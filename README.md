@@ -23,6 +23,20 @@ A typical Xyna application is a server application that carries business logic. 
 DISCLAIMER: Xyna is a free & open platform. No commercial terms, no locked-in effects,  no dependencies, no barriers to entry. And like any software, Xyna contains bugs. We appreciate any feedback and contributions here on GitHub. In its current maturity stage Xyna is well suited for application development. But for production systems, we generally recommend to implement further security measures through suitable network technology, firewalls, WAFs, etc. #CIP #kaizen #FailHarder.
 
 ### FEEDBACK, SUPPORT & CONTRIBUTION
+
 The best place for feedback, assistance, and other discussion is our GitHub discussions. Also, our wiki here on GitHub. To report a bug or request a feature, please open a GitHub issue using the provided templates.
 
 Contributions are always welcome. Please contact us via discussion / direct message if you want to participate. Our community management will be happy to contact you. We want to moderate the further development in the sense of all users qualitatively.
+
+### SCREENSHOTS
+
+<img width="1440" alt="fman-01" src="https://user-images.githubusercontent.com/107180330/173103480-599bbef5-372e-4463-9fdd-84ce1986f542.png">
+<img width="1440" alt="fman-02" src="https://user-images.githubusercontent.com/107180330/173103490-3c7ac8af-2a1e-4e96-b01b-903b1593c8bb.png">
+<img width="1440" alt="fman-03" src="https://user-images.githubusercontent.com/107180330/173103495-c941e712-744e-44fd-bc71-41e4c7c66bfe.png">
+<img width="1440" alt="pmod-01" src="https://user-images.githubusercontent.com/107180330/173103498-5f97603e-05ba-4773-93ca-b801ae29a096.png">
+<img width="1440" alt="pmod-02" src="https://user-images.githubusercontent.com/107180330/173103503-046ed6c7-0a46-4543-ab1b-d5d9c6cb6a04.png">
+<img width="1440" alt="pmod-03" src="https://user-images.githubusercontent.com/107180330/173103505-2cae2669-66e6-4b88-b50b-3f9de43bbe32.png">
+<img width="1440" alt="pmod-04" src="https://user-images.githubusercontent.com/107180330/173103509-3a8ef270-82bd-4dd0-8796-eef9f01b3223.png">
+<img width="1440" alt="pmon-01" src="https://user-images.githubusercontent.com/107180330/173103513-69018810-5f97-4068-af36-d8ef5af2f8d3.png">
+<img width="1440" alt="pmon-02" src="https://user-images.githubusercontent.com/107180330/173103519-07b3e259-d850-4473-821d-4df08ca452bc.png">
+<img width="1440" alt="pmon-03" src="https://user-images.githubusercontent.com/107180330/173103525-1f55076f-91f0-4d2c-a8de-95e7e44c66f3.png">
