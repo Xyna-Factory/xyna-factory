@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get order types" TypeName="GetOrderTypes" TypePath="xmcp.factorymanager.ordertypes" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get order types" Name="GetOrderTypes">
+    <Input>
+      <Data ID="9" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="8"/>
+        <Target RefID="31"/>
+        <Target RefID="45"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="66" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo66">
+        <Source RefID="25"/>
+      </Data>
+      <Data ID="168" IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter168">
+        <Source RefID="25"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="Load Order Types Exception" ReferenceName="LoadOrderTypesException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="loadOrderTypesException"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <Function ID="224" Label="Check Rights for Current User">
+      <Source RefID="223"/>
+      <Source RefID="226"/>
+      <Target RefID="223"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="223">
+        <Source RefID="226">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="223"/>
+    </Function>
+    <Choice ID="8" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="9"/>
+      <Target RefID="53"/>
+      <Target RefID="87"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="21" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo21"/>
+        <Source RefID="9"/>
+      </Input>
+      <Case ID="10" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="16" Label="Generate Table Columns">
+          <Target RefID="20"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,closeInputs,closeOutputs,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="22" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="20"/>
+          </Output>
+          <Mapping>%0%["0"].name="Name"</Mapping>
+          <Mapping>%0%["0"].path="name"</Mapping>
+          <Mapping>%0%["0"].sort="asc"</Mapping>
+          <Mapping>%0%["1"].name="Application"</Mapping>
+          <Mapping>%0%["1"].path="application"</Mapping>
+          <Mapping>%0%["2"].name="Version"</Mapping>
+          <Mapping>%0%["2"].path="version"</Mapping>
+          <Mapping>%0%["3"].name="Workspace"</Mapping>
+          <Mapping>%0%["3"].path="workspace"</Mapping>
+          <Mapping>%0%["4"].name="Execution Destination Type/Name"</Mapping>
+          <Mapping>%0%["4"].path="executionDestination.name"</Mapping>
+          <Mapping>%0%["5"].name="Used Capacities"</Mapping>
+          <Mapping>%0%["5"].path="usedCapacities"</Mapping>
+          <Mapping>%0%["6"].name="Priority"</Mapping>
+          <Mapping>%0%["6"].path="priority"</Mapping>
+          <Mapping>%0%["7"].name="Monitoring Level"</Mapping>
+          <Mapping>%0%["7"].path="monitoringLevel"</Mapping>
+        </Mappings>
+        <Mappings ID="31" Label="Set bootstrap &amp; columns">
+          <Source RefID="20"/>
+          <Source RefID="9"/>
+          <Target RefID="36"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,closeInputs,closeOutputs,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="30" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo30"/>
+            <Source RefID="9"/>
+          </Input>
+          <Input>
+            <Data ID="32" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn32"/>
+            <Source RefID="20"/>
+          </Input>
+          <Output>
+            <Data ID="35" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo35"/>
+            <Target RefID="36"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="23">
+          <Source RefID="36"/>
+          <Source RefID="20"/>
+          <Target RefID="53"/>
+          <Target RefID="87"/>
+          <Copy>
+            <Source RefID="36"/>
+            <Target RefID="53"/>
+          </Copy>
+          <Copy>
+            <Source RefID="20"/>
+            <Target RefID="87"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="7" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="45" Label="1:1">
+          <Source RefID="9"/>
+          <Target RefID="48"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,closeInputs,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="44" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo44"/>
+            <Source RefID="9"/>
+          </Input>
+          <Output>
+            <Data ID="47" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo47"/>
+            <Target RefID="48"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="90" Label="Get columns from Table Info">
+          <Source RefID="48"/>
+          <Target RefID="86"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="88" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo88"/>
+            <Source RefID="48">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="89" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn89"/>
+            <Target RefID="86"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="24">
+          <Source RefID="48"/>
+          <Source RefID="86"/>
+          <Target RefID="53"/>
+          <Target RefID="87"/>
+          <Copy>
+            <Source RefID="48"/>
+            <Target RefID="53"/>
+          </Copy>
+          <Copy>
+            <Source RefID="86"/>
+            <Target RefID="87"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="20" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn20">
+      <Source RefID="16"/>
+      <Target RefID="31"/>
+      <Target RefID="23"/>
+    </Data>
+    <Data ID="36" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo36">
+      <Source RefID="31"/>
+      <Target RefID="23"/>
+    </Data>
+    <Data ID="48" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo48">
+      <Source RefID="45"/>
+      <Target RefID="90"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="53" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo53">
+      <Source RefID="8"/>
+      <Source RefID="23"/>
+      <Source RefID="24"/>
+      <Target RefID="58"/>
+    </Data>
+    <ServiceReference ID="57" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="58"/>
+      <Target RefID="58"/>
+    </ServiceReference>
+    <Function ID="58" Label="Build TableInfo and Select Columns">
+      <Source RefID="57"/>
+      <Source RefID="53"/>
+      <Source RefID="87"/>
+      <Source RefID="169"/>
+      <Target RefID="57"/>
+      <Target RefID="59"/>
+      <Meta>
+        <FixedWidth>350.60000000000014</FixedWidth>
+        <FixedHeight>32</FixedHeight>
+      </Meta>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="57">
+        <Source RefID="53">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="169">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xmcp.factorymanager.ordertypes.OrderType</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="87"/>
+      </Invoke>
+      <Receive ServiceID="57">
+        <Target RefID="59"/>
+      </Receive>
+    </Function>
+    <Data ID="59" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="58"/>
+      <Target RefID="25"/>
+      <Target RefID="109"/>
+    </Data>
+    <Choice ID="130" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Target RefID="219"/>
+      <Case ID="122" Label="true" Premise="&quot;1&quot;==&quot;1&quot;">
+        <Function ID="109" Label="Get list entries">
+          <Source RefID="59"/>
+          <Source RefID="120"/>
+          <Target RefID="120"/>
+          <Target RefID="217"/>
+          <Invoke Operation="getListEntries" ServiceID="120">
+            <Source RefID="59">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="120">
+            <Target RefID="217"/>
+          </Receive>
+        </Function>
+        <Assign ID="131">
+          <Source RefID="217"/>
+          <Target RefID="219"/>
+          <Copy>
+            <Source RefID="217"/>
+            <Target RefID="219"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="123" Label="false">
+        <Mappings ID="135" Label="Mapping">
+          <Source RefID="165"/>
+          <Target RefID="218"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="171" IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter"/>
+            <Source RefID="165">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="166" IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter166"/>
+            <Target RefID="218"/>
+          </Output>
+        </Mappings>
+        <Assign ID="132">
+          <Source RefID="218"/>
+          <Target RefID="219"/>
+          <Copy>
+            <Source RefID="218"/>
+            <Target RefID="219"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="86" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn86">
+      <Source RefID="90"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="87" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn87">
+      <Source RefID="8"/>
+      <Source RefID="23"/>
+      <Source RefID="24"/>
+      <Target RefID="58"/>
+    </Data>
+    <ServiceReference ID="120" Label="Order Type Services" ReferenceName="OrderTypeServices.OrderTypeServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="109"/>
+      <Target RefID="109"/>
+    </ServiceReference>
+    <Data ID="165" IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter165">
+      <Target RefID="135"/>
+      <Value>
+        <Data ID="187" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes">
+          <Data ID="172" Label="Name" VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="173" Label="Planning Destination Is Custom" VariableName="planningDestinationIsCustom">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+          </Data>
+          <Data ID="174" Label="Execution Destination Is Custom" VariableName="executionDestinationIsCustom">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+          </Data>
+          <Data ID="175" Label="Cleanup Destination Is Custom" VariableName="cleanupDestinationIsCustom">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+          </Data>
+          <Data ID="176" IsList="true" Label="Required Capacities" ReferenceName="Capacity" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="requiredCapacities"/>
+          <Data ID="177" Label="Documentation" VariableName="documentation">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="178" Label="Monitoring Level" VariableName="monitoringLevel">
+            <Meta>
+              <Type>Integer</Type>
+            </Meta>
+          </Data>
+          <Data ID="179" Label="Monitoring Level Is Custom" VariableName="monitoringLevelIsCustom">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+          </Data>
+          <Data ID="180" Label="Priority" VariableName="priority">
+            <Meta>
+              <Type>Integer</Type>
+            </Meta>
+          </Data>
+          <Data ID="181" Label="Priority Is Custom" VariableName="priorityIsCustom">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+          </Data>
+          <Data ID="182" Label="Application" VariableName="application">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="183" Label="Version" VariableName="version">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="184" IsList="true" Label="Parameter Inheritance Rules" ReferenceName="ParameterInheritanceRule" ReferencePath="xmcp.factorymanager" VariableName="parameterInheritanceRules"/>
+          <Data ID="185" Label="Workspace" VariableName="workspace">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="186" Label="Used Capacities" VariableName="usedCapacities">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Data ID="169" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="const_OrderTypeParameter">
+      <Target RefID="58"/>
+      <Data ID="188" Label="Name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="191" Label="Planning Destination" ReferenceName="DestinationType" ReferencePath="xmcp.factorymanager" VariableName="planningDestination">
+        <Data ID="189" Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="190" Label="Type" VariableName="type">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="192" Label="Planning Destination Is Custom" VariableName="planningDestinationIsCustom">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="195" Label="Execution Destination" ReferenceName="DestinationType" ReferencePath="xmcp.factorymanager" VariableName="executionDestination">
+        <Data ID="193" Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="194" Label="Type" VariableName="type">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="196" Label="Execution Destination Is Custom" VariableName="executionDestinationIsCustom">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="199" Label="Cleanup Destination" ReferenceName="DestinationType" ReferencePath="xmcp.factorymanager" VariableName="cleanupDestination">
+        <Data ID="197" Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="198" Label="Type" VariableName="type">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="200" Label="Cleanup Destination Is Custom" VariableName="cleanupDestinationIsCustom">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="201" IsList="true" Label="Required Capacities" ReferenceName="Capacity" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="requiredCapacities"/>
+      <Data ID="202" Label="Documentation" VariableName="documentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="203" Label="Monitoring Level" VariableName="monitoringLevel">
+        <Meta>
+          <Type>Integer</Type>
+        </Meta>
+      </Data>
+      <Data ID="204" Label="Monitoring Level Is Custom" VariableName="monitoringLevelIsCustom">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="205" Label="Priority" VariableName="priority">
+        <Meta>
+          <Type>Integer</Type>
+        </Meta>
+      </Data>
+      <Data ID="206" Label="Priority Is Custom" VariableName="priorityIsCustom">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="207" Label="Application" VariableName="application">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="208" Label="Version" VariableName="version">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="213" Label="Runtime Context" ReferenceName="Application" ReferencePath="xmcp" VariableName="runtimeContext">
+        <Data ID="209" Label="Version Name" VariableName="versionName">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="210" Label="Type" VariableName="type">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="211" Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="212" Label="Revision" VariableName="revision">
+          <Meta>
+            <Type>Long</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="214" IsList="true" Label="Parameter Inheritance Rules" ReferenceName="ParameterInheritanceRule" ReferencePath="xmcp.factorymanager" VariableName="parameterInheritanceRules"/>
+      <Data ID="215" Label="Workspace" VariableName="workspace">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="216" Label="Used Capacities" VariableName="usedCapacities">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="217" IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter217">
+      <Source RefID="109"/>
+      <Target RefID="131"/>
+    </Data>
+    <Data ID="218" IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter218">
+      <Source RefID="135"/>
+      <Target RefID="132"/>
+    </Data>
+    <Data ID="219" IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter219">
+      <Source RefID="130"/>
+      <Source RefID="131"/>
+      <Source RefID="132"/>
+      <Target RefID="25"/>
+    </Data>
+    <ServiceReference ID="223" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="224"/>
+      <Target RefID="224"/>
+    </ServiceReference>
+    <Data ID="226" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="224"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.orderTypes:read:*:*:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="25">
+      <Source RefID="59"/>
+      <Source RefID="219"/>
+      <Target RefID="66"/>
+      <Target RefID="168"/>
+      <Copy>
+        <Source RefID="59">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="66"/>
+      </Copy>
+      <Copy>
+        <Source RefID="219"/>
+        <Target RefID="168"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

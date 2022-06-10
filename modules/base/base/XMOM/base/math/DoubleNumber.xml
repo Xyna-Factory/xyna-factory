@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DoubleNumber" TypeName="DoubleNumber" TypePath="base.math" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="value" VariableName="value">
+    <Meta>
+      <Type>double</Type>
+    </Meta>
+  </Data>
+  <Service Label="Double" TypeName="DoubleNumber">
+    <Operation IsStatic="false" Label="Ceil" Name="ceil">
+      <Meta>
+        <Documentation>Return the smallest Integer Number, that is greater than this Number</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber((long)Math.ceil(value));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Floor" Name="floor">
+      <Meta>
+        <Documentation>Return the greatest Integer Number, that is less than this Number</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber((long)Math.floor(value));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Format" Name="format">
+      <Meta>
+        <Documentation>Uses a Double Format Specifier to format this number into a Text. For more information how to use this look at the documentation of the Double Format Specifier.</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Double Format Specifier" ReferenceName="DoubleFormatSpecifier" ReferencePath="base.math" VariableName="doubleFormatSpecifier"/>
+      </Input>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">StringBuilder sb = new StringBuilder();
+sb.append("%");
+if(doubleFormatSpecifier.getThousandsSeparator())
+  sb.append(",");
+if(doubleFormatSpecifier.getNumberWidth()!=null)
+  sb.append("0"+ doubleFormatSpecifier.getNumberWidth());
+if(doubleFormatSpecifier.getPlacesAfterDecimalPoint()!=null)
+  sb.append("." + doubleFormatSpecifier.getPlacesAfterDecimalPoint());
+sb.append("f");
+if(doubleFormatSpecifier.getFormatLocale() instanceof base.locale.De_DEGerman){
+  return new Text(String.format(java.util.Locale.GERMAN, sb.toString(), value));
+} else if(doubleFormatSpecifier.getFormatLocale() instanceof base.locale.En_USEnglish){
+  return new Text(String.format(java.util.Locale.US, sb.toString(), value));
+} else if(doubleFormatSpecifier.getFormatLocale() == null){
+  return new Text(String.format(sb.toString(), value));
+} else{
+  //Set null fields to ""
+  String l = doubleFormatSpecifier.getFormatLocale().getLanguage() == null?"":doubleFormatSpecifier.getFormatLocale().getLanguage();
+  String c = doubleFormatSpecifier.getFormatLocale().getCountry() == null?"":doubleFormatSpecifier.getFormatLocale().getCountry();
+  String v = doubleFormatSpecifier.getFormatLocale().getVariant() == null?"":doubleFormatSpecifier.getFormatLocale().getVariant();
+  java.util.Locale lc = new java.util.Locale(l, c, v);
+  return new Text(String.format(lc, sb.toString(), value));
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Log" Name="log">
+      <Meta>
+        <Documentation>Return the logarithm of this Number to the base of Base</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Base" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber58"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">double log1 = Math.log(value); 
+double log2 = Math.log(doubleNumber.getValue());
+return new DoubleNumber(log1 / log2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Pow" Name="pow">
+      <Meta>
+        <Documentation>Return this raised to the power of Exponent</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Exponent" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber24"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new DoubleNumber(Math.pow(value, doubleNumber.getValue()))</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Round" Name="round">
+      <Meta>
+        <Documentation>Returns the closest Integer Number rounding. This is ceiling at decimal Point greater or equal to '.5' and flooring at decimal points less that '.5'.</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber((long)Math.round(value));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Round to Decimal Point" Name="roundToDecimalPoint">
+      <Input>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">double num = value;
+long power = (long)Math.pow(10, integerNumber.getValue());
+num *= power;
+num = Math.round(num);
+num /= power;
+return new DoubleNumber(num);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

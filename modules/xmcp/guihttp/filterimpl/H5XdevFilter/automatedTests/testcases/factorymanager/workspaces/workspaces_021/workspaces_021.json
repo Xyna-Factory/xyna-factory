@@ -1,0 +1,356 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "workspaces_and_applications"
+    },
+    {
+      "data": [
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!wait!": "wait"
+        },
+        {
+          "!xprc.waitsuspend.WaitAndSuspendFeature!": "xprc.waitsuspend.WaitAndSuspendFeature"
+        },
+        {
+          "!Wait!": "Wait"
+        },
+        {
+          "!xprc.waitsuspend.RelativeTimeConfiguration!": "xprc.waitsuspend.RelativeTimeConfiguration"
+        },
+        {
+          "!{x$metax:{xfqnx:xxprc.waitsuspend.RelativeTimeCo!": "{\\\"$meta\\\":{\\\"fqn\\\":\\\"xprc.waitsuspend.RelativeTimeConfiguration\\\",\\\"rtc\\\":{\\\"workspace\\\":\\\"default workspace\\\"}},\\\"timeInSeconds\\\":{\\\"$meta\\\":{\\\"fqn\\\":\\\"xprc.waitsuspend.Seconds\\\"},\\\"timeUnitInSeconds\\\":100000}}"
+        },
+        {
+          "!signature!": "signature"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ClearWorkspace!": "xmcp.factorymanager.rtcmanager.ClearWorkspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.Workspace!": "xmcp.factorymanager.rtcmanager.Workspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ClearWorkspaceReq!": "xmcp.factorymanager.rtcmanager.ClearWorkspaceRequest"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1595314312512.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1595314312512!",
+      "variable": "!new_1595314312512.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1595314312512.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=label]/id",
+      "targetVariable": "!labelArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id",
+      "targetVariable": "!step0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/rtc/name",
+      "targetVariable": "!autotest.generated.random0!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!autotest.generated!",
+      "variable": "!autotest.generated.random0!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=errorHandling]/items/$list[id=!wf!]/areas/$list[name=content]/$meta/rtc/application",
+      "targetVariable": "!GuiHttp!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=errorHandling]/items/$list[id=!wf!]/areas/$list[name=unhandledExceptions]/items/$list[0]/fqn",
+      "targetVariable": "!core.exception.XynaException!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=errorHandling]/items/$list[id=!wf!]/areas/$list[name=unhandledExceptions]/items/$list[fqn=!core.exception.XynaException!]/$meta/rtc/version",
+      "targetVariable": "!1.1.99!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows/!new_1595314312512!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 0,
+        "text": "!wait!"
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows/!new_1595314312512!/!NewWorkflow!/objects/!labelArea!/change"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows/!new_1595314312512!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "fqn": "!xprc.waitsuspend.WaitAndSuspendFeature!",
+          "label": "!Wait!",
+          "operation": "!wait!",
+          "type": "service"
+        },
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows/!new_1595314312512!/!NewWorkflow!/objects/!step0!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[fqn=!xprc.waitsuspend.WaitAndSuspendFeature!]/id",
+      "targetVariable": "!step10!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/items/$list[name=timeConfigurationParameter]/rtc/name",
+      "targetVariable": "!Base!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/items/$list[name=timeConfigurationParameter]/rtc/version",
+      "targetVariable": "!1.0.17!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/items/$list[name=timeConfigurationParameter]/id",
+      "targetVariable": "!var10-in0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows/!new_1595314312512!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!xprc.waitsuspend.RelativeTimeConfiguration!",
+            "rtc": {
+  "workspace": "default workspace"
+}
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!autotest.generated.random!/structure"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xprc.waitsuspend.RelativeTimeConfiguration/timeInSeconds/$object/fqn",
+      "targetVariable": "!xprc.waitsuspend.Seconds!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!xprc.waitsuspend.Seconds!",
+            "rtc": {
+  "workspace": "default workspace"
+}
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!autotest.generated.random!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "constant": "!{x$metax:{xfqnx:xxprc.waitsuspend.RelativeTimeCo!",
+        "revision": 2
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows/!new_1595314312512!/!NewWorkflow!/objects/!var10-in0!/constant"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows/!new_1595314312512!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!wait!",
+        "path": "!autotest.generated!",
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!autotest.generated.random!/xmom/workflows/!new_1595314312512!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/fqn",
+      "targetVariable": "!autotest.generated.Wait!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!autotest.generated.random0!/xmom/workflows/!autotest.generated!/!Wait!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!autotest.generated.random0!/xmom/workflows/!autotest.generated!/!Wait!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!autotest.generated.random0!/xmom/workflows/!autotest.generated!/!Wait!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "fqn": "!autotest.generated.Wait!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!autotest.generated.random0!/!signature!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": true,
+        "customStringContainer": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "input": [],
+        "monitoringLevel": 20,
+        "orderType": "!autotest.generated.Wait!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!autotest.generated.random!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ClearWorkspaceReq!"
+            },
+            "stopRunningOrders": false,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "!autotest.generated.random!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.ClearWorkspace!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!readName1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "print",
+      "variable": "!readName1!"
+    }
+  ]
+}

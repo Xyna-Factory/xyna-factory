@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "addAndUse.json",
+	"delete.json",
+	"prototypeUserOutput.json"
+  ]
+}

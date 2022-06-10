@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="List local applications" TypeName="ListLocalApplications" TypePath="xfmg.xfctrl.appmgmt" Version="1.8">
+  <Meta>
+    <Documentation>Output der Form:
+
+[ (App1, 1.0, comment1, STOPPED) , (App1, 2.0, comment2, RUNNING), (App2, 1.12, comment3, RUNNING) ], [Node1, false], [], true
+[ ], [Node2, false], [ConnectionException: Could not connect to node 2], false</Documentation>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,openDocumentation,vScroll(280)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="List local applications" Name="ListLocalApplications">
+    <Input>
+      <Data ID="27" Label="List application parameter" ReferenceName="ListApplicationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="listApplicationParameter">
+        <Target RefID="14"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" IsList="true" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Function ID="21" Label="List all nodes">
+      <Source RefID="20"/>
+      <Target RefID="20"/>
+      <Target RefID="22"/>
+      <Invoke Operation="listAllNodes" ServiceID="20"/>
+      <Receive ServiceID="20">
+        <Target RefID="22"/>
+      </Receive>
+    </Function>
+    <Foreach ID="31">
+      <Source RefID="22"/>
+      <Target RefID="48"/>
+      <InputList RefID="22">
+        <Data ID="32" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode">
+          <Target RefID="30"/>
+          <Target RefID="14"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="48">
+        <Data ID="47" IsList="true" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails47">
+          <Source RefID="30"/>
+          <Source RefID="49"/>
+          <Source RefID="50"/>
+        </Data>
+      </OutputList>
+      <Choice ID="30" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="32"/>
+        <Target RefID="47"/>
+        <Input>
+          <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl"/>
+          <Source RefID="32"/>
+        </Input>
+        <Case ID="28" Label="true" Premise="%0%.local">
+          <Function ID="14" Label="List applications for one node">
+            <Source RefID="19"/>
+            <Source RefID="27"/>
+            <Source RefID="32"/>
+            <Target RefID="19"/>
+            <Target RefID="33"/>
+            <Invoke Operation="ListApplicationsForOneNode" ServiceID="19">
+              <Source RefID="32">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+              <Source RefID="27"/>
+            </Invoke>
+            <Receive ServiceID="19">
+              <Target RefID="33"/>
+            </Receive>
+          </Function>
+          <Mappings ID="52" Label="as list">
+            <Source RefID="33"/>
+            <Target RefID="46"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="51" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails51"/>
+              <Source RefID="33"/>
+            </Input>
+            <Output>
+              <Data ID="53" IsList="true" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails53"/>
+              <Target RefID="46"/>
+            </Output>
+            <Mapping>%1%["0"]=%0%</Mapping>
+          </Mappings>
+          <Assign ID="49">
+            <Source RefID="46"/>
+            <Target RefID="47"/>
+            <Copy>
+              <Source RefID="46"/>
+              <Target RefID="47"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="29" Label="false">
+          <Mappings ID="40" Label="empty list">
+            <Target RefID="38"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+            </Meta>
+            <Output>
+              <Data ID="39" IsList="true" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails39"/>
+              <Target RefID="38"/>
+            </Output>
+          </Mappings>
+          <Assign ID="50">
+            <Source RefID="38"/>
+            <Target RefID="47"/>
+            <Copy>
+              <Source RefID="38"/>
+              <Target RefID="47"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+    </Foreach>
+    <ServiceReference ID="19" Label="List applications for one node" ReferenceName="ListApplicationsForOneNode" ReferencePath="xfmg.xfctrl.appmgmt.subwfs">
+      <Source RefID="14"/>
+      <Target RefID="14"/>
+    </ServiceReference>
+    <ServiceReference ID="20" Label="Node Management" ReferenceName="NodeManagement.NodeManagement" ReferencePath="xfmg.xfctrl.nodemgmt">
+      <Source RefID="21"/>
+      <Target RefID="21"/>
+    </ServiceReference>
+    <Data ID="22" IsList="true" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode22">
+      <Source RefID="21"/>
+      <Target RefID="31"/>
+    </Data>
+    <Data ID="33" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails33">
+      <Source RefID="14"/>
+      <Target RefID="52"/>
+    </Data>
+    <Data ID="38" IsList="true" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails38">
+      <Source RefID="40"/>
+      <Target RefID="50"/>
+    </Data>
+    <Data ID="46" IsList="true" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails45">
+      <Source RefID="52"/>
+      <Target RefID="49"/>
+    </Data>
+    <Data ID="48" IsList="true" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails48">
+      <Source RefID="31"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="48"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="48"/>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

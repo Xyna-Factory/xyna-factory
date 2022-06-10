@@ -1,0 +1,9 @@
+{
+  "tests":
+  [
+    "02_Rename_a_workflow.json",
+	"02_Rename_a_codedService.json",
+	"02_Rename_a_subWorkflow.json",
+	"02_Rename_a_mapping.json"
+  ]
+}

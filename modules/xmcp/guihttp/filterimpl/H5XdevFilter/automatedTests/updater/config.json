@@ -1,0 +1,8 @@
+{
+  "autoTesterPath": "../autoTester.py",
+  "resetEnvironmentProgram": "./resetEnvironment.sh",
+  "changeEnvironmentProgram": "./changeEnvironment.sh",
+  "resultSuffix": "_optimized",
+  "_listIndexKeys":[],
+  "listIndexKeys": ["name", "id", "fqn"]
+}

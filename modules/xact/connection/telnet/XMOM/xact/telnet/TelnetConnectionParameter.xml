@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ConnectionParameter" BaseTypePath="xact.connection" Label="Telnet connection parameter" TypeName="TelnetConnectionParameter" TypePath="xact.telnet" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Data Label="host" VariableName="host">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="port" VariableName="port">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="terminal type" VariableName="terminalType">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Telnet Connection Parameter" TypeName="TelnetConnectionParameter">
+   <Meta>
+      <AdditionalDependencies>
+        <Datatype>xact.templates.CommandLineInterface</Datatype>
+        <Datatype>xact.telnet.TelnetConnection</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation IsStatic="false" Label="Connect" Name="connect">
+      <Input>
+        <Data Label="Document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+      </Input>
+      <Output>
+        <Data Label="Managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">ManagedConnection connection;
+if (documentType instanceof xact.templates.CommandLineInterface) {
+  connection = new xact.telnet.TelnetConnection(this, null);
+} else {
+  throw new RuntimeException("Unexpected DocumentType: " + documentType);
+}
+connection.connect();
+return connection;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

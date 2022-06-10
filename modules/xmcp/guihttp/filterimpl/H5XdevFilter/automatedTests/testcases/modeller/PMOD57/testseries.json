@@ -1,0 +1,16 @@
+{
+  "tests":
+  [
+    "PMOD57_choice_userconnection.json",
+    "PMOD57_function_connectionlost.json",
+    "PMOD57_function_repair_removed.json",
+    "PMOD57_mapping_empty_move.json",
+    "PMOD57_mapping_prototypesInOut.json",
+    "PMOD57_parallel_function_userconnection.json",
+    "PMOD57_parallel_mapping_userconnection.json",
+    "PMOD57_parallel_twomappings.json",
+    "PMOD57_throw_constant_reserved.json",
+    "PMOD57_variable_copy.json",
+    "PMOD57_variable_move.json"
+  ]
+}

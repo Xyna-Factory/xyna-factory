@@ -1,0 +1,288 @@
+{
+  "meta":
+  {
+    "name": "conditionalChoiceTextTest",
+	"description": "Execute a workflow containing a Conditional Choice with a Boolean and a Text variable (loaded from app) and open audit",
+	"created": "17.03.2020",
+	"updated": "18.03.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "set",
+	  "variable": "!workflowFQN!",
+	  "value": "xmcp.h5x.regression.PMON49.ConditionalChoiceBooleanText"
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "!workflowFQN!",
+		"!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON49.DatatypeWithBoolean","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"data":true},{"$meta":{"fqn":"base.Text","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"text":"Expected String"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 5,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step6",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "0",
+		"!pathInVariable!": "text"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!choiceInput!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!choiceInput!",
+	  "value": "Expected String"
+	},
+
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step6",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "1",
+		"!pathInVariable!": "data"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!choiceInput!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!choiceInput!",
+	  "value": "true"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!caseId!",
+	  "pathInResponse": "info/$list[id=step6]/caseId",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!caseId!",
+	  "value": "case6-0_input"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step6]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+
+    {
+      "operation": "read",
+      "targetVariable": "!branch6-0!",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/areas/$list[name=content]/items/$list[0]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branch6-0!",
+      "value": "branch6-0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch6-0!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "!workflowFQN!",
+		"!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON49.DatatypeWithBoolean","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"data":true},{"$meta":{"fqn":"base.Text","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"text":"Something unexpected"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 5,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step6",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "0",
+		"!pathInVariable!": "text"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!choiceInput!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!choiceInput!",
+	  "value": "Something unexpected"
+	},
+
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step6",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "1",
+		"!pathInVariable!": "data"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!choiceInput!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!choiceInput!",
+	  "value": "true"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!caseId!",
+	  "pathInResponse": "info/$list[id=step6]/caseId",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!caseId!",
+	  "value": "case6-1_input"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step6]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+
+    {
+      "operation": "read",
+      "targetVariable": "!branch6-1!",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/areas/$list[name=content]/items/$list[1]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branch6-1!",
+      "value": "branch6-1"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch6-1!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    }
+  ]
+}

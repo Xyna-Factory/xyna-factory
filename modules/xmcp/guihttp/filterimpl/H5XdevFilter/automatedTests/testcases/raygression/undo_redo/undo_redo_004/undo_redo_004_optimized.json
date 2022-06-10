@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "16.7.2020",
+    "updated": "16.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Data_Type!": "New Data Type"
+        },
+        {
+          "!undo_redo_004!": "undo_redo_004"
+        },
+        {
+          "!redo!": "redo"
+        },
+        {
+          "!autoTest.generated.CkbKcUoN!": "autoTest.generated.!rnd!"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1594881220162.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1594881220162!",
+      "variable": "!new_1594881220162.NewDataType!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewDataType!",
+      "variable": "!new_1594881220162.NewDataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/id",
+      "targetVariable": "!memberVarArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/itemTypes[0]",
+      "targetVariable": "!xmcp.processmodeller.datatypes.Data!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Data!",
+      "variable": "!xmcp.processmodeller.datatypes.Data!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!undo_redo_004!",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594881220162!/!NewDataType!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "!Data!",
+          "type": "memberVar"
+        },
+        "index": -1,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594881220162!/!NewDataType!/objects/!memberVarArea!/insert"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594881220162!/!NewDataType!/undo"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594881220162!/!NewDataType!/!redo!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!undo_redo_004!",
+        "path": "!autoTest.generated.CkbKcUoN!",
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594881220162!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!autoTest.generated.CkbKcUoN.Undo_redo_004!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Undo_redo_004!",
+      "variable": "!autoTest.generated.CkbKcUoN.Undo_redo_004!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.CkbKcUoN!/!Undo_redo_004!/deploy"
+    },
+    {
+      "constraint": "listLength",
+      "expectedValue": "1",
+      "operation": "assert",
+      "path": "updates/$list[0]/areas/$list[name=memberVars]/items/$list"
+    }
+  ]
+}

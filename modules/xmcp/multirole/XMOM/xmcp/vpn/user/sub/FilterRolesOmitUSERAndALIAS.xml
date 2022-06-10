@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Filter Roles: Omit USER and ALIAS" TypeName="FilterRolesOmitUSERAndALIAS" TypePath="xmcp.vpn.user.sub" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Filter Roles: Omit USER and ALIAS" Name="FilterRolesOmitUSERAndALIAS">
+    <Input>
+      <Data ID="4" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole">
+        <Target RefID="7"/>
+        <Target RefID="17"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole2">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Choice ID="7" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Target RefID="18"/>
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl"/>
+        <Source RefID="4">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl"/>
+        <Source RefID="4">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="5" Label="true" Premise="startswith(%0%.role,&quot;USER_&quot;)||startswith(%1%.role,&quot;ALIAS_&quot;)">
+        <Mappings ID="14" Label="empty list">
+          <Target RefID="13"/>
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="12" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole12"/>
+            <Target RefID="13"/>
+          </Output>
+        </Mappings>
+        <Assign ID="19">
+          <Source RefID="13"/>
+          <Target RefID="18"/>
+          <Copy>
+            <Source RefID="13"/>
+            <Target RefID="18"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="6" Label="false">
+        <Mappings ID="17" Label="list with input element">
+          <Source RefID="4"/>
+          <Target RefID="16"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="21" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole21"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data ID="15" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole15"/>
+            <Target RefID="16"/>
+          </Output>
+          <Mapping>%1%["0"]=%0%</Mapping>
+        </Mappings>
+        <Assign ID="20">
+          <Source RefID="16"/>
+          <Target RefID="18"/>
+          <Copy>
+            <Source RefID="16"/>
+            <Target RefID="18"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="13" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole13">
+      <Source RefID="14"/>
+      <Target RefID="19"/>
+    </Data>
+    <Data ID="16" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole16">
+      <Source RefID="17"/>
+      <Target RefID="20"/>
+    </Data>
+    <Data ID="18" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole18">
+      <Source RefID="7"/>
+      <Source RefID="19"/>
+      <Source RefID="20"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="18"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="18"/>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

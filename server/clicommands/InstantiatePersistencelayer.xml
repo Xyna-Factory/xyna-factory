@@ -1,0 +1,26 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="instantiatepersistencelayer" Groups="Persistence" Description="Instantiates a persistencelayer. if assigned to a table, all operations on that table automatically uses this persistence layer instance."/>
+  <Argument Name="persistenceLayerID" Description="The ID of a previously created persistence layer instance. If not set, 'persistenceLayerName' is required" Optional = "true"/>
+  <Argument Name="department" Description="The associated department"/>
+  <Argument Name="connectionType" Description="Valid values for the connection type are: DEFAULT, ALTERNATIVE, HISTORY"/>
+  <Argument Name="persistenceLayerSpecifics" Description="Additional parameters required for the specific persistence layer implementation as shown by command listpersistencelayers" MultipleValues="true" Optional="true"/>
+  <Argument Name="persistenceLayerName" Description="The name of a previously created persistence layer. If not set, 'persistenceLayerID' is required" Optional = "true"/>
+  <Argument Name="persistenceLayerInstanceName" Description="The name of the new persistence layer instance." Optional = "true"/>  
+</XynaCommandLineCommand>

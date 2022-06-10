@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "serviceWorkflowTest.json",
+    "serviceWorkflowErrorTest.json"
+  ]
+}

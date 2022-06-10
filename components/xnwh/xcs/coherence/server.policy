@@ -1,0 +1,9 @@
+grant codeBase "file:${{java.ext.dirs}}/*" {
+	permission java.security.AllPermission;
+};
+
+// default permissions granted to all domains
+
+grant { 
+	permission java.security.AllPermission;
+};

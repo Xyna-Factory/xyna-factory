@@ -1,0 +1,28 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="forcecleanabandonedorder" Groups="Misc" Description="Removes all evidence for the abandoned order.">
+    <ExtendedDescription>
+		( -a | [ -f | -r ] -entryID &lt;abandoned order entry id&gt; )
+    </ExtendedDescription>
+  </CommandDefinition>
+  <Argument Name="entryID" Description="The entryID of the abandoned order to be cleaned." Optional="true"/>
+  <BoolOption Name="a" LongName="all_unintentionally" Description="Cleans all abandoned orders except those abandoned intentionally." Optional="true"/>
+  <BoolOption Name="f" LongName="family" Description="Cleans abandoned order family except those abandoned intentionally." Optional="true"/>
+  <BoolOption Name="r" LongName="using_all_detection_rules" Description="Cleans abandoned order using clean up routines from all detection rules." Optional="true"/>
+</XynaCommandLineCommand>

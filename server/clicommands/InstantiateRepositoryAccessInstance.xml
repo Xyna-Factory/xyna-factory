@@ -1,0 +1,26 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="instantiaterepositoryaccessinstance" Groups="Repository Access Management" Description="Instantiates a previously registered repository access implementation." />
+  <Argument Name="typename" Description="Name of the registered repository access implementation." />
+  <Argument Name="instancename" Description="Name of the repository access instance." />
+  <Argument Name="parameter" MultipleValues="true" Description="Initialization parameters specific to the repository access implementation in &lt;key&gt;=&lt;value&gt; notation." />
+  <Argument Name="workspaceName" Description="The name of the workspace that is used for the local repository directory." Optional="true"/>
+  <Argument Name="codeAccessName" Description="Creates a new code access." Optional="true"/>
+  <Argument Name="xmomAccessName" Description="Creates a new xmom access. (without import of XynaProperties and Capacities)" Optional="true"/>
+</XynaCommandLineCommand>

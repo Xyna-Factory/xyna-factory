@@ -1,0 +1,114 @@
+GIP-BLACK-XPRC-XPCE-MIB DEFINITIONS ::= BEGIN
+IMPORTS
+	xprc FROM GIP-BLACK-MIB;
+
+------------------------------------------------------
+-- Copyright 2022 GIP SmartMercial GmbH, Germany
+--
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+--
+--  http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+------------------------------------------------------
+--
+xpce MODULE-IDENTITY
+        LAST-UPDATED "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        ORGANIZATION "GIP AG"
+        CONTACT-INFO "GIP AG"
+        DESCRIPTION  ""
+        REVISION     "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        DESCRIPTION  ""
+	::= { xprc 2 }
+
+
+stats OBJECT IDENTIFIER
+	::= { xpce 1 }
+
+
+--
+-- XPRC.XPCE.Stats
+--
+
+
+orderStatTable OBJECT-TYPE
+    SYNTAX  SEQUENCE OF OrderStatEntry
+    MAX-ACCESS not-accessible
+    STATUS  current
+    DESCRIPTION
+        "Table of order statistics."
+    ::= { stats 1 }
+
+
+orderStatEntry OBJECT-TYPE
+        SYNTAX  OrderStatEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION
+                "Statistics for one ordertype."
+        INDEX {
+                orderType
+        }
+        ::= { orderStatTable 1 }
+
+
+OrderStatEntry ::= SEQUENCE {
+		orderType		OCTET STRING,
+        total           Gauge,
+        success         Gauge,
+		timeouts		Gauge,
+        errors          Gauge }
+
+
+orderType OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Name of the ordertype."
+        ::= { orderStatEntry 1 }
+
+
+total OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Total count of orders of this ordertype."
+        ::= { orderStatEntry 2 }
+
+
+success OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Count of orders of this ordertype that were executed successfully."
+        ::= { orderStatEntry 3 }
+
+
+timeouts OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Count of orders of this ordertype that were canceled due to a scheduling timeout."
+        ::= { orderStatEntry 4 }
+
+
+errors OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Count of orders of this ordertype that failed."
+        ::= { orderStatEntry 5 }
+
+
+END

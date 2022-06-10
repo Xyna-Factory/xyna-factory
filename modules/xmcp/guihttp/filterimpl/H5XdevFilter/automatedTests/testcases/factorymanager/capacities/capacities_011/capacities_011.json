@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.capacities.DeleteCapacity!": "xmcp.factorymanager.capacities.DeleteCapacity"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.capacities.CapacityName!": "xmcp.factorymanager.capacities.CapacityName"
+        },
+        {
+          "!xmcp.factorymanager.capacities.GetCapacities!": "xmcp.factorymanager.capacities.GetCapacities"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!name!": "name"
+        },
+        {
+          "!Cardinality!": "Cardinality"
+        },
+        {
+          "!cardinality!": "cardinality"
+        },
+        {
+          "!Usage!": "Usage"
+        },
+        {
+          "!inuse!": "inuse"
+        },
+        {
+          "!dsc!": "dsc"
+        },
+        {
+          "!State!": "State"
+        },
+        {
+          "!state!": "state"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.capacities.CapacityName!"
+            },
+            "name": "!autotest.generated.random!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.capacities.DeleteCapacity!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!output!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!output!",
+      "value": "Unknown capacity"
+    }
+  ]
+}

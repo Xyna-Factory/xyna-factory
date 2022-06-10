@@ -1,0 +1,26 @@
+{
+  "meta": 
+  {
+    "name": "assertionFailedTest",
+	"description": "Zeigt was passiert, wenn assert (equals) einen Test auf Failed setzt"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!testVar!",
+	  "value": "testValue"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!compVar!",
+	  "value": "tValue"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!testVar!",
+	  "value": "!compVar!_m"
+	}
+  ]
+}

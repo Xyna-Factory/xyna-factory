@@ -1,0 +1,85 @@
+{
+  "meta":
+  {
+    "name": "02_Rename_a_codedService.json",
+	"description": "Rename a coded Service",
+	"created": "08.11.2019",
+	"updated": "08.11.2019",
+	"issues": "404 in addServiceToServiceGroup. but url seems ok. [?]"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!codedServiceName!",
+	  "value": "testName"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!sgPath!",
+	  "value": "autoTest.generated"
+	},
+    {
+	  "operation": "set",
+	  "variable": "!workspaceName!",
+	  "value": "default workspace"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!label!"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!label!",
+	  "value": "GeneratedTestServiceGroup_!label!"
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createServiceGroup",
+	  "mapInput": 
+	  {
+	    "!workspaceName!": "!workspaceName!",
+	    "!label!": "!label!",
+	    "!path!": "!sgPath!"
+	  },
+	  "mapOutput": 
+	  {
+		"!sgName!" : "!sgName!",
+		"!url!" : "!url!",
+		"!revision!": "!revision!"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "addServiceToServiceGroup",
+	  "mapInput": 
+	  {
+	    "!workspaceName!": "!workspaceName!",
+		"!path!": "!sgPath!",
+		"!sgName!": "!sgName!",
+		"!serviceLabel!": "Service",
+		"!sgLabel!": "!label!",
+		"!revision!": "!revision!"
+	  },
+	  "mapOutput": {"!serviceName!" : "!memberMethodName!"}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!memberMethodName!/change",
+	  "payload": {"label":"!codedServiceName!","revision":1}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!readCodedServiceName!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=memberMethodsArea]/items/$list[0]/label",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readCodedServiceName!",
+	  "value": "!codedServiceName!"
+	}
+  ]
+}

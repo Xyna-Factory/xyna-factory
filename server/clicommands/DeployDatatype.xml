@@ -1,0 +1,28 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="deploydatatype" Groups="Deployment" Description="Deploy a saved datatype."/>
+  <Argument Name="fqDatatypeName" Description="The fully qualified path to the XMOM entity"/>
+  <Argument Name="protectionMode" Description="See: 'deploy'" ArgumentValueName="DEFAULT, TRY, FORCE, FORCEKILL" Optional="true"/>
+  <Argument Name="libraries" Description="Specifies libraries that service implementations depend on" ArgumentValueName="path to jar/zip" Optional="true"/>
+  <Argument Name="registerWithXMOM" Description="Register the datatype within the XMOM-Database (deprecated and without functionality - all data types will be registered - only present for backward compatibility )" ArgumentValueName="true or false" Optional="true"/>
+  <Argument Name="applicationName" Description="The name of the application in which the datatype should be replaced." Optional="true"/>
+  <Argument Name="versionName" Description="The version name of the application in which the datatype should be replaced." Optional="true"/>
+  <Argument Name="xmlFile" Description="The name of the xml file that should replace the existing datatype definition." Optional="true"/>
+  <Argument Name="workspaceName" Description="The name of the workspace in which the datatype should be replaced." Optional="true"/>
+</XynaCommandLineCommand>

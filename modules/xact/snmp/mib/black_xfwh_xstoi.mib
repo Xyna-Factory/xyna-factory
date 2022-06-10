@@ -1,0 +1,90 @@
+GIP-BLACK-XFWH-XSTOI-MIB DEFINITIONS ::= BEGIN
+IMPORTS
+	xfwh FROM GIP-BLACK-MIB;
+
+------------------------------------------------------
+-- Copyright 2022 GIP SmartMercial GmbH, Germany
+--
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+--
+--  http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+------------------------------------------------------
+--
+xStoI MODULE-IDENTITY
+        LAST-UPDATED "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        ORGANIZATION "GIP AG"
+        CONTACT-INFO "GIP AG"
+        DESCRIPTION  ""
+        REVISION     "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        DESCRIPTION  ""
+	::= { xfwh 1 }
+
+
+connectionPools OBJECT IDENTIFIER
+	::= { xStoI 1 }
+
+
+connectionPoolTable OBJECT-TYPE
+    SYNTAX  SEQUENCE OF ConnectionPoolEntry
+    MAX-ACCESS not-accessible
+    STATUS  current
+    DESCRIPTION
+        "Table of connection pool statistics."
+    ::= { xStoI 1 }
+
+
+connectionPoolEntry OBJECT-TYPE
+        SYNTAX  ConnectionPoolEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION
+                "Entry for a connection pool."
+        INDEX {
+                orderType
+        }
+        ::= { connectionPoolTable 1 }
+
+
+ConnectionPoolEntry ::= SEQUENCE {
+		name			OCTET STRING,
+        total      		INTEGER,
+        inUse			Gauge
+		}
+
+
+name OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Name of the connection pool."
+        ::= { connectionPoolEntry 1 }
+
+
+total OBJECT-TYPE
+        SYNTAX  INTEGER
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Total count of connections."
+        ::= { connectionPoolEntry 2 }
+
+
+inUse OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Count of connections currently in use."
+        ::= { connectionPoolEntry 3 }
+
+
+END

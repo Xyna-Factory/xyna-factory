@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Query Users TableInfo" TypeName="QueryUsersTableInfo" TypePath="xmcp.vpn.user" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth,vScroll(46)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Query Users TableInfo" Name="QueryUsersTableInfo">
+    <Input>
+      <Data ID="4" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="9"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="5" IsList="true" Label="User Wrapper" ReferenceName="UserWrapper" ReferencePath="xmcp.vpn.user" VariableName="userWrapper">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="8" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="9"/>
+      <Source RefID="18"/>
+      <Target RefID="9"/>
+      <Target RefID="18"/>
+    </ServiceReference>
+    <Function ID="9" Label="Build TableInfo and Select Columns">
+      <Source RefID="8"/>
+      <Source RefID="4"/>
+      <Source RefID="11"/>
+      <Source RefID="80"/>
+      <Target RefID="8"/>
+      <Target RefID="10"/>
+      <Meta>
+        <FixedHeight>32</FixedHeight>
+        <FixedWidth>547.6999999999998</FixedWidth>
+      </Meta>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="8">
+        <Source RefID="4"/>
+        <Source RefID="11">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xmcp.vpn.user.UserWrapper</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="80">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="8">
+        <Target RefID="10"/>
+      </Receive>
+    </Function>
+    <Data ID="10" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="9"/>
+      <Target RefID="3"/>
+      <Target RefID="18"/>
+    </Data>
+    <Data ID="11" Label="User Wrapper" ReferenceName="UserWrapper" ReferencePath="xmcp.vpn.user" VariableName="const_UserWrapper">
+      <Target RefID="9"/>
+      <Data ID="43" Label="User Name" VariableName="userName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="44" Label="Is locked" VariableName="isLocked">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="45" Label="Change Date" VariableName="changeDate">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="46" Label="Roles and Rights" VariableName="rolesAndRights">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Mappings ID="26">
+      <Target RefID="25"/>
+      <Meta>
+        <IsCondition>true</IsCondition>
+      </Meta>
+      <Output>
+        <Data ID="27" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition27"/>
+        <Target RefID="25"/>
+      </Output>
+    </Mappings>
+    <Function ID="24" Label="Query all Advanced Users">
+      <Source RefID="23"/>
+      <Source RefID="25"/>
+      <Source RefID="28"/>
+      <Source RefID="29"/>
+      <Target RefID="23"/>
+      <Target RefID="32"/>
+      <Invoke Operation="query" ServiceID="23">
+        <Source RefID="28">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="25">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="29">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="23">
+        <Target RefID="32"/>
+      </Receive>
+    </Function>
+    <Foreach ID="38">
+      <Source RefID="32"/>
+      <Target RefID="40"/>
+      <InputList RefID="32">
+        <Data ID="37" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser37">
+          <Target RefID="36"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="40">
+        <Data ID="39" Label="User Wrapper" ReferenceName="UserWrapper" ReferencePath="xmcp.vpn.user" VariableName="userWrapper39">
+          <Source RefID="36"/>
+        </Data>
+      </OutputList>
+      <Function ID="36" Label="Build User Wrapper">
+        <Source RefID="35"/>
+        <Source RefID="37"/>
+        <Target RefID="35"/>
+        <Target RefID="39"/>
+        <Invoke Operation="BuildUserWrapper" ServiceID="35">
+          <Source RefID="37"/>
+        </Invoke>
+        <Receive ServiceID="35">
+          <Target RefID="39"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="18" Label="Sort and Filter Table">
+      <Source RefID="8"/>
+      <Source RefID="10"/>
+      <Source RefID="40"/>
+      <Target RefID="8"/>
+      <Target RefID="20"/>
+      <Invoke Operation="sortAndFilterTable" ServiceID="8">
+        <Source RefID="10">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="40">
+          <Meta>
+            <ExpectedType>xmcp.vpn.user.UserWrapper</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="8">
+        <Target RefID="20">
+          <Meta>
+            <ExpectedType>xmcp.vpn.user.UserWrapper</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="20" IsList="true" Label="User Wrapper" ReferenceName="UserWrapper" ReferencePath="xmcp.vpn.user" VariableName="userWrapper20">
+      <Source RefID="18"/>
+      <Target RefID="3"/>
+    </Data>
+    <ServiceReference ID="23" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="24"/>
+      <Target RefID="24"/>
+    </ServiceReference>
+    <Data ID="25" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition">
+      <Source RefID="26"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="28" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="24"/>
+      <Data ID="47" Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xmcp.vpn.user.AdvancedUser</Value>
+      </Data>
+    </Data>
+    <Data ID="29" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="24"/>
+      <Data ID="48" Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data ID="49" Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="50" IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="32" IsList="true" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser">
+      <Source RefID="24"/>
+      <Target RefID="38"/>
+    </Data>
+    <ServiceReference ID="35" Label="Build User Wrapper" ReferenceName="BuildUserWrapper" ReferencePath="xmcp.vpn.user.sub">
+      <Source RefID="36"/>
+      <Target RefID="36"/>
+    </ServiceReference>
+    <Data ID="40" IsList="true" Label="User Wrapper" ReferenceName="UserWrapper" ReferencePath="xmcp.vpn.user" VariableName="userWrapper40">
+      <Source RefID="38"/>
+      <Target RefID="18"/>
+    </Data>
+    <Data ID="80" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn">
+      <Target RefID="9"/>
+      <Value>
+        <Data ID="88" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes">
+          <Data ID="82" Label="name" VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Benutzername</Value>
+          </Data>
+          <Data ID="83" Label="path" VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>userName</Value>
+          </Data>
+          <Data ID="84" Label="sort" VariableName="sort">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>ASC</Value>
+          </Data>
+          <Data ID="85" Label="filter" VariableName="filter">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="86" Label="disable sort" VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data ID="87" Label="disable filter" VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data ID="95" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes">
+          <Data ID="89" Label="name" VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Gesperrt</Value>
+          </Data>
+          <Data ID="90" Label="path" VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>isLocked</Value>
+          </Data>
+          <Data ID="91" Label="sort" VariableName="sort">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="92" Label="filter" VariableName="filter">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="93" Label="disable sort" VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data ID="94" Label="disable filter" VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data ID="102" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes">
+          <Data ID="96" Label="name" VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Änderungsdatum</Value>
+          </Data>
+          <Data ID="97" Label="path" VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>changeDate</Value>
+          </Data>
+          <Data ID="98" Label="sort" VariableName="sort">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="99" Label="filter" VariableName="filter">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="100" Label="disable sort" VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data ID="101" Label="disable filter" VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data ID="109" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes">
+          <Data ID="103" Label="name" VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Rollen und Rechte</Value>
+          </Data>
+          <Data ID="104" Label="path" VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>rolesAndRights</Value>
+          </Data>
+          <Data ID="105" Label="sort" VariableName="sort">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="106" Label="filter" VariableName="filter">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <Data ID="107" Label="disable sort" VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data ID="108" Label="disable filter" VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="10"/>
+      <Source RefID="20"/>
+      <Target RefID="2"/>
+      <Target RefID="5"/>
+      <Copy>
+        <Source RefID="10">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+      <Copy>
+        <Source RefID="20">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="5"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

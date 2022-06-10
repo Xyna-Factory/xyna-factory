@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "emptyWorkflowTest.json",
+    "emptyWorkflowWithInput1Test.json"
+  ]
+}

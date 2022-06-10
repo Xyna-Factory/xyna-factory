@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Xyna Properties TableInfo" TypeName="GetXynaPropertiesTableInfo" TypePath="xmcp.factorymanager.xynaproperties" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(1164)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="Get Xyna Properties TableInfo" Name="GetXynaPropertiesTableInfo">
+    <Input>
+      <Data ID="4" Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      <Data ID="60" Label="Documentation Language" ReferenceName="DocumentationLanguage" ReferencePath="xmcp" VariableName="documentationLanguage"/>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2"/>
+      <Data ID="5" IsList="true" Label="Xyna Property" ReferenceName="XynaProperty" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaProperty"/>
+    </Output>
+    <Throws>
+      <Exception ID="184" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights184"/>
+    </Throws>
+    <ServiceReference ID="47" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables"/>
+    <ServiceReference ID="58" Label="Xyna Properties Services" ReferenceName="XynaPropertiesServices.XynaPropertiesServices" ReferencePath="xmcp.factorymanager"/>
+    <Choice ID="10" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Target RefID="42"/>
+      <Target RefID="44"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="68" Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo68"/>
+        <Source RefID="4">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="11" Label="" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="63" Label="Mapping">
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="69" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="38"/>
+          </Output>
+          <Mapping>%0%["0"].name="Key"</Mapping>
+          <Mapping>%0%["0"].path="key"</Mapping>
+          <Mapping>%0%["0"].sort="asc"</Mapping>
+          <Mapping>%0%["1"].name="Value"</Mapping>
+          <Mapping>%0%["1"].path="value"</Mapping>
+          <Mapping>%0%["2"].name="Default Value"</Mapping>
+          <Mapping>%0%["2"].path="defaultValue"</Mapping>
+          <Mapping>%0%["3"].name="Documentation"</Mapping>
+          <Mapping>%0%["3"].path="gUIDocumentation"</Mapping>
+        </Mappings>
+        <Mappings ID="19" Label="Mapping">
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="26" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn26"/>
+            <Source RefID="38"/>
+          </Input>
+          <Output>
+            <Data ID="20" Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo20"/>
+            <Target RefID="43"/>
+          </Output>
+          <Mapping>%1%.bootstrap="false"</Mapping>
+          <Mapping>%1%.columns=%0%</Mapping>
+        </Mappings>
+        <Assign ID="33">
+          <Source RefID="38"/>
+          <Source RefID="43"/>
+          <Target RefID="42"/>
+          <Target RefID="44"/>
+          <Copy>
+            <Source RefID="38"/>
+            <Target RefID="42"/>
+          </Copy>
+          <Copy>
+            <Source RefID="43"/>
+            <Target RefID="44"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="9" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="64" Label="Mapping">
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="70" Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo62"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data ID="65" Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo65"/>
+            <Target RefID="31"/>
+          </Output>
+          <Output>
+            <Data ID="66" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn66"/>
+            <Target RefID="37"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%2%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="34">
+          <Source RefID="37"/>
+          <Source RefID="31"/>
+          <Target RefID="42"/>
+          <Target RefID="44"/>
+          <Copy>
+            <Source RefID="37"/>
+            <Target RefID="42"/>
+          </Copy>
+          <Copy>
+            <Source RefID="31"/>
+            <Target RefID="44"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="48" Label="Build TableInfo and Select Columns">
+      <Source RefID="47"/>
+      <Source RefID="44"/>
+      <Source RefID="67"/>
+      <Source RefID="42"/>
+      <Target RefID="47"/>
+      <Target RefID="50"/>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="47">
+        <Source RefID="44">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="67">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xmcp.factorymanager.xynaproperties.XynaProperty</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="42"/>
+      </Invoke>
+      <Receive ServiceID="47">
+        <Target RefID="50"/>
+      </Receive>
+    </Function>
+    <Function ID="59" Label="Get list entries">
+      <Source RefID="58"/>
+      <Source RefID="50"/>
+      <Source RefID="60"/>
+      <Target RefID="58"/>
+      <Target RefID="61"/>
+      <Invoke Operation="getListEntries" ServiceID="58">
+        <Source RefID="50">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="60"/>
+      </Invoke>
+      <Receive ServiceID="58">
+        <Target RefID="61"/>
+      </Receive>
+    </Function>
+    <Function ID="107" Label="Set Length">
+      <Source RefID="47"/>
+      <Source RefID="50"/>
+      <Source RefID="61"/>
+      <Target RefID="47"/>
+      <Target RefID="108"/>
+      <Invoke Operation="setLength" ServiceID="47">
+        <Source RefID="50">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="61">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="47">
+        <Target RefID="108"/>
+      </Receive>
+    </Function>
+    <Data ID="31" Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo31">
+      <Source RefID="64"/>
+      <Target RefID="34"/>
+    </Data>
+    <Data ID="37" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn37">
+      <Source RefID="64"/>
+      <Target RefID="34"/>
+    </Data>
+    <Data ID="38" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn38">
+      <Source RefID="63"/>
+      <Target RefID="19"/>
+    </Data>
+    <Data ID="42" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn42">
+      <Source RefID="33"/>
+      <Source RefID="34"/>
+      <Source RefID="10"/>
+      <Target RefID="48"/>
+    </Data>
+    <Data ID="43" Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo43">
+      <Source RefID="19"/>
+      <Target RefID="33"/>
+    </Data>
+    <Data ID="44" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo44">
+      <Source RefID="33"/>
+      <Source RefID="34"/>
+      <Source RefID="10"/>
+      <Target RefID="48"/>
+    </Data>
+    <Data ID="50" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="48"/>
+      <Target RefID="59"/>
+    </Data>
+    <Data ID="61" IsList="true" Label="Xyna Property" ReferenceName="XynaProperty" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaProperty61">
+      <Source RefID="59"/>
+      <Target RefID="107"/>
+    </Data>
+    <Data ID="67" Label="Xyna Property" ReferenceName="XynaProperty" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="const_XynaProperty">
+      <Target RefID="48"/>
+      <Data ID="71" Label="Key" VariableName="key">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="72" Label="Value" VariableName="value">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="73" Label="Default value" VariableName="defaultValue">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="74" IsList="true" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp" VariableName="documentation"/>
+      <Data ID="75" Label="GUIDocumentation" VariableName="gUIDocumentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="108" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo108">
+      <Source RefID="107"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="108"/>
+      <Source RefID="61"/>
+      <Target RefID="2"/>
+      <Target RefID="5"/>
+      <Copy>
+        <Source RefID="108">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+      <Copy>
+        <Source RefID="61"/>
+        <Target RefID="5"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

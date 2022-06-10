@@ -1,0 +1,127 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from CheckStatus WSDL service -->
+
+  <service name="CheckStatusPort" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://www.gip.com/juno/WS/CheckStatus"/>
+      <parameter name="wsdlServiceElement" value="CheckStatus"/>
+      <parameter name="schemaQualified" value="http://www.gip.com/juno/Gui/WS/Messages"/>
+      <parameter name="wsdlServicePort" value="CheckStatusPort"/>
+      <parameter name="className" value="com.gip.www.juno.WS.CheckStatus.CheckStatusBindingSkeleton"/>
+      <parameter name="wsdlPortType" value="CheckStatus"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:CheckStatusForIpInput_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.CheckStatusForIpInput_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:ErrorParameter_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.ErrorParameter_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:Payload_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.Payload_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:StatusElement_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.StatusElement_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:ResponseHeader_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.ResponseHeader_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:CheckStatusForIpRequest_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.CheckStatusForIpRequest_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:CheckStatusForIpResponse_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.StatusElement_ctype[]"
+        innerType="cmp-ns:StatusElement_ctype" xmlns:cmp-ns="http://www.gip.com/juno/Gui/WS/Messages"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:GetInstanceInfoListResponse_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.InstanceInfo_ctype[]"
+        innerType="cmp-ns:InstanceInfo_ctype" xmlns:cmp-ns="http://www.gip.com/juno/Gui/WS/Messages"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:InputHeaderContent_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.InputHeaderContent_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:GetInstanceInfoListRequest_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.GetInstanceInfoListRequest_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:InstanceInfo_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.InstanceInfo_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:ErrorParameterList_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.ErrorParameter_ctype[]"
+        innerType="cmp-ns:ErrorParameter_ctype" xmlns:cmp-ns="http://www.gip.com/juno/Gui/WS/Messages"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:Response_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.Response_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

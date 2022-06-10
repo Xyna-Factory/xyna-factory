@@ -1,0 +1,27 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="enabletriggerinstance" Groups="Deployment" Description="reenable a previous disabled trigger instance."/>
+  <Argument Name="triggerinstancename" Description="The name of the triggerInstance to enable."/>
+  <Argument Name="applicationName" Description="The name of the application." Optional="true"/>
+  <Argument Name="versionName" Description="The name of the version of the application." Optional="true"/>
+  <BoolOption Name="d" LongName="filterInstanceDependencies" Description="Reenable the filter instances also." Optional="true" />
+  <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
+  <Argument Name="orderentrancelimit" Description="Amount of orders to be processed before the trigger deactivates." Optional="true"/>
+  <BoolOption Name="v" LongName="verbose" Description="Print verbose output of the state after the operation has finished." Optional="true" />
+</XynaCommandLineCommand>

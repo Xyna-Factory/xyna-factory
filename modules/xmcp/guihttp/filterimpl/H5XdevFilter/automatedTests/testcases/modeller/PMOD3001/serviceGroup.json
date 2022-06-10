@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "23.6.2021",
+    "updated": "23.6.2021"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!servicegroups!": "servicegroups"
+        },
+        {
+          "!New_Service_Group!": "New Service Group"
+        },
+        {
+          "!memberService!": "memberService"
+        },
+        {
+          "!autotest.generated.pmod3001!": "autotest.generated.pmod2340.!rnd!"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Service_Group!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1624455686629.NewServiceGroup!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1624455686629!",
+      "variable": "!new_1624455686629.NewServiceGroup!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=methodsArea]/id",
+      "targetVariable": "!memberMethodsArea!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewServiceGroup!",
+      "variable": "!new_1624455686629.NewServiceGroup!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!sg!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Service",
+          "type": "!memberService!"
+        },
+        "index": -1,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1624455686629!/!NewServiceGroup!/objects/!memberMethodsArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[0]/name",
+      "targetVariable": "!service!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[0]/id",
+      "targetVariable": "!serviceId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Service",
+          "type": "!memberService!"
+        },
+        "index": -1,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1624455686629!/!NewServiceGroup!/objects/!memberMethodsArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[name=service0]/id",
+      "targetVariable": "!memberMethod1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[1]/name",
+      "targetVariable": "!service0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[1]/id",
+      "targetVariable": "!service0Id!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!New_Service_Group!",
+        "path": "!autotest.generated.pmod3001!",
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1624455686629!/!NewServiceGroup!/save"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autotest.generated.pmod3001!/!NewServiceGroup!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autotest.generated.pmod3001!/!NewServiceGroup!/close"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autotest.generated.pmod3001!/!NewServiceGroup!/objects/!service0!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "focusId",
+      "targetVariable": "!focusId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!focusId!",
+      "value": "!service0Id!"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autotest.generated.pmod3001!/!NewServiceGroup!/close"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autotest.generated.pmod3001!/!NewServiceGroup!/objects/service"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "focusId",
+      "targetVariable": "!focusId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!focusId!",
+      "value": "!serviceId!"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autotest.generated.pmod3001!/!NewServiceGroup!/close"
+    }
+  ]
+}

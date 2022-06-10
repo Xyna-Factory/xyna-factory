@@ -1,0 +1,113 @@
+{
+  "meta":
+  {
+    "name": "02_RenameaSubworkflow",
+	"description": "Creates a workflow, then adds it in another workflow and renames it.",
+	"created": "08.11.2019",
+	"updated": "12.11.2019"
+  },
+  "operations":
+  [
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd2!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd3!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd4!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd5!",
+	  "length": 12
+	},
+	{
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!firstWorkflowPath!": "autoTest.generated.!rnd1!"},
+		{"!firstWorkflowLabel!": "generatedWorkflow_!rnd2!"},
+		{"secondWorkflowPath!": "autoTest.generated.!rnd3!"},
+		{"secondWorkflowLabel!": "generatedWorkflow_!rnd4!"}
+	  ]
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/save",
+	  "payload": {"revision":0,"path":"!firstWorkflowPath!","label":"!firstWorkflowLabel!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!firstFqnQuoted!",
+	  "pathInResponse": "updates/$list[0]/fqn"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "splitFQNtoPathAndName",
+	  "mapInput": {"!fqn!": "!firstFqnQuoted!"},
+	  "mapOutput": {"!path!": "!firstWorkflowPath!", "!name!": "!firstWorkflowName!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"service","label":"!firstWorkflowLabel!","fqn":"!firstWorkflowPath!.!firstWorkflowName!","operation":"!firstWorkflowPath!.!firstWorkflowName!"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!subworkflowLabelArea!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[fqn=!firstWorkflowPath!.!firstWorkflowName!]/areas/$list[name=label]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!subworkflowLabelArea!/change",
+	  "payload": {"text":"!rnd5!","revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!readLabel!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[fqn=!firstWorkflowPath!.!firstWorkflowName!]/areas/$list[name=label]/text",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readLabel!",
+	  "value": "!rnd5!"
+	}
+  ]
+}

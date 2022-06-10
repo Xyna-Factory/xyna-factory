@@ -1,0 +1,6 @@
+{
+    "testseries": [
+        "workspaces/workspaces.json",
+        "applications/applications.json"
+    ]
+}

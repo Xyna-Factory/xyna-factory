@@ -1,0 +1,50 @@
+[
+  {
+    "docu": "!workspace! should be unescaped like 'default workspace'",
+    "type": "function",
+    "functionName": "createStorable",
+    "input": [ "!workspace!", "!path!", "!label!" ],
+    "output": [ "!name!" ],
+    "operations":
+    [
+  	  {
+	    "operation": "set",
+	    "variable": "!escapedWorkspace!",
+	    "value": "!workspace!"
+	  },
+	  {
+	    "operation": "modification",
+	    "variable": "!escapedWorkspace!",
+	    "modification":{ "operation": "urlencode" }
+	  },
+      {
+	    "operation": "invoke",
+	    "functionName": "createDatatype",
+	    "mapInput": 
+	    {
+	      "!workspace!": "!workspace!",
+		  "!path!": "!path!",
+		  "!label!": "!label!"
+	    },
+	    "mapOutput": {"!name!" : "!name!"}
+	  },
+	  {
+	    "operation": "set",
+	    "variable": "!url!",
+	    "value": "/runtimeContext/!escapedWorkspace!/xmom/datatypes/!path!/!name!"
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "PUT",
+	    "url": "!url!/objects/typeInfoArea/change",
+	    "payload": {"baseType":"xnwh.persistence.Storable","revision":1}
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url":"!url!/deploy",
+	    "payload": {"revision":5,"label":"!label!","path":"!path!"}
+  	  }
+    ]
+  }
+]

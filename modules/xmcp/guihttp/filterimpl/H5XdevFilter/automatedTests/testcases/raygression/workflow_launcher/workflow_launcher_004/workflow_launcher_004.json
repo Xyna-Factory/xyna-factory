@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "10.7.2020",
+    "updated": "10.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!workflow_launcher_002_ARANDOM!": "workflow_launcher_002_!rnd!"
+        },
+        {
+          "!autotest.generated.ARANDOM!": "autotest.generated.!rnd!"
+        },
+        {
+          "!signature!": "signature"
+        },
+        {
+          "!startorder!": "startorder"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1594363355090.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1594363355090!",
+      "variable": "!new_1594363355090.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1594363355090.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=label]/id",
+      "targetVariable": "!labelArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1594363355090!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 0,
+        "text": "!workflow_launcher_002_ARANDOM!"
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1594363355090!/!NewWorkflow!/objects/!labelArea!/change"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1594363355090!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!workflow_launcher_002_ARANDOM!",
+        "path": "!autotest.generated.ARANDOM!",
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1594363355090!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/fqn",
+      "targetVariable": "!autotest.generated.ARANDOM.Workflow_launcher_002!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Workflow_launcher_002_ARANDOM!",
+      "variable": "!autotest.generated.ARANDOM.Workflow_launcher_002!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autotest.generated.ARANDOM!/!Workflow_launcher_002_ARANDOM!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "fqn": "!autotest.generated.ARANDOM.Workflow_launcher_002!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!signature!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "fqn": "!autotest.generated.ARANDOM.Workflow_launcher_002!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!signature!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "customStringContainer": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "input": [],
+        "monitoringLevel": 20,
+        "orderType": "!autotest.generated.ARANDOM.Workflow_launcher_002!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!output!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!output!",
+      "value": "unexpected error"
+    }
+  ]
+}

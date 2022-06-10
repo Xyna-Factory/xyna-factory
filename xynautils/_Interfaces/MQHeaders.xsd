@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:mq="http://xmlns.oracle.com/pcbpel/adapter/mq/header"
+	targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/mq/header"
+	elementFormDefault="qualified">
+	<element name="MQInboundHeaderAndProperties">
+		<complexType>
+			<sequence>
+				<!-- These values are filled from the MQMD header of the message -->
+				<element name="MQInboundHeader"
+					type="mq:MQMessageDescriptor" />
+
+				<!-- This element is for passing generic properties -->
+				<element name="MQInboundProperties"
+					type="mq:MQPropertiesType" minOccurs="0" />
+			</sequence>
+		</complexType>
+	</element>
+	<element name="MQOutboundHeaderAndProperties">
+		<complexType>
+			<sequence>
+				<!-- what we primarily need from the inbound header is the 
+					replyToQ, replyToQMgr, actual MsgId, CorrelId, and the 
+					correlation scheme, when sending a response. -->
+				<element name="FromMQInboundHeader"
+					type="mq:FromMQInboundHeader" minOccurs="0" />
+				<!-- Values specified here override the values in the WSDL. -->
+				<element name="MQOutboundHeader"
+					type="mq:MQOutboundHeader" minOccurs="0" />
+				<!-- This element is for passing generic properties -->
+				<element name="MQOutboundProperties"
+					type="mq:MQPropertiesType" minOccurs="0" />
+			</sequence>
+		</complexType>
+	</element>
+	<complexType name="MQMessageDescriptor">
+		<all>
+			<element name="MsgType" type="mq:MessageType" />
+			<!-- hex encoded actual message id and correlation id of the message -->
+			<element name="MsgId" type="string" />
+			<element name="CorrelId" type="string" />
+			<element name="Report" type="mq:Report" />
+			<element name="ReplyToQ" type="string" minOccurs="0" />
+			<element name="ReplyToQMgr" type="string" minOccurs="0" />
+			<element name="Expiry" type="mq:Expiry" />
+			<element name="Feedback" type="mq:Feedback" />
+			<element name="Format" type="string" minOccurs="0" />
+			<element name="Priority" type="mq:Priority" />
+			<element name="Persistence" type="mq:Persistence" />
+			<element name="Encoding" type="mq:Encoding" />
+			<element name="CodedCharSetId" type="string" />
+			<element name="StrucId" type="string" />
+			<element name="Version" type="mq:Version" />
+			<element name="BackoutCount" type="nonNegativeInteger" />
+			<element name="UserIdentifier" type="string" minOccurs="0" />
+			<element name="AccountingToken" type="string" minOccurs="0" />
+			<element name="ApplIdentityData" type="string"
+				minOccurs="0" />
+			<element name="ApplOriginData" type="string" minOccurs="0" />
+			<element name="PutApplType" type="mq:PutApplType" />
+			<element name="PutApplName" type="string" minOccurs="0" />
+			<element name="PutDateTime" type="dateTime" />
+			<element name="GroupAndSegmentStatus"
+				type="mq:GroupAndSegmentStatus" minOccurs="0" />
+		</all>
+	</complexType>
+	<simpleType name="MessageType">
+		<restriction base="string">
+			<enumeration value="NORMAL" />
+			<enumeration value="REPORT" />
+			<enumeration value="REQUEST" />
+			<enumeration value="RESPONSE" />
+		</restriction>
+	</simpleType>
+	<complexType name="Report">
+		<sequence>
+			<element name="CorrelationScheme"
+				type="mq:CorrelationScheme" />
+			<element name="PAN" type="boolean" />
+			<element name="NAN" type="boolean" />
+			<element name="COA" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="WITH_NO_DATA" />
+						<enumeration value="WITH_PARTIAL_DATA" />
+						<enumeration value="WITH_FULL_DATA" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="COD" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="WITH_NO_DATA" />
+						<enumeration value="WITH_PARTIAL_DATA" />
+						<enumeration value="WITH_FULL_DATA" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="Exception" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="WITH_NO_DATA" />
+						<enumeration value="WITH_PARTIAL_DATA" />
+						<enumeration value="WITH_FULL_DATA" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="Expiry" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="WITH_NO_DATA" />
+						<enumeration value="WITH_PARTIAL_DATA" />
+						<enumeration value="WITH_FULL_DATA" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="OnDeliveryFailure"
+				type="mq:OnDeliveryFailure" minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="CorrelationScheme">
+		<sequence>
+			<element name="ForMessageId" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="NEW_MSG_ID" />
+						<enumeration value="PASS_MSG_ID" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="ForCorrelationId" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="COPY_MSG_ID" />
+						<enumeration value="PASS_CORREL_ID" />
+					</restriction>
+				</simpleType>
+			</element>
+		</sequence>
+	</complexType>
+	<simpleType name="OnDeliveryFailure">
+		<restriction base="string">
+			<enumeration value="DISCARD_MSG" />
+			<enumeration value="SEND_MSG_TO_DEAD_LETTER_Q" />
+		</restriction>
+	</simpleType>
+	<simpleType name="Expiry">
+		<union>
+			<simpleType>
+				<restriction base="positiveInteger" />
+			</simpleType>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="NEVER" />
+				</restriction>
+			</simpleType>
+		</union>
+	</simpleType>
+	<simpleType name="Feedback">
+		<restriction base="string">
+			<enumeration value="EXPIRATION" />
+			<enumeration value="COA" />
+			<enumeration value="COD" />
+			<enumeration value="QUIT" />
+			<enumeration value="PAN" />
+			<enumeration value="NAN" />
+			<enumeration value="DATA_LENGTH_ZERO" />
+			<enumeration value="DATA_LENGTH_NEGATIVE" />
+			<enumeration value="DATA_LENGTH_TOO_BIG" />
+			<enumeration value="BUFFER_OVERFLOW" />
+			<enumeration value="LENGTH_OFF_BY_ONE" />
+			<enumeration value="IIH_ERROR" />
+			<enumeration value="NONE" />
+			<enumeration value="APPLICATION_DEFINED" />
+		</restriction>
+	</simpleType>
+	<simpleType name="Priority">
+		<union>
+			<simpleType>
+				<restriction base="integer">
+					<minInclusive value="0" />
+					<maxInclusive value="9" />
+				</restriction>
+			</simpleType>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="AS_Q_DEF" />
+				</restriction>
+			</simpleType>
+		</union>
+	</simpleType>
+	<simpleType name="Persistence">
+		<union>
+			<simpleType>
+				<restriction base="boolean" />
+			</simpleType>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="AS_Q_DEF" />
+				</restriction>
+			</simpleType>
+		</union>
+	</simpleType>
+	<complexType name="Encoding">
+		<sequence>
+			<element name="Integer" type="mq:EncodingValues" />
+			<element name="Decimal" type="mq:EncodingValues" />
+			<element name="Float" type="mq:FloatEncodingValues" />
+		</sequence>
+	</complexType>
+	<simpleType name="EncodingValues">
+		<restriction base="string">
+			<enumeration value="NORMAL" />
+			<enumeration value="REVERSED" />
+		</restriction>
+	</simpleType>
+	<simpleType name="FloatEncodingValues">
+		<union>
+			<simpleType>
+				<restriction base="mq:EncodingValues" />
+			</simpleType>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="S390" />
+				</restriction>
+			</simpleType>
+		</union>
+	</simpleType>
+	<simpleType name="Version">
+		<restriction base="string">
+			<enumeration value="VERSION_1" />
+			<enumeration value="VERSION_2" />
+			<enumeration value="NOT_SUPPORTED" />
+		</restriction>
+	</simpleType>
+	<simpleType name="PutApplType">
+		<restriction base="string">
+			<enumeration value="AIX" />
+			<enumeration value="CICS" />
+			<enumeration value="DOS" />
+			<enumeration value="IMS" />
+			<enumeration value="MVS" />
+			<enumeration value="OS2" />
+			<enumeration value="OS400" />
+			<enumeration value="QMGR" />
+			<enumeration value="UNIX" />
+			<enumeration value="WINDOWS" />
+			<enumeration value="JAVA" />
+			<enumeration value="NO_CONTEXT" />
+			<enumeration value="USER_DEFINED" />
+		</restriction>
+	</simpleType>
+	<complexType name="GroupAndSegmentStatus">
+		<sequence>
+			<element name="GroupId" type="string" />
+			<element name="IsMsgInGroup" type="boolean" />
+			<element name="MsgSeqNumber" type="positiveInteger" />
+			<element name="IsLastMsgInGroup" type="boolean" />
+			<element name="IsSegment" type="boolean" />
+			<element name="Offset" type="nonNegativeInteger" />
+			<element name="OriginalLength" type="nonNegativeInteger" />
+			<element name="IsLastSegment" type="boolean" />
+		</sequence>
+	</complexType>
+	<complexType name="MQPropertiesType">
+		<sequence>
+			<element name="Property" type="mq:PropType" minOccurs="0"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+	<complexType name="PropType">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="name" type="ID" use="required" />
+				<attribute name="type" type="mq:PropTypeEnum"
+					use="optional" />
+				<attribute name="value" type="string" use="required" />
+			</extension>
+		</simpleContent>
+	</complexType>
+	<simpleType name="PropTypeEnum">
+		<restriction base="string">
+			<enumeration value="string" />
+			<enumeration value="integer" />
+			<enumeration value="long" />
+			<enumeration value="boolean" />
+			<enumeration value="byte" />
+			<enumeration value="short" />
+			<enumeration value="float" />
+			<enumeration value="double" />
+		</restriction>
+	</simpleType>
+	<complexType name="FromMQInboundHeader">
+		<all>
+			<element name="MsgType" type="mq:MessageType" minOccurs="0" />
+			<element name="MsgId" type="string" minOccurs="0" />
+			<element name="CorrelId" type="string" minOccurs="0" />
+			<element name="CorrelationScheme"
+				type="mq:CorrelationScheme" minOccurs="0" />
+			<element name="PAN" type="boolean" minOccurs="0" />
+			<element name="NAN" type="boolean" minOccurs="0" />
+			<element name="ReplyToQ" type="string" minOccurs="0" />
+			<element name="ReplyToQMgr" type="string" minOccurs="0" />
+		</all>
+	</complexType>
+	<complexType name="MQOutboundHeader">
+		<all>
+			<element name="QueueName" type="string" minOccurs="0" />
+			<element name="SecondaryQueueMgrName" type="string"
+				minOccurs="0" />
+			<element name="FallbackReplyToQ" type="string"
+				minOccurs="0" />
+			<element name="FallbackReplyToQMgr" type="string"
+				minOccurs="0" />
+			<element name="MsgType" type="mq:MessageType" minOccurs="0" />
+			<element name="MsgId" type="string" minOccurs="0" />
+			<element name="CorrelId" type="string" minOccurs="0" />
+			<element name="Report" type="mq:Report" minOccurs="0" />
+			<element name="ReplyToQ" type="string" minOccurs="0" />
+			<element name="ReplyToQMgr" type="string" minOccurs="0" />
+			<element name="Expiry" type="mq:Expiry" minOccurs="0" />
+			<element name="Feedback" type="mq:Feedback" minOccurs="0" />
+			<element name="Format" type="string" minOccurs="0" />
+			<element name="Priority" type="mq:Priority" minOccurs="0" />
+			<element name="Persistence" type="mq:Persistence"
+				minOccurs="0" />
+			<element name="StrucId" type="string" />
+			<element name="Version" type="mq:Version" />
+			<element name="UserIdentifier" type="string" minOccurs="0" />
+			<element name="AccountingToken" type="string" minOccurs="0" />
+			<element name="ApplIdentityData" type="string"
+				minOccurs="0" />
+			<element name="ApplOriginData" type="string" minOccurs="0" />
+			<element name="PutApplType" type="mq:PutApplType" />
+			<element name="PutApplName" type="string" minOccurs="0" />
+			<element name="PutDateTime" type="dateTime" />
+			<element name="GroupAndSegmentStatus"
+				type="mq:GroupAndSegmentStatus" minOccurs="0" />
+		</all>
+	</complexType>
+</schema>

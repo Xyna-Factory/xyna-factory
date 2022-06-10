@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-15" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.gip.com/xyna/3.0/xsd/xmdm/gui/messages/1.0"
+            targetNamespace="http://www.gip.com/xyna/3.0/xsd/xmdm/gui/messages/1.0"
+            elementFormDefault="qualified">
+  <xsd:complexType name="ObjectReference">
+    <xsd:attribute name="ComplexName" use="required" type="xsd:string"/>
+    <xsd:attribute name="ComplexPath" use="required" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="commitWorkflowRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Workflow" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="commitWorkflowResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="CommitSuccess" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="Fault" type="xsd:string" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="commitMDMObjectRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="MDMXmlContent" type="xsd:string"/>
+        <xsd:element name="ZippedLibraries" type="xsd:base64Binary"
+                     minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="commitMDMObjectResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        
+        <xsd:element name="Fault" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="CommitSuccess" type="xsd:string" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <!--xsd:element name="getWorkflowRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="ObjectReference"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="getWorkflowResponse">
+    <xsd:complexType>
+      <xsd:choice>
+        <xsd:element name="Workflow" type="xsd:string"/>
+        <xsd:element name="Fault" type="xsd:string"/>
+      </xsd:choice>
+    </xsd:complexType>
+  </xsd:element-->
+  <xsd:element name="deployWorkflowRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Workflow" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="deployWorkflowResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="DeploymentSuccess" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="Fault" type="xsd:string" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="getMDMRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" name="ObjectReference"
+                     type="ObjectReference"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="getMDMResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="MDMObject" type="xsd:string" minOccurs="0"
+                     maxOccurs="unbounded"/>
+        <xsd:element name="Fault" type="xsd:string" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="deployMDMInstanceRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Data" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="deployMDMInstanceResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="DeploymentSuccess" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="Fault" type="xsd:string" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

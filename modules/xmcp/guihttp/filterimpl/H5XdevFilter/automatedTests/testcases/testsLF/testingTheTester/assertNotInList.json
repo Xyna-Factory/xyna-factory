@@ -1,0 +1,17 @@
+{
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!list!",
+	  "value": [{"name": "test"}, {"name": "test2"}]
+	},
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+	  "invertLogic": true,
+      "variable": "!list!",
+	  "entries": [{"name": "test3"}]
+    }
+  ]
+}

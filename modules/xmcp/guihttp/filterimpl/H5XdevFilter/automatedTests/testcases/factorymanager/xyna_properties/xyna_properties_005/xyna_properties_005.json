@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "15.7.2020", 
+    "updated": "15.7.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        }, 
+        {
+          "!startorder!": "startorder"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper!": "xmcp.factorymanager.xynaproperties.GetXynaPropertyDetails"
+        }, 
+        {
+          "!autotest.generated.random!": "autotest.generated.random"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaPropertyK!": "xmcp.factorymanager.xynaproperties.XynaPropertyKey"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaPropertyK!"
+            }, 
+            "key": "!autotest.generated.random!"
+          }
+        ], 
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaProper!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

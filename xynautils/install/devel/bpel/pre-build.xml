@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+
+<project name="bpel.prebuild"
+         default="updateWorkflow"
+         basedir="."
+         xmlns:oracle="antlib:oracle">
+
+	<condition property="interfaces.dir"
+	           value="../_Interfaces"
+	           else="../../_Interfaces">
+		<available file="../_Interfaces" />
+	</condition>
+
+	<!-- ADJUSTMENT: add all needed interface files -->
+	<property name="interfaces.files"
+	          value="Common.xsd Faults.xsd FaultMessages.wsdl" />
+
+	<!-- ================================= 
+          target: updateWorkflow              
+         ================================= -->
+	<target name="updateWorkflow"
+	        depends="getInterfaces, getPartnerLinks"
+	        description="Update all interfaces and partner links of the workflow." />
+
+	<!-- ================================= 
+          target: getInterfaces              
+         ================================= -->
+	<target name="getInterfaces"
+	        description="Get workflow interfaces from _Interfaces directory">
+		<copy todir="${basedir}/bpel" overwrite="true">
+			<fileset dir="${interfaces.dir}"
+			         casesensitive="yes"
+			         includes="${interfaces.files}" />
+		</copy>
+	</target>
+
+	<!-- ================================= 
+          target: getPartnerLinks           
+         ================================= -->
+	<target name="getPartnerLinks"
+	        depends="clearPartnerLinks"
+	        description="Get partner link wsdls and dependend xsds from _Interfaces directory">
+		<!-- ADJUSTMENT: add  a call for each needed partner links -->
+		<oracle:fetchWsdl wsdl="${interfaces.dir}/.wsdl"
+		                  output="${basedir}/bpel/partnerLinks/" />
+		<move todir="${basedir}/bpel/partnerLinks">
+			<fileset dir="${basedir}/bpel/partnerLinks">
+				<include name="**/*CallbackService.wsdl" />
+			</fileset>
+			<mapper type="glob" from="*CallbackService.wsdl" to="*.wsdl" />
+		</move>
+	</target>
+
+	<!-- ================================= 
+          target: clearPartnerLinks              
+         ================================= -->
+	<target name="clearPartnerLinks"
+	        description="Remove all partner links from workflow">
+		<delete failonerror="false">
+			<fileset dir="${basedir}/bpel/partnerLinks"
+			         includes="**/*.xsd **/*.wsdl" />
+		</delete>
+	</target>
+
+</project>

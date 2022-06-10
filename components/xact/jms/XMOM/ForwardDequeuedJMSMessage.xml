@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service ID="1" Label="ForwardDequeuedJMSMessage" TypeName="ForwardDequeuedJMSMessage" TypePath="xact.jms" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+  <Operation Label="ForwardDequeuedJMSMessage" Name="ForwardDequeuedJMSMessage">
+    <Input>
+      <Data ID="7" Label="correlationId" ReferenceName="CorrelationId" ReferencePath="xprc.synchronization" VariableName="correlationId">
+        <Target RefID="6"/>
+      </Data>
+      <Data ID="8" Label="JMS Text Message" ReferenceName="JMSTextMessage" ReferencePath="xact.jms" VariableName="jMSTextMessage">
+        <Target RefID="3"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception ReferenceName="XynaException" ReferencePath="core.exception"/>
+    </Throws>
+    <Function ID="3" Label="Get Message As Sync Answer">
+      <Source RefID="2"/>
+      <Source RefID="8"/>
+      <Target RefID="2"/>
+      <Target RefID="4"/>
+      <Invoke Operation="getMessageAsSyncAnswer" ServiceID="2">
+        <Source RefID="8"/>
+      </Invoke>
+      <Receive ServiceID="2">
+        <Target RefID="4"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="2" Label="JMS Support Service" ReferenceName="JMSSupport.JMSSupportService" ReferencePath="xact.jms">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+    </ServiceReference>
+    <Data ID="4" Label="Sync Answer" ReferenceName="SynchronizationAnswer" ReferencePath="xprc.synchronization" VariableName="syncAnswer">
+      <Source RefID="3"/>
+      <Target RefID="6"/>
+    </Data>
+    <ServiceReference ID="5" Label="synchronizationService" ReferenceName="Synchronization.SynchronizationService" ReferencePath="xprc.synchronization">
+      <Source RefID="6"/>
+      <Target RefID="6"/>
+    </ServiceReference>
+    <Function ID="6" Label="notifyWaitingOrder">
+      <Source RefID="5"/>
+      <Source RefID="4"/>
+      <Source RefID="7"/>
+      <Target RefID="5"/>
+      <Invoke Operation="notifyWaitingOrder" ServiceID="5">
+        <Source RefID="7"/>
+        <Source RefID="4"/>
+      </Invoke>
+      <Receive ServiceID="5"/>
+    </Function>
+    <Assign/>
+  </Operation>
+</Service>

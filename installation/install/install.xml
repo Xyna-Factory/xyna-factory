@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="install" default="help" basedir="." xmlns:oracle="antlib:oracle">
+  
+  <import file="ant-xyna.xml" />
+
+  <start_logging name="${delivery.name}" />
+
+  <!-- =================================
+	       target: help
+	      ================================= -->
+  <target name="help">
+    <echo message="Choose one of the following targets:" />
+    <echo message="install: Install the whole application" />
+    <echo message="  +-- install-db" />
+    <echo message="  +-- install-resource" />
+    <echo message="  +-- install-ear" />
+    <echo message="  +-- install-workflow" />
+    <echo message="  +-- install-routing" />
+    <echo message="update: Update installation" />
+    <echo message="test: Run unit tests of the application" />
+  </target>
+
+  <!-- =================================
+	       target: install
+	     ================================= -->
+  <target name="install"
+          depends="install-db, install-resource, install-ear, install-workflow, install-routing"
+          description="Install the whole application.">
+    <echo message="Installation complete." />
+  </target>
+  
+  <!-- ================================= 
+          target: update              
+         ================================= -->
+    <target name="update" description="Update the whole application.">
+        <!-- Override target from ant-xyna -->
+    </target>
+
+  <!-- =================================
+	          target: test
+	        ================================= -->
+  <target name="test" description="Run unit tests.">
+    <!-- ADJUSTMENT: call component tests -->
+    <echo message="Test complete." />
+  </target>
+
+  <!-- =================================
+	       target: install-db
+	      ================================= -->
+  <target name="install-db" description="install part 'database'">
+    <!--<initXynaDB sqldir="${sql.dir}" />
+    <createDBUser sqldir="${sql.dir}" userid="${db.userid}" />
+    <createDB sqldir="${sql.dir}" />-->
+    <echo message="Install part 'database' complete." />
+  </target>
+
+  <!-- =================================
+	       target: install-resource
+	      ================================= -->
+  <target name="install-resource" description="install part 'resource'">
+    <!-- ADJUSTMENT: install component resources -->
+    <!-- log4j -->
+    <!--<replace file="${basedir}/../log4j.properties">
+      <replacefilter token="TOKEN_OC4J" value="${as.oc4j}" />
+    </replace>
+    <copy file="${basedir}/../log4j.properties"
+          todir="${oracle.home}/j2ee/${as.oc4j}/config" />-->
+    <!-- exceptions -->
+    <!--<copy file="${basedir}/../${delivery.name}Exceptions.xml"
+          todir="${oracle.home}/j2ee/${as.oc4j}" />-->
+    <echo message="Install part 'resource' complete." />
+  </target>
+
+  <!-- =================================
+	       target: install-ear
+	      ================================= -->
+  <target name="install-ear" description="install part 'ear'">
+    <xynaTarget name="install-ear" if="myproject.WebServices">
+      <!-- ADJUSTMENT: install component ears -->
+    </xynaTarget>
+    <!--<sqlplus user="${db.userid}"
+             password="${db.password}"
+             path="${sql.dir}/update"
+             file="set_asversion.sql"
+             parameter="${release.number} ${as.host}"
+             connectstring="${db.connectstring}" />-->
+    <echo message="Install part 'ear' complete." />
+  </target>
+
+  <!-- =================================
+	       target: install-workflow
+	      ================================= -->
+  <target name="install-workflow" description="install part 'workflow'">
+    <xynaTarget name="install-Workflows" if="myproject.Workflows">
+      <!-- ADJUSTMENT: install component workflows -->
+    </xynaTarget>
+    <echo message="Install part 'workflow' complete." />
+  </target>
+
+  <!-- =================================
+	          target: install-routing
+	         ================================= -->
+  <target name="install-routing" description="install part 'routing'">
+    <xynaTarget name="install-Routing" if="myproject.Routing">
+      <!-- ADJUSTMENT: set routing for web services and workflows -->
+    </xynaTarget>
+    <echo message="Install part 'routing' complete." />
+  </target>
+
+</project>

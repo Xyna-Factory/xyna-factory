@@ -1,0 +1,419 @@
+{
+  "meta":
+  {
+    "name": "twoRetriesSuccessTest",
+    "description": "Execute a workflow containing a Foreach (loaded from app) and open audit to check if Xyna Property xyna.processmonitor.lazyloading.limit works",
+    "created": "01.12.2020",
+    "updated": "01.12.2020"
+  },
+  "operations":
+  [
+	{
+      "data": [
+	    {
+          "!customFieldValues!": ["test", "", "", ""]
+        },
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!": "xmcp.factorymanager.xynaproperties.ChangeXynaProperty"
+        },
+        {
+          "!xyna.processmonitor.lazyloading.limit!": "xyna.processmonitor.lazyloading.limit"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaProperty!": "xmcp.factorymanager.xynaproperties.XynaProperty"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput":
+      {
+        "!url!": "!url!",
+        "!applicationName!" : "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "no iteration limit", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "value": "-1"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput":
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON248.SimpleForeach",
+        "!input!": [{"$meta":{"fqn":"base.Text","rtc":{"workspace":"default workspace"}},"$list":[{"$meta":{"fqn":"base.Text"},"text":"a"},{"$meta":{"fqn":"base.Text"},"text":"b"},{"$meta":{"fqn":"base.Text"},"text":"c"}]}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput":
+      {
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 2,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+      "operation": "read",
+      "pathInResponse": "lazyLoadingLimit",
+      "targetVariable": "!lazyLoadingLimit!",
+      "unquoteResult": false
+    },
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lazyLoadingLimit!",
+      "value": "-1"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "info/$list[id=step25]/iterationCount",
+      "targetVariable": "!iterationCount!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!iterationCount!",
+      "value": "3"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "/info/$list[id=step-25]/iterations/$list",
+      "expectedValue": "3"
+    },
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "/info/$list[id=step6]/iterations/$list",
+      "expectedValue": "3"
+    },
+
+    { "comment": "limit set to 2 iterations", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "value": "2"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput":
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON248.SimpleForeach",
+        "!input!": [{"$meta":{"fqn":"base.Text","rtc":{"workspace":"default workspace"}},"$list":[{"$meta":{"fqn":"base.Text"},"text":"a"},{"$meta":{"fqn":"base.Text"},"text":"b"},{"$meta":{"fqn":"base.Text"},"text":"c"}]}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput":
+      {
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 2,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+      "operation": "read",
+      "pathInResponse": "lazyLoadingLimit",
+      "targetVariable": "!lazyLoadingLimit!",
+      "unquoteResult": false
+    },
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lazyLoadingLimit!",
+      "value": "2"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "info/$list[id=step25]/iterationCount",
+      "targetVariable": "!iterationCount!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!iterationCount!",
+      "value": "2"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "/info/$list[id=step-25]/iterations/$list",
+      "expectedValue": "2"
+    },
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "/info/$list[id=step6]/iterations/$list",
+      "expectedValue": "2"
+    },
+
+    { "comment": "limit set to 1 iteration", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "value": "1"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput":
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON248.SimpleForeach",
+        "!input!": [{"$meta":{"fqn":"base.Text","rtc":{"workspace":"default workspace"}},"$list":[{"$meta":{"fqn":"base.Text"},"text":"a"},{"$meta":{"fqn":"base.Text"},"text":"b"},{"$meta":{"fqn":"base.Text"},"text":"c"}]}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput":
+      {
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 2,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+      "operation": "read",
+      "pathInResponse": "lazyLoadingLimit",
+      "targetVariable": "!lazyLoadingLimit!",
+      "unquoteResult": false
+    },
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lazyLoadingLimit!",
+      "value": "1"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "info/$list[id=step25]/iterationCount",
+      "targetVariable": "!iterationCount!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!iterationCount!",
+      "value": "1"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "/info/$list[id=step-25]/iterations/$list",
+      "expectedValue": "1"
+    },
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "/info/$list[id=step6]/iterations/$list",
+      "expectedValue": "1"
+    },
+
+    { "comment": "limit being set too low should lead to 1 iteration", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "value": "0"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput":
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON248.SimpleForeach",
+        "!input!": [{"$meta":{"fqn":"base.Text","rtc":{"workspace":"default workspace"}},"$list":[{"$meta":{"fqn":"base.Text"},"text":"a"},{"$meta":{"fqn":"base.Text"},"text":"b"},{"$meta":{"fqn":"base.Text"},"text":"c"}]}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput":
+      {
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 2,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+      "operation": "read",
+      "pathInResponse": "lazyLoadingLimit",
+      "targetVariable": "!lazyLoadingLimit!",
+      "unquoteResult": false
+    },
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lazyLoadingLimit!",
+      "value": "1"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "info/$list[id=step25]/iterationCount",
+      "targetVariable": "!iterationCount!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!iterationCount!",
+      "value": "1"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "/info/$list[id=step-25]/iterations/$list",
+      "expectedValue": "1"
+    },
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "/info/$list[id=step6]/iterations/$list",
+      "expectedValue": "1"
+    },
+
+    { "comment": "reset property to default value", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "overwrittenDefaultValue": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Cron-like Order Services" TypeName="CronLikeOrderServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>CronLikeOrderServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="Cron-like Order Services" TypeName="CronLikeOrderServices">
+    <Operation IsStatic="true" Label="Create cron-like order" Name="createCronLikeOrder">
+      <Input>
+        <Data Label="Cron-like Order" ReferenceName="CronLikeOrder" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrder"/>
+      </Input>
+      <Output>
+        <Data Label="Cron like order Id" ReferenceName="CronLikeOrderId" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrderId"/>
+      </Output>
+      <Throws>
+        <Exception Label="Create Cron-like Order Exception" ReferenceName="CreateCronLikeOrderException" ReferencePath="xmcp.factorymanager.cronlikeorders.exceptions" VariableName="createCronLikeOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.CronLikeOrderServicesImpl.createCronLikeOrder(cronLikeOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Cron-like order" Name="deleteCronLikeOrder">
+      <Input>
+        <Data Label="Cron like order Id" ReferenceName="CronLikeOrderId" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrderId"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Delete Cron-like Order Exception" ReferenceName="DeleteCronLikeOrderException" ReferencePath="xmcp.factorymanager.cronlikeorders.exceptions" VariableName="deleteCronLikeOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.CronLikeOrderServicesImpl.deleteCronLikeOrder(cronLikeOrderId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get cron-like order" Name="getCronLikeOrder">
+      <Input>
+        <Data Label="Cron-like Order" ReferenceName="CronLikeOrder" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrder11"/>
+      </Input>
+      <Output>
+        <Data Label="Cron-like Order" ReferenceName="CronLikeOrder" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrder"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load Cron-like Order Exception" ReferenceName="LoadCronLikeOrderException" ReferencePath="xmcp.factorymanager.cronlikeorders.exceptions" VariableName="loadCronLikeOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.CronLikeOrderServicesImpl.getCronLikeOrder(cronLikeOrder11);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get list entries" Name="getListEntries">
+      <Meta>
+        <Abstract.UID>FA5B0041-03AE-FEFC-A28A-2BB702864596</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Cron-like Order" ReferenceName="CronLikeOrder" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrder"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load Cron-like Orders Exception" ReferenceName="LoadCronLikeOrdersException" ReferencePath="xmcp.factorymanager.cronlikeorders.exceptions" VariableName="loadCronLikeOrdersException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.CronLikeOrderServicesImpl.getListEntries(tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Update cron-like order" Name="updateCronLikeOrder">
+      <Input>
+        <Data Label="Cron-like Order" ReferenceName="CronLikeOrder" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrder"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Update Cron-like Order Exception" ReferenceName="UpdateCronLikeOrderException" ReferencePath="xmcp.factorymanager.cronlikeorders.exceptions" VariableName="updateCronLikeOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.CronLikeOrderServicesImpl.updateCronLikeOrder(cronLikeOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

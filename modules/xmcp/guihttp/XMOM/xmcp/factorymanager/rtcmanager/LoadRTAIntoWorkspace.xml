@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Load RTA into Workspace" TypeName="LoadRTAIntoWorkspace" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Load RTA into Workspace" Name="LoadRTAIntoWorkspace">
+    <Input>
+      <Data ID="5" Label="Load RTA Request" ReferenceName="LoadRTARequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="loadRTARequest">
+        <Target RefID="9"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Load RTA into Workspace Exception" ReferenceName="LoadRTAIntoWorkspaceException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="loadRTAIntoWorkspaceException"/>
+    </Throws>
+    <ServiceReference ID="8" Label="RtcManagerServices" ReferenceName="RtcManagerServices.RtcManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="9"/>
+      <Target RefID="9"/>
+    </ServiceReference>
+    <Function ID="9" Label="Load RTA into Workspace">
+      <Source RefID="8"/>
+      <Source RefID="5"/>
+      <Target RefID="8"/>
+      <Invoke Operation="loadRTAIntoWorkspace" ServiceID="8">
+        <Source RefID="5"/>
+      </Invoke>
+      <Receive ServiceID="8"/>
+    </Function>
+    <Assign ID="4"/>
+  </Operation>
+</Service>

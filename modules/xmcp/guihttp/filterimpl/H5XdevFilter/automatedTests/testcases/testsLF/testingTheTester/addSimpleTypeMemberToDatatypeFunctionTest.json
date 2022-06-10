@@ -1,0 +1,114 @@
+{
+  "meta":
+  {
+    "name": "addSimpleTypeMemberToDatatypeFunctionTest",
+	"description": "Testet die addSimpleMemberToDatatype Funktion. Dazu wird ein neuer Datentyp angelegt, die Funktion aufgerufen, das Ergebnis kontrolliert und der Datentyp wieder entfernt.",
+	"issues": "nach Aufruf von addSimpleTypeMemberToDatatype den Datentyp nochmal anschauen."
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rndLabel!"
+	},
+    {
+	  "operation": "setRandom",
+	  "variable": "!rndPath!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!" : "autoTest.generated.!rndPath!"},
+		{"!label!": "generatedDatatype_!rndLabel!"},
+		{"!setType!": "int"}
+	  ]
+	},
+    {
+	  "operation": "set",
+	  "variable": "!workspaceName!",
+	  "value": "default workspace"
+	},
+	{
+	  "operation" : "set",
+	  "variable": "!workspaceEscaped!",
+	  "value": "!workspaceName!"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!workspaceEscaped!",
+	  "modification": {"operation" : "urlencode" }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!label!"
+	  },
+	  "mapOutput": {"!name!" : "!name!"}
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/!workspaceEscaped!/xmom/datatypes/!path!/!name!/close",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "addSimpleTypeMemberToDatatype",
+	  "mapInput":
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!datatypePath!": "!path!",
+		"!datatypeName!": "!name!",
+		"!insertType!": "!setType!",
+		"!insertLabel!": "generatedMember"
+	  },
+	  "mapOutput":
+	  {
+	    "!insertName!" : "!nameOfMemberVariable!"
+	  }
+	},
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/!workspaceEscaped!/xmom/datatypes/!path!/!name!",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "print",
+	  "variable": "!path!"
+	},
+	{
+	  "operation": "print",
+	  "variable": "!name!"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!readType!",
+	  "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=!nameOfMemberVariable!]/primitiveType",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readType!",
+	  "value": "!setType!"
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/!workspaceEscaped!/xmom/datatypes/!path!/!name!/close",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/!workspaceEscaped!/xmom/datatypes/!path!/!name!/delete",
+	  "payload": {"force":false}
+	}
+  ]
+}

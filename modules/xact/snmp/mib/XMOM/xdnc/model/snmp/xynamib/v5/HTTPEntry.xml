@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="HTTP Entry" TypeName="HTTPEntry" TypePath="xdnc.model.snmp.xynamib.v5" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Instance Name" VariableName="instanceName">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <SnmpType>xact.snmp.types.SNMPString</SnmpType>
+        <Oid>1</Oid>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Configured Max Trigger Events" VariableName="configuredMaxTriggerEvents">
+    <Meta>
+      <Type>int</Type>
+      <DataModel>
+        <SnmpType>xact.snmp.types.SNMPInteger</SnmpType>
+        <Oid>2</Oid>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Current Trigger Events" VariableName="currentTriggerEvents">
+    <Meta>
+      <DataModel>
+        <SnmpType>xact.snmp.types.SNMPInteger</SnmpType>
+        <Oid>3</Oid>
+      </DataModel>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="Requests Received" VariableName="requestsReceived">
+    <Meta>
+      <Type>long</Type>
+      <DataModel>
+        <SnmpType>xact.snmp.types.SNMPInteger</SnmpType>
+        <Oid>4</Oid>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Requests Rejected" VariableName="requestsRejected">
+    <Meta>
+      <Type>long</Type>
+      <DataModel>
+        <SnmpType>xact.snmp.types.SNMPInteger</SnmpType>
+        <Oid>5</Oid>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Requests Processed" VariableName="requestsProcessed">
+    <Meta>
+      <Type>long</Type>
+      <DataModel>
+        <SnmpType>xact.snmp.types.SNMPInteger</SnmpType>
+        <Oid>6</Oid>
+      </DataModel>
+    </Meta>
+  </Data>
+</DataType>

@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "24.8.2020", 
+    "updated": "24.8.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        }, 
+        {
+          "!startorder!": "startorder"
+        }, 
+        {
+          "!xmcp.factorymanager.rtcmanager.GetWorkspaces!": "xmcp.factorymanager.rtcmanager.GetWorkspaces"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper!": "xmcp.factorymanager.xynaproperties.GetXynaPropertiesTableInfo"
+        }, 
+        {
+          "!1.2!": "1.2"
+        }, 
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        }, 
+        {
+          "!en-US!": "en-US"
+        }, 
+        {
+          "!xmcp.DocumentationLanguage!": "xmcp.DocumentationLanguage"
+        }, 
+        {
+          "!xmcp.xfm.processmodeller.dev.performanceoptimiza!": "xmcp.xfm.processmodeller.dev.performanceoptimization"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper0!": "xmcp.factorymanager.xynaproperties.GetXynaPropertyDetails"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaPropertyK!": "xmcp.factorymanager.xynaproperties.XynaPropertyKey"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!": "xmcp.factorymanager.xynaproperties.ChangeXynaProperty"
+        },
+		{
+		  "!newEnvValue!": "false"
+		}
+      ], 
+      "operation": "multiSet"
+    }, 
+	{
+	  "operation": "call",
+	  "payload": 
+	  {
+	    "orderType":"xmcp.factorymanager.rtcmanager.GetRuntimeApplications",
+		"input":[],
+		"async":false
+	  },
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+	},
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/$list[name=GuiHttp]/version",
+      "targetVariable": "!version!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.factorymanager.xynaproperties.XynaProperty", 
+              "rtc": {
+                "application": "GuiHttp", 
+                "version": "!version!"
+              }
+            }, 
+            "key": "!xmcp.xfm.processmodeller.dev.performanceoptimiza!", 
+            "value": "!newEnvValue!"
+          }
+        ], 
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

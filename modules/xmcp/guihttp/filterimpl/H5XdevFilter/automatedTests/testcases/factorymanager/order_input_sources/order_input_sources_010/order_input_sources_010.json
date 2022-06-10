@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "16.7.2020", 
+    "updated": "16.7.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!xnwh.persistence.SelectionMask!": "xnwh.persistence.SelectionMask"
+        }, 
+        {
+          "!default_workspace!": "default workspace"
+        }, 
+        {
+          "!xnwh.persistence.FilterCondition!": "xnwh.persistence.FilterCondition"
+        }, 
+        {
+          "!xnwh.persistence.QueryParameter!": "xnwh.persistence.QueryParameter"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!xnwh.persistence.SelectionMask!", 
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!xnwh.persistence.FilterCondition!", 
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!xnwh.persistence.QueryParameter!", 
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    }
+  ]
+}

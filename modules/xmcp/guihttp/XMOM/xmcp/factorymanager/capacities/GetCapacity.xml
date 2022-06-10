@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Capacity" TypeName="GetCapacity" TypePath="xmcp.factorymanager.capacities" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Capacity" Name="GetCapacity">
+    <Input>
+      <Data ID="21" Label="Capacity Name" ReferenceName="CapacityName" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityName">
+        <Target RefID="19"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="22" Label="Capacity Information" ReferenceName="CapacityInformation" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityInformation">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Capacity Load Exception" ReferenceName="CapacityLoadException" ReferencePath="xmcp.factorymanager.capacities.exceptions" VariableName="capacityLoadException"/>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="18" Label="Capacity Services" ReferenceName="CapacityServices.CapacityServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="19"/>
+      <Target RefID="19"/>
+    </ServiceReference>
+    <Function ID="27" Label="Check Rights for Current User">
+      <Source RefID="26"/>
+      <Source RefID="29"/>
+      <Target RefID="26"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="26">
+        <Source RefID="29">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="26"/>
+    </Function>
+    <Function ID="19" Label="Get details">
+      <Source RefID="18"/>
+      <Source RefID="21"/>
+      <Target RefID="18"/>
+      <Target RefID="20"/>
+      <Invoke Operation="getDetails" ServiceID="18">
+        <Source RefID="21"/>
+      </Invoke>
+      <Receive ServiceID="18">
+        <Target RefID="20"/>
+      </Receive>
+    </Function>
+    <Data ID="20" Label="CapacityInformation" ReferenceName="CapacityInformation" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityDetails20">
+      <Source RefID="19"/>
+      <Target RefID="9"/>
+    </Data>
+    <ServiceReference ID="26" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="27"/>
+      <Target RefID="27"/>
+    </ServiceReference>
+    <Data ID="29" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="27"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.capacities:read:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="20"/>
+      <Target RefID="22"/>
+      <Copy>
+        <Source RefID="20"/>
+        <Target RefID="22"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

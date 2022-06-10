@@ -1,0 +1,13 @@
+{"testseries":
+    [
+        "dynamic_typing_001/testseries.json",
+        "dynamic_typing_002/testseries.json",
+        "dynamic_typing_003/testseries.json",
+        "dynamic_typing_004/testseries.json",
+        "dynamic_typing_005/testseries.json",
+        "dynamic_typing_006/testseries.json",
+        "dynamic_typing_007/testseries.json",
+        "dynamic_typing_008/testseries.json",
+        "dynamic_typing_009/testseries.json"
+    ]
+}

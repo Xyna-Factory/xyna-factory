@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *  Copyright GIP AG 2008
+ *  (http://www.gip.com)
+ *
+ *  Heinrich-von-Brentano-Str. 2
+ *  55130 Mainz
+ * ___________________________________________________
+ *
+ *  $Revision: 101684 $
+ *  $Date: 2011-11-17 11:17:00 +0100 (Thu, 17 Nov 2011) $
+ *
+-->
+<!--antlib-->
+<project name="git" basedir=".">
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: git_checkout          
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="git_checkout"
+            description="Execute an svn export. The export will be execute from the named tag.
+                         If the tag does not exist in the repository one will be create on the 
+                         HEAD revision before execution (you will be ask if you want to create the tag).
+                         If you enter 'HEAD' for tag, the export will be executed from the HEAD revision
+                         and no tag will be created.
+                         If attribute 'branch' is use all action are performed on the named branch
+                         instead of trunk.">
+    <attribute name="tag"
+               default="${git.tag}"
+               description="Tag from which the export will be executed." />
+    <attribute name="root"
+               default="${git.root}"
+               description="Root of the svn repository. Default is ${svn.root}" />
+    <attribute name="project"
+               default="${git.project}"
+               description="A folder within the svn repository representing the project to check out. Default is ${svn.project}" />
+    <attribute name="branch"
+               default="${git.branch}"
+               description="If this attribute is used, the check out will be executed on named branch." />
+    <attribute name="destdir" default="${root.dir}" />
+    <sequential>
+      <input message="Enter GIT-Tag for checkout.
+                   If tag not exists one will be created on head revision.
+                   Enter HEAD to checkout head revision without creating a tag."
+             defaultvalue="@{tag}"
+             addproperty="input.checkout@{tag}" />
+      <if>
+        <equals arg1="${input.checkout@{tag}}" arg2="HEAD" />
+        <then>
+          <git_checkoutHEAD root="@{root}"
+                        project="@{project}"
+                        destdir="@{destdir}"
+                        branch="@{branch}" />
+        </then>
+        <else>
+          <!-- check if tag already exists -->
+          <echo>check if tag already exists</echo>
+          <exec executable="git" resultproperty="result.gitls@{tag}">
+            <arg line="show @{tag}" />
+          </exec>
+          <echo>result: ${result.gitls@{tag}}</echo>
+          <if>
+            <not>
+              <equals arg1="${result.gitls@{tag}}" arg2="0" />
+            </not>
+            <then>
+              <echo>create tag</echo>
+              <git_createTag root="@{root}" tag="@{tag}" branch="@{branch}" />
+            </then>
+          </if>
+          <git_checkoutTag root="@{root}"
+                       tag="@{tag}"
+                       project="@{project}"
+                       destdir="@{destdir}" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: git_checkoutHEAD          
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="git_checkoutHEAD"
+            description="Execute git export from the HEAD revision of trunk (if attribute branch is not used) 
+                         or of the branch indicated by attribute branch.">
+    <attribute name="root"
+               default="${git.root}"
+               description="Root of the svn repository. Default is ${svn.root}" />
+    <attribute name="project"
+               default="${git.project}"
+               description="A folder within the svn repository representing the project to check out. Default is ${svn.project}" />
+    <attribute name="branch"
+               default="${git.branch}"
+               description="If this attribute is used, the head of the named branch will checked out." />
+    <attribute name="destdir" default="${root.dir}" />
+    <sequential>
+      <if>
+        <equals arg1="@{branch}" arg2="" />
+        <then>
+          <!-- check out from trunk -->
+          <exec executable="git" failonerror="true">
+            <arg line="archive --output=@{destdir} HEAD @{project}" />
+          </exec>
+          <echo message="Checked out HEAD revision of trunk in repository @{root} to destination @{destdir}." />
+        </then>
+        <else>
+          <!-- check out from tag -->
+          <exec executable="git" failonerror="true">
+            <arg line="archive --output={destdir} @{branch} {project}" />
+          </exec>
+          <echo message="Checked out HEAD revision of tag @{branch} in repository @{root} to destination @{destdir}." />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: git_checkoutTag          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="git_checkoutTag" description="Execute svn export from named tag.">
+    <attribute name="tag"
+               default="${git.tag}"
+               description="Tag from which the export will be executed." />
+    <attribute name="root"
+               default="${git.root}"
+               description="Root of the svn repository. Default is ${svn.root}" />
+    <attribute name="project"
+               default="${git.project}"
+               description="A folder within the svn repository representing the project to check out. Default is ${svn.project}" />
+    <attribute name="destdir" default="${root.dir}" />
+    <sequential>
+      <exec dir="./../../" executable="git" failonerror="true">
+        <arg line="archive --format=zip -o @{destdir}.zip @{tag} @{project}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: git_createTag          
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="git_createTag"
+            description="Create a git tag on head of trunk (if attribute branch is not used) 
+                         or of the branch indicated by attribute branch. 
+                         There will be no checks if the tag already exists!">
+    <attribute name="root"
+               default="${git.root}"
+               description="Root of the svn repository. Default is ${svn.root}" />
+    <attribute name="tag"
+               default="${git.tag}"
+               description="Tag to create. Default is ${svn.tag}" />
+    <attribute name="branch"
+               default="${git.branch}"
+               description="If this attribute is used, the tag will be create on the named branch." />
+    <sequential>
+      <if>
+        <equals arg1="@{branch}" arg2="$${svn.branch}" />
+        <then>
+          <!-- create tag on head of trunk -->
+          <exec executable="git" failonerror="true">
+            <arg line="tag -a -m &quot; create tag @{tag}&quot; @{tag}" />
+          </exec>
+          <echo message="Created tag @{tag} on head of trunk in repository @{root}" />
+        </then>
+        <else>
+          <!-- create tag on head of branch -->
+          <exec executable="git" failonerror="true">
+            <arg line="tag -a -m &quot; create tag @{tag}&quot; @{tag}" />
+          </exec>
+          <echo message="Created tag @{tag} on head of branch @{branch} in repository @{root}" />
+        </else>
+      </if>
+      <!-- push the tag -->
+      <!--exec executable="git" failonerror="true">
+        <arg line="push origin @{tag}" />
+      </exec-->
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: git_removeTag          
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="git_removeTag"
+            description="Remove a tag from git. 
+                         There will be no check if the tag already exists!">
+    <attribute name="root"
+               default="${git.root}"
+               description="Root of the svn repository. Default is ${svn.root}" />
+    <attribute name="tag"
+               default="${git.tag}"
+               description="Tag to remove. Default is ${svn.tag}" />
+    <sequential>
+      <input message="Confirm deletion of tag @{tag}"
+             validargs="y,n"
+             addproperty="input.removeTag@{tag}" />
+      <if>
+        <equals arg1="${input.removeTag@{tag}}" arg2="y" />
+        <then>
+          <!-- local -->
+          <exec executable="git" failonerror="true">
+            <arg line="tag -d @{tag}" />
+          </exec>
+          <!-- remote -->
+          <!--exec executable="git" failonerror="true">
+            <arg line="push origin - -delete @{tag}" />
+          </exec>
+          <echo message="Removed tag @{tag} from repository @{root}" /-->
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: update          
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="git_update"
+            description="Execute an git update on current location.">
+    <sequential>
+      <exec executable="git">
+        <arg value="pull" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: setKeywords          
+       = = = = = = = = = = = = = = = = = -->
+  <!--macrodef name="setKeywords" description="Set svn keywords">
+    <attribute name="srcdir"
+               description="Base directory. Set keywords to all files in this directory (including sub directories)." />
+    <sequential>
+      <exec executable="svn" failonerror="true">
+        <arg line="propset -R svn:keywords &quot; Date Author Revision Id HeadURL &quot; @{srcdir}" />
+      </exec>
+    </sequential>
+  </macrodef-->
+
+<!--/antlib-->
+</project>

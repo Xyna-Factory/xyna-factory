@@ -1,0 +1,1138 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-2838", 
+    "created": "19.4.2021", 
+    "updated": "19.4.2021"
+  }, 
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!New_Workflow!": "New Workflow"
+        }, 
+        {
+          "!base.Text!": "base.Text"
+        }, 
+        {
+          "!%0%.text=xtruex!": "%0%.text=\\\"true\\\""
+        }, 
+        {
+          "!%0%.text=xfalsex!": "%0%.text=\\\"false\\\""
+        }, 
+        {
+          "!length(!": "length("
+        }, 
+        {
+          "!length(%0%!": "length(%0%"
+        }, 
+        {
+          "!length(%0%)==!": "length(%0%)=="
+        }, 
+        {
+          "!length(%0%)==length(!": "length(%0%)==length("
+        }, 
+        {
+          "!length(%0%)==length(%1%!": "length(%0%)==length(%1%"
+        }, 
+        {
+          "!length(%0%)==length(%1%)!": "length(%0%)==length(%1%)"
+        }, 
+        {
+          "!user!": "user"
+        }, 
+        {
+          "!{x$metax:{xfqnx:xbase.Textx,xrtcx:{xworkspacex:x!": "{\\\"$meta\\\":{\\\"fqn\\\":\\\"base.Text\\\",\\\"rtc\\\":{\\\"workspace\\\":\\\"default workspace\\\"}},\\\"$list\\\":[{\\\"$meta\\\":{\\\"fqn\\\":\\\"base.Text\\\"}}]}"
+        }, 
+        {
+          "!%1%!": "%1%"
+        }, 
+        {
+          "!%1%[x0x].text=xx!": "%1%[\\\"0\\\"].text=\\\"\\\""
+        }, 
+        {
+          "!%2%!": "%2%"
+        }, 
+        {
+          "!%2%=!": "%2%="
+        }, 
+        {
+          "!%2%=%0%!": "%2%=%0%"
+        }, 
+        {
+          "!autoTest.generated.PMOD2527!": "autoTest.generated.PMOD2527.!rnd!"
+        }, 
+        {
+          "!NewConstants_ListTextOneElement!": "NewConstants_ListTextOneElement"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "set", 
+      "value": "boolean", 
+      "variable": "!boolean0!"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Workflow!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "targetVariable": "!new_1618813844607.NewWorkflow!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1618813844607!", 
+      "variable": "!new_1618813844607.NewWorkflow!"
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewWorkflow!", 
+      "variable": "!new_1618813844607.NewWorkflow!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id", 
+      "targetVariable": "!step0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/id", 
+      "targetVariable": "!wf!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=output]/id", 
+      "targetVariable": "!wf_output!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "Mapping", 
+          "type": "mapping"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!step0!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[0]/id", 
+      "targetVariable": "!step10!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=output]/id", 
+      "targetVariable": "!step10_output!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/id", 
+      "targetVariable": "!step10_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=formulas]/id", 
+      "targetVariable": "!formulaArea10!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!Text!", 
+      "variable": "!base.Text!"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!base.Text!", 
+          "isList": false, 
+          "label": "!Text!", 
+          "type": "variable"
+        }, 
+        "index": -1, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!step10_output!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=output]/items/$list[fqn=!base.Text!]/id", 
+      "targetVariable": "!var10-out0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "isList": true, 
+        "revision": 2
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!var10-out0!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "type": "conditionalChoice"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 3
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!step0!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[1]/id", 
+      "targetVariable": "!step37!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[0]/id", 
+      "targetVariable": "!branch37-0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=content]/id", 
+      "targetVariable": "!step40!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[1]/id", 
+      "targetVariable": "!branch37-1!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-1!]/areas/$list[name=content]/id", 
+      "targetVariable": "!step42!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=input]/items/$list[0]/id", 
+      "targetVariable": "!case37-0_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=input]/items/$list[id=!case37-0_input!]/areas/$list[name=condition]/items/$list[id=!case37-0_input!]/expression", 
+      "targetVariable": "!%0%!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=input]/items/$list[0]/id", 
+      "targetVariable": "!formula37-0_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-1!]/areas/$list[name=input]/items/$list[0]/id", 
+      "targetVariable": "!case37-1_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-1!]/areas/$list[name=input]/items/$list[id=!case37-1_input!]/areas/$list[name=condition]/items/$list[id=!case37-1_input!]/input/$list[fqn=!boolean0!]/id", 
+      "targetVariable": "!var37-in1!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-1!]/areas/$list[name=input]/items/$list[id=!case37-1_input!]/areas/$list[name=condition]/items/$list[id=!case37-1_input!]/input/$list[id=!var37-in1!]/fqn", 
+      "targetVariable": "!boolean!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=input]/items/$list[id=!case37-0_input!]/areas/$list[name=condition]/items/$list[id=!case37-0_input!]/input/$list[fqn=!boolean!]/id", 
+      "targetVariable": "!var37-in0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "Mapping", 
+          "type": "mapping"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 4
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!step40!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=content]/items/$list[0]/id", 
+      "targetVariable": "!step52!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=content]/items/$list[id=!step52!]/areas/$list[name=output]/id", 
+      "targetVariable": "!step52_output!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=content]/items/$list[id=!step52!]/areas/$list[name=formulas]/id", 
+      "targetVariable": "!formulaArea52!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!base.Text!", 
+          "isList": false, 
+          "label": "!Text!", 
+          "type": "variable"
+        }, 
+        "index": -1, 
+        "revision": 5
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!step52_output!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=content]/items/$list[id=!step52!]/areas/$list[name=output]/items/$list[fqn=!base.Text!]/id", 
+      "targetVariable": "!var52-out0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 6, 
+        "targetId": "!step42!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!step52!/copy"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-1!]/areas/$list[name=content]/items/$list[0]/id", 
+      "targetVariable": "!step71!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-1!]/areas/$list[name=content]/items/$list[id=!step71!]/areas/$list[name=formulas]/id", 
+      "targetVariable": "!formulaArea71!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "", 
+          "type": "formula", 
+          "variables": []
+        }, 
+        "index": -1, 
+        "revision": 7
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formulaArea52!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-0!]/areas/$list[name=content]/items/$list[id=!step52!]/areas/$list[name=formulas]/items/$list[0]/id", 
+      "targetVariable": "!formula52-0_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%0%!"
+        }, 
+        "revision": 8
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula52-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%0%.text=xtruex!"
+        }, 
+        "revision": 9
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula52-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "", 
+          "type": "formula", 
+          "variables": []
+        }, 
+        "index": -1, 
+        "revision": 10
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formulaArea71!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step37!]/areas/$list[name=content]/items/$list[id=!branch37-1!]/areas/$list[name=content]/items/$list[id=!step71!]/areas/$list[name=formulas]/items/$list[0]/id", 
+      "targetVariable": "!formula71-0_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%0%!"
+        }, 
+        "revision": 11
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula71-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%0%.text=xfalsex!"
+        }, 
+        "revision": 12
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula71-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "index": -1, 
+        "revision": 13, 
+        "targetId": "!step10_output!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!var10-out0!/copy"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=output]/items/$list[1]/id", 
+      "targetVariable": "!var10-out1!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "index": -1, 
+        "revision": 14, 
+        "targetId": "!step10_input!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!var10-out1!/copy"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/items/$list[fqn=!base.Text!]/id", 
+      "targetVariable": "!var10-in0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!length(!"
+        }, 
+        "revision": 15
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula37-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!base.Text!", 
+          "isAbstract": false, 
+          "isList": true, 
+          "label": "!Text!", 
+          "type": "variable"
+        }, 
+        "index": -1, 
+        "revision": 16
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula37-0_input!/insert"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!length(%0%!"
+        }, 
+        "revision": 17
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula37-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!length(%0%)==!"
+        }, 
+        "revision": 18
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula37-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!length(%0%)==length(!"
+        }, 
+        "revision": 19
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula37-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!base.Text!", 
+          "isAbstract": false, 
+          "isList": true, 
+          "label": "!Text!", 
+          "type": "variable"
+        }, 
+        "index": -1, 
+        "revision": 20
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula37-0_input!/insert"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!length(%0%)==length(%1%!"
+        }, 
+        "revision": 21
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula37-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!length(%0%)==length(%1%)!"
+        }, 
+        "revision": 22
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula37-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 23, 
+        "sourceId": "!var10-out0!", 
+        "targetId": "!var37-in0!", 
+        "type": "!user!"
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 23, 
+        "sourceId": "!var10-out1!", 
+        "targetId": "!var37-in1!", 
+        "type": "!user!"
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "constant": "!{x$metax:{xfqnx:xbase.Textx,xrtcx:{xworkspacex:x!", 
+        "revision": 23
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!var10-in0!/constant"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "", 
+          "type": "formula", 
+          "variables": []
+        }, 
+        "index": -1, 
+        "revision": 24
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formulaArea10!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=formulas]/items/$list[0]/id", 
+      "targetVariable": "!formula10-0_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%1%!"
+        }, 
+        "revision": 25
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula10-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%1%[x0x].text=xx!"
+        }, 
+        "revision": 26
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula10-0_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "", 
+          "type": "formula", 
+          "variables": []
+        }, 
+        "index": -1, 
+        "revision": 27
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formulaArea10!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=formulas]/items/$list[1]/id", 
+      "targetVariable": "!formula10-1_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%2%!"
+        }, 
+        "revision": 28
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula10-1_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%2%=!"
+        }, 
+        "revision": 29
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula10-1_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!%2%=%0%!"
+        }, 
+        "revision": 30
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!formula10-1_input!/change"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "index": -1, 
+        "revision": 31, 
+        "targetId": "!wf_output!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/objects/!var52-out0!/copy"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "label": "!NewConstants_ListTextOneElement!", 
+        "path": "!autoTest.generated.PMOD2527!", 
+        "revision": 32
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618813844607!/!NewWorkflow!/save"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=label]/fqn", 
+      "targetVariable": "!autoTest.generated.PMOD2527.NewConstants_ListTex!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD2527!/!NewConstants_ListTextOneElement!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD2527!/!NewConstants_ListTextOneElement!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 32
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD2527!/!NewConstants_ListTextOneElement!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD2527!/!NewConstants_ListTextOneElement!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD2527!/!NewConstants_ListTextOneElement!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "customStringContainer": [
+          null, 
+          null, 
+          null, 
+          null
+        ], 
+        "input": [], 
+        "orderType": "!autoTest.generated.PMOD2527.NewConstants_ListTex!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/text",
+      "targetVariable": "!readResult!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readResult!",
+      "value": "true"
+    }
+  ]
+}

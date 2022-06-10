@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Date" BaseTypePath="base.date" Label="Relative Date" TypeName="RelativeDate" TypePath="base.date" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Duration" VariableName="duration">
+    <Meta>
+      <Documentation>Format: &lt;amount&gt;[unit]
+unit can be one of "ns", "ms", "s", "min", "h", "d". Default is "s".
+Example: "10 s" means 10 second.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Relative Date" TypeName="RelativeDate">
+    <Operation IsStatic="false" Label="asString" Name="asString">
+      <Input/>
+      <Output>
+        <Data Label="As String" VariableName="asString">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="fromMillis" Name="fromMillis">
+      <Input>
+        <Data Label="Millis" VariableName="millis">
+          <Meta>
+            <Type>long</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="toMillis" Name="toMillis">
+      <Input/>
+      <Output>
+        <Data Label="Millis" VariableName="millis">
+          <Meta>
+            <Type>long</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return 0L;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="validate" Name="validate">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

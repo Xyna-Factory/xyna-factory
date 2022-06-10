@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="5" Label="Discover" TypeName="Discover" TypePath="xact.dhcp.client.wf" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(5)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="4" Label="Discover" Name="Discover">
+    <Meta>
+      <Abstract.UID>087090EA-3767-AA81-7684-DAA0665C74A0</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="0" IsList="true" Label="DHCP Server" ReferenceName="DHCPServer" ReferencePath="xact.dhcp.client" VariableName="dHCPServer">
+        <Target RefID="10"/>
+      </Data>
+      <Data ID="1" Label="MAC Address" ReferenceName="MACAddress" ReferencePath="xact.dhcp.client" VariableName="mACAddress">
+        <Target RefID="10"/>
+      </Data>
+      <Data ID="2" Label="Link Address" ReferenceName="LinkAddress" ReferencePath="xact.dhcp.client" VariableName="linkAddress">
+        <Target RefID="10"/>
+      </Data>
+      <Data ID="3" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option">
+        <Target RefID="10"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="62" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option62">
+        <Source RefID="6"/>
+      </Data>
+      <Data ID="79" Label="DHCP Packet" ReferenceName="DHCPPacket" ReferencePath="xact.dhcp" VariableName="dHCPPacket79">
+        <Source RefID="6"/>
+      </Data>
+      <Data ID="119" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType119">
+        <Source RefID="6"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="DHCP Send Exception" ReferenceName="DHCPSendException" ReferencePath="xact.dhcp.client" VariableName="dHCPSendException"/>
+      <Exception Label="Duplicate Correlation ID" ReferenceName="DuplicateCorrelationID" ReferencePath="xprc.synchronization" VariableName="duplicateCorrelationID"/>
+      <Exception ID="159" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException159"/>
+    </Throws>
+    <ServiceReference ID="9" Label="DHCPv4 Client Service" ReferenceName="DHCPv4ClientService.DHCPv4ClientService" ReferencePath="xact.dhcp.client">
+      <Source RefID="10"/>
+      <Source RefID="86"/>
+      <Target RefID="10"/>
+      <Target RefID="86"/>
+    </ServiceReference>
+    <Function ID="10" Label="Send Request">
+      <Source RefID="9"/>
+      <Source RefID="0"/>
+      <Source RefID="1"/>
+      <Source RefID="2"/>
+      <Source RefID="3"/>
+      <Source RefID="60"/>
+      <Target RefID="9"/>
+      <Target RefID="12"/>
+      <Invoke Operation="sendRequest" ServiceID="9">
+        <Source RefID="0"/>
+        <Source RefID="1"/>
+        <Source RefID="2"/>
+        <Source RefID="60">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="3"/>
+      </Invoke>
+      <Receive ServiceID="9">
+        <Target RefID="12"/>
+      </Receive>
+    </Function>
+    <Data ID="12" Label="correlationId" ReferenceName="CorrelationId" ReferencePath="xprc.synchronization" VariableName="correlationId">
+      <Source RefID="10"/>
+      <Target RefID="16"/>
+    </Data>
+    <ServiceReference ID="15" Label="synchronizationService" ReferenceName="Synchronization.SynchronizationService" ReferencePath="xprc.synchronization">
+      <Source RefID="16"/>
+      <Target RefID="16"/>
+    </ServiceReference>
+    <Function ID="16" Label="Await">
+      <Source RefID="15"/>
+      <Source RefID="17"/>
+      <Source RefID="12"/>
+      <Target RefID="15"/>
+      <Target RefID="19"/>
+      <Target RefID="142"/>
+      <Invoke Operation="awaitNotification" ServiceID="15">
+        <Source RefID="12"/>
+        <Source RefID="17">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="15">
+        <Target RefID="19">
+          <Meta>
+            <ExpectedType>xact.dhcp.DHCPPacket</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+      <Catch ExceptionID="142" ID="144">
+        <Mappings ID="133" Label="Mapping">
+          <Target RefID="128"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Exception ID="132" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException132"/>
+            <Target RefID="128"/>
+          </Output>
+          <Mapping>%0%.reason="Timeout"</Mapping>
+        </Mappings>
+        <Throw ExceptionID="128" ID="145" Label="Throw No Lease Exception">
+          <Source RefID="128"/>
+        </Throw>
+        <Assign ID="143"/>
+      </Catch>
+    </Function>
+    <Data ID="17" Label="timeout" ReferenceName="Timeout" ReferencePath="xprc.synchronization" VariableName="const_Timeout">
+      <Target RefID="16"/>
+      <Data ID="55" Label="time" VariableName="time">
+        <Meta>
+          <Type>Integer</Type>
+        </Meta>
+        <Value>3</Value>
+      </Data>
+    </Data>
+    <Data ID="19" Label="DHCP Packet" ReferenceName="DHCPPacket" ReferencePath="xact.dhcp" VariableName="dHCPPacket">
+      <Source RefID="16"/>
+      <Source RefID="143"/>
+      <Target RefID="86"/>
+      <Target RefID="6"/>
+    </Data>
+    <Function ID="86" Label="Extract Lease Options For Request">
+      <Source RefID="9"/>
+      <Source RefID="19"/>
+      <Target RefID="9"/>
+      <Target RefID="87"/>
+      <Target RefID="88"/>
+      <Invoke Operation="extractLeaseOptionsForRequest" ServiceID="9">
+        <Source RefID="19"/>
+      </Invoke>
+      <Receive ServiceID="9">
+        <Target RefID="87"/>
+        <Target RefID="88"/>
+      </Receive>
+    </Function>
+    <Data ID="60" Label="DHCP Message Type" ReferenceName="DHCPMessageType_DISCOVER" ReferencePath="xact.dhcp.enums" VariableName="const_DHCPMessageType_DISCOVER">
+      <Target RefID="10"/>
+    </Data>
+    <Data ID="87" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType87">
+      <Source RefID="86"/>
+      <Target RefID="6"/>
+    </Data>
+    <Data ID="88" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option88">
+      <Source RefID="86"/>
+      <Target RefID="6"/>
+    </Data>
+    <Exception ID="128" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException">
+      <Source RefID="133"/>
+      <Target RefID="145"/>
+    </Exception>
+    <Exception ID="142" Label="Timeout During Synchronization" ReferenceName="TimeoutDuringSynchronization" ReferencePath="xprc.synchronization" VariableName="timeoutDuringSynchronization142">
+      <Source RefID="16"/>
+    </Exception>
+    <Assign ID="6">
+      <Source RefID="88"/>
+      <Source RefID="19"/>
+      <Source RefID="87"/>
+      <Target RefID="62"/>
+      <Target RefID="79"/>
+      <Target RefID="119"/>
+      <Copy>
+        <Source RefID="88">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="62"/>
+      </Copy>
+      <Copy>
+        <Source RefID="19"/>
+        <Target RefID="79"/>
+      </Copy>
+      <Copy>
+        <Source RefID="87"/>
+        <Target RefID="119"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,24 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="benchmark" Groups="Misc" Description="Inserts a given number of orders and calculates the resulting performance in Hz."/>
+  <Argument Name="orderType" Description="The ordertype that is created for benchmark purposes"/>
+  <Argument Name="numberOfCalls" Description="The number of orders started per run"/>
+  <Argument Name="numberOfRuns" Description="The number of times the benchmark is repeated"/>
+  <Argument Name="maxParallel" Description="The maximum number of orders running in parallel. This uses a capacity" Optional="true"/>
+</XynaCommandLineCommand>

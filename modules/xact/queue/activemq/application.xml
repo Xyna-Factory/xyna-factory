@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Application applicationName="ActiveMQ" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+  <ApplicationInfo>
+    <Description Lang="DE">ActiveMQ</Description>
+    <Description Lang="EN">ActiveMQ</Description>
+    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Queue</ApplicationName>
+        <VersionName>1.0.1</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>activemq</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <Triggers>
+    <Trigger implicitDependency="false">
+      <Name>ActiveMQTrigger</Name>
+      <JarFiles>ActiveMQTrigger/ActiveMQTrigger.jar:</JarFiles>
+      <FqTriggerClassname>com.gip.xyna.xact.trigger.ActiveMQTrigger</FqTriggerClassname>
+      <SharedLibs>activemq:</SharedLibs>
+    </Trigger>
+  </Triggers>
+  <Filters>
+    <Filter implicitDependency="false">
+      <Name>ActiveMQForwardingFilter</Name>
+      <JarFiles>ActiveMQForwardingFilter/ActiveMQForwardingFilter.jar:</JarFiles>
+      <FqFilterClassname>com.gip.xyna.xact.filter.ActiveMQForwardingFilter</FqFilterClassname>
+      <TriggerName>ActiveMQTrigger</TriggerName>
+      <SharedLibs>activemq:</SharedLibs>
+    </Filter>
+  </Filters>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.queue.admin.ActiveMQConfig</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.queue.ActiveMQ</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>

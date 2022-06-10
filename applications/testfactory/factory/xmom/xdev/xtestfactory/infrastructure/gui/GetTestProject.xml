@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Test Project" TypeName="GetTestProject" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(26)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Test Project" Name="GetTestProject">
+    <Input>
+      <Data ID="21" Label="Test Project Selector" ReferenceName="TestProjectSelector" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testProjectSelector">
+        <Target RefID="14"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Test Project not found" ReferenceName="TestProjectNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testProjectNotFound"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="11" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="12"/>
+      <Target RefID="12"/>
+    </ServiceReference>
+    <Mappings ID="14">
+      <Source RefID="21"/>
+      <Target RefID="13"/>
+      <Meta>
+        <IsCondition>true</IsCondition>
+      </Meta>
+      <Input>
+        <Data ID="20" Label="Test Project Selector" ReferenceName="TestProjectSelector" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testProjectSelector20"/>
+        <Source RefID="21">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="22" Label="Test Project Selector" ReferenceName="TestProjectSelector" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testProjectSelector22"/>
+        <Source RefID="21">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="15" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition15"/>
+        <Target RefID="13"/>
+      </Output>
+      <Mapping>%2%.formula=concat("(%0%.name==\"",replaceall(replaceall(%0%.testProjectName,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\") &amp;&amp; (%0%.workspaceReference==\"",replaceall(replaceall(%1%.workspaceReference,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+    </Mappings>
+    <Function ID="12" Label="Query">
+      <Source RefID="11"/>
+      <Source RefID="13"/>
+      <Source RefID="16"/>
+      <Source RefID="17"/>
+      <Target RefID="11"/>
+      <Target RefID="19"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+        <QueryFilter>
+          <Condition>%0%.name==%1%.testProjectName</Condition>
+          <Condition>%0%.workspaceReference==%2%.workspaceReference</Condition>
+        </QueryFilter>
+      </Meta>
+      <Invoke Operation="query" ServiceID="11">
+        <Source RefID="16">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="13">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="17">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="11">
+        <Target RefID="19"/>
+      </Receive>
+    </Function>
+    <Data ID="13" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition">
+      <Source RefID="14"/>
+      <Target RefID="12"/>
+    </Data>
+    <Data ID="16" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="12"/>
+      <Data ID="32" Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.TestProject</Value>
+      </Data>
+    </Data>
+    <Data ID="17" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="12"/>
+      <Data ID="33" Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>1</Value>
+      </Data>
+      <Data ID="34" Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="35" IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="19" IsList="true" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject19">
+      <Source RefID="12"/>
+      <Target RefID="26"/>
+      <Target RefID="29"/>
+    </Data>
+    <Choice ID="26" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="19"/>
+      <Target RefID="39"/>
+      <Input>
+        <Data ID="36" IsList="true" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject36"/>
+        <Source RefID="19">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="24" Label="true" Premise="length(%0%)==&quot;1&quot;">
+        <Mappings ID="29" Label="Mapping">
+          <Source RefID="19"/>
+          <Target RefID="30"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="27" IsList="true" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject27"/>
+            <Source RefID="19"/>
+          </Input>
+          <Output>
+            <Data ID="28" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject28"/>
+            <Target RefID="30"/>
+          </Output>
+          <Mapping>%1%=%0%["0"]</Mapping>
+        </Mappings>
+        <Assign ID="37">
+          <Source RefID="30"/>
+          <Target RefID="39"/>
+          <Copy>
+            <Source RefID="30"/>
+            <Target RefID="39"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="25" Label="false">
+        <Throw ExceptionID="41" ID="40" Label="Throw Test Project Not Found">
+          <Source RefID="41">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="38"/>
+      </Case>
+    </Choice>
+    <Data ID="30" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject30">
+      <Source RefID="29"/>
+      <Target RefID="37"/>
+    </Data>
+    <Data ID="39" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject39">
+      <Source RefID="26"/>
+      <Source RefID="37"/>
+      <Target RefID="3"/>
+    </Data>
+    <Exception ID="41" Label="Test Project not found" ReferenceName="TestProjectNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="const_TestProjectNotFound">
+      <Target RefID="40"/>
+    </Exception>
+    <Assign ID="3">
+      <Source RefID="39"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="39"/>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

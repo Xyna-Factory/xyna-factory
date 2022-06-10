@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-866", 
+    "created": "30.1.2020", 
+    "updated": "30.1.2020"
+  }, 
+  "operations": [
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!applicationName!%252F!applicationVersion!/xmom/workflows/xmcp.h5x.regression.PMOD863/AnyTypeInChoiceOutput"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!applicationName!%252F!applicationVersion!/xmom/workflows/xmcp.h5x.regression.PMOD863/AnyTypeInChoiceOutput/dataflow"
+    }
+  ]
+}

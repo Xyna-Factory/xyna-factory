@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Migrate runtime context dependencies" TypeName="MigrateRuntimeContextDependencies" TypePath="xfmg.xfctrl.appmgmt" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Migrate runtime context dependencies" Name="MigrateRuntimeContextDependencies">
+    <Input>
+      <Data ID="26" IsList="true" Label="Node Migration Parameter" ReferenceName="NodeMigrationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="nodeMigrationParameter">
+        <Target RefID="29"/>
+      </Data>
+      <Data ID="27" Label="Migrate Runtime Context Dependency Parameter" ReferenceName="MigrateRuntimeContextDependencyParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="migrateRuntimeContextDependencyParameter">
+        <Target RefID="14"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="24" IsList="true" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult24">
+        <Source RefID="22"/>
+      </Data>
+    </Output>
+    <Foreach ID="29">
+      <Source RefID="26"/>
+      <Target RefID="30"/>
+      <InputList RefID="26">
+        <Data ID="28" Label="Node Migration Parameter" ReferenceName="NodeMigrationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="nodeMigrationParameter28">
+          <Target RefID="14"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="30">
+        <Data ID="25" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult">
+          <Source RefID="14"/>
+        </Data>
+      </OutputList>
+      <Function ID="14" Label="Migrate runtime context dependencies on one node">
+        <Source RefID="23"/>
+        <Source RefID="28"/>
+        <Source RefID="27"/>
+        <Target RefID="23"/>
+        <Target RefID="25"/>
+        <Invoke Operation="MigrateRuntimeContextDependenciesOnOneNode" ServiceID="23">
+          <Source RefID="28"/>
+          <Source RefID="27"/>
+        </Invoke>
+        <Receive ServiceID="23">
+          <Target RefID="25"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <ServiceReference ID="23" Label="Migrate runtime context dependencies on one node" ReferenceName="MigrateRuntimeContextDependenciesOnOneNode" ReferencePath="xfmg.xfctrl.appmgmt.subwfs">
+      <Source RefID="14"/>
+      <Target RefID="14"/>
+    </ServiceReference>
+    <Data ID="30" IsList="true" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult25">
+      <Source RefID="29"/>
+      <Target RefID="22"/>
+    </Data>
+    <Assign ID="22">
+      <Source RefID="30"/>
+      <Target RefID="24"/>
+      <Copy>
+        <Source RefID="30"/>
+        <Target RefID="24"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

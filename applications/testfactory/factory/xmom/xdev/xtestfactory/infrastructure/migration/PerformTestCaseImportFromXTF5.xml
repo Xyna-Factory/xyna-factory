@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Perform Test Case Import from XTF 5" TypeName="PerformTestCaseImportFromXTF5" TypePath="xdev.xtestfactory.infrastructure.migration" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(35)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Perform Test Case Import from XTF 5" Name="PerformTestCaseImportFromXTF5">
+    <Input>
+      <Data ID="5" Label="XTF 5 Testdurchfuerhungsplan CSV" ReferenceName="XTF5TestdurchfuerhungsplanCSV" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="xTF5TestdurchfuerhungsplanCSV">
+        <Target RefID="3"/>
+      </Data>
+      <Data ID="51" IsList="true" Label="Input Generation Mapping" ReferenceName="InputGenerationMapping" ReferencePath="xdev.xtestfactory.infrastructure.migration.testcases" VariableName="inputGenerationMapping">
+        <Target RefID="3"/>
+      </Data>
+      <Data ID="52" IsList="true" Label="Test Process Mapping" ReferenceName="TestProcessMapping" ReferencePath="xdev.xtestfactory.infrastructure.migration.testcases" VariableName="testProcessMapping">
+        <Target RefID="3"/>
+      </Data>
+      <Data ID="75" Label="XTF 5 Testcase CSV" ReferenceName="XTF5TestcaseCSV" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="xTF5TestcaseCSV">
+        <Target RefID="3"/>
+      </Data>
+      <Data ID="76" Label="XTF 5 Testseries CSV" ReferenceName="XTF5TestseriesCSV" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="xTF5TestseriesCSV">
+        <Target RefID="3"/>
+      </Data>
+      <Data ID="77" Label="XTF 5 Testcasetestseries CSV" ReferenceName="XTF5TestcasetestseriesCSV" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="xTF5TestcasetestseriesCSV">
+        <Target RefID="3"/>
+      </Data>
+      <Data ID="121" Label="Import Configuration" ReferenceName="ImportConfiguration" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="importConfiguration">
+        <Target RefID="120"/>
+        <Target RefID="124"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="Migration Failed" ReferenceName="MigrationFailed" ReferencePath="xdev.xtestfactory.infrastructure.migration.exceptions" VariableName="migrationFailed"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="2" Label="Migration Services" ReferenceName="MigrationServices.MigrationServices" ReferencePath="xdev.xtestfactory.infrastructure.migration">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+    </ServiceReference>
+    <Function ID="3" Label="Obtain Test Case Objects Without Input Sources">
+      <Source RefID="5"/>
+      <Source RefID="2"/>
+      <Source RefID="51"/>
+      <Source RefID="52"/>
+      <Source RefID="75"/>
+      <Source RefID="76"/>
+      <Source RefID="77"/>
+      <Target RefID="2"/>
+      <Target RefID="46"/>
+      <Target RefID="74"/>
+      <Invoke Operation="obtainTestCaseObjectsWithoutInputSources" ServiceID="2">
+        <Source RefID="5"/>
+        <Source RefID="51"/>
+        <Source RefID="52"/>
+        <Source RefID="75"/>
+        <Source RefID="76"/>
+        <Source RefID="77"/>
+      </Invoke>
+      <Receive ServiceID="2">
+        <Target RefID="46"/>
+        <Target RefID="74"/>
+      </Receive>
+    </Function>
+    <Choice ID="120" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="121"/>
+      <Input>
+        <Data Label="Import Configuration" ReferenceName="ImportConfiguration" ReferencePath="xdev.xtestfactory.infrastructure.migration"/>
+        <Source RefID="121">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="118" Label="true" Premise="%0%.importTestCases">
+        <Foreach ID="110">
+          <Source RefID="46"/>
+          <InputList RefID="46">
+            <Data ID="109" Label="test case and order input source combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination109">
+              <Target RefID="33"/>
+            </Data>
+          </InputList>
+          <Function ID="33" Label="Store Test Case from Combination With Empty Test Process Reference">
+            <Source RefID="36"/>
+            <Source RefID="109"/>
+            <Target RefID="36"/>
+            <Invoke Operation="StoreTestCaseFromCombinationWithEmptyTestProcessReference" ServiceID="36">
+              <Source RefID="109"/>
+            </Invoke>
+            <Receive ServiceID="36"/>
+          </Function>
+        </Foreach>
+        <Foreach ID="112">
+          <Source RefID="46"/>
+          <InputList RefID="46">
+            <Data ID="111" Label="test case and order input source combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination111">
+              <Target RefID="63"/>
+            </Data>
+          </InputList>
+          <Function ID="63" Label="Create Order Input Source">
+            <Source RefID="62"/>
+            <Source RefID="111"/>
+            <Target RefID="62"/>
+            <Invoke Operation="CreateOrderInputSource" ServiceID="62">
+              <Source RefID="111"/>
+            </Invoke>
+            <Receive ServiceID="62"/>
+          </Function>
+        </Foreach>
+        <Assign/>
+      </Case>
+      <Case ID="119" Label="false">
+        <Assign/>
+      </Case>
+    </Choice>
+    <ServiceReference ID="36" Label="Store Test Case from Combination With Empty Test Process Reference" ReferenceName="StoreTestCaseFromCombinationWithEmptyTestProcessReference" ReferencePath="xdev.xtestfactory.infrastructure.migration">
+      <Source RefID="33"/>
+      <Target RefID="33"/>
+    </ServiceReference>
+    <Data ID="46" IsList="true" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination">
+      <Source RefID="3"/>
+      <Target RefID="110"/>
+      <Target RefID="112"/>
+    </Data>
+    <ServiceReference ID="62" Label="Create Order Input Source" ReferenceName="CreateOrderInputSource" ReferencePath="xdev.xtestfactory.infrastructure.migration">
+      <Source RefID="63"/>
+      <Target RefID="63"/>
+    </ServiceReference>
+    <Data ID="74" IsList="true" Label="Test Series And List Of Test Case OIS Combination" ReferenceName="TestSeriesAndListOfTestCaseOISCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testSeriesAndListOfTestCaseOISCombination">
+      <Source RefID="3"/>
+      <Target RefID="114"/>
+    </Data>
+    <Choice ID="124" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="121"/>
+      <Input>
+        <Data Label="Import Configuration" ReferenceName="ImportConfiguration" ReferencePath="xdev.xtestfactory.infrastructure.migration"/>
+        <Source RefID="121">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="122" Label="true" Premise="%0%.importTestSeries">
+        <Foreach ID="114">
+          <Source RefID="74"/>
+          <InputList RefID="74">
+            <Data ID="113" Label="test series and list of test case oiscombination" ReferenceName="TestSeriesAndListOfTestCaseOISCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testSeriesAndListOfTestCaseOISCombination113">
+              <Target RefID="83"/>
+            </Data>
+          </InputList>
+          <Function ID="83" Label="Process Series">
+            <Source RefID="89"/>
+            <Source RefID="113"/>
+            <Target RefID="89"/>
+            <Invoke Operation="ProcessSeries" ServiceID="89">
+              <Source RefID="113"/>
+            </Invoke>
+            <Receive ServiceID="89"/>
+          </Function>
+        </Foreach>
+        <Assign/>
+      </Case>
+      <Case ID="123" Label="false">
+        <Assign/>
+      </Case>
+    </Choice>
+    <ServiceReference ID="89" Label="Process Series" ReferenceName="ProcessSeries" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries">
+      <Source RefID="83"/>
+      <Target RefID="83"/>
+    </ServiceReference>
+    <Assign ID="6"/>
+  </Operation>
+</Service>

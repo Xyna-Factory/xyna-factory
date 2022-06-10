@@ -1,0 +1,1058 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.xacm.usermanagement.GetUsers!": "xmcp.xacm.usermanagement.GetUsers"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Locked!": "Locked"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!locked!": "locked"
+        },
+        {
+          "!User!": "User"
+        },
+        {
+          "!user!": "user"
+        },
+        {
+          "!Role!": "Role"
+        },
+        {
+          "!role!": "role"
+        },
+        {
+          "!Domains!": "Domains"
+        },
+        {
+          "!domains!": "domains"
+        },
+        {
+          "!Creation_Date!": "Creation Date"
+        },
+        {
+          "!creationDate!": "creationDate"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        },
+        {
+          "!dsc!": "dsc"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true,
+                  "sort": "!dsc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!dsc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!dsc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!dsc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!dsc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    }
+  ]
+}

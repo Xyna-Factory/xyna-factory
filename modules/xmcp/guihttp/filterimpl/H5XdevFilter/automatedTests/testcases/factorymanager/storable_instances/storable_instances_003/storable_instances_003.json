@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "storable_instances"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!autotest.generated.ARANDOM.Storable_instances!": "autotest.generated.!rnd!.Storable_instances"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xnwh.persistence.SelectionMask"
+            },
+            "columns": [],
+            "rootType": "!autotest.generated.ARANDOM.Storable_instances!"
+          },
+          {
+            "$meta": {
+              "fqn": "xnwh.persistence.FilterCondition"
+            },
+            "formula": ""
+          },
+          {
+            "$meta": {
+              "fqn": "xnwh.persistence.QueryParameter"
+            },
+            "maxObjects": -1,
+            "queryHistory": false,
+            "sortCriterion": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xnwh.persistence.SortCriterion!"
+              }
+            }
+          }
+        ],
+        "orderType": "xnwh.persistence.Query"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/$list[0]/uniqueIdentifier",
+      "targetVariable": "!output!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!output!",
+      "value": "111"
+    }
+  ]
+}

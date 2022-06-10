@@ -1,0 +1,17 @@
+{
+    "testseries": [
+        "data_flow_001/testseries.json",
+        "data_flow_002/testseries.json",
+        "data_flow_003/testseries.json",
+        "data_flow_004/testseries.json",
+        "data_flow_005/testseries.json",
+        "data_flow_006/testseries.json",
+        "data_flow_007/testseries.json",
+        "data_flow_008/testseries.json",
+        "data_flow_010/testseries.json",
+        "data_flow_011/testseries.json",
+        "data_flow_014/testseries.json",
+        "data_flow_015/testseries.json",
+        "data_flow_016/testseries.json"
+    ]
+}

@@ -1,0 +1,129 @@
+{
+  "meta":
+  {
+	"created": "15.01.2020",
+	"updated": "15.01.2020",
+	"Test Reference": "TODO ~PMOD-800"
+  },
+  "operations":
+  [
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!" : "xmcp.h5x.regression.PMOD697"},
+		{"!dtName!": "DeletedDatatype"},
+		{"!wfName!": "WorkflowWithInstanceServiceCall"},
+		{"!wfLabel!": "Workflow with Instance Service Call"},
+		{"!instdtName!": "DatatypeWithInstanceService"},
+		{"!instdtLabel!": "DatatypeWithInstanceService"},
+		{"!wfUrl!": "/runtimeContext/default%20workspace/xmom/workflows/!path!/!wfName!"},
+		{"!dtUrl!": "/runtimeContext/default%20workspace/xmom/workflows/!path!/!instdtName!"}
+	  ]
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!dtName!/delete",
+	  "payload": {"force":false}
+	},
+	{
+	  "comment": "check workflow",
+	  "operation": "invoke",
+	  "functionName": "repairWorkflow",
+	  "mapInput": 
+	  { 
+	    "!wfUrl!" : "!wfUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!wfLabel!", 
+		"!expectedNumberOfRepairEntries!" : 3
+	  },
+	  "mapOutput": { }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!inputIsAbstract!",
+	  "pathInResponse": "xmomItem/areas/$list[id=step0]/items/$list[0]/areas/$list[name=input]/items/$list[name=deletedDatatype]/isAbstract"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!outputIsAbstract!",
+	  "pathInResponse": "xmomItem/areas/$list[id=step0]/items/$list[0]/areas/$list[name=output]/items/$list[0]/isAbstract"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!inputIsAbstract!",
+	  "value": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!outputIsAbstract!",
+	  "value": "true"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!/dataflow"
+	},
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "connections/$list",
+      "expectedValue": 1
+    },
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/close",
+	  "payload": {"force":false,"revision":0}
+	},
+	
+	{
+	  "comment": "check datatype",
+	  "operation": "invoke",
+	  "functionName": "repairDatatype",
+	  "mapInput": 
+	  { 
+	    "!dtUrl!" : "!dtUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!instdtLabel!", 
+		"!expectedNumberOfRepairEntries!" : 2
+	  },
+	  "mapOutput": { }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!dtUrl!"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!inputIsAbstract!",
+	  "pathInResponse": "xmomItem/areas/$list[name=memberMethods]/items/$list[0]/areas/$list[name=input]/items/$list[1]/isAbstract"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!outputIsAbstract!",
+	  "pathInResponse": "xmomItem/areas/$list[name=memberMethods]/items/$list[0]/areas/$list[name=output]/items/$list[0]/isAbstract"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!inputIsAbstract!",
+	  "value": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!outputIsAbstract!",
+	  "value": "true"
+	}
+  ]
+}

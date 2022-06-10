@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="OrderControlService" TypeName="OrderControlService" TypePath="xprc.xpce" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>OrderControlServiceImpl.jar</Libraries>
+  <Service Label="OrderControlService" TypeName="OrderControlService">
+    <Operation IsStatic="true" Label="addParameterInheritanceRule" Name="addParameterInheritanceRule" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Parameter Type" ReferenceName="ParameterType" ReferencePath="xprc.xpce" VariableName="parameterType"/>
+        <Data Label="Inheritance Rule" ReferenceName="InheritanceRule" ReferencePath="xprc.xpce" VariableName="inheritanceRule"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xprc.xpce.OrderControlServiceImpl.addParameterInheritanceRule(correlatedXynaOrder, parameterType, inheritanceRule);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="createSchedulerInformation" Name="createSchedulerInformation" RequiresXynaOrder="true">
+      <Meta>
+        <Documentation>Creates a new SchedulerInformation in planning phase (with Capacities from configured OrderType).</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="Scheduler Information" ReferenceName="SchedulerInformation" ReferencePath="xprc.xsched" VariableName="schedulerInformation"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.createSchedulerInformation(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getCurrentSchedulerInformation" Name="getCurrentSchedulerInformation" RequiresXynaOrder="true">
+      <Meta>
+        <Documentation>Gets current SchedulerInformation in execution phase.</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="Scheduler Information" ReferenceName="SchedulerInformation" ReferencePath="xprc.xsched" VariableName="schedulerInformation"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getCurrentSchedulerInformation(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getCustomFields" Name="getCustomFields" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Custom Fields" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getCustomFields(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Custom Fields from Scope" Name="getCustomFieldsFromScope" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Scope" ReferenceName="Scope" ReferencePath="xprc.xpce.enums.orderhierarchy" VariableName="scope"/>
+      </Input>
+      <Output>
+        <Data Label="Custom Fields" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getCustomFieldsFromScope(correlatedXynaOrder, scope);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getOrderId" Name="getOrderId" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Order Id" ReferenceName="OrderId" ReferencePath="xprc.xpce" VariableName="orderId"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getOrderId(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getOrderType" Name="getOrderType" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Order Type" ReferenceName="OrderType" ReferencePath="xprc.xpce" VariableName="orderType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getOrderType(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getOwnFqClassName" Name="getOwnFqClassName">
+      <Input/>
+      <Output>
+        <Data Label="Workflow Name" ReferenceName="WorkflowName" ReferencePath="xprc.xpce" VariableName="workflowName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getOwnFqClassName();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getOwnXMLName" Name="getOwnXMLName">
+      <Input/>
+      <Output>
+        <Data Label="Workflow Name" ReferenceName="WorkflowName" ReferencePath="xprc.xpce" VariableName="workflowName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getOwnXMLName();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getRootOrderId" Name="getRootOrderId" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Order Id" ReferenceName="OrderId" ReferencePath="xprc.xpce" VariableName="orderId"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getRootOrderId(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="setCustomFields" Name="setCustomFields" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Custom Fields" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xprc.xpce.OrderControlServiceImpl.setCustomFields(correlatedXynaOrder, customFields);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set Custom Fields for Scope" Name="setCustomFieldsForScope" RequiresXynaOrder="true">
+      <Meta>
+        <Documentation>Empty CustomFields will not be set.</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Custom Fields" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields"/>
+        <Data Label="Scope" ReferenceName="Scope" ReferencePath="xprc.xpce.enums.orderhierarchy" VariableName="scope"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xprc.xpce.OrderControlServiceImpl.setCustomFieldsForScope(correlatedXynaOrder, customFields, scope);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="setLoggingContext" Name="setLoggingContext" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Logging Context" ReferenceName="LoggingContext" ReferencePath="xprc.xpce" VariableName="loggingContext"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xprc.xpce.OrderControlServiceImpl.setLoggingContext(correlatedXynaOrder, loggingContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

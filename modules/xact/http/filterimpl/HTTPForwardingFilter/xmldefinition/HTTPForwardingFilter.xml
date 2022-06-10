@@ -1,0 +1,53 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Filter>
+	<AdditionalDependencies>
+		<Datatype>xact.http.URLPath</Datatype>
+                <Datatype>base.Host</Datatype>
+                <Datatype>base.Port</Datatype>
+                <Datatype>xact.http.enums.httpmethods.HTTPMethod</Datatype>
+                <Datatype>xact.http.enums.httpmethods.GET</Datatype>
+                <Datatype>xact.http.enums.httpmethods.POST</Datatype>
+                <Datatype>xact.http.enums.httpmethods.DELETE</Datatype>
+                <Datatype>xact.http.enums.httpmethods.HEAD</Datatype>
+                <Datatype>xact.http.enums.httpmethods.OPTIONS</Datatype>
+                <Datatype>xact.http.enums.httpmethods.PUT</Datatype>
+                <Datatype>xact.http.enums.httpmethods.TRACE</Datatype>
+                <Datatype>xact.http.enums.httpmethods.PATCH</Datatype>
+                <Datatype>xact.http.Header</Datatype>
+                <Datatype>xact.templates.Document</Datatype>
+                <Datatype>xact.templates.PlainText</Datatype>
+                <Datatype>xact.http.enums.statuscode.Accepted</Datatype>
+                <Datatype>xact.http.enums.statuscode.BadRequest</Datatype>
+                <Datatype>xact.http.enums.statuscode.Created</Datatype>
+                <Datatype>xact.http.enums.statuscode.Forbidden</Datatype>
+                <Datatype>xact.http.enums.statuscode.GatewayTimeout</Datatype>
+                <Datatype>xact.http.enums.statuscode.HTTPStatusCode</Datatype>
+                <Datatype>xact.http.enums.statuscode.InternalServerError</Datatype>
+                <Datatype>xact.http.enums.statuscode.LengthRequired</Datatype>
+                <Datatype>xact.http.enums.statuscode.MethodNotAllowed</Datatype>
+                <Datatype>xact.http.enums.statuscode.NoContent</Datatype>
+                <Datatype>xact.http.enums.statuscode.NotAcceptable</Datatype>
+                <Datatype>xact.http.enums.statuscode.NotFound</Datatype>
+                <Datatype>xact.http.enums.statuscode.NotImplemented</Datatype>
+                <Datatype>xact.http.enums.statuscode.OK</Datatype>
+                <Datatype>xact.http.enums.statuscode.TemporaryRedirect</Datatype>
+                <Datatype>xact.http.enums.statuscode.Unauthorized</Datatype>
+                <Datatype>xact.http.ManagedFileReference</Datatype>
+	</AdditionalDependencies>
+</Filter>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="IPv4 Subnet" TypeName="IPv4Subnet" TypePath="base.net" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Network" ReferenceName="IPv4" ReferencePath="base.net" VariableName="network"/>
+  <Data Label="Mask" ReferenceName="IPv4Netmask" ReferencePath="base.net" VariableName="mask"/>
+  <Service Label="IPv4 Subnet" TypeName="IPv4Subnet">
+    
+    <Operation IsStatic="false" Label="Broadcast Address" Name="broadcastAddress">
+      <Input/>
+      <Output>
+        <Data Label="IPv4" ReferenceName="IPv4" ReferencePath="base.net" VariableName="iPv4"/>
+      </Output>
+      <Throws>
+        <Exception Label="Format Exception" ReferenceName="FormatException" ReferencePath="base.net.exception" VariableName="formatException"/>
+        <Exception Label="Validation Exception" ReferenceName="ValidationException" ReferencePath="base.net.exception" VariableName="validationException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="false" Label="Gateway Address" Name="gatewayAddress">
+      <Input/>
+      <Output>
+        <Data Label="IPv4" ReferenceName="IPv4" ReferencePath="base.net" VariableName="iPv4"/>
+      </Output>
+      <Throws>
+        <Exception Label="Format Exception" ReferenceName="FormatException" ReferencePath="base.net.exception" VariableName="formatException"/>
+        <Exception Label="Validation Exception" ReferenceName="ValidationException" ReferencePath="base.net.exception" VariableName="validationException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="false" Label="IP within Subnet" Name="ipWithinSubnet">
+      <Input>
+        <Data Label="IPv4" ReferenceName="IPv4" ReferencePath="base.net" VariableName="iPv4"/>
+      </Input>  
+      <Output>
+        <Data Label="Flag" VariableName="flag">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Throws>
+        <Exception Label="Format Exception" ReferenceName="FormatException" ReferencePath="base.net.exception" VariableName="formatException"/>
+        <Exception Label="Validation Exception" ReferenceName="ValidationException" ReferencePath="base.net.exception" VariableName="validationException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="false" Label="Next Free IP" Name="nextFreeIP">
+      <Input>
+        <Data IsList="true" Label="IPv4" ReferenceName="IPv4" ReferencePath="base.net" VariableName="iPv4List"/>
+      </Input>
+      <Output>
+        <Data Label="IPv4" ReferenceName="IPv4" ReferencePath="base.net" VariableName="iPv4"/>
+      </Output>
+      <Throws>
+        <Exception Label="Format Exception" ReferenceName="FormatException" ReferencePath="base.net.exception" VariableName="formatException"/>
+        <Exception Label="Validation Exception" ReferenceName="ValidationException" ReferencePath="base.net.exception" VariableName="validationException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="false" Label="All IPs in Subnet" Name="allIPsInSubnet">
+      <Input></Input>
+      <Output>
+        <Data IsList="true" Label="IPv4" ReferenceName="IPv4" ReferencePath="base.net" VariableName="iPv4List"/>
+      </Output>
+      <Throws>
+        <Exception Label="Format Exception" ReferenceName="FormatException" ReferencePath="base.net.exception" VariableName="formatException"/>
+        <Exception Label="Validation Exception" ReferenceName="ValidationException" ReferencePath="base.net.exception" VariableName="validationException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="To Wildcard Mask" Name="toWildcardMask">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="IPv4" ReferenceName="IPv4" ReferencePath="base.net" VariableName="iPv4"/>
+      </Output>
+      <Throws>
+        <Exception Label="Format Exception" ReferenceName="FormatException" ReferencePath="base.net.exception" VariableName="formatException"/>
+        <Exception Label="Validation Exception" ReferenceName="ValidationException" ReferencePath="base.net.exception" VariableName="validationException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+  </Service>
+</DataType>

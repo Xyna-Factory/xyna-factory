@@ -1,0 +1,57 @@
+[
+  {
+    "docu": "Start a Workflow using the regression test application. Return Order id.",
+    "type": "function",
+	"functionName": "runWorkflow",
+	"input": ["!workflowFQN!", "!input!", "!customStringContainer!"],
+	"output": 
+	[
+	  "!orderId!",
+	  "!applicationName!",
+	  "!applicationVersion!"
+	],
+	"operations":
+	[
+	  {
+        "operation": "invoke",
+        "functionName": "getRegressionApplication",
+        "mapInput": {},
+        "mapOutput": 
+        { 
+          "!url!": "!url!", 
+          "!applicationName!" : "!applicationName!", 
+          "!applicationVersion!": "!applicationVersion!"
+        }
+      },
+	  {
+	    "operation": "set",
+		"variable": "!payload!",
+		"value": {"orderType":"!workflowFQN!","async":false,"monitoringLevel":20,"priority":7}
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!payload!",
+		"value": "!input!",
+		"path": "input"
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!payload!",
+		"value": "!customStringContainer!",
+		"path": "customStringContainer"
+	  },
+      {
+        "operation": "call",
+        "requestType": "POST",
+        "url": "!url!/startorder",
+        "payload": "!payload!"
+      },
+      {
+        "operation": "read",
+        "pathInResponse": "orderId",
+        "targetVariable": "!orderId!",
+        "unquoteResult": true
+      }
+	]
+  }
+]

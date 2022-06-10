@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="CountAllRows" TypeName="CountAllRows" TypePath="xmcp.dhcp.v4.deploymentmonitor" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="CountAllRows" Name="CountAllRows">
+    <Input>
+      <Data ID="78" Label="CountAllRowsInput" ReferenceName="CountAllRowsInput" ReferencePath="xmcp.dhcp.v4.deploymentmonitor" VariableName="countAllRowsInput78"/>
+    </Input>
+    <Output>
+      <Data ID="167" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype167"/>
+      <Data ID="198" Label="CountAllRowsOutput" ReferenceName="CountAllRowsOutput" ReferencePath="xmcp.dhcp.v4.deploymentmonitor" VariableName="countAllRowsOutput198"/>
+    </Output>
+    <ServiceReference ID="4" Label="DeployActions" ReferenceName="DeployActions.DeployActions" ReferencePath="xmcp.dhcp.v4.deploymentmonitor"/>
+    <Mappings ID="51" Label="Build Input">
+      <Input>
+        <Data ID="18" Label="CountAllRowsInput" ReferenceName="CountAllRowsInput" ReferencePath="xmcp.dhcp.v4.deploymentmonitor" VariableName="countAllRowsInput18"/>
+        <Source RefID="78"/>
+      </Input>
+      <Output>
+        <Data ID="52" Label="Count All Rows Request ctype" ReferenceName="CountAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages" VariableName="countAllRowsRequest_ctype52">
+          <Source RefID="51"/>
+        </Data>
+        <Target RefID="53"/>
+      </Output>
+      <Mapping>%1%.countAllRowsInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Count All Rows Output">
+      <Source RefID="4"/>
+      <Source RefID="53"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="countAllRowsOutput" ServiceID="4">
+        <Source RefID="53"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="141" Label="Extract Output">
+      <Input>
+        <Data ID="158" Label="Response_ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages" VariableName="response_ctype158">
+          <Source RefID="141"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="180" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype180">
+          <Source RefID="141"/>
+        </Data>
+        <Target RefID="181"/>
+      </Output>
+      <Output>
+        <Data ID="248" Label="CountAllRowsOutput" ReferenceName="CountAllRowsOutput" ReferencePath="xmcp.dhcp.v4.deploymentmonitor" VariableName="countAllRowsOutput248">
+          <Source RefID="141"/>
+        </Data>
+        <Target RefID="249"/>
+      </Output>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+      <Mapping>%2%.countAllRowsOutput=%0%.payload.countAllRowsOutput</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="53" Label="Count All Rows Request ctype" ReferenceName="CountAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages" VariableName="countAllRowsRequest_ctype53">
+      <Source RefID="51"/>
+    </Data>
+    <Data ID="181" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype181">
+      <Source RefID="141"/>
+    </Data>
+    <Data ID="249" Label="CountAllRowsOutput" ReferenceName="CountAllRowsOutput" ReferencePath="xmcp.dhcp.v4.deploymentmonitor" VariableName="countAllRowsOutput249">
+      <Source RefID="141"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="181"/>
+      <Source RefID="249"/>
+      <Target RefID="167"/>
+      <Target RefID="198"/>
+      <Copy>
+        <Source RefID="181"/>
+        <Target RefID="167"/>
+      </Copy>
+      <Copy>
+        <Source RefID="249"/>
+        <Target RefID="198"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get MI Entries" TypeName="GetMIEntries" TypePath="xmcp.processmonitor" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(2191)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get MI Entries" Name="GetMIEntries">
+    <Input>
+      <Data ID="17" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="16"/>
+        <Target RefID="20"/>
+        <Target RefID="22"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="30" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo30">
+        <Source RefID="2"/>
+      </Data>
+      <Data ID="31" IsList="true" Label="Manual Interaction Entry" ReferenceName="ManualInteractionEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionEntry">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Load Manual Interaction Exception" ReferenceName="LoadManualInteractionException" ReferencePath="xmcp.processmonitor.datatypes" VariableName="loadManualInteractionException"/>
+    </Throws>
+    <Choice ID="16" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="17"/>
+      <Target RefID="26"/>
+      <Target RefID="29"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="15" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo15"/>
+        <Source RefID="17"/>
+      </Input>
+      <Case ID="6" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="19" Label="Generate Table Columns">
+          <Target RefID="18"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="44" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="18"/>
+          </Output>
+          <Mapping>%0%["0"].name="ID"</Mapping>
+          <Mapping>%0%["0"].path="id.id"</Mapping>
+          <Mapping>%0%["0"].sort="asc"</Mapping>
+          <Mapping>%0%["1"].name="Reason"</Mapping>
+          <Mapping>%0%["1"].path="reason"</Mapping>
+          <Mapping>%0%["2"].name="To Do"</Mapping>
+          <Mapping>%0%["2"].path="todo"</Mapping>
+          <Mapping>%0%["3"].name="Type"</Mapping>
+          <Mapping>%0%["3"].path="type"</Mapping>
+          <Mapping>%0%["4"].name="User Group"</Mapping>
+          <Mapping>%0%["4"].path="userGroup"</Mapping>
+          <Mapping>%0%["5"].name="Priority"</Mapping>
+          <Mapping>%0%["5"].path="priority"</Mapping>
+          <Mapping>%0%["6"].name="Start Time"</Mapping>
+          <Mapping>%0%["6"].path="startTime"</Mapping>
+          <Mapping>%0%["7"].name="Last Update"</Mapping>
+          <Mapping>%0%["7"].path="lastUpdate"</Mapping>
+          <Mapping>%0%["8"].name="Application"</Mapping>
+          <Mapping>%0%["8"].path="application"</Mapping>
+          <Mapping>%0%["9"].name="Version"</Mapping>
+          <Mapping>%0%["9"].path="version"</Mapping>
+          <Mapping>%0%["10"].name="Workspace"</Mapping>
+          <Mapping>%0%["10"].path="workspace"</Mapping>
+          <Mapping>%0%["11"].name="Order Type"</Mapping>
+          <Mapping>%0%["11"].path="orderType"</Mapping>
+        </Mappings>
+        <Mappings ID="20" Label="Set bootstrap &amp; columns">
+          <Source RefID="17"/>
+          <Source RefID="18"/>
+          <Target RefID="21"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="8" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo8"/>
+            <Source RefID="17"/>
+          </Input>
+          <Input>
+            <Data ID="9" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn9"/>
+            <Source RefID="18"/>
+          </Input>
+          <Output>
+            <Data ID="10" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo10"/>
+            <Target RefID="21"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="27">
+          <Source RefID="21"/>
+          <Source RefID="18"/>
+          <Target RefID="26"/>
+          <Target RefID="29"/>
+          <Copy>
+            <Source RefID="21"/>
+            <Target RefID="26"/>
+          </Copy>
+          <Copy>
+            <Source RefID="18"/>
+            <Target RefID="29"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="7" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="22" Label="1:1">
+          <Source RefID="17"/>
+          <Target RefID="23"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="11" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo11"/>
+            <Source RefID="17"/>
+          </Input>
+          <Output>
+            <Data ID="12" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo12"/>
+            <Target RefID="23"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="25" Label="Get columns from Table Info">
+          <Source RefID="23"/>
+          <Target RefID="24"/>
+          <Input>
+            <Data ID="13" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo13"/>
+            <Source RefID="23">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="14" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn14"/>
+            <Target RefID="24"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="28">
+          <Source RefID="23"/>
+          <Source RefID="24"/>
+          <Target RefID="26"/>
+          <Target RefID="29"/>
+          <Copy>
+            <Source RefID="23"/>
+            <Target RefID="26"/>
+          </Copy>
+          <Copy>
+            <Source RefID="24"/>
+            <Target RefID="29"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="18" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn18">
+      <Source RefID="19"/>
+      <Target RefID="20"/>
+      <Target RefID="27"/>
+    </Data>
+    <Data ID="21" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo21">
+      <Source RefID="20"/>
+      <Target RefID="27"/>
+    </Data>
+    <Data ID="23" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo23">
+      <Source RefID="22"/>
+      <Target RefID="25"/>
+      <Target RefID="28"/>
+    </Data>
+    <Data ID="24" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn24">
+      <Source RefID="25"/>
+      <Target RefID="28"/>
+    </Data>
+    <Data ID="26" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo26">
+      <Source RefID="16"/>
+      <Source RefID="27"/>
+      <Source RefID="28"/>
+      <Target RefID="35"/>
+    </Data>
+    <Data ID="29" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn29">
+      <Source RefID="16"/>
+      <Source RefID="27"/>
+      <Source RefID="28"/>
+      <Target RefID="35"/>
+    </Data>
+    <ServiceReference ID="34" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="35"/>
+      <Source RefID="70"/>
+      <Target RefID="35"/>
+      <Target RefID="70"/>
+    </ServiceReference>
+    <Function ID="35" Label="Build TableInfo and Select Columns">
+      <Source RefID="34"/>
+      <Source RefID="29"/>
+      <Source RefID="26"/>
+      <Source RefID="38"/>
+      <Target RefID="34"/>
+      <Target RefID="37"/>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="34">
+        <Source RefID="26">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="38">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xmcp.processmonitor.datatypes.ManualInteractionEntry</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="29"/>
+      </Invoke>
+      <Receive ServiceID="34">
+        <Target RefID="37"/>
+      </Receive>
+    </Function>
+    <Data ID="37" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="35"/>
+      <Target RefID="2"/>
+      <Target RefID="42"/>
+      <Target RefID="70"/>
+    </Data>
+    <Data ID="38" Label="Manual Interaction Entry" ReferenceName="ManualInteractionEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="const_ManualInteractionEntry">
+      <Target RefID="35"/>
+      <Data ID="75" Label="Id" ReferenceName="ManualInteractionId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="id">
+        <Data ID="74" Label="Id" VariableName="id">
+          <Meta>
+            <Type>long</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="46" Label="Reason" VariableName="reason">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="47" Label="Type" VariableName="type">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="48" Label="User group" VariableName="userGroup">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="49" Label="Todo" VariableName="todo">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="50" Label="Priority" VariableName="priority">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+      </Data>
+      <Data ID="51" Label="MonitoringCode" VariableName="monitoringCode">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+      </Data>
+      <Data ID="52" Label="Order type" VariableName="orderType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="53" Label="Session Id" VariableName="sessionId">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="54" Label="Parent Id" VariableName="parentId">
+        <Meta>
+          <Type>long</Type>
+        </Meta>
+      </Data>
+      <Data ID="55" Label="Application" VariableName="application">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="56" Label="Version" VariableName="version">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="57" Label="Workspace" VariableName="workspace">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="58" Label="Allow continue" VariableName="allowContinue">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="59" Label="Allow retry" VariableName="allowRetry">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="60" Label="Allow abort" VariableName="allowAbort">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <ServiceReference ID="41" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="42"/>
+      <Target RefID="42"/>
+    </ServiceReference>
+    <Function ID="42" Label="Get MI Entries">
+      <Source RefID="41"/>
+      <Source RefID="37"/>
+      <Target RefID="41"/>
+      <Target RefID="43"/>
+      <Invoke Operation="getMIEntries" ServiceID="41">
+        <Source RefID="37">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="41">
+        <Target RefID="43"/>
+      </Receive>
+    </Function>
+    <Data ID="43" IsList="true" Label="Manual Interaction Entry" ReferenceName="ManualInteractionEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionEntry43">
+      <Source RefID="42"/>
+      <Target RefID="70"/>
+    </Data>
+    <Function ID="70" Label="TableHelper Sort Filter Limit">
+      <Source RefID="34"/>
+      <Source RefID="37"/>
+      <Source RefID="43"/>
+      <Target RefID="34"/>
+      <Target RefID="72"/>
+      <Invoke Operation="tableHelperSortFilterLimit" ServiceID="34">
+        <Source RefID="37">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="43">
+          <Meta>
+            <ExpectedType>xmcp.processmonitor.datatypes.ManualInteractionEntry</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="34">
+        <Target RefID="72">
+          <Meta>
+            <ExpectedType>xmcp.processmonitor.datatypes.ManualInteractionEntry</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="72" IsList="true" Label="Manual Interaction Entry" ReferenceName="ManualInteractionEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionEntry72">
+      <Source RefID="70"/>
+      <Target RefID="2"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="37"/>
+      <Source RefID="72"/>
+      <Target RefID="30"/>
+      <Target RefID="31"/>
+      <Copy>
+        <Source RefID="37">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="30"/>
+      </Copy>
+      <Copy>
+        <Source RefID="72">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="31"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

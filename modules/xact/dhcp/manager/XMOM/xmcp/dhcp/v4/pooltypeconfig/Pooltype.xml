@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Pooltype" TypeName="Pooltype" TypePath="xmcp.dhcp.v4.pooltypeconfig" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>Pooltype.jar</Libraries>
+  <Libraries>PooltypeImpl.jar</Libraries>
+  <SharedLibraries>tools</SharedLibraries>
+  <Service Label="Pooltype" TypeName="Pooltype">
+    <Operation IsStatic="true" Label="deleteRows" Name="deleteRows" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Delete Rows Request ctype" ReferenceName="DeleteRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="deleteRowsRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.dhcp.v4.pooltypeconfig.PooltypeImpl.deleteRows(correlatedXynaOrder, deleteRowsRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getAllRows" Name="getAllRows" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Get All Rows Request ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.dhcp.v4.pooltypeconfig.PooltypeImpl.getAllRows(correlatedXynaOrder, getAllRowsRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getMetaInfo" Name="getMetaInfo" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Get Meta Info Request ctype" ReferenceName="GetMetaInfoRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages" VariableName="getMetaInfoRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.dhcp.v4.pooltypeconfig.PooltypeImpl.getMetaInfo(correlatedXynaOrder, getMetaInfoRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="insertRow" Name="insertRow" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Insert Row Request ctype" ReferenceName="InsertRowRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="insertRowRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.dhcp.v4.pooltypeconfig.PooltypeImpl.insertRow(correlatedXynaOrder, insertRowRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="searchRows" Name="searchRows" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Search Rows Request ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="searchRowsRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.dhcp.v4.pooltypeconfig.PooltypeImpl.searchRows(correlatedXynaOrder, searchRowsRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="updateRow" Name="updateRow" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Update Row Request ctype" ReferenceName="UpdateRowRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="updateRowRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.dhcp.v4.pooltypeconfig.PooltypeImpl.updateRow(correlatedXynaOrder, updateRowRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

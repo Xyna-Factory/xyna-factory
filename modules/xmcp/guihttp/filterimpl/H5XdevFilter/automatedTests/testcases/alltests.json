@@ -1,0 +1,11 @@
+{
+  "testseries":
+  [
+    "testsLF/allTests.json",
+    "modeller/modellertests.json",
+    "monitor/monitorTests.json",
+    "factorymanager/factorymanager.json",
+    "raygression/allraygressiontests.json",
+    "factory/factory.json"
+  ]
+}

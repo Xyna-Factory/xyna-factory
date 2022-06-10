@@ -1,0 +1,69 @@
+[
+  {
+    "comment": "assumes the workflow is closed. Repairs the workflow and closes it",
+    "type" : "function",
+	"functionName": "repairWorkflow",
+	"input": ["!wfUrl!", "!path!", "!label!", "!expectedNumberOfRepairEntries!"],
+	"output": [],
+    "operations":
+	[
+	  {
+	    "operation": "call",
+	    "requestType": "GET",
+	    "url": "!wfUrl!",
+	    "acceptError": true
+	  },
+      {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "repairs/$list",
+        "expectedValue": "!expectedNumberOfRepairEntries!"
+      },
+	  {
+	    "operation": "call",
+	    "requestType": "GET",
+	    "url": "!wfUrl!?repair=true"
+	  },
+      {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "repairResult/$list",
+        "expectedValue": "!expectedNumberOfRepairEntries!"
+      },
+	  {
+	    "operation": "call",
+	    "requestType": "GET",
+	    "url": "!wfUrl!/dataflow"
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!wfUrl!/save",
+	    "payload": {"revision":1,"path":"!path!","label":"!label!","force":false}
+	  },	
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!wfUrl!/close",
+	    "payload": {"force":false,"revision":1}
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "GET",
+	    "url": "!wfUrl!"
+	  },
+      {
+        "operation": "assert",
+        "constraint": "fieldNotInResult",
+        "fieldName": "repairs",
+        "basePath": ""
+      },
+      {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!wfUrl!/close",
+	    "payload": {"force":false,"revision":0}
+	  }
+	]
+  }
+]

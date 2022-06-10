@@ -1,0 +1,25 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="createremotedestinationinstance" Groups="Node Management" Description="Creates a new remote destination instance."/>
+  <Argument Name="remotedestinationtype" Description="The name of the remote destination type (possible values shown by listremotedestinationtypes)"/>
+  <Argument Name="instancename" Description="Name for the new instance" />
+  <Argument Name="instancedescription" Description="Description of the new instance" Optional="true" />
+  <Argument Name="executiontimeout" Description="Local orders are cancelled once the execution timeout is reached. Format: 5s, 15 min, 2h, ..." Optional="true" />
+  <Argument Name="parameters" Description="The parameters for the remote destination type or 'help' to show possible parameters" MultipleValues="true" Optional="true"/>
+</XynaCommandLineCommand>

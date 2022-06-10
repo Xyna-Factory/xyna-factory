@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<antlib xmlns:oracle="antlib:oracle">
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: start_logging
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="start_logging"
+            description="create log.dir and start logging into log.dir/timestamp.log with ant-task 'record'">
+    <attribute name="dir"
+               default="${basedir}/log"
+               description="Directory to write the log file to" />
+    <attribute name="name"
+               default=""
+               description="Name of the log file. Will be suffixed with timestamp." />
+    <sequential>
+      <mkdir dir="@{dir}" />
+      <record name="@{dir}/@{name}_${timestamp}.log" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: setRouting
+        = = = = = = = = = = = = = = = = = -->
+   <macrodef name="setRouting" description="">
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="httpPort" default="${as.port.http}" />
+    <attribute name="dispatchername" />
+    <attribute name="orderType" />
+    <attribute name="orderTypeVersion" default="1.0" />
+    <attribute name="url" />
+    <attribute name="operation" />
+    <attribute name="synchronous" default="false" />
+    <sequential>
+      <setRoute httpPort="@{httpPort}"
+                host="@{host}"
+                dispatcherName="@{dispatchername}"
+                orderType="@{orderType}"
+                orderTypeVersion="@{orderTypeVersion}"
+                url="@{url}"
+                operation="@{operation}"
+                synchronous="@{synchronous}" />
+      <echo message="Routing for dispatcher '@{dispatchername}' and order type '@{orderType}' with order type version '@{orderTypeVersion}' set." />
+    </sequential>
+   </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: deleteRouting
+        = = = = = = = = = = = = = = = = = -->
+   <macrodef name="deleteRouting" description="">
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="httpPort" default="${as.port.http}" />
+    <attribute name="dispatchername" />
+    <attribute name="orderType" />
+    <attribute name="orderTypeVersion" default="1.0" />
+    <attribute name="url" default="http://localhost" />
+    <attribute name="operation" default="initiate" />
+    <attribute name="synchronous" default="false" />
+    <sequential>
+      <deleteRoute httpPort="@{httpPort}"
+                   host="@{host}"
+                   dispatcherName="@{dispatchername}"
+                   orderType="@{orderType}"
+                   orderTypeVersion="@{orderTypeVersion}"
+                   url="@{url}"
+                   operation="@{operation}"
+                   synchronous="@{synchronous}" />
+      <echo message="Routing for dispatcher '@{dispatchername}' and order type '@{orderType}' with order type version '@{orderTypeVersion}' deleted." />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: addCapacity          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="addCapacity">
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="httpPort" default="${as.port.http}" />
+    <attribute name="name" description="Name of the capacity" />
+    <attribute name="cardinality" description="Quantity of the capacity" />
+    <attribute name="available"
+               default="true"
+               description="Indicates if the capacity is locked or not" />
+    <sequential>
+      <createCapacity httpPort="@{httpPort}"
+                      host="@{host}"
+                      name="@{name}"
+                      cardinality="@{cardinality}"
+                      available="@{available}" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	          macrodef: deleteCapacity          
+	         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="deleteCapacity">
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="httpPort" default="${as.port.http}" />
+    <attribute name="name" description="Name of the new capacity" />
+    <sequential>
+      <removeCapacity httpPort="@{httpPort}" host="@{host}" name="@{name}" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	        macrodef: createOrderType        
+	     = = = = = = = = = = = = = = = = = -->
+  <macrodef name="createOrderType">
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="httpPort" default="${as.port.http}" />
+    <attribute name="orderType" />
+    <attribute name="orderTypeVersion" />
+    <element name="capacities" optional="true" implicit="true" />
+    <sequential>
+      <addOrderType httpPort="@{httpPort}"
+                    host="@{host}"
+                    orderType="@{orderType}"
+                    orderTypeVersion="@{orderTypeVersion}">
+        <capacities />
+      </addOrderType>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	           macrodef: modifyOrderType        
+	        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="modifyOrderType">
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="httpPort" default="${as.port.http}" />
+    <attribute name="orderType" />
+    <attribute name="orderTypeVersion" />
+    <element name="capacities" optional="true" implicit="true" />
+    <sequential>
+      <changeOrderType httpPort="@{httpPort}"
+                       host="@{host}"
+                       orderType="@{orderType}"
+                       orderTypeVersion="@{orderTypeVersion}">
+        <capacities />
+      </changeOrderType>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	             macrodef: deleteOrderType        
+	            = = = = = = = = = = = = = = = = = -->
+  <macrodef name="deleteOrderType">
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="httpPort" default="${as.port.http}" />
+    <attribute name="orderType" />
+    <attribute name="orderTypeVersion" />
+    <sequential>
+      <removeOrderType httpPort="@{httpPort}"
+                       host="@{host}"
+                       orderType="@{orderType}"
+                       orderTypeVersion="@{orderTypeVersion}" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: xyna          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="xyna">
+    <attribute name="command" />
+    <sequential>
+      <checkProperty name="installation.folder" />
+      <echo message="Executing @{command}" />
+      <exec executable="${installation.folder}/server/xynafactory.sh" failonerror="true">
+        <arg line="@{command}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+</antlib>

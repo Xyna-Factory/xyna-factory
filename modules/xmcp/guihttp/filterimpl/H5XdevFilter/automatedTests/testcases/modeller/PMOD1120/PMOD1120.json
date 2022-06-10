@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "18.2.2021",
+    "updated": "18.2.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Exception_Type!": "New Exception Type"
+        },
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.GetDeploymen!": "xmcp.factorymanager.deploymentitems.GetDeploymentItem"
+        },
+        {
+          "!exceptionType!": "exceptionType"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.DeploymentIt!": "xmcp.factorymanager.deploymentitems.DeploymentItemId"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/rtc/$meta/fqn",
+      "targetVariable": "!xmcp.processmodeller.datatypes.Workspace!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Workspace!",
+      "variable": "!xmcp.processmodeller.datatypes.Workspace!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/rtc/name",
+      "targetVariable": "!Base_Import!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1613654207958.NewExceptionType!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1613654207958.NewExceptionType0!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1613654207958!",
+      "variable": "!new_1613654207958.NewExceptionType0!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!"
+            },
+            "name": "!new_1613654207958.NewExceptionType!",
+            "type": "!exceptionType!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!Base_Import!",
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewExceptionType!",
+      "variable": "!new_1613654207958.NewExceptionType0!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1613654207958!/!NewExceptionType!/relations"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!"
+            },
+            "name": "!new_1613654207958.NewExceptionType0!",
+            "type": "!exceptionType!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!Base_Import!",
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1613654207958!/!NewExceptionType!/relations"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "baseType": "core.exception.XynaExceptionBase",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1613654207958!/!NewExceptionType!/objects/typeInfoArea/change",
+	  "acceptError": true
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "params/$list[0]/value",
+      "targetVariable": "!error!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!error!",
+      "value": "ModificationNotAllowedException"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "baseType": "core.exception.XynaException",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1613654207958!/!NewExceptionType!/objects/typeInfoArea/change",
+	  "acceptError": true
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "params/$list[0]/value",
+      "targetVariable": "!error!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!error!",
+      "value": "ModificationNotAllowedException"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "baseType": "core.exception.Exception",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1613654207958!/!NewExceptionType!/objects/typeInfoArea/change",
+	  "acceptError": true
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "params/$list[0]/value",
+      "targetVariable": "!error!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!error!",
+      "value": "ModificationNotAllowedException"
+    }
+  ]
+}

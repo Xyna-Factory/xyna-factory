@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<antlib>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: initXynaDB          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="initXynaDB"
+            description="Create tabelspaces for Xyna Installation (need initXynaDB.sql).">
+    <attribute name="sqldir"
+               description="Directory where sql scripts are stored" />
+    <sequential>
+      <checkProperty name="db.connectstring" />
+      <checkProperty name="db.driver" />
+      <checkProperty name="db.driver.jar" />
+      <checkProperty name="db.url" />
+      <checkProperty name="sqlplus.path" />
+      <if>
+        <and>
+          <isset property="db.sys.password" />
+          <not>
+            <equals arg1="${db.sys.password}" arg2="" />
+          </not>
+        </and>
+        <then>
+          <!-- Check if database is initialized -->
+          <tempfile property="initXynaDB.tmp" suffix=".txt" />
+          <sql driver="${db.driver}"
+               password="${db.sys.password}"
+               url="${db.url}"
+               userid="sys as sysdba"
+               output="${initXynaDB.tmp}"
+               print="true"
+               showheaders="false">
+            <classpath>
+              <pathelement location="${db.driver.jar}" />
+            </classpath>
+            SELECT name FROM v$tablespace WHERE name IN (UPPER('DATA'), UPPER('IDX'))
+          </sql>
+          <loadfile property="initXynaDB.out" srcfile="${initXynaDB.tmp}" />
+          <delete file="${initXynaDB.tmp}"
+                  failonerror="false"
+                  verbose="false" />
+          <if>
+            <and>
+              <contains string="${initXynaDB.out}"
+                        substring="DATA"
+                        casesensitive="false" />
+              <contains string="${initXynaDB.out}"
+                        substring="IDX"
+                        casesensitive="false" />
+            </and>
+            <then>
+              <!-- already initialized -->
+              <echo message="Skip database initialization (already initialized)" />
+            </then>
+            <else>
+              <!-- Initialize Xyna database -->
+              <sqlplus user="sys"
+                       password="${db.sys.password}"
+                       sysdba="as sysdba"
+                       path="@{sqldir}/install"
+                       executable="${sqlplus.path}"
+                       file="initXynaDB.sql"
+                       parameter="${db.tablespace.data.file} ${db.tablespace.index.file} ${db.tablespace.initsize} ${db.tablespace.maxsize}"
+                       connectstring="${db.connectstring}" />
+              <echo message="Xyna DB initialized." />
+            </else>
+          </if>
+        </then>
+        <else>
+          <!-- no sys rights -->
+          <input message="Unable to initialize database. Please initialize manually or via sql script 'initXynaDB.sql' and press enter to continue." />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: createDBUser          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="createDBUser"
+            description="Create new database user/schema (need createUser.sql).">
+    <attribute name="userid"
+               description="ID of the new user." />
+    <attribute name="password"
+               default="${db.password}"
+               description="Password of the new user." />
+    <attribute name="tablespace"
+               default="users"
+               description="Tablespace where the user should be created in." />
+    <attribute name="sqldir"
+               description="Directory where sql scripts are stored" />
+    <sequential>
+      <checkProperty name="db.connectstring" />
+      <if>
+        <and>
+          <isset property="db.sys.password" />
+          <not>
+            <equals arg1="${db.sys.password}" arg2="" />
+          </not>
+        </and>
+        <then>
+          <existsDBUser userid="@{userid}"
+                        result="createDBUser.existsDBUser@{userid}" />
+          <if>
+            <equals arg1="${createDBUser.existsDBUser@{userid}}" arg2="true" />
+            <then>
+              <!-- user already exists -->
+              <echo message="Skip user creation (already exists)" />
+            </then>
+            <else>
+              <!-- Create database user -->
+              <sqlplus user="sys"
+                       password="${db.sys.password}"
+                       sysdba="as sysdba"
+                       path="@{sqldir}/install"
+                       executable="${sqlplus.path}"
+                       file="createUser.sql"
+                       parameter="@{userid} @{password} @{tablespace}"
+                       connectstring="${db.connectstring}" />
+              <echo message="DB user '@{userid}' created." />
+            </else>
+          </if>
+        </then>
+        <else>
+          <!-- no sys rights -->
+          <input message="Missing Sys rights. Please create user manually or via sql scrip 'createUser.sql' and press enter to continue." />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: createDB          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="createDB"
+            description="Create schema content like tables, queues, ... (need createDB.sql).">
+    <attribute name="userid"
+               default="${db.userid}"
+               description="ID of the user." />
+    <attribute name="password"
+               default="${db.password}"
+               description="Password of the user." />
+    <attribute name="sqldir"
+               description="Directory where sql scripts are stored" />
+    <sequential>
+      <checkProperty name="db.connectstring" />
+      <checkProperty name="db.userid" />
+      <checkProperty name="db.password" />
+      <checkProperty name="sqlplus.path" />
+      <existsDBUser userid="@{userid}"
+                    result="createDB.existsDBUser@{userid}" />
+      <if>
+        <equals arg1="${createDB.existsDBUser@{userid}}" arg2="true" />
+        <then>
+          <echo message=">>> Datenbank Benutzer existiert bereits. Falls ein Update beabsichtigt war, bitte das entsprechende Ant Target aufrufen." />
+          <input message=">>> Ohne Datenbank Installation fortsetzen (z.B. RAC System)?"
+                 addproperty="input.createDB@{userid}"
+                 validargs="y,n"
+                 defaultvalue="n" />
+          <if>
+            <equals arg1="${input.createDB@{userid}}" arg2="n" />
+            <then>
+              <fail message="Installation wurde vom Benutzer abgebrochen." />
+            </then>
+          </if>
+        </then>
+        <else>
+          <sqlplus user="@{userid}"
+                   password="@{password}"
+                   path="@{sqldir}/install"
+                   file="createDB.sql"
+                   executable="${sqlplus.path}"
+                   parameter="@{sqldir}/install ${as.host} ${release.number}"
+                   connectstring="${db.connectstring}" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: existsDBUser          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="existsDBUser"
+            description="Check if named user exists in database.">
+    <attribute name="userid"
+               description="ID of the user." />
+    <attribute name="result"
+               description="Name of a property to store the result value (true or false)" />
+    <sequential>
+      <checkProperty name="db.driver" />
+      <checkProperty name="db.driver.jar" />
+      <checkProperty name="db.url" />
+      <!-- Check if database user exists. -->
+      <tempfile property="existsDBUser.tmp@{userid}" suffix=".txt" />
+      <sql driver="${db.driver}"
+           password="${db.sys.password}"
+           url="${db.url}"
+           userid="sys as sysdba"
+           output="${existsDBUser.tmp@{userid}}"
+           print="true"
+           showheaders="false">
+        <classpath>
+          <pathelement location="${db.dirver.jar}" />
+        </classpath>
+        SELECT username FROM ALL_USERS WHERE username=UPPER('@{userid}')
+      </sql>
+      <loadfile property="existsDBUser@{userid}"
+                srcfile="${existsDBUser.tmp@{userid}}" />
+      <delete file="${existsDBUser.tmp@{userid}}"
+              failonerror="false"
+              verbose="false" />
+      <if>
+        <contains string="${existsDBUser@{userid}}"
+                  substring="@{userid}"
+                  casesensitive="false" />
+        <then>
+          <property name="@{result}" value="true" />
+          <echo message="Database user @{userid} already exists." />
+        </then>
+        <else>
+          <property name="@{result}" value="false" />
+          <echo message="Database user @{userid} not exists." />
+        </else>
+      </if>
+      <!-- <condition property="@{result}" value="true" else="false">
+        <contains string="${existsDBUser@{userid}}"
+                  substring="@{userid}"
+                  casesensitive="false" />
+      </condition>-->
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+            macrodef: dropDBUser          
+           = = = = = = = = = = = = = = = = = -->
+  <macrodef name="dropDBUser"
+            description="Drop named user from database (need dropUser.sql)">
+    <attribute name="userid"
+               description="ID of the user." />
+    <attribute name="password"
+               default="${db.password}"
+               description="Password of the user." />
+    <attribute name="sqldir"
+               description="Directory where sql scripts are stored" />
+    <sequential>
+      <checkProperty name="sqlplus.path" />
+      <checkProperty name="db.connectstring" />
+      <if>
+        <and>
+          <isset property="db.sys.password" />
+          <not>
+            <equals arg1="${db.sys.password}" arg2="" />
+          </not>
+        </and>
+        <then>
+          <existsDBUser userid="@{userid}"
+                        result="dropDBUser.existsDBUser@{userid}" />
+          <if>
+            <equals arg1="${dropDBUser.existsDBUser@{userid}}" arg2="true" />
+            <then>
+              <!-- Drop database user -->
+              <sqlplus user="sys"
+                       password="${db.sys.password}"
+                       sysdba="as sysdba"
+                       path="@{sqldir}"
+                       file="dropUser.sql"
+                       executable="${sqlplus.path}"
+                       parameter="@{userid} @{password}"
+                       connectstring="${db.connectstring}" />
+              <echo message="DB user '@{userid}' dropped." />
+            </then>
+            <else>
+              <!-- user not exists -->
+              <echo message="Skip user deletion (not exists)" />
+            </else>
+          </if>
+        </then>
+        <else>
+          <!-- no sys rights -->
+          <input message="Missing Sys rights. Please delete user manually or via sql scrip 'dropUser.sql' and press enter to continue." />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+</antlib>

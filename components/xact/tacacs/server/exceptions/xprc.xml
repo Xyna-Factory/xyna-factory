@@ -1,0 +1,1461 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="EN">
+   <Description Language="">Exceptions Xyna. Codes finden sich in auch in Klasse
+               com.gip.xyna.xprc.Codes. Diese Datei dient
+               gleichzeitig als Dokumentation der Fehlermeldungen.
+               CodeRange von 01000 bis 01599</Description>
+   <!-- Code="XYNA-01000"  XMOM/xprc/waitsuspend/SuspensionError.xml -->
+   <!-- Code="XYNA-01001"  XMOM/xprc/waitsuspend/WaitingError.xml -->
+   <ExceptionType Code="XYNA-01010" TypeName="XPRC_HANGING_PROCESS" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="orderId">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">auftrag %0% hängt. es wurde ein ergebnis oder ein fehler zurückerwartet.</MessageText>
+      <MessageText Language="EN">order %0% hangs. expected response or error.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01011" TypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="orderId">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Auftrag %0% hat seine maximale Wartezeit ueberschritten und konnte nicht ausgefuehrt werden.</MessageText>
+      <MessageText Language="EN">Order %0% timed out while waiting to be scheduled for execution.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01527" TypeName="XPRC_SchedulingTimeout_Capacity" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Auftrag %0% hat im Scheduler beim Warten auf eine Capacity seine maximale Wartezeit überschritten.</MessageText>
+      <MessageText Language="EN">Order %0% timed out in scheduler while waiting for capacity.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01528" TypeName="XPRC_SchedulingTimeout_Veto" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Auftrag %0% hat im Scheduler beim Warten auf ein Veto seine maximale Wartezeit überschritten.</MessageText>
+      <MessageText Language="EN">Order %0% timed out in scheduler while waiting for veto.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01529" TypeName="XPRC_SchedulingTimeout_Predecessor" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Auftrag %0% hat im Scheduler beim Warten auf Serien-Vorgänger seine maximale Wartezeit überschritten.</MessageText>
+      <MessageText Language="EN">Order %0% timed out in scheduler while waiting for series predecessor.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01530" TypeName="XPRC_SchedulingTimeout_TimeConstraint" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Auftrag %0% hat im Scheduler beim Warten auf Startzeit oder Zeitfenster seine maximale Wartezeit überschritten.</MessageText>
+      <MessageText Language="EN">Order %0% timed out in scheduler while waiting for start time or time window.</MessageText>
+   </ExceptionType>
+  <ExceptionType Code="XYNA-01531" TypeName="XPRC_SchedulingTimeout_BatchProcess" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Auftrag %0% hat im Scheduler beim Warten auf pausierten BatchProcess seine maximale Wartezeit überschritten.</MessageText>
+      <MessageText Language="EN">Order %0% timed out in scheduler while waiting for paused batch process.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01532" TypeName="XPRC_SchedulingTimeout_Deployment" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Auftrag %0% hat im Scheduler beim Warten auf das Deployment seine maximale Wartezeit überschritten.</MessageText>
+      <MessageText Language="EN">Order %0% timed out in scheduler while waiting for deployment.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01012" TypeName="XPRC_PROCESS_CANCELLED" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="orderId">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Auftrag %0% wurde storniert.</MessageText>
+      <MessageText Language="EN">Order %0% has been cancelled.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01020" TypeName="XPRC_PROCESS_NOT_FOUND" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="processName" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Process mit Namen %0% konnte nicht gefunden werden. Bitte Dispatcher-Konfiguration pruefen.</MessageText>
+      <MessageText Language="EN">Process %0% could not be found. Please check the dispatcher configuration.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01021" TypeName="XPRC_PROCESS_NOT_ACCESSABLE" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="processName" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Auf den Prozess mit Namen %0% kann nicht zugegriffen werden.</MessageText>
+      <MessageText Language="DE">Process %0% can not be accessed.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01022" TypeName="XPRC_PROCESS_NOT_INSTANTIABLE" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="processName" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Prozess mit Namen %0% kann nicht instanziiert werden.</MessageText>
+      <MessageText Language="EN">Process %0% can not be instantiated.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01023" TypeName="XPRC_DATATYPE_NOT_FOUND" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="datatypeName" VariableName="datatypeName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Datentyp mit Namen %0% konnte nicht gefunden werden.</MessageText>
+      <MessageText Language="EN">Datatype %0% could not be found.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01030" TypeName="XPRC_UNEXPECTED_ERROR_PROCESS" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="ordertype" VariableName="orderType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="errorMessage" VariableName="errorMessage">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Unerwarteter Fehler bei Ausführung des Auftrags %0%: %1%</MessageText>
+      <MessageText Language="EN">unexpected error executing order %0%: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01035" TypeName="XPRC_DEPLOYMENT_ERROR" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="vorgang" VariableName="deploymentOperation">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="objekt in dem der fehler aufgetreten ist" VariableName="erroneousObject">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="fehler" VariableName="errorMessage">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Deployment-Fehler waehrend des Schritts '%0%' von %1%: %2%</MessageText>
+      <MessageText Language="EN">Deployment error during step '%0%' at %1%: %2%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01133" TypeName="XPRC_INVALID_PLANNING_RESPONSETYPE" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">(%0%) PlanningWorkflow muss SchedulerBean zurückgeben.</MessageText>
+      <MessageText Language="EN">(%0%) Invalid response type. The response type of planning workflows must be a SchedulerBean</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01140" TypeName="XPRC_INVALID_MONITORING_TYPE" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="code" VariableName="code">
+         <Meta>
+            <Type>java.lang.Integer</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Nicht definierter Monitoring Code %0%.</MessageText>
+      <MessageText Language="EN">Undefined monitoring code %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01141" TypeName="XPRC_CREATE_MONITOR_STEP_XML_ERROR" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="message" VariableName="message">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler beim Erstellen des XML-Codes für das schrittweise Monitoring: %0%.</MessageText>
+      <MessageText Language="EN">Error while creating XML code for step-wise monitoring: %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01150" TypeName="XPRC_PROCESS_NOT_DEPLOYED" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="process name" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Process %0% ist nicht deployed.</MessageText>
+      <MessageText Language="EN">Process %0% is not deployed.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01151" TypeName="XPRC_ERROR_IN_COMPENSATION" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="error msg" VariableName="errorMessage">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="vorherige error msg" VariableName="errorMessageOld">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler während Compensation: %0%. ursprünglicher fehler: %1%</MessageText>
+      <MessageText Language="EN">Error during compensation: %0%. original error: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01152" TypeName="XPRC_TIMEOUT_WAITING_FOR_DEPLOYMENT" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="process name" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Auftrag konnte nicht gestartet werden, weil der zugehörige Workflow %0% noch beim Deployment ist</MessageText>
+      <MessageText Language="EN">order could not be started. workflow %0% is still deploying</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01153" TypeName="XPRC_UNEXPECTED_THREAD_INTERRUPTION" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Thread wurde unerwarteterweise unterbrochen.</MessageText>
+      <MessageText Language="EN">Thread was interrupted unexpectedly</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01154" TypeName="XPRC_PARALLEL_EXEC_FAILED" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Fehler bei der parallelen Ausführung</MessageText>
+      <MessageText Language="EN">Error during parallel execution</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01155" TypeName="XPRC_CLASSLOADER_NOT_FOUND" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="process name" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Workflow %0% ist nicht korrekt deployed. Entsprechender ClassLoader wurde nicht gefunden.</MessageText>
+      <MessageText Language="EN">Workflow %0% is not deployed correctly. classloader was not found.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01156" TypeName="XPRC_PROCESS_INPUT_IS_NULL" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="process name" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Workflow %0% wurde mit dem Input-Parameter 'null' aufgerufen.</MessageText>
+      <MessageText Language="EN">Workflow %0% was called with input parameter 'null'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01157" TypeName="XPRC_TOO_FEW_PROCESS_INPUT_PARAMETERS" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="process name" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Workflow %0% wurde mit zu wenigen Input-Parametern aufgerufen.</MessageText>
+      <MessageText Language="EN">Workflow %0% was called with too few input parameters.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01158" TypeName="XPRC_TOO_MANY_PROCESS_INPUT_PARAMETERS" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="process name" VariableName="processName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Workflow %0% wurde mit zu vielen Input-Parametern aufgerufen.</MessageText>
+      <MessageText Language="EN">Workflow %0% was called with too many input parameters.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01159" TypeName="XPRC_INVALID_INPUT_PARAMETER_TYPE" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="parameter position" VariableName="position">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="expected" VariableName="expected">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="got" VariableName="got">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Unerwarteter Input-Parameter an Position %0%. Erwartet '%1%', erhalten '%2%'.</MessageText>
+      <MessageText Language="EN">Invalid input parameter at position %0%. Expected '%1%', got '%2%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01160" TypeName="XPRC_InvalidInputParameterClassloader" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="parameter position" VariableName="position">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="class name" VariableName="className">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="expected classloader" VariableName="expectedClassloader">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="got classloader" VariableName="gotClassloader">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Input-Parameter an Position %0% (Typ %1%) wurde von falschem Classloader geladen. Erwartet '%2%', erhalten '%3%'.</MessageText>
+      <MessageText Language="EN">Input parameter at position %0% was loaded by wrong classloader. Classloader of type %1% was '%3%', expected '%2%'.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-01170" TypeName="XPRC_CAPACITY_ALREADY_DEFINED" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="cap Name" VariableName="capName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Capacity %0% existiert bereits.</MessageText>
+      <MessageText Language="EN">capacity %0% already exists.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01171" TypeName="XPRC_CAPACITY_NOT_FOUND" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="cap Name" VariableName="capName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Capacity %0% nicht gefunden.</MessageText>
+      <MessageText Language="EN">Capacity %0% not found.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01172" TypeName="XPRC_ClusterStateChangedException" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Der Capacity Algorithmus passt bereits nicht mehr zum Cluster Zustand.</MessageText>
+      <MessageText Language="EN">The capacity algorithm is not consistent with the current cluster state.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01210" TypeName="XPRC_DESTINATION_NOT_FOUND" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="orderType" VariableName="orderType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="DispatcherName" VariableName="dispatcherName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Destination für orderType="%0%" ist im %1% nicht konfiguriert</MessageText>
+      <MessageText Language="EN">Destination not found for ordertype="%0%" in %1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01211" TypeName="XPRC_UNEXPECTED_PERSISTANCE_WHAT_KEY" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="expectedKey" VariableName="expectedKey">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="gotKey" VariableName="gotKey">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Unerwarteter Key von Datenbanklayer erhalten. erwartet: %0%, bekommen: %1%.</MessageText>
+      <MessageText Language="EN">unexpected key in persistance layer. expected %0%, got %1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01280" TypeName="XPRC_INVALID_PARAMETERS_DIFFERENT_BASE_PATH" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="pfad1" VariableName="path1">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="pfad2" VariableName="path2">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Ungültige Pfadangaben "%0%" und "%1%". Pfade müssen gleiches Prefix besitzen</MessageText>
+      <MessageText Language="EN">paths "%0" and "%1%" must have the same prefix.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01281" TypeName="XPRC_ERROR_BUILDING_TEMPLATE_PROJECT" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="projectname" VariableName="projectname">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="caused by" VariableName="causedBy">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler beim erstellen des Template Projekts %0%: %1%</MessageText>
+      <MessageText Language="DE">error generating template project %0%: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01300" TypeName="XPRC_GENERAL_UPDATE_ERROR" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="targetVersion" VariableName="targetVersion">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Beim Update auf Version %0% traten fehler auf.</MessageText>
+      <MessageText Language="EN">Error while updating to version %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01301" TypeName="XPRC_VERSION_VALIDATION_ERROR" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="requestedVersion" VariableName="requestedVersion">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="actualVersion" VariableName="actualVersion">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Geprüfte Version %0% stimmt nicht mit der aktuellen Version %1% überein.</MessageText>
+      <MessageText Language="EN">Checked version %0% does not match current version %1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01302" TypeName="XPRC_FILE_UPDATE_ERROR" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="file" VariableName="fileName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="message" VariableName="message">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="updateversion" VariableName="updateversion">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Datei %0% konnte nicht auf Version %2% aktualisiert werden werden (%1%)</MessageText>
+      <MessageText Language="EN">File %0% could not be updated to version %2% (%1%)</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01303" TypeName="XPRC_VERSION_DETECTION_PROBLEM" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Version konnte nicht erfolgreich ermittelt werden.</MessageText>
+      <MessageText Language="EN">Could not detect version.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01350" TypeName="XPRC_UNSYNCHRONIZED_ACCESS" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="accessed entity" VariableName="accessedEntity">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Unsynchronisierter Zugriff auf %0%</MessageText>
+      <MessageText Language="EN">Unsynchronized access to %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01370" TypeName="XPRC_UNSUPPORTED_FILE_EXTENSION_DEPLOYMENT" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Ungültiges Dateiformat für Implementierung. Es werden nur Jar und Zip Files unterstützt</MessageText>
+      <MessageText Language="EN">Unsupported file format for implementation. Only jar and zip files are supported.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01390" TypeName="XPRC_RUNTIME_EXCEPTION_DURING_EXECUTION" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="orderId" VariableName="orderId">
+         <Meta>
+            <Type>java.lang.Long</Type>
+         </Meta>
+      </Data>
+      <Data Label="errorMessage" VariableName="errorMessage">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">RuntimeException bei der Ausfueherung von Auftrag %0% gefangen: %1%</MessageText>
+      <MessageText Language="EN">Caugh RuntimeException during execution of order %0%: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01410" TypeName="XPRC_FACTORY_IS_SHUTTING_DOWN" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="attemptedAction" VariableName="attemptedAction">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fabrik faehrt herunter, konnte den Vorgang nicht durchfuehren (%0%)</MessageText>
+      <MessageText Language="EN">Factory is shutting down, could not perform the requested action (%0%)</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01415" TypeName="XPRC_TIMEOUT_DURING_SYNCHRONIZATION" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="correlationId" VariableName="correlationId">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Zeitüberschreitung beim Synchronisieren auf (%0%)</MessageText>
+      <MessageText Language="EN">Timout while waiting to synchronize on (%0%)</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01416" TypeName="XPRC_DUPLICATE_CORRELATIONID" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="correlationId" VariableName="correlationId">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Doppelte CorrelationId (%0%)</MessageText>
+      <MessageText Language="EN">Duplicated correlationId (%0%)</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01417" TypeName="XPRC_CircularDependencyInSeriesException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="cycle" VariableName="cycle">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Zirkuläre Abhängigkeit in Auftragsserie: Predecessor-CorrelationIds %0%.</MessageText>
+      <MessageText Language="EN">Circular dependency in series: predecessor correlationIds %0%.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-01418" TypeName="XPRC_JAVATYPE_UNSUPPORTED" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="javatype" VariableName="javatype">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">JavaType %0% ist ungültig.</MessageText>
+      <MessageText Language="EN">invalid javatype %0%.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01419" TypeName="XPRC_MEMBER_DATA_NOT_IDENTIFIED" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="invalid variable" VariableName="varName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Data Objekt ist im XML nicht korrekt definiert, es konnte keine passende Struktur zu %0% gefunden werden</MessageText>
+      <MessageText Language="EN">Child name '%0%' in data object could not be identified as valid child</MessageText>
+   </ExceptionType>
+
+   <ExceptionType Code="XYNA-01420" TypeName="XPRC_InvalidXMLMissingListValueException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="variable type" VariableName="variableType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Variable hat unterhalb eines Listen Elements kein Data-Element.</MessageText>
+      <MessageText Language="EN">Variable is missing a data element as child of a list.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-01421" TypeName="XPRC_MISSING_ATTRIBUTE" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="element" VariableName="element">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="variable type" VariableName="variableType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="missingAttribute" VariableName="missingAttribute">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehlendes Attribut von %0% in Variable des Typs %1%: %2%</MessageText>
+      <MessageText Language="EN">Missing attribute for %0% in variable of type %1%: %2%</MessageText>
+   </ExceptionType>   
+   
+   <ExceptionType Code="XYNA-01422" TypeName="XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqClassName" VariableName="fqClassName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="requestedType" VariableName="requestedType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="currentType" VariableName="currentType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Erstellung von ungueltigem Objekt (Angefragt %0% vom Typ %1%, gefundener Typ: %2%)</MessageText>
+      <MessageText Language="EN">Illegal object creation (requested '%0%' with type %1%, found existing object with type %2%)</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01423" TypeName="XPRC_InvalidXmlVariableTypeMissingException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="varName" VariableName="varName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="objectName" VariableName="objectName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Für Variable %0% in %1% ist kein Type angegeben.</MessageText>
+      <MessageText Language="DE">There is no type defined for variable %0% in %1%.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-01424" TypeName="XPRC_OperationUnknownException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="operationName" VariableName="operationName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Operation %0% konnte nicht gefunden werden</MessageText>
+      <MessageText Language="EN">Operation %0% could not be found</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01425" TypeName="XPRC_InvalidExceptionXmlInvalidBaseReferenceException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Invalid XML in %0%. Base ReferenceName and ReferencePath have to be either both null or both not null.</MessageText>
+   </ExceptionType>    
+   <ExceptionType Code="XYNA-01426" TypeName="XPRC_InvalidExceptionVariableXmlMissingTypeNameException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Invalid XML in %0%. ReferenceName and ReferencePath may not be null.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01427" TypeName="XPRC_InvalidXmlMethodAbstractAndStaticException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="methoden name" VariableName="methodName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Methode %0% ist abstract und static definiert. diese Kombination ist unmöglich</MessageText>
+      <MessageText Language="EN">method %0% is defined as abstract and static which is not allowed in this combination</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01428" TypeName="XPRC_InvalidXmlMissingRequiredElementException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="parentElement" VariableName="parentElement">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="childElement" VariableName="childElement">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">In Element %0% fehlt das benötigte Kindelement %1%.</MessageText>
+      <MessageText Language="EN">element %0% is missing its required childelement %1%.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-01429" TypeName="XPRC_JarFileForServiceImplNotFoundException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="service" VariableName="service">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="jarfile" VariableName="jarfile">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das für den Service %0% angegebene Jarfile %1% wurde nicht gefunden.</MessageText>
+      <MessageText Language="EN">Couldn't find jar file %1% used in service %0%.</MessageText>
+   </ExceptionType>    
+   <ExceptionType Code="XYNA-01430" TypeName="XPRC_EXISTING_DEPENDENCY_ONUNDEPLOYMENT" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="object" VariableName="objekt">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Datentyp %0% konnte nicht entfernt werden weil Abhaengigkeiten bestehen</MessageText>
+      <MessageText Language="DE">Datatype object %0% could not be removed because of existing dependencies</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01431" TypeName="XPRC_INVALID_UNDEPLOYMENT_WORKFLOW_IN_USE" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="workflow" VariableName="workflow">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="workflowStatus" VariableName="workflowStatus">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Workflow %0% konnte nicht undeployt werden, er ist noch in Verwendung (%1%).</MessageText>
+      <MessageText Language="EN">Workflow %0% could not be undeployed, it is still in use (%1%).</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-01432" TypeName="XPRC_DeploymentDuringUndeploymentException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">%0% is being undeployed and thus can not be deployed.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-01433" TypeName="XPRC_InternalObjectMayNotBeUndeployedException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">%0% may not be undeployed. It is used internally.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-01434" TypeName="XPRC_InconsistentFileNameAndContentException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">MDM Objekt %0% hat im xml ein anderen namen angegeben als der dateiname/-pfad besagt</MessageText>
+      <MessageText Language="EN">XML name of MDM Object %0% is different from its file path</MessageText>
+   </ExceptionType>      
+   <ExceptionType Code="XYNA-01435" TypeName="XPRC_WrongDeploymentTypeException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMDeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="wrongObjektType" VariableName="wrongObjectType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="realObjektType" VariableName="realObjectType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Object %0% may not be deployed as %1%. It is a %2%.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-01436" TypeName="XPRC_InheritedConcurrentDeploymentException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="target state" VariableName="targetState">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">%0% could not complete state transition to state %1%.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-01437" TypeName="XPRC_MDMDeploymentException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Exception occurred during deployment of %0%.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-01438" TypeName="XPRC_CompileError" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMDeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="file" VariableName="fileName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Fehlermeldung" VariableName="errorMessage">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Beim Deployment von %0% ist das Kompilieren von %1% fehlgeschlagen: %2%</MessageText>
+      <MessageText Language="EN">Compile of %1% failed during deployment of %0%: %2%</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01439" TypeName="XPRC_DuplicateVariableNamesException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="var Name" VariableName="duplicateVarName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>      
+      <MessageText Language="DE">Variablenname %0% ist nicht eindeutig.</MessageText>
+      <MessageText Language="EN">variable name %0% must be unique.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01440" TypeName="XPRC_InvalidVariableNameException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMDeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="varname" VariableName="varname">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Ungültiger Variablen Name: %1% in %0%. Name wird entweder intern verwendet oder ist mehrfach in Benutzung.</MessageText>
+      <MessageText Language="EN">Invalid variable name: %1% in %0%. It is either used internally or is used several times.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01441" TypeName="XPRC_InvalidPackageNameException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="packagename" VariableName="packagename">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Packagename in '%0%' ist ungültig.</MessageText>
+      <MessageText Language="EN">invalid packagename in '%0%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01442" TypeName="XPRC_BackupFileException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMDeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Backup of xml could not be restored after error in %0%.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01443" TypeName="XPRC_BackupDeploymentException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMDeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Backup of xml could not be redeployed after error in %0%.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-01444" TypeName="XPRC_DeploymentCleanupException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMDeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Errors occurred during cleanup after error.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01445" TypeName="XPRC_MDMUndeploymentException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Exception occurred during undeployment of '%0%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01446" TypeName="XPRC_UndeploymentDuringDeploymentException" TypePath="com.gip.xyna.xprc.exceptions"  BaseTypeName="XPRC_MDMUndeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">'%0%' is being deployed and thus can not be undeployed.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01447" TypeName="XPRC_SimultanuousUndeploymentException" TypePath="com.gip.xyna.xprc.exceptions"  BaseTypeName="XPRC_MDMUndeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">%0% is already being undeployed.</MessageText>
+   </ExceptionType>   
+     <ExceptionType Code="XYNA-01448" TypeName="XPRC_InvalidVariableIdException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">referenzierte variablen id konnte nicht aufgelöst werden: %0%</MessageText>
+      <MessageText Language="EN">referenced variableid not found: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01449" TypeName="XPRC_MissingServiceIdException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="operation" VariableName="operation">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es wurde keine ServiceID gefunden für Operation %0%.</MessageText>
+      <MessageText Language="EN">No serviceId found for operation %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01450" TypeName="XPRC_EmptyVariableIdException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="elementWithNoId" VariableName="elementWithNoId">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es wurde kein RefID Attribut gefunden in Element "%0%".</MessageText>
+      <MessageText Language="EN">Didn't find RefID Attribute in element "%0%".</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01451" TypeName="XPRC_InvalidXmlChoiceHasNoInputException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqChoiceName" VariableName="fqChoiceName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Choice %0% must define input.</MessageText>
+   </ExceptionType>
+   
+   
+
+   <ExceptionType Code="XYNA-01452" TypeName="XDEV_MissingImplementationOfMethodException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="method name" VariableName="methodName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="mdm objekt" VariableName="mdmObject">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Abstrakte Methode %0% muss in dem Objekt %1% implementiert werden oder das Objekt muss selbst als abstrakt definiert werden.</MessageText>
+      <MessageText Language="EN">missing implementation of inherited abstract method %0% in object %1%. either implement method or define object as abstract.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01453" TypeName="XPRC_InvalidSourceTargetDefinitionException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="mdm objekt" VariableName="mdmObject">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="syntax" VariableName="syntax">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Source/Target Verweis in Datei %0% hat einen ungültigen Syntax: %1%</MessageText>
+      <MessageText Language="EN">invalid source target references in file %0%: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01454" TypeName="XPRC_MissingContextForNonstaticMethodCallException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="methode" VariableName="method">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="mdm objekt" VariableName="mdmObject">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Methode %0% in Objekt %1% kann nur statisch aufgerufen werden, da keine zugehörige Variable definiert wurde.</MessageText>
+      <MessageText Language="EN">missing object-instance: method %0% in object %1% can not be accessed in a static way.</MessageText>
+   </ExceptionType>
+   
+
+   <ExceptionType Code="XYNA-01455" TypeName="XPRC_InvalidServiceIdException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">referenzierte serviceid konnte nicht aufgelöst werden: %0%</MessageText>
+      <MessageText Language="EN">referenced serviceid not found: %0%</MessageText>
+   </ExceptionType>
+    <ExceptionType Code="XYNA-01456" TypeName="XPRC_InvalidIDTargetException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="foundId" VariableName="foundId">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="expectedElementType" VariableName="expectedElementType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Unerwarteter Elementtyp mit ID "%0%", erwartet: %1%.</MessageText>
+      <MessageText Language="EN">Unexpected element type with id "%0%", expected: %1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01457" TypeName="XPRC_XmlParsingException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="xmlfileName" VariableName="xmlfileName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">XML file '%0%' could not be parsed successfully.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01458" TypeName="XPRC_DuplicateMIException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id of mi" VariableName="idOfMI">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Manual Interaction with id '%0%' has already been processed.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01459" TypeName="XPRC_ExecutionDestinationMissingException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="orderType" VariableName="orderType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Execution destination for ordertype %0% is not configured.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01460" TypeName="XPRC_OperationNotFoundInDatatypeException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="operationName" VariableName="operationName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="fqDataType" VariableName="fqDataType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Operation '%0%' not found in datatype '%1%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01461" TypeName="XPRC_ResumeFailedException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Resume of order %0% failed.</MessageText>
+   </ExceptionType>    
+   <ExceptionType Code="XYNA-01462" TypeName="XPRC_SuspendFailedException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Suspend of order %0% failed.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-01463" TypeName="XPRC_CancelFailedException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Cancel of order %0% failed.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-01464" TypeName="XPRC_DeploymentHandlerException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqName" VariableName="fqName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="deployment Handler Name" VariableName="deploymentHandlerName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Execution of deployment handler %1% for object %0% failed.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01465" TypeName="XPRC_UnDeploymentHandlerException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqName" VariableName="fqName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="undeployment Handler Name" VariableName="undeploymentHandlerName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Execution of undeployment handler '%1%' for object '%0%' failed.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01466" TypeName="XPRC_MDMObjectCreationException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqName" VariableName="fqName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">MDM Object Instance of '%0%' could not be created from variable content.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-01467" TypeName="XPRC_InvalidXMLForObjectCreationException" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">XML is not valid for object creation.</MessageText>
+   </ExceptionType>
+    <ExceptionType Code="XYNA-01468" TypeName="XPRC_MdmDeploymentCyclicInheritanceException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqName" VariableName="fqName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">MDM Object '%0%' inherits from itself (directly or indirectly).</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01469" TypeName="XPRC_WorkflowProtectionModeViolationException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="fqName" VariableName="fqName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Deployment wurde abgebrochen, weil noch Aufträge aktiv sind, die den Workflow "%0%" benutzen.</MessageText>
+      <MessageText Language="EN">Deployment aborted, because there are active orders using workflow "%0%".</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01470" TypeName="XPRC_UnresolveableOrderTypeException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="ordertype" VariableName="ordertype">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="dispatchername" VariableName="dispatchername">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Deployment wurde abgebrochen,  Auftragstyp "%0%" konnte in Dispatcher %1% nicht aufgelöst werden.</MessageText>
+      <MessageText Language="EN">Deployment aborted, ordertype "%0%" could not be resolved in dispatcher %1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01471" TypeName="XPRC_TimeoutWhileWaitingForUnaccessibleOrderException" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Zeitüberschreitung beim Warten auf einen unerreichbaren Auftrag.</MessageText>
+      <MessageText Language="EN">Timeout while waiting on unaccessible order.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01490" TypeName="XPRC_InvalidUndeploymentTypeException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMUndeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="invalidUsedType" VariableName="invalidUsedType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Illegal undeployment attempt: '%0%' is not of type '%1%'.</MessageText>
+      <MessageText Language="DE">Ungueltiger Undeployment-Vorgang: '%0%' ist nicht vom Typ '%1%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01472" TypeName="XPRC_CronLikeSchedulerException" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Error in CronLikeScheduler.</MessageText>
+      <MessageText Language="DE">Fehler im CronLikeScheduler..</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01473" TypeName="XPRC_CronCreationException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_CronLikeSchedulerException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="cronLikeOrderId" VariableName="cronLikeOrderId">
+         <Meta>
+            <Type>Long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Failed to create CronLikeOrder '%0%'.</MessageText>
+      <MessageText Language="DE">Konnte CronLikeJob '%0%' nicht erstellen.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01474" TypeName="XPRC_CronRemovalException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_CronLikeSchedulerException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="cronLikeOrderId" VariableName="cronLikeOrderId">
+         <Meta>
+            <Type>Long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Failed to remove CronLikeOrder '%0%'.</MessageText>
+      <MessageText Language="DE">Konnte CronLikeJob '%0%' nicht entfernen.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01475" TypeName="XPRC_CronLikeOrderStorageException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_CronLikeSchedulerException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="cronLikeOrderId" VariableName="cronLikeOrderId">
+         <Meta>
+            <Type>Long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Error while processing storage information on CronLikeJob '%0%'.</MessageText>
+      <MessageText Language="DE">Fehler bei der Verarbeitung der gespeicherten Information zu CronLikeJob '%0%'.</MessageText>
+   </ExceptionType>
+    <ExceptionType Code="XYNA-01476" TypeName="XPRC_TimeoutWhileWaitingForUnaccessibleOrderException" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="DE">Zeitüberschreitung beim Warten auf einen unerreichbaren Auftrag.</MessageText>
+      <MessageText Language="EN">Timeout while waiting on unaccessible order.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01477" TypeName="XPRC_InvalidUndeploymentTypeException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMUndeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="invalidUsedType" VariableName="invalidUsedType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Illegal undeployment attempt: '%0%' is not of type '%1%'.</MessageText>
+      <MessageText Language="DE">Ungueltiger Undeployment-Vorgang: '%0%' ist nicht vom Typ '%1%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01478" TypeName="XPRC_ErrorDuringReloadOfGeneratedObjects" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="reason" VariableName="reason">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Error while trying to reload generated object: %0%.</MessageText>
+      <MessageText Language="DE">Fehler beim Versuch ein generiertes Objekt neuzuladen: %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01479" TypeName="XPRC_FeatureRelatedExceptionDuringSuspensionHandling" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="reason" VariableName="reason">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Error during suspension handling: %0%.</MessageText>
+      <MessageText Language="DE">Fehler bei der Behandlung eines Suspendierungs-Ereignisses: %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01480" TypeName="XPRC_InvalidEntryInList" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="expected" VariableName="expected">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="actual" VariableName="actual">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Illegal content of list encountered: Expected '%0%', got '%1%'.</MessageText>
+      <MessageText Language="DE">Unerwarteter Listeninhalt: Erwartet: '%0%', festgestellt: '%1%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01481" TypeName="XPRC_InvalidTaskType" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="type" VariableName="type">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Unkown FrequencyControlledTaskType: %0%.</MessageText>
+      <MessageText Language="DE">Unbekannter FrequencyControlledTaskType: %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01481" TypeName="XPRC_InvalidCreationParameters" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="problem" VariableName="problem">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Invalid value in FrequencyControlledTask creation parameters: %0%.</MessageText>
+      <MessageText Language="DE">Ungültiger Wert in FrequencyControlledTask-Erstellungsparametern: %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01482" TypeName="XPRC_InvalidFrequencyControlledTaskId" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>Long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Unabled to locate task for id '%0%'.</MessageText>
+      <MessageText Language="DE">Es konnte kein Task für die id '%0%' gefunden werden.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01483" TypeName="XPRC_IllegalStateForTaskArchiving" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="state" VariableName="state">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">An attempt was made to archive a %0% task, this is not allowed.</MessageText>
+      <MessageText Language="DE">Es wurde versucht ein Task im Status %0% zu archivieren, dies ist nicht erlaubt.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01484" TypeName="XPRC_IllegalEventCreationStopAttempt" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">An attempt was made to stop an already stopped EventCreationAlgorithm.</MessageText>
+      <MessageText Language="DE">Es wurde versucht, einen EventCreationAlgorithm zu stoppen, der bereits gestoppt war.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01485" TypeName="XPRC_FactoryShutdownViolation" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Active orders were found, Factory-Shutdown canceled.</MessageText>
+      <MessageText Language="DE">Überprüfungen zeigten laufende Aufträge, Factory-Shutdown wurde verhindert.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01533" TypeName="XPRC_FactoryShutdownViolation_ActiveOperation" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="operation" VariableName="operation">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">'%0%' is still active, Factory-Shutdown canceled.</MessageText>
+      <MessageText Language="DE">'%0%' ist noch aktiv, Factory-Shutdown wurde verhindert.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01486" TypeName="XPRC_TTLExpirationBeforeHandlerRegistration" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="Formatted Expiration Timestamp" VariableName="formattedExpirationTimestamp">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Time to live of order expired at %0%.</MessageText>
+      <MessageText Language="DE">Die Time to live-Zeit des Auftrags wurde zum Zeitpunkt %0% überschritten.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01487" TypeName="XPRC_RetryLimitExpired" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">The specified number of retries were all unsuccesfull.</MessageText>
+      <MessageText Language="DE">Die angegebene Anzahl an Wiederholungen erzeugten alle eine Fehler.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01488" TypeName="XPRC_IllegalManualInteractionResponse" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="response" VariableName="response">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">The given response (%0%) for the manual interaction is not allowed.</MessageText>
+      <MessageText Language="DE">Die gegebene Antwort (%0%) für die Manuelle Interaktion ist nicht erlaubt.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01489" TypeName="XPRC_NoInputSpecifiedForChoice" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">The input of a choice object may not be 'null'. This may be caused by an unimplemented service.</MessageText>
+      <MessageText Language="DE">Der Input-Wert eines Choice-Objekts darf nicht 'null' sein. Die Ursache kann ein nicht implementierter Service sein.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01491" TypeName="XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Can not reduce cardinality to the desired value, too many capacities in use. Try again later.</MessageText>
+      <MessageText Language="DE">Cardinality kann nicht auf den gewünschten Wert reduziert werden, da zuviele Capacities in Benutzung sind. Später nochmal probieren.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01492" TypeName="XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryChangeState" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Can not reduce cardinality to the desired value, too many capacities in use. Try changeState to DISABLED first.</MessageText>
+      <MessageText Language="DE">Cardinality kann nicht auf den gewünschten Wert reduziert werden, da zuviele Capacities in Benutzung sind. Eventuell hilft ein vorheriges changeState auf DISABLED.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01493" TypeName="XPRC_OrderEntryCouldNotBeAcknowledgedException" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Failed to acknowledge order entry.</MessageText>
+      <MessageText Language="DE">Auftragseingang konnte nicht quittiert werden.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01494" TypeName="XPRC_OrderBackupIncomplete_XynaOrderMissing" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">Incomplete entry in OrderBackup: Missing XynaOrder or was unable to deserialize it.</MessageText>
+      <MessageText Language="DE">Unvollständiger Eintrag im OrderBackup: XynaOrder fehlt oder konnte nicht deserialisiert werden.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01495" TypeName="XPRC_UnknownIntentionallyAbandonedOrderID" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>Long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">No intentionally abandoned order with ID '%0%' is not known.</MessageText>
+      <MessageText Language="DE">Es ist keine intentionally abandoned order mit ID '%0%' bekannt.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01496" TypeName="XPRC_IncompleteIntentionallyAbandonedOrder" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>Long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">The information on the intentionally abandoned order with ID '%0%' is incomplete, cannot process order.</MessageText>
+      <MessageText Language="DE">Die Informationen zur intentionally abandoned order mit ID '%0%' ist unvollstaendig und kann daher nicht verarbeitet werden.</MessageText>
+   </ExceptionType>
+   
+   
+   <ExceptionType Code="XYNA-01497" TypeName="XPRC_Scheduler_CapacityMissingException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="capName" VariableName="capName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Capacity '%0%' needed to schedule does not exist.</MessageText>
+      <MessageText Language="DE">Die zum Schedulen benötigte Capacity '%0%' existiert nicht.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01498" TypeName="XPRC_Scheduler_TooHighCapacityCardinalityException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="capName" VariableName="capName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="cardinality" VariableName="cardinality">
+         <Meta>
+            <Type>Integer</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Capacity '%0%' needed to schedule is not availabe in requested cardinality %1%.</MessageText>
+      <MessageText Language="DE">Die zum Schedulen benötigte Capacity '%0%' ist nicht in der geforderten Cardinality %1% vorhanden.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01499" TypeName="XPRC_Scheduler_SchedulerBeanMissingException" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">SchedulerBean is needed to schedule.</MessageText>
+      <MessageText Language="DE">Die zum Schedulen benötigte SchedulerBean existiert nicht.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01500" TypeName="XPRC_AdministrativeVetoAllocationDenied" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="vetoName" VariableName="vetoName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="holdingOrderId" VariableName="holdingOrderId">
+         <Meta>
+            <Type>Long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">The Veto '%0%' could not be allocated for an administrative purpose because it is already held by order %1%.</MessageText>
+      <MessageText Language="DE">Das Veto '%0%' konnte nicht administrativ belegt werden, da es bereits von Auftrag %1% gehalten wird.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01501" TypeName="XPRC_AdministrativeVetoDeallocationDenied" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="vetoName" VariableName="vetoName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">The Veto '%0%' could not be deallocated, it is either not held administratively or not held at all.</MessageText>
+      <MessageText Language="DE">Das Veto '%0%' konnte nicht freigegeben werden, es wird entweder nicht administrativ belegt oder existiert nicht.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01502" TypeName="XPRC_XMOMObjectDoesNotExist" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMDeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">The object %0% does not exist.</MessageText>
+      <MessageText Language="DE">Das Objekt %0% existiert nicht.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01510" TypeName="XPRC_OrderShouldDieBecauseUnsafe" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="orderId">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Order %0% is in an unsafe state. To avoid performing the same service call more than once, the order will be aborted.</MessageText>
+      <MessageText Language="DE">Der Auftrag %0% ist in einem unsicheren Zustand. Um das doppelte Ausführen von Schritten zu vermeiden, wird er abgebrochen.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01511" TypeName="XPRC_PROCESS_ABORTED_EXCEPTION" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="orderId">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <Data Label="abortion cause" VariableName="abortionCause">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Auftrag mit der ID %0% wurde mit dem folgenden Grund abgebrochen: %1%</MessageText>
+      <MessageText Language="EN">Order with ID %0% has been aborted for the following reason: %1%</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01512" TypeName="XPRC_PROCESS_ABORTION_FAILED" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="orderId">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <Data Label="abortion fail cause" VariableName="failCause">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Auftrag mit der ID %0% konnte mit dem folgenden Grund nicht abgebrochen werden: %1%</MessageText>
+      <MessageText Language="EN">Order with ID %0% could not be aborted for the following reason: %1%</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01513" TypeName="XPRC_InvalidVariableMemberNameException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="typeName" VariableName="typeName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="memberName" VariableName="memberName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Typ '%0%' hat keine Membervariable mit dem Namen '%1%'.</MessageText>
+      <MessageText Language="EN">Type '%0%' doesn't have a member var named '%1%'.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01514" TypeName="XPRC_ParsingModelledExpressionException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="expression" VariableName="expression">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="position" VariableName="position">
+         <Meta>
+            <Type>int</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der modellierte Ausdruck '%0%' konnte an Position %1% nicht geparst werden.</MessageText>
+      <MessageText Language="EN">The modelled expression '%0%' could not be parsed at position %1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-01515" TypeName="XPRC_InvalidCronLikeOrderParametersException" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_CronLikeSchedulerException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="message" VariableName="message">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Cron Like Order konnte nicht erstellt oder geändert werden: %0%.</MessageText>
+      <MessageText Language="EN">The Cron Like Order could not be created or modified: %0%.</MessageText>
+   </ExceptionType> 
+   
+   <ExceptionType Code="XYNA-01516" TypeName="XPRC_VetonameMustNotBeEmpty" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">The veto name must not be empty.</MessageText>
+      <MessageText Language="DE">Der Vetoname darf nicht leer sein.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01517" TypeName="XPRC_ExclusiveDeploymentInProgress" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_MDMDeploymentException" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="reason" VariableName="reason">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Deployment of '%0%' aborted because there is an exclusive deployment in progress: '%1%'.</MessageText>
+      <MessageText Language="DE">Das Deployment von '%0%' wurde abgebrochen, weil ein exklusives Deploment am laufen ist: '%1%'.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01518" TypeName="XPRC_MayNotOverrideFinalOperationException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="Operation Name" VariableName="operationName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Datatype with operation marked as final" VariableName="dataTypeSuper">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Overriding datatype" VariableName="dataTypeSub">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Operation %0% in Datatype %1% is marked as final and may not be overridden by %2%.</MessageText>
+      <MessageText Language="DE">Operation %0% in Datatype %1% ist als final markiert und darf nicht von %2% überschrieben werden.</MessageText>
+   </ExceptionType>
+      
+   <ExceptionType Code="XYNA-01519" TypeName="XPRC_DuplicateTimeWindowNameException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="windowName" VariableName="windowName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das Zeitfenster '%0%' existiert bereits.</MessageText>
+      <MessageText Language="EN">The time window '%0%' already exists.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01520" TypeName="XPRC_TimeWindowNotFoundInDatabaseException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="windowName" VariableName="windowName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das Zeitfenster '%0%' konnte nicht in der Datenbank gefunden werden.</MessageText>
+      <MessageText Language="EN">The time window '%0%' could not be found in database.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01521" TypeName="XPRC_Scheduler_TimeWindowMissingException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="windowName" VariableName="windowName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Time window '%0%' needed to schedule does not exist.</MessageText>
+      <MessageText Language="DE">Das zum Schedulen benötigte Zeitfenster '%0%' existiert nicht.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01522" TypeName="XPRC_TimeWindowStillUsedException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="windowName" VariableName="windowName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Time window '%0%' is currently used by orders.</MessageText>
+      <MessageText Language="DE">Das Zeitfenster '%0%' wird derzeit von Aufträgen verwendet.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01523" TypeName="XPRC_TimeWindowRemoteManagementException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="windowName" VariableName="windowName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="origCause" VariableName="origCause">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Time contraint management for window '%0%' has a exception on an other node '%1%'.</MessageText>
+      <MessageText Language="DE">Das TimeContraintManagement für das Zeitfenster '%0%' hat eine Exception auf einem anderen Knoten '%1%'.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01524" TypeName="XPRC_InputGeneratorInitializationException" TypePath="com.gip.xyna.xprc.exceptions">
+      <MessageText Language="EN">InputGenerator could not be initialized correctly.</MessageText>
+      <MessageText Language="DE">Der InputGenerator konnte nicht korrekt angelegt werden.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01525" TypeName="XPRC_CronLikeOrderAlreadyExistsException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="keys" VariableName="keys">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">CronLikeOrder already exists for given keys %0%.</MessageText>
+      <MessageText Language="DE">Die CronLikeOrder existiert bereits für die Keys %0%.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-01526" TypeName="XPRC_MDMParallelDeploymentException" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="number of failed objects" VariableName="numberOfFailedObjects">
+         <Meta>
+            <Type>Integer</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">During deployment, an error has occurred in %0% objects.</MessageText>
+      <MessageText Language="DE">Beim Deployment ist bei %0% Objekten ein Fehler aufgetreten.</MessageText>
+   </ExceptionType>
+   
+   <!--  letzte verwendete ID 1533 -->
+   
+ </ExceptionStore>

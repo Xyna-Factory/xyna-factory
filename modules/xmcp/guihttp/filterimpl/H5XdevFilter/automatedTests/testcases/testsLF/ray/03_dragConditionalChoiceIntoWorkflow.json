@@ -1,0 +1,46 @@
+{
+  "meta":
+  {
+
+	"name": "dragConditionalChoiceIntoWorkflow",
+	"description": "Öffnet einen neuen Workflow und fügt ein ConditionalChoice ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type ein ConditionalChoice ist.",
+	"created": "11.11.2019",
+	"updated": "11.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"conditionalChoice"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "listLength",
+	  "expectedValue": 1,
+	  "path": "updates/$list[0]/areas/$list[id=step0]/items/$list"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!stepType!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/$meta/fqn",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!stepType!",
+	  "value": "xmcp.processmodeller.datatypes.distinction.ConditionalChoice"
+	}
+  ]
+}

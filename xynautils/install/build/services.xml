@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build_services" default="build" basedir=".">
+
+  <property name="root.dir" value="${ant.file.build_services}/../../.." />
+
+  <import file="${ant.file.build_services}/../ant-xyna.xml" />
+
+  <property name="xyna.lib.dir" value="${root.dir}/installation/lib/xyna" />
+  <property name="mdm.dir" value="${root.dir}/MDM" />
+  <property name="services.dir" value="${root.dir}/services" />
+
+  <property name="target.dir" value="${basedir}/deploy" />
+  <property name="sharedlib.dir"
+            value="${root.dir}/installation/lib/sharedlibs" />
+
+  <property name="checkInterface.suffix" value="CheckInterface" />
+  <basename file="${project.name}" property="project.path" suffix="Impl" />
+
+  <!-- TODO. allow configuration -->
+  <fail message="Nicht unterstuetzte Java-Version: ${java.version}. Erwartet wird 1.6.0">
+    <condition>
+      <not>
+        <contains string="${java.version}" substring="1.6.0" />
+      </not>
+    </condition>
+  </fail>
+
+  <condition property="server.available">
+    <and>
+      <isset property="server.host" />
+      <isset property="server.userid" />
+      <isset property="server.password" />
+      <isset property="server.path" />
+    </and>
+  </condition>
+
+  <!-- ================================= 
+                target: deploy             
+               ================================= -->
+  <target name="deploy"
+          depends="build"
+          if="server.available"
+          description="Deploy jar file to xyna server.">
+    <!-- clean directory on xyna server -->
+    <sshexec host="${server.host}"
+             username="${server.userid}"
+             password="${server.password}"
+             command="rm -r ${server.mdm.path}"
+             trust="true"
+             failonerror="false" />
+    <!-- create directory on xyna server -->
+    <sshexec host="${server.host}"
+             username="${server.userid}"
+             password="${server.password}"
+             command="mkdir -p ${server.mdm.path}"
+             trust="true"
+             failonerror="false" />
+    <!-- copy libraries to xyna server -->
+    <scp todir="${server.userid}:${server.password}@${server.host}:${server.mdm.path}"
+         trust="true"
+         verbose="true">
+      <fileset dir="${target.dir}/${fqclassname}">
+        <include name="**/*.jar" />
+      </fileset>
+    </scp>
+    <!-- deploy datatype -->
+    <sshexec host="${server.host}"
+             username="${server.userid}"
+             password="${server.password}"
+             command="cd ${server.path}; ./xynafactory.sh deploydatatype -fqDatatypeName ${fqclassname} -protectionMode TRY -registerWithXMOM true"
+             trust="true"
+             failonerror="true" />
+  </target>
+
+  <!-- ================================= 
+	         target: build             
+	        ================================= -->
+  <target name="build"
+          depends="validateInterface"
+          description="Build jar file with java implementation of services.">
+    <delete dir="${basedir}/classes" />
+    <mkdir dir="${basedir}/classes" />
+    <javac debug="on"
+           encoding="iso8859-1"
+           includeantruntime="false"
+           fork="yes"
+           srcdir="${basedir}/src"
+           destdir="${basedir}/classes">
+      <classpath path="${basedir}/classes" />
+      <classpath refid="libraries" />
+      <classpath>
+        <fileset dir="${sharedlib.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+      <classpath>
+        <fileset dir="${xyna.lib.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+    <mkdir dir="${target.dir}/${fqclassname}" />
+    <jar destfile="${target.dir}/${fqclassname}/${project.name}.jar">
+      <manifest>
+        <attribute name="Vendor" value="${vendor.name}" />
+        <attribute name="Version" value="${release.number}" />
+        <attribute name="Build-Date" value="${timestamp}" />
+      </manifest>
+      <fileset dir="${basedir}/classes">
+        <include name="**/*.class" />
+        <exclude name="${fqpath}${checkInterface.suffix}.class" />
+      </fileset>
+      <fileset dir="${basedir}">
+        <include name="Exceptions.xml" />
+      </fileset>
+    </jar>
+    <!-- copy libraries to target.dir -->
+    <copy todir="${target.dir}/${fqclassname}">
+      <path refid="libraries" />
+    </copy>
+  </target>
+
+  <!-- TODO: does not work -->
+  <condition property="uptodate.mdm">
+    <and>
+      <isset property="project.name" />
+      <available file="${xyna.lib.dir}/mdm.jar" />
+      <uptodate targetfile="${xyna.lib.dir}/mdm.jar">
+        <srcfiles dir="${services.dir}/${project.path}" includes="**/*" />
+      </uptodate>
+    </and>
+  </condition>
+
+  <!-- ================================= 
+          target: updateMDMandXynaFactoryJar
+         ================================= -->
+  <target name="updateMDMandXynaFactoryJar"
+          if="server.available"
+          unless="uptodate.mdm"
+          depends="updateMDM"
+          description="Receive new mdm.jar and xynafactory.jar from Xyna Factory">
+    <!-- build mdm.jar -->
+    <sshexec host="${server.host}"
+             username="${server.userid}"
+             password="${server.password}"
+             command="cd ${server.path}; ./xynafactory.sh buildmdmjar"
+             trust="true"
+             failonerror="true" />
+    <!-- copy mdm.jar from xyna server -->
+    <scp file="${server.userid}:${server.password}@${server.host}:${server.path}/mdm.jar"
+         todir="${xyna.lib.dir}"
+         trust="true"
+         verbose="true" />
+    <!-- copy xynafactory.jar from xyna server -->
+    <scp file="${server.userid}:${server.password}@${server.host}:${server.path}/lib/xynafactory.jar"
+         todir="${xyna.lib.dir}"
+         trust="true"
+         verbose="true" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: updateMDM                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="updateMDM" if="server.available">
+    <mkdir dir="${mdm.dir}/xact" />
+    <delete includeemptydirs="true">
+      <!-- TODO: allow configuration -->
+      <fileset dir="${mdm.dir}/xact">
+        <include name="**/*.xml" />
+      </fileset>
+    </delete>
+    <scp file="${server.userid}:${server.password}@${server.host}:${server.path}/../MDM/saved/xact/*"
+         todir="${mdm.dir}/xact"
+         trust="true"
+         verbose="true" />
+    <delete includeemptydirs="true">
+      <!-- TODO: allow configuration -->
+      <fileset dir="${mdm.dir}/xact">
+        <include name="dhcp*/**" />
+        <include name="dsl*/**" />
+        <include name="jms/**" />
+        <include name="sip/**" />
+        <include name="snmp/**" />
+        <exclude name="snmp/helpers/Get.xml" />
+        <exclude name="snmp/helpers/Walk.xml" />
+        <exclude name="snmp/mock/**" />
+        <include name="vlan/**" />
+        <include name="XScrpt/**" />
+      </fileset>
+    </delete>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: validateInterface                    
+         - - - - - - - - - - - - - - - - - -->
+  <target name="validateInterface"
+          depends="updateMDMandXynaFactoryJar"
+          description="Check the interface of the service implementation against the mdm datatype">
+    <propertyregex property="fqpath"
+                   input="${fqclassname}"
+                   regexp="([^\.]*).([\w]*)"
+                   replace="\1/\2"
+                   global="true" />
+    <xslt style="${ant.file.build_services}/../CreateInterface.xsl"
+          in="${mdm.dir}/${fqpath}.xml"
+          out="${services.dir}/${project.path}/src/${fqpath}${checkInterface.suffix}.java">
+      <param name="suffix" expression="${checkInterface.suffix}" />
+    </xslt>
+  </target>
+
+
+  <!-- - - - - - - - - - - - - - - - - -
+	                   target: genCodeClass
+	                  - - - - - - - - - - - - - - - - - -->
+  <target name="genCodeClass" description="Generate code class for exceptions.">
+    <java fork="true"
+          failonerror="yes"
+          classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
+      <sysproperty key="BLACK_SERVER_HOME" value="lib/xyna" />
+      <classpath>
+        <fileset dir="${basedir}/lib">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+      <arg value="Exceptions.xml" />
+      <arg value="${basedir}/src" />
+      <arg value="y" />
+    </java>
+  </target>
+
+</project>

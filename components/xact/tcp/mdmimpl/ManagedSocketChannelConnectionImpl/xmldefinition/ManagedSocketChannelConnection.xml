@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ManagedConnection" BaseTypePath="xact.connection" Label="Managed socket channel connection" TypeName="ManagedSocketChannelConnection" TypePath="xact.tcp" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>ManagedSocketChannelConnectionImpl.jar</Libraries>
+  <SharedLibraries>socketMgmt</SharedLibraries>
+  <Service Label="Managed Socket Channel Connection" TypeName="ManagedSocketChannelConnection">
+    <Operation IsStatic="false" Label="Connect" Name="connect">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().connect();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Disconnect" Name="disconnect">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().disconnect();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Send" Name="send">
+      <Input>
+        <Data Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+        <Data Label="Document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+        <Data Label="Device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType"/>
+        <Data Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter"/>
+      </Input>
+      <Output>
+        <Data Label="Command response tuple" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple"/>
+      </Output>
+      <Call ReferenceName="ManagedSocketChannelSendImpl" ReferencePath="xact.tcp"/>
+    </Operation>
+    <Operation IsStatic="false" Label="Send async" Name="sendAsync">
+      <Input>
+        <Data Label="Document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+        <Data Label="Device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType"/>
+        <Data Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+        <Data Label="Managed socket channel send parameter" ReferenceName="ManagedSocketChannelSendParameter" ReferencePath="xact.tcp" VariableName="managedSocketChannelSendParameter"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Connection Already Closed" ReferenceName="ConnectionAlreadyClosed" ReferencePath="xact.connection" VariableName="connectionAlreadyClosed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().sendAsync(documentType, deviceType, command, managedSocketChannelSendParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Send sync" Name="sendSync">
+      <Input>
+        <Data Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+        <Data Label="Device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType"/>
+        <Data Label="Document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+        <Data Label="Managed socket channel send parameter" ReferenceName="ManagedSocketChannelSendParameter" ReferencePath="xact.tcp" VariableName="managedSocketChannelSendParameter"/>
+      </Input>
+      <Output>
+        <Data Label="correlationId" ReferenceName="CorrelationId" ReferencePath="xprc.synchronization" VariableName="correlationId"/>
+      </Output>
+      <Throws>
+        <Exception Label="Connection Already Closed" ReferenceName="ConnectionAlreadyClosed" ReferencePath="xact.connection" VariableName="connectionAlreadyClosed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().sendSync(command, deviceType, documentType, managedSocketChannelSendParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "18.8.2021", 
+    "updated": "18.8.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!New_Data_Type!": "New Data Type"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Data_Type!"
+      }, 
+      "requestType": "OPTIONS", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    }
+  ]
+}

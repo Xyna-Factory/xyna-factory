@@ -1,0 +1,95 @@
+{
+  "meta":
+  {
+    "name": "select from xml test",
+	"description": "Testet die Funktion zum lesen eines wertes aus einer xml variable",
+	"created": "14.11.2019",
+	"updated": "15.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!valueToRead!": "test"},
+		{"!xml!": "<tag>test</tag>"}
+	  ]
+	},
+	{
+	  "operation": "selectFromXml",
+	  "inputVariable": "!xml!",
+	  "xpath": "",
+	  "outputVariable": "!readValue!"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readValue!",
+	  "value": "!valueToRead!"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!xml!",
+	  "value": "<tag1><tag2>!valueToRead!</tag2></tag1>"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!readValue!",
+	  "value": ""
+	},
+	{
+	  "operation": "selectFromXml",
+	  "inputVariable": "!xml!",
+	  "xpath":"tag2",
+	  "outputVariable": "!readValue!"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readValue!",
+	  "value": "!valueToRead!"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!xml!",
+	  "value": "<tag1 att=\"!valueToRead!\"/>"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!readValue!",
+	  "value": ""
+	},
+	{
+	  "operation": "selectFromXml",
+	  "inputVariable": "!xml!",
+	  "xpath":"",
+	  "outputVariable": "!readValue!",
+	  "attribute": "att"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readValue!",
+	  "value": "!valueToRead!"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!xml!",
+	  "value": "\"<tag>\\\"</tag>\""
+	},
+	{
+	  "operation": "selectFromXml",
+	  "inputVariable": "!xml!",
+	  "outputVariable":"!readValue!",
+	  "xpath":"",
+	  "jsonDecode": true
+	},
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readValue!",
+      "value": "\""
+    }
+  ]
+}

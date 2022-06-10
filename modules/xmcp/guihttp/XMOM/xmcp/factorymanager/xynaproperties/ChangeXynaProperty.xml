@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Change Xyna Property" TypeName="ChangeXynaProperty" TypePath="xmcp.factorymanager.xynaproperties" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Change Xyna Property" Name="ChangeXynaProperty">
+    <Input>
+      <Data ID="8" Label="Xyna Property" ReferenceName="XynaProperty" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaProperty">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="Property Update Exception" ReferenceName="PropertyUpdateException" ReferencePath="xmcp.factorymanager.xynaproperties.exceptions" VariableName="propertyUpdateException"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Xyna Properties Services" ReferenceName="XynaPropertiesServices.XynaPropertiesServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="13" Label="Check Rights for Current User">
+      <Source RefID="12"/>
+      <Source RefID="15"/>
+      <Target RefID="12"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="12">
+        <Source RefID="15">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="12"/>
+    </Function>
+    <Function ID="5" Label="Change Property">
+      <Source RefID="8"/>
+      <Source RefID="4"/>
+      <Target RefID="4"/>
+      <Invoke Operation="changeProperty" ServiceID="4">
+        <Source RefID="8"/>
+      </Invoke>
+      <Receive ServiceID="4"/>
+    </Function>
+    <ServiceReference ID="12" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="13"/>
+      <Target RefID="13"/>
+    </ServiceReference>
+    <Data ID="15" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="13"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.XynaProperties:write:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="7"/>
+  </Operation>
+</Service>

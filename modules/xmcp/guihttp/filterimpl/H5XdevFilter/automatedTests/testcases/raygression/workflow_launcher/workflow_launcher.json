@@ -1,0 +1,6 @@
+{
+    "testseries": [
+        "workflow_launcher_001/testseries.json",
+        "workflow_launcher_004/testseries.json"
+    ]
+}

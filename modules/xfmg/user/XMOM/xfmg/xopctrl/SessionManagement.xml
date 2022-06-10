@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Session Management" TypeName="SessionManagement" TypePath="xfmg.xopctrl" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SessionManagementImpl.jar</Libraries>
+  <Service Label="Session Management" TypeName="SessionManagement">
+    <Operation IsStatic="true" Label="Get Current Xyna User Session" Name="getCurrentXynaUserSession" RequiresXynaOrder="true">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="Xyna User Session" ReferenceName="XynaUserSession" ReferencePath="xfmg.xopctrl" VariableName="xynaUserSession"/>
+      </Output>
+      <Throws>
+        <Exception Label="Could Not Access Session Exception" ReferenceName="CouldNotAccessSessionException" ReferencePath="xfmg.xopctrl" VariableName="couldNotAccessSessionException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xopctrl.SessionManagementImpl.getCurrentXynaUserSession(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get User Authentication Rights" Name="getUserAuthenticationRights">
+      <Input>
+        <Data Label="Xyna User Session" ReferenceName="XynaUserSession" ReferencePath="xfmg.xopctrl" VariableName="xynaUserSession"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+      </Output>
+      <Throws>
+        <Exception Label="Could Not Access Session Exception" ReferenceName="CouldNotAccessSessionException" ReferencePath="xfmg.xopctrl" VariableName="couldNotAccessSessionException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xopctrl.SessionManagementImpl.getUserAuthenticationRights(xynaUserSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get User Authentication Role" Name="getUserAuthenticationRole">
+      <Input>
+        <Data Label="Xyna User Session" ReferenceName="XynaUserSession" ReferencePath="xfmg.xopctrl" VariableName="xynaUserSession"/>
+      </Input>
+      <Output>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+      </Output>
+      <Throws>
+        <Exception Label="Could Not Access Session Exception" ReferenceName="CouldNotAccessSessionException" ReferencePath="xfmg.xopctrl" VariableName="couldNotAccessSessionException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xopctrl.SessionManagementImpl.getUserAuthenticationRole(xynaUserSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Login" Name="login">
+      <Meta>
+        <Abstract.UID>09D62CCA-C89C-B387-8CB0-39C4681430A2</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials"/>
+      </Input>
+      <Output>
+        <Data Label="Xyna User Session" ReferenceName="XynaUserSession" ReferencePath="xfmg.xopctrl" VariableName="xynaUserSession"/>
+      </Output>
+      <Throws>
+        <Exception Label="Invalid Credentials" ReferenceName="InvalidCredentials" ReferencePath="xfmg.xopctrl" VariableName="invalidCredentials"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xopctrl.SessionManagementImpl.login(credentials);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Logout" Name="logout">
+      <Meta>
+        <Abstract.UID>CEE0A65B-4321-49D6-B907-7DE94C46FA03</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Xyna User Session" ReferenceName="XynaUserSession" ReferencePath="xfmg.xopctrl" VariableName="xynaUserSession"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xopctrl.SessionManagementImpl.logout(xynaUserSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Validate Session" Name="validateSession">
+      <Meta>
+        <Abstract.UID>3F38AA2F-41BE-C21D-F232-39C3955B1EAC</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Xyna User Session" ReferenceName="XynaUserSession" ReferencePath="xfmg.xopctrl" VariableName="xynaUserSession"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Invalid Session" ReferenceName="InvalidSession" ReferencePath="xfmg.xopctrl" VariableName="invalidSession"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xopctrl.SessionManagementImpl.validateSession(xynaUserSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

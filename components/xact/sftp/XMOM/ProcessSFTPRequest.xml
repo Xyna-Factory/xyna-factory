@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="processSFTPRequest" TypeName="ProcessSFTPRequest" TypePath="xact.sftp" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="processSFTPRequest" Name="ProcessSFTPRequest">
+    <Input>
+      <Data ID="5" Label="Path" ReferenceName="Path" ReferencePath="xact.sftp" VariableName="path">
+        <Target RefID="7"/>
+      </Data>
+      <Data Label="Username" ReferenceName="Username" ReferencePath="xact.sftp" VariableName="username"/>
+    </Input>
+    <Output>
+      <Data ID="42" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content42">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Choice ID="7" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="5"/>
+      <Target RefID="22"/>
+      <Input>
+        <Data ID="47" Label="Path" ReferenceName="Path" ReferencePath="xact.sftp" VariableName="path47"/>
+        <Source RefID="5">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="48" Label="true" Premise="contains(%0%.path,&quot;dietrich&quot;)">
+        <Mappings ID="15" Label="setContent">
+          <Source RefID="70"/>
+          <Target RefID="16"/>
+          <Input>
+            <Data ID="17" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content17"/>
+            <Source RefID="70">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="2" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content"/>
+            <Target RefID="16"/>
+          </Output>
+          <Mapping>%1%~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="95">
+          <Source RefID="16"/>
+          <Target RefID="22"/>
+          <Copy>
+            <Source RefID="16"/>
+            <Target RefID="22"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="49" Label="false">
+        <Mappings ID="21" Label="setContent">
+          <Source RefID="75"/>
+          <Target RefID="20"/>
+          <Input>
+            <Data ID="18" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content18"/>
+            <Source RefID="75">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="19" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content19"/>
+            <Target RefID="20"/>
+          </Output>
+          <Mapping>%1%~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="94">
+          <Source RefID="20"/>
+          <Target RefID="22"/>
+          <Copy>
+            <Source RefID="20"/>
+            <Target RefID="22"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="16" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content16">
+      <Source RefID="15"/>
+      <Target RefID="95"/>
+    </Data>
+    <Data ID="20" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content1920">
+      <Source RefID="21"/>
+      <Target RefID="94"/>
+    </Data>
+    <Data ID="22" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content1622">
+      <Source RefID="7"/>
+      <Source RefID="94"/>
+      <Source RefID="95"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="70" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content1737">
+      <Target RefID="15"/>
+      <Data ID="84" Label="Content" VariableName="content">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Dietrich</Value>
+      </Data>
+    </Data>
+    <Data ID="75" Label="Content" ReferenceName="Content" ReferencePath="xact.sftp" VariableName="content1827">
+      <Target RefID="21"/>
+      <Data ID="85" Label="Content" VariableName="content">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value/>
+      </Data>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="22"/>
+      <Target RefID="42"/>
+      <Copy>
+        <Source RefID="22"/>
+        <Target RefID="42"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

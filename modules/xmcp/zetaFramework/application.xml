@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.45" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Processing</ApplicationName>
+        <VersionName>1.0.15</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>ZetaTools</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.TableServiceGroup</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.TableUtils</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.TableColumn</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.TableInfo</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.transformation.ColumnFilter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.transformation.ColumnPath</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.transformation.ColumnTransformation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.transformation.ISO8601DateTime</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.transformation.ISO8601ToUnixTimestampTransformation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.transformation.UnixTimestamp</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.query.QueryAllColumns</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.query.QueryColumns</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.query.QueryMemberFilterCondition</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.tables.datatypes.query.QueryOnlySelectedColumns</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+	<XMOMEntry implicitDependency="false">
+      <FqName>xmcp.graphs.datatypes.GraphData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+	<XMOMEntry implicitDependency="false">
+      <FqName>xmcp.graphs.datatypes.GraphInfo</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+	<XMOMEntry implicitDependency="false">
+      <FqName>xmcp.graphs.datatypes.GraphSlice</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+	<XMOMEntry implicitDependency="false">
+      <FqName>xmcp.graphs.datatypes.TimeInterval</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.BaseDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.ButtonDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.CheckboxDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.ComponentDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.ContainerDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.Definition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.DefinitionWorkflow</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.DropdownDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.FormDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.FormPanelDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.InputDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.ItemDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.OpenDetailsButtonDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.PanelBoxDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.PossibleValuesDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.StartOrderButtonDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.TablePanelDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.TextAreaDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.TextInputDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.TextItemDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.TreePanelDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.DefinitionListDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.DefinitionListEntryDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+  <XynaProperties>
+    <XynaProperty implicitDependency="false">
+      <Name>zeta.table.limit</Name>
+      <Value>100</Value>
+    </XynaProperty>
+  </XynaProperties>
+</Application>

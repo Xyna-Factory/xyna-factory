@@ -1,0 +1,159 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "16.7.2020",
+    "updated": "16.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!servicegroups!": "servicegroups"
+        },
+        {
+          "!New_Service_Group!": "New Service Group"
+        },
+        {
+          "!undo_redo_006!": "undo_redo_006"
+        },
+        {
+          "!memberService!": "memberService"
+        },
+        {
+          "!redo!": "redo"
+        },
+        {
+          "!autoTest.generated.CkbKcUoN!": "autoTest.generated.!rnd!"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Service_Group!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1594881270570.NewServiceGroup!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1594881270570!",
+      "variable": "!new_1594881270570.NewServiceGroup!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewServiceGroup!",
+      "variable": "!new_1594881270570.NewServiceGroup!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=methodsArea]/id",
+      "targetVariable": "!memberMethodsArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!sg!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!undo_redo_006!",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594881270570!/!NewServiceGroup!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Service",
+          "type": "!memberService!"
+        },
+        "index": -1,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594881270570!/!NewServiceGroup!/objects/!memberMethodsArea!/insert"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594881270570!/!NewServiceGroup!/undo"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594881270570!/!NewServiceGroup!/!redo!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!undo_redo_006!",
+        "path": "!autoTest.generated.CkbKcUoN!",
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594881270570!/!NewServiceGroup!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!autoTest.generated.CkbKcUoN.Undo_redo_006!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Undo_redo_006!",
+      "variable": "!autoTest.generated.CkbKcUoN.Undo_redo_006!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autoTest.generated.CkbKcUoN!/!Undo_redo_006!/deploy"
+    },
+    {
+      "constraint": "listLength",
+      "expectedValue": "1",
+      "operation": "assert",
+      "path": "updates/$list[0]/areas/$list[3]/items/$list"
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-1059", 
+    "created": "11.03.2020", 
+    "updated": "11.03.2020"
+  }, 
+  "operations": [
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!" : "autoTest.generated.PMOD1059"},
+		{"!workspaceName!": "default workspace"},
+		{"!storableName!": "TestStorable"},
+		{"!workflowName!": "PMOD1059"},
+		{"!propertyFqn!": "xfmg.xods.configuration.XynaPropertyString"}
+	  ]
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createStorable",
+	  "mapInput": { 
+		"!workspace!": "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!storableName!"
+	 },
+	  "mapOutput": 
+	  {
+	    "!name!" : "!storable!"
+	  }
+	},
+	{
+	  "operation": "set",
+	  "variable": "!storablefqn!",
+	  "value": "!path!.!storable!"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "addSimpleTypeMemberToDatatype",
+	  "mapInput": {
+		"!workspace!": "!workspaceName!",
+		"!datatypePath!": "!path!",
+		"!datatypeName!": "!storableName!",
+	    "!insertType!": "String",
+	    "!insertLabel!": "Name"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": { },
+	  "mapOutput": 
+	  {
+	    "!newPath!" : "!wfNewPath!",
+	    "!newWorkflowName!" : "!wfNewName!",
+		"!url!": "!newWFUrl!"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "saveAndDeploy",
+	  "mapInput": { 
+	    "!wfUrl!" : "!newWFUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!workflowName!", 
+		"!revision!" : 0},
+	  "mapOutput": 
+	  {
+	    "!wfName!" : "!wfName!", 
+	    "!wfUrl!" : "!wfUrl!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/wf_input/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"Xyna Property String","fqn":"!propertyFqn!","isList":false},"revision":0}
+	},
+	{
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Query",
+          "type": "query"
+        },
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "!wfUrl!/objects/step0/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=wf]/areas/$list[name=content]/items/$list[0]/id",
+      "targetVariable": "!queryId!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=wf]/areas/$list[name=content]/items/$list[id=!queryId!]/areas/$list[name=output]/items/$list[fqn=xnwh.persistence.Storable]/id",
+      "targetVariable": "!query-out0!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "call",
+      "payload": {
+        "castToFqn": "!path!.!storable!",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "!wfUrl!/objects/!query-out0!/change"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!queryId!]/areas/$list[name=filterCriteria]/id",
+      "targetVariable": "!queryFilterAreaId!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "call",
+      "payload": {
+        "content": {
+          "expression": "",
+          "type": "queryFilterCriterion",
+          "variables": []
+        },
+        "index": -1,
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "!wfUrl!/objects/!queryFilterAreaId!/insert"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!queryId!]/areas/$list[id=!queryFilterAreaId!]/items/$list[0]/id",
+      "targetVariable": "!queryFilterCriterionId!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "call",
+      "payload": {
+        "content": {
+          "fqn": "!propertyFqn!",
+          "isAbstract": false,
+          "isList": false,
+          "label": "Xyna_Property_String",
+          "type": "variable"
+        },
+        "index": -1,
+        "revision": 10
+      },
+      "requestType": "POST",
+      "url": "!wfUrl!/objects/!queryFilterCriterionId!/insert"
+    },
+	{
+      "operation": "call",
+      "payload": {
+        "content": {
+          "expression": "%0%.name==%1%.get()"
+        },
+        "revision": 12
+      },
+      "requestType": "PUT",
+      "url": "!wfUrl!/objects/!queryFilterCriterionId!/change"
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "saveAndDeploy",
+	  "mapInput": { 
+	    "!wfUrl!" : "!wfUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!workflowName!", 
+		"!revision!" : 0
+	  },
+	  "mapOutput": 
+	  {
+	    "!wfName!" : "!wfName!", 
+	    "!wfUrl!" : "!wfUrl!"
+	  }
+	},
+	{
+      "operation": "call",
+      "requestType": "GET",
+      "url": "!wfUrl!/xml"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "current",
+      "targetVariable": "!xml!",
+      "unquoteResult": false
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "{http://www.gip.com/xyna/xdev/xfractmod}Operation/{http://www.gip.com/xyna/xdev/xfractmod}Mappings/{http://www.gip.com/xyna/xdev/xfractmod}Mapping",
+		"outputVariable": "!Mapping!",
+		"jsonDecode": true
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!Mapping!",
+      "value": "%1%.formula=concat(\"(%0%.name==\\\"\", replaceall(replaceall(%0%.get(), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"\\\"\", \"\\\\\\\\\\\"\"), \"\\\")\")"
+    }
+  ]
+}

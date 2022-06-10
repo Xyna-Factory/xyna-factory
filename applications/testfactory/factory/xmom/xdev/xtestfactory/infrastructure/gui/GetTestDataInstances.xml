@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Test Data Instances" TypeName="GetTestDataInstances" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Test Data Instances" Name="GetTestDataInstances">
+    <Input>
+      <Data ID="10" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo10">
+        <Target RefID="4"/>
+        <Target RefID="11"/>
+        <Target RefID="30"/>
+      </Data>
+      <Data ID="57" Label="DataType FQN" ReferenceName="Text" ReferencePath="base" VariableName="text57">
+        <Target RefID="94"/>
+        <Target RefID="119"/>
+        <Target RefID="30"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="48" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo48">
+        <Source RefID="33"/>
+      </Data>
+      <Data ID="49" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable">
+        <Source RefID="33"/>
+      </Data>
+    </Output>
+    <Choice ID="4" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="10"/>
+      <Target RefID="26"/>
+      <Input>
+        <Data ID="114" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo114"/>
+        <Source RefID="10"/>
+      </Input>
+      <Case ID="2" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Function ID="131" Label="Get Info for super type Test Data">
+          <Source RefID="130"/>
+          <Source RefID="133"/>
+          <Target RefID="130"/>
+          <Target RefID="132"/>
+          <Invoke Operation="inspectDatatypeByName" ServiceID="130">
+            <Source RefID="133">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="130">
+            <Target RefID="132"/>
+          </Receive>
+        </Function>
+        <Mappings ID="135" Label="Determine fields of Test Data to exclude in GUI">
+          <Source RefID="132"/>
+          <Target RefID="136"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="134" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector134"/>
+            <Source RefID="132"/>
+          </Input>
+          <Output>
+            <Data IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember"/>
+            <Target RefID="136"/>
+          </Output>
+          <Mapping>%1%=%0%.listAllVariableMembers()</Mapping>
+        </Mappings>
+        <Foreach ID="146">
+          <Source RefID="136"/>
+          <Target RefID="149"/>
+          <InputList RefID="136">
+            <Data ID="145" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember145">
+              <Target RefID="143"/>
+            </Data>
+          </InputList>
+          <OutputList RefID="149">
+            <Data ID="148" Label="Names to remove" ReferenceName="Text" ReferencePath="base" VariableName="text148">
+              <Source RefID="143"/>
+            </Data>
+          </OutputList>
+          <Mappings ID="143" Label="Create list of variable names to remove">
+            <Source RefID="145"/>
+            <Target RefID="148"/>
+            <Meta>
+              <FixedDetailOptions>FillMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="142" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember142"/>
+              <Source RefID="145"/>
+            </Input>
+            <Output>
+              <Data ID="144" Label="Name to remove" ReferenceName="Text" ReferencePath="base" VariableName="text144"/>
+              <Target RefID="148"/>
+            </Output>
+            <Mapping>%1%.text=%0%.varName</Mapping>
+          </Mappings>
+        </Foreach>
+        <Function ID="119" Label="Build TableColumns By DataType excluding Members">
+          <Source RefID="118"/>
+          <Source RefID="149"/>
+          <Source RefID="57"/>
+          <Target RefID="118"/>
+          <Target RefID="120"/>
+          <Invoke Operation="BuildTableColumnsByDataTypeExcludingMembers" ServiceID="118">
+            <Source RefID="57">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="149"/>
+          </Invoke>
+          <Receive ServiceID="118">
+            <Target RefID="120"/>
+          </Receive>
+        </Function>
+        <Mappings ID="30" Label="Mapping">
+          <Source RefID="10"/>
+          <Source RefID="120"/>
+          <Source RefID="57"/>
+          <Target RefID="25"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="29" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo29"/>
+            <Source RefID="10"/>
+          </Input>
+          <Input>
+            <Data ID="115" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Source RefID="120"/>
+          </Input>
+          <Input>
+            <Data ID="47" Label="DataType FQN" ReferenceName="Text" ReferencePath="base" VariableName="text47"/>
+            <Source RefID="57">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="31" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo31"/>
+            <Target RefID="25"/>
+          </Output>
+          <Mapping>%3%=%0%</Mapping>
+          <Mapping>%3%.bootstrap="false"</Mapping>
+          <Mapping>%3%.columns=%1%</Mapping>
+          <Mapping>%3%.rootType=%2%.text</Mapping>
+        </Mappings>
+        <Assign ID="27">
+          <Source RefID="25"/>
+          <Target RefID="26"/>
+          <Copy>
+            <Source RefID="25"/>
+            <Target RefID="26"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="3" Label="false">
+        <Mappings ID="11" Label="Mapping">
+          <Source RefID="10"/>
+          <Target RefID="13"/>
+          <Input>
+            <Data ID="5" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+            <Source RefID="10"/>
+          </Input>
+          <Output>
+            <Data ID="12" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo12"/>
+            <Target RefID="13"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="28">
+          <Source RefID="13"/>
+          <Target RefID="26"/>
+          <Copy>
+            <Source RefID="13"/>
+            <Target RefID="26"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="13" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo13">
+      <Source RefID="11"/>
+      <Target RefID="28"/>
+    </Data>
+    <Data ID="25" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo24">
+      <Source RefID="30"/>
+      <Target RefID="27"/>
+    </Data>
+    <Data ID="26" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo26">
+      <Source RefID="4"/>
+      <Source RefID="27"/>
+      <Source RefID="28"/>
+      <Target RefID="94"/>
+      <Target RefID="103"/>
+    </Data>
+    <ServiceReference ID="36" Label="Query" ReferenceName="Query" ReferencePath="xnwh.persistence">
+      <Source RefID="37"/>
+      <Target RefID="37"/>
+    </ServiceReference>
+    <Mappings ID="103" Label="Mapping">
+      <Source RefID="26"/>
+      <Target RefID="100"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="101" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo101"/>
+        <Source RefID="26">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="102" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn102"/>
+        <Target RefID="100"/>
+      </Output>
+      <Mapping>%1%=%0%.columns</Mapping>
+    </Mappings>
+    <Function ID="94" Label="Build TableInfo and Select Columns">
+      <Source RefID="81"/>
+      <Source RefID="57"/>
+      <Source RefID="26"/>
+      <Source RefID="100"/>
+      <Target RefID="81"/>
+      <Target RefID="95"/>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="81">
+        <Source RefID="26">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="57">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="100"/>
+      </Invoke>
+      <Receive ServiceID="81">
+        <Target RefID="95"/>
+      </Receive>
+    </Function>
+    <Function ID="109" Label="Build Query Parameters from TableInfo">
+      <Source RefID="81"/>
+      <Source RefID="95"/>
+      <Source RefID="113"/>
+      <Target RefID="81"/>
+      <Target RefID="110"/>
+      <Target RefID="111"/>
+      <Target RefID="112"/>
+      <Invoke Operation="buildQueryParametersFromTableInfo" ServiceID="81">
+        <Source RefID="95">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="113">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="81">
+        <Target RefID="110"/>
+        <Target RefID="111"/>
+        <Target RefID="112"/>
+      </Receive>
+    </Function>
+    <Function ID="37" Label="Query">
+      <Source RefID="36"/>
+      <Source RefID="112"/>
+      <Source RefID="111"/>
+      <Source RefID="110"/>
+      <Target RefID="36"/>
+      <Target RefID="39"/>
+      <Invoke Operation="Query" ServiceID="36">
+        <Source RefID="110"/>
+        <Source RefID="111"/>
+        <Source RefID="112"/>
+      </Invoke>
+      <Receive ServiceID="36">
+        <Target RefID="39"/>
+      </Receive>
+    </Function>
+    <Data ID="39" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable8">
+      <Source RefID="37"/>
+      <Target RefID="33"/>
+    </Data>
+    <ServiceReference ID="81" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="94"/>
+      <Source RefID="109"/>
+      <Target RefID="94"/>
+      <Target RefID="109"/>
+    </ServiceReference>
+    <Data ID="95" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="94"/>
+      <Target RefID="109"/>
+      <Target RefID="33"/>
+    </Data>
+    <Data ID="100" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn100">
+      <Source RefID="103"/>
+      <Target RefID="94"/>
+    </Data>
+    <Data ID="110" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask110">
+      <Source RefID="109"/>
+      <Target RefID="37"/>
+    </Data>
+    <Data ID="111" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition111">
+      <Source RefID="109"/>
+      <Target RefID="37"/>
+    </Data>
+    <Data ID="112" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="queryParameter">
+      <Source RefID="109"/>
+      <Target RefID="37"/>
+    </Data>
+    <Data ID="113" Label="Query Columns" ReferenceName="QueryAllColumns" ReferencePath="xmcp.tables.datatypes.query" VariableName="const_QueryAllColumns">
+      <Target RefID="109"/>
+    </Data>
+    <ServiceReference ID="118" Label="Build TableColumns By DataType excluding Members" ReferenceName="BuildTableColumnsByDataTypeExcludingMembers" ReferencePath="xdev.xtestfactory.infrastructure.gui">
+      <Source RefID="119"/>
+      <Target RefID="119"/>
+    </ServiceReference>
+    <Data ID="120" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn120">
+      <Source RefID="119"/>
+      <Target RefID="30"/>
+    </Data>
+    <ServiceReference ID="130" Label="DOMInspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="131"/>
+      <Target RefID="131"/>
+    </ServiceReference>
+    <Data ID="132" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector">
+      <Source RefID="131"/>
+      <Target RefID="135"/>
+    </Data>
+    <Data ID="133" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text">
+      <Target RefID="131"/>
+      <Data Label="text" VariableName="text">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.TestData</Value>
+      </Data>
+    </Data>
+    <Data ID="136" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember136">
+      <Source RefID="135"/>
+      <Target RefID="146"/>
+    </Data>
+    <Data ID="149" IsList="true" Label="Names to remove" ReferenceName="Text" ReferencePath="base" VariableName="text149">
+      <Source RefID="146"/>
+      <Target RefID="119"/>
+    </Data>
+    <Assign ID="33">
+      <Source RefID="95"/>
+      <Source RefID="39"/>
+      <Target RefID="48"/>
+      <Target RefID="49"/>
+      <Copy>
+        <Source RefID="95">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="48"/>
+      </Copy>
+      <Copy>
+        <Source RefID="39"/>
+        <Target RefID="49"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

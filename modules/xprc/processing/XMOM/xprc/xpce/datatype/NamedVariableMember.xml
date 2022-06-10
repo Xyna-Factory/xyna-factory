@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Named Variable Member" TypeName="NamedVariableMember" TypePath="xprc.xpce.datatype" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Label" VariableName="label">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Var Name" VariableName="varName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Documentation" VariableName="documentation">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Named XMOMMember" TypeName="NamedVariableMember">
+    <Operation ID="4" IsStatic="false" Label="Get Member Object" Name="getMemberObject">
+      <Input/>
+      <Output>
+        <Data ID="3" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+    return (GeneralXynaObject)parentObject.get(varName);
+  } catch( Exception e ) {
+    throw new RuntimeException(e);
+  }</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="false" Label="Get Member Value" Name="getMemberValue">
+      <Input/>
+      <Output>
+        <Data ID="5" Label="Value" VariableName="value">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">Object current = getUntypedMemberValue(varName);
+    return current == null ? null : String.valueOf(current);
+
+}
+
+
+private Object getUntypedMemberValue(String path) {
+try {
+System.out.println("getUntypedMemberValue: " + path);
+List&lt;String&gt; parts = new ArrayList&lt;String&gt;();
+String[] nonListParts = com.gip.xyna.utils.StringUtils.fastSplit(path, '.', -1);
+for (String nonListPart : nonListParts) {
+  if (nonListPart.endsWith("]")) {
+    int listAccessIndex = nonListPart.indexOf('[');
+    parts.add(nonListPart.substring(0, listAccessIndex));
+    parts.add(nonListPart.substring(listAccessIndex + 1));
+  } else {
+    parts.add(nonListPart);
+  }
+}
+System.out.println("parts: " + parts);
+Object current = parentObject;
+for (String part : parts) {
+  if (part.endsWith("]")) {
+    current = ((List)current).get(Integer.parseInt(part.substring(0, part.length()-1)));
+  } else {
+    current = ((GeneralXynaObject)current).get(part);
+  }  
+}
+return current;
+  } catch( Exception e ) {
+    throw new RuntimeException(e);
+  }</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Set Member Object" Name="setMemberObject">
+      <Input>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+    XynaObject.set(parentObject, varName, anyType);
+  } catch( Exception e ) {
+    throw new RuntimeException(e);
+  } 
+}
+
+private GeneralXynaObject parentObject;
+
+public void setParentObject(GeneralXynaObject parentObject) {
+  this.parentObject = parentObject;
+}
+
+private java.lang.reflect.Field field;
+
+public java.lang.reflect.Field getField() {
+  try {
+      if (field == null) {
+GeneralXynaObject gxo;
+String shortenedVarName;
+int dotIndex = varName.lastIndexOf('.');
+if (dotIndex &gt;= 0) {
+  gxo = (GeneralXynaObject)getUntypedMemberValue(varName.substring(0, dotIndex));
+  shortenedVarName = varName.substring(dotIndex + 1);
+} else {
+  gxo = parentObject;
+  shortenedVarName = varName;
+}
+        Class&lt;?&gt; currentClazz = gxo.getClass();
+          try {
+            field = currentClazz.getDeclaredField(shortenedVarName);
+          } catch(NoSuchFieldException e) {
+            Class&lt;?&gt; currentContextClazz = currentClazz.getSuperclass();
+            while (currentContextClazz != null) {
+              try {
+                field = currentContextClazz.getDeclaredField(shortenedVarName); 
+                break;
+              } catch(NoSuchFieldException ee) {    
+                
+              }
+              currentContextClazz = currentContextClazz.getSuperclass();
+            }
+          }
+      }
+    } catch (Throwable t) {
+      throw new RuntimeException(t);
+    }
+  return field;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="10" IsStatic="false" Label="Set Member Value" Name="setMemberValue">
+      <Input>
+        <Data ID="9" Label="Value" VariableName="value">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+System.out.println("setting varName: " + varName);
+GeneralXynaObject gxo;
+String shortenedVarName;
+int dotIndex = varName.lastIndexOf('.');
+if (dotIndex &gt;= 0) {
+  gxo = (GeneralXynaObject)getUntypedMemberValue(varName.substring(0, dotIndex));
+  shortenedVarName = varName.substring(dotIndex + 1);
+} else {
+  gxo = parentObject;
+  shortenedVarName = varName;
+}
+
+Class&lt;?&gt; fieldType = getField().getType();
+    Object adjustedValue;
+    if (fieldType.isAssignableFrom(String.class)) {
+      adjustedValue = value;
+    } else if (fieldType.isAssignableFrom(Integer.class) &amp;&amp;
+               fieldType.isAssignableFrom(int.class)) {
+           adjustedValue = Integer.parseInt(value);
+    } else if (fieldType.isAssignableFrom(Long.class) &amp;&amp;
+               fieldType.isAssignableFrom(long.class)) {
+      adjustedValue = Long.parseLong(value);
+    } else if (fieldType.isAssignableFrom(Boolean.class) &amp;&amp;
+               fieldType.isAssignableFrom(boolean.class)) {
+      adjustedValue = Boolean.parseBoolean(value);
+    } else if (fieldType.isAssignableFrom(Float.class) &amp;&amp;
+               fieldType.isAssignableFrom(float.class)) {
+      adjustedValue = Float.parseFloat(value);
+    } else if (fieldType.isAssignableFrom(Double.class) &amp;&amp;
+               fieldType.isAssignableFrom(double.class)) {
+      adjustedValue = Float.parseFloat(value);
+    } else {
+      // or throw?
+      adjustedValue = value;
+    }
+
+System.out.println("gxo: " + gxo);
+System.out.println("shortenedVarName: " + shortenedVarName);
+System.out.println("adjustedValue: " + adjustedValue);
+  XynaObject.set(gxo, shortenedVarName, adjustedValue);
+} catch(Exception e) {
+  throw new RuntimeException(e);
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsStatic="false" Label="Set Member Value Wrapped" Name="setMemberValueWrapped">
+      <Input>
+        <Data ID="11" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">setMemberValue(text.getText());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

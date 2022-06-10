@@ -1,0 +1,218 @@
+GIP-BLACK-XPRC-XSCHED-MIB DEFINITIONS ::= BEGIN
+IMPORTS
+	xprc FROM GIP-BLACK-MIB;
+
+------------------------------------------------------
+-- Copyright 2022 GIP SmartMercial GmbH, Germany
+--
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+--
+--  http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+------------------------------------------------------
+--
+xSched MODULE-IDENTITY
+        LAST-UPDATED "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        ORGANIZATION "GIP AG"
+        CONTACT-INFO "GIP AG"
+        DESCRIPTION  ""
+        REVISION     "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        DESCRIPTION  ""
+	::= { xprc 1 }
+
+
+core OBJECT IDENTIFIER
+	::= { xSched 1 }
+
+
+--
+-- XPRC.XSched.Core
+--
+
+schedulerState OBJECT-TYPE
+  SYNTAX  OCTET STRING
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Current state of the scheduler.
+	Returns 'Scheduling all orders' if scheduler is performing its normal operation.
+    Returns 'Scheduling only already running orders' if scheduler is about to be paused.
+    Returns 'Shutting down' if scheduler is stopped due to shut down.
+    Returns 'NO SCHEDULER THREAD' if the scheduler thread was stopped due to a severe internal error."
+  ::= { core 1 }
+
+
+lastSchedulingDecisionTime OBJECT-TYPE
+  SYNTAX  OCTET STRING
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "ISO-Timestamp of the beginning of the last scheduling activity."
+  ::= { core 2 }
+
+
+lastSchedulingDuration OBJECT-TYPE
+  SYNTAX  Gauge
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Duration of the last scheduling in milliseconds [ms]."
+  ::= { core 3 }
+
+
+waitingOrders OBJECT-TYPE
+  SYNTAX  INTEGER
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Number of orders waiting to be scheduled."
+  ::= { core 4 }
+
+
+scheduledLast5Mins OBJECT-TYPE
+  SYNTAX  Gauge
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Number of orders that have been scheduled within the last 5 minutes."
+  ::= { core 5 }
+
+
+scheduledLast60Mins OBJECT-TYPE
+  SYNTAX  Gauge
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Number of orders that have been scheduled within the last 60 minutes."
+  ::= { core 6 }
+
+
+--
+-- XPRC.XSched.CC
+--
+
+cc OBJECT IDENTIFIER
+	::= { xSched 2 }
+
+	
+capacityTable OBJECT-TYPE
+    SYNTAX  SEQUENCE OF CapacityEntry
+    MAX-ACCESS not-accessible
+    STATUS  current
+    DESCRIPTION
+        "Table of capacities."
+    ::= { cc 1 }
+
+
+capacityEntry OBJECT-TYPE
+        SYNTAX  CapacityEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION
+                "Entry for a capacity."
+        INDEX {
+                capacityName
+        }
+        ::= { capacityTable 1 }
+
+
+CapacityEntry ::= SEQUENCE {
+		capacityName		OCTET STRING,
+        cardinality         INTEGER,
+        used                INTEGER,
+        state               OCTET STRING }
+
+
+capacityName OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Name of the capacity."
+        ::= { capacityEntry 1 }
+
+
+cardinality OBJECT-TYPE
+        SYNTAX  INTEGER
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Cardinality of the capacity."
+        ::= { capacityEntry 2 }
+
+
+used OBJECT-TYPE
+        SYNTAX  INTEGER
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Number of capacities of this type currently in use."
+        ::= { capacityEntry 3 }
+
+
+state OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "State of the capacity.
+				Returns 'ACTIVE' if the capacity may be used.
+				Returns 'DISABLED' if the capacity has been disabled."
+        ::= { capacityEntry 4 }
+
+
+-- #####################################################################
+
+
+vetoTable OBJECT-TYPE
+    SYNTAX  SEQUENCE OF VetoEntry
+    MAX-ACCESS not-accessible
+    STATUS  current
+    DESCRIPTION
+        "Table of vetos."
+    ::= { cc 2 }
+
+
+vetoEntry OBJECT-TYPE
+        SYNTAX  VetoEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION
+                "Entry for a veto."
+        INDEX {
+                vetoName
+        }
+        ::= { vetoTable 1 }
+
+
+VetoEntry ::= SEQUENCE {
+		vetoName		OCTET STRING,
+        orderID         INTEGER }
+
+
+vetoName OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Name of the veto."
+        ::= { vetoEntry 1 }
+
+
+orderID OBJECT-TYPE
+        SYNTAX  INTEGER
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Order id of the order currently occupying this veto."
+        ::= { vetoEntry 2 }
+
+
+END

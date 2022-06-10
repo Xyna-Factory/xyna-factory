@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DhcpdConfDuplicateForMigration" TypeName="DhcpdConfDuplicateForMigration" TypePath="xmcp.dhcp.v4.netconfigurator" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="DhcpdConfDuplicateForMigration" Name="DhcpdConfDuplicateForMigration">
+    <Input>
+      <Data ID="72" Label="Source" ReferenceName="MigrationTargetIdentifier_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="migrationTargetIdentifier_ctype72"/>
+      <Data ID="85" Label="Target" ReferenceName="MigrationTargetIdentifier_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="migrationTargetIdentifier_ctype85"/>
+    </Input>
+    <Output>
+      <Data ID="246" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype246"/>
+      <Data ID="277" Label="DhcpdConfResponse_ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype277"/>
+    </Output>
+    <ServiceReference ID="4" Label="DhcpdConf" ReferenceName="DhcpdConf.DhcpdConf" ReferencePath="xmcp.dhcp.v4.netconfigurator"/>
+    <Mappings ID="38" Label="Build Input">
+      <Input>
+        <Data ID="107" Label="Source" ReferenceName="MigrationTargetIdentifier_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="migrationTargetIdentifier_ctype107">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="72">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="116" Label="Target" ReferenceName="MigrationTargetIdentifier_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="migrationTargetIdentifier_ctype116">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="85">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Duplicate For Migration Request ctype" ReferenceName="DuplicateForMigrationRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="duplicateForMigrationRequest_ctype">
+          <Target RefID="5"/>
+        </Data>
+        <Target RefID="98"/>
+      </Output>
+      <Mapping>%2%.source=%0%</Mapping>
+      <Mapping>%2%.target=%1%</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Duplicate For Migration">
+      <Source RefID="4"/>
+      <Source RefID="98"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="duplicateForMigration" ServiceID="4">
+        <Source RefID="98"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="47" Label="Extract Output">
+      <Input>
+        <Data ID="237" Label="Response_ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype237">
+          <Source RefID="47"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="267" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype267">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="268"/>
+      </Output>
+      <Output>
+        <Data ID="290" Label="DhcpdConfResponse_ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype290">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="291"/>
+      </Output>
+      <Mapping>%2%=%0%.payload.duplicateForMigrationResponse</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="98" Label="Duplicate For Migration Request ctype" ReferenceName="DuplicateForMigrationRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="duplicateForMigrationRequest_ctype98">
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="268" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype268">
+      <Source RefID="47"/>
+    </Data>
+    <Data ID="291" Label="DhcpdConfResponse_ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype291">
+      <Source RefID="47"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="268"/>
+      <Source RefID="291"/>
+      <Target RefID="246"/>
+      <Target RefID="277"/>
+      <Copy>
+        <Source RefID="268"/>
+        <Target RefID="246"/>
+      </Copy>
+      <Copy>
+        <Source RefID="291"/>
+        <Target RefID="277"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

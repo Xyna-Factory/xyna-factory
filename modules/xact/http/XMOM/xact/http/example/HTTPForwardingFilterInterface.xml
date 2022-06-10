@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="HTTP Forwarding Filter Interface" TypeName="HTTPForwardingFilterInterface" TypePath="xact.http.example" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="HTTP Forwarding Filter Interface" Name="HTTPForwardingFilterInterface">
+    <Input>
+      <Data Label="URL-path" ReferenceName="URLPath" ReferencePath="xact.http" VariableName="uRLPath"/>
+      <Data Label="host" ReferenceName="Host" ReferencePath="base" VariableName="host"/>
+      <Data Label="Port" ReferenceName="Port" ReferencePath="base" VariableName="port"/>
+      <Data Label="HTTP Method" ReferenceName="HTTPMethod" ReferencePath="xact.http.enums.httpmethods" VariableName="hTTPMethod"/>
+      <Data ID="6" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header">
+        <Target RefID="3"/>
+      </Data>
+      <Data ID="4" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document">
+        <Target RefID="3"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="5" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header5">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="7" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Data ID="8" Label="HTTP Status Code" ReferenceName="NotFound" ReferencePath="xact.http.enums.statuscode" VariableName="const_NotFound">
+      <Target RefID="3"/>
+      <Data Label="Code" VariableName="code">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+      </Data>
+      <Data Label="Reason" VariableName="reason">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="8"/>
+      <Source RefID="4"/>
+      <Source RefID="6"/>
+      <Target RefID="7"/>
+      <Target RefID="2"/>
+      <Target RefID="5"/>
+      <Copy>
+        <Source RefID="4"/>
+        <Target RefID="2"/>
+      </Copy>
+      <Copy>
+        <Source RefID="6"/>
+        <Target RefID="5"/>
+      </Copy>
+      <Copy>
+        <Source RefID="8">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="7"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

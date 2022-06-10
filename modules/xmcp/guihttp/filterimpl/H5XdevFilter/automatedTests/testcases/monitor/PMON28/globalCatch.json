@@ -1,0 +1,90 @@
+{
+  "meta":
+  {
+    "name": "globalCatch",
+	"description": "Execute a workflow containing a thow, but handling exception in global catch (loaded from app) and open audit",
+	"created": "14.02.2020",
+	"updated": "14.02.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON28.WorkflowCatchTestWorkflow",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 0,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list",
+      "expectedValue": 3
+    },
+    {
+      "operation": "read", 
+      "pathInResponse": "workflow/id", 
+      "targetVariable": "!wf!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/id",
+      "targetVariable": "!stepId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "info/$list[id=!stepId!]/status",
+      "targetVariable": "!readStatusThrow!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "info/$list[id=!wf!]/status",
+      "targetVariable": "!readStatusWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readStatusThrow!",
+      "value": "Failed"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readStatusWorkflow!",
+      "value": "Finished"
+    }
+  ]
+}

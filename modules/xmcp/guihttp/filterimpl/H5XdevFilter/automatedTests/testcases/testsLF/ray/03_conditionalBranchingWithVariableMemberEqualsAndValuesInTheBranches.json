@@ -1,0 +1,279 @@
+{
+  "meta":
+  {
+    "name": "ConditionalBranchingWithVariableMemberEqualsAndValuesInTheBranches",
+	"description": "Erzeugt zwei Datentypen und erstellt einen Workflow. Der Workflow enthält ein conditionalBranching mit dem ersten erzeugten Datentypen in der Expression. Alle Zweige des ConditionalBranchings geben den zweiten Member zurück.",
+	"created": "11.11.2019",
+	"updated": "12.11.2019"
+  },
+  "operations":
+  [
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd2!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd3!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd4!"
+	},
+	{
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!workspace!": "default workspace"},
+		{"!workspaceEscaped!": "!workspace!"},
+	    {"!firstDatatypePath!": "autoTest.generated"},
+		{"!firstDatatypeLabel!": "generatedDatatype1_!rnd1!"},
+		{"!firstDatatypeMemberLabel!": "generatedMember_!rnd2!"},
+		{"!firstDatatypeMemberType!": "String"},
+		{"!secondDatatypePath!": "autoTest.generated"},
+		{"!secondDatatypeLabel!": "generatedDatatype2_!rnd3!"},
+		{"!workflowPath!": "autoTest.generated"},
+		{"!workflowLabel!": "generatedWorkflow_!rnd4!"}
+	  ]
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!workspaceEscaped!",
+	  "modification": {"operation": "urlencode"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	
+	{
+	  "meta": "create first Datatype",
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!": "!workspace!",
+		"!path!": "!firstDatatypePath!",
+		"!label!": "!firstDatatypeLabel!"
+	  },
+	  "mapOutput": {"!name!": "!firstDatatypeName!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "addSimpleTypeMemberToDatatype",
+	  "mapInput":
+	  {
+	    "!workspace!": "!workspace!",
+		"!datatypePath!": "!firstDatatypePath!",
+		"!datatypeName!": "!firstDatatypeName!",
+		"!insertType!": "!firstDatatypeMemberType!",
+		"!insertLabel!": "!firstDatatypeMemberLabel!"
+	  },
+	  "mapOutput":
+	  {
+	    "!insertName!": "!firstDatatypeMemberName!"
+	  }
+	},
+	
+	{
+	  "meta": "create second datatype",
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!": "!workspace!",
+		"!path!": "!secondDatatypePath!",
+		"!label!": "!secondDatatypeLabel!"
+	  },
+	  "mapOutput": {"!name!": "!secondDatatypeName!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+
+	
+	{
+	  "meta": "prepare workflow - add Conditional Branching, add branch, add mappings in branches",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"conditionalBranching"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!stepId!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!branchArea!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=content]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!branchArea!/insert",
+	  "payload": {"index":-1,"content":{"type":"branch"},"revision": "!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "right list index (0) could be modelled better -> id is branch[id of parentStep]-0. Complete result is Something like step16",
+	  "operation": "read",
+	  "targetVariable": "!createdBranchStep!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[id=!stepId!]/areas/$list[name=content]/items/$list[0]/areas/$list[name=content]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!defaultBranchStep!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[id=!stepId!]/areas/$list[name=content]/items/$list[1]/areas/$list[name=content]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!createdBranchStep!/insert",
+	  "payload": {"index":-1,"content":{"type":"mapping","label":"Mapping"},"relativePosition":"inside","revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!createdBranchMapping!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=content]/items/$list[0]/areas/$list[id=!createdBranchStep!]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType" : "POST",
+	  "url": "!url!/objects/!createdBranchMapping!_output/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!secondDatatypeLabel!","fqn":"!secondDatatypePath!.!secondDatatypeName!","isList":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType" : "POST",
+	  "url": "!url!/objects/!defaultBranchStep!/insert",
+	  "payload": {"index":-1,"content":{"type":"mapping","label":"Mapping"},"relativePosition":"inside","revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!defaultBranchMapping!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=content]/items/$list[1]/areas/$list[id=!defaultBranchStep!]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "call",
+	  "requestType" : "POST",
+	  "url": "!url!/objects/!defaultBranchMapping!_output/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!secondDatatypeLabel!","fqn":"!secondDatatypePath!.!secondDatatypeName!","isList":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!conditionalBranchingFormulaInput!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=input]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!conditionalBranchingFormulaInput!/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!firstDatatypeLabel!","fqn":"!firstDatatypePath!.!firstDatatypeName!","isList":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!conditionalBranchingFormulaInput!/change",
+	  "payload": {"content":{"expression":"%0%.!firstDatatypeMemberName!="},"revision":"!revision!"}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/save",
+	  "payload": {"revision":"!revision!","path":"!workflowPath!","label":"!workflowLabel!","force":true}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!quotedFqn!",
+	  "pathInResponse": "updates/$list[0]/fqn"
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "splitFQNtoPathAndName",
+	  "mapInput":
+	  {
+	    "!fqn!": "!quotedFqn!"
+	  },
+	  "mapOutput":
+	  {
+	    "!path!": "!wfSetPath!",
+		"!name!": "!wfSetName!"
+	  }
+	},
+	{
+	  "operation": "set",
+	  "variable": "!url!",
+	  "value": "/runtimeContext/!workspaceEscaped!/xmom/workflows/!wfSetPath!/!wfSetName!"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "listLength",
+	  "expectedValue": 3,
+	  "path": "connections/$list"
+	}
+  ]
+}

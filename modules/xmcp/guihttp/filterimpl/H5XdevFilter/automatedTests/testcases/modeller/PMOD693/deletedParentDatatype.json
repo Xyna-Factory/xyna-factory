@@ -1,0 +1,127 @@
+{
+  "meta":
+  {
+	"created": "15.01.2020",
+	"updated": "15.01.2020",
+	"Test Reference": "PMOD-787"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rndLabel1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rndLabel2!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!" : "autoTest.generated.PMOD693"},
+		{"!label1!": "GeneratedDatatype_!rndLabel1!"},
+		{"!label2!": "GeneratedDatatype_!rndLabel2!"},
+		{"!workspaceName!": "default workspace"}
+	  ]
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!rndLabel1!"
+	  },
+	  "mapOutput": {"!name!" : "!nameDT1!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!rndLabel2!"
+	  },
+	  "mapOutput": {"!name!" : "!nameDT2!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "changeDatatypeParent",
+	  "mapInput":
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!dtToChangeParentPath!": "!path!",
+		"!dtToChangeParentName!": "!nameDT1!",
+		"!newParentFqn!": "!path!.!nameDT2!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT2!/close",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT2!/delete",
+	  "payload": {"force":false}
+	},
+	{
+	  "comment": "Wir erwarten 409 - es muss repariert werden",
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!",
+	  "acceptError": true
+	},
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "repairs/$list",
+      "expectedValue": 1
+    },
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!?repair=true"
+	},
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "repairResult/$list",
+      "expectedValue": 1
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/save",
+	  "payload": {"revision":0,"path":"!path!","label":"!rndLabel1!"}
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/deploy",
+	  "payload": {"revision":0}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/close",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "fieldNotInResult",
+	  "fieldName": "baseType",
+	  "basePath": "/xmomItem/areas/$list[id=typeInfoArea]"
+	}
+  ]
+}

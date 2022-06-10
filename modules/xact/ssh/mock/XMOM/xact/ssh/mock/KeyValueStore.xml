@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Key Value Store" TypeName="KeyValueStore" TypePath="xact.ssh.mock" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>KeyValueStoreImpl.jar</Libraries>
+  <Service Label="Mocked Device" TypeName="KeyValueStore">
+    <Operation IsStatic="false" Label="Get Key Value" Name="getKeyValue">
+      <Input>
+        <Data Label="Key Value Pair" ReferenceName="KeyValuePair" ReferencePath="xact.ssh.mock" VariableName="keyValuePair"/>
+      </Input>
+      <Output>
+        <Data Label="Key Value Pair" ReferenceName="KeyValuePair" ReferencePath="xact.ssh.mock" VariableName="keyValuePair177"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getKeyValue(keyValuePair);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Key Value String" Name="getKeyValueString">
+      <Input>
+        <Data Label="Key" VariableName="key">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="Value" VariableName="value">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getKeyValueString(key);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="List All Key Value Pairs" Name="listAllKeyValuePairs">
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="Key Value Pair" ReferenceName="KeyValuePair" ReferencePath="xact.ssh.mock" VariableName="keyValuePair"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().listAllKeyValuePairs();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Put Key Value" Name="putKeyValue">
+      <Input>
+        <Data Label="Key Value Pair" ReferenceName="KeyValuePair" ReferencePath="xact.ssh.mock" VariableName="keyValuePair"/>
+      </Input>
+      <Output>
+        <Data Label="Key Value Pair" ReferenceName="KeyValuePair" ReferencePath="xact.ssh.mock" VariableName="oldKeyValuePair"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().putKeyValue(keyValuePair);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Put Key Value String" Name="putKeyValueString">
+      <Input>
+        <Data Label="Key" VariableName="key">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Value" VariableName="value">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="Old Value" VariableName="oldValue">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().putKeyValueString(key, value);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Remove Key Value" Name="removeKeyValue">
+      <Input>
+        <Data Label="Key Value Pair" ReferenceName="KeyValuePair" ReferencePath="xact.ssh.mock" VariableName="keyValuePair"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().removeKeyValue(keyValuePair);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Remove Key Value String" Name="removeKeyValueString">
+      <Input>
+        <Data Label="Key" VariableName="key">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().removeKeyValueString(key);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

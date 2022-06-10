@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XSDBaseModel" BaseTypePath="xdnc.model.xsd" IsAbstract="false" Label="Response_ctype" TypeName="Response_ctype" TypePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" Version="1.8">
+  <Meta>
+    <DataModel>
+      <XSDInfo>&lt;XSD Namespace="http://www.gip.com/juno/Gui/WS/Messages" Name="Response_ctype"&gt;
+  &lt;RootElements&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForUnregisteredCableModemResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForSipMtaResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromStringResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromStringV4Response"/&gt;
+    &lt;Root Name="TlvToAsciiResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForIsdnMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForUnregisteredMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForInitializedCableModemResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForNcsMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForIsdnMtaResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForUnregisteredMtaResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForUnregisteredCableModemResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromStringV4Response"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForSipMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForUninitializedMtaResponse"/&gt;
+    &lt;Root Name="ShowV4PacketsAsAsciiResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForUninitializedMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromStringResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForNcsMtaResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForInitializedCableModemResponse"/&gt;
+    &lt;Root Name="ShowPacketsAsAsciiResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForUnregisteredCableModemResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForSipMtaResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromStringResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromStringV4Response"/&gt;
+    &lt;Root Name="TlvToAsciiResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForIsdnMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForUnregisteredMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForInitializedCableModemResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForNcsMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForIsdnMtaResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForUnregisteredMtaResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForUnregisteredCableModemResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromStringV4Response"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForSipMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForUninitializedMtaResponse"/&gt;
+    &lt;Root Name="ShowV4PacketsAsAsciiResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForUninitializedMtaResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromStringResponse"/&gt;
+    &lt;Root Name="GenerateTlvFromTemplateForNcsMtaResponse"/&gt;
+    &lt;Root Name="GenerateAsciiFromTemplateForInitializedCableModemResponse"/&gt;
+    &lt;Root Name="ShowPacketsAsAsciiResponse"/&gt;
+  &lt;/RootElements&gt;
+&lt;/XSD&gt;</XSDInfo>
+      <ModelName>xdnc.model.xsd.v0.ConfigFile</ModelName>
+    </DataModel>
+  </Meta>
+  <Data Label="ResponseHeader" ReferenceName="ResponseHeader_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="responseHeader">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="ResponseHeader" Type="Element" Position="0"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Payload" ReferenceName="Payload_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="payload">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="Payload" Type="Element" Usage="optional" Position="1"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+</DataType>

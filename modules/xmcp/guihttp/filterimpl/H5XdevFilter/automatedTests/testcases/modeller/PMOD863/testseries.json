@@ -1,0 +1,6 @@
+{
+  "tests":
+  [
+    "anyTypeInChoice.json"
+  ]
+}

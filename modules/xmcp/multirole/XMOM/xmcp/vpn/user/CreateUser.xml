@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Create User" TypeName="CreateUser" TypePath="xmcp.vpn.user" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas,vScroll(1535)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Create User" Name="CreateUser">
+    <Input>
+      <Data ID="4" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser">
+        <Target RefID="107"/>
+        <Target RefID="73"/>
+      </Data>
+      <Data ID="5" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials">
+        <Target RefID="13"/>
+        <Target RefID="33"/>
+        <Target RefID="39"/>
+        <Target RefID="73"/>
+        <Target RefID="28"/>
+        <Target RefID="142"/>
+        <Target RefID="188"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser2">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      <Exception Label="Create User Exception" ReferenceName="CreateUserException" ReferencePath="xmcp.vpn.user" VariableName="createUserException"/>
+      <Exception Label="Domain Does Not Exist" ReferenceName="DomainDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="domainDoesNotExist"/>
+      <Exception Label="Name Contains Invalid Character" ReferenceName="NameContainsInvalidCharacter" ReferencePath="xfmg.xopctrl" VariableName="nameContainsInvalidCharacter"/>
+      <Exception Label="Password Restriction Violation" ReferenceName="PasswordRestrictionViolation" ReferencePath="xfmg.xopctrl" VariableName="passwordRestrictionViolation"/>
+      <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+      <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Choice ID="13" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="5"/>
+      <Input>
+        <Data ID="54" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials54"/>
+        <Source RefID="5">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="55" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials55"/>
+        <Source RefID="5">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="11" Label="true" Premise="%0%.password==null||length(%1%.password)==&quot;0&quot;">
+        <Throw ExceptionID="43" ID="15" Label="Throw Create User Exception">
+          <Source RefID="43">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="56"/>
+      </Case>
+      <Case ID="12" Label="false">
+        <Assign ID="57"/>
+      </Case>
+    </Choice>
+    <ServiceReference ID="19" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="20"/>
+      <Source RefID="33"/>
+      <Source RefID="112"/>
+      <Target RefID="20"/>
+      <Target RefID="33"/>
+      <Target RefID="112"/>
+    </ServiceReference>
+    <Choice ID="39" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="5"/>
+      <Input>
+        <Data ID="37" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials37"/>
+        <Source RefID="5"/>
+      </Input>
+      <Input>
+        <Data ID="38" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials38"/>
+        <Source RefID="5"/>
+      </Input>
+      <Case ID="35" Label="true" Premise="%0%.username==null||length(%1%.username)==&quot;0&quot;">
+        <Throw ExceptionID="42" ID="41" Label="Throw Create User Exception">
+          <Source RefID="42">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="58"/>
+      </Case>
+      <Case ID="36" Label="false">
+        <Assign ID="59"/>
+      </Case>
+    </Choice>
+    <Mappings ID="28" Label="Build Individual User Role">
+      <Source RefID="5"/>
+      <Target RefID="26"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="163" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials163"/>
+        <Source RefID="5"/>
+      </Input>
+      <Output>
+        <Data ID="29" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole29"/>
+        <Target RefID="26"/>
+      </Output>
+      <Mapping>%1%.role=concat("USER_",%0%.username)</Mapping>
+    </Mappings>
+    <Mappings ID="188" Label="Build Description">
+      <Source RefID="5"/>
+      <Target RefID="187"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="189" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials189"/>
+        <Source RefID="5"/>
+      </Input>
+      <Output>
+        <Data ID="198" Label="Description" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+        <Target RefID="187"/>
+      </Output>
+      <Mapping>%1%.text=concat("Individual user role for user \"",%0%.username,"\"")</Mapping>
+    </Mappings>
+    <Function ID="20" Label="Create role">
+      <Source RefID="19"/>
+      <Source RefID="21"/>
+      <Source RefID="26"/>
+      <Source RefID="187"/>
+      <Target RefID="19"/>
+      <Meta>
+        <FixedHeight>32</FixedHeight>
+        <FixedWidth>421</FixedWidth>
+      </Meta>
+      <Invoke Operation="createRole" ServiceID="19">
+        <Source RefID="26"/>
+        <Source RefID="21">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="187"/>
+      </Invoke>
+      <Receive ServiceID="19"/>
+    </Function>
+    <Data ID="21" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="const_DomainName">
+      <Target RefID="20"/>
+      <Data ID="60" Label="name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>XYNA</Value>
+      </Data>
+    </Data>
+    <Data ID="26" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole">
+      <Source RefID="28"/>
+      <Target RefID="20"/>
+      <Target RefID="33"/>
+      <Target RefID="112"/>
+    </Data>
+    <Function ID="33" Label="Create user">
+      <Source RefID="19"/>
+      <Source RefID="5"/>
+      <Source RefID="26"/>
+      <Target RefID="19"/>
+      <Target RefID="34"/>
+      <Invoke Operation="createUser" ServiceID="19">
+        <Source RefID="5"/>
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="19">
+        <Target RefID="34"/>
+      </Receive>
+    </Function>
+    <Data ID="34" Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult">
+      <Source RefID="33"/>
+      <Target RefID="132"/>
+    </Data>
+    <Exception ID="42" Label="Create User Exception" ReferenceName="CreateUserException" ReferencePath="xmcp.vpn.user" VariableName="createUserException40">
+      <Target RefID="41"/>
+      <Data ID="61" Label="Exception Details" VariableName="exceptionDetails">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Der User Name in den Credentials muss gesetzt sein.</Value>
+      </Data>
+    </Exception>
+    <Exception ID="43" Label="Create User Exception" ReferenceName="CreateUserException" ReferencePath="xmcp.vpn.user" VariableName="createUserException14">
+      <Target RefID="15"/>
+      <Data ID="62" Label="Exception Details" VariableName="exceptionDetails">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Das Passwort in den Credentials muss gesetzt sein.</Value>
+      </Data>
+    </Exception>
+    <Data ID="71" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser70">
+      <Source RefID="73"/>
+      <Target RefID="118"/>
+      <Target RefID="3"/>
+    </Data>
+    <ServiceReference ID="78" Label="Combine User Roles" ReferenceName="CombineUserRoles" ReferencePath="xmcp.vpn.user.sub">
+      <Source RefID="79"/>
+      <Target RefID="79"/>
+    </ServiceReference>
+    <Choice ID="132" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="34"/>
+      <Input>
+        <Data ID="152" Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult152"/>
+        <Source RefID="34">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="130" Label="true" Premise="%0%.success">
+        <Assign ID="153"/>
+      </Case>
+      <Case ID="131" Label="false">
+        <Mappings ID="142" Label="Build Exception">
+          <Source RefID="5"/>
+          <Target RefID="141"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="164" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials164"/>
+            <Source RefID="5"/>
+          </Input>
+          <Output>
+            <Exception ID="140" Label="Create User Exception" ReferenceName="CreateUserException" ReferencePath="xmcp.vpn.user" VariableName="createUserException140"/>
+            <Target RefID="141"/>
+          </Output>
+          <Mapping>%1%.exceptionDetails=concat("Der Benutzer \"",%0%.username,"\" konnte nicht angelegt werden. Möglicherweise ist der Benutzername bereits vergeben.")</Mapping>
+        </Mappings>
+        <Throw ExceptionID="141" ID="134" Label="Throw Create User Exception">
+          <Source RefID="141"/>
+        </Throw>
+        <Assign ID="154"/>
+      </Case>
+    </Choice>
+    <Function ID="107" Label="Get All Roles from Advanced User">
+      <Source RefID="106"/>
+      <Source RefID="4"/>
+      <Target RefID="106"/>
+      <Target RefID="108"/>
+      <Invoke Operation="getAllRolesFromAdvancedUser" ServiceID="106">
+        <Source RefID="4"/>
+      </Invoke>
+      <Receive ServiceID="106">
+        <Target RefID="108"/>
+      </Receive>
+    </Function>
+    <Function ID="79" Label="Combine User Roles">
+      <Source RefID="78"/>
+      <Source RefID="108"/>
+      <Target RefID="78"/>
+      <Target RefID="80"/>
+      <Invoke Operation="CombineUserRoles" ServiceID="78">
+        <Source RefID="108"/>
+      </Invoke>
+      <Receive ServiceID="78">
+        <Target RefID="80"/>
+      </Receive>
+    </Function>
+    <Data ID="80" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight">
+      <Source RefID="79"/>
+      <Target RefID="114"/>
+    </Data>
+    <ServiceReference ID="106" Label="Permission Service Group" ReferenceName="PermissionServiceGroup.PermissionServiceGroup" ReferencePath="xmcp.vpn.user">
+      <Source RefID="107"/>
+      <Target RefID="107"/>
+    </ServiceReference>
+    <Data ID="108" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole108">
+      <Source RefID="107"/>
+      <Target RefID="79"/>
+    </Data>
+    <Foreach ID="114">
+      <Source RefID="80"/>
+      <InputList RefID="80">
+        <Data ID="113" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight113">
+          <Target RefID="112"/>
+        </Data>
+      </InputList>
+      <Function ID="112" Label="Grant right to role">
+        <Source RefID="19"/>
+        <Source RefID="113"/>
+        <Source RefID="26"/>
+        <Target RefID="19"/>
+        <Invoke Operation="grantRightToRole" ServiceID="19">
+          <Source RefID="26">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+          <Source RefID="113"/>
+        </Invoke>
+        <Receive ServiceID="19"/>
+      </Function>
+    </Foreach>
+    <ServiceReference ID="117" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="118"/>
+      <Target RefID="118"/>
+    </ServiceReference>
+    <Mappings ID="73" Label="Update Advanced User">
+      <Source RefID="5"/>
+      <Source RefID="4"/>
+      <Source RefID="162"/>
+      <Target RefID="71"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="72" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser72"/>
+        <Source RefID="4"/>
+      </Input>
+      <Input>
+        <Data ID="74" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials74"/>
+        <Source RefID="5"/>
+      </Input>
+      <Input>
+        <Data ID="172" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now"/>
+        <Source RefID="162">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="75" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser75"/>
+        <Target RefID="71"/>
+      </Output>
+      <Mapping>%3%=%0%</Mapping>
+      <Mapping>%3%.changeDate=%2%.asString()</Mapping>
+      <Mapping>%3%.userName=%1%.username</Mapping>
+    </Mappings>
+    <Function ID="118" Label="Store Advanced User">
+      <Source RefID="117"/>
+      <Source RefID="119"/>
+      <Source RefID="71"/>
+      <Target RefID="117"/>
+      <Invoke Operation="store" ServiceID="117">
+        <Source RefID="71">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="119">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="117"/>
+    </Function>
+    <Data ID="119" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="118"/>
+      <Data ID="127" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="128" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="129" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Exception ID="141" Label="Create User Exception" ReferenceName="CreateUserException" ReferencePath="xmcp.vpn.user" VariableName="createUserException141">
+      <Source RefID="142"/>
+      <Target RefID="134"/>
+    </Exception>
+    <Data ID="162" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="const_Now">
+      <Target RefID="73"/>
+      <Data ID="173" Label="Date" VariableName="date">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="175" Label="Format" ReferenceName="CustomDateFormat" ReferencePath="base.date" VariableName="format">
+        <Data ID="174" Label="Date Format" VariableName="dateFormat">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>yyyy-MM-dd' 'HH:mm:ss</Value>
+        </Data>
+      </Data>
+    </Data>
+    <Data ID="187" Label="Description" ReferenceName="Text" ReferencePath="base" VariableName="text187">
+      <Source RefID="188"/>
+      <Target RefID="20"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="71"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="71">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

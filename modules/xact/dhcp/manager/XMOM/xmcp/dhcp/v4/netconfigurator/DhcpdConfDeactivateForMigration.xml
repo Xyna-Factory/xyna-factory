@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DhcpdConfDeactivateForMigration" TypeName="DhcpdConfDeactivateForMigration" TypePath="xmcp.dhcp.v4.netconfigurator" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="DhcpdConfDeactivateForMigration" Name="DhcpdConfDeactivateForMigration">
+    <Input>
+      <Data ID="107" Label="Migration Target Identifier ctype" ReferenceName="MigrationTargetIdentifier_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="migrationTargetIdentifier_ctype107"/>
+    </Input>
+    <Output>
+      <Data ID="137" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype137"/>
+      <Data ID="170" Label="DhcpdConfResponse_ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype170"/>
+    </Output>
+    <ServiceReference ID="4" Label="DhcpdConf" ReferenceName="DhcpdConf.DhcpdConf" ReferencePath="xmcp.dhcp.v4.netconfigurator"/>
+    <Function ID="5" Label="Deactivate For Migration">
+      <Source RefID="4"/>
+      <Source RefID="107"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="deactivateForMigration" ServiceID="4">
+        <Source RefID="107"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="47" Label="Extract Output">
+      <Input>
+        <Data ID="72" Label="Response_ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype72">
+          <Source RefID="47"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="150" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype150">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="151"/>
+      </Output>
+      <Output>
+        <Data ID="160" Label="DhcpdConfResponse_ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype160">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="161"/>
+      </Output>
+      <Mapping>%2%=%0%.payload.deactivateForMigrationResponse</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="151" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype151">
+      <Source RefID="47"/>
+    </Data>
+    <Data ID="161" Label="DhcpdConfResponse_ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype161">
+      <Source RefID="47"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="151"/>
+      <Source RefID="161"/>
+      <Target RefID="137"/>
+      <Target RefID="170"/>
+      <Copy>
+        <Source RefID="151"/>
+        <Target RefID="137"/>
+      </Copy>
+      <Copy>
+        <Source RefID="161"/>
+        <Target RefID="170"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

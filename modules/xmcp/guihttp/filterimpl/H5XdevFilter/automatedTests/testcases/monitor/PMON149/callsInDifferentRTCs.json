@@ -1,0 +1,102 @@
+{
+  "meta":
+  {
+    "name": "serviceWorkflowTest",
+    "description": "Execute a workflow containing service calls in different RTCs (loaded from app) and open audit",
+    "created": "20.05.2020",
+    "updated": "20.05.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON149.CallWFsInDifferentApps",
+        "!input!": [],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 0,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check call of service in RegressionTestApp", "operation": "comment" },
+    
+    {
+      "operation": "read",
+      "targetVariable": "!executionRTC!",
+      "pathInResponse": "info/$list[id=step10]/executionRTC",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!executionRTC!",
+      "value": "RegressionTestApp"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!originalRTC!",
+      "pathInResponse": "info/$list[id=step10]/originalRTC",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!originalRTC!",
+      "value": "!executionRTC!"
+    },
+
+    { "comment": "check call of service in RegressionTestDependentApp", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!executionRTCForeignCall!",
+      "pathInResponse": "info/$list[id=step6]/executionRTC",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!executionRTCForeignCall!",
+      "value": "!executionRTC!"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!originalRTCForeignCall!",
+      "pathInResponse": "info/$list[id=step6]/originalRTC",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!originalRTCForeignCall!",
+      "value": "RegressionTestDependentApp"
+    }
+  ]
+}

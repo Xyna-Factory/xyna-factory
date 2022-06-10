@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="updateInterfaces" default="updateInterfaces" basedir=".">
+
+	<property name="main.dir" value="${basedir}/../.." />
+	<property name="interfaces.dir" value="${main.dir}/_Interfaces" />
+
+	<!-- ================================= 
+          target: updateInterfaces              
+         ================================= -->
+	<target name="updateInterfaces"
+	        depends="updateWorkflows, updateWebServices"
+	        description="Update interfaces             
+                in all workflows and web services. Interfaces are fetch from directory _Interfaces.">
+	</target>
+
+	<!-- ================================= 
+             target: updateWorkflows              
+            ================================= -->
+	<target name="updateWorkflows"
+	        depends="checkPreBuilds"
+	        description="Update interfaces             
+                   in all workflows. Interfaces are fetch from directory _Interfaces.">
+		<subant target="updateWorkflow" antfile="pre-build.xml" verbose="true">
+			<property name="interfaces.dir" value="${interfaces.dir}" />
+			<fileset dir="${main.dir}">
+				<include name="**/pre-build.xml" />
+				<exclude name="installation/**" />
+				<exclude name="snmp/**" />
+				<exclude name="**/XynaSNMP/**" />
+			</fileset>
+		</subant>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: checkPreBuilds                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="checkPreBuilds">
+		<subant target="existsPreBuild"
+		        genericantfile="${ant.file.updateInterfaces}">
+			<dirset dir="${main.dir}">
+				<include name="**/bpel" />
+				<exclude name="installation/**" />
+				<exclude name="**/output/**" />
+				<exclude name="snmp/**" />
+				<exclude name="**/XynaSNMP/**" />
+			</dirset>
+		</subant>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: existsPreBuild                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="existsPreBuild">
+		<dirname file="${basedir}" property="workflow.dir" />
+		<echo message="Searching for pre-build.xml in ${workflow.dir}" />
+		<available file="${workflow.dir}/pre-build.xml"
+		           property="existsPreBuild" />
+		<fail unless="existsPreBuild"
+		      message="Workflow in ${workflow.dir} is missing pre-build.xml!" />
+		<echo message="Found pre-build.xml in ${workflow.dir}" />
+	</target>
+
+	<!-- ================================= 
+          target: updateWebServices              
+         ================================= -->
+	<target name="updateWebServices"
+	        depends="checkRegenerate"
+	        description="Update interfaces             
+            in all web services Interfaces are fetch from directory _Interfaces.">
+		<subant target="regenerateFromWsdl"
+		        antfile="regenerateFromWsdl.xml"
+		        verbose="true">
+			<property name="interfaces.dir" value="${interfaces.dir}" />
+			<fileset dir="${main.dir}">
+				<include name="**/regenerateFromWsdl.xml" />
+				<exclude name="installation/**" />
+				<exclude name="snmp/**" />
+				<exclude name="**/VoiceRoutingService/**" />
+				<exclude name="**/VoiceRoutingServiceMock/**" />
+			</fileset>
+		</subant>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+             target: checkRegenerate                      
+            - - - - - - - - - - - - - - - - - -->
+	<target name="checkRegenerate">
+		<available file="${main.dir}/installation/webservices/regenerateFromWsdlMaster.xml"
+		           property="existsRegenerateMaster" />
+		<fail unless="existsRegenerateMaster"
+		      message="File ${main.dir}/installation/webservices/regenerateFromWsdlMaster.xml is missing!" />
+		<subant target="existsRegenerate"
+		        genericantfile="${ant.file.updateInterfaces}">
+			<dirset dir="${main.dir}">
+				<include name="**/public_html" />
+				<exclude name="**/bpel/**" />
+				<exclude name="installation/**" />
+				<exclude name="**/classes/**" />
+				<exclude name="snmp/**" />
+			</dirset>
+		</subant>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+             target: existsRegenerate                      
+            - - - - - - - - - - - - - - - - - -->
+	<target name="existsRegenerate">
+		<dirname file="${basedir}" property="webservice.dir" />
+		<echo message="Searching for regenerateFromWsdl.xml in ${webservice.dir}" />
+		<available file="${webservice.dir}/regenerateFromWsdl.xml"
+		           property="existsRegenerate" />
+		<fail unless="existsRegenerate"
+		      message="Web Service in ${webservice.dir} is missing regenerateFromWsdl.xml!" />
+		<echo message="Found regenerateFromWsdl.xml in ${webservice.dir}" />
+	</target>
+
+</project>

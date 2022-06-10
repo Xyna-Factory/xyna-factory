@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "28.4.2021",
+    "updated": "28.4.2021"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Data_Type!": "New Data Type"
+        },
+        {
+          "!xnwh.persistence.Storable!": "xnwh.persistence.Storable"
+        },
+        {
+          "!autoTest.generated.PMOD205!": "autoTest.generated.PMOD205.!rnd!"
+        },
+        {
+          "!Storable_Type!": "Storable Type"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1619600876842.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1619600876842!",
+      "variable": "!new_1619600876842.NewDataType!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewDataType!",
+      "variable": "!new_1619600876842.NewDataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=globalStorableProperties]/isStorable",
+      "targetVariable": "!isStorable!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isStorable!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "useHistorization",
+      "basePath": "xmomItem/areas/$list[name=globalStorableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "odsName",
+      "basePath": "xmomItem/areas/$list[name=globalStorableProperties]"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "baseType": "!xnwh.persistence.Storable!",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1619600876842!/!NewDataType!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=globalStorableProperties]/isStorable",
+      "targetVariable": "!isStorable!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isStorable!",
+      "value": "true"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=globalStorableProperties]/useHistorization",
+      "targetVariable": "!useHistorization!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!useHistorization!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "odsName",
+      "basePath": "updates/$list[0]/areas/$list[name=globalStorableProperties]"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!Storable_Type!",
+        "path": "!autoTest.generated.PMOD205!",
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1619600876842!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!pmod205.StorableType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!StorableType!",
+      "variable": "!pmod205.StorableType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.PMOD205!/!StorableType!/deploy"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=globalStorableProperties]/isStorable",
+      "targetVariable": "!isStorable!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isStorable!",
+      "value": "true"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=globalStorableProperties]/useHistorization",
+      "targetVariable": "!useHistorization!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!useHistorization!",
+      "value": "false"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=globalStorableProperties]/oDSName",
+      "targetVariable": "!odsName!",
+	  "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!odsName!",
+      "value": "storabletype"
+    }
+  ]
+}

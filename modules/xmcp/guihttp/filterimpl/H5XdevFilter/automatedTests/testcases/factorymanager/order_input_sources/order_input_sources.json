@@ -1,0 +1,13 @@
+{
+    "testseries": [
+        "order_input_sources_001/testseries.json",
+        "order_input_sources_002/testseries.json",
+        "order_input_sources_003/testseries.json",
+        "order_input_sources_009/testseries.json",
+        "order_input_sources_010/testseries.json",
+        "order_input_sources_012/testseries.json",
+        "order_input_sources_013/testseries.json",
+        "order_input_sources_014/testseries.json",
+        "order_input_sources_015/testseries.json"
+    ]
+}

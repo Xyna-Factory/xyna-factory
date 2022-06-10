@@ -1,0 +1,65 @@
+{
+  "meta":
+  {
+    "name": "rename a mapping",
+	"descritpion": "Fügt einem Workflow ein Mapping hinzu und ändert dessen Namen",
+	"created": "12.11.2019",
+	"updated": "12.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!text!"
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+    },
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"mapping","label":"Mapping"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!mappingLabelArea!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=label]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!mappingLabelArea!/change",
+	  "payload": {"text":"!text!","revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!readText!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=label]/text",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readText!",
+	  "value": "!text!"
+	}
+  ]
+}

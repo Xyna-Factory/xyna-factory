@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-978", 
+    "created": "20.2.2020", 
+    "updated": "20.2.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!datatypes!": "datatypes"
+        }, 
+        {
+          "!New_Data_Type!": "New Data Type"
+        }, 
+        {
+          "!base.Text!": "base.Text"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Data_Type!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!datatypes!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn", 
+      "targetVariable": "!new_1582211468653.NewDataType!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1582211468653!", 
+      "variable": "!new_1582211468653.NewDataType!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/id", 
+      "targetVariable": "!memberVarArea!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewDataType!", 
+      "variable": "!new_1582211468653.NewDataType!"
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!Text!", 
+      "variable": "!base.Text!"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!base.Text!", 
+          "isList": false, 
+          "label": "!Text!", 
+          "type": "memberVar"
+        }, 
+        "index": -1, 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!datatypes!/!new_1582211468653!/!NewDataType!/objects/!memberVarArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberVars]/items/$list[0]/fqn",
+      "targetVariable": "!readType!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readType!",
+      "value": "!base.Text!"
+    }
+  ]
+}

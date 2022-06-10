@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "21.7.2020", 
+    "updated": "21.7.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        }, 
+        {
+          "!startorder!": "startorder"
+        }, 
+        {
+          "!xmcp.xacm.usermanagement.GetDomains!": "xmcp.xacm.usermanagement.GetDomains"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [], 
+        "orderType": "!xmcp.xacm.usermanagement.GetDomains!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

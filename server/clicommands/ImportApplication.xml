@@ -1,0 +1,35 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="importapplication" Groups="Application" Description="Import an application from file."/>
+  <Argument Name="filename" Description="The name of the file containing the application."/>
+  <BoolOption Name="xp" LongName="excludeXynaProperties" Description="Do not import the properties of the application." Optional="true"/>
+  <BoolOption Name="xc" LongName="excludeCapacities" Description="Do not import the capacities of the application." Optional="true"/>
+  <BoolOption Name="ip" LongName="includeXynaProperties" Description="Do import the properties of the application." Optional="true"/>
+  <BoolOption Name="ic" LongName="includeCapacities" Description="Do import the capacities of the application." Optional="true"/>
+  <BoolOption Name="op" LongName="importOnlyXynaProperties" Description="Import only the properties of the application." Optional="true"/>
+  <BoolOption Name="oc" LongName="importOnlyCapacities" Description="Import only the capacities of the application." Optional="true"/>
+  <BoolOption Name="f" LongName="force" Description="Override existing application. If existing application is used by another runtime context, that runtime context will switch to the newly imported application." Optional="true" />
+  <BoolOption Name="s" LongName="stop" Description="Stop existing application." Optional="true" />
+  <BoolOption Name="v" LongName="verbose" Description="Enable verbose output." Optional="true" />
+  <BoolOption Name="g" LongName="global" Description="On cluster configuration perform the command on all nodes." Optional="true" />
+  <BoolOption Name="r" LongName="regenerate" Description="Generated code inside the application will be regenerated during the import." Optional="true" />
+  <BoolOption Name="iq" LongName="failOnIncompatibleRequirements" Description="If a required runtime context is only present in a different version, the requirement will not be switched to that version, and the import will fail. Default=false." Optional="true" />
+  <Argument Name="storableNameGeneration" Description="abort: Abort import if odsNames of different types collide (default). allow: Allows deviation on name colllsions. exclude: Do not import odsNames." Optional="true" />
+  <!-- Argument Name="storableNameGeneration" Description="Controls whether odsName should be imported ('exclude') and if a name collision should abort the import ('abort') or a different name should be choosen ('allow')." Optional="true" /-->
+</XynaCommandLineCommand>

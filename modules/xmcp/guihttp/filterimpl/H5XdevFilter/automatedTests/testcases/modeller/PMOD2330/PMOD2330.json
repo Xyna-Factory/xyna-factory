@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-2831", 
+    "created": "14.4.2021", 
+    "updated": "14.4.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!base!": "base"
+        }, 
+        {
+          "!IPv4!": "IPv4"
+        }, 
+        {
+          "!dataType!": "dataType"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "invoke",
+      "functionName": "getApplicationVersion",
+      "mapInput":
+      {
+        "!applicationName!": "Base"
+      },
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!": "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "set",
+	  "variable": "!BaseAppAndVersion!",
+	  "value": "!applicationName!%252F!applicationVersion!"
+	},
+    {
+      "operation": "print",
+      "variable": "!BaseAppAndVersion!"
+    },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!BaseAppAndVersion!/xmom/datatypes/!base!/!IPv4!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn", 
+      "targetVariable": "!base.IPv4!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!BaseAppAndVersion!/xmom/datatypes/!base!/!IPv4!/relations"
+    },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "extends0/$list",
+      "entries": [
+	    {
+		  "fqn": "base.IP",
+		  "type": "dataType"
+		}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "meta":
+  {
+    "description": "Testet die Operation success",
+	"created": "07.11.2019",
+	"updated": "07.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!printMe!",
+	  "value": "thisVariableShouldBePrinted"
+	},
+    {
+	  "operation": "set",
+	  "variable": "!dontPrintMe!",
+	  "value": "thisVariableShouldNotBePrinted"
+	},
+	{
+	  "operation": "print",
+	  "variable": "!printMe!"
+	},
+	{
+	  "operation": "success"
+	},
+	{
+	  "operation": "print",
+	  "variable": "!dontPrintMe!"
+	}
+  ]
+}

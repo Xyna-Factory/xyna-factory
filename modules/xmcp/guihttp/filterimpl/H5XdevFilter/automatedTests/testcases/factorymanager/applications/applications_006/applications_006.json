@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "workspaces_and_applications"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!": "xmcp.factorymanager.rtcmanager.GetDependentRTCs"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionForward"
+        },
+        {
+          "!local!": "local"
+        },
+        {
+          "!doc!": "doc"
+        },
+        {
+          "!STOPPED!": "STOPPED"
+        },
+        {
+          "!1!": "1"
+        },
+        {
+          "!RMI!": "RMI"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.OrderEntry!": "xmcp.factorymanager.rtcmanager.OrderEntry"
+        },
+        {
+          "!CLI!": "CLI"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.RuntimeApplicatio!": "xmcp.factorymanager.rtcmanager.RuntimeApplicationDetails"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!autotest.generated.random.ad!": "autotest.generated.!rnd!.ad"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!": "xmcp.factorymanager.rtcmanager.GetDependentRTCsRequest"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": false,
+            "includeUnassigned": true,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.RuntimeApplicatio!",
+                "rtc": {
+                "workcpase": "default workspace"
+              }
+              },
+              "documentation": "!doc!",
+              "factoryNode": "!local!",
+              "isLocal": true,
+              "name": "!autotest.generated.random.ad!",
+              "orderEntries": {
+                "$list": [
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.OrderEntry!"
+                    },
+                    "isActive": false,
+                    "name": "!RMI!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.OrderEntry!"
+                    },
+                    "isActive": false,
+                    "name": "!CLI!"
+                  }
+                ],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.OrderEntry!"
+                }
+              },
+              "revision": 2132,
+              "state": "!STOPPED!",
+              "version": "!1!"
+            }
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

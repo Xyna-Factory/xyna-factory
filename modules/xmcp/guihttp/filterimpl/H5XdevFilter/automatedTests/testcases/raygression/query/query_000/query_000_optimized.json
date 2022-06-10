@@ -1,0 +1,662 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "13.7.2020",
+    "updated": "13.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "seed": "query_autotests",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Data_Type!": "New Data Type"
+        },
+        {
+          "!STORABLE!": "STORABLE"
+        },
+        {
+          "!xnwh.persistence.Storable!": "xnwh.persistence.Storable"
+        },
+        {
+          "!T!": "T"
+        },
+        {
+          "!Test!": "Test"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!autotest.generated.ARANDOM!": "autotest.generated.!rnd!"
+        },
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetRuntimeContexts!": "xmcp.factorymanager.shared.GetRuntimeContexts"
+        },
+        {
+          "!xnwh.persistence.Query!": "xnwh.persistence.Query"
+        },
+        {
+          "!xnwh.persistence.SelectionMask!": "xnwh.persistence.SelectionMask"
+        },
+        {
+          "!xnwh.persistence.FilterCondition!": "xnwh.persistence.FilterCondition"
+        },
+        {
+          "!xnwh.persistence.SortCriterion!": "xnwh.persistence.SortCriterion"
+        },
+        {
+          "!xnwh.persistence.QueryParameter!": "xnwh.persistence.QueryParameter"
+        },
+        {
+          "!xnwh.persistence.Store!": "xnwh.persistence.Store"
+        },
+        {
+          "!123!": "123"
+        },
+        {
+          "!xnwh.persistence.StoreParameter!": "xnwh.persistence.StoreParameter"
+        },
+        {
+          "!User!": "User"
+        },
+        {
+          "!Tester!": "Tester"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1594629510353.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1594629510353!",
+      "variable": "!new_1594629510353.NewDataType!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewDataType!",
+      "variable": "!new_1594629510353.NewDataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/id",
+      "targetVariable": "!memberVarArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/itemTypes[0]",
+      "targetVariable": "!xmcp.processmodeller.datatypes.Data!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Data!",
+      "variable": "!xmcp.processmodeller.datatypes.Data!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/rtc/name",
+      "targetVariable": "!default_workspace!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!STORABLE!",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "baseType": "!xnwh.persistence.Storable!",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "!Data!",
+          "type": "memberVar"
+        },
+        "index": -1,
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/objects/!memberVarArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberVars]/items/$list[name=data]/id",
+      "targetVariable": "!memberVar0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "!Data!",
+          "type": "memberVar"
+        },
+        "index": -1,
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/objects/!memberVarArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberVars]/items/$list[name=data0]/id",
+      "targetVariable": "!memberVar1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!T!",
+        "revision": 4
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/objects/!memberVar0!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!Test!",
+        "revision": 5
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/objects/!memberVar0!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!Name!",
+        "revision": 6
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/objects/!memberVar1!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "!Data!",
+          "type": "memberVar"
+        },
+        "index": -1,
+        "revision": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/objects/!memberVarArea!/insert"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!STORABLE!",
+        "path": "!autotest.generated.ARANDOM!",
+        "revision": 8
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1594629510353!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!autotest.generated.ARANDOM.STORABLE!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 9
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autotest.generated.ARANDOM!/!STORABLE!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.shared.GetRuntimeContexts!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.SelectionMask!"
+            },
+            "columns": [],
+            "rootType": "!autotest.generated.ARANDOM.STORABLE!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.FilterCondition!"
+            },
+            "formula": ""
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.QueryParameter!"
+            },
+            "maxObjects": -1,
+            "queryHistory": false,
+            "sortCriterion": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xnwh.persistence.SortCriterion!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xnwh.persistence.Query!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+              "rtc": {
+                "workspace": "!default_workspace!"
+              }
+            },
+            "data": "!123!",
+            "name": "!Name!",
+            "test": "!Test!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.StoreParameter!"
+            },
+            "forceRecursiveStore": false,
+            "historizePreviousObject": false,
+            "keepMetaFieldData": false
+          }
+        ],
+        "orderType": "!xnwh.persistence.Store!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.SelectionMask!"
+            },
+            "columns": [],
+            "rootType": "!autotest.generated.ARANDOM.STORABLE!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.FilterCondition!"
+            },
+            "formula": ""
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.QueryParameter!"
+            },
+            "maxObjects": -1,
+            "queryHistory": false,
+            "sortCriterion": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xnwh.persistence.SortCriterion!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xnwh.persistence.Query!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+              "rtc": {
+                "workspace": "!default_workspace!"
+              }
+            },
+            "data": "!Test!",
+            "name": "!Test!",
+            "test": "!Test!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.StoreParameter!"
+            },
+            "forceRecursiveStore": false,
+            "historizePreviousObject": false,
+            "keepMetaFieldData": false
+          }
+        ],
+        "orderType": "!xnwh.persistence.Store!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.SelectionMask!"
+            },
+            "columns": [],
+            "rootType": "!autotest.generated.ARANDOM.STORABLE!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.FilterCondition!"
+            },
+            "formula": ""
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.QueryParameter!"
+            },
+            "maxObjects": -1,
+            "queryHistory": false,
+            "sortCriterion": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xnwh.persistence.SortCriterion!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xnwh.persistence.Query!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+              "rtc": {
+                "workspace": "!default_workspace!"
+              }
+            },
+            "data": "!User!",
+            "name": "!User!",
+            "test": "!User!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.StoreParameter!"
+            },
+            "forceRecursiveStore": false,
+            "historizePreviousObject": false,
+            "keepMetaFieldData": false
+          }
+        ],
+        "orderType": "!xnwh.persistence.Store!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.SelectionMask!"
+            },
+            "columns": [],
+            "rootType": "!autotest.generated.ARANDOM.STORABLE!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.FilterCondition!"
+            },
+            "formula": ""
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.QueryParameter!"
+            },
+            "maxObjects": -1,
+            "queryHistory": false,
+            "sortCriterion": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xnwh.persistence.SortCriterion!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xnwh.persistence.Query!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!autotest.generated.ARANDOM.STORABLE!",
+              "rtc": {
+                "workspace": "!default_workspace!"
+              }
+            },
+            "data": "!Tester!",
+            "name": "!Tester!",
+            "test": "!Tester!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.StoreParameter!"
+            },
+            "forceRecursiveStore": false,
+            "historizePreviousObject": false,
+            "keepMetaFieldData": false
+          }
+        ],
+        "orderType": "!xnwh.persistence.Store!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.SelectionMask!"
+            },
+            "columns": [],
+            "rootType": "!autotest.generated.ARANDOM.STORABLE!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.FilterCondition!"
+            },
+            "formula": ""
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.QueryParameter!"
+            },
+            "maxObjects": -1,
+            "queryHistory": false,
+            "sortCriterion": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xnwh.persistence.SortCriterion!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xnwh.persistence.Query!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    }
+  ]
+}

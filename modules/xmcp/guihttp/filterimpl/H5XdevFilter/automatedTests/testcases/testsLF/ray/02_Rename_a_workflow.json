@@ -1,0 +1,44 @@
+{
+  "meta":
+  {
+    "name": "02_Rename_a_workflow.json",
+	"description": "Rename a workflow",
+	"created": "08.11.2019",
+	"updated": "08.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!workflowName!",
+	  "value": "testName"
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/labelArea/change",
+	  "payload": {"text":"!workflowName!","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!readNameOfWorkflow!",
+	  "pathInResponse": "updates/$list[0]/label",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readNameOfWorkflow!",
+	  "value": "!workflowName!"
+	}
+  ]
+}

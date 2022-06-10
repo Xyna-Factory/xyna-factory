@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Runtime Applications Table" TypeName="GetRuntimeApplicationsTable" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(554)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Runtime Applications Table" Name="GetRuntimeApplicationsTable">
+    <Input>
+      <Data ID="4" Label="Search Criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="24"/>
+        <Target RefID="27"/>
+        <Target RefID="29"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="10" IsList="true" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Get Runtime Applications Exception" ReferenceName="GetRuntimeApplicationsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getRuntimeApplicationsException"/>
+    </Throws>
+    <Choice ID="24" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Target RefID="33"/>
+      <Target RefID="36"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="23" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo23"/>
+        <Source RefID="4"/>
+      </Input>
+      <Case ID="14" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="26" Label="Generate Table Columns">
+          <Target RefID="25"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="50" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="25"/>
+          </Output>
+          <Mapping>%0%["0"].name="State"</Mapping>
+          <Mapping>%0%["0"].path="state"</Mapping>
+          <Mapping>%0%["1"].name="Name"</Mapping>
+          <Mapping>%0%["1"].path="name"</Mapping>
+          <Mapping>%0%["1"].sort="asc"</Mapping>
+          <Mapping>%0%["2"].name="Version"</Mapping>
+          <Mapping>%0%["2"].path="version"</Mapping>
+          <Mapping>%0%["3"].name="Factory Node"</Mapping>
+          <Mapping>%0%["3"].path="factoryNode"</Mapping>
+          <Mapping>%0%["4"].name="Documentation"</Mapping>
+          <Mapping>%0%["4"].path="documentation"</Mapping>
+        </Mappings>
+        <Mappings ID="27" Label="Set bootstrap &amp; columns">
+          <Source RefID="4"/>
+          <Source RefID="25"/>
+          <Target RefID="28"/>
+          <Input>
+            <Data ID="16" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo16"/>
+            <Source RefID="4"/>
+          </Input>
+          <Input>
+            <Data ID="17" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn17"/>
+            <Source RefID="25"/>
+          </Input>
+          <Output>
+            <Data ID="18" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo18"/>
+            <Target RefID="28"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="34">
+          <Source RefID="25"/>
+          <Source RefID="28"/>
+          <Target RefID="33"/>
+          <Target RefID="36"/>
+          <Copy>
+            <Source RefID="25"/>
+            <Target RefID="33"/>
+          </Copy>
+          <Copy>
+            <Source RefID="28"/>
+            <Target RefID="36"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="15" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="29" Label="1:1">
+          <Source RefID="4"/>
+          <Target RefID="30"/>
+          <Input>
+            <Data ID="19" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo19"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data ID="20" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo20"/>
+            <Target RefID="30"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="32" Label="Get columns from Table Info">
+          <Source RefID="30"/>
+          <Target RefID="31"/>
+          <Input>
+            <Data ID="21" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo21"/>
+            <Source RefID="30">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="22" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn22"/>
+            <Target RefID="31"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="35">
+          <Source RefID="31"/>
+          <Source RefID="30"/>
+          <Target RefID="33"/>
+          <Target RefID="36"/>
+          <Copy>
+            <Source RefID="31"/>
+            <Target RefID="33"/>
+          </Copy>
+          <Copy>
+            <Source RefID="30"/>
+            <Target RefID="36"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="25" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn25">
+      <Source RefID="26"/>
+      <Target RefID="27"/>
+      <Target RefID="34"/>
+    </Data>
+    <Data ID="28" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo28">
+      <Source RefID="27"/>
+      <Target RefID="34"/>
+    </Data>
+    <Data ID="30" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo30">
+      <Source RefID="29"/>
+      <Target RefID="32"/>
+      <Target RefID="35"/>
+    </Data>
+    <Data ID="31" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn31">
+      <Source RefID="32"/>
+      <Target RefID="35"/>
+    </Data>
+    <Data ID="33" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn33">
+      <Source RefID="24"/>
+      <Source RefID="34"/>
+      <Source RefID="35"/>
+      <Target RefID="40"/>
+    </Data>
+    <Data ID="36" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo36">
+      <Source RefID="24"/>
+      <Source RefID="34"/>
+      <Source RefID="35"/>
+      <Target RefID="40"/>
+    </Data>
+    <ServiceReference ID="39" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="40"/>
+      <Target RefID="40"/>
+    </ServiceReference>
+    <Function ID="40" Label="Build TableInfo and Select Columns">
+      <Source RefID="39"/>
+      <Source RefID="33"/>
+      <Source RefID="36"/>
+      <Source RefID="58"/>
+      <Target RefID="39"/>
+      <Target RefID="42"/>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="39">
+        <Source RefID="36">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="58">
+          <Meta>
+            <ExpectedType>xmcp.factorymanager.rtcmanager.RuntimeApplication</ExpectedType>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="33"/>
+      </Invoke>
+      <Receive ServiceID="39">
+        <Target RefID="42"/>
+      </Receive>
+    </Function>
+    <Data ID="42" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="40"/>
+      <Target RefID="3"/>
+      <Target RefID="46"/>
+    </Data>
+    <ServiceReference ID="45" Label="RtcManagerServices" ReferenceName="RtcManagerServices.RtcManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="46"/>
+      <Target RefID="46"/>
+    </ServiceReference>
+    <Function ID="46" Label="Get Runtime Applications">
+      <Source RefID="45"/>
+      <Source RefID="42"/>
+      <Target RefID="45"/>
+      <Target RefID="47"/>
+      <Invoke Operation="getRuntimeApplications" ServiceID="45">
+        <Source RefID="42">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="45">
+        <Target RefID="47"/>
+      </Receive>
+    </Function>
+    <Data ID="47" IsList="true" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication47">
+      <Source RefID="46"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="58" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="const_RuntimeApplication">
+      <Target RefID="40"/>
+      <Data Label="Version" VariableName="version">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data Label="Factory Node" VariableName="factoryNode">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data Label="Documentation" VariableName="documentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data Label="isLocal" VariableName="isLocal">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data Label="State" VariableName="state">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data Label="Name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="42"/>
+      <Source RefID="47"/>
+      <Target RefID="2"/>
+      <Target RefID="10"/>
+      <Copy>
+        <Source RefID="42">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+      <Copy>
+        <Source RefID="47"/>
+        <Target RefID="10"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

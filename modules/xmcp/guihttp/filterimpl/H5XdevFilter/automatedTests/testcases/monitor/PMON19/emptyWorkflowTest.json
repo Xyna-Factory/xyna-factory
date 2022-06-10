@@ -1,0 +1,61 @@
+{
+  "meta":
+  {
+    "name": "emptyWorkflowTest",
+    "description": "Execute an empty workflow (loaded from app) and open audit",
+	"minRequiredAppVersion": "1",
+    "created": "04.12.2019",
+    "updated": "06.12.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.EmptyWorkflow",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 0,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "listLength",
+	  "expectedValue": "0",
+	  "path": "info/$list[id=wf]/inputs"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "listLength",
+	  "expectedValue": "0",
+	  "path": "info/$list[id=wf]/outputs"
+	}
+  ]
+}

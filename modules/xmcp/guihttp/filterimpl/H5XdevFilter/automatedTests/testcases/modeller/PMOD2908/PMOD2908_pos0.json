@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "comment": "Inserts mapping1 at position 0, then insertis mapping2 at position 1. Expected result ist that mapping1 is in front of mapping2",
+    "Test Reference": "Open", 
+    "created": "7.5.2021", 
+    "updated": "7.5.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!NewWorkflow!": "NewWorkflow"
+        }, 
+        {
+          "!M1!": "M1"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "set", 
+      "value": "wf", 
+      "variable": "!wf0!"
+    }, 
+	   {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1618580923595.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1618580923595!",
+      "variable": "!new_1618580923595.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1618580923595.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id",
+      "targetVariable": "!step0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "Mapping1", 
+          "type": "mapping"
+        }, 
+        "index": 0, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618580923595!/!NewWorkflow!/objects/!step0!/insert"
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "Mapping2", 
+          "type": "mapping"
+        }, 
+        "index": 1, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618580923595!/!NewWorkflow!/objects/!step0!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=content]/items/$list[0]/label",
+      "targetVariable": "!label1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=content]/items/$list[1]/label",
+      "targetVariable": "!label2!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!label1!",
+      "value": "Mapping1"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!label2!",
+      "value": "Mapping2"
+    }
+  ]
+}

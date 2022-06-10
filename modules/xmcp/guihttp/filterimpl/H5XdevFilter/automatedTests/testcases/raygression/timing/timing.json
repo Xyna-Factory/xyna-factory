@@ -1,0 +1,7 @@
+{
+    "testseries": [
+        "timing_001/testseries.json",
+        "timing_002/testseries.json",
+        "timing_003/testseries.json"
+    ]
+}

@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.gip.com/juno/DHCP/WS/Optionsv4/Messages" xmlns:gui="http://www.gip.com/juno/Gui/WS/Messages" elementFormDefault="qualified" targetNamespace="http://www.gip.com/juno/DHCP/WS/Optionsv4/Messages">
+
+              
+   <xsd:complexType name="MetaInfo_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="1" name="col" type="MetaInfoRow_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="MetaInfoRow_ctype">
+            <xsd:attribute default="false" name="visible" type="xsd:boolean"/>
+            <xsd:attribute default="false" name="updates" type="xsd:boolean"/>
+            <xsd:attribute name="guiname" type="xsd:string"/>
+            <xsd:attribute name="colname" type="xsd:string" use="required"/>
+            <xsd:attribute name="colnum" type="xsd:integer" use="required"/>
+            <xsd:attribute name="childtable" type="xsd:string"/>
+            <xsd:attribute name="parenttable" type="xsd:string"/>
+            <xsd:attribute name="parentcol" type="xsd:string"/>
+            <xsd:attribute name="inputType" type="xsd:string"/>
+            <xsd:attribute name="inputFormat" type="xsd:string"/>
+            <xsd:attribute name="optional" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:simpleType name="FailoverInstance_type">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="primary"/>
+      <xsd:enumeration value="secondary"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="StringList_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1000" minOccurs="0" name="Value" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ColValuesDistinct_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1000" minOccurs="0" name="Value" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="InputHeaderContent_ctype">
+    <xsd:sequence>
+      <xsd:element name="username" type="xsd:string"/>
+      <xsd:element name="password" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="OutputHeaderContent_ctype">
+    <xsd:sequence>
+      <xsd:element name="Status" type="xsd:string"/>
+      <xsd:element name="Exception" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="LoginData_ctype">
+    <xsd:sequence>
+      <xsd:element name="username" type="xsd:string"/>
+      <xsd:element name="password" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AuthenticateResponse_ctype">
+    <xsd:sequence>
+      <xsd:element name="Status" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="StringInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="Content" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="StringOutput_ctype">
+    <xsd:sequence>
+      <xsd:element name="OutputHeader" type="OutputHeaderContent_ctype"/>
+      <xsd:element name="Content" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GetMetaInfoRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GetMetaInfoInput" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="MetaInfoOutput_ctype">
+    <xsd:sequence>
+      <xsd:element name="OutputHeader" type="OutputHeaderContent_ctype"/>
+      <xsd:element name="Content" type="MetaInfo_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="StringListOutput_ctype">
+    <xsd:sequence>
+      <xsd:element name="OutputHeader" type="OutputHeaderContent_ctype"/>
+      <xsd:element name="Content" type="StringList_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:element name="GetMetaInfoRequest" type="GetMetaInfoRequest_ctype"/>
+
+  <xsd:element name="GetMetaInfoOutput" type="MetaInfoOutput_ctype"/>
+  <xsd:element name="MetaInfo" type="MetaInfo_ctype"/>
+
+
+  <xsd:element name="LoginData" type="LoginData_ctype"/>
+  <xsd:element name="AuthenticationStatus" type="xsd:string"/>
+  <xsd:element name="AuthenticateResponse" type="AuthenticateResponse_ctype"/>
+
+  <xsd:element name="InputHeaderContent" type="InputHeaderContent_ctype"/>
+  <xsd:element name="OutputHeaderContent" type="OutputHeaderContent_ctype"/>
+
+ <!-- Response Header -->
+  <xsd:complexType name="ResponseHeader_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1" minOccurs="0" name="ErrorDomain" type="xsd:string"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="ErrorNumber" type="xsd:string"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Severity" type="xsd:string"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Description" type="xsd:string"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Stacktrace" type="xsd:string"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="ParameterList" type="ErrorParameterList_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Status" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ErrorParameterList_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="Parameter" type="ErrorParameter_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ErrorParameter_ctype">
+    <xsd:sequence>
+      <xsd:element name="Id" type="xsd:string"/>
+      <xsd:element name="Value" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+	<xsd:complexType name="Row_ctype">
+		<xsd:sequence>
+		  <xsd:element name="Id" type="xsd:string"/>
+     	  <xsd:element maxOccurs="1" minOccurs="0" name="ParentId" type="xsd:string"/>
+		  <xsd:element name="TypeName" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="TypeEncoding" type="xsd:string"/>
+		  <xsd:element maxOccurs="1" minOccurs="0" name="EnterpriseNr" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="ValueDataTypeName" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="ValueDataTypeArgumentsString" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="ReadOnly" type="xsd:string"/> 
+	      <xsd:element maxOccurs="1" minOccurs="0" name="Status" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiName" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiAttribute" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiFixedAttribute" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiParameter" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiAttributeId" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiFixedAttributeId" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiParameterId" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiAttributeWerteBereich" type="xsd:string"/>
+	      <xsd:element maxOccurs="1" minOccurs="0" name="GuiFixedAttributeValue" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+ <xsd:element name="Row" type="Row_ctype"/>
+
+  <xsd:complexType name="RowList_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1000" minOccurs="0" ref="Row"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="RowListInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="Content" type="RowList_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="InsertRowRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="InsertRowInput" type="Row_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SearchRowsRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="SearchRowsInput" type="Row_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UpdateRowRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="UpdateRowInput" type="Row_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="DeleteRowsRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="DeleteRowsInput" type="Row_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GetAllRowsRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GetAllRowsInput" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GetColValuesDistinctRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GetColValuesDistinctInput" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="RowListWrapper_ctype">
+    <xsd:sequence>
+      <xsd:element name="item" type="RowList_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="RowListOutput_ctype">
+    <xsd:sequence>
+      <xsd:element name="OutputHeader" type="OutputHeaderContent_ctype"/>
+      <xsd:element name="Content" type="RowListWrapper_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  
+ <xsd:complexType name="Response_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="ResponseHeader_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Payload" type="Payload_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+
+  <xsd:complexType name="DeployOnDPPRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="DeployOnDPPInput" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="LocationListWrapper_ctype">
+    <xsd:sequence>
+      <xsd:element name="Locations" type="LocationList_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="LocationList_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="1" name="Location" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="DeployOnDPPResponse_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="1" name="StatusReport" type="StatusReport_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  
+  <xsd:complexType name="StatusReport_ctype">
+    <xsd:sequence>
+      <xsd:element name="Location" type="xsd:string"/>
+      <xsd:element name="Status" type="xsd:string"/>
+	</xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="Payload_ctype">  
+    <xsd:sequence>
+      <xsd:element maxOccurs="1" minOccurs="0" name="MetaInfoOutput" type="MetaInfo_ctype"/>
+      <!-- xsd:element name="GetAllRowsOutput" type="RowListOutput_ctype" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="SearchRowsOutput" type="RowListOutput_ctype" minOccurs="0" maxOccurs="1"/-->
+      <xsd:element maxOccurs="1" minOccurs="0" name="GetAllRowsOutput" type="RowList_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SearchRowsOutput" type="RowList_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="UpdateRowOutput" type="Row_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="InsertRowOutput" type="Row_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DeleteRowsOutput" type="xsd:string"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="CountAllRowsOutput" type="xsd:string"/> 
+      <xsd:element maxOccurs="1" minOccurs="0" name="CountRowsWithConditionOutput" type="xsd:string"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DeployOnDPPResponse" type="DeployOnDPPResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="ColValuesDistinct" type="ColValuesDistinct_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:element name="GetAllRowsRequest" type="GetAllRowsRequest_ctype"/>
+  <xsd:element name="GetAllRowsOutput" type="Response_ctype"/>
+  <xsd:element name="GetColValuesDistinctRequest" type="GetColValuesDistinctRequest_ctype"/>
+  <xsd:element name="ColValuesDistinctOutput" type="Response_ctype"/>
+  <xsd:element name="SearchRowsRequest" type="SearchRowsRequest_ctype"/>
+  <xsd:element name="SearchRowsOutput" type="Response_ctype"/>
+  <xsd:element name="UpdateRowRequest" type="UpdateRowRequest_ctype"/>
+  <xsd:element name="UpdateRowOutput" type="Response_ctype"/>
+  <xsd:element name="InsertRowRequest" type="InsertRowRequest_ctype"/>
+  <xsd:element name="InsertRowOutput" type="Response_ctype"/>
+  <xsd:element name="DeleteRowsRequest" type="DeleteRowsRequest_ctype"/>
+  <xsd:element name="DeleteRowsOutput" type="Response_ctype"/>
+  <xsd:element name="MetaInfoOutput" type="Response_ctype"/>
+    
+  <xsd:complexType name="CountRowsWithConditionRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="CountRowsWithConditionInput" type="Row_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="CountAllRowsRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="CountAllRowsInput" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:element name="CountRowsWithConditionRequest" type="CountRowsWithConditionRequest_ctype"/>
+  <xsd:element name="CountRowsWithConditionOutput" type="Response_ctype"/>
+  
+  <xsd:element name="CountAllRowsRequest" type="CountAllRowsRequest_ctype"/>
+  <xsd:element name="CountAllRowsOutput" type="Response_ctype"/>
+  
+  <xsd:element name="DeployOnDPPRequest" type="DeployOnDPPRequest_ctype"/>
+  <xsd:element name="DeployOnDPPResponse" type="Response_ctype"/>
+
+
+  
+</xsd:schema>

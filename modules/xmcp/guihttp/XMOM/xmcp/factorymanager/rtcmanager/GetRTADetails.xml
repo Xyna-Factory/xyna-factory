@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get RTA Details" TypeName="GetRTADetails" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get RTA Details" Name="GetRTADetails">
+    <Input>
+      <Data ID="10" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication">
+        <Target RefID="22"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="12" Label="Runtime Application Details" ReferenceName="RuntimeApplicationDetails" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplicationDetails">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Get RTA Details Exception" ReferenceName="GetRTADetailsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getRTADetailsException"/>
+    </Throws>
+    <ServiceReference ID="21" Label="RtcManagerServices" ReferenceName="RtcManagerServices.RtcManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="22"/>
+      <Target RefID="22"/>
+    </ServiceReference>
+    <Function ID="22" Label="Get RTA Details">
+      <Source RefID="21"/>
+      <Source RefID="10"/>
+      <Target RefID="21"/>
+      <Target RefID="23"/>
+      <Invoke Operation="getRTADetails" ServiceID="21">
+        <Source RefID="10"/>
+      </Invoke>
+      <Receive ServiceID="21">
+        <Target RefID="23"/>
+      </Receive>
+    </Function>
+    <Data ID="23" Label="Runtime Application Details" ReferenceName="RuntimeApplicationDetails" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplicationDetails23">
+      <Source RefID="22"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="23"/>
+      <Target RefID="12"/>
+      <Copy>
+        <Source RefID="23"/>
+        <Target RefID="12"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

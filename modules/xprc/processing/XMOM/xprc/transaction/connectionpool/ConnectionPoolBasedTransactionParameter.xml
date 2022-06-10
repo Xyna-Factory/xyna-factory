@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TransactionParameter" BaseTypePath="xprc.transaction" Label="Connection Pool Based Transaction Parameter" TypeName="ConnectionPoolBasedTransactionParameter" TypePath="xprc.transaction.connectionpool" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Connection Pool Names" VariableName="connectionPoolNames">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Names of the connection pools from which a connection is to be opened</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Pool Waiting Timeout In Millis" VariableName="poolWaitingTimeoutInMillis">
+    <Meta>
+      <Type>long</Type>
+      <Documentation>How long to wait for a connection if none is available at the moment</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Client Info" VariableName="clientInfo">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Value that can be used to disginguish the connections in use</Documentation>
+    </Meta>
+  </Data>
+  <Service Label="Connection Pool Based Transaction Parameter" TypeName="ConnectionPoolBasedTransactionParameter">
+    <Operation IsStatic="false" Label="open" Name="open" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Transaction" ReferenceName="Transaction" ReferencePath="xprc.transaction" VariableName="transaction"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; pools = getConnectionPoolNames();
+if (pools == null) {
+  throw new IllegalArgumentException("No Connection Pools specified");  
+}
+java.util.Map&lt;String, String&gt; specifics = new java.util.HashMap&lt;&gt;();
+StringBuilder sb = new StringBuilder();
+boolean first = true;
+for (String pool : pools) {
+  if (first) {
+    first = false;
+  } else {
+    sb.append(",");
+  } 
+  sb.append(pool);
+}
+
+specifics.put("connectionPools", sb.toString());
+
+long timeout = getPoolWaitingTimeoutInMillis();
+if (timeout != 0) {
+  specifics.put("conTimeout", String.valueOf(timeout));
+}
+
+String clientInfo = getClientInfo();
+if (clientInfo != null) {
+  specifics.put("clientInfo", clientInfo);
+}
+
+//implemented in basetype
+return openTx("ConnectionPoolTransactionType", specifics, correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

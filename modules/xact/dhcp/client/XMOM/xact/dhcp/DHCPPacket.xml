@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DHCP Packet" TypeName="DHCPPacket" TypePath="xact.dhcp" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="op" VariableName="op">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="htype" VariableName="htype">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="hlen" VariableName="hlen">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="hops" VariableName="hops">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="xid" VariableName="xid">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="secs" VariableName="secs">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="flags" VariableName="flags">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="ciaddr" VariableName="ciaddr">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="yiaddr" VariableName="yiaddr">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="siaddr" VariableName="siaddr">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="giaddr" VariableName="giaddr">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="chaddr" VariableName="chaddr">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="sname" VariableName="sname">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="file" VariableName="file">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="options" VariableName="options">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

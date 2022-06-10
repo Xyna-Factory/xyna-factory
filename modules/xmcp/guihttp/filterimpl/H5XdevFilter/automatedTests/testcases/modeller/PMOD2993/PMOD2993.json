@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "22.6.2021",
+    "updated": "22.6.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+		{
+          "!dataType!": "dataType"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "dataType": true,
+        "exceptionType": true,
+        "maxCount": 100,
+        "service": true,
+        "serviceGroup": true,
+        "workflow": true
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects?q=*xmcp.processmodeller.datatypes.response.GetOrderInputSourcesResponse*"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "objects[fqn=xmcp.processmodeller.datatypes.response.GetOrderInputSourcesResponse]/type",
+      "targetVariable": "!type!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!type!",
+      "value": "!dataType!"
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "27.7.2020", 
+    "updated": "27.7.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!servicegroups!": "servicegroups"
+        }, 
+        {
+          "!New_Service_Group!": "New Service Group"
+        }, 
+        {
+          "!memberService!": "memberService"
+        }, 
+        {
+          "!A_Service!": "A Service"
+        },
+		{
+          "!Service!": "Service"
+        }, 
+        {
+          "!base.Text!": "base.Text"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Service_Group!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "targetVariable": "!new_1595874911890.NewServiceGroup!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1595874911890!", 
+      "variable": "!new_1595874911890.NewServiceGroup!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=methodsArea]/id", 
+      "targetVariable": "!memberMethodsArea!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewServiceGroup!", 
+      "variable": "!new_1595874911890.NewServiceGroup!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/id", 
+      "targetVariable": "!sg!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "!Service!", 
+          "type": "!memberService!"
+        }, 
+        "index": -1, 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1595874911890!/!NewServiceGroup!/objects/!memberMethodsArea!/insert"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "!Service!", 
+          "type": "!memberService!"
+        }, 
+        "index": -1, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1595874911890!/!NewServiceGroup!/objects/!memberMethodsArea!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[name=service0]/id", 
+      "targetVariable": "!memberMethod1!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[name=service0]/areas/$list[name=input]/id", 
+      "targetVariable": "!methodVarArea1_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!A_Service!", 
+        "revision": 2
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1595874911890!/!NewServiceGroup!/objects/!memberMethod1!/change"
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!Text!", 
+      "variable": "!base.Text!"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!base.Text!", 
+          "isList": false, 
+          "label": "!Text!", 
+          "type": "variable"
+        }, 
+        "index": -1, 
+        "revision": 3
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1595874911890!/!NewServiceGroup!/objects/!methodVarArea1_input!/insert"
+    },
+
+	{
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[id=memberMethod0]/label",
+      "targetVariable": "!aServiceLabel!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+	  "variable": "!aServiceLabel!",
+	  "value": "!A_Service!"
+    },
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+	  "fieldName": "items",
+	  "basePath": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[id=memberMethod0]/areas/$list[name=input]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[id=memberMethod1]/label",
+      "targetVariable": "!serviceLabel!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+	  "variable": "!serviceLabel!",
+	  "value": "!Service!"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[id=memberMethod1]/areas/$list[name=input]/items/$list[0]/label",
+      "targetVariable": "!labelNewVar!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+	  "variable": "!labelNewVar!",
+	  "value": "!Text!"
+    }
+  ]
+}

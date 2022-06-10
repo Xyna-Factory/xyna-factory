@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Exception Service" TypeName="ExceptionService" TypePath="core.exception" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Exception Service" TypeName="ExceptionService">
+    <Operation IsStatic="true" Label="Get Exception Details" Name="getExceptionDetails">
+      <Input>
+        <Exception Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception"/>
+      </Input>
+      <Output>
+        <Data Label="Exception Details" ReferenceName="ExceptionDetails" ReferencePath="core.exception" VariableName="exceptionDetails"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">ExceptionDetails exceptionDetails = new ExceptionDetails();
+
+java.io.StringWriter sw = new java.io.StringWriter();
+java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+exception.printStackTrace(pw);
+
+exceptionDetails.setMessage(exception.getMessage());
+exceptionDetails.setStacktrace(sw.toString());
+
+return exceptionDetails;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Exception Details With Localized Message" Name="getExceptionDetailsWithLocalizedMessage">
+      <Input>
+        <Exception Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception"/>
+        <Data Label="Language Code" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data Label="Exception Details" ReferenceName="ExceptionDetails" ReferencePath="core.exception" VariableName="exceptionDetails"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">core.exception.ExceptionDetails ret = 
+     new core.exception.ExceptionDetails();
+
+if (exception instanceof com.gip.xyna.utils.exceptions.XynaException) {
+com.gip.xyna._1_5.xsd.faults._1.XynaFault_ctype xf = 
+    com.gip.xyna.utils.exceptions.ExceptionHandler.toXynaFault(
+        exception, text.getText(), 
+        com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.
+                     getRevisionByClass(exception.getClass()));
+
+String msg = xf.getSummary();
+String code = xf.getCode();
+String stacktrace = xf.getDetails();
+ret.setMessage(msg);
+ret.setStacktrace(stacktrace);
+ret.setCode(code);
+}
+else {
+  ret.setMessage(exception.getMessage());
+}
+return ret;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Exception Message" Name="getExceptionMessage">
+      <Input>
+        <Exception Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception"/>
+      </Input>
+      <Output>
+        <Data Label="Exception Message" ReferenceName="ExceptionMessage" ReferencePath="core.exception" VariableName="exceptionMessage"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+StringBuilder sb = new StringBuilder();
+Throwable ex = exception;
+
+sb.append(ex.getClass().getSimpleName()).append(": ").append(ex.getMessage());
+while (ex.getCause() != null) {
+  ex = ex.getCause();
+  sb.append("\nCaused by ").append(ex.getClass().getSimpleName()).append(": ").append(ex.getMessage());
+}
+
+return new ExceptionMessage(sb.toString());
+
+</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Rethrow Exception" Name="rethrowException">
+      <Input>
+        <Exception Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">Rethrower.rethrow(exception);
+}
+public static class Rethrower  {
+
+  public static void rethrow(Throwable t) {
+    Rethrower.&lt;RuntimeException&gt;rethrowHelper(t);
+  }
+
+  private static &lt;T extends Throwable&gt; void rethrowHelper(Throwable t) throws T {
+    throw (T) t;
+  }</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Rethrow Exception" Name="rethrowException_1">
+      <Input>
+        <Data Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">rethrowException(exceptionHolder.getException());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Wrap Exception" Name="wrapException">
+      <Input>
+        <Exception Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception"/>
+      </Input>
+      <Output>
+        <Data Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ExceptionHolder(exception);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

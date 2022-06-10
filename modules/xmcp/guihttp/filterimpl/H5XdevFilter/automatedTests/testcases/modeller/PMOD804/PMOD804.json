@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "17.2.2020", 
+    "updated": "17.2.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!servicegroups!": "servicegroups"
+        }, 
+        {
+          "!New_Service_Group!": "New Service Group"
+        }, 
+        {
+          "!memberService!": "memberService"
+        }, 
+        {
+          "!base.Text!": "base.Text"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Service_Group!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "targetVariable": "!new_1581951818717.NewServiceGroup!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1581951818717!", 
+      "variable": "!new_1581951818717.NewServiceGroup!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=methodsArea]/id", 
+      "targetVariable": "!memberMethodsArea!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewServiceGroup!", 
+      "variable": "!new_1581951818717.NewServiceGroup!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/id", 
+      "targetVariable": "!sg!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "Service", 
+          "type": "!memberService!"
+        }, 
+        "index": -1, 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1581951818717!/!NewServiceGroup!/objects/!memberMethodsArea!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[name=service]/areas/$list[name=input]/id", 
+      "targetVariable": "!methodVarArea0_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!Text!", 
+      "variable": "!base.Text!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[name=service]/areas/$list[name=output]/id", 
+      "targetVariable": "!methodVarArea0_output!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!base.Text!", 
+          "isList": false, 
+          "label": "!Text!", 
+          "type": "variable"
+        }, 
+        "index": -1, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1581951818717!/!NewServiceGroup!/objects/!methodVarArea0_input!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[name=service]/areas/$list[name=input]/items/$list[name=text1]/id", 
+      "targetVariable": "!var0-in0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "index": -1, 
+        "revision": 2, 
+        "targetId": "!methodVarArea0_input!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1581951818717!/!NewServiceGroup!/objects/!var0-in0!/copy"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[name=service]/areas/$list[name=input]/items/$list[name=text2]/id", 
+      "targetVariable": "!var0-in1!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "index": -1, 
+        "revision": 3, 
+        "targetId": "!methodVarArea0_output!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1581951818717!/!NewServiceGroup!/objects/!var0-in1!/copy"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=methodsArea]/items/$list[name=service]/areas/$list[name=output]/items/$list[name=text3]/id", 
+      "targetVariable": "!var0-out0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "index": -1, 
+        "revision": 4, 
+        "targetId": "!methodVarArea0_output!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1581951818717!/!NewServiceGroup!/objects/!var0-out0!/copy"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "updates/$list[0]/areas/$list[name=methodsArea]/items/$list[0]/areas/$list[name=input]/items/$list",
+      "expectedValue": 2
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "updates/$list[0]/areas/$list[name=methodsArea]/items/$list[0]/areas/$list[name=output]/items/$list",
+      "expectedValue": 2
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=methodsArea]/items/$list[0]/areas/$list[name=input]/items/$list[0]/fqn",
+      "targetVariable": "!readFqnIn!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=methodsArea]/items/$list[0]/areas/$list[name=output]/items/$list[0]/fqn",
+      "targetVariable": "!readFqnOut1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=methodsArea]/items/$list[0]/areas/$list[name=output]/items/$list[1]/fqn",
+      "targetVariable": "!readFqnOut2!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readFqnIn!",
+      "value": "!base.Text!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readFqnOut1!",
+      "value": "!base.Text!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readFqnOut2!",
+      "value": "!base.Text!"
+    }
+  ]
+}

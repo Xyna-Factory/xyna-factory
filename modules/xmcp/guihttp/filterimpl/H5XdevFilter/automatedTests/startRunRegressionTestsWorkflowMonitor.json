@@ -1,0 +1,31 @@
+{
+  "operations":
+  [
+    {
+      "operation": "call",
+      "requestType": "POST",
+      "url": "/runtimeContext/PMONRegressionTests%201/startorder",
+      "payload": {"orderType":"qs.xact.filter.H5xdevFilter.Monitor.RunRegressionTests","input":[],"async":false,"customStringContainer":[null,null,null,null],"monitoringLevel":20,"priority":7}
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/value",
+      "targetVariable": "!returnCode!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]",
+      "targetVariable": "!errorList!"
+    },
+    {
+      "operation": "print",
+      "variable": "!errorList!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!returnCode!",
+      "value": "0"
+    }
+  ]
+}

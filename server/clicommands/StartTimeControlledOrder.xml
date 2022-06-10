@@ -1,0 +1,89 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="starttimecontrolledorder" Groups="Time Controlled Order" Description="Register and start a new Time Controlled Order.">
+    <ExtendedDescription>
+Optional CalendarDefinition
+========================
+The calendarDefinition can be specified as a list of time units with conditions, separated by semicolons and enclosed by square brackets.
+The following time units are allowed: Millisecond, Second, Minute, Hour, Day, DayOfMonth, Month, Year.
+Examples:
+* [Hour=20;Minute=15;DayOfWeek=SAT] starts every Saturday at 20:15 an order
+* [Hour=:2] starts every two hours an order
+* [Day=2#MON;Month=JAN] starts always on the second Monday in January an order
+
+Optional InputPayloadFile
+==============
+The optional Input consists of one or more Data-Tags. Each of the Data-Tags has the following attributes:
+  IsList        : Indicates that the data is a list holding multiple values
+  ReferenceName : The Data-Type of the Input
+  ReferencePath : Path where the Data-Type is located
+  VariableName  : Name of the member variable the Data is assigned to (must match the variable name specified in the definition of the Data-Type)
+  
+Each Data-Tag can either hold exactly one Value-Tag or one or more other Data-Tags, if the Data-Type is complex. If the nested Data is primitive it only has the VariableName-Attribute referencing to the member variable of the complex Data. In that case the VariableName must match the name of the member variable.
+
+If the input data is a list then the Data-Tag gets the IsList-Attribute which is set to true. In that case the Data-Tag is followed by one or more Value-Tags where each holds the same type of Data.
+
+The inner most Value-Tag holds a literal that is interpreted as the primitive data of the member variable it is being assigned to.
+
+A sample input XML-file might look like this:
+
+&lt;Input&gt;
+  &lt;Data ReferenceName="mdmDataType" ReferencePath="mdmPath" VariableName="varName"&gt;
+    &lt;Data VariableName="memberVarName"&gt;
+      &lt;Value&gt;value&lt;/Value&gt;
+    &lt;/Data&gt;
+    ...
+  &lt;/Data&gt;
+  &lt;Data IsList="true" ReferenceName="mdmDataListType" ReferencePath="mdmPath" VariableName="varNameList"&gt;
+    &lt;Value&gt;
+      &lt;Data VariableName="memberVarName"&gt;
+        &lt;Value&gt;value&lt;/Value&gt;
+      &lt;/Data&gt;
+      ...
+    &lt;/Value&gt;
+    &lt;Value&gt;
+      &lt;Data VariableName="memberVarName"&gt;
+        &lt;Value&gt;value&lt;/Value&gt;
+      &lt;/Data&gt;
+      ...
+    &lt;/Value&gt;
+    ...
+  &lt;/Data&gt;
+  ...
+&lt;/Input&gt;
+    </ExtendedDescription>
+  </CommandDefinition>
+  <Argument Name="label" Description="A name for the new Time Controlled Order" Optional="true"/>
+  <Argument Name="orderType" Description="The ordertype of the order to be started by the Time Controlled Order"/>
+  <Argument Name="calendarDefinition" Description="Times at which the order will be executed. If not set, the order will be executed only once." Optional="true"/>
+  <Argument Name="firstExecutionTime" Description="Date and time of the first execution. Use the value '0' to execute immediately. Supported inputs are ISO Timestamp YYYY-MM-DDThh:mm:ss[,f] and the milliseconds since 1970 for absolute times. For relative times only milliseconds since 1970 are supported."/>
+  <Argument Name="timeZone" Description="Time zone associated with the first execution time. Only valid if the interval is a multiple of 24h. If no time zone is provided the first execution time is assumed to be in UTC." Optional="true"/>
+  <BoolOption Name="dst" LongName="useDaylightSavingTime" Description="If the provided time zone has daylight saving time, then it is taken into account when executing intervals that are multiple of days." Optional="true"/>
+  <BoolOption Name="r" LongName="relative" Description="Interpret the firstExecutionTime as a relative millisecond value."/>
+  <BoolOption Name="d" LongName="disabled" Description="Create the order in disabled status"/>
+  <Argument Name="onError" Description="Behavior if an error occurs. Allowed values are 'Disable', 'Drop' and 'Ignore'." Optional="true" />
+  <Argument Name="inputPayloadFile" Description="Location of the file containing the payload that is used to execute the Time Controlled Order. Format: &lt;Input&gt;&lt;Data&gt;...&lt;/Data&gt;&lt;Data&gt;...&lt;/Data&gt;&lt;/Input&gt; (see callservice documentation)" Optional="true"/>
+  <Argument Name="applicationName" Description="The application the ordertype belongs to." Optional="true"/>
+  <Argument Name="versionName" Description="The version of the application the ordertype belongs to." Optional="true"/>
+  <Argument Name="custom0" Description="Sets the custom0 field for the Time Controlled Order." Optional="true"/>
+  <Argument Name="custom1" Description="Sets the custom1 field for the Time Controlled Order." Optional="true"/>
+  <Argument Name="custom2" Description="Sets the custom2 field for the Time Controlled Order." Optional="true"/>
+  <Argument Name="custom3" Description="Sets the custom3 field for the Time Controlled Order." Optional="true"/>
+  <Argument Name="workspaceName" Description="The workspace the ordertype belongs to." Optional="true"/>
+</XynaCommandLineCommand>

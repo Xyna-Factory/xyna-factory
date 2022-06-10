@@ -1,0 +1,285 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "24.2.2021", 
+    "updated": "24.2.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!": "xmcp.factorymanager.xynaproperties.ChangeXynaProperty"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaProperty!": "xmcp.factorymanager.xynaproperties.XynaProperty"
+        }, 
+        {
+          "!GuiHttp!": "GuiHttp"
+        }, 
+        {
+          "!false!": "false"
+        }, 
+        {
+          "!Controls_whether_the_application_xGlobalApplicat!": "Controls whether the application \\\"GlobalApplicationMgmt\\\" is displayed in the GUI or not."
+        }, 
+        {
+          "!en-US!": "en-US"
+        }, 
+        {
+          "!xmcp.DocumentationLanguage!": "xmcp.DocumentationLanguage"
+        }, 
+        {
+          "!xmcp.Documentation!": "xmcp.Documentation"
+        }, 
+        {
+          "!Steuert,_ob_die_Applikation_xGlobalApplicationMg!": "Steuert, ob die Applikation \\\"GlobalApplicationMgmt\\\" angezeigt wird oder nicht."
+        }, 
+        {
+          "!de-DE!": "de-DE"
+        }, 
+        {
+          "!true!": "true"
+        }, 
+        {
+          "!xfmg.xfctrl.appmgmt.showGlobalApplicationManagem!": "xfmg.xfctrl.appmgmt.showGlobalApplicationManagement"
+        }, 
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper!": "xmcp.factorymanager.xynaproperties.GetXynaPropertiesTableInfo"
+        }, 
+        {
+          "!asc!": "asc"
+        }, 
+        {
+          "!Key!": "Key"
+        }, 
+        {
+          "!showG!": "showG"
+        }, 
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        }, 
+        {
+          "!key!": "key"
+        }, 
+        {
+          "!Value!": "Value"
+        }, 
+        {
+          "!value!": "value"
+        }, 
+        {
+          "!Default_Value!": "Default Value"
+        }, 
+        {
+          "!defaultValue!": "defaultValue"
+        }, 
+        {
+          "!gUIDocumentation!": "gUIDocumentation"
+        }, 
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        }, 
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        }, 
+        {
+          "!xmcp.factorymanager.rtcmanager.GetRuntimeApplica!": "xmcp.factorymanager.rtcmanager.GetRuntimeApplications"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!", 
+              "rtc": {
+                "application": "!GuiHttp!" 
+              }
+            }, 
+            "defaultValue": "!false!", 
+            "documentation": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.Documentation!"
+                  }, 
+                  "documentation": "!Controls_whether_the_application_xGlobalApplicat!", 
+                  "language": {
+                    "$meta": {
+                      "fqn": "!xmcp.DocumentationLanguage!"
+                    }, 
+                    "languageTag": "!en-US!"
+                  }
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.Documentation!"
+                  }, 
+                  "documentation": "!Steuert,_ob_die_Applikation_xGlobalApplicationMg!", 
+                  "language": {
+                    "$meta": {
+                      "fqn": "!xmcp.DocumentationLanguage!"
+                    }, 
+                    "languageTag": "!de-DE!"
+                  }
+                }
+              ], 
+              "$meta": {
+                "fqn": "!xmcp.Documentation!"
+              }
+            }, 
+            "key": "!xfmg.xfctrl.appmgmt.showGlobalApplicationManagem!", 
+            "overwrittenDefaultValue": false, 
+            "value": "!true!"
+          }
+        ], 
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!Documentation!", 
+      "variable": "!xmcp.Documentation!"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!", 
+              "rtc": {
+                "application": "!ZetaFramework!" 
+              }
+            }, 
+            "bootstrap": false, 
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "filter": "!showG!", 
+                  "name": "!Key!", 
+                  "path": "!key!", 
+                  "pre": false, 
+                  "shrink": false, 
+                  "sort": "!asc!"
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "!Value!", 
+                  "path": "!value!", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "!Default_Value!", 
+                  "path": "!defaultValue!", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "!Documentation!", 
+                  "path": "!gUIDocumentation!", 
+                  "pre": false, 
+                  "shrink": false
+                }
+              ], 
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            }, 
+            "filterCaseSensitive": false
+          }, 
+          {
+            "$meta": {
+              "fqn": "!xmcp.DocumentationLanguage!"
+            }, 
+            "languageTag": "!en-US!"
+          }
+        ], 
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaProper!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [], 
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetRuntimeApplica!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "assert", 
+      "constraint": "isInList", 
+      "invertLogic": false, 
+      "pathToList": "output[0]/$list", 
+      "entries": [ 
+        {
+          "name": "GlobalApplicationMgmt"
+        }
+      ]
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [], 
+        "orderType": "xmcp.factorymanager.shared.GetRuntimeContexts"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    }, 
+    {
+      "operation": "assert", 
+      "constraint": "isInList", 
+      "invertLogic": false, 
+      "pathToList": "output[0]/$list", 
+      "entries": [ 
+        {
+          "name": "GlobalApplicationMgmt"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="LDAP Management" TypeName="LDAPManagement" TypePath="xact.ldap.generation" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>LDAPManagementImpl.jar</Libraries>
+  <SharedLibraries>ldap</SharedLibraries>
+  <Service Label="LDAP Management" TypeName="LDAPManagement">
+    <Operation IsStatic="true" Label="Reload LDAPSchema and regenerate Artifacts" Name="reloadLDAPSchemaAndRegenerateArtifacts">
+      <Meta>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data Label="host" ReferenceName="Host" ReferencePath="base" VariableName="host"/>
+        <Data Label="Port" ReferenceName="Port" ReferencePath="base" VariableName="port"/>
+        <Data Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.ldap.generation.LDAPManagementImpl.reloadLDAPSchemaAndRegenerateArtifacts(host, port, credentials);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SSL Reload LDAPSchema and regenerate Artifacts" Name="sSLReloadLDAPSchemaAndRegenerateArtifacts">
+      <Input>
+        <Data Label="host" ReferenceName="Host" ReferencePath="base" VariableName="host"/>
+        <Data Label="Port" ReferenceName="Port" ReferencePath="base" VariableName="port"/>
+        <Data Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials"/>
+        <Data Label="SSL Parameter" ReferenceName="SSLParameter" ReferencePath="xact.ldap" VariableName="sSLParameter"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.ldap.generation.LDAPManagementImpl.reloadLDAPSchemaAndRegenerateArtifacts(host, port, credentials, sSLParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

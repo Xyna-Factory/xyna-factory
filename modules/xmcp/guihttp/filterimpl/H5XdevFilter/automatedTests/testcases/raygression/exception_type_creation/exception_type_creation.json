@@ -1,0 +1,12 @@
+{
+    "testseries": [
+        "exception_type_creation_001/testseries.json",
+        "exception_type_creation_002/testseries.json",
+        "exception_type_creation_003/testseries.json",
+        "exception_type_creation_007/testseries.json",
+        "exception_type_creation_008/testseries.json",
+        "exception_type_creation_009/testseries.json",
+        "exception_type_creation_010/testseries.json",
+        "exception_type_creation_011/testseries.json"
+    ]
+}

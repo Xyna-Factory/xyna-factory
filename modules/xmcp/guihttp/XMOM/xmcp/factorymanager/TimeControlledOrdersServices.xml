@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Time Controlled Orders Services" TypeName="TimeControlledOrdersServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>TimeControlledOrdersServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="Time Controlled Orders Services" TypeName="TimeControlledOrdersServices">
+    <Operation IsStatic="true" Label="Create TCO" Name="createTCO">
+      <Input>
+        <Data Label="Time controlled order" ReferenceName="TimeControlledOrder" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="timeControlledOrder"/>
+      </Input>
+      <Output>
+        <Data Label="TCO Id" ReferenceName="TCOId" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="tCOId22"/>
+      </Output>
+      <Throws>
+        <Exception Label="Create TCO Exception" ReferenceName="CreateTCOException" ReferencePath="xmcp.factorymanager.timecontrolledorders.exceptions" VariableName="createTCOException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.TimeControlledOrdersServicesImpl.createTCO(timeControlledOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get TCO Details" Name="getTCODetails">
+      <Input>
+        <Data Label="TCO Id" ReferenceName="TCOId" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="tCOId"/>
+      </Input>
+      <Output>
+        <Data Label="Time controlled order" ReferenceName="TimeControlledOrder" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="timeControlledOrder"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load TCO Details Exception" ReferenceName="LoadTCODetailsException" ReferencePath="xmcp.factorymanager.timecontrolledorders.exceptions" VariableName="loadTCODetailsException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.TimeControlledOrdersServicesImpl.getTCODetails(tCOId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get TCOs" Name="getTCOs">
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo1"/>
+        <Data ID="1" Label="TCO Table Filter" ReferenceName="TCOTableFilter" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="tCOTableFilter1"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Time Controlled Order Table Entry" ReferenceName="TimeControlledOrderTableEntry" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="timeControlledOrderTableEntry"/>
+      </Output>
+      <Throws>
+        <Exception Label="LoadTCOs Exception" ReferenceName="LoadTCOsException" ReferencePath="xmcp.factorymanager.timecontrolledorders.exceptions" VariableName="loadTCOsException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.TimeControlledOrdersServicesImpl.getTCOs(tableInfo1, tCOTableFilter1);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Kill TCO" Name="killTCO">
+      <Input>
+        <Data Label="TCO Id" ReferenceName="TCOId" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="tCOId"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Kill TCO Exception" ReferenceName="KillTCOException" ReferencePath="xmcp.factorymanager.timecontrolledorders.exceptions" VariableName="killTCOException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.TimeControlledOrdersServicesImpl.killTCO(tCOId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Update TCO" Name="updateTCO">
+      <Input>
+        <Data Label="Time controlled order" ReferenceName="TimeControlledOrder" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="timeControlledOrder"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Update TCO Exception" ReferenceName="UpdateTCOException" ReferencePath="xmcp.factorymanager.timecontrolledorders.exceptions" VariableName="updateTCOException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.TimeControlledOrdersServicesImpl.updateTCO(timeControlledOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

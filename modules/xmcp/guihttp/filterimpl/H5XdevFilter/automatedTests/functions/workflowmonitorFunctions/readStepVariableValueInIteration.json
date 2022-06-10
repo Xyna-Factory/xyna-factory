@@ -1,0 +1,30 @@
+[
+  {
+    "docu": "Result is unquoted. Expects lastResponse to be a GetAuditResponse.",
+    "type": "function",
+    "functionName": "readStepVariableValueInIteration",
+    "input": ["!stepId!", "!variableAreaName!", "!indexInArea!" ,"!pathInVariable!", "!iterationIndex!"],
+    "output": ["!result!"],
+    "operations":
+    [
+      {
+        "operation": "read",
+        "targetVariable": "!variableComplete!",
+        "pathInResponse": "info/$list[id=!stepId!]/iterations/$list[index=0]/runtimeInfo/!variableAreaName![!indexInArea!]"
+      },
+      {
+        "operation": "invoke",
+        "functionName": "stringToJson",
+        "mapInput": {"!stringToConvert!" : "!variableComplete!" },
+        "mapOutput": { "!jsonResult!" : "!variableAsJson!" }
+      },
+      {
+        "operation" : "setFromVariable",
+        "targetVariable": "!result!",
+        "sourceVariable": "!variableComplete!",
+        "path": "!pathInVariable!",
+        "unquoteResult": true
+      }
+    ]
+  }
+]

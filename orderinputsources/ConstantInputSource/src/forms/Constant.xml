@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Constant" 
+TypePath="xmcp.factorymanager.orderinputsourcetype" TypeName="Constant">
+  <Data Label="Input Data" VariableName="inputData">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Priority" VariableName="priority">
+    <Meta>
+		<Documentation>Priority of order (highest = 10, lowest = 1)
+		</Documentation>
+		<Type>Integer</Type>
+    </Meta>
+    <Restriction>
+      <DefaultValue>7</DefaultValue>
+      <MinValue>1</MinValue>
+      <StepValue>1</StepValue>
+      <MaxValue>10</MaxValue>
+    </Restriction> 
+  </Data>
+  <Data Label="Custom Field 0" VariableName="customField0">
+    <Meta>
+      <Documentation>Custom Field 0. Some userdefined value to be used to recognize orders.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Custom Field 1" VariableName="customField1">
+    <Meta>
+      <Documentation>Custom Field 1. Some userdefined value to be used to recognize orders.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Custom Field 2" VariableName="customField2">
+    <Meta>
+      <Documentation>Custom Field 2. Some userdefined value to be used to recognize orders.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Custom Field 3" VariableName="customField3">
+    <Meta>
+      <Documentation>Custom Field 3. Some userdefined value to be used to recognize orders.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Monitoring Level" VariableName="monitoringLevel">
+    <Meta>
+      <Documentation>Monitoring Level of order (0, 5, 10, 15, 17, 18 or 20)</Documentation>
+      <Type>Integer</Type>
+    </Meta>
+    <Restriction>
+      <DefaultValue>20</DefaultValue>
+      <PossibleValue>0</PossibleValue>
+      <PossibleValue>5</PossibleValue>
+      <PossibleValue>10</PossibleValue>
+      <PossibleValue>15</PossibleValue>
+      <PossibleValue>17</PossibleValue>
+      <PossibleValue>18</PossibleValue>
+      <PossibleValue>20</PossibleValue>
+    </Restriction>
+  </Data>
+</DataType>

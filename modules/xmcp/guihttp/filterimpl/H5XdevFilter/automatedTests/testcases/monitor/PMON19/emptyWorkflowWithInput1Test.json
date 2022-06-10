@@ -1,0 +1,65 @@
+{
+  "meta":
+  {
+    "name": "emptyWorkflowTest",
+    "description": "Execute an empty workflow (loaded from app) and open audit",
+	"minRequiredAppVersion": "2",
+    "created": "06.12.2019",
+    "updated": "17.02.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+	  "operation": "set",
+	  "variable": "!expectedResultText!",
+	  "value": "someText"
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.EmptyWorkflowWithInput",
+		"!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.datatypes.CustomTextDT","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"text":"!expectedResultText!"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 1,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	}
+  ]
+}

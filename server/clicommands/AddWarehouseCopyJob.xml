@@ -1,0 +1,26 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="addwarehousecopyjob" Groups="Persistence" Description="Creates a job that periodically copies data from one persistence layer instance to the other."/>
+  <Argument Name="sourceConnectionType" Description="The ConnectionType from which the data is read"/>
+  <Argument Name="targetConnectionType" Description="The ConnectionType to which the data is written"/>
+  <Argument Name="tableName" Description="The table for which the data transfer will be performed"/>
+  <Argument Name="interval" Description="The time interval (in seconds) after which the action is repeated periodically"/>
+  <Argument Name="constraints" Description="Constraints for the set of objects to be copied, written in SQL" Optional="true"/>
+  <BoolOption Name="c" LongName="concurrencyProtection" Description="If there are constraints this parameter will lock the source data until it is copied to the target" Optional="true"/>
+</XynaCommandLineCommand>

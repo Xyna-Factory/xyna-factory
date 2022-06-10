@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Storable" BaseTypePath="xnwh.persistence" Label="Test Data" TypeName="TestData" TypePath="xdev.xtestfactory.infrastructure.storables" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Persistence>
+      <FlattenToInterface>true</FlattenToInterface>
+      <Reference>parentTestDataMetaData</Reference>
+    </Persistence>
+  </Meta>
+  <Data Label="ID" VariableName="iD">
+    <Meta>
+      <Type>long</Type>
+      <Persistence>
+        <Type>UniqueIdentifier</Type>
+      </Persistence>
+    </Meta>
+  </Data>
+  <Data Label="Parent Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="parentTestDataMetaData"/>
+  <Data Label="Next To Be Drawn" VariableName="nextToBeDrawn">
+    <Meta>
+      <Documentation>May be "true" only for one Test Data object per Test Data Description. This is the one that will be used when drawing from the respective Test Data Type.</Documentation>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Used" VariableName="used">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+</DataType>

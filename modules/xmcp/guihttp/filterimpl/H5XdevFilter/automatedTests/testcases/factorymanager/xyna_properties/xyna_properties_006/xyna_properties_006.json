@@ -1,0 +1,262 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xyna_property"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!": "xmcp.factorymanager.xynaproperties.ChangeXynaProperty"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!changed!": "changed"
+        },
+        {
+          "!en-US!": "en-US"
+        },
+        {
+          "!xmcp.DocumentationLanguage!": "xmcp.DocumentationLanguage"
+        },
+        {
+          "!xmcp.Documentation!": "xmcp.Documentation"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaProperty!": "xmcp.factorymanager.xynaproperties.XynaProperty"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper!": "xmcp.factorymanager.xynaproperties.GetXynaPropertiesTableInfo"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Key!": "Key"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!key!": "key"
+        },
+        {
+          "!Value!": "Value"
+        },
+        {
+          "!value!": "value"
+        },
+        {
+          "!Default_Value!": "Default Value"
+        },
+        {
+          "!defaultValue!": "defaultValue"
+        },
+        {
+          "!gUIDocumentation!": "gUIDocumentation"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper0!": "xmcp.factorymanager.xynaproperties.GetXynaPropertyDetails"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaPropertyK!": "xmcp.factorymanager.xynaproperties.XynaPropertyKey"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "documentation": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.Documentation!"
+                  },
+                  "documentation": "",
+                  "language": {
+                    "$meta": {
+                      "fqn": "!xmcp.DocumentationLanguage!"
+                    },
+                    "languageTag": "!en-US!"
+                  }
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.Documentation!"
+              }
+            },
+            "key": "!autotest.generated.random!",
+            "overwrittenDefaultValue": false,
+            "value": "!changed!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Documentation!",
+      "variable": "!xmcp.Documentation!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Key!",
+                  "path": "!key!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Value!",
+                  "path": "!value!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Default_Value!",
+                  "path": "!defaultValue!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Documentation!",
+                  "path": "!gUIDocumentation!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.DocumentationLanguage!"
+            },
+            "languageTag": "!en-US!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaProper!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaPropertyK!"
+            },
+            "key": "!autotest.generated.random!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaProper0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/value",
+      "targetVariable": "!output!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!output!",
+      "value": "changed"
+    }
+  ]
+}

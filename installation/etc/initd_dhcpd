@@ -1,0 +1,72 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          dhcpd
+# Default-Start:     3 5
+# Default-Stop:      0 1 2 6
+# Required-Start:    $local_fs $network $syslog XynaFactory
+# Required-Stop:     $local_fs $network $syslog XynaFactory
+### END INIT INFO
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Copyright 2022 GIP SmartMercial GmbH, Germany
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+DHCPD_CONF=TOKEN_INSTALL_DIR/etc/dhcpd.conf
+DHCPD_LEASES=TOKEN_INSTALL_DIR/var/dhcpd.leases
+
+DHCPD_BIN=TOKEN_INSTALL_DIR/sbin/dhcpd
+test -x $DHCPD_BIN || { echo "$DHCPD_BIN not installed";
+	if [ "$1" = "stop" ]; then exit 0;
+	else exit 5; fi; }
+
+OMSHELL_SH=TOKEN_INSTALL_DIR/bin/omshell.sh
+test -x $OMSHELL_SH || { echo "$OMSHELL_SH not installed"; exit 5; }
+
+. /etc/rc.status
+rc_reset
+
+exec 2> >(logger -plocal3.info)
+
+case "$1" in
+  start)
+    echo -n "Starting dhcpd "
+    /sbin/startproc $DHCPD_BIN -cf $DHCPD_CONF -lf $DHCPD_LEASES
+    rc_status -v
+    ;;
+  stop)
+    echo -n "Shutting down dhcpd "
+    /sbin/killproc -TERM $DHCPD_BIN
+    rc_status -v
+    ;;
+  status)
+    echo -n "Checking for service dhcpd "
+    /sbin/checkproc $DHCPD_BIN
+    rc_status -v
+    ;;
+  shutdown)
+    echo -n "Preparing shutdown of dhcpd "
+    $OMSHELL_SH set-shutdown
+    sleep 1
+    rc_status -v
+    $0 stop
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|shutdown}"
+    exit 1
+    ;;
+esac
+rc_exit
+

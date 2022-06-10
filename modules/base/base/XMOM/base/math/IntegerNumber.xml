@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="IntegerNumber" TypeName="IntegerNumber" TypePath="base.math" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="value" VariableName="value">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Service Label="Integer Number" TypeName="IntegerNumber">
+    <Operation IsStatic="false" Label="Bitshift Left" Name="bitshiftLeft">
+      <Meta>
+        <Documentation>Shifts the bits of the number to the left by Amount. The rightmost bit will be set to 0.</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Amount" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber48"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(value &lt;&lt; integerNumber.getValue())</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Bitshift Right" Name="bitshiftRight">
+      <Meta>
+        <Documentation>Shifts the bits of the number to the right by Amount. The leftmost bit will be set to the second to leftmost bit.</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Amount" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber48"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(value &gt;&gt; integerNumber.getValue())</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Bitshift Right Unsigned" Name="bitshiftRightUnsigned">
+      <Meta>
+        <Documentation>Shifts the bits of the number to the right by Amount. The leftmost bit will be set to 0.</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Amount" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber48"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(value &gt;&gt;&gt; integerNumber.getValue())</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Bitwise AND" Name="bitwiseAND">
+      <Meta>
+        <Documentation>Performs an AND operation on all bits with it's corresponding bit in the other number and returns the result</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber65"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(value &amp; integerNumber.getValue())</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Bitwise NOT" Name="bitwiseNOT">
+      <Meta>
+        <Documentation>Performs a NOT operation on all bits of the number and return the result</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(~value)</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Bitwise OR" Name="bitwiseOR">
+      <Meta>
+        <Documentation>Performs an OR operation on all bits with it's corresponding bit in the other number and returns the result</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber61"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(value | integerNumber.getValue())</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Bitwise XOR" Name="bitwiseXOR">
+      <Meta>
+        <Documentation>Performs an XOR operation on all bits with it's corresponding bit in the other number and returns the result</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber266"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(value ^ integerNumber.getValue())</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Log" Name="log">
+      <Meta>
+        <Documentation>Return the logarithm of this Number to the base of Base</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Base" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber8"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">double log1 = Math.log(value); 
+double log2 = Math.log(doubleNumber.getValue());
+return new DoubleNumber(log1 / log2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Pow" Name="pow">
+      <Meta>
+        <Documentation>Return this raised to the power of Exponent</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Exponent" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber12"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new DoubleNumber(Math.pow(value, doubleNumber.getValue()))</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

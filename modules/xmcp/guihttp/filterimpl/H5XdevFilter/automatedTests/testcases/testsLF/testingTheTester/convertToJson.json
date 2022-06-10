@@ -1,0 +1,45 @@
+{
+  "operations":
+  [
+    {
+      "operation": "set",
+	  "variable": "!json!",
+	  "value": "\\n {\"reason\": \"reason\"}"
+	},
+	{
+	  "operation": "convertToJson",
+	  "variable": "!json!",
+	  "targetVariable": "!target!"
+	},
+	{
+	  "operation": "convertToJson",
+	  "variable": "!json!"
+	},
+	{
+	  "operation": "setFromVariable",
+	  "targetVariable": "!reason!",
+      "sourceVariable": "!json!",
+      "path": "reason",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!reason!",
+	  "value": "reason"
+	},
+	{
+	  "operation": "setFromVariable",
+	  "targetVariable": "!reason!",
+      "sourceVariable": "!target!",
+      "path": "reason",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!reason!",
+	  "value": "reason"
+	}
+  ]
+}

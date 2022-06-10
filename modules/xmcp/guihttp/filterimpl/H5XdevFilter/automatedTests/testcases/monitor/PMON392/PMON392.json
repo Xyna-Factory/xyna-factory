@@ -1,0 +1,1422 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "30.7.2021", 
+    "updated": "30.7.2021"
+  }, 
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!New_Workflow!": "New Workflow"
+        }, 
+        {
+          "!xprc.waitsuspend.WaitAndSuspendFeature!": "xprc.waitsuspend.WaitAndSuspendFeature"
+        }, 
+        {
+          "!wait!": "wait"
+        }, 
+        {
+          "!Wait!": "Wait"
+        }, 
+        {
+          "!{x$metax:{xfqnx:xxprc.waitsuspend.RelativeTimeCo!": "{\\\"$meta\\\":{\\\"fqn\\\":\\\"xprc.waitsuspend.RelativeTimeConfiguration\\\",\\\"rtc\\\":{\\\"application\\\":\\\"Base\\\"}},\\\"timeInMinutes\\\":{\\\"$meta\\\":{\\\"fqn\\\":\\\"xprc.waitsuspend.Minutes\\\"},\\\"timeUnitInMinutes\\\":1}}"
+        }, 
+        {
+          "!autoTest.generated.PMON392!": "autoTest.generated.PMON392.!rnd!"
+        }, 
+        {
+          "!Capacity_Test!": "Capacity Test"
+        },
+        {
+          "!PMON-392CapacityToUse!": "PMON-392 Capacity To Use !rnd!"
+        },
+        {
+          "!PMON-392UnusedCapacity!": "PMON-392 Unused Capacity !rnd!"
+        },
+        {
+          "!PMON-392DisabledCapacity!": "PMON-392 Disabled Capacity !rnd!"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Workflow!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "targetVariable": "!new_1627626091340.NewWorkflow!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1627626091340!", 
+      "variable": "!new_1627626091340.NewWorkflow!"
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewWorkflow!", 
+      "variable": "!new_1627626091340.NewWorkflow!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id", 
+      "targetVariable": "!step0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/id", 
+      "targetVariable": "!wf!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/warnings"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!xprc.waitsuspend.WaitAndSuspendFeature!", 
+          "label": "!Wait!", 
+          "operation": "!wait!", 
+          "type": "service"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/objects/!step0!/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[fqn=!xprc.waitsuspend.WaitAndSuspendFeature!]/id", 
+      "targetVariable": "!step10!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/items/$list[name=timeConfigurationParameter]/id", 
+      "targetVariable": "!var10-in0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/warnings"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "constant": "!{x$metax:{xfqnx:xxprc.waitsuspend.RelativeTimeCo!", 
+        "revision": 1
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/objects/!var10-in0!/constant"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/warnings"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "label": "!Capacity_Test!", 
+        "path": "!autoTest.generated.PMON392!", 
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1627626091340!/!NewWorkflow!/save"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/fqn", 
+      "targetVariable": "!autoTest.generated.PMON392.CapacityTest!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!CapacityTest!", 
+      "variable": "!autoTest.generated.PMON392.CapacityTest!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/warnings"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/warnings"
+    },
+    
+    
+    
+    
+    
+    
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.factorymanager.capacities.CapacityInformation"
+            }, 
+            "cardinality": "5", 
+            "name": "!PMON-392CapacityToUse!", 
+            "state": "ACTIVE"
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.capacities.CreateCapacity"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.tables.datatypes.TableInfo", 
+              "rtc": {
+                "application": "ZetaFramework"
+              }
+            }, 
+            "bootstrap": false, 
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Name", 
+                  "path": "name", 
+                  "pre": false, 
+                  "shrink": false, 
+                  "sort": "asc"
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Cardinality", 
+                  "path": "cardinality", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Usage", 
+                  "path": "inuse", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "State", 
+                  "path": "state", 
+                  "pre": false, 
+                  "shrink": false
+                }
+              ], 
+              "$meta": {
+                "fqn": "xmcp.tables.datatypes.TableColumn"
+              }
+            }, 
+            "filterCaseSensitive": false
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.capacities.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.factorymanager.capacities.CapacityInformation"
+            }, 
+            "cardinality": "2", 
+            "name": "!PMON-392UnusedCapacity!", 
+            "state": "ACTIVE"
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.capacities.CreateCapacity"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.tables.datatypes.TableInfo", 
+              "rtc": {
+                "application": "ZetaFramework"
+              }
+            }, 
+            "bootstrap": false, 
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Name", 
+                  "path": "name", 
+                  "pre": false, 
+                  "shrink": false, 
+                  "sort": "asc"
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Cardinality", 
+                  "path": "cardinality", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Usage", 
+                  "path": "inuse", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "State", 
+                  "path": "state", 
+                  "pre": false, 
+                  "shrink": false
+                }
+              ], 
+              "$meta": {
+                "fqn": "xmcp.tables.datatypes.TableColumn"
+              }
+            }, 
+            "filterCaseSensitive": false
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.capacities.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.factorymanager.capacities.CapacityInformation"
+            }, 
+            "cardinality": "1", 
+            "name": "!PMON-392DisabledCapacity!", 
+            "state": "DISABLED"
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.capacities.CreateCapacity"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder",
+      "comment": "end of step 4 - created all three capacities"
+    }, 
+    
+    
+    
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.tables.datatypes.TableInfo", 
+              "rtc": {
+                "application": "ZetaFramework"
+              }
+            }, 
+            "bootstrap": false, 
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Name", 
+                  "path": "name", 
+                  "pre": false, 
+                  "shrink": false, 
+                  "sort": "asc"
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Cardinality", 
+                  "path": "cardinality", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Usage", 
+                  "path": "inuse", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "State", 
+                  "path": "state", 
+                  "pre": false, 
+                  "shrink": false
+                }
+              ], 
+              "$meta": {
+                "fqn": "xmcp.tables.datatypes.TableColumn"
+              }
+            }, 
+            "filterCaseSensitive": false
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.capacities.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.tables.datatypes.TableInfo"
+            }, 
+            "bootstrap": true
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.ordertypes.GetOrderTypes"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.tables.datatypes.TableInfo", 
+              "rtc": {
+                "application": "ZetaFramework"
+              }
+            }, 
+            "bootstrap": false, 
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "filter": "!autoTest.generated.PMON392!", 
+                  "name": "Name", 
+                  "path": "name", 
+                  "pre": false, 
+                  "shrink": false, 
+                  "sort": "asc"
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Application", 
+                  "path": "application", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Version", 
+                  "path": "version", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Workspace", 
+                  "path": "workspace", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Execution Destination Type/Name", 
+                  "path": "executionDestination.name", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Used Capacities", 
+                  "path": "usedCapacities", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Priority", 
+                  "path": "priority", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Monitoring Level", 
+                  "path": "monitoringLevel", 
+                  "pre": false, 
+                  "shrink": false
+                }
+              ], 
+              "$meta": {
+                "fqn": "xmcp.tables.datatypes.TableColumn"
+              }
+            }, 
+            "filterCaseSensitive": false
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.ordertypes.GetOrderTypes"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.Workspace", 
+              "rtc": {
+                "application": "GuiHttp"
+              }
+            }, 
+            "name": "default workspace", 
+            "revision": -1, 
+            "type": "Workspace"
+          }, 
+          {
+            "$meta": {
+              "fqn": "xmcp.factorymanager.ordertypes.OrderTypeName"
+            }, 
+            "name": "!autoTest.generated.PMON392!.!CapacityTest!"
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.ordertypes.GetOrderType"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.Workspace", 
+              "rtc": {
+                "application": "GuiHttp"
+              }
+            }, 
+            "name": "default workspace", 
+            "revision": -1, 
+            "type": "Workspace"
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.ordertypes.GetDestinations"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.tables.datatypes.TableInfo"
+            }, 
+            "bootstrap": true
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.ordertypes.GetOrdertypeCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.tables.datatypes.TableInfo"
+            }, 
+            "bootstrap": true
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.ordertypes.GetOrdertypeCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.factorymanager.ordertypes.OrderType", 
+              "rtc": {
+                "application": "GuiHttp"
+              }
+            }, 
+            "cleanupDestination": {
+              "$meta": {
+                "fqn": "xmcp.factorymanager.DestinationType"
+              }, 
+              "name": "Empty", 
+              "type": "Xyna Fractal Workflow"
+            }, 
+            "cleanupDestinationIsCustom": false, 
+            "executionDestination": {
+              "$meta": {
+                "fqn": "xmcp.factorymanager.DestinationType"
+              }, 
+              "name": "!autoTest.generated.PMON392!.!CapacityTest!", 
+              "type": "Xyna Fractal Workflow"
+            }, 
+            "executionDestinationIsCustom": false, 
+            "monitoringLevel": -1, 
+            "monitoringLevelIsCustom": false, 
+            "name": "!autoTest.generated.PMON392!.!CapacityTest!", 
+            "parameterInheritanceRules": {
+              "$list": [], 
+              "$meta": {
+                "fqn": "xmcp.factorymanager.ParameterInheritanceRule"
+              }
+            }, 
+            "planningDestination": {
+              "$meta": {
+                "fqn": "xmcp.factorymanager.DestinationType"
+              }, 
+              "name": "DefaultPlanning", 
+              "type": "Xyna Fractal Workflow"
+            }, 
+            "planningDestinationIsCustom": false, 
+            "priorityIsCustom": false, 
+            "requiredCapacities": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "xmcp.factorymanager.ordertypes.Capacity"
+                  }, 
+                  "cardinality": 2, 
+                  "name": "!PMON-392CapacityToUse!"
+                }
+              ], 
+              "$meta": {
+                "fqn": "xmcp.factorymanager.ordertypes.Capacity"
+              }
+            }, 
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "xmcp.Workspace"
+              }, 
+              "name": "default workspace", 
+              "revision": -1, 
+              "type": "Workspace"
+            }, 
+            "usedCapacities": "", 
+            "workspace": "default workspace"
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.ordertypes.ChangeOrderType"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.tables.datatypes.TableInfo", 
+              "rtc": {
+                "application": "ZetaFramework"
+              }
+            }, 
+            "bootstrap": false, 
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "filter": "!autoTest.generated.PMON392!", 
+                  "name": "Name", 
+                  "path": "name", 
+                  "pre": false, 
+                  "shrink": false, 
+                  "sort": "asc"
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Application", 
+                  "path": "application", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Version", 
+                  "path": "version", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Workspace", 
+                  "path": "workspace", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Execution Destination Type/Name", 
+                  "path": "executionDestination.name", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Used Capacities", 
+                  "path": "usedCapacities", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Priority", 
+                  "path": "priority", 
+                  "pre": false, 
+                  "shrink": false
+                }, 
+                {
+                  "$meta": {
+                    "fqn": "xmcp.tables.datatypes.TableColumn"
+                  }, 
+                  "break0": false, 
+                  "disableFilter": false, 
+                  "disableSort": false, 
+                  "name": "Monitoring Level", 
+                  "path": "monitoringLevel", 
+                  "pre": false, 
+                  "shrink": false
+                }
+              ], 
+              "$meta": {
+                "fqn": "xmcp.tables.datatypes.TableColumn"
+              }
+            }, 
+            "filterCaseSensitive": false
+          }
+        ], 
+        "orderType": "xmcp.factorymanager.ordertypes.GetOrderTypes"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [], 
+        "orderType": "xmcp.factorymanager.shared.GetRuntimeContexts"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/clipboard"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [], 
+        "orderType": "xmcp.factorymanager.shared.GetRuntimeContexts"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/warnings"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/issues"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/workflows/!autoTest.generated.PMON392!/!CapacityTest!/warnings"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": true, 
+        "customStringContainer": [
+          null, 
+          null, 
+          null, 
+          null
+        ], 
+        "input": [], 
+        "orderType": "!autoTest.generated.PMON392!.!CapacityTest!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": true, 
+        "customStringContainer": [
+          null, 
+          null, 
+          null, 
+          null
+        ], 
+        "input": [], 
+        "orderType": "!autoTest.generated.PMON392!.!CapacityTest!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/startorder"
+    }, 
+    {
+      "comment": "step 7 - open capacity montor",
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.processmonitor.resources.Filter"
+            }
+          }, 
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "xmcp.processmonitor.datatypes.filter.IncludeUnused"
+                }
+              }
+            ], 
+            "$meta": {
+              "fqn": "xmcp.processmonitor.datatypes.SearchFlag"
+            }
+          }
+        ], 
+        "orderType": "xmcp.processmonitor.resources.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    },
+    {
+      "comment": "check all three capacities are in the list",
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "output[0]/$list",
+      "entries": [
+        {
+          "name": "!PMON-392CapacityToUse!"
+        },
+        {
+          "name": "!PMON-392UnusedCapacity!"
+        },
+        {
+          "name": "!PMON-392DisabledCapacity!"
+        }
+      ]
+     }
+,
+
+    {
+      "operation": "invoke",
+      "functionName": "validateCapacity",
+      "mapInput": { 
+        "!capacityname!" : "!PMON-392CapacityToUse!", 
+        "!isActive!" : true, 
+        "!total!" : 5, 
+        "!usage!" : 4, 
+        "!watingOrderCount!" : 0, 
+        "!runningOrderCount!" : 2
+        }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "validateCapacity",
+      "mapInput": { 
+        "!capacityname!" : "!PMON-392UnusedCapacity!", 
+        "!isActive!" : true, 
+        "!total!" : 2, 
+        "!usage!" : 0, 
+        "!watingOrderCount!" : 0, 
+        "!runningOrderCount!" : 0
+        }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "validateCapacity",
+      "mapInput": { 
+        "!capacityname!" : "!PMON-392DisabledCapacity!", 
+        "!isActive!" : false, 
+        "!total!" : 1, 
+        "!usage!" : 0, 
+        "!watingOrderCount!" : 0, 
+        "!runningOrderCount!" : 0
+        }
+    },
+
+    
+    {
+      "operation": "call", 
+      "payload": {
+        "async": true, 
+        "customStringContainer": [
+          null, 
+          null, 
+          null, 
+          null
+        ], 
+        "input": [], 
+        "orderType": "!autoTest.generated.PMON392!.!CapacityTest!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/startorder"
+    }, 
+    {
+      "comment": "step 9 - refresh capacity monitor",
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.processmonitor.resources.Filter"
+            }
+          }, 
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "xmcp.processmonitor.datatypes.filter.IncludeUnused"
+                }
+              }
+            ], 
+            "$meta": {
+              "fqn": "xmcp.processmonitor.datatypes.SearchFlag"
+            }
+          }
+        ], 
+        "orderType": "xmcp.processmonitor.resources.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    
+    
+    {
+      "operation": "invoke",
+      "functionName": "validateCapacity",
+      "mapInput": { 
+        "!capacityname!" : "!PMON-392CapacityToUse!", 
+        "!isActive!" : true, 
+        "!total!" : 5, 
+        "!usage!" : 4, 
+        "!watingOrderCount!" : 1, 
+        "!runningOrderCount!" : 2
+        }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "validateCapacity",
+      "mapInput": { 
+        "!capacityname!" : "!PMON-392UnusedCapacity!", 
+        "!isActive!" : true, 
+        "!total!" : 2, 
+        "!usage!" : 0, 
+        "!watingOrderCount!" : 0, 
+        "!runningOrderCount!" : 0
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "validateCapacity",
+      "mapInput": { 
+        "!capacityname!" : "!PMON-392DisabledCapacity!", 
+        "!isActive!" : false, 
+        "!total!" : 1, 
+        "!usage!" : 0, 
+        "!watingOrderCount!" : 0, 
+        "!runningOrderCount!" : 0
+        }
+    },
+
+    
+    
+    
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.processmonitor.resources.Filter"
+            }
+          }, 
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "xmcp.processmonitor.datatypes.filter.IncludeUnused"
+                }
+              }
+            ], 
+            "$meta": {
+              "fqn": "xmcp.processmonitor.datatypes.SearchFlag"
+            }
+          }
+        ], 
+        "orderType": "xmcp.processmonitor.resources.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.processmonitor.resources.Filter"
+            }, 
+            "filter": "use"
+          }, 
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "xmcp.processmonitor.datatypes.filter.IncludeUnused"
+                }
+              }
+            ], 
+            "$meta": {
+              "fqn": "xmcp.processmonitor.datatypes.SearchFlag"
+            }
+          }
+        ], 
+        "orderType": "xmcp.processmonitor.resources.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+    
+    
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "output[0]/$list",
+      "entries": [
+        {
+          "name": "!PMON-392CapacityToUse!"
+        },
+        {
+          "name": "!PMON-392UnusedCapacity!"
+        }
+      ]
+     },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "output[0]/$list",
+      "entries": [
+        {
+          "name": "!PMON-392DisabledCapacity!"
+        }
+      ]
+     },
+    
+    
+    
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.processmonitor.resources.Filter"
+            }, 
+            "filter": "use"
+          }, 
+          {
+            "$list": [], 
+            "$meta": {
+              "fqn": "xmcp.processmonitor.datatypes.SearchFlag"
+            }
+          }
+        ], 
+        "orderType": "xmcp.processmonitor.resources.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    }, 
+
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "output[0]/$list",
+      "entries": [
+        {
+          "name": "!PMON-392CapacityToUse!"
+        }
+      ]
+     },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "output[0]/$list",
+      "entries": [
+        {
+          "name": "!PMON-392DisabledCapacity!"
+        },
+        {
+          "name": "!PMON-392UnusedCapacity!"
+        }
+      ]
+     },
+
+
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.processmonitor.resources.Filter"
+            }, 
+            "filter": ""
+          }, 
+          {
+            "$list": [], 
+            "$meta": {
+              "fqn": "xmcp.processmonitor.datatypes.SearchFlag"
+            }
+          }
+        ], 
+        "orderType": "xmcp.processmonitor.resources.GetCapacities"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "output[0]/$list",
+      "entries": [
+        {
+          "name": "!PMON-392CapacityToUse!"
+        }
+      ]
+     },
+     {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "output[0]/$list",
+      "entries": [
+        {
+          "name": "!PMON-392DisabledCapacity!"
+        },
+        {
+          "name": "!PMON-392UnusedCapacity!"
+        }
+      ]
+     }
+  ]
+}

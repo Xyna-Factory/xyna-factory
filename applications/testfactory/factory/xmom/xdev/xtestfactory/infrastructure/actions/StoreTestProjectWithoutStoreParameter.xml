@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Store Test Project Without Store Parameter" TypeName="StoreTestProjectWithoutStoreParameter" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Store Test Project Without Store Parameter" Name="StoreTestProjectWithoutStoreParameter">
+    <Input>
+      <Data ID="290" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+        <Target RefID="416"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Function ID="416" Label="Update">
+      <Source RefID="290"/>
+      <Source RefID="415"/>
+      <Source RefID="418"/>
+      <Source RefID="419"/>
+      <Target RefID="415"/>
+      <Invoke Operation="Update" ServiceID="415">
+        <Source RefID="290"/>
+        <Source RefID="418">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="419">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="415"/>
+    </Function>
+    <ServiceReference ID="415" Label="Update" ReferenceName="Update" ReferencePath="xnwh.persistence">
+      <Source RefID="416"/>
+      <Target RefID="416"/>
+    </ServiceReference>
+    <Data ID="418" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="416"/>
+      <Data Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.TestProject</Value>
+      </Data>
+      <Data IsList="true" Label="Columns" VariableName="columns">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>%0%.description</Value>
+      </Data>
+    </Data>
+    <Data ID="419" Label="Update parameter" ReferenceName="UpdateParameter" ReferencePath="xnwh.persistence" VariableName="const_UpdateParameter">
+      <Target RefID="416"/>
+      <Data Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+    </Data>
+    <Assign ID="2"/>
+  </Operation>
+</Service>

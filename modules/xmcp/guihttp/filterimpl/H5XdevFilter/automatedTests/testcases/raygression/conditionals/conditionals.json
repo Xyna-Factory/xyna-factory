@@ -1,0 +1,10 @@
+{
+    "testseries": [
+        "conditionals_001/testseries.json",
+        "conditionals_002/testseries.json",
+        "conditionals_003/testseries.json",
+        "conditionals_004/testseries.json",
+        "conditionals_005/testseries.json",
+        "conditionals_006/testseries.json"
+    ]
+}

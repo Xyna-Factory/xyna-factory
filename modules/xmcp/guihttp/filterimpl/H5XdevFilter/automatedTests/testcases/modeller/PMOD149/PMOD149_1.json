@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "19.3.2021", 
+    "updated": "19.3.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "dataType": true, 
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "service": true, 
+        "serviceGroup": true, 
+        "workflow": true
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects?q=base.AnyType"
+    },
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "pathToList": "objects",
+	  "entries": [
+	    {
+	      "fqn": "base.AnyType",
+		  "type": "dataType"
+	    }
+	  ]
+	}
+  ]
+}

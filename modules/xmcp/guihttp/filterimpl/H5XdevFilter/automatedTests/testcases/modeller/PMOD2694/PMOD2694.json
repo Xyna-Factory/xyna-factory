@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-2697", 
+    "created": "24.2.2021", 
+    "updated": "24.2.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!RegressionTestDependentApp%252F2!": "default%20workspace"
+        }, 
+        {
+          "!xmcp.h5x.modeller.pmod2694!": "xmcp.h5x.modeller.pmod2694"
+        }, 
+        {
+          "!MergedLanesNoCaseIDs!": "MergedLanesNoCaseIDs"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "set", 
+      "value": "xmcp.h5x.modeller.pmod2694.SuperDT", 
+      "variable": "!xmcp.h5x.modeller.pmod2694.SuperDT0!"
+    }, 
+    {
+      "acceptError": true, 
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!RegressionTestDependentApp%252F2!/xmom/workflows/!xmcp.h5x.modeller.pmod2694!/!MergedLanesNoCaseIDs!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "repairs/$list",
+      "expectedValue": "4"
+    },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!RegressionTestDependentApp%252F2!/xmom/workflows/!xmcp.h5x.modeller.pmod2694!/!MergedLanesNoCaseIDs!?repair=true"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/rtc/version", 
+      "targetVariable": "!2!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/items/$list[0]/id", 
+      "targetVariable": "!step6!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/items/$list[id=!step6!]/areas/$list[name=input]/items/$list[0]/id", 
+      "targetVariable": "!formula6-0_input!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=input]/items/$list[fqn=!xmcp.h5x.modeller.pmod2694.SuperDT0!]/id", 
+      "targetVariable": "!var-in0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=input]/items/$list[id=!var-in0!]/fqn", 
+      "targetVariable": "!xmcp.h5x.modeller.pmod2694.SuperDT!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/items/$list[id=!step6!]/areas/$list[name=input]/items/$list[id=!formula6-0_input!]/input/$list[fqn=!xmcp.h5x.modeller.pmod2694.SuperDT!]/id", 
+      "targetVariable": "!var6-in0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/items/$list[id=!step6!]/areas/$list[name=input]/items/$list[id=!formula6-0_input!]/input/$list[id=!var6-in0!]/rtc/$meta/fqn", 
+      "targetVariable": "!xmcp.processmodeller.datatypes.Application!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!Application!", 
+      "variable": "!xmcp.processmodeller.datatypes.Application!"
+    },  
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!RegressionTestDependentApp%252F2!/xmom/workflows/!xmcp.h5x.modeller.pmod2694!/!MergedLanesNoCaseIDs!/dataflow"
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="DeviceTypeWithMultilineSupport" BaseTypePath="xact.connection" Label="Rule based Device Type" TypeName="RuleBasedDeviceType" TypePath="xact.connection" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>RuleBasedDeviceTypeImpl.jar</Libraries>
+  <Data Label="device type id" VariableName="deviceTypeId">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Rule Based Device Type" TypeName="RuleBasedDeviceType">
+    <Operation IsStatic="false" Label="Check interaction" Name="checkInteraction">
+      <Input>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+        <Data Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+      </Input>
+      <Output>
+        <Data Label="is interaction" VariableName="isInteraction">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().checkInteraction(response, documentType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Cleanup after error" Name="cleanupAfterError">
+      <Input>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+        <Data Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+        <Data Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().cleanupAfterError(response, documentType, managedConnection);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Detect critical error" Name="detectCriticalError">
+      <Input>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+        <Data Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().detectCriticalError(response, documentType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Enrich command" Name="enrichCommand">
+      <Input>
+        <Data Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Input>
+      <Output>
+        <Data Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().enrichCommand(command);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get State" Name="getState">
+      <Input/>
+      <Output>
+        <Data Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getState();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Is response complete" Name="isResponseComplete">
+      <Input>
+        <Data Label="response" VariableName="response">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+        <Data Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="mannagedConnection"/>
+        <Data Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Input>
+      <Output>
+        <Data Label="is complete" VariableName="isComplete">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().isResponseComplete(response, documentType, mannagedConnection, command);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="partition commands" Name="partitionCommands">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().partitionCommands(document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Remove device specifics" Name="removeDeviceSpecifics">
+      <Input>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().removeDeviceSpecifics(response);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.RemoveXynaPro!": "xmcp.factorymanager.xynaproperties.RemoveXynaProperty"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaPropertyK!": "xmcp.factorymanager.xynaproperties.XynaPropertyKey"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper!": "xmcp.factorymanager.xynaproperties.GetXynaPropertiesTableInfo"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Key!": "Key"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!key!": "key"
+        },
+        {
+          "!Value!": "Value"
+        },
+        {
+          "!value!": "value"
+        },
+        {
+          "!Default_Value!": "Default Value"
+        },
+        {
+          "!defaultValue!": "defaultValue"
+        },
+        {
+          "!Documentation!": "Documentation"
+        },
+        {
+          "!gUIDocumentation!": "gUIDocumentation"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        },
+        {
+          "!en-US!": "en-US"
+        },
+        {
+          "!xmcp.DocumentationLanguage!": "xmcp.DocumentationLanguage"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaPropertyK!"
+            },
+            "key": "!autotest.generated.random!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.RemoveXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!output!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!output!",
+      "value": "doesn't exist."
+    }
+  ]
+}

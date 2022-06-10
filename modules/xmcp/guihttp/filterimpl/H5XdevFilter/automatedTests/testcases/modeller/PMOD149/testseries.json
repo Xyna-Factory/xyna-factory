@@ -1,0 +1,11 @@
+{
+  "tests":
+  [
+    "PMOD149_1.json",
+    "PMOD149_2.json",
+    "PMOD149_3.json",
+    "PMOD149_4.json",
+    "PMOD149_5.json",
+    "PMOD149_6.json"
+  ]
+}

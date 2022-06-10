@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="585" Label="SharedNetworkGetAllRows" TypeName="SharedNetworkGetAllRows" TypePath="xmcp.dhcp.v4.control" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="SharedNetworkGetAllRows" Name="SharedNetworkGetAllRows">
+    <Input>
+      <Data ID="571" Label="GetAllRowsInput" ReferenceName="GetAllRowsInput" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="getAllRowsInput571">
+        <Target RefID="38"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="187" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype187">
+        <Source RefID="2"/>
+      </Data>
+      <Data ID="236" Label="Get All Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="rowList_ctype236">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Mappings ID="38" Label="Build Input">
+      <Source RefID="571"/>
+      <Target RefID="66"/>
+      <Input>
+        <Data ID="584" Label="GetAllRowsInput" ReferenceName="GetAllRowsInput" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="getAllRowsInput584">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="571"/>
+      </Input>
+      <Output>
+        <Data ID="65" Label="Get All Rows Request ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype65">
+          <Source RefID="38"/>
+        </Data>
+        <Target RefID="66"/>
+      </Output>
+      <Mapping>%1%.getAllRowsInput=%0%.getAllRowsInput</Mapping>
+    </Mappings>
+    <Function ID="594" Label="Get All Rows">
+      <Source RefID="593"/>
+      <Source RefID="66"/>
+      <Target RefID="593"/>
+      <Target RefID="595"/>
+      <Invoke Operation="getAllRows" ServiceID="593">
+        <Source RefID="66"/>
+      </Invoke>
+      <Receive ServiceID="593">
+        <Target RefID="595"/>
+      </Receive>
+    </Function>
+    <Mappings ID="47" Label="Extract Output">
+      <Source RefID="595"/>
+      <Target RefID="201"/>
+      <Target RefID="250"/>
+      <Input>
+        <Data ID="56" Label="Response_ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="response_ctype56">
+          <Source RefID="47"/>
+        </Data>
+        <Source RefID="595"/>
+      </Input>
+      <Output>
+        <Data ID="200" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype200">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="201"/>
+      </Output>
+      <Output>
+        <Data ID="249" Label="RowList_ctype" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="rowList_ctype249">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="250"/>
+      </Output>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+      <Mapping>%2%=%0%.payload.getAllRowsOutput</Mapping>
+    </Mappings>
+    <Data ID="7" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="response_ctype">
+      <Target RefID="2"/>
+    </Data>
+    <Data ID="66" Label="Get All Rows Request ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype66">
+      <Source RefID="38"/>
+      <Target RefID="594"/>
+    </Data>
+    <Data ID="201" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype201">
+      <Source RefID="47"/>
+      <Target RefID="2"/>
+    </Data>
+    <Data ID="250" Label="RowList_ctype" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="rowList_ctype250">
+      <Source RefID="47"/>
+      <Target RefID="2"/>
+    </Data>
+    <ServiceReference ID="593" Label="SharedNetwork" ReferenceName="SharedNetwork.SharedNetwork" ReferencePath="xmcp.dhcp.v4.control">
+      <Source RefID="594"/>
+      <Target RefID="594"/>
+    </ServiceReference>
+    <Data ID="595" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="response_ctype595">
+      <Source RefID="594"/>
+      <Target RefID="47"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="201"/>
+      <Source RefID="250"/>
+      <Target RefID="187"/>
+      <Target RefID="236"/>
+      <Copy>
+        <Source RefID="201">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="187"/>
+      </Copy>
+      <Copy>
+        <Source RefID="250"/>
+        <Target RefID="236"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://www.gip.com/juno/WS/DhcpdConf"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:gui="http://www.gip.com/juno/Gui/WS/Messages"
+                  name="DhcpdConf"
+                  targetNamespace="http://www.gip.com/juno/WS/DhcpdConf">
+
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" >
+      <xsd:import namespace="http://www.gip.com/juno/Gui/WS/Messages"
+                  schemaLocation="DhcpdConfMessages.xsd" />
+    </xsd:schema>
+  </wsdl:types>
+
+  <wsdl:message name="CheckDhcpdConfRequestMessage">
+    <wsdl:part name="CheckDhcpdConfRequest" element="gui:CheckDhcpdConfRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="CheckDhcpdConfResponseMessage">
+    <wsdl:part name="CheckDhcpdConfResponse" element="gui:CheckDhcpdConfResponse"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="CheckDhcpdConfNewFormatRequestMessage">
+    <wsdl:part name="CheckDhcpdConfNewFormatRequest" element="gui:CheckDhcpdConfNewFormatRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="CheckDhcpdConfNewFormatResponseMessage">
+    <wsdl:part name="CheckDhcpdConfNewFormatResponse" element="gui:CheckDhcpdConfNewFormatResponse"></wsdl:part>
+  </wsdl:message>
+
+  
+  <wsdl:message name="DeployDhcpdConfNewFormatRequestMessage">
+    <wsdl:part name="DeployDhcpdConfNewFormatRequest" element="gui:DeployDhcpdConfNewFormatRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeployDhcpdConfNewFormatResponseMessage">
+    <wsdl:part name="DeployDhcpdConfNewFormatResponse" element="gui:DeployDhcpdConfNewFormatResponse"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeployDhcpdConfRequestMessage">
+    <wsdl:part name="DeployDhcpdConfRequest" element="gui:DeployDhcpdConfRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeployDhcpdConfResponseMessage">
+    <wsdl:part name="DeployDhcpdConfResponse" element="gui:DeployDhcpdConfResponse"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeployStaticHostRequestMessage">
+    <wsdl:part name="DeployStaticHostRequest" element="gui:DeployStaticHostRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeployStaticHostResponseMessage">
+    <wsdl:part name="DeployStaticHostResponse" element="gui:DeployStaticHostResponse"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeployStaticHostNewFormatRequestMessage">
+    <wsdl:part name="DeployStaticHostNewFormatRequest" element="gui:DeployStaticHostNewFormatRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeployStaticHostNewFormatResponseMessage">
+    <wsdl:part name="DeployStaticHostNewFormatResponse" element="gui:DeployStaticHostNewFormatResponse"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="UndeployStaticHostRequestMessage">
+    <wsdl:part name="UndeployStaticHostRequest" element="gui:UndeployStaticHostRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="UndeployStaticHostResponseMessage">
+    <wsdl:part name="UndeployStaticHostResponse" element="gui:UndeployStaticHostResponse"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="UndeployStaticHostNewFormatRequestMessage">
+    <wsdl:part name="UndeployStaticHostNewFormatRequest" element="gui:UndeployStaticHostNewFormatRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="UndeployStaticHostNewFormatResponseMessage">
+    <wsdl:part name="UndeployStaticHostNewFormatResponse" element="gui:UndeployStaticHostNewFormatResponse"></wsdl:part>
+  </wsdl:message>
+
+  
+  <wsdl:message name="DeployCPERequestMessage">
+    <wsdl:part name="DeployCPERequest" element="gui:DeployCPERequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeployCPEResponseMessage">
+    <wsdl:part name="DeployCPEResponse" element="gui:DeployCPEResponse"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="UndeployCPERequestMessage">
+    <wsdl:part name="UndeployCPERequest" element="gui:UndeployCPERequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="UndeployCPEResponseMessage">
+    <wsdl:part name="UndeployCPEResponse" element="gui:UndeployCPEResponse"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DuplicateForMigrationRequestMessage">
+    <wsdl:part name="DuplicateForMigrationRequest" element="gui:DuplicateForMigrationRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DuplicateForMigrationResponseMessage">
+    <wsdl:part name="DuplicateForMigrationResponse" element="gui:DuplicateForMigrationResponse"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="DeactivateForMigrationRequestMessage">
+    <wsdl:part name="DeactivateForMigrationRequest" element="gui:DeactivateForMigrationRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeactivateForMigrationResponseMessage">
+    <wsdl:part name="DeactivateForMigrationResponse" element="gui:DeactivateForMigrationResponse"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="ActivateForMigrationRequestMessage">
+    <wsdl:part name="ActivateForMigrationRequest" element="gui:ActivateForMigrationRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="ActivateForMigrationResponseMessage">
+    <wsdl:part name="ActivateForMigrationResponse" element="gui:ActivateForMigrationResponse"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="DeleteForMigrationRequestMessage">
+    <wsdl:part name="DeleteForMigrationRequest" element="gui:DeleteForMigrationRequest"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="DeleteForMigrationResponseMessage">
+    <wsdl:part name="DeleteForMigrationResponse" element="gui:DeleteForMigrationResponse"></wsdl:part>
+  </wsdl:message>
+
+
+  <wsdl:portType name="DhcpdConf">
+
+     <wsdl:operation name="CheckDhcpdConf">
+      <wsdl:input message="tns:CheckDhcpdConfRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:CheckDhcpdConfResponseMessage"></wsdl:output>
+    </wsdl:operation>
+
+     <wsdl:operation name="CheckDhcpdConfNewFormat">
+      <wsdl:input message="tns:CheckDhcpdConfNewFormatRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:CheckDhcpdConfNewFormatResponseMessage"></wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="DeployDhcpdConf">
+      <wsdl:input message="tns:DeployDhcpdConfRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:DeployDhcpdConfResponseMessage"></wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeployDhcpdConfNewFormat">
+      <wsdl:input message="tns:DeployDhcpdConfNewFormatRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:DeployDhcpdConfNewFormatResponseMessage"></wsdl:output>
+    </wsdl:operation>
+        
+    <wsdl:operation name="DeployStaticHost">
+      <wsdl:input message="tns:DeployStaticHostRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:DeployStaticHostResponseMessage"></wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeployStaticHostNewFormat">
+      <wsdl:input message="tns:DeployStaticHostNewFormatRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:DeployStaticHostNewFormatResponseMessage"></wsdl:output>
+    </wsdl:operation>
+                
+    <wsdl:operation name="UndeployStaticHost">
+      <wsdl:input message="tns:UndeployStaticHostRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:UndeployStaticHostResponseMessage"></wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="UndeployStaticHostNewFormat">
+      <wsdl:input message="tns:UndeployStaticHostNewFormatRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:UndeployStaticHostNewFormatResponseMessage"></wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="DeployCPE">
+      <wsdl:input message="tns:DeployCPERequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:DeployCPEResponseMessage"></wsdl:output>
+    </wsdl:operation>
+                
+    <wsdl:operation name="UndeployCPE">
+      <wsdl:input message="tns:UndeployCPERequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:UndeployCPEResponseMessage"></wsdl:output>
+    </wsdl:operation>
+
+
+
+
+	<wsdl:operation name="DuplicateForMigration">
+      <wsdl:input message="tns:DuplicateForMigrationRequestMessage"></wsdl:input>
+      <wsdl:output message="tns:DuplicateForMigrationResponseMessage"></wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="DeactivateForMigration">
+      <wsdl:input message="tns:DeactivateForMigrationRequestMessage"></wsdl:input>
+      <wsdl:output message="tns:DeactivateForMigrationResponseMessage"></wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="ActivateForMigration">
+      <wsdl:input message="tns:ActivateForMigrationRequestMessage"></wsdl:input>
+      <wsdl:output message="tns:ActivateForMigrationResponseMessage"></wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="DeleteForMigration">
+      <wsdl:input message="tns:DeleteForMigrationRequestMessage"></wsdl:input>
+      <wsdl:output message="tns:DeleteForMigrationResponseMessage"></wsdl:output>
+    </wsdl:operation>
+        
+    
+  </wsdl:portType>
+
+  <wsdl:binding name="DhcpdConfBinding" type="tns:DhcpdConf">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+       
+    <wsdl:operation name="CheckDhcpdConf">
+      <soap:operation soapAction="CheckDhcpdConf"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="CheckDhcpdConfNewFormat">
+      <soap:operation soapAction="CheckDhcpdConfNewFormat"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+        
+    <wsdl:operation name="DeployDhcpdConf">
+      <soap:operation soapAction="DeployDhcpdConf"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeployDhcpdConfNewFormat">
+      <soap:operation soapAction="DeployDhcpdConfNewFormat"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="DeployStaticHost">
+      <soap:operation soapAction="DeployStaticHost"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeployStaticHostNewFormat">
+      <soap:operation soapAction="DeployStaticHostNewFormat"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="UndeployStaticHost">
+      <soap:operation soapAction="UndeployStaticHost"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="UndeployStaticHostNewFormat">
+      <soap:operation soapAction="UndeployStaticHostNewFormat"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="DeployCPE">
+      <soap:operation soapAction="DeployCPE"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="UndeployCPE">
+      <soap:operation soapAction="UndeployCPE"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+         
+       
+    <wsdl:operation name="DuplicateForMigration">
+      <soap:operation soapAction="DuplicateForMigration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="DeactivateForMigration">
+      <soap:operation soapAction="DeactivateForMigration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="ActivateForMigration">
+      <soap:operation soapAction="ActivateForMigration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="DeleteForMigration">
+      <soap:operation soapAction="DeleteForMigration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+  </wsdl:binding>
+
+  <wsdl:service name="DhcpdConf">
+    <wsdl:port binding="tns:DhcpdConfBinding" name="DhcpdConfPort">
+      <soap:address location="http://local.de"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

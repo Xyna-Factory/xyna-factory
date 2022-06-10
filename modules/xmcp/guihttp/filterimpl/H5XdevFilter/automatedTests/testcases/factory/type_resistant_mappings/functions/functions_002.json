@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "8.7.2021", 
+    "updated": "8.7.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!RuntimeContextName_Escaped!": "default%20workspace"
+        },
+        {
+          "!RuntimeContextName!": "default workspace"
+        },
+        {
+          "!TestProcess_Path!": "typeresistantmappings"
+        }, 
+        {
+          "!TestProcess_Name!": "FunctionsCast"
+        },
+        {
+          "!TestProcess_FqName!": "typeresistantmappings.FunctionsCast"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/workflows/!TestProcess_Path!/!TestProcess_Name!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "customStringContainer": [
+          null, 
+          null, 
+          null, 
+          null
+        ], 
+        "input": [
+        ], 
+        "orderType": "!TestProcess_FqName!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/startorder"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "stackTrace",
+      "basePath": ""
+    }
+  ]
+}

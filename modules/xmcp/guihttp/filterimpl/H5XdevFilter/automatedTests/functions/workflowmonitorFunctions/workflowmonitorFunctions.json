@@ -1,0 +1,42 @@
+[
+  {
+    "type": "additionalFunctionFile",
+	"value": "getRegressionApplication.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "getApplicationVersion.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "runWorkflow.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "assertGeneralFields.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "assertCustomFields.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "readStepVariableValue.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "readStepVariableValueInIteration.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "readStepVariableValueByIndex.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "assertQuery.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "validateCapacity.json"
+  }
+]

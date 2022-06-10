@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-996", 
+    "created": "24.2.2020", 
+    "updated": "24.2.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!datatypes!": "datatypes"
+        }, 
+        {
+          "!base!": "xmcp.h5x.regression.datatypes"
+        }, 
+        {
+          "!Text!": "CustomTextDT"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+	{
+        "operation": "invoke",
+        "functionName": "getRegressionApplication",
+        "mapInput": {},
+        "mapOutput": 
+        { 
+          "!url!": "!url!", 
+          "!applicationName!" : "!applicationName!", 
+          "!applicationVersion!": "!applicationVersion!"
+        }
+      },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!applicationName!%252F!applicationVersion!/xmom/!datatypes!/!base!/!Text!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/readonly",
+      "targetVariable": "!readFlag!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readFlag!",
+      "value": "true"
+    }
+  ]
+}

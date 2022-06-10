@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "3.2.2020", 
+    "updated": "3.2.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        }, 
+        {
+          "!startorder!": "startorder"
+        }, 
+        {
+          "!xmcp.factorymanager.shared.GetRuntimeContexts!": "xmcp.factorymanager.shared.GetRuntimeContexts"
+        },  
+        {
+          "!New_Workflow!": "New Workflow"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": null, 
+        "orderType": "!xmcp.factorymanager.shared.GetRuntimeContexts!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "output[0]/$list[last]/name", 
+      "targetVariable": "!firstWorkspace!", 
+      "unquoteResult": true
+    }, 
+    {
+	  "operation": "modification",
+	  "variable": "!firstWorkspace!",
+	  "modification":{"operation": "urlencode"}
+	},	
+    {
+      "operation": "print",
+      "variable": "!firstWorkspace!"
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Workflow!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!firstWorkspace!/xmom/workflows"
+    },
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "targetVariable": "!new_1580732014991.NewWorkflow!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewWorkflow!", 
+      "variable": "!new_1580732014991.NewWorkflow!"
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1580732014991!", 
+      "variable": "!new_1580732014991.NewWorkflow!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!firstWorkspace!/xmom/workflows/!new_1580732014991!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "input": null, 
+        "orderType": "!xmcp.factorymanager.shared.GetRuntimeContexts!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "output[0]/$list[type=Workspace]/name", 
+      "targetVariable": "!secondWS!", 
+      "unquoteResult": true
+    }, 
+    {
+	  "operation": "modification",
+	  "variable": "!secondWS!",
+	  "modification":{"operation": "urlencode"}
+	},
+    {
+      "operation": "print",
+      "variable": "!secondWS!"
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Workflow!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!secondWS!/xmom/workflows"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "targetVariable": "!new_1580732021781.NewWorkflow!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1580732021781!", 
+      "variable": "!new_1580732021781.NewWorkflow!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!secondWS!/xmom/workflows/!new_1580732021781!/!NewWorkflow!/dataflow"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType Label="Remote Call" TypeName="RemoteCall" TypePath="xprc.xpce" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+  <Data Label="remote order id" VariableName="remoteOrderId">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Service Label="Remote Call" TypeName="RemoteCall">
+    <Operation Label="initiate remote call" IsStatic="false" Name="initiateRemoteCall" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Lane Id" VariableName="laneId">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="ordertype" VariableName="ordertype">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext"/>
+        <Data Label="remoteDestination" VariableName="remoteDestination">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Any Input Payload" ReferenceName="AnyInputPayload" ReferencePath="xprc.xpce" VariableName="anyInputPayload"/>
+        <Data Label="Any Input Payload" ReferenceName="AnyInputPayload" ReferencePath="xprc.xpce" VariableName="anyInputPayload18"/>
+      </Input>
+      <Output>
+       <Data Label="Any Input Payload" ReferenceName="AnyInputPayload" ReferencePath="xprc.xpce" VariableName="anyInputPayload19"/> 
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java" IsCancelable="true">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="initiate remote call for detached calls" IsStatic="false" Name="initiateRemoteCallForDetachedCalls" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Remote Call Input" ReferenceName="RemoteCallInput" ReferencePath="xprc.xpce" VariableName="remoteCallInput"/>
+        <Data Label="Any Input Payload" ReferenceName="AnyInputPayload" ReferencePath="xprc.xpce" VariableName="anyInputPayload"/>
+        <Data Label="Any Input Payload" ReferenceName="AnyInputPayload" ReferencePath="xprc.xpce" VariableName="anyInputPayload18"/>
+      </Input>
+      <Output>
+       <Data Label="Any Input Payload" ReferenceName="AnyInputPayload" ReferencePath="xprc.xpce" VariableName="anyInputPayload19"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java" IsCancelable="true">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

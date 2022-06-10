@@ -1,0 +1,8 @@
+{
+    "testseries": [
+        "functions/testseries.json",
+        "list_access/testseries.json",
+        "operators/testseries.json",
+        "xmom_persistence/testseries.json"
+    ]
+}

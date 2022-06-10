@@ -1,0 +1,180 @@
+{
+  "meta":
+  {
+    "name": "RedeployAllWorkflows",
+	"description": "öffnet, speichert und deployt (unter neuem Namen) alle (max 1000) Workflows im angegebenen Workspace",
+	"created": "26.10.2019",
+	"updated": "26.10.2019",
+	"issues": "version of GuiHttp application (current static value). We need to set !nameFilter!, !revision! -> revision of workspace to operate on, !workspacename!. Open: Determine revision inside testcase.",
+	"info": "auf 70 hat BNG2a 18.2a die revision: 656. Name: 'BNG2a 18.2a'"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!generatedPrefix!",
+	  "value": "autotests.generated.saveas016",
+	  "comment": "not suppost to end in '.'. Complete generated path is generatedPrefix.originalPath"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!generatedNameSuffix!",
+	  "value": "_GEN"
+	},
+    {
+	  "operation": "set",
+	  "variable": "!nameFilter!",
+	  "value": "autotests.lf*"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!revision!",
+	  "value": "656"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!workspaceName!",
+	  "value": "BNG2a 18.2a"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!workspaceEscaped!",
+	  "value": "!workspaceName!"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!workspaceEscaped!",
+	  "modification": { "operation": "urlencode" }
+	},
+	{
+	  "operation": "call",
+      "requestType": "POST",
+      "url": "/runtimeContext/GuiHttp%252F/startorder",
+      "payload":{"orderType":"xmcp.factorymanager.deploymentitems.GetDeploymentItems","input":[{"$meta":{"fqn":"xmcp.tables.datatypes.TableInfo","rtc":{"application":"ZetaFramework","version":"0.6.21"}},"pageIndex":0,"columns":{"$meta":{"fqn":"xmcp.tables.datatypes.TableColumn"},"$list":[{"$meta":{"fqn":"xmcp.tables.datatypes.TableColumn"},"disableFilter":false,"path":"typeNiceName","name":"Type","disableSort":false,"filter":"workflow"},{"$meta":{"fqn":"xmcp.tables.datatypes.TableColumn"},"disableFilter":false,"path":"id.name","name":"Name","sort":"asc","disableSort":false,"filter":"!nameFilter!"},{"$meta":{"fqn":"xmcp.tables.datatypes.TableColumn"},"disableFilter":false,"path":"state","name":"State","disableSort":false},{"$meta":{"fqn":"xmcp.tables.datatypes.TableColumn"},"disableFilter":false,"path":"openTaskCount","name":"Open Task","disableSort":false},{"$meta":{"fqn":"xmcp.tables.datatypes.TableColumn"},"disableFilter":false,"path":"tagsNiceList","name":"Tags","disableSort":false}]},"limit":999,"length":999,"pageSize":0,"bootstrap":false,"version":"1.2"},{"$meta":{"fqn":"xmcp.Workspace"},"name":"!workspaceName!","revision":"!revision!","type":"Workspace"}],"async":false,"monitoringLevel":20,"priority":7}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!allObjects!",
+	  "pathInResponse": "output[1]/$list",
+	  "comment": "info in allObjects at id/name. It is the fqn of our workflow"
+	},
+	{
+	  "operation": "iterate",
+	  "variable": "!allObjects!",
+	  "singleVariableName": "!singleWorkflowObject!",
+	  "operations":
+	  [
+	  	{
+	      "operation": "setFromVariable",
+	      "targetVariable": "!workflowPathAndName!",
+	      "sourceVariable": "!singleWorkflowObject!",
+	      "path": "id/name"
+	    },
+		{
+		  "operation": "subtestcase",
+		  "subtestcaseName": "Save under new Name: !workflowPathAndName!",
+		  "operations":
+		  [
+			{
+			  "operation": "set",
+			  "variable": "!workflowPathOld!",
+			  "value": "!workflowPathAndName!"
+			},
+			{
+			  "operation": "modification",
+			  "variable": "!workflowPathOld!",
+			  "modification":
+			  {
+			    "operation": "substring",
+				"divider": ".",
+				"keep": "before",
+				"direction": "inversed"
+			  }
+			},
+			{
+			  "operation": "modification",
+			  "variable": "!workflowPathOld!",
+			  "modification":
+			  {
+			    "operation": "substring",
+				"divider": "\"",
+				"keep": "after"
+			  }
+			},
+			{
+			  "operation": "set",
+			  "variable": "!workflowPathNew!",
+			  "value": "!generatedPrefix!.!workflowPathOld!"
+			},
+			{
+			  "operation": "set",
+			  "variable": "!workflowNameOld!",
+			  "value": "!workflowPathAndName!"
+			},
+			{
+			  "operation": "modification",
+			  "variable": "!workflowNameOld!",
+			  "modification":
+			  {
+			    "operation": "substring",
+				"divider": ".",
+				"keep": "after",
+				"direction": "inversed"
+			  }
+			},
+			{
+			  "operation": "modification",
+			  "variable": "!workflowNameOld!",
+			  "modification":
+			  {
+			    "operation": "substring",
+				"divider": "\"",
+				"keep": "before"
+			  }
+			},
+			{
+			  "operation": "set",
+			  "variable": "!workflowNameNew!",
+			  "value": "!workflowNameOld!!generatedNameSuffix!"
+			},
+			{
+			  "operation": "call",
+			  "requestType": "POST",
+			  "url":"/runtimeContext/!workspaceEscaped!/xmom/workflows/!workflowPathOld!/!workflowNameOld!/deploy",
+			  "payload": {"revision":0}
+			},
+			{
+              "operation": "call",
+              "requestType": "GET",
+              "url": "/runtimeContext/!workspaceEscaped!/xmom/workflows/!workflowPathOld!/!workflowNameOld!"
+            },
+            {
+              "operation": "call",
+              "requestType": "GET",
+              "url": "/runtimeContext/!workspaceEscaped!/xmom/workflows/!workflowPathOld!/!workflowNameOld!/dataflow"
+            },
+            {
+              "operation": "call",
+              "requestType": "POST",
+              "url": "/runtimeContext/!workspaceEscaped!/xmom/workflows/!workflowPathOld!/!workflowNameOld!/save",
+              "payload": {"revision":0,"path":"!workflowPathNew!","label":"!workflowNameNew!"}
+            },
+			{
+			  "operation": "call",
+			  "requestType": "POST",
+			  "url":"/runtimeContext/!workspaceEscaped!/xmom/workflows/!workflowPathNew!/!workflowNameNew!/deploy",
+			  "payload": {"revision":0}
+			},
+			{
+			  "operation": "call",
+			  "requestType": "POST",
+			  "url":"/runtimeContext/!workspaceEscaped!/xmom/workflows/!workflowPathNew!/!workflowNameNew!/close",
+			  "payload": {"force":true,"revision":0}
+			}
+		  ]
+			
+		}
+	  ]
+	}
+  ]
+}

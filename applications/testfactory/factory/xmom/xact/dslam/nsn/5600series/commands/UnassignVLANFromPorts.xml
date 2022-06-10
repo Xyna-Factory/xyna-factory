@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="UnassignVLANfromPorts" TypeName="UnassignVLANFromPorts" TypePath="xact.dslam.nsn.5600series.commands" Version="1.8">
+  <Meta>
+    <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Operation Label="UnassignVLANfromPorts" Name="UnassignVLANfromPorts">
+    <Input>
+      <Data ID="4" Label="SNMPConnectionData" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="sNMPConnectionData">
+        <Target RefID="3"/>
+      </Data>
+      <Data ID="5" Label="VLAN ID" ReferenceName="VLANID" ReferencePath="xact.vlan" VariableName="vLANID">
+        <Target RefID="3"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception ReferenceName="XynaException" ReferencePath="core.exception"/>
+    </Throws>
+    <Function ID="3" Label="AssignVLANToPorts">
+      <Source RefID="2"/>
+      <Source RefID="4"/>
+      <Source RefID="5"/>
+      <Source RefID="6"/>
+      <Source RefID="7"/>
+      <Target RefID="2"/>
+      <Invoke Operation="AssignVLANToPorts" ServiceID="2">
+        <Source RefID="4"/>
+        <Source RefID="5"/>
+        <Source RefID="6">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="7">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="2"/>
+    </Function>
+    <ServiceReference ID="2" Label="AssignVLANToPorts" ReferenceName="AssignVLANToPorts" ReferencePath="xact.dslam.nsn.5600series.commands">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+    </ServiceReference>
+    <Data ID="6" Label="Upstream DSLAM Port" ReferenceName="DSLAMPortName" ReferencePath="xact.dslam" VariableName="dSLAMPortName">
+      <Target RefID="3"/>
+      <Data Label="Name" VariableName="name"/>
+    </Data>
+    <Data ID="7" Label="Bridge Port Index" ReferenceName="BridgePortIndex" ReferencePath="xact.dslam.nsn.5600series" VariableName="bridgePortIndex">
+      <Target RefID="3"/>
+      <Data Label="Index" VariableName="index">
+        <Value>-1</Value>
+      </Data>
+    </Data>
+    <Assign/>
+  </Operation>
+</Service>

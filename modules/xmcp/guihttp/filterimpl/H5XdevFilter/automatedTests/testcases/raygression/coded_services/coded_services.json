@@ -1,0 +1,10 @@
+{
+    "testseries": [
+        "coded_services_001/testseries.json",
+        "coded_services_002/testseries.json",
+        "coded_services_003/testseries.json",
+        "coded_services_005/testseries.json",
+        "coded_services_006/testseries.json",
+        "coded_services_011/testseries.json"
+    ]
+}

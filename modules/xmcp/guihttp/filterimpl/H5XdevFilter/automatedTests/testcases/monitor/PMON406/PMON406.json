@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "9.8.2021",
+    "updated": "9.8.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!xmcp.processmonitor.resources.GetCapacities!": "xmcp.processmonitor.resources.GetCapacities"
+        },
+        {
+          "!xmcp.processmonitor.resources.Filter!": "xmcp.processmonitor.resources.Filter"
+        },
+        {
+          "!xmcp.processmonitor.datatypes.filter.IncludeUnus!": "xmcp.processmonitor.datatypes.filter.IncludeUnused"
+        },
+        {
+          "!xmcp.processmonitor.datatypes.SearchFlag!": "xmcp.processmonitor.datatypes.SearchFlag"
+        },
+        {
+          "!RegressionTestApp%252F38!": "default%20workspace"
+        },
+        {
+          "!xmcp.h5x.regression.PMON406.CapacityTest!": "xmcp.h5x.regression.PMON406.CapacityTest"
+        },
+        {
+          "!xmcp.processmonitor.resources.GetOrders!": "xmcp.processmonitor.resources.GetOrders"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!PMON-406_Capacity!": "PMON-406 Capacity"
+        },
+        {
+          "!xmcp.processmonitor.resources.Capacity!": "xmcp.processmonitor.resources.Capacity"
+        },
+        {
+          "!GuiHttp!": "GuiHttp"
+        },
+        {
+          "!1.1.317a!": "1.1.317a"
+        },
+        {
+          "!xmcp.processmonitor.resources.GetCapacity!": "xmcp.processmonitor.resources.GetCapacity"
+        },
+        {
+          "!xmcp.processmonitor.resources.Name!": "xmcp.processmonitor.resources.Name"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.processmonitor.resources.Filter!"
+            }
+          },
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "!xmcp.processmonitor.datatypes.filter.IncludeUnus!"
+                }
+              }
+            ],
+            "$meta": {
+              "fqn": "!xmcp.processmonitor.datatypes.SearchFlag!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.processmonitor.resources.GetCapacities!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+	{
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "output[0]/$list",
+      "entries": [
+	    {
+	      "usage": "!PMON-406_Capacity!",
+		  "usage": 0
+	    }
+      ]
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": true,
+        "customStringContainer": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "input": [],
+        "orderType": "!xmcp.h5x.regression.PMON406.CapacityTest!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!RegressionTestApp%252F38!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "orderID",
+      "targetVariable": "!orderID!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.processmonitor.resources.Capacity!"
+            },
+            "isActive": true,
+            "name": "!PMON-406_Capacity!",
+            "runningOrders": [],
+            "total": 2,
+            "usage": 0,
+            "waitingOrdersCount": 0
+          }
+        ],
+        "orderType": "!xmcp.processmonitor.resources.GetOrders!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.processmonitor.resources.Name!"
+            },
+            "name": "!PMON-406_Capacity!"
+          }
+        ],
+        "orderType": "!xmcp.processmonitor.resources.GetCapacity!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/name",
+      "targetVariable": "!name!",
+	  "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!name!",
+      "value": "!PMON-406_Capacity!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/usage",
+      "targetVariable": "!usage!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!usage!",
+      "value": "1"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/runningOrders[0]",
+      "targetVariable": "!runningOrderID!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!runningOrderID!",
+      "value": "!orderID!"
+    }
+  ]
+}

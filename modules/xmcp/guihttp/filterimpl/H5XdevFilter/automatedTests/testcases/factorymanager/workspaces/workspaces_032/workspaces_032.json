@@ -1,0 +1,499 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "workspaces_and_applications"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon!": "xmcp.factorymanager.rtcmanager.GetApplicationContent"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!autotest.generated.random.ad!": "autotest.generated.!rnd!.ad"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!changed!": "changed"
+        },
+        {
+          "!OK!": "OK"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ApplicationDefini!": "xmcp.factorymanager.rtcmanager.ApplicationDefinitionDetails"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!": "xmcp.factorymanager.rtcmanager.GetApplicationContentRequest"
+        },
+        {
+          "!a!": "a"
+        },
+        {
+          "!autotest.generated.random.Workspaces_023_wf!": "autotest.generated.!rnd!.Workspaces_023_wf"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "documentation": "!changed!",
+              "name": "!autotest.generated.random.ad!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/columns/$meta/fqn",
+      "targetVariable": "!xmcp.tables.datatypes.TableColumn!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/columns/$list[name=Type]/path",
+      "targetVariable": "!elementType!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/columns/$list[name=Name]/sort",
+      "targetVariable": "!asc!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/columns/$list[1]/name",
+      "targetVariable": "!Name!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/columns/$list[name=Name]/path",
+      "targetVariable": "!name!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/columns/$list[name=Type]/$meta/rtc/application",
+      "targetVariable": "!ZetaFramework!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/columns/$list[name=Type]/$meta/rtc/version",
+      "targetVariable": "!0.6.33!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/columns/$list[0]/name",
+      "targetVariable": "!Type!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!a!",
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "documentation": "!changed!",
+              "name": "!autotest.generated.random.ad!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "documentation": "!changed!",
+              "name": "!autotest.generated.random.ad!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!autotest.generated.random.Workspaces_023_wf!",
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "documentation": "!changed!",
+              "name": "!autotest.generated.random.ad!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!autotest.generated.random.Workspaces_023_wf!",
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "documentation": "!changed!",
+              "name": "!autotest.generated.random.ad!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="3" Label="Check Usage Of Feature in Test Project" TypeName="CheckUsageOfFeatureInTestProject" TypePath="xdev.xtestfactory.infrastructure.util" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="2" Label="Check Usage Of Feature in Test Project" Name="CheckUsageOfFeatureInTestProject">
+    <Meta>
+      <Abstract.UID>77B6CC1E-23AE-00B6-BEE1-FAB27ED8F1AF</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="0" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+        <Target RefID="9"/>
+        <Target RefID="12"/>
+      </Data>
+      <Data ID="1" Label="Feature" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="feature">
+        <Target RefID="12"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Feature Is In Use" ReferenceName="FeatureIsInUse" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="featureIsInUse"/>
+    </Throws>
+    <Mappings ID="9" Label="Get All Test Cases">
+      <Source RefID="0"/>
+      <Target RefID="7"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="8" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject8"/>
+        <Source RefID="0"/>
+      </Input>
+      <Output>
+        <Data ID="10" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase10"/>
+        <Target RefID="7"/>
+      </Output>
+      <Mapping>%1%~=%0%.testCase</Mapping>
+    </Mappings>
+    <Data ID="7" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+      <Source RefID="9"/>
+      <Target RefID="14"/>
+    </Data>
+    <ServiceReference ID="11" Label="Check Usage Of Feature In Test Case" ReferenceName="CheckUsageOfFeatureInTestCase" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="12"/>
+      <Target RefID="12"/>
+    </ServiceReference>
+    <Foreach ID="14">
+      <Source RefID="7"/>
+      <InputList RefID="7">
+        <Data ID="13" Label="test case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase13">
+          <Target RefID="12"/>
+        </Data>
+      </InputList>
+      <Function ID="12" Label="Check Usage Of Feature In Test Case">
+        <Source RefID="1"/>
+        <Source RefID="11"/>
+        <Source RefID="13"/>
+        <Source RefID="0"/>
+        <Target RefID="11"/>
+        <Invoke Operation="CheckUsageOfFeatureInTestCase" ServiceID="11">
+          <Source RefID="1"/>
+          <Source RefID="13"/>
+          <Source RefID="0"/>
+        </Invoke>
+        <Receive ServiceID="11"/>
+      </Function>
+    </Foreach>
+    <Assign ID="4"/>
+  </Operation>
+</Service>

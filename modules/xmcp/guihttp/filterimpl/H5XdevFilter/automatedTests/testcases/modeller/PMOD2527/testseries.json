@@ -1,0 +1,14 @@
+{
+  "tests":
+  [
+    "PMOD2527_emptyListText.json",
+	"PMOD2527_emptyText.json",
+	"PMOD2527_listStringOneElement.json",
+	"PMOD2527_listTextOneElement.json",
+    "PMOD2527_now.json",
+	"PMOD2527_subObjectListValue.json",
+	"PMOD2527_subObjectNull.json",
+	"PMOD2527_subObjectValue.json",
+	"PMOD2527_textWithValue.json"
+  ]
+}

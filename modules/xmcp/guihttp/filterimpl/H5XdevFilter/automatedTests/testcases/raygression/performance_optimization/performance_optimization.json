@@ -1,0 +1,13 @@
+{
+    "testseries": [
+        "performance_optimization_001/testseries.json",
+        "performance_optimization_002/testseries.json",
+        "performance_optimization_003/testseries.json",
+        "performance_optimization_004/testseries.json",
+        "performance_optimization_005/testseries.json",
+        "performance_optimization_006/testseries.json",
+        "performance_optimization_007/testseries.json",
+        "performance_optimization_008/testseries.json",
+        "performance_optimization_009/testseries.json"
+    ]
+}

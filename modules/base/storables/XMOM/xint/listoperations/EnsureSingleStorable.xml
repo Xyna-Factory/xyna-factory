@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Ensure Single Storable" TypeName="EnsureSingleStorable" TypePath="xint.listoperations" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth,vScroll(282)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Ensure Single Storable" Name="EnsureSingleStorable">
+    <Input>
+      <Data ID="4" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable">
+        <Target RefID="7"/>
+        <Target RefID="13"/>
+        <Target RefID="19"/>
+        <Target RefID="43"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable2">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception ID="87" Label="Multiple Storables Found" ReferenceName="MultipleStorablesFound" ReferencePath="xint.listoperations" VariableName="multipleStorablesFound87"/>
+      <Exception Label="Storable not found" ReferenceName="StorableNotFound" ReferencePath="xint.listoperations" VariableName="storableNotFound"/>
+    </Throws>
+    <Choice ID="19" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Input>
+        <Data ID="20" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable20"/>
+        <Source RefID="4">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="17" Label="true" Premise="length(%0%)==&quot;0&quot;">
+        <Throw ExceptionID="63" ID="26" Label="Throw Storable Not Found">
+          <Source RefID="63">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="21"/>
+      </Case>
+      <Case ID="18" Label="false">
+        <Assign ID="22"/>
+      </Case>
+    </Choice>
+    <Choice ID="7" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Input>
+        <Data ID="23" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable23"/>
+        <Source RefID="4">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="5" Label="true" Premise="length(%0%)&gt;&quot;1&quot;">
+        <Mappings ID="43" Label="make exception">
+          <Source RefID="4"/>
+          <Target RefID="32"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="42" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable42"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Exception ID="44" Label="Multiple Storables Found" ReferenceName="MultipleStorablesFound" ReferencePath="xint.listoperations" VariableName="multipleStorablesFound44"/>
+            <Target RefID="32"/>
+          </Output>
+          <Mapping>%1%.exceptionDetailsDE="Es wurden mehrere Storables gefunden, die die Suchkriterien erfüllen"</Mapping>
+          <Mapping>%1%.exceptionDetailsEN="Multiple Storables matching the search criteria have been found"</Mapping>
+          <Mapping>%1%.storables=%0%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="32" ID="33" Label="Throw Multiple Storables Found">
+          <Source RefID="32"/>
+        </Throw>
+        <Assign ID="24"/>
+      </Case>
+      <Case ID="6" Label="false">
+        <Assign ID="25"/>
+      </Case>
+    </Choice>
+    <Data ID="16" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable16">
+      <Source RefID="13"/>
+      <Target RefID="3"/>
+    </Data>
+    <Mappings ID="13" Label="take first element">
+      <Source RefID="4"/>
+      <Target RefID="16"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="12" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable12"/>
+        <Source RefID="4"/>
+      </Input>
+      <Output>
+        <Data ID="14" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable14"/>
+        <Target RefID="16"/>
+      </Output>
+      <Mapping>%1%=%0%["0"]</Mapping>
+    </Mappings>
+    <Exception ID="32" Label="Multiple Storables Found" ReferenceName="MultipleStorablesFound" ReferencePath="xint.listoperations" VariableName="multipleStorablesFound">
+      <Source RefID="43"/>
+      <Target RefID="33"/>
+    </Exception>
+    <Exception ID="63" Label="Storable not found" ReferenceName="StorableNotFound" ReferencePath="xint.listoperations" VariableName="const_StorableNotFound">
+      <Target RefID="26"/>
+      <Data Label="Exception Details EN" VariableName="exceptionDetailsEN">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>No storable matching the search criteria has been found</Value>
+      </Data>
+      <Data Label="Exception Details DE" VariableName="exceptionDetailsDE">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Es wurden mehrere Storables gefunden, die die Suchkriterien erfüllen</Value>
+      </Data>
+    </Exception>
+    <Assign ID="3">
+      <Source RefID="16"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="16"/>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

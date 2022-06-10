@@ -1,0 +1,85 @@
+{
+  "meta":
+  {
+    "name": "importAuditTest",
+    "description": "Import a audit and check the result. Limit amount of runtime information entries",
+    "created": "25.02.2021",
+    "updated": "25.02.2021"
+  },
+  "operations":
+  [
+    {
+      "data": [
+        {
+          "!limit!": 300
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call",
+      "requestType": "POST", 
+      "payload": {
+        "orderType":"xmcp.factorymanager.xynaproperties.ChangeXynaProperty",
+        "input":[
+          {
+            "$meta":{
+              "fqn":"xmcp.factorymanager.xynaproperties.XynaProperty",
+              "rtc":{"application":"GuiHttp"}
+              },
+            "documentation": {
+              "$meta":{"fqn":"xmcp.Documentation"},
+              "$list":[
+              ]
+            },
+            "defaultValue":"1000",
+            "overwrittenDefaultValue":false,
+            "value": "!limit!",
+            "key":"xyna.processmonitor.lazyloading.limit"
+          }
+        ],
+        "async":false},
+      "url": "/runtimeContext/GuiHttp%252F/startorder"
+    },
+    {
+      "operation": "upload",
+      "file": "PMON310_order.xml",
+      "relativeToThis": true,
+      "fileIdVar": "!fileId!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/importedAudits/!fileId!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "info/$list[id=!wf!]/outputs[0]",
+      "targetVariable": "!readOutput!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!readOutput!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!readOutput!",
+      "sourceVariable": "!readOutput!",
+      "path": "$list",
+	  "convertToObject": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "variable": "!readOutput!",
+      "expectedValue": "!limit!"
+    }
+  ]
+}

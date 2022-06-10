@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Change Veto" TypeName="ChangeVeto" TypePath="xmcp.factorymanager.administrativevetoes" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Change Veto" Name="ChangeVeto">
+    <Input>
+      <Data ID="6" Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Change administrative veto exception" ReferenceName="ChangeAdministrativeVetoException" ReferencePath="xmcp.factorymanager.administrativevetoes.exceptions" VariableName="changeAdministrativeVetoException"/>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <Function ID="13" Label="Check Rights for Current User">
+      <Source RefID="12"/>
+      <Source RefID="15"/>
+      <Target RefID="12"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="12">
+        <Source RefID="15">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="12"/>
+    </Function>
+    <Function ID="5" Label="Change veto">
+      <Source RefID="6"/>
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+      <Invoke Operation="changeVeto" ServiceID="8">
+        <Source RefID="6"/>
+      </Invoke>
+      <Receive ServiceID="8"/>
+    </Function>
+    <ServiceReference ID="8" Label="Administrative Veto Services" ReferenceName="AdministrativeVetoServices.AdministrativeVetoServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <ServiceReference ID="12" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="13"/>
+      <Target RefID="13"/>
+    </ServiceReference>
+    <Data ID="15" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="13"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.administrativeVetos:write:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="7"/>
+  </Operation>
+</Service>

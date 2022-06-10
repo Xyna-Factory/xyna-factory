@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Add Test Object Type To Project" TypeName="AddTestObjectTypeToProject" TypePath="xdev.xtestfactory.user" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation</FixedDetailOptions>
+    <Documentation>This workflow adds a user-specific Test Object Type to the current Test Project. In the future, this workflow will be redundant, as a Test Object Type can be chosen with the creation of a new Test Project.</Documentation>
+  </Meta>
+  <Operation ID="0" Label="Add Test Object Type To Project" Name="AddTestObjectTypeToProject">
+    <Input>
+      <Data ID="27" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text">
+        <Target RefID="11"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Determine Current Test Project">
+      <Source RefID="4"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="4"/>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="5"/>
+      <Target RefID="11"/>
+    </Data>
+    <Mappings ID="11" Label="Mapping">
+      <Source RefID="6"/>
+      <Source RefID="27"/>
+      <Target RefID="13"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openDocumentation</FixedDetailOptions>
+        <Documentation>The fully qualified name of the Test Object Type has to be mapped to the field "Test Object Type". 
+E.g. "xdev.user.Subscription"</Documentation>
+      </Meta>
+      <Input>
+        <Data ID="21" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="6"/>
+      </Input>
+      <Input>
+        <Data ID="26" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text26"/>
+        <Source RefID="27"/>
+      </Input>
+      <Output>
+        <Data ID="12" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject12"/>
+        <Target RefID="13"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.testObjectType=%1%.text</Mapping>
+    </Mappings>
+    <Data ID="13" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject13">
+      <Source RefID="11"/>
+      <Target RefID="17"/>
+    </Data>
+    <ServiceReference ID="16" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="17"/>
+      <Target RefID="17"/>
+    </ServiceReference>
+    <Function ID="17" Label="Store">
+      <Source RefID="16"/>
+      <Source RefID="13"/>
+      <Source RefID="18"/>
+      <Target RefID="16"/>
+      <Invoke Operation="store" ServiceID="16">
+        <Source RefID="13">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="18">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="16"/>
+    </Function>
+    <Data ID="18" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="17"/>
+      <Data ID="22" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="23" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="24" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="25"/>
+  </Operation>
+</Service>

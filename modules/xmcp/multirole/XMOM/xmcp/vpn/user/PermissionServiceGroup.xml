@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Permission Service Group" TypeName="PermissionServiceGroup" TypePath="xmcp.vpn.user" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Permission Service Group" TypeName="PermissionServiceGroup">
+    <Operation ID="3" IsStatic="true" Label="Check Missing Rights" Name="checkMissingRights">
+      <Input>
+        <Data ID="0" IsList="true" Label="Granted Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+        <Data ID="1" IsList="true" Label="Required Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight57"/>
+      </Input>
+      <Output>
+        <Data ID="2" IsList="true" Label="Missing Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight58"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">// userAuthenticationRight   =&gt; Granted Rights
+// userAuthenticationRight57 =&gt; Required Rights
+List&lt;UserAuthenticationRight&gt; missing_rights = new ArrayList&lt;&gt;();
+for (UserAuthenticationRight required_right : userAuthenticationRight57) {
+  boolean right_found = false;
+  for (UserAuthenticationRight granted_right : userAuthenticationRight) {
+      if (granted_right.getRight().equals(required_right.getRight())) {
+          right_found = true;
+          break;
+      }
+  }
+  if (!right_found) {
+      missing_rights.add(required_right);
+  }
+}
+return missing_rights;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="8" IsStatic="true" Label="Determine Incremental Remove and Add Rights" Name="determineIncrementalRemoveAndAddRights">
+      <Input>
+        <Data ID="4" IsList="true" Label="Old Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+        <Data ID="5" IsList="true" Label="New Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight23"/>
+      </Input>
+      <Output>
+        <Data ID="6" IsList="true" Label="Remove Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight24"/>
+        <Data ID="7" IsList="true" Label="Add Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight25"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">// userAuthenticationRight   =&gt; "Old Rights"
+// userAuthenticationRight23 =&gt; "New Rights"
+// O(|Old Rights|*|New Rights|). Expected |Old Rights|,|New Rights|&lt;100
+
+List&lt;UserAuthenticationRight&gt; remove_rights = new ArrayList&lt;&gt;();
+List&lt;UserAuthenticationRight&gt; add_rights = new ArrayList&lt;&gt;();
+
+for (UserAuthenticationRight old_right : userAuthenticationRight) {
+  boolean remove_old_right = true;
+  for (UserAuthenticationRight new_right : userAuthenticationRight23) {
+     if (old_right.getRight().equals(new_right.getRight())) {
+        remove_old_right = false;
+        break;
+     }
+  }
+  if (remove_old_right) {
+     remove_rights.add(old_right);
+  }
+}
+
+for (UserAuthenticationRight new_right : userAuthenticationRight23) {
+  boolean add_new_right = true;
+  for (UserAuthenticationRight old_right : userAuthenticationRight) {
+     if (new_right.getRight().equals(old_right.getRight())) {
+        add_new_right = false;
+        break;
+     }
+  }
+  if (add_new_right) {
+     add_rights.add(new_right);
+  }
+}
+
+XynaObjectList xyna_list_remove_rights = new XynaObjectList(remove_rights, UserAuthenticationRight.class);
+XynaObjectList xyna_list_add_rights = new XynaObjectList(add_rights, UserAuthenticationRight.class);
+return new Container(xyna_list_remove_rights, xyna_list_add_rights);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="11" IsStatic="true" Label="Extract Roles and Rights from Advanced User" Name="extractRolesAndRightsFromAdvancedUser">
+      <Input>
+        <Data ID="9" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser"/>
+      </Input>
+      <Output>
+        <Data ID="10" Label="Roles and Rights" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">String result = "";
+for (String role : advancedUser.getRoles()) {
+  if (result.length() &gt; 0) {
+    result += ", ";
+  }
+  result += role;
+}
+for (String role : advancedUser.getAdditionalAliasRights()) {
+  if (result.length() &gt; 0) {
+    result += ", ";
+  }
+  result += role;
+}
+return new base.Text(result);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="27" IsStatic="true" Label="Get All Roles from Advanced User" Name="getAllRolesFromAdvancedUser">
+      <Input>
+        <Data ID="25" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser"/>
+      </Input>
+      <Output>
+        <Data ID="26" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;UserAuthenticationRole&gt; result = new ArrayList&lt;UserAuthenticationRole&gt;();
+if (advancedUser.getRoles() != null) {
+  for (String role : advancedUser.getRoles()) {
+      result.add(new UserAuthenticationRole(role));
+  }
+}
+// every xyna role representing an "additional right" starts with "ALIAS_"
+// This prefix is omitted in the GUI for cosmetic reasons. 
+// =&gt; "ALIAS_" has to be added as prefix to the role name, if it is not there
+if (advancedUser.getAdditionalAliasRights() != null) {
+  for (String role : advancedUser.getAdditionalAliasRights()) {
+      if (!role.startsWith("ALIAS_")) {
+         role = "ALIAS_" + role;
+      }
+      result.add(new UserAuthenticationRole(role));
+  }
+}
+return result;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="17" IsStatic="true" Label="Remove Duplicate Rights" Name="removeDuplicateRights">
+      <Input>
+        <Data ID="15" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+      </Input>
+      <Output>
+        <Data ID="16" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight10"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">// userAuthenticationRight
+
+// O(n^2). Expected: n \approx 100
+List&lt;UserAuthenticationRight&gt; result = new ArrayList&lt;UserAuthenticationRight&gt;();
+for (UserAuthenticationRight list_element_candidate : userAuthenticationRight) {
+
+    // check if candidate is already in the result list
+    boolean already_in_the_list = false;
+    for (UserAuthenticationRight list_element : result) {
+      if (list_element_candidate.getRight().equals(list_element.getRight())) {
+         already_in_the_list = true;
+         break;
+      }
+    }
+
+    // add candidate if not already in the list
+    if (!already_in_the_list) {
+       result.add(list_element_candidate);
+    }
+}
+
+return result;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="24" IsStatic="true" Label="Sort Role List" Name="sortRoleList">
+      <Input>
+        <Data ID="22" IsList="true" Label="GUI Wrapper Role" ReferenceName="GUIWrapperRole" ReferencePath="xmcp.vpn.user" VariableName="gUIWrapperRole"/>
+      </Input>
+      <Output>
+        <Data ID="23" IsList="true" Label="GUI Wrapper Role" ReferenceName="GUIWrapperRole" ReferencePath="xmcp.vpn.user" VariableName="gUIWrapperRole54"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">// gUIWrapperRole
+
+//==========
+// sort list
+//==========
+
+final boolean ascending_order = true;
+
+java.util.Comparator &lt; GeneralXynaObject &gt; comparator = new java.util.Comparator &lt; GeneralXynaObject &gt; () {
+
+  public int compare(GeneralXynaObject e1, GeneralXynaObject e2) {
+
+      Object value1 = getValue(e1);
+      Object value2 = getValue(e2);
+
+      if (value1 == null) {
+          if (value2 == null) {
+              return 0;
+          } else {
+              return 1;
+          }
+      } else if (value2 == null) {
+          return -1;
+      }
+      if (value1 instanceof Comparable) {
+          String vs1 = value1.toString();
+          String vs2 = value2.toString();
+          return vs1.compareToIgnoreCase(vs2) * (ascending_order ? 1 : -1);
+      } else {
+          throw new RuntimeException("unsupported type: " + value1.getClass().getName());
+      }
+  }
+
+  private Object getValue(GeneralXynaObject obj) {
+      try {
+          return obj.get("roleName");
+      } catch (Exception e) { // not instantiated members lead to this exception =&gt; return null
+          return null; 
+          // throw new RuntimeException("invalid sortedColumn: " + sorted_column, e);
+      }
+  }
+
+};
+
+java.util.Collections.sort(gUIWrapperRole, comparator);
+
+return gUIWrapperRole;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

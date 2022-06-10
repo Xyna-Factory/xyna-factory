@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="To Role" TypeName="ToRole" TypePath="xmcp.xacm.rolemanagement.subwfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,openDocumentation,showDetailAreas,vScroll(679)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="To Role" Name="ToRole">
+    <Input>
+      <Data ID="256" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName">
+        <Target RefID="218"/>
+        <Target RefID="244"/>
+      </Data>
+      <Data ID="252" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole252">
+        <Target RefID="244"/>
+        <Target RefID="218"/>
+      </Data>
+      <Data ID="330" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale">
+        <Target RefID="314"/>
+        <Target RefID="334"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="150" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Fill Parameter Definition Exception" ReferenceName="FillParameterDefinitionException" ReferencePath="xmcp.xacm.rightmanagement.exceptions" VariableName="fillParameterDefinitionException"/>
+      <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+      <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="217" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="218"/>
+      <Target RefID="218"/>
+    </ServiceReference>
+    <Function ID="218" Label="Get All Rights From Role">
+      <Source RefID="217"/>
+      <Source RefID="252"/>
+      <Source RefID="256"/>
+      <Target RefID="217"/>
+      <Target RefID="219"/>
+      <Invoke Operation="getAllRightsFromRole" ServiceID="217">
+        <Source RefID="252"/>
+        <Source RefID="256"/>
+      </Invoke>
+      <Receive ServiceID="217">
+        <Target RefID="219"/>
+      </Receive>
+    </Function>
+    <Foreach ID="297">
+      <Source RefID="219"/>
+      <Target RefID="303"/>
+      <InputList RefID="219">
+        <Data ID="296" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight296">
+          <Target RefID="298"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="303">
+        <Data ID="302" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName302">
+          <Source RefID="298"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="298" Label="To Right Name">
+        <Source RefID="296"/>
+        <Target RefID="302"/>
+        <Meta>
+          <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="295" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight295"/>
+          <Source RefID="296"/>
+        </Input>
+        <Output>
+          <Data ID="299" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName299"/>
+          <Target RefID="302"/>
+        </Output>
+        <Mapping>%1%.rightName=%0%.right</Mapping>
+      </Mappings>
+    </Foreach>
+    <Foreach ID="293">
+      <Source RefID="303"/>
+      <Target RefID="294"/>
+      <InputList RefID="303">
+        <Data ID="304" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName">
+          <Target RefID="274"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="294">
+        <Data ID="290" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right_0">
+          <Source RefID="274"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="274" Label="To Right">
+        <Source RefID="281"/>
+        <Source RefID="304"/>
+        <Target RefID="290"/>
+        <Meta>
+          <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="280" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right280"/>
+          <Source RefID="281">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="291" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName291"/>
+          <Source RefID="304"/>
+        </Input>
+        <Output>
+          <Data ID="275" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right275"/>
+          <Target RefID="290"/>
+        </Output>
+        <Mapping>%2%=%0%.createRightFromRightNameWithParameterValue(%1%)</Mapping>
+      </Mappings>
+    </Foreach>
+    <Foreach ID="315">
+      <Source RefID="294"/>
+      <InputList RefID="294">
+        <Data ID="316" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right">
+          <Target RefID="314"/>
+        </Data>
+      </InputList>
+      <Function ID="314" Label="Fill Parameter Definition">
+        <Source RefID="313"/>
+        <Source RefID="316"/>
+        <Source RefID="330"/>
+        <Target RefID="313"/>
+        <Invoke Operation="fillParameterDefinition" ServiceID="313">
+          <Source RefID="316"/>
+          <Source RefID="330"/>
+        </Invoke>
+        <Receive ServiceID="313"/>
+      </Function>
+    </Foreach>
+    <Foreach ID="336">
+      <Source RefID="294"/>
+      <Target RefID="338"/>
+      <InputList RefID="294">
+        <Data ID="335" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right335">
+          <Target RefID="334"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="338">
+        <Data ID="337" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right7">
+          <Source RefID="334"/>
+        </Data>
+      </OutputList>
+      <Function ID="334" Label="Fill Description in Right">
+        <Source RefID="333"/>
+        <Source RefID="335"/>
+        <Source RefID="330"/>
+        <Target RefID="333"/>
+        <Target RefID="337"/>
+        <Invoke Operation="FillDescriptionInRight" ServiceID="333">
+          <Source RefID="335"/>
+          <Source RefID="330"/>
+        </Invoke>
+        <Receive ServiceID="333">
+          <Target RefID="337"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Mappings ID="244" Label="To Role">
+      <Source RefID="252"/>
+      <Source RefID="256"/>
+      <Source RefID="338"/>
+      <Target RefID="269"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="270" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName270"/>
+        <Source RefID="256"/>
+      </Input>
+      <Input>
+        <Data ID="241" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole241"/>
+        <Source RefID="252"/>
+      </Input>
+      <Input>
+        <Data ID="265" IsList="true" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right265"/>
+        <Source RefID="338">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="245" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role245"/>
+        <Target RefID="269"/>
+      </Output>
+      <Mapping>%3%.domainName0=%0%.name</Mapping>
+      <Mapping>%3%.rightList=%2%</Mapping>
+      <Mapping>%3%.roleName=%1%.role</Mapping>
+    </Mappings>
+    <Data ID="219" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight">
+      <Source RefID="218"/>
+      <Target RefID="297"/>
+    </Data>
+    <Data ID="269" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role269">
+      <Source RefID="244"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="281" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="const_Right">
+      <Target RefID="274"/>
+      <Data ID="306" Label="Right Name" VariableName="rightName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="307" Label="Documentation" VariableName="documentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="309" IsList="true" Label="Parameter List" ReferenceName="RightParameter" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="parameterList"/>
+    </Data>
+    <Data ID="294" IsList="true" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right290">
+      <Source RefID="293"/>
+      <Target RefID="315"/>
+      <Target RefID="336"/>
+    </Data>
+    <Data ID="303" IsList="true" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName303">
+      <Source RefID="297"/>
+      <Target RefID="293"/>
+    </Data>
+    <ServiceReference ID="313" Label="RightManagement" ReferenceName="RightManagement.RightManagement" ReferencePath="xmcp.xacm">
+      <Source RefID="314"/>
+      <Target RefID="314"/>
+    </ServiceReference>
+    <ServiceReference ID="333" Label="Fill Description in Right" ReferenceName="FillDescriptionInRight" ReferencePath="xmcp.xacm.rightmanagement.subwfs">
+      <Source RefID="334"/>
+      <Target RefID="334"/>
+    </ServiceReference>
+    <Data ID="338" IsList="true" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right338">
+      <Source RefID="336"/>
+      <Target RefID="244"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="269"/>
+      <Target RefID="150"/>
+      <Copy>
+        <Source RefID="269"/>
+        <Target RefID="150"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

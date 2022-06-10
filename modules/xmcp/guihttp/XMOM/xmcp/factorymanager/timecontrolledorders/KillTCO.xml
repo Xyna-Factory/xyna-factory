@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Kill TCO" TypeName="KillTCO" TypePath="xmcp.factorymanager.timecontrolledorders" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Kill TCO" Name="KillTCO">
+    <Input>
+      <Data ID="6" Label="TCO Id" ReferenceName="TCOId" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="tCOId">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Create TCO Exception" ReferenceName="CreateTCOException" ReferencePath="xmcp.factorymanager.timecontrolledorders.exceptions" VariableName="deleteTCOException"/>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Time Controlled Orders Services" ReferenceName="TimeControlledOrdersServices.TimeControlledOrdersServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="10" Label="Check Rights for Current User">
+      <Source RefID="9"/>
+      <Source RefID="12"/>
+      <Target RefID="9"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="9">
+        <Source RefID="12">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9"/>
+    </Function>
+    <Function ID="5" Label="Kill TCO" Operation="killTCO">
+      <Source RefID="4"/>
+      <Source RefID="6"/>
+      <Target RefID="4"/>
+      <Invoke Operation="killTCO" ServiceID="4">
+        <Source RefID="6"/>
+      </Invoke>
+      <Receive ServiceID="4"/>
+    </Function>
+    <ServiceReference ID="9" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="10"/>
+      <Target RefID="10"/>
+    </ServiceReference>
+    <Data ID="12" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="10"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.timeControlledOrders:kill:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign/>
+  </Operation>
+</Service>

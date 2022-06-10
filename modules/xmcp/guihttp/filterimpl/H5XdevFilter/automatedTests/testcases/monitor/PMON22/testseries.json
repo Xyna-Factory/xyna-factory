@@ -1,0 +1,9 @@
+{
+  "tests":
+  [
+    "mappingWorkflowTest.json",
+	"mappingWorkflowWithInputTest.json",
+	"mappingWIthExpressionTest.json",
+	"mappingWithErrorTest.json"
+  ]
+}

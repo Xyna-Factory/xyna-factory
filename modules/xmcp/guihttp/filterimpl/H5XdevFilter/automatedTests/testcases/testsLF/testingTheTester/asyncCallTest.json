@@ -1,0 +1,33 @@
+{
+  "operations": [
+    {
+	  "operation": "set",
+	  "variable": "!someVar!",
+	  "value": "someValue"
+	},
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/12e7-1a16-3486-84f6",
+	  "async": true,
+	  "callId": "call1"
+	},
+    {
+      "operation": "print",
+      "variable": "!someVar!"
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "call1",
+		  "variable": "!readVar!"
+		}
+	  ]
+	},
+    {
+      "operation": "print",
+      "variable": "!readVar!"
+    }
+  ]
+}

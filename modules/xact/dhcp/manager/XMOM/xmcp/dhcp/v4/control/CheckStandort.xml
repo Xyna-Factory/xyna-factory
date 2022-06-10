@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Check Standort" TypeName="CheckStandort" TypePath="xmcp.dhcp.v4.control" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Check Standort" Name="CheckStandort">
+    <Input>
+      <Data ID="14" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype14"/>
+      <Data ID="99" Label="Standortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="row_ctype99"/>
+    </Input>
+    <Output>
+      <Data ID="32" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype32"/>
+      <Data ID="23" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype23"/>
+    </Output>
+    <ServiceReference ID="123" Label="StandortSearchRows" ReferenceName="StandortSearchRows" ReferencePath="xmcp.dhcp.v4.control"/>
+    <ServiceReference ID="772" Label="StandortInsertRow" ReferenceName="StandortInsertRow" ReferencePath="xmcp.dhcp.v4.control"/>
+    <Choice ID="69" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="14"/>
+      <Target RefID="880"/>
+      <Target RefID="955"/>
+      <Input>
+        <Data ID="272" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype272">
+          <Source RefID="69"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Case ID="70" Label="true" Premise="%0%.standortGruppeID==&quot;&quot;">
+        <Mappings ID="171" Label="Search Standort">
+          <Input>
+            <Data ID="297" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype297">
+              <Source RefID="171"/>
+            </Data>
+            <Source RefID="14"/>
+          </Input>
+          <Input>
+            <Data ID="222" Label="Standortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="row_ctype222">
+              <Source RefID="171"/>
+            </Data>
+            <Source RefID="99"/>
+          </Input>
+          <Output>
+            <Data ID="172" Label="Search Rows Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype172">
+              <Source RefID="171"/>
+            </Data>
+            <Target RefID="173"/>
+          </Output>
+          <Mapping>%2%.standortGruppeID=%1%.standortGruppeID</Mapping>
+          <Mapping>%2%.name=%0%.name</Mapping>
+        </Mappings>
+        <Assign ID="74"/>
+        <Function ID="122" Label="StandortSearchRows">
+          <Source RefID="123"/>
+          <Source RefID="173"/>
+          <Target RefID="123"/>
+          <Target RefID="125"/>
+          <Target RefID="126"/>
+          <Invoke Operation="StandortSearchRows" ServiceID="123">
+            <Source RefID="173">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="123">
+            <Target RefID="125"/>
+            <Target RefID="126"/>
+          </Receive>
+        </Function>
+        <Choice ID="412" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="125"/>
+          <Target RefID="782"/>
+          <Target RefID="783"/>
+          <Input>
+            <Data ID="433" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype433">
+              <Source RefID="412"/>
+            </Data>
+            <Source RefID="125"/>
+          </Input>
+          <Case ID="413" Label="true" Premise="%0%.description==&quot;Ok&quot;">
+            <Assign ID="417"/>
+            <Choice ID="570" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="126"/>
+              <Target RefID="780"/>
+              <Target RefID="781"/>
+              <Input>
+                <Data ID="587" Label="Search Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="rowList_ctype587">
+                  <Source RefID="570"/>
+                </Data>
+                <Source RefID="126"/>
+              </Input>
+              <Case ID="571" Label="true" Premise="length(%0%.row)!=&quot;0&quot;">
+                <Assign ID="575"/>
+                <Mappings ID="650" Label="Build Output">
+                  <Input>
+                    <Data ID="736" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype736">
+                      <Source RefID="650"/>
+                    </Data>
+                    <Source RefID="125"/>
+                  </Input>
+                  <Input>
+                    <Data ID="663" Label="Search Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="rowList_ctype663">
+                      <Source RefID="650"/>
+                    </Data>
+                    <Source RefID="126"/>
+                  </Input>
+                  <Output>
+                    <Data ID="651" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype651">
+                      <Source RefID="650"/>
+                    </Data>
+                    <Target RefID="652"/>
+                  </Output>
+                  <Output>
+                    <Data ID="653" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype653">
+                      <Source RefID="650"/>
+                    </Data>
+                    <Target RefID="654"/>
+                  </Output>
+                  <Mapping>%3%=%1%.row["0"]</Mapping>
+                  <Mapping>%2%=%0%</Mapping>
+                </Mappings>
+                <Assign ID="574">
+                  <Source RefID="654"/>
+                  <Source RefID="652"/>
+                  <Target RefID="780"/>
+                  <Target RefID="781"/>
+                  <Copy>
+                    <Source RefID="654"/>
+                    <Target RefID="780"/>
+                  </Copy>
+                  <Copy>
+                    <Source RefID="652"/>
+                    <Target RefID="781"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="572" Label="false">
+                <Mappings ID="1056" Label="Insert Standort">
+                  <Input>
+                    <Data ID="1103" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype1103">
+                      <Source RefID="1056"/>
+                    </Data>
+                    <Source RefID="14">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Input>
+                    <Data ID="1212" Label="Standortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="row_ctype1212">
+                      <Source RefID="1056"/>
+                    </Data>
+                    <Source RefID="99"/>
+                  </Input>
+                  <Output>
+                    <Data ID="1077" Label="insert Row Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype1077">
+                      <Source RefID="1056"/>
+                    </Data>
+                    <Target RefID="1078"/>
+                  </Output>
+                  <Mapping>%2%=%0%</Mapping>
+                  <Mapping>%2%.standortGruppeID=%1%.standortGruppeID</Mapping>
+                  <Mapping>%2%.standortID=""</Mapping>
+                </Mappings>
+                <Assign ID="578"/>
+                <Function ID="771" Label="StandortInsertRow">
+                  <Source RefID="772"/>
+                  <Source RefID="1078"/>
+                  <Target RefID="772"/>
+                  <Target RefID="774"/>
+                  <Target RefID="775"/>
+                  <Invoke Operation="StandortInsertRow" ServiceID="772">
+                    <Source RefID="1078">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Invoke>
+                  <Receive ServiceID="772">
+                    <Target RefID="774"/>
+                    <Target RefID="775"/>
+                  </Receive>
+                </Function>
+                <Assign ID="577">
+                  <Source RefID="775"/>
+                  <Source RefID="774"/>
+                  <Target RefID="780"/>
+                  <Target RefID="781"/>
+                  <Copy>
+                    <Source RefID="775"/>
+                    <Target RefID="780"/>
+                  </Copy>
+                  <Copy>
+                    <Source RefID="774"/>
+                    <Target RefID="781"/>
+                  </Copy>
+                </Assign>
+                <Data ID="774" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype774">
+                  <Source RefID="771"/>
+                </Data>
+                <Data ID="775" Label="Insert Row Output" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype775">
+                  <Source RefID="771"/>
+                </Data>
+              </Case>
+            </Choice>
+            <Assign ID="416">
+              <Source RefID="780"/>
+              <Source RefID="781"/>
+              <Target RefID="782"/>
+              <Target RefID="783"/>
+              <Copy>
+                <Source RefID="780"/>
+                <Target RefID="782"/>
+              </Copy>
+              <Copy>
+                <Source RefID="781"/>
+                <Target RefID="783"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="414" Label="false">
+            <Assign ID="420"/>
+            <Mappings ID="468" Label="Build Output">
+              <Input>
+                <Data ID="477" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype477">
+                  <Source RefID="468"/>
+                </Data>
+                <Source RefID="125"/>
+              </Input>
+              <Output>
+                <Data ID="486" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype486">
+                  <Source RefID="468"/>
+                </Data>
+                <Target RefID="487"/>
+              </Output>
+              <Output>
+                <Data ID="496" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype496">
+                  <Source RefID="468"/>
+                </Data>
+                <Target RefID="497"/>
+              </Output>
+              <Mapping>%1%=%0%</Mapping>
+            </Mappings>
+            <Assign ID="419">
+              <Source RefID="497"/>
+              <Source RefID="487"/>
+              <Target RefID="782"/>
+              <Target RefID="783"/>
+              <Copy>
+                <Source RefID="497"/>
+                <Target RefID="782"/>
+              </Copy>
+              <Copy>
+                <Source RefID="487"/>
+                <Target RefID="783"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Assign ID="73">
+          <Source RefID="782"/>
+          <Source RefID="783"/>
+          <Target RefID="880"/>
+          <Target RefID="955"/>
+          <Copy>
+            <Source RefID="782"/>
+            <Target RefID="880"/>
+          </Copy>
+          <Copy>
+            <Source RefID="783"/>
+            <Target RefID="955"/>
+          </Copy>
+        </Assign>
+        <Data ID="125" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype125">
+          <Source RefID="122"/>
+        </Data>
+        <Data ID="126" Label="Search Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="rowList_ctype126">
+          <Source RefID="122"/>
+        </Data>
+      </Case>
+      <Case ID="71" Label="false">
+        <Assign ID="77"/>
+        <Mappings ID="836" Label="Build Output">
+          <Input>
+            <Data ID="865" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype865">
+              <Source RefID="836"/>
+            </Data>
+            <Source RefID="14"/>
+          </Input>
+          <Output>
+            <Data ID="878" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype878">
+              <Source RefID="836"/>
+            </Data>
+            <Target RefID="879"/>
+          </Output>
+          <Output>
+            <Data ID="953" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype953">
+              <Source RefID="836"/>
+            </Data>
+            <Target RefID="954"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%2%.description="Ok"</Mapping>
+        </Mappings>
+        <Assign ID="76">
+          <Source RefID="879"/>
+          <Source RefID="954"/>
+          <Target RefID="880"/>
+          <Target RefID="955"/>
+          <Copy>
+            <Source RefID="879"/>
+            <Target RefID="880"/>
+          </Copy>
+          <Copy>
+            <Source RefID="954"/>
+            <Target RefID="955"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="173" Label="Search Rows Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype173">
+      <Source RefID="171"/>
+    </Data>
+    <Data ID="487" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype487">
+      <Source RefID="468"/>
+    </Data>
+    <Data ID="497" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype497">
+      <Source RefID="468"/>
+    </Data>
+    <Data ID="652" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype652">
+      <Source RefID="650"/>
+    </Data>
+    <Data ID="654" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype654">
+      <Source RefID="650"/>
+    </Data>
+    <Data ID="780" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype780">
+      <Source RefID="570"/>
+    </Data>
+    <Data ID="781" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype781">
+      <Source RefID="570"/>
+    </Data>
+    <Data ID="782" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype782">
+      <Source RefID="412"/>
+    </Data>
+    <Data ID="783" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype783">
+      <Source RefID="412"/>
+    </Data>
+    <Data ID="879" Label="Standort" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype879">
+      <Source RefID="836"/>
+    </Data>
+    <Data ID="880" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype880">
+      <Source RefID="69"/>
+    </Data>
+    <Data ID="954" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype954">
+      <Source RefID="836"/>
+    </Data>
+    <Data ID="955" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype955">
+      <Source RefID="69"/>
+    </Data>
+    <Data ID="1078" Label="insert Row Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages" VariableName="row_ctype1078">
+      <Source RefID="1056"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="955"/>
+      <Source RefID="880"/>
+      <Target RefID="32"/>
+      <Target RefID="23"/>
+      <Copy>
+        <Source RefID="955"/>
+        <Target RefID="32"/>
+      </Copy>
+      <Copy>
+        <Source RefID="880">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="23"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="PGP Service" TypeName="PGPService" TypePath="xint.crypto" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>PGPServiceImpl.jar</Libraries>
+  <SharedLibraries>pgp</SharedLibraries>
+  <Service Label="PGP Service" TypeName="PGPService">
+    <Operation IsStatic="true" Label="decrypt" Name="decrypt">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="Decryption Parameter" ReferenceName="DecryptionParameter" ReferencePath="xint.crypto.parameter" VariableName="decryptionParameter"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document15"/>
+        <Data Label="Signature Verification Result" ReferenceName="SignatureVerificationResult" ReferencePath="xint.crypto.parameter" VariableName="signatureVerificationResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="Xyna Exception Base" ReferenceName="XynaExceptionBase" ReferencePath="core.exception" VariableName="xynaExceptionBase"/>
+        <Exception Label="PGP Exception" ReferenceName="PGPException" ReferencePath="xint.crypto.exceptions" VariableName="pGPException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return PGPServiceImpl.decrypt(document, decryptionParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="encrypt" Name="encrypt">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="Encryption Parameter" ReferenceName="EncryptionParameter" ReferencePath="xint.crypto.parameter" VariableName="encryptionParameter"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document7"/>
+      </Output>
+      <Throws>
+        <Exception Label="Xyna Exception Base" ReferenceName="XynaExceptionBase" ReferencePath="core.exception" VariableName="xynaExceptionBase"/>
+        <Exception Label="PGP Exception" ReferenceName="PGPException" ReferencePath="xint.crypto.exceptions" VariableName="pGPException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return PGPServiceImpl.encrypt(document, encryptionParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="encrypt and sign" Name="encryptAndSign">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="Encryption Parameter" ReferenceName="EncryptionParameter" ReferencePath="xint.crypto.parameter" VariableName="encryptionParameter"/>
+        <Data Label="Signature Parameter" ReferenceName="SignatureParameter" ReferencePath="xint.crypto.parameter" VariableName="signatureParameter"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document10"/>
+      </Output>
+      <Throws>
+        <Exception Label="Xyna Exception Base" ReferenceName="XynaExceptionBase" ReferencePath="core.exception" VariableName="xynaExceptionBase"/>
+        <Exception Label="PGP Exception" ReferenceName="PGPException" ReferencePath="xint.crypto.exceptions" VariableName="pGPException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return PGPServiceImpl.encryptAndSign(document, encryptionParameter, signatureParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

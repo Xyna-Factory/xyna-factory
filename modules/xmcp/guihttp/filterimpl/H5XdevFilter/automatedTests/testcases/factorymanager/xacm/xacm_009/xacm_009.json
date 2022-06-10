@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.xacm.usermanagement.GetDomains!": "xmcp.xacm.usermanagement.GetDomains"
+        },
+        {
+          "!xacm!": "xacm"
+        },
+        {
+          "!updateuser!": "updateuser"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!MODELLER!": "MODELLER"
+        },
+        {
+          "!xmcp.xacm.usermanagement.datatypes.UpdateUserReq!": "xmcp.xacm.usermanagement.datatypes.UpdateUserRequest"
+        },
+        {
+          "!123!": "123"
+        },
+        {
+          "!xmcp.xacm.usermanagement.GetUsers!": "xmcp.xacm.usermanagement.GetUsers"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!Locked!": "Locked"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!locked!": "locked"
+        },
+        {
+          "!User!": "User"
+        },
+        {
+          "!user!": "user"
+        },
+        {
+          "!Role!": "Role"
+        },
+        {
+          "!role!": "role"
+        },
+        {
+          "!Domains!": "Domains"
+        },
+        {
+          "!domains!": "domains"
+        },
+        {
+          "!dsc!": "dsc"
+        },
+        {
+          "!Creation_Date!": "Creation Date"
+        },
+        {
+          "!creationDate!": "creationDate"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.xacm.usermanagement.GetDomains!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/$list[0]/name",
+      "targetVariable": "!XYNA!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "$meta": {
+          "fqn": "!xmcp.xacm.usermanagement.datatypes.UpdateUserReq!"
+        },
+        "domains": [
+          "!XYNA!"
+        ],
+        "locked": true,
+        "password": "!123!",
+        "role": "!MODELLER!",
+        "username": "!autotest.generated.random!"
+      },
+      "requestType": "POST",
+      "url": "/!xacm!/!updateuser!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Locked!",
+                  "path": "!locked!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!User!",
+                  "path": "!user!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!role!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domains!",
+                  "path": "!domains!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": true,
+                  "disableSort": false,
+                  "name": "!Creation_Date!",
+                  "path": "!creationDate!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!dsc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.usermanagement.GetUsers!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

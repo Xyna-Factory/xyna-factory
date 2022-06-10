@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 6.1 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2015
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 164488 $
+ * $Date: 2015-02-24 09:03:56 +0100 (Di, 24. Feb 2015) $
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Template Provider" TypeName="TemplateProvider" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsXynaComponent>true</IsXynaComponent>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>TemplateProviderImpl.jar</Libraries>
+  <SharedLibraries>templatestorables</SharedLibraries>
+  <Service Label="Template Provider" TypeName="TemplateProvider">
+    <Operation IsStatic="true" Label="build Template" Name="buildTemplate">
+      <Input>
+        <Data Label="Template Type" ReferenceName="TemplateType" ReferencePath="xact.templates" VariableName="templateType16"/>
+        <Data Label="Template Input Data" ReferenceName="TemplateInputData" ReferencePath="xact.templates" VariableName="templateInputData17"/>
+      </Input>
+      <Output>
+        <Data Label="Velocity Template" ReferenceName="VelocityTemplate" ReferencePath="xact.templates" VariableName="velocityTemplate18"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.templates.TemplateProviderImpl.buildTemplate(templateType16, templateInputData17);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load Template Data From Persistence" Name="loadTemplateDataFromPersistence">
+      <Meta>
+        <Abstract.UID>61CE0E83-5C62-81D3-F8E1-9F7A74A9420B</Abstract.UID>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="Velocity Template Part" ReferenceName="VelocityTemplatePart" ReferencePath="xact.templates" VariableName="velocityTemplatePart"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.templates.TemplateProviderImpl.loadTemplateDataFromPersistence();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="refresh Cache" Name="reload">
+      <Input>
+        <Data IsList="true" Label="Velocity Template Part" ReferenceName="VelocityTemplatePart" ReferencePath="xact.templates" VariableName="velocityTemplatePart"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.templates.TemplateProviderImpl.reload(velocityTemplatePart);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

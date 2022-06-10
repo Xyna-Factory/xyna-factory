@@ -1,0 +1,125 @@
+{
+  "meta":
+  {
+    "name": "foreachRunningTimeCatchTest",
+	"description": "Execute a workflow containing a foreach with a 1s-wait-step that has a catch (loaded from app) and open audit",
+	"created": "07.04.2020",
+	"updated": "08.04.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON105.ForeachRunningTimesWithCatch",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 3,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTimeIteration0!",
+      "pathInResponse": "info/$list[id=step-15]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTimeIteration0!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdateIteration0!",
+      "pathInResponse": "info/$list[id=step-15]/iterations/$list[index=0]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdateIteration0!",
+      "value": "!startTimeIteration0!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTimeIteration1!",
+      "pathInResponse": "info/$list[id=step-15]/iterations/$list[index=1]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+	  "orEquals": "true",
+      "variable": "!startTimeIteration1!",
+      "value": "!lastUpdateIteration0!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdateIteration1!",
+      "pathInResponse": "info/$list[id=step-15]/iterations/$list[index=1]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdateIteration1!",
+      "value": "!startTimeIteration1!"
+    },
+
+    { "comment": "check RunningTime of ForeachRuntimeInfo", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTimeForeach!",
+      "pathInResponse": "info/$list[id=step15]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+	  "orEquals": "true",
+      "variable": "!startTimeIteration0!",
+      "value": "!startTimeForeach!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdateForeach!",
+      "pathInResponse": "info/$list[id=step15]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+	  "orEquals": "true",
+      "variable": "!lastUpdateForeach!",
+      "value": "!lastUpdateIteration1!"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "meta":
+  {
+    "name": "multiSetTest",
+	"description": "Testet die multiSet Operation"
+  },
+  "operations":
+  [
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!var1!": "val1"},
+		{"!var2!": "val2"},
+		{"!var3!": "!var1!"}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!var1!",
+	  "value": "val1"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!var2!",
+	  "value": "val2"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!var3!",
+	  "value": "val1"
+	}
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "meta":
+  {
+    "name": "oneRetrySuccessTest",
+    "description": "Execute a workflow containing a Step that is retried once with success (loaded from app) and open audit",
+    "created": "27.03.2020",
+    "updated": "30.03.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTest",
+        "!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"necessaryReductions":0,"reducetionRetryLimit":0}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 11,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check caught step", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtStepId!",
+      "pathInResponse": "info/$list[3]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "readStepVariableValue",
+      "mapInput":
+      {
+        "!stepId!": "!caughtStepId!",
+        "!variableAreaName!": "outputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "text"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!caughtStepOutput!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtStepOutput!",
+      "value": "Success"
+    },
+
+    { "comment": "check executed catch", "operation": "comment" },
+
+    {
+	  "operation": "modification",
+	  "variable": "!caughtStepId!",
+	  "modification":
+	  {
+	    "operation": "replace",
+		"toReplace": "step",
+		"replacement": ""
+	  }
+	},
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[fqn=xmcp.h5x.regression.PMON30.ThrowExceptionWhenDTPresent]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[name=content]/items/$list[1]/id",
+      "targetVariable": "!branchId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=!branchId!]/caughtException/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.ExpiredException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionStacktrace!",
+      "pathInResponse": "info/$list[id=!branchId!]/caughtException/stacktrace",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionStacktrace!",
+      "value": "at xmcp.h5x.regression.PMON30.ExpiredException."
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionMessage!",
+      "pathInResponse": "info/$list[id=!branchId!]/caughtException/message",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionMessage!",
+      "value": "xmcp.h5x.regression.PMON30.ExpiredException:"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branchId!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    { "comment": "check retry", "operation": "comment" },
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[2]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[1]/areas/$list[name=content]/items/$list[label=Retry Throw Exception when DT present]/id",
+      "targetVariable": "!step199!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!step199!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=!step199!]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=!step199!]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lastUpdate!",
+      "value": "-1"
+    }
+  ]
+}

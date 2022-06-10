@@ -1,0 +1,335 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="EN">
+   <Description Language="">Exceptions für XDEV Department. Diese Datei dient
+               gleichzeitig als Dokumentation der Fehlermeldungen.
+               CodeRange von 03000 - 03499 (siehe BlackExceptionCodeManagement)</Description>
+   <ExceptionType Code="XYNA-03001" TypeName="XDEV_ZipFileCouldNotBeCreatedException" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="file Name" VariableName="fileName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Gezippte Datei %0% konnte nicht erstellt werden.</MessageText>
+      <MessageText Language="EN">Could not create zip file %0%.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-03031" TypeName="XDEV_ABSTRACT_INHERITANCE" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="objekt, dass abstrakt sein muss" VariableName="notAbstract">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="objekt, dass abstrakt ist" VariableName="abstractObject">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">%0% muss abstrakt definiert sein, weil %1% abstrakt ist.</MessageText>
+      <MessageText Language="EN">%0% has to be defined abstract, because %1% is abstract.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03032" TypeName="XDEV_INVALID_GENERATION_STATE" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="objektName" VariableName="objectName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="was geht nicht?" VariableName="actionNotPossible">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="state" VariableName="state">
+         <Meta>
+            <Type>int</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">MDM Objekt %0% kann nicht %1%, da es im state %2% ist.</MessageText>
+      <MessageText Language="EN">MDM Object %0% can not %1%, because it is in state %2%.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-03163" TypeName="XDEV_INVALID_PLANNING_RESPONSETYPE" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">PlanningWorkflow muss SchedulerBean zurückgeben.</MessageText>
+      <MessageText Language="EN">Invalid response type. The response type of planning workflows muss be SchedulerBean</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03191" TypeName="XDEV_ERROR_BUILDING_XYNASERVERJAR" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="error" VariableName="error">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler beim Erstellen des Xynaserver.jar: %0%</MessageText>
+      <MessageText Language="EN">error during build process of xynaserver.jar: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03221" TypeName="XDEV_XMLSERIALIZATION_ERROR" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="fileName" VariableName="fileName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler bei XML Serialisierung in Datei %0%</MessageText>
+      <MessageText Language="EN">error during xml serialization to file %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03223" TypeName="XDEV_UNSUPPORTED_FEATURE" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="feature" VariableName="feature">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Feature "%0%" wird derzeit nicht unterstützt</MessageText>
+      <MessageText Language="EN">unsupported feature "%0%"</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03230" TypeName="XDEV_CYCLIC_DEPENDENCY" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="message" VariableName="message">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Zyklische Abhaengigkeit zwischen Factory-Komponenten gefunden: %0%</MessageText>
+      <MessageText Language="EN">Found cyclic dependencies between factory components: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03231" TypeName="XDEV_ERRONEOUS_DEPENDENCY" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="message" VariableName="message">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Für Fabrik Komponente "%0%" wurden Komponenten mehrfach als abhängig definiert.</MessageText>
+      <MessageText Language="EN">For factory component "%0%" other components have been defined as dependent more than once.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-03260" TypeName="XDEV_JARFILE_NOT_FOUND" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="fileName" VariableName="fileName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Angegebenes Jarfile %0% konnte nicht gefunden werden</MessageText>
+      <MessageText Language="EN">can not find provided jarfile %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03261" TypeName="XDEV_INVALID_JARFILE_LOCATION" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="fileName" VariableName="fileName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Angegebener Pfad zu Jarfile %0% ist ungültig</MessageText>
+      <MessageText Language="EN">invalid path to jarfile %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03280" TypeName="XDEV_INVALID_PARAMETERS_DIFFERENT_BASE_PATH" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="pfad1" VariableName="path1">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="pfad2" VariableName="path2">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Ungültige Pfadangaben "%0%" und "%1%". Pfade müssen gleiches Prefix besitzen</MessageText>
+      <MessageText Language="EN">paths "%0%" and "%1%" must have the same prefix.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03281" TypeName="XDEV_ERROR_BUILDING_TEMPLATE_PROJECT" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="projectname" VariableName="projectname">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="causeMsg" VariableName="causeMsg">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler beim Erstellen des Template Projekts %0%: %1%</MessageText>
+      <MessageText Language="DE">Error generating template project %0%: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03282" TypeName="XDEV_TRIGGER_JAR_NOT_FOUND" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="path" VariableName="path">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Jarfile des Triggers wurde nicht an erwarteter Stelle %0% gefunden.</MessageText>
+      <MessageText Language="EN">Didn't find jar file of trigger in %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03290" TypeName="XDEV_PARAMETER_NAME_NOT_FOUND" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="paraName" VariableName="paraName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Parameter %0% existiert nicht</MessageText>
+      <MessageText Language="EN">Parameter with name %0% does not exist</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03300" TypeName="XDEV_INVALID_XML_MISSING_TAG" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="tag" VariableName="tag">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">XML konnte nicht erfolgreich geparst werden. Erwartete Tag "%0%"</MessageText>
+      <MessageText Language="EN">XML couldn't be parsed successfully. Expected Tag "%0%"</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03301" TypeName="XDEV_CLASS_INSTANTIATION_PROBLEM" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="className" VariableName="className">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Klasse %0% konnte nicht erfolgreich instantiiert werden</MessageText>
+      <MessageText Language="EN">Class %0% couldn't be instantiated</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03351" TypeName="XDEV_INVALID_INPUT_PARAMETERS" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="className" VariableName="className">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="expectedInputClass" VariableName="expectedInputClass">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="actualInputClass" VariableName="actualInputClass">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Prozess %0% konnte nicht erfolgreich gestartet werden (Input-Parameter waren: %1%, erwartet: %2%)</MessageText>
+      <MessageText Language="EN">Could not start process %0% (input parameters were %1%, expected %2%</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-03360" TypeName="XDEV_PACKAGE_CREATION_ITEM_NOT_FOUND" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="item" VariableName="item">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Konnte folgende fuer die Paket-Erstellung benoetigte Komponente nicht finden: %0%</MessageText>
+      <MessageText Language="EN">Could not find the following component that is required for the package creation: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03361" TypeName="XDEV_PackageDefinitionFileNotFoundException" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="fileName" VariableName="fileName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Package Definitions Datei %0% nicht gefunden.</MessageText>
+      <MessageText Language="EN">Could not find package definition file %0%.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-03363" TypeName="XDEV_PackageDefinitionItemNotFoundException" TypePath="com.gip.xyna.xdev.exceptions">
+      <Data Label="typeOfItemNotFound" VariableName="typeOfItemNotFound">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="nameOfItemNotFound" VariableName="nameOfItemNotFound">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das in der PackageDefinition angegebene Objekt vom Type %0% mit dem Namen %1% konnte nicht gefunden werden.</MessageText>
+      <MessageText Language="EN">The object %1% of type %0% specified in the package definition could not be found.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03364" TypeName="XDEV_PackageDefinitionFileInvalidException" TypePath="com.gip.xyna.xdev.exceptions" IsAbstract="true">
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03365" TypeName="XDEV_PackageDefinitionFileInvalidRootException" TypePath="com.gip.xyna.xdev.exceptions" BaseTypeName="XDEV_PackageDefinitionFileInvalidException" BaseTypePath="com.gip.xyna.xdev.exceptions">
+      <MessageText Language="DE">Die PackageDefinition hat ein ungültiges Root Element.</MessageText>
+      <MessageText Language="EN">The package definition has an invalid root element.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03366" TypeName="XDEV_ExistingTriggerHasIncompatibleStartParametersException" TypePath="com.gip.xyna.xdev.exceptions">
+       <Data Label="name of trigger" VariableName="triggerName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Trigger %0% konnte nicht importiert werden, weil seine Startparameter inkompatibel mit den vorhandenen sind.</MessageText>
+      <MessageText Language="EN">Trigger %0% could not be imported because of conflicting start parameter definitions.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03367" TypeName="XDEV_ProjectTemplateZipFileCouldNotBeCreatedException" TypePath="com.gip.xyna.xdev.exceptions" BaseTypeName="Ex_FileAccessException" BaseTypePath="com.gip.xyna.exceptions" >
+   	  <Data Label="name of project" VariableName="projectName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das Projekt Template Zip %0% für Projekt %1% konnte nicht erstellt werden.</MessageText>
+      <MessageText Language="EN">Could not create project template zip file %0% for project %1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03368" TypeName="XDEV_ProjectTemplateTemplateCouldNotBeAccessedException" TypePath="com.gip.xyna.xdev.exceptions" BaseTypeName="Ex_FileAccessException" BaseTypePath="com.gip.xyna.exceptions" >
+   	  <Description>Hier geht es um das Basis Template</Description>
+      <MessageText Language="DE">Auf das Template File %0% für ein Projekt Template konnte nicht zugegriffen werden.</MessageText>
+      <MessageText Language="EN">Could not access template file %0% while creating project template.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03369" TypeName="XDEV_InvalidProjectTemplateParametersException" TypePath="com.gip.xyna.xdev.exceptions" >
+      <Data Label="description of invalid parameter" VariableName="invalidParameterDescription">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="invalid value" VariableName="invalidValue">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Parameter %0% hat den ungültigen Wert %1%.</MessageText>
+      <MessageText Language="EN">Parameter %0% has invalid value %1%..</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-03370" TypeName="XDEV_UserDefinedDeploymentException" TypePath="com.gip.xyna.xdev.exceptions" >
+      <Data Label="datatyper" VariableName="datatype">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Datentyp %0% konnte nicht deployed werden.</MessageText>
+      <MessageText Language="EN">Datatype %0% could not be deployed.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-03371" TypeName="XDEV_UserDefinedUnDeploymentException" TypePath="com.gip.xyna.xdev.exceptions" >
+      <Data Label="datatype" VariableName="datatype">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Datentyp %0% konnte nicht undeployed werden.</MessageText>
+      <MessageText Language="EN">Datatype %0% could not be undeployed.</MessageText>
+   </ExceptionType>    
+   <ExceptionType Code="XYNA-03372" TypeName="XDEV_XynaPropertyForExportNotSetException" TypePath="com.gip.xyna.xdev.exceptions" >
+      <Data Label="propertyName" VariableName="propertyName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Für Topology Exports muss die Property %0% gesetzt sein. Sie muss den Wert beinhalten, der dem File entspricht, dass vom PersistenceLayer (ALTERNATIVE) für die Tabelle topologies erzeugt wird.</MessageText>
+      <MessageText Language="EN">Property %0% must be set for topology exports. Its value must be the path to the file in which the table topologies is saved by its ALTERNATIVE persistence layer.</MessageText>
+   </ExceptionType>    
+   <ExceptionType Code="XYNA-03373" TypeName="XDEV_DuplicateTopologyNameException" TypePath="com.gip.xyna.xdev.exceptions" >
+      <Data Label="topologyName" VariableName="topologyName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es existiert bereits eine Topology mit dem Namen %0%.</MessageText>
+      <MessageText Language="EN">A topology with name %0% exists already.</MessageText>
+   </ExceptionType>    
+</ExceptionStore>

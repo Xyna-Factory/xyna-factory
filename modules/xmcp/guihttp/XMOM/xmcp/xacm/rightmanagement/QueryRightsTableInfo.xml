@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Query Rights TableInfo" TypeName="QueryRightsTableInfo" TypePath="xmcp.xacm.rightmanagement" Version="1.8">
+  <Meta>
+    <Documentation>https://wiki.gip.com/wiki/Zeta_Framework/Tabellen/Tabellen_(Backend)</Documentation>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,openDocumentation,vScroll(1534)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Query Rights TableInfo" Name="QueryRightsTableInfo">
+    <Input>
+      <Data ID="13" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo13">
+        <Target RefID="266"/>
+        <Target RefID="269"/>
+        <Target RefID="271"/>
+      </Data>
+      <Data ID="307" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale">
+        <Target RefID="300"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="14" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="162" IsList="true" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right162">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+    </Throws>
+    <Choice ID="266" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="13"/>
+      <Target RefID="275"/>
+      <Target RefID="278"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="265" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo265"/>
+        <Source RefID="13"/>
+      </Input>
+      <Case ID="256" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="268" Label="Generate Table Columns">
+          <Target RefID="267"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="292" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="267"/>
+          </Output>
+          <Mapping>%0%["0"].name="Right"</Mapping>
+          <Mapping>%0%["0"].path="rightName"</Mapping>
+          <Mapping>%0%["0"].sort="asc"</Mapping>
+          <Mapping>%0%["1"].name="Documentation"</Mapping>
+          <Mapping>%0%["1"].path="documentation"</Mapping>
+        </Mappings>
+        <Mappings ID="269" Label="Set bootstrap &amp; columns">
+          <Source RefID="13"/>
+          <Source RefID="267"/>
+          <Target RefID="270"/>
+          <Input>
+            <Data ID="258" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo258"/>
+            <Source RefID="13"/>
+          </Input>
+          <Input>
+            <Data ID="259" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn259"/>
+            <Source RefID="267"/>
+          </Input>
+          <Output>
+            <Data ID="260" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo260"/>
+            <Target RefID="270"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="276">
+          <Source RefID="267"/>
+          <Source RefID="270"/>
+          <Target RefID="275"/>
+          <Target RefID="278"/>
+          <Copy>
+            <Source RefID="267"/>
+            <Target RefID="275"/>
+          </Copy>
+          <Copy>
+            <Source RefID="270"/>
+            <Target RefID="278"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="257" IsDefault="true" Label="default">
+        <Mappings ID="271" Label="1:1">
+          <Source RefID="13"/>
+          <Target RefID="272"/>
+          <Input>
+            <Data ID="261" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo261"/>
+            <Source RefID="13"/>
+          </Input>
+          <Output>
+            <Data ID="262" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo262"/>
+            <Target RefID="272"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="274" Label="Get columns from Table Info">
+          <Source RefID="272"/>
+          <Target RefID="273"/>
+          <Input>
+            <Data ID="263" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo263"/>
+            <Source RefID="272">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="264" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn264"/>
+            <Target RefID="273"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="277">
+          <Source RefID="273"/>
+          <Source RefID="272"/>
+          <Target RefID="275"/>
+          <Target RefID="278"/>
+          <Copy>
+            <Source RefID="273"/>
+            <Target RefID="275"/>
+          </Copy>
+          <Copy>
+            <Source RefID="272"/>
+            <Target RefID="278"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="282" Label="Build TableInfo and Select Columns">
+      <Source RefID="281"/>
+      <Source RefID="275"/>
+      <Source RefID="278"/>
+      <Source RefID="306"/>
+      <Target RefID="281"/>
+      <Target RefID="284"/>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="281">
+        <Source RefID="278">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="306">
+          <Meta>
+            <ExpectedType>xmcp.xacm.rightmanagement.datatypes.Right</ExpectedType>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="275"/>
+      </Invoke>
+      <Receive ServiceID="281">
+        <Target RefID="284"/>
+      </Receive>
+    </Function>
+    <Function ID="204" Label="Get All Rights">
+      <Source RefID="203"/>
+      <Source RefID="206"/>
+      <Target RefID="203"/>
+      <Target RefID="205"/>
+      <Invoke Operation="getAllRights" ServiceID="203">
+        <Source RefID="206">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="203">
+        <Target RefID="205"/>
+      </Receive>
+    </Function>
+    <Foreach ID="238">
+      <Source RefID="205"/>
+      <Target RefID="244"/>
+      <InputList RefID="205">
+        <Data ID="237" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight237">
+          <Target RefID="239"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="244">
+        <Data ID="243" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName243">
+          <Source RefID="239"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="239" Label="To Right Name">
+        <Source RefID="237"/>
+        <Target RefID="243"/>
+        <Meta>
+          <FixedDetailOptions>FillMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="236" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight236"/>
+          <Source RefID="237"/>
+        </Input>
+        <Output>
+          <Data ID="240" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName240"/>
+          <Target RefID="243"/>
+        </Output>
+        <Mapping>%1%.rightName=%0%.right</Mapping>
+      </Mappings>
+    </Foreach>
+    <Foreach ID="247">
+      <Source RefID="244"/>
+      <Target RefID="219"/>
+      <InputList RefID="244">
+        <Data ID="246" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName246">
+          <Target RefID="213"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="219">
+        <Data ID="248" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right248">
+          <Source RefID="213"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="213" Label="To Right">
+        <Source RefID="227"/>
+        <Source RefID="246"/>
+        <Target RefID="248"/>
+        <Meta>
+          <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="223" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right223"/>
+          <Source RefID="227">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="245" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName245"/>
+          <Source RefID="246"/>
+        </Input>
+        <Output>
+          <Data ID="214" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right214"/>
+          <Target RefID="248"/>
+        </Output>
+        <Mapping>%2%=%0%.createRightFromRightNameWithParameterDefinition(%1%)</Mapping>
+      </Mappings>
+    </Foreach>
+    <Foreach ID="302">
+      <Source RefID="219"/>
+      <Target RefID="304"/>
+      <InputList RefID="219">
+        <Data ID="301" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right301">
+          <Target RefID="300"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="304">
+        <Data ID="303" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right7">
+          <Source RefID="300"/>
+        </Data>
+      </OutputList>
+      <Function ID="300" Label="Fill Description in Right">
+        <Source RefID="299"/>
+        <Source RefID="301"/>
+        <Source RefID="307"/>
+        <Target RefID="299"/>
+        <Target RefID="303"/>
+        <Invoke Operation="FillDescriptionInRight" ServiceID="299">
+          <Source RefID="301"/>
+          <Source RefID="307"/>
+        </Invoke>
+        <Receive ServiceID="299">
+          <Target RefID="303"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="289" Label="TableHelper Sort Filter Limit">
+      <Source RefID="281"/>
+      <Source RefID="284"/>
+      <Source RefID="304"/>
+      <Target RefID="281"/>
+      <Target RefID="291"/>
+      <Invoke Operation="tableHelperSortFilterLimit" ServiceID="281">
+        <Source RefID="284">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="304">
+          <Meta>
+            <ExpectedType>xmcp.xacm.rightmanagement.datatypes.Right</ExpectedType>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="281">
+        <Target RefID="291">
+          <Meta>
+            <ExpectedType>xmcp.xacm.rightmanagement.datatypes.Right</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <ServiceReference ID="203" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="204"/>
+      <Target RefID="204"/>
+    </ServiceReference>
+    <Data ID="205" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight">
+      <Source RefID="204"/>
+      <Target RefID="238"/>
+    </Data>
+    <Data ID="206" Label="Locale" ReferenceName="En_USEnglish" ReferencePath="base.locale" VariableName="const_En_USEnglish">
+      <Target RefID="204"/>
+      <Data ID="220" Label="language" VariableName="language">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="221" Label="country" VariableName="country">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="222" Label="variant" VariableName="variant">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="219" IsList="true" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right219">
+      <Source RefID="247"/>
+      <Target RefID="302"/>
+    </Data>
+    <Data ID="227" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right227">
+      <Target RefID="213"/>
+      <Data ID="249" Label="Right Name" VariableName="rightName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="250" Label="Documentation" VariableName="documentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="252" IsList="true" Label="Parameter List" ReferenceName="RightParameter" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="parameterList"/>
+    </Data>
+    <Data ID="244" IsList="true" Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName244">
+      <Source RefID="238"/>
+      <Target RefID="247"/>
+    </Data>
+    <Data ID="267" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn267">
+      <Source RefID="268"/>
+      <Target RefID="269"/>
+      <Target RefID="276"/>
+    </Data>
+    <Data ID="270" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo270">
+      <Source RefID="269"/>
+      <Target RefID="276"/>
+    </Data>
+    <Data ID="272" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo272">
+      <Source RefID="271"/>
+      <Target RefID="274"/>
+      <Target RefID="277"/>
+    </Data>
+    <Data ID="273" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn273">
+      <Source RefID="274"/>
+      <Target RefID="277"/>
+    </Data>
+    <Data ID="275" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn275">
+      <Source RefID="266"/>
+      <Source RefID="276"/>
+      <Source RefID="277"/>
+      <Target RefID="282"/>
+    </Data>
+    <Data ID="278" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo278">
+      <Source RefID="266"/>
+      <Source RefID="276"/>
+      <Source RefID="277"/>
+      <Target RefID="282"/>
+    </Data>
+    <ServiceReference ID="281" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="282"/>
+      <Source RefID="289"/>
+      <Source RefID="316"/>
+      <Target RefID="282"/>
+      <Target RefID="289"/>
+      <Target RefID="316"/>
+    </ServiceReference>
+    <Data ID="284" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="282"/>
+      <Target RefID="289"/>
+      <Target RefID="316"/>
+    </Data>
+    <Data ID="291" IsList="true" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right">
+      <Source RefID="289"/>
+      <Target RefID="3"/>
+      <Target RefID="316"/>
+    </Data>
+    <ServiceReference ID="299" Label="Fill Description in Right" ReferenceName="FillDescriptionInRight" ReferencePath="xmcp.xacm.rightmanagement.subwfs">
+      <Source RefID="300"/>
+      <Target RefID="300"/>
+    </ServiceReference>
+    <Data ID="304" IsList="true" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right304">
+      <Source RefID="302"/>
+      <Target RefID="289"/>
+    </Data>
+    <Data ID="306" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="const_Right">
+      <Target RefID="282"/>
+      <Data ID="309" Label="Right Name" VariableName="rightName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="310" Label="Documentation" VariableName="documentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="311" IsList="true" Label="Parameter List" ReferenceName="RightParameter" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="parameterList"/>
+      <Data ID="312" Label="Original Right Name" VariableName="originalRightName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Function ID="316" Label="Set Length">
+      <Source RefID="281"/>
+      <Source RefID="284"/>
+      <Source RefID="291"/>
+      <Target RefID="281"/>
+      <Target RefID="317"/>
+      <Invoke Operation="setLength" ServiceID="281">
+        <Source RefID="284">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="291">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="281">
+        <Target RefID="317"/>
+      </Receive>
+    </Function>
+    <Data ID="317" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo74">
+      <Source RefID="316"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="291"/>
+      <Source RefID="317"/>
+      <Target RefID="162"/>
+      <Target RefID="14"/>
+      <Copy>
+        <Source RefID="317">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="14"/>
+      </Copy>
+      <Copy>
+        <Source RefID="291">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="162"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

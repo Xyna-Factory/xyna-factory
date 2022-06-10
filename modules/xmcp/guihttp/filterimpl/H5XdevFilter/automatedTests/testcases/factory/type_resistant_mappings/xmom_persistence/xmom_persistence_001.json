@@ -1,0 +1,359 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "8.7.2021", 
+    "updated": "8.7.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!RuntimeContextName_Escaped!": "default%20workspace"
+        },
+        {
+          "!RuntimeContextName!": "default workspace"
+        },
+        {
+          "!TestProcess_Path!": "typeresistantmappings"
+        }, 
+        {
+          "!TestProcess_Name!": "XMOMPersistenceBasics"
+        },
+        {
+          "!TestProcess_FqName!": "typeresistantmappings.XMOMPersistenceBasics"
+        }, 
+        {
+          "!typeresistantmappings.ValidationMode!": "typeresistantmappings.ValidationMode"
+        }, 
+        { 
+          "!typeresistantmappings.Primitives!": "typeresistantmappings.Primitives"
+        },
+        {
+          "!Primitives!": "Primitives"
+        }, 
+        {
+          "!memberVar0!": "memberVar0"
+        }, 
+        {
+          "!memberVar1!": "memberVar1"
+        }, 
+        {
+          "!memberVar2!": "memberVar2"
+        }, 
+        {
+          "!memberVar3!": "memberVar3"
+        }, 
+        {
+          "!memberVar4!": "memberVar4"
+        }, 
+        {
+          "!memberVar5!": "memberVar5"
+        }, 
+        {
+          "!memberVar6!": "memberVar6"
+        }, 
+        {
+          "!memberVar7!": "memberVar7"
+        }, 
+        {
+          "!memberVar8!": "memberVar8"
+        }, 
+        {
+          "!String!": "String"
+        }, 
+        {
+          "!int!": "int"
+        }, 
+        {
+          "!Integer!": "Integer"
+        }, 
+        {
+          "!long!": "long"
+        }, 
+        {
+          "!Long!": "Long"
+        }, 
+        {
+          "!double!": "double"
+        }, 
+        {
+          "!Double!": "Double"
+        }, 
+        {
+          "!boolean!": "boolean"
+        }, 
+        {
+          "!Boolean!": "Boolean"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/workflows/!TestProcess_Path!/!TestProcess_Name!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "customStringContainer": [
+          null, 
+          null, 
+          null, 
+          null
+        ], 
+        "input": [
+        ], 
+        "orderType": "!TestProcess_FqName!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/startorder"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "stackTrace",
+      "basePath": ""
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!double!", 
+        "revision": 0
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar0!/change"
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!Integer!", 
+        "revision": 1
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar1!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!long!", 
+        "revision": 2
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar2!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!Double!", 
+        "revision": 3
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar3!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!String!", 
+        "revision": 4
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar4!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!Long!", 
+        "revision": 5
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar5!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "int", 
+        "revision": 6
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar6!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!Boolean!", 
+        "revision": 7
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar7!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!boolean!", 
+        "revision": 8
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar8!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "revision": 9
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/save"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 9
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "customStringContainer": [
+          null, 
+          null, 
+          null, 
+          null
+        ], 
+        "input": [
+        ], 
+        "orderType": "!TestProcess_FqName!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/startorder"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "stackTrace",
+      "basePath": ""
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!String!", 
+        "revision": 0
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar0!/change"
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "int", 
+        "revision": 1
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar1!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!Integer!", 
+        "revision": 2
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar2!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!long!", 
+        "revision": 3
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar3!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!Long!", 
+        "revision": 4
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar4!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!double!", 
+        "revision": 5
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar5!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!Double!", 
+        "revision": 6
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar6!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!boolean!", 
+        "revision": 7
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar7!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "primitiveType": "!Boolean!", 
+        "revision": 8
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/objects/!memberVar8!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "revision": 9
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/save"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 9
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "revision": 9
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/save"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 9
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!RuntimeContextName_Escaped!/xmom/datatypes/!TestProcess_Path!/!Primitives!/deploy"
+    }
+  ]
+}

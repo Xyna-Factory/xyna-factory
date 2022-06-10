@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<MessageStore xmlns="http://www.gip.com/xyna/1.5/utils/message/storage/1.0"
+              Name="XynaUtils Soap Exceptions" Version="2.2" DefaultLanguage="DE">
+  <Description>Exceptions XynaUtils Soap. Codes finden sich in auch in Klasse
+               com.gip.xyna._1_5.exceptions.Codes. Diese Datei dient
+               gleichzeitig als Dokumentation der Fehlermeldungen.</Description>
+  <JavaGen>
+    <FQClassName>com.gip.xyna.utils.exceptions.soap.Codes</FQClassName>
+  </JavaGen>
+  <Message Code="XYNA-12345">
+    <JavaGen>
+      <VarName>HTTP_RESPONSE_CODE_ERROR</VarName>
+    </JavaGen>
+    <MessageText Language="DE">Soap Antwort enthält einen Http Response Code, der einen Fehler signalisiert: %0%</MessageText>
+    <MessageText Language="EN">Soap response contains http response code signaling an error: %0%</MessageText>
+    <Parameter Number="0">
+      <Description Language="DE">Http Response Code</Description>
+      <JavaGen>
+        <FQJavaType>int</FQJavaType>
+        <Name>responseCode</Name>
+      </JavaGen>
+    </Parameter>
+  </Message>
+  <Message Code="XYNA-12346">
+    <JavaGen>
+      <VarName>URL_INVALID</VarName>
+    </JavaGen>
+    <MessageText Language="DE">Es konnte keine Http Verbindung hergestellt werden, da die angegebene URL ungültig ist: Protokoll = %0%, Hostname = %1%, Port = %2%, Service = %3%</MessageText>
+    <MessageText Language="EN">The provided url is invalid: protocol = %0%, hostname = %1%, port = %2%, service = %3%</MessageText>
+    <Parameter Number="0">
+      <Description Language="DE">Protokoll</Description>
+      <JavaGen>
+        <FQJavaType>java.lang.String</FQJavaType>
+        <Name>protocol</Name>
+      </JavaGen>
+    </Parameter>
+    <Parameter Number="1">
+      <Description Language="DE">Hostname</Description>
+      <JavaGen>
+        <FQJavaType>java.lang.String</FQJavaType>
+        <Name>hostName</Name>
+      </JavaGen>
+    </Parameter>
+    <Parameter Number="2">
+      <Description Language="DE">Port</Description>
+      <JavaGen>
+        <FQJavaType>int</FQJavaType>
+        <Name>port</Name>
+      </JavaGen>
+    </Parameter>
+    <Parameter Number="3">
+      <Description Language="DE">Service</Description>
+      <JavaGen>
+        <FQJavaType>java.lang.String</FQJavaType>
+        <Name>service</Name>
+      </JavaGen>
+    </Parameter>
+  </Message>
+  <Message Code="XYNA-12347">
+    <JavaGen>
+      <VarName>CONNECTION_WONT_OPEN</VarName>
+    </JavaGen>
+    <MessageText Language="DE">Es konnte keine Verbindung zur angegeben URL hergestellt werden.</MessageText>
+    <MessageText Language="EN">Could not connect to specified url.</MessageText>
+  </Message>
+  <Message Code="XYNA-12348">
+    <JavaGen>
+      <VarName>RESPONSE_PARSING_ERROR</VarName>
+    </JavaGen>
+    <MessageText Language="DE">Die Soap Response konnte nicht als XML geparst werden.</MessageText>
+    <MessageText Language="EN">Could not parse soap response.</MessageText>
+  </Message>
+  <Message Code="XYNA-12349">
+    <JavaGen>
+      <VarName>RESPONSE_SOAP_FAULT</VarName>
+    </JavaGen>
+    <MessageText Language="DE">Die Soap Response enthielt ein SOAP Fault: [%0%] %1%. Details: %2%</MessageText>
+    <MessageText Language="EN">The soap response contained a soap fault: [%0%] %1%. details: %2%</MessageText>
+    <Parameter Number="0">
+      <Description Language="DE">FaultCode</Description>
+      <JavaGen>
+        <FQJavaType>java.lang.String</FQJavaType>
+        <Name>code</Name>
+      </JavaGen>
+    </Parameter>
+    <Parameter Number="1">
+      <Description Language="DE">FaultString</Description>
+      <JavaGen>
+        <FQJavaType>java.lang.String</FQJavaType>
+        <Name>faultString</Name>
+      </JavaGen>
+    </Parameter>
+    <Parameter Number="2">
+      <Description Language="DE">Details</Description>
+      <JavaGen>
+        <FQJavaType>java.lang.String</FQJavaType>
+        <Name>details</Name>
+      </JavaGen>
+    </Parameter>
+  </Message>
+  <Message Code="XYNA-12350">
+    <JavaGen>
+      <VarName>REQUEST_INVALID_XML</VarName>
+    </JavaGen>
+    <MessageText Language="DE">Fehler beim XML Parsen des Requests.</MessageText>
+    <MessageText Language="EN">Could not parse request xml.</MessageText>
+  </Message>
+<!--  <Message Code="XYNA-01001" NoOfParameters="1">
+    <JavaGen>
+      <VarName>ORDERNUMBER_TOO_LONG</VarName>
+    </JavaGen>
+    <Parameter Number="0">
+      <Description Language="DE">Maximal erlaubte Länge der OrderNumber</Description>
+      <JavaGen>
+        <FQJavaType>int</FQJavaType>
+        <Name>maxlength</Name>
+      </JavaGen>
+    </Parameter>
+    <MessageText Language="DE">Ungültiges Xyna Order Format: OrderNumber darf maximal %0% Zeichen lang sein</MessageText>
+    <MessageText Language="EN">Invalid Xyna Order Format: OrderNumber may be %0% characters long at the most.</MessageText>
+  </Message> -->
+</MessageStore>

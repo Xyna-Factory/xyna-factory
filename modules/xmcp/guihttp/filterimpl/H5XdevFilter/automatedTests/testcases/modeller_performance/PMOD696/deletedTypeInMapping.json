@@ -1,0 +1,200 @@
+{
+  "meta":
+  {
+	"created": "15.01.2020",
+	"updated": "15.01.2020",
+	"Test Reference": "PMOD-792"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rndLabel1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rndLabel2!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!" : "autoTest.generated.PMOD696"},
+		{"!dtLabel!": "GeneratedDatatype_!rndLabel1!"},
+		{"!wfLabel!": "GeneratedWorkflow_!rndLabel2!"},
+		{"!workspaceName!": "default workspace"}
+	  ]
+	},
+	{
+	  "operation": "set",
+	  "variable": "!escapedWorkspace!",
+	  "value": "!workspaceName!"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!escapedWorkspace!",
+	  "modification":{ "operation": "urlencode" }
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!dtLabel!"
+	  },
+	  "mapOutput": {"!name!" : "!nameDT!"}
+	},
+	{
+	  "operation": "set",
+	  "variable": "!dtfqn!",
+	  "value": "!path!.!nameDT!"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": { },
+	  "mapOutput": 
+	  {
+	    "!newPath!" : "!wfNewPath!",
+	    "!newWorkflowName!" : "!wfNewName!",
+		"!url!": "!newWFUrl!"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "saveAndDeploy",
+	  "mapInput": { 
+	    "!wfUrl!" : "!newWFUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!wfLabel!", 
+		"!revision!" : 0},
+	  "mapOutput": 
+	  {
+	    "!wfName!" : "!wfName!", 
+	    "!wfUrl!" : "!wfUrl!"
+	  }
+	},
+	
+	
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"mapping","label":"Mapping"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!stepId!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/id",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/!stepId!_input/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!dtLabel!","fqn":"!dtfqn!","isList":false},"revision":1}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/!stepId!_output/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!dtLabel!","fqn":"!dtfqn!","isList":false},"revision":2}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!inputIsAbstract!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[name=input]/id",
+	  "unquoteResponse": true
+	},
+	
+	
+	{
+	  "operation": "invoke",
+	  "functionName": "saveAndDeploy",
+	  "mapInput": 
+	  { 
+	    "!wfUrl!" : "!wfUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!wfLabel!", 
+		"!revision!" : 0
+	  },
+	  "mapOutput": 
+	  {
+	    "!wfName!" : "!wfName!", 
+	    "!wfUrl!" : "!wfUrl!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/close",
+	  "payload": {"force":false,"revision":1}
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT!/close",
+	  "payload": {"force":false}
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT!/delete",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "repairWorkflow",
+	  "mapInput": 
+	  { 
+	    "!wfUrl!" : "!wfUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!wfLabel!", 
+		"!expectedNumberOfRepairEntries!" : 2
+	  },
+	  "mapOutput": { }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!"
+	},
+	
+	{
+	  "operation": "read",
+	  "targetVariable": "!inputIsAbstract!",
+	  "pathInResponse": "xmomItem/areas/$list[id=step0]/items/$list[id=!stepId!]/areas/$list[name=input]/items/$list[0]/isAbstract"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!outputIsAbstract!",
+	  "pathInResponse": "xmomItem/areas/$list[id=step0]/items/$list[id=!stepId!]/areas/$list[name=output]/items/$list[0]/isAbstract"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!inputIsAbstract!",
+	  "value": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!outputIsAbstract!",
+	  "value": "true"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!/dataflow"
+	},
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "connections/$list",
+      "expectedValue": 0
+    }
+
+  ]
+}

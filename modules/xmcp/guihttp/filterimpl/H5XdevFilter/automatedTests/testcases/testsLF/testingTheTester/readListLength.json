@@ -1,0 +1,23 @@
+{
+  "operations": [
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/workflows",
+	  "payload": {"label":"New Workflow"}
+	},
+	
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list",
+      "targetVariable": "!listLength!",
+	  "getListLength": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!listLength!",
+      "value": 6
+    }
+  ]
+}

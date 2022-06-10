@@ -1,0 +1,45 @@
+{
+  "meta":
+  {
+    "name": "PMOD481",
+	"description": "Fügt einem Workflow zwei Queries hinzu. Das Problem hinter PMOD481 war das setzen von Konstanten bei StepFunction. Durch eine vorherige Änderung beim setzen der Schritt-Inputs wurden für StepFunctions Konstante Inputs entfernt.",
+	"created": "23.10.2019",
+	"updated": "23.10.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput":
+	  {
+	    "!newPath!": "!newPath!",
+		"!newWorkflowName!": "!newWFName!",
+		"!url!": "!wfUrl!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url" : "!wfUrl!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"query","label":"Query"},"relativePosition":"inside","revision":0}
+	},
+	{
+      "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!/dataflow"
+    },
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"query","label":"Query"},"relativePosition":"inside","revision":1}
+	},
+	{
+      "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!/dataflow"
+    }
+  ]
+}

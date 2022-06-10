@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+	"foreachRunningTimeTest.json",
+	"foreachRunningTimeCatchTest.json",
+	"foreachRunningTimeNested.json"
+  ]
+}

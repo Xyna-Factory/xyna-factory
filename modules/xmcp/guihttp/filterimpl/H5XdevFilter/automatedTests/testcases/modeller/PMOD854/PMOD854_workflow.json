@@ -1,0 +1,265 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "20.2.2020", 
+    "updated": "20.2.2020"
+  }, 
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!New_Workflow!": "New Workflow"
+        }, 
+        {
+          "!autoTest.generated.PMOD854!": "autoTest.generated.PMOD854.!rnd!"
+        }, 
+        {
+          "!WorkflowDeploymentState!": "WorkflowDeploymentState"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Workflow!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    }, 
+    {
+      "operation": "read",
+      "pathInResponse": "saveState",
+      "targetVariable": "!readSaveState!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readSaveState!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "modified",
+      "targetVariable": "!readModifiedState!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readModifiedState!",
+      "value": "false"
+    },
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "targetVariable": "!new_1582207363124.NewWorkflow!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1582207363124!", 
+      "variable": "!new_1582207363124.NewWorkflow!"
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewWorkflow!", 
+      "variable": "!new_1582207363124.NewWorkflow!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id", 
+      "targetVariable": "!step0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/itemTypes[0]", 
+      "targetVariable": "!xmcp.processmodeller.datatypes.Mapping!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!Mapping!", 
+      "variable": "!xmcp.processmodeller.datatypes.Mapping!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1582207363124!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "!Mapping!", 
+          "type": "mapping"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1582207363124!/!NewWorkflow!/objects/!step0!/insert"
+    }, 
+    {
+      "operation": "read",
+      "pathInResponse": "modified",
+      "targetVariable": "!readModifiedState!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readModifiedState!",
+      "value": "true"
+    },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1582207363124!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!WorkflowDeploymentState!", 
+        "path": "!autoTest.generated.PMOD854!", 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1582207363124!/!NewWorkflow!/save"
+    }, 
+    {
+      "operation": "read",
+      "pathInResponse": "saveState",
+      "targetVariable": "!readSaveState!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readSaveState!",
+      "value": "true"
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "modified",
+      "targetVariable": "!readModifiedState!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readModifiedState!",
+      "value": "false"
+    },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD854!/!WorkflowDeploymentState!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD854!/!WorkflowDeploymentState!/deploy"
+    }, 
+	{
+      "operation": "read",
+      "pathInResponse": "deploymentState",
+      "targetVariable": "!readDeployState!",
+	  "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readDeployState!",
+      "value": "DEPLOYED"
+    },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD854!/!WorkflowDeploymentState!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "!Mapping!", 
+          "type": "mapping"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD854!/!WorkflowDeploymentState!/objects/!step0!/insert"
+    }, 
+    {
+      "operation": "read",
+      "pathInResponse": "modified",
+      "targetVariable": "!readModifiedState!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readModifiedState!",
+      "value": "true"
+    },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD854!/!WorkflowDeploymentState!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "label": "!WorkflowDeploymentState!", 
+        "path": "!autoTest.generated.PMOD854!", 
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD854!/!WorkflowDeploymentState!/save"
+    }, 
+	{
+      "operation": "read",
+      "pathInResponse": "deploymentState",
+      "targetVariable": "!readDeployState!",
+	  "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readDeployState!",
+      "value": "CHANGED"
+    },
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.PMOD854!/!WorkflowDeploymentState!/dataflow"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="installMacrosTest"
+         basedir="."
+         xmlns:au="antlib:org.apache.ant.antunit"
+         xmlns="antlib:org.apache.tools.ant">
+
+	<loadproperties srcfile="gipsun246.properties" />
+	
+	<import file="../install/installMacros.xml" />
+
+	<target name="suiteSetUp">
+		<!-- DispatcherManager is needed -->
+	</target>
+
+	<target name="testSetRouting"
+	        description="Im DispatcherManager eine neue Route eintragen bzw. eine bestehende aendern">
+		<setRouting dispatchername="TestDispatcher"
+		            orderType="NewTestOrder"
+		            url="http://www.test.com:6666/"
+		            operation="initiate" />
+		<!-- TODO: check existance of entires -->
+		<getRouting dispatchername="TestDispatcher" outputproperty="routing" />
+		<au:assertPropertyEquals name="routing"
+		                         value=""
+		                         message="Unexpected routing information: ${routing}" />
+	</target>
+
+	<target name="testDeleteRouting"
+	        description="Im DispatcherManager eine Route austragen">
+		<deleteRouting dispatchername="TestDispatcher"
+		               orderType="NewTestOrder"
+		               url="http://www.test.com:6666/"
+		               operation="initiate" />
+		<!-- TODO: check non existance of entires -->
+	</target>
+	
+	<target name="testAddDatasource"
+	           description="Adding a datasource">
+	      <addDatasource name="processingDS" connectionpool="processingPool"/>
+	      <!-- TODO: check existance of entires -->
+	   </target>
+
+</project>

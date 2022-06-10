@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TimeConstraint" BaseTypePath="xprc.xpce.timeconstraint" Label="Time Window" TypeName="TimeWindow" TypePath="xprc.xpce.timeconstraint" Version="1.8">
+  <Meta>
+    <Documentation>Defines start and end time, optionally combined with a referenced time window.</Documentation>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Start" ReferenceName="Date" ReferencePath="base.date" VariableName="start">
+    <Meta>
+      <Documentation>Start of Time Window
+Optional (Default=Now)</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="End" ReferenceName="Date" ReferencePath="base.date" VariableName="end">
+    <Meta>
+      <Documentation>End of Time Window - absolute or relative to start time.
+Optional (Default=Forever)</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Time Window Name" VariableName="timeWindowName">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name of referenced Time Window
+Optional (Default=None)</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Time Window Offset" ReferenceName="RelativeDate" ReferencePath="base.date" VariableName="timeWindowOffset">
+    <Meta>
+      <Documentation>Offset in referenced Time Window
+Optional (Default=0)</Documentation>
+    </Meta>
+  </Data>
+  <Service Label="Time Window" TypeName="TimeWindow"/>
+</DataType>

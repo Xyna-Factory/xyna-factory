@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="107" Label="Add Custom Field Columns" TypeName="AddCustomFieldColumns" TypePath="xmcp.processmonitor" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,openDocumentation</FixedDetailOptions>
+    <Documentation>TODO: schönere Lösung als per Copy &amp; Paste</Documentation>
+  </Meta>
+  <Operation ID="106" Label="Add Custom Field Columns" Name="AddCustomFieldColumns">
+    <Meta>
+      <Abstract.UID>C28F6C53-F32B-F802-0113-6D799319549B</Abstract.UID>
+    </Meta>
+    <Input/>
+    <Output>
+      <Data ID="104" IsList="true" Label="Custom Field Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn104">
+        <Source RefID="108"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="111" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="112"/>
+      <Target RefID="112"/>
+    </ServiceReference>
+    <Mappings ID="139" Label="Start with empty list">
+      <Source RefID="138"/>
+      <Target RefID="134"/>
+      <Meta>
+        <FixedDetailOptions>FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="147" IsList="true" Label="Custom Field Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn135"/>
+        <Source RefID="138">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="140" IsList="true" Label="Custom Field Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn140"/>
+        <Target RefID="134"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+    </Mappings>
+    <Function ID="112" Label="Get Custom Field Labels">
+      <Source RefID="111"/>
+      <Target RefID="111"/>
+      <Target RefID="160"/>
+      <Invoke Operation="getCustomFieldLabels" ServiceID="111"/>
+      <Receive ServiceID="111">
+        <Target RefID="160"/>
+      </Receive>
+    </Function>
+    <Choice ID="125" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="160"/>
+      <Input>
+        <Data ID="162" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields162"/>
+        <Source RefID="160">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="123" Label="true" Premise="%0%.custom1!=null">
+        <Mappings ID="157" Label="Create Column for Custom Field">
+          <Source RefID="160"/>
+          <Target RefID="155"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="161" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields161"/>
+            <Source RefID="160"/>
+          </Input>
+          <Output>
+            <Data ID="158" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn158"/>
+            <Target RefID="155"/>
+          </Output>
+          <Mapping>%1%.name=%0%.custom1</Mapping>
+          <Mapping>%1%.path="customFields.custom1"</Mapping>
+        </Mappings>
+        <Mappings ID="143" Label="Add Custom Filed">
+          <Source RefID="134"/>
+          <Source RefID="155"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="142" IsList="true" Label="Custom Field Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn142"/>
+            <Source RefID="134"/>
+          </Input>
+          <Input>
+            <Data ID="163" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn163"/>
+            <Source RefID="155">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Mapping>%0%=append(%0%,%1%)</Mapping>
+        </Mappings>
+        <Assign ID="136"/>
+      </Case>
+      <Case ID="124" Label="false">
+        <Assign ID="137"/>
+      </Case>
+    </Choice>
+    <Data ID="134" IsList="true" Label="Custom Field Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+      <Source RefID="139"/>
+      <Target RefID="143"/>
+      <Target RefID="174"/>
+      <Target RefID="185"/>
+      <Target RefID="196"/>
+      <Target RefID="108"/>
+    </Data>
+    <Data ID="138" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn">
+      <Target RefID="139"/>
+    </Data>
+    <Data ID="155" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn155">
+      <Source RefID="157"/>
+      <Target RefID="143"/>
+    </Data>
+    <Data ID="160" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields">
+      <Source RefID="112"/>
+      <Target RefID="125"/>
+      <Target RefID="157"/>
+      <Target RefID="171"/>
+      <Target RefID="172"/>
+      <Target RefID="182"/>
+      <Target RefID="183"/>
+      <Target RefID="193"/>
+      <Target RefID="194"/>
+    </Data>
+    <Choice ID="171" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="160"/>
+      <Input>
+        <Data ID="170" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields170"/>
+        <Source RefID="160"/>
+      </Input>
+      <Case ID="168" Label="true" Premise="%0%.custom2!=null">
+        <Mappings ID="172" Label="Create Column for Custom Field">
+          <Source RefID="160"/>
+          <Target RefID="173"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="164" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields164"/>
+            <Source RefID="160"/>
+          </Input>
+          <Output>
+            <Data ID="165" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn165"/>
+            <Target RefID="173"/>
+          </Output>
+          <Mapping>%1%.name=%0%.custom2</Mapping>
+          <Mapping>%1%.path="customFields.custom2"</Mapping>
+        </Mappings>
+        <Mappings ID="174" Label="Add Custom Filed">
+          <Source RefID="134"/>
+          <Source RefID="173"/>
+          <Input>
+            <Data ID="166" IsList="true" Label="Custom Field Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn166"/>
+            <Source RefID="134"/>
+          </Input>
+          <Input>
+            <Data ID="167" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn167"/>
+            <Source RefID="173">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Mapping>%0%=append(%0%,%1%)</Mapping>
+        </Mappings>
+        <Assign ID="197"/>
+      </Case>
+      <Case ID="169" Label="false">
+        <Assign ID="198"/>
+      </Case>
+    </Choice>
+    <Data ID="173" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn173">
+      <Source RefID="172"/>
+      <Target RefID="174"/>
+    </Data>
+    <Choice ID="182" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="160"/>
+      <Input>
+        <Data ID="181" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields181"/>
+        <Source RefID="160"/>
+      </Input>
+      <Case ID="179" Label="true" Premise="%0%.custom3!=null">
+        <Mappings ID="183" Label="Create Column for Custom Field">
+          <Source RefID="160"/>
+          <Target RefID="184"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="175" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields175"/>
+            <Source RefID="160"/>
+          </Input>
+          <Output>
+            <Data ID="176" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn176"/>
+            <Target RefID="184"/>
+          </Output>
+          <Mapping>%1%.name=%0%.custom3</Mapping>
+          <Mapping>%1%.path="customFields.custom3"</Mapping>
+        </Mappings>
+        <Mappings ID="185" Label="Add Custom Filed">
+          <Source RefID="134"/>
+          <Source RefID="184"/>
+          <Input>
+            <Data ID="177" IsList="true" Label="Custom Field Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn177"/>
+            <Source RefID="134"/>
+          </Input>
+          <Input>
+            <Data ID="178" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn178"/>
+            <Source RefID="184">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Mapping>%0%=append(%0%,%1%)</Mapping>
+        </Mappings>
+        <Assign ID="199"/>
+      </Case>
+      <Case ID="180" Label="false">
+        <Assign ID="200"/>
+      </Case>
+    </Choice>
+    <Data ID="184" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn184">
+      <Source RefID="183"/>
+      <Target RefID="185"/>
+    </Data>
+    <Choice ID="193" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="160"/>
+      <Input>
+        <Data ID="192" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields192"/>
+        <Source RefID="160"/>
+      </Input>
+      <Case ID="190" Label="true" Premise="%0%.custom4!=null">
+        <Mappings ID="194" Label="Create Column for Custom Field">
+          <Source RefID="160"/>
+          <Target RefID="195"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="186" Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields186"/>
+            <Source RefID="160"/>
+          </Input>
+          <Output>
+            <Data ID="187" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn187"/>
+            <Target RefID="195"/>
+          </Output>
+          <Mapping>%1%.name=%0%.custom4</Mapping>
+          <Mapping>%1%.path="customFields.custom4"</Mapping>
+        </Mappings>
+        <Mappings ID="196" Label="Add Custom Filed">
+          <Source RefID="134"/>
+          <Source RefID="195"/>
+          <Input>
+            <Data ID="188" IsList="true" Label="Custom Field Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn188"/>
+            <Source RefID="134"/>
+          </Input>
+          <Input>
+            <Data ID="189" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn189"/>
+            <Source RefID="195">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Mapping>%0%=append(%0%,%1%)</Mapping>
+        </Mappings>
+        <Assign ID="201"/>
+      </Case>
+      <Case ID="191" Label="false">
+        <Assign ID="202"/>
+      </Case>
+    </Choice>
+    <Data ID="195" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn195">
+      <Source RefID="194"/>
+      <Target RefID="196"/>
+    </Data>
+    <Assign ID="108">
+      <Source RefID="134"/>
+      <Target RefID="104"/>
+      <Copy>
+        <Source RefID="134"/>
+        <Target RefID="104"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

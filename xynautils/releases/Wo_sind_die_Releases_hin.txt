@@ -1,0 +1,5 @@
+Releases sind ins AFS verschoben worden.
+
+Ordner ist: /afs/gip.local/data/Xyna/XynaUtils
+
+Erstellt 16.02.11 von DW in Absprache mit PD.

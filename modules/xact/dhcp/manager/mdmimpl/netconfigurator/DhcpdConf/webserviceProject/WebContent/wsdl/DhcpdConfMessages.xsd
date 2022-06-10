@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.gip.com/juno/Gui/WS/Messages" elementFormDefault="qualified" targetNamespace="http://www.gip.com/juno/Gui/WS/Messages">
+
+  <xsd:include schemaLocation="JunoGuiCommon.xsd"/>
+
+  <xsd:complexType name="CheckDhcpdConfInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="StandortGruppeID" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="DeployDhcpdConfInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="StandortGruppeID" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="DeployStaticHostInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="StaticHostId" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UndeployStaticHostInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="StaticHostId" type="xsd:string"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Force" type="xsd:boolean"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CheckDhcpdConfRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="CheckDhcpdConfInput" type="CheckDhcpdConfInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="DeployDhcpdConfRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="DeployDhcpdConfInput" type="DeployDhcpdConfInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="DeployStaticHostRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="DeployStaticHostInput" type="DeployStaticHostInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UndeployStaticHostRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="UndeployStaticHostInput" type="UndeployStaticHostInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="DhcpdConfResponse_ctype">
+    <xsd:sequence>
+      <xsd:element name="OutputHeader" type="OutputHeaderContent_ctype"/>
+      <xsd:element name="OutputContent" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Response_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="ResponseHeader_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Payload" type="Payload_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Payload_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1" minOccurs="0" name="CheckDhcpdConfResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="CheckDhcpdConfNewFormatResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DeployDhcpdConfResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DeployDhcpdConfNewFormatResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DeployStaticHostResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DeployStaticHostNewFormatResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="UndeployStaticHostResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="UndeployStaticHostNewFormatResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DuplicateForMigrationResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DeactivateForMigrationResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="ActivateForMigrationResponse" type="DhcpdConfResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="DeleteForMigrationResponse" type="DhcpdConfResponse_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="DeployCPERequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="DeployCPEInput" type="CPEIdentification_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+    
+  <xsd:complexType name="DeployCPEResponse_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="ResponseHeader_ctype"/>
+      <xsd:element name="DeployCPEOutput" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="UndeployCPERequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="UndeployCPEInput" type="CPEIdentification_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="UndeployCPEResponse_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="ResponseHeader_ctype"/>
+      <xsd:element name="UndeployCPEOutput" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="CPEIdentification_ctype">
+    <xsd:sequence>
+      <xsd:element name="Cpe_mac" type="xsd:string"/>
+	  <xsd:element name="Ip" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="MigrationTargetIdentifier_ctype">
+    <xsd:sequence>
+      <xsd:element name="TargetType" type="xsd:string"/>
+	  <xsd:element name="UniqueIdentifier" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="DuplicateForMigrationRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="Source" type="MigrationTargetIdentifier_ctype"/>
+	  <xsd:element name="Target" type="MigrationTargetIdentifier_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  
+  <xsd:element name="CheckDhcpdConfRequest" type="CheckDhcpdConfRequest_ctype"/>
+  <xsd:element name="CheckDhcpdConfResponse" type="Response_ctype"/>
+
+  <xsd:element name="CheckDhcpdConfNewFormatRequest" type="CheckDhcpdConfRequest_ctype"/>
+  <xsd:element name="CheckDhcpdConfNewFormatResponse" type="Response_ctype"/>
+
+  <xsd:element name="DeployDhcpdConfRequest" type="DeployDhcpdConfRequest_ctype"/>
+  <xsd:element name="DeployDhcpdConfResponse" type="Response_ctype"/>
+
+  <xsd:element name="DeployDhcpdConfNewFormatRequest" type="DeployDhcpdConfRequest_ctype"/>
+  <xsd:element name="DeployDhcpdConfNewFormatResponse" type="Response_ctype"/>
+
+  <xsd:element name="DeployStaticHostRequest" type="DeployStaticHostRequest_ctype"/>
+  <xsd:element name="DeployStaticHostResponse" type="Response_ctype"/>
+
+  <xsd:element name="DeployStaticHostNewFormatRequest" type="DeployStaticHostRequest_ctype"/>
+  <xsd:element name="DeployStaticHostNewFormatResponse" type="Response_ctype"/>
+
+  <xsd:element name="UndeployStaticHostRequest" type="UndeployStaticHostRequest_ctype"/>
+  <xsd:element name="UndeployStaticHostResponse" type="Response_ctype"/>
+
+  <xsd:element name="UndeployStaticHostNewFormatRequest" type="UndeployStaticHostRequest_ctype"/>
+  <xsd:element name="UndeployStaticHostNewFormatResponse" type="Response_ctype"/>
+  
+  <xsd:element name="DeployCPERequest" type="DeployCPERequest_ctype"/>
+  <xsd:element name="DeployCPEResponse" type="DeployCPEResponse_ctype"/>
+
+  <xsd:element name="UndeployCPERequest" type="UndeployCPERequest_ctype"/>
+  <xsd:element name="UndeployCPEResponse" type="UndeployCPEResponse_ctype"/>
+        
+  <xsd:element name="DuplicateForMigrationRequest" type="DuplicateForMigrationRequest_ctype"/>
+  <xsd:element name="DuplicateForMigrationResponse" type="Response_ctype"/>
+  
+  <xsd:element name="DeactivateForMigrationRequest" type="MigrationTargetIdentifier_ctype"/>
+  <xsd:element name="DeactivateForMigrationResponse" type="Response_ctype"/>
+  
+  <xsd:element name="ActivateForMigrationRequest" type="MigrationTargetIdentifier_ctype"/>
+  <xsd:element name="ActivateForMigrationResponse" type="Response_ctype"/>
+  
+  <xsd:element name="DeleteForMigrationRequest" type="MigrationTargetIdentifier_ctype"/>
+  <xsd:element name="DeleteForMigrationResponse" type="Response_ctype"/>
+</xsd:schema>

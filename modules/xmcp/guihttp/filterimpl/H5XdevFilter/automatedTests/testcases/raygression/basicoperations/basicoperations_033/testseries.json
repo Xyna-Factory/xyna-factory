@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "basicoperations_033_input.json",
+    "basicoperations_033_output.json"
+  ]
+}

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Stop applications" TypeName="StopApplications" TypePath="xfmg.xfctrl.appmgmt" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Stop applications" Name="StopApplications">
+    <Input>
+      <Data ID="16" IsList="true" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext">
+        <Target RefID="18"/>
+      </Data>
+      <Data ID="14" Label="Stop application parameter" ReferenceName="StopApplicationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="stopApplicationParameter">
+        <Target RefID="8"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" IsList="true" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Foreach ID="18">
+      <Source RefID="16"/>
+      <Target RefID="19"/>
+      <InputList RefID="16">
+        <Data ID="17" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext17">
+          <Target RefID="8"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="19">
+        <Data ID="15" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult_0">
+          <Source RefID="8"/>
+        </Data>
+      </OutputList>
+      <Function ID="8" Label="Stop one application on one node">
+        <Source RefID="14"/>
+        <Source RefID="13"/>
+        <Source RefID="17"/>
+        <Target RefID="15"/>
+        <Target RefID="13"/>
+        <Invoke Operation="StopOneApplicationOnOneNode" ServiceID="13">
+          <Source RefID="17"/>
+          <Source RefID="14"/>
+        </Invoke>
+        <Receive ServiceID="13">
+          <Target RefID="15"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <ServiceReference ID="13" Label="Stop one application on one node" ReferenceName="StopOneApplicationOnOneNode" ReferencePath="xfmg.xfctrl.appmgmt.subwfs">
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <Data ID="19" IsList="true" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult15">
+      <Source RefID="18"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="19"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="19"/>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

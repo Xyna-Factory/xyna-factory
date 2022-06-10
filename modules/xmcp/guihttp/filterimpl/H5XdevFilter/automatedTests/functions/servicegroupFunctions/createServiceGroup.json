@@ -1,0 +1,105 @@
+[
+ {
+  "docu": "Creates and deploys a servicegroup with a given label/path.",
+  "type":"function",
+  "functionName": "createServiceGroup",
+  "input": ["!workspaceName!", "!label!", "!path!"],
+  "output": ["!sgName!", "!url!", "!revision!"],
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!workspaceEscaped!",
+	  "value": "!workspaceName!"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!workspaceEscaped!",
+	  "modification": {"operation": "urlencode"}
+	},
+	{
+	  "operation": "set",
+	  "variable": "!url!",
+	  "value": "/runtimeContext/!workspaceEscaped!/xmom/servicegroups"
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!",
+	  "payload": {"label":"New Service Group"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!newFqn!",
+	  "pathInResponse": "xmomItem/fqn",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "splitFQNtoPathAndName",
+	  "mapInput": {"!fqn!": "!newFqn!"},
+	  "mapOutput": {"!path!": "!newPath!", "!name!": "!newName!"}
+	},
+    {
+	  "operation": "set",
+	  "variable": "!url!",
+	  "value": "!url!/!newPath!/!newName!"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/typeInfoArea/change",
+	  "payload": {"label":"!label!","revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/save",
+	  "payload": {"revision":"!revision!","label":"!label!","path":"!path!"}
+	},
+    {
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!sgFqn!",
+	  "pathInResponse": "updates/$list[0]/fqn",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "splitFQNtoPathAndName",
+	  "mapInput": {"!fqn!": "!sgFqn!"},
+	  "mapOutput": {"!name!": "!sgName!", "!path!": "!newPath!"}
+	},
+    {
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!url!",
+	  "value": "/runtimeContext/!workspaceEscaped!/xmom/servicegroups/!newPath!/!sgName!"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/deploy",
+	  "payload": {"revision":"!revision!"}
+	}
+  ]
+ }
+]

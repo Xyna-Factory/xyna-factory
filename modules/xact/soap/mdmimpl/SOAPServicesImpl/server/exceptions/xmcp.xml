@@ -1,0 +1,165 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+	<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+	Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="EN">
+	<Description Language="">Exceptions Xyna. Codes
+		finden sich in auch in Klasse
+		com.gip.xyna.xmcp.Codes. Diese Datei dient
+		gleichzeitig als Dokumentation der Fehlermeldungen.
+		CodeRange 10000-10299 (siehe BlackExceptionCodeManagement)</Description>
+	<ExceptionType Code="XYNA-10000" TypeName="XMCP_RMI_BINDING_ERROR"
+		TypePath="com.gip.xyna.xmcp.exceptions">
+		<Data Label="klassenname" VariableName="className">
+			<Meta>
+				<Type>String</Type>
+			</Meta>
+		</Data>
+		<MessageText Language="DE">fehler beim binden von %0% an rmi-registry</MessageText>
+      <MessageText Language="EN">error binding %0% to rmi-registry</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10001" TypeName="XMCP_RMI_UNBINDING_ERROR" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="klassenname" VariableName="className">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">fehler beim lösen von %0% von rmi-registry</MessageText>
+      <MessageText Language="EN">error unbinding %0% from rmi-registry</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10190" TypeName="XMCP_UNKOWN_XYNA_COMMAND" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="command" VariableName="command">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Xyna hat das Kommando "%0%" nicht verstanden. Hilfe mit dem Kommando "help".</MessageText>
+      <MessageText Language="EN">unknown command "%0%". try "help"</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10192" TypeName="XMCP_INVALID_PARAMETERNUMBER" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="parameterlist" VariableName="parameterlist">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Ungültige Anzahl von Parametern. Erwartete Parameter: %0%</MessageText>
+      <MessageText Language="EN">invalid number of parameters. expected: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10193" TypeName="XMCP_RMI_RELOADING_ERROR" TypePath="com.gip.xyna.xmcp.exceptions">
+      <MessageText Language="DE">Fehler beim reload des RMIChannels</MessageText>
+      <MessageText Language="EN">Error reloading RMI channel</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10194" TypeName="XMCP_COULD_NOT_DELETE_DIRECTORY" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="dir" VariableName="dir">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Verzeichnis %0% konnte nicht gelöscht werden</MessageText>
+      <MessageText Language="EN">Couldn't delete directory %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10195" TypeName="XMCP_COULD_NOT_GET_CANONICAL_PATH" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="dir1" VariableName="dir1">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="dir2" VariableName="dir2">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Kanonischer Verzeichnisname konnte nicht ermittelt werden (Betroffene Dateien: "%0%", "%1%")</MessageText>
+      <MessageText Language="EN">Could not evaluate canonical filename for "%0%" and "%1%"</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10196" TypeName="XMCP_ERROR_COPYING_FILE" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="file1" VariableName="file1">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="file2" VariableName="file2">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Datei %0% konnte nicht nach %1% kopiert werden</MessageText>
+      <MessageText Language="EN">Could not copy %0% to %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10197" TypeName="XMCP_PROBLEM_ACCESSING_FILE" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="file" VariableName="file">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Auf Datei %0% konnte nicht zugegriffen werden</MessageText>
+      <MessageText Language="EN">Couldn't access file %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10198" TypeName="XMCP_FILE_DOES_NOT_EXIST" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="file" VariableName="file">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Datei %0% nicht gefunden.</MessageText>
+      <MessageText Language="EN">Didn't find file %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10199" TypeName="XMCP_InternalObjectModifiedException" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="nameOfObject" VariableName="nameOfObject">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Internes Objekt %0% kann nicht geändert werden.</MessageText>
+      <MessageText Language="EN">Internal object %0% may not be modified.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-10200" TypeName="XMCP_RestrictedCallNotAvailableException" TypePath="com.gip.xyna.xmcp.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="restrictedCall" VariableName="restrictedCall">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Aufruf %0% ist beschränkt und derzeit nicht möglich, weil er bereits ausgeführt wird.</MessageText>
+      <MessageText Language="EN">Call %0% is restricted and not available at this moment because its resource is used by someone else.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-10201" TypeName="XMCP_InvalidParameterCombinationException" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="parameter1" VariableName="parameter1">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="parameter2" VariableName="parameter2">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es können nicht beide der Parameter '%0%' und '%1%' gleichzeitig gesetzt werden.</MessageText>
+      <MessageText Language="EN">Parameter '%0%' and '%1%' may not both be set.</MessageText>
+   </ExceptionType> 
+   
+   <ExceptionType Code="XYNA-10220" TypeName="XMCP_RMIConnectionFailureException" TypePath="com.gip.xyna.xmcp.exceptions">
+      <Data Label="url" VariableName="url">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die RMI Verbindung zu %0% konnte nicht aufgebaut werden.</MessageText>
+      <MessageText Language="EN">RMI Connection to %0% could not be created.</MessageText>
+   </ExceptionType>   
+   
+</ExceptionStore>

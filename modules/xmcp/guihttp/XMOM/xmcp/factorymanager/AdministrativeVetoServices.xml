@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Administrative Veto Services" TypeName="AdministrativeVetoServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>AdministrativeVetoServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="Administrative Veto Services" TypeName="AdministrativeVetoServices">
+    <Operation IsStatic="true" Label="Change veto" Name="changeVeto">
+      <Meta>
+        <Abstract.UID>DBE38125-1832-63B5-B54A-2B11CF84E91F</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Change administrative veto exception" ReferenceName="ChangeAdministrativeVetoException" ReferencePath="xmcp.factorymanager.administrativevetoes.exceptions" VariableName="changeAdministrativeVetoException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.AdministrativeVetoServicesImpl.changeVeto(administrativeVeto);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create veto" Name="createVeto">
+      <Meta>
+        <Abstract.UID>4D4F0A69-D799-763B-073F-2B0A2551C8F5</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Create administrative veto exception" ReferenceName="CreateAdministrativeVetoException" ReferencePath="xmcp.factorymanager.administrativevetoes.exceptions" VariableName="createAdministrativeVetoException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.AdministrativeVetoServicesImpl.createVeto(administrativeVeto);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete veto" Name="deleteVeto">
+      <Meta>
+        <Abstract.UID>988EFA51-6250-9905-DE2D-2B1398ABF608</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Administrative Veto Name" ReferenceName="AdministrativeVetoName" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVetoName"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Delete administrative veto exception" ReferenceName="DeleteAdministrativeVetoException" ReferencePath="xmcp.factorymanager.administrativevetoes.exceptions" VariableName="deleteAdministrativeVetoException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.AdministrativeVetoServicesImpl.deleteVeto(administrativeVetoName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get list entries" Name="getListEntries">
+      <Meta>
+        <Abstract.UID>044804F1-0798-0057-9DCD-2AE054FB54B9</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load administrative vetoes exception" ReferenceName="LoadAdministrativeVetoesException" ReferencePath="xmcp.factorymanager.administrativevetoes.exceptions" VariableName="loadAdministrativeVetoesException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.AdministrativeVetoServicesImpl.getListEntries(tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get veto details" Name="getVetoDetails">
+      <Meta>
+        <Abstract.UID>4A340E4C-54D2-FE10-14AB-2B0E03F44291</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Administrative Veto Name" ReferenceName="AdministrativeVetoName" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVetoName"/>
+      </Input>
+      <Output>
+        <Data Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load administrative veto exception" ReferenceName="LoadAdministrativeVetoException" ReferencePath="xmcp.factorymanager.administrativevetoes.exceptions" VariableName="loadAdministrativeVetoException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.AdministrativeVetoServicesImpl.getVetoDetails(administrativeVetoName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

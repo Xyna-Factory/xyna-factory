@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="SSH Mock Close" TypeName="SSHMockClose" TypePath="xact.ssh.mock.wfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(117)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="SSH Mock Close" Name="SSHMockClose">
+    <Input>
+      <Data ID="6" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession">
+        <Target RefID="19"/>
+        <Target RefID="24"/>
+        <Target RefID="33"/>
+        <Target RefID="37"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="No Session Found Exception" ReferenceName="NoSessionFoundException" ReferencePath="xact.ssh.mock" VariableName="noSessionFoundException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="SSHMock" ReferenceName="SSHMock.SSHMock" ReferencePath="xact.ssh.mock">
+      <Source RefID="19"/>
+      <Source RefID="33"/>
+      <Source RefID="37"/>
+      <Target RefID="19"/>
+      <Target RefID="33"/>
+      <Target RefID="37"/>
+    </ServiceReference>
+    <Function ID="19" Label="Get Mocked Device">
+      <Source RefID="4"/>
+      <Source RefID="6"/>
+      <Target RefID="4"/>
+      <Target RefID="20"/>
+      <Invoke Operation="getMockedDevice" ServiceID="4">
+        <Source RefID="6"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="20"/>
+      </Receive>
+    </Function>
+    <Data ID="20" Label="Mocked Device" ReferenceName="MockedDevice" ReferencePath="xact.ssh.mock" VariableName="mockedDevice">
+      <Source RefID="19"/>
+      <Target RefID="24"/>
+    </Data>
+    <Function ID="24" Label="Disconnect">
+      <Source RefID="23"/>
+      <Source RefID="20"/>
+      <Source RefID="6"/>
+      <Target RefID="23"/>
+      <Target RefID="26"/>
+      <Invoke Operation="disconnect" ServiceID="23">
+        <Source RefID="20"/>
+        <Source RefID="6"/>
+      </Invoke>
+      <Receive ServiceID="23">
+        <Target RefID="26"/>
+      </Receive>
+    </Function>
+    <Choice ID="29" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="26"/>
+      <Input>
+        <Data ID="39" Label="Session Store Parameter" ReferenceName="SessionStoreParameter" ReferencePath="xact.ssh.mock" VariableName="sessionStoreParameter39"/>
+        <Source RefID="26">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="27" Label="true" Premise="%0%.doNotStore">
+        <Function ID="33" Label="Remove Session Data">
+          <Source RefID="6"/>
+          <Source RefID="4"/>
+          <Target RefID="4"/>
+          <Invoke Operation="removeSessionData" ServiceID="4">
+            <Source RefID="6"/>
+          </Invoke>
+          <Receive ServiceID="4"/>
+        </Function>
+        <Assign ID="40"/>
+      </Case>
+      <Case ID="28" Label="false">
+        <Function ID="37" Label="Store Session Data">
+          <Source RefID="6"/>
+          <Source RefID="26"/>
+          <Source RefID="4"/>
+          <Target RefID="4"/>
+          <Invoke Operation="storeSessionData" ServiceID="4">
+            <Source RefID="6"/>
+            <Source RefID="26"/>
+          </Invoke>
+          <Receive ServiceID="4"/>
+        </Function>
+        <Assign ID="41"/>
+      </Case>
+    </Choice>
+    <ServiceReference ID="23" Label="Mocked Device" ReferenceName="MockedDevice.MockedDevice" ReferencePath="xact.ssh.mock">
+      <Source RefID="24"/>
+      <Target RefID="24"/>
+    </ServiceReference>
+    <Data ID="26" Label="Session Store Parameter" ReferenceName="SessionStoreParameter" ReferencePath="xact.ssh.mock" VariableName="sessionStoreParameter">
+      <Source RefID="24"/>
+      <Target RefID="29"/>
+      <Target RefID="37"/>
+    </Data>
+    <Assign ID="11"/>
+  </Operation>
+</Service>

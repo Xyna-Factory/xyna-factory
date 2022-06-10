@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Right" TypeName="Right" TypePath="xmcp.xacm.rightmanagement.datatypes" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Right Name" VariableName="rightName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Documentation" VariableName="documentation">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Parameter List" ReferenceName="RightParameter" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="parameterList"/>
+  <Data Label="Original Right Name" VariableName="originalRightName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Right" TypeName="Right">
+    <Operation IsStatic="false" Label="Create Right From Right Name With Parameter Definition" Name="createRightFromRightNameWithParameterDefinition">
+      <Input>
+        <Data Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName"/>
+      </Input>
+      <Output>
+        <Data Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">//return getImplementationOfInstanceMethods().createRightFromRightNameWithParameterDefinition(rightName);
+Right right = new Right();
+right.setOriginalRightName(rightName.getRightName());
+if(rightName.getRightName().contains(":")) {
+  String[] split = rightName.getRightName().split(":");
+  right.setRightName(split[0]);
+  List&lt;RightParameter&gt; parameterList = new ArrayList&lt;RightParameter&gt;();
+  for(int i=1; i&lt;split.length; i++) {
+    RightParameter parameter = new RightParameter();
+    List&lt;RightParameterDefinition&gt; parameterDefinitionList = new ArrayList&lt;RightParameterDefinition&gt;();
+    String definition = split[i];
+    if(definition.matches("^\\s*\\[(.*)\\]")) {
+      parameter.setType("options");
+      String[] defsplit = definition.replace("[", "").replace("]","").split(",");
+      for(String def : defsplit) {
+        RightParameterDefinition rpd = new RightParameterDefinition(); 
+        rpd.setDefinition(def.trim());  
+        parameterDefinitionList.add(rpd);    
+      }   
+      parameter.setParameterDefinitionList(parameterDefinitionList);
+    }
+    else if(definition.matches("^\\s*(\\/.*\\/)")) {
+      parameter.setType("regexp");      
+      RightParameterDefinition rpd = new RightParameterDefinition();
+      rpd.setDefinition(definition.trim());      
+      parameterDefinitionList.add(rpd);
+      parameter.setParameterDefinitionList(parameterDefinitionList);
+    }
+    else {
+      parameter.setType("xyna");
+      RightParameterDefinition rpd = new RightParameterDefinition();
+      rpd.setDefinition(definition.trim());      
+      parameterDefinitionList.add(rpd);
+      parameter.setParameterDefinitionList(parameterDefinitionList);
+    }     
+    parameterList.add(parameter);
+  }
+  right.setParameterList(parameterList);
+}
+else {
+  right.setRightName(rightName.getRightName());
+}
+return right;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Create Right From Right Name With Parameter Value" Name="createRightFromRightNameWithParameterValue">
+      <Input>
+        <Data Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName"/>
+      </Input>
+      <Output>
+        <Data Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">//return getImplementationOfInstanceMethods().createRightFromRightNameWithParameterValue(rightName);
+Right right = new Right();
+right.setOriginalRightName(rightName.getRightName());
+if(rightName.getRightName().contains(":")) {
+  String[] split = rightName.getRightName().split(":");
+  right.setRightName(split[0]);
+  List&lt;RightParameter&gt; parameterList = new ArrayList&lt;RightParameter&gt;();
+  for(int i=1; i&lt;split.length; i++) {
+    RightParameter parameter = new RightParameter();
+    parameter.setValue(split[i]);
+    parameterList.add(parameter);
+  }
+  if(rightName.getRightName().endsWith(":")){
+    RightParameter parameter = new RightParameter();
+    parameter.setValue("");
+    parameterList.add(parameter);
+  }  
+  right.setParameterList(parameterList);
+}
+else {
+  right.setRightName(rightName.getRightName());
+}
+return right;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Create Right Name With Parameter Definition" Name="createRightNameWithParameterDefinition">
+      <Input>
+        <Data Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right"/>
+      </Input>
+      <Output>
+        <Data Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">//getImplementationOfInstanceMethods().createRightNameWithParameterDefinition(right);
+StringBuffer sb = new StringBuffer();
+sb.append(right.getRightName());
+if(right.getParameterList() != null){
+  for(RightParameter rp : right.getParameterList()) {
+    if(rp.getType().equals("options")) {
+      sb.append(":[");
+      for(int i=0; i&lt;rp.getParameterDefinitionList().size(); i++) {
+        RightParameterDefinition rpd = rp.getParameterDefinitionList().get(i);
+        if(i &gt; 0) {
+          sb.append(",");
+        }
+        sb.append(rpd.getDefinition());
+      }
+      sb.append("]");
+    }
+    else {
+      for(RightParameterDefinition rpd : rp.getParameterDefinitionList()) {
+        sb.append(":").append(rpd.getDefinition());
+      }
+    }
+  }
+}
+return new RightName(sb.toString());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Create Right Name With Parameter Value" Name="createRightNameWithParameterValue">
+      <Input>
+        <Data Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right"/>
+      </Input>
+      <Output>
+        <Data Label="Right Name" ReferenceName="RightName" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="rightName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">//return getImplementationOfInstanceMethods().createRightNameWithParameterValue(right);
+StringBuffer sb = new StringBuffer();
+sb.append(right.getRightName());
+if(right.getParameterList() != null){
+  for(RightParameter rp : right.getParameterList()) {
+    sb.append(":").append(rp.getValue());
+  }
+}
+return new RightName(sb.toString());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

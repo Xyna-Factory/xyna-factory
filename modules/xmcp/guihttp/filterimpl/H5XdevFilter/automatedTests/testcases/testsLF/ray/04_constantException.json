@@ -1,0 +1,162 @@
+{
+  "meta":
+  {
+    "name": "constantException",
+	"description": "Erstellt eine Exception, fügt sie in einen Workflow ein und belegt sie konstant.",
+	"created": "12.11.2019",
+	"updated": "12.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd2!"
+	},
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd3!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd4!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!exceptionPath!": "autoTest.generated.!rnd1!"},
+		{"!exceptionLabel!": "generatedException_!rnd2!"},
+		{"!workspace!": "default workspace"},
+		{"!workflowPath!": "autoTest.generated.!rnd3!"},
+		{"!workflowLabel!": "generatedWorkflow_!rnd4!"}
+	  ]
+	},
+	{
+	  "operation": "set",
+	  "variable": "!workspaceEscaped!",
+	  "value": "!workspace!"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!workspaceEscaped!",
+	  "modification": {"operation": "urlencode"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createException",
+	  "mapInput":
+	  {
+	    "!path!": "!exceptionPath!",
+		"!label!": "!exceptionLabel!",
+		"!workspace!": "!workspace!"
+	  },
+	  "mapOutput":
+	  {
+	    "!name!": "!exceptionName!"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput":
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload":{"index":-1,"content":{"type":"exception","label":"!exceptionLabel!","fqn":"!exceptionPath!.!exceptionName!","isList":false},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!stepThrowInput!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=input]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!stepThrowInput!/constant",
+	  "payload": {"constant":"{\"$meta\":{\"fqn\":\"!exceptionPath!.!exceptionName!\",\"rtc\":{\"workspace\":\"!workspace!\"}}}","revision":"!revision!"}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/save",
+	  "payload": {"revision":"!revision!","path":"!workflowPath!","label":"!workflowLabel!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!quotedFqn!",
+	  "pathInResponse": "updates/$list[0]/fqn"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "splitFQNtoPathAndName",
+	  "mapInput":
+	  {
+	    "!fqn!": "!quotedFqn!"
+	  },
+	  "mapOutput":
+	  {
+	    "!path!": "!wfSetPath!",
+		"!name!": "!wfSetName!"
+	  }
+	},
+	{
+	  "operation": "set",
+	  "variable": "!url!",
+	  "value": "/runtimeContext/!workspaceEscaped!/xmom/workflows/!wfSetPath!/!wfSetName!"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "listLength",
+	  "expectedValue": "1",
+	  "path": "connections/$list"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!connectionType!",
+	  "pathInResponse": "connections/$list[0]/type",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!connectionType!",
+	  "value": "constant"
+	}
+  ]
+}

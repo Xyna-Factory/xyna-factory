@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "migrateSuccess.json",
+	"migrateFail.json",
+	"cleanup.json"
+  ]
+}

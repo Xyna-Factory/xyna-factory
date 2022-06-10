@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="UserManagement" TypeName="UserManagement" TypePath="xmcp.xacm" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>UserManagementImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="UserManagement" TypeName="UserManagement">
+    <Operation IsStatic="true" Label="Delete user" Name="deleteUser">
+      <Input>
+        <Data Label="Username" ReferenceName="Username" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="username"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Delete User Exception" ReferenceName="DeleteUserException" ReferencePath="xmcp.xacm.usermanagement.exceptions" VariableName="deleteUserException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.xacm.UserManagementImpl.deleteUser(username);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Domains" Name="getDomains">
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="Domain" ReferenceName="Domain" ReferencePath="xmcp.xacm.domainmanagement.datatypes" VariableName="domain"/>
+      </Output>
+      <Throws>
+        <Exception Label="List Domains Exception" ReferenceName="ListDomainsException" ReferencePath="xmcp.xacm.usermanagement.exceptions" VariableName="listDomainsException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.xacm.UserManagementImpl.getDomains();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Roles" Name="getRoles">
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="Role name" ReferenceName="RoleName" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleName"/>
+      </Output>
+      <Throws>
+        <Exception Label="Get Roles Exception" ReferenceName="GetRolesException" ReferencePath="xmcp.xacm.usermanagement.exceptions" VariableName="getRolesException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.xacm.UserManagementImpl.getRoles();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get users" Name="getUsers">
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user1"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load Users Exception" ReferenceName="LoadUsersException" ReferencePath="xmcp.xacm.usermanagement.exceptions" VariableName="loadUsersException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.xacm.UserManagementImpl.getUsers(tableInfo2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

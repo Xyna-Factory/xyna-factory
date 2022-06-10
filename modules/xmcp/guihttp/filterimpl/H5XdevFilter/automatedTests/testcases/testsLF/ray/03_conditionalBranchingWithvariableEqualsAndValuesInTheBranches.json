@@ -1,0 +1,213 @@
+{
+  "meta":
+  {
+    "name": "conditional Branching with vairbale at the top and .member=value in the branches",
+	"description": "erstellt einen Datentypen mit zwei Membern. Erstellt einen neuen Workflow mit conditionalBranching und fügt den Datentypen in die Expression ein. Die Expressions der beiden eingefügten  Branches überprüfen den Wert der Membervariablen.",
+	"created": "13.11.2019",
+	"updated": "13.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd1!"
+	},
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd2!"
+	},
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd3!",
+	  "length": 6
+	},
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd4!",
+	  "length": 6
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!workflowPath!": "autoTest.generated.ray03"},
+		{"!workflowLabel!": "condBranWithMemEqValInBranches_!rnd1!"},
+		{"!workspaceName!": "default workspace"},
+		{"!workspaceEscaped!": "!workspaceName!"},
+		{"!datatypePath!": "autoTest.generated.ray03.condBranWithMemEqValInBranches"},
+		{"!datatypeLabel!": "generatedDatatype_!rnd2!"},
+		{"!datatypeMember1Label!": "member1_!rnd3!"},
+		{"!datatypeMember2Label!": "member2_!rnd4!"},
+		{"!branch1equals!": "test1"},
+		{"!branch2equals!": "test2"}
+	  ]
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!workspaceEscaped!",
+	  "modification": {"operation": "urlencode"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!": "!workspaceName!", 
+		"!path!": "!datatypePath!", 
+		"!label!": "!datatypeLabel!"
+	  },
+	  "mapOutput": {"!name!": "!datatypeName!"}
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "addSimpleTypeMemberToDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!datatypePath!": "!datatypePath!",
+		"!datatypeName!": "!datatypeName!",
+		"!insertType!": "String",
+		"!insertLabel!": "!datatypeMember1Label!"
+	  },
+	  "mapOutput": {"!insertName!": "!datatypeMember1Name!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "addSimpleTypeMemberToDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!": "!workspaceName!",
+		"!datatypePath!": "!datatypePath!",
+		"!datatypeName!": "!datatypeName!",
+		"!insertType!": "String",
+		"!insertLabel!": "!datatypeMember2Label!"
+	  },
+	  "mapOutput": {"!insertName!": "!datatypeMember2Name!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!",
+		"!newPath!": "!newWorkflowPath!",
+		"!newWorkflowName!": "!newWorkflowName!"
+	  }
+	},
+    {
+	  "meta": "insert conditional Branching",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"conditionalBranching"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!branchArea!",
+	  "pathInResponse": "updates/$list[fqn=!newWorkflowPath!.!newWorkflowName!]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=content]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "insert first Branch",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!branchArea!/insert",
+	  "payload": {"index":-1,"content":{"type":"branch"},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+    {
+	  "meta": "insert second branch",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!branchArea!/insert",
+	  "payload": {"index":-1,"content":{"type":"branch"},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!formulaInput!",
+	  "pathInResponse": "updates/$list[fqn=!newWorkflowPath!.!newWorkflowName!]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=input]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+    {
+	  "meta": "add Branching expression 1",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!formulaInput!/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!datatypeLabel!","fqn":"!datatypePath!.!datatypeName!","isList":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+    {
+	  "meta": "add branching expression 2",
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!formulaInput!/change",
+	  "payload": {"content":{"expression":"%0%"},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!caseInput1!",
+	  "pathInResponse": "updates/$list[fqn=!newWorkflowPath!.!newWorkflowName!]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=content]/items/$list[0]/areas/$list[name=input]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!caseInput2!",
+	  "pathInResponse": "updates/$list[fqn=!newWorkflowPath!.!newWorkflowName!]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=content]/items/$list[1]/areas/$list[name=input]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "set branch expression 1",
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!caseInput1!/change",
+	  "payload": {"content":{"expression":"%0%¿.!datatypeMember1Name!==\"!branch1equals!\"?"},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "set branch expression 2",
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!caseInput2!/change",
+	  "payload": {"content":{"expression":"%0%¿.!datatypeMember2Name!==\"!branch2equals!\"?"},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/save",
+	  "payload": {"revision":"!revision!","path":"!workflowPath!","label":"!workflowLabel!"}
+	}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "deleteFormula.json",
+	"changeMapping.json",
+	"deleteStep.json"
+  ]
+}

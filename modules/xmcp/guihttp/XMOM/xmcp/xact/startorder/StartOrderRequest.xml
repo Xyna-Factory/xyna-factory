@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Start Order Request" TypeName="StartOrderRequest" TypePath="xmcp.xact.startorder" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Order Type" VariableName="orderType">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Async" VariableName="async">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Custom String Container" VariableName="customStringContainer">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Input Source Id" VariableName="inputSourceId">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Monitoring Level" VariableName="monitoringLevel">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Input" ReferenceName="AnyType" ReferencePath="base" VariableName="input"/>
+  <Data Label="Timeout" VariableName="timeout">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+</DataType>

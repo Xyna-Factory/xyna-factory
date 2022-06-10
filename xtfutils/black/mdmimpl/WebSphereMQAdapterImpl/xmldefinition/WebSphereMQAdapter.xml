@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="WebSphereMQ Adapter" TypeName="WebSphereMQAdapter" TypePath="xact.jms.webspheremq" Version="1.7">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>WebSphereMQAdapterImpl.jar</Libraries>
+  <Service Label="WebSphereMQ Adapter" TypeName="WebSphereMQAdapter">
+    <Operation IsStatic="true" Label="Adapt JMS Property List to String" Name="adaptJMSPropertyListToString">
+      <Input>
+        <Data Label="JMS Property List" ReferenceName="JMSPropertyList" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyList"/>
+      </Input>
+      <Output>
+        <Data Label="JMS Property List Document" ReferenceName="JMSPropertyListDocument" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyListDocument"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Adapt String to JMS Property List" Name="adaptStringToJMSPropertyList">
+      <Input>
+        <Data Label="JMS Property List Document" ReferenceName="JMSPropertyListDocument" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyListDocument"/>
+      </Input>
+      <Output>
+        <Data Label="JMS Property List" ReferenceName="JMSPropertyList" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyList"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Enqueue Extd" Name="enqueueExtd">
+      <Input>
+        <Data Label="Xyna Queue Mgmt Queue Name" ReferenceName="XynaQueueMgmtQueueName" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="xynaQueueMgmtQueueName"/>
+        <Data Label="WebSphere MQ Message" ReferenceName="WebSphereMQMessage" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="webSphereMQMessage"/>
+        <Data Label="Correlation ID" ReferenceName="CorrelationID" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="correlationID"/>
+        <Data Label="JMS Message Type" ReferenceName="JMSMessageType" ReferencePath="xact.WebSphereMQ.datatypes.msgtypes" VariableName="jMSMessageType"/>
+        <Data Label="Keep Connection Open Flag" ReferenceName="KeepConnectionOpenFlag" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="keepConnectionOpenFlag"/>
+        <Data Label="Connection Timeout" ReferenceName="ConnectionTimeout" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="connectionTimeout"/>
+        <Data Label="JMS Property List" ReferenceName="JMSPropertyList" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyList"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">WebSphereMQAdapterImpl.enqueueExtd(xynaQueueMgmtQueueName, webSphereMQMessage, correlationID, jMSMessageType, keepConnectionOpenFlag, connectionTimeout, jMSPropertyList);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Enqueue Extd With JMS Reply To" Name="enqueueExtdWithJMSReplyTo">
+      <Input>
+        <Data Label="Xyna Queue Mgmt Queue Name" ReferenceName="XynaQueueMgmtQueueName" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="xynaQueueMgmtQueueName"/>
+        <Data Label="WebSphere MQ Message" ReferenceName="WebSphereMQMessage" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="webSphereMQMessage"/>
+        <Data Label="Correlation ID" ReferenceName="CorrelationID" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="correlationID"/>
+        <Data Label="JMS Message Type" ReferenceName="JMSMessageType" ReferencePath="xact.WebSphereMQ.datatypes.msgtypes" VariableName="jMSMessageType"/>
+        <Data Label="Keep Connection Open Flag" ReferenceName="KeepConnectionOpenFlag" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="keepConnectionOpenFlag"/>
+        <Data Label="Connection Timeout" ReferenceName="ConnectionTimeout" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="connectionTimeout"/>
+        <Data Label="JMS Property List" ReferenceName="JMSPropertyList" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyList"/>
+        <Data Label="JMS Reply To" ReferenceName="JMSReplyTo" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSReplyTo"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.jms.webspheremq.WebSphereMQAdapterImpl.enqueueExtdWithJMSReplyTo(xynaQueueMgmtQueueName, webSphereMQMessage, correlationID, jMSMessageType, keepConnectionOpenFlag, connectionTimeout, jMSPropertyList, jMSReplyTo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Filter JMS Property List" Name="filterJMSPropertyList">
+      <Input>
+        <Data Label="JMS Property List" ReferenceName="JMSPropertyList" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyList"/>
+        <Data Label="JMS Property Filter" ReferenceName="JMSPropertyFilter" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyFilter"/>
+      </Input>
+      <Output>
+        <Data Label="JMS Property List" ReferenceName="JMSPropertyList" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyList23"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Select JMS Property" Name="selectJMSProperty">
+      <Input>
+        <Data Label="JMS Property Name" ReferenceName="JMSPropertyName" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyName"/>
+        <Data Label="JMS Property List" ReferenceName="JMSPropertyList" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSPropertyList"/>
+      </Input>
+      <Output>
+        <Data Label="Flag &quot;JMS Property Exists in List&quot;" ReferenceName="FlagJMSPropertyExistsInList" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="flagJMSPropertyExistsInList"/>
+        <Data Label="JMS Property" ReferenceName="JMSProperty" ReferencePath="xact.WebSphereMQ.datatypes" VariableName="jMSProperty"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.jms.webspheremq.WebSphereMQAdapterImpl.selectJMSProperty(jMSPropertyName, jMSPropertyList);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

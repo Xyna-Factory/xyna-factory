@@ -1,0 +1,35 @@
+{
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!iterations!",
+      "value": 10
+    },
+    {
+      "operation": "set",
+      "variable": "!result!",
+      "value": 0
+    },
+    {
+      "operation": "iterate",
+      "count": "!iterations!",
+      "singleVariableName": "!single!",
+      "operations":
+      [
+        {
+          "operation": "add",
+          "targetVariable": "!result!",
+          "sourceVariable": "!result!",
+          "additionVariable": "!single!"
+        }
+      ]
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!result!",
+      "value": 45
+    }
+  ]
+}

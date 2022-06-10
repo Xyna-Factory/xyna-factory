@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "PMOD2766.json",
+    "PMOD2766_oneOutput.json"
+  ]
+}

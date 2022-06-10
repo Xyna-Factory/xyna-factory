@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="185" Label="DeleteRows" TypeName="DeleteRows" TypePath="xmcp.dhcp.v4.pooltypeconfig" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(170)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="DeleteRows" Name="DeleteRows">
+    <Input>
+      <Data ID="89" Label="Delete Rows Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="row_ctype89">
+        <Target RefID="38"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="186" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype">
+        <Source RefID="9"/>
+      </Data>
+      <Data ID="184" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="deleteRowsOutput184">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="4" Label="Pooltype" ReferenceName="Pooltype.Pooltype" ReferencePath="xmcp.dhcp.v4.pooltypeconfig">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Mappings ID="38" Label="Build Input">
+      <Source RefID="89"/>
+      <Target RefID="72"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="102" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="row_ctype102">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="89"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Delete Rows Request ctype" ReferenceName="DeleteRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="deleteRowsRequest_ctype">
+          <Target RefID="5"/>
+        </Data>
+        <Target RefID="72"/>
+      </Output>
+      <Mapping>%1%.deleteRowsInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Delete Rows">
+      <Source RefID="4"/>
+      <Source RefID="72"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="deleteRows" ServiceID="4">
+        <Source RefID="72"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="47" Label="Extract Output">
+      <Source RefID="6"/>
+      <Target RefID="152"/>
+      <Target RefID="188"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="8" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype8">
+          <Source RefID="9"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="187" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype187"/>
+        <Target RefID="188"/>
+      </Output>
+      <Output>
+        <Data ID="151" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="deleteRowsOutput151">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="152"/>
+      </Output>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+      <Mapping>%2%.deleteRowsOutput=%0%.payload.deleteRowsOutput</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+      <Target RefID="47"/>
+    </Data>
+    <Data ID="72" Label="Delete Rows Request ctype" ReferenceName="DeleteRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="deleteRowsRequest_ctype72">
+      <Source RefID="38"/>
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="152" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="deleteRowsOutput152">
+      <Source RefID="47"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="188" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype188">
+      <Source RefID="47"/>
+      <Target RefID="9"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="188"/>
+      <Source RefID="152"/>
+      <Target RefID="186"/>
+      <Target RefID="184"/>
+      <Copy>
+        <Source RefID="188"/>
+        <Target RefID="186"/>
+      </Copy>
+      <Copy>
+        <Source RefID="152"/>
+        <Target RefID="184"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

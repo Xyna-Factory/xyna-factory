@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XSDBaseModel" BaseTypePath="xdnc.model.xsd" IsAbstract="false" Label="Payload_ctype" TypeName="Payload_ctype" TypePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" Version="1.8">
+  <Meta>
+    <DataModel>
+      <XSDInfo>&lt;XSD Namespace="http://www.gip.com/juno/Gui/WS/Messages" Name="Payload_ctype"&gt;
+&lt;/XSD&gt;</XSDInfo>
+      <ModelName>xdnc.model.xsd.v0.ConfigFile</ModelName>
+    </DataModel>
+  </Meta>
+  <Data Label="TlvToAsciiResponse" ReferenceName="TlvToAsciiResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="tlvToAsciiResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="TlvToAsciiResponse" Type="Element" Usage="optional" Position="0"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromTemplateForInitializedCableModemResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromTemplateForInitializedCableModemResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromTemplateForInitializedCableModemResponse" Type="Element" Usage="optional" Position="1"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromTemplateForInitializedCableModemResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromTemplateForInitializedCableModemResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromTemplateForInitializedCableModemResponse" Type="Element" Usage="optional" Position="2"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromTemplateForUnregisteredCableModemResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromTemplateForUnregisteredCableModemResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromTemplateForUnregisteredCableModemResponse" Type="Element" Usage="optional" Position="3"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromTemplateForUnregisteredCableModemResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromTemplateForUnregisteredCableModemResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromTemplateForUnregisteredCableModemResponse" Type="Element" Usage="optional" Position="4"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromStringResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromStringResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromStringResponse" Type="Element" Usage="optional" Position="5"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromStringV4Response" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromStringV4Response">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromStringV4Response" Type="Element" Usage="optional" Position="6"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="ShowPacketsAsAsciiResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="showPacketsAsAsciiResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="ShowPacketsAsAsciiResponse" Type="Element" Usage="optional" Position="7"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="ShowV4PacketsAsAsciiResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="showV4PacketsAsAsciiResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="ShowV4PacketsAsAsciiResponse" Type="Element" Usage="optional" Position="8"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromStringResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromStringResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromStringResponse" Type="Element" Usage="optional" Position="9"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromStringV4Response" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromStringV4Response">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromStringV4Response" Type="Element" Usage="optional" Position="10"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromTemplateForSipMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromTemplateForSipMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromTemplateForSipMtaResponse" Type="Element" Usage="optional" Position="11"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromTemplateForSipMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromTemplateForSipMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromTemplateForSipMtaResponse" Type="Element" Usage="optional" Position="12"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromTemplateForNcsMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromTemplateForNcsMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromTemplateForNcsMtaResponse" Type="Element" Usage="optional" Position="13"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromTemplateForNcsMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromTemplateForNcsMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromTemplateForNcsMtaResponse" Type="Element" Usage="optional" Position="14"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromTemplateForIsdnMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromTemplateForIsdnMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromTemplateForIsdnMtaResponse" Type="Element" Usage="optional" Position="15"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromTemplateForIsdnMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromTemplateForIsdnMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromTemplateForIsdnMtaResponse" Type="Element" Usage="optional" Position="16"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromTemplateForUninitializedMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromTemplateForUninitializedMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromTemplateForUninitializedMtaResponse" Type="Element" Usage="optional" Position="17"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromTemplateForUninitializedMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromTemplateForUninitializedMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromTemplateForUninitializedMtaResponse" Type="Element" Usage="optional" Position="18"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateAsciiFromTemplateForUnregisteredMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateAsciiFromTemplateForUnregisteredMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateAsciiFromTemplateForUnregisteredMtaResponse" Type="Element" Usage="optional" Position="19"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GenerateTlvFromTemplateForUnregisteredMtaResponse" ReferenceName="TextResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages" VariableName="generateTlvFromTemplateForUnregisteredMtaResponse">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GenerateTlvFromTemplateForUnregisteredMtaResponse" Type="Element" Usage="optional" Position="20"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+</DataType>

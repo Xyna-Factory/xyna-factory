@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<xsd:schema xmlns="http://www.gip.com/juno/DHCP/WS/StaticHost/Messages"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:gui="http://www.gip.com/juno/Gui/WS/Messages"
+	targetNamespace="http://www.gip.com/juno/DHCP/WS/StaticHost/Messages"
+	elementFormDefault="qualified">
+
+  <xsd:import namespace="http://www.gip.com/juno/Gui/WS/Messages"
+              schemaLocation="JunoGuiCommon.xsd" />
+
+	<xsd:complexType name="Row_ctype">
+		<xsd:sequence>
+      <xsd:element name="StaticHostID" type="xsd:string"/>
+      <xsd:element name="SubnetID" type="xsd:string"/>
+      <xsd:element name="Subnet" type="xsd:string"/>
+      <xsd:element name="Cpe_mac" type="xsd:string"/>
+	  <xsd:element name="RemoteId" type="xsd:string"/>
+	  <xsd:element name="Ip" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="Dns" type="xsd:string"/>
+      <xsd:element name="Hostname" type="xsd:string"/>
+      <xsd:element name="Deployed1" type="xsd:string"/>
+      <xsd:element name="Deployed2" type="xsd:string"/>
+      <xsd:element name="DynamicDnsActive" type="xsd:string"/>
+      <xsd:element name="ConfigDescr" type="xsd:string"/>
+      <xsd:element name="AssignedPoolID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="Pool" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="DesiredPoolType" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="PoolType" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="Cmtsip" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+
+
+ <xsd:element name="Row" type="Row_ctype"/>
+
+  <xsd:complexType name="RowList_ctype">
+    <xsd:sequence>
+      <xsd:element ref="Row" minOccurs="0" maxOccurs="1000"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="RowListInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="Content" type="RowList_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="InsertRowRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="InsertRowInput" type="Row_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SearchRowsRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="SearchRowsInput" type="Row_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UpdateRowRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="UpdateRowInput" type="Row_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="DeleteRowsRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="DeleteRowsInput" type="Row_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+
+  <xsd:complexType name="RowListOutput_ctype">
+    <xsd:sequence>
+      <xsd:element name="OutputHeader" type="gui:OutputHeaderContent_ctype" />
+      <xsd:element name="Content" type="RowList_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="OneRowOutput_ctype">
+    <xsd:sequence>
+      <xsd:element name="OutputHeader" type="gui:OutputHeaderContent_ctype" />
+      <xsd:element name="Content" type="Row_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UpdateRowPkInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="Conditions" type="Row_ctype" />
+      <xsd:element name="NewValues" type="Row_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UpdateRowPkRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="UpdateRowPkInput" type="UpdateRowPkInput_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GetFreeReservedIPsRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="GetFreeReservedIPsInput" type="GetFreeReservedIPsInput_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GetFreeReservedIPsInput_ctype">
+  	<xsd:sequence>
+  	  <xsd:element name="Cpe_mac" type="xsd:string"/>
+  	</xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GetFreeReservedIPsResponse_ctype">
+  	<xsd:sequence>
+  	  <xsd:element name="ResponseHeader" type="gui:ResponseHeader_ctype" />
+  	  <xsd:element name="GetFreeReservedIPsOutput" type="GetFreeReservedIPsOutput_ctype"/>
+  	</xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GetFreeReservedIPsOutput_ctype">
+  	<xsd:sequence>
+  	  <xsd:element name="Ip" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+  	</xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="SetIPforCPERequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="SetIPforCPEInput" type="SetIPforCPEInput_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="SetIPforCPEInput_ctype">
+		<xsd:sequence>
+	      <xsd:element name="Cpe_mac" type="xsd:string"/>
+		  <xsd:element name="Ip" type="xsd:string"/>
+		  <xsd:element name="RemoteId" type="xsd:string"/>
+	      <xsd:element name="Dns" type="xsd:string"/>
+	      <xsd:element name="Hostname" type="xsd:string"/>
+	      <xsd:element name="ConfigDescr" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+  
+  <xsd:complexType name="SetIPforCPEResponse_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="gui:ResponseHeader_ctype" />
+      <xsd:element name="SetIPforCPEOutput" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="DeleteIPforCPERequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="gui:InputHeaderContent_ctype" />
+      <xsd:element name="DeleteIPforCPEInput" type="DeleteIPforCPEInput_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="DeleteIPforCPEInput_ctype">
+		<xsd:sequence>
+	      <xsd:element name="Cpe_mac" type="xsd:string"/>
+		  <xsd:element name="Ip" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+  
+  <xsd:complexType name="DeleteIPforCPEResponse_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="gui:ResponseHeader_ctype" />
+      <xsd:element name="DeleteIPforCPEOutput" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="Response_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="gui:ResponseHeader_ctype" />
+      <xsd:element name="Payload" type="Payload_ctype" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  
+  <xsd:complexType name="Payload_ctype">  
+    <xsd:sequence>
+      <xsd:element name="MetaInfoOutput" type="gui:MetaInfo_ctype" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="GetAllRowsOutput" type="RowList_ctype" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="SearchRowsOutput" type="RowList_ctype" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="UpdateRowOutput" type="Row_ctype" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="InsertRowOutput" type="Row_ctype" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="DeleteRowsOutput" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="CountAllRowsOutput" type="xsd:string" minOccurs="0" maxOccurs="1"/> 
+      <xsd:element name="CountRowsWithConditionOutput" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:element name="MetaInfoOutput" type="Response_ctype"/>
+  
+
+  <xsd:element name="GetAllRowsRequest" type="gui:GetAllRowsRequest_ctype"/>
+  <xsd:element name="GetAllRowsWithSessionAuthentificationRequest" type="gui:GetAllRowsRequest_ctype"/>
+  <xsd:element name="GetAllRowsOutput" type="Response_ctype" />
+  
+  
+  <xsd:element name="SearchRowsRequest" type="SearchRowsRequest_ctype"/>
+  <xsd:element name="SearchRowsOutput" type="Response_ctype" />
+  
+  <xsd:element name="UpdateRowRequest" type="UpdateRowRequest_ctype"/>
+  <xsd:element name="UpdateRowOutput" type="Response_ctype"/>
+
+  <xsd:element name="InsertRowRequest" type="InsertRowRequest_ctype"/>
+  <xsd:element name="InsertRowOutput" type="Response_ctype"/>
+
+  <xsd:element name="DeleteRowsRequest" type="DeleteRowsRequest_ctype"/>
+  <xsd:element name="DeleteRowsOutput" type="Response_ctype"/>
+
+  <xsd:element name="UpdateRowPkRequest" type="UpdateRowPkRequest_ctype" />
+  <xsd:element name="UpdateRowPkOutput" type="Response_ctype" />
+  
+  <xsd:element name="GetFreeReservedIPsRequest" type="GetFreeReservedIPsRequest_ctype" />
+  <xsd:element name="GetFreeReservedIPsResponse" type="GetFreeReservedIPsResponse_ctype" />
+  
+  <xsd:element name="SetIPforCPERequest" type="SetIPforCPERequest_ctype" />
+  <xsd:element name="SetIPforCPEResponse" type="SetIPforCPEResponse_ctype" />
+  
+  <xsd:element name="DeleteIPforCPERequest" type="DeleteIPforCPERequest_ctype" />
+  <xsd:element name="DeleteIPforCPEResponse" type="DeleteIPforCPEResponse_ctype" />
+  
+</xsd:schema>
+

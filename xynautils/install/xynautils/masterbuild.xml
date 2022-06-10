@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="xynautils_masterbuild" default="help">
+
+  <property name="project.name" value="xynautils-${utils.name}" />
+
+  <!--Directory to store releases -->
+  <property name="release.dir"
+            value="${ant.file.xynautils_masterbuild}/../../../releases" />
+
+  <property name="svn.root" value="svn://svn.gip.local" />
+  <property name="svn.tag" value="${project.name}-${release.number}" />
+  <property name="svn.project" value="xyna/utils/${utils.name}" />
+
+  <property name="vendor.name" value="GIP AG" />
+
+  <import file="${ant.file.xynautils_masterbuild}/../../build/ant-xyna.xml" />
+
+  <!-- Directory to build releases -->
+  <property name="root.dir" value="${release.dir}/checkout_${timestamp}" />
+  <property name="release.build.dir" value="${root.dir}/build_${timestamp}" />
+
+  <typedef file="${ant.file.xynautils_masterbuild}/../../delivery/svn.xml" />
+  <typedef file="${ant.file.xynautils_masterbuild}/../../build/buildMacros.xml" />
+  <typedef file="${ant.file.xynautils_masterbuild}/../../delivery/deliveryMacros.xml" />
+
+  <!--Folder for the java documentation of all projects-->
+  <property name="alldoc.dir" value="${user.home}/public_html/XynaUtils" />
+
+  <!-- ================================= 
+          target: help              
+       =================================
+-->
+  <target name="help">
+    <echo>
+			Create delivery item for XynaUtils.
+
+			Needed properties:
+			        * utils.name        : 
+			        * release.number    :
+			
+			Main targets:
+			     buildRelease   : Create a zip archive from the project given by ${utils.name} and
+			                      move it to release folder. The file will only be moved if in the
+			                      archive project is not a file with the same name.
+		                         The name of the archive is prefixed by xynautils- followed by the
+			                      project name (eg. jms), followed by a release number
+			                      (eg. xynautils-jms-2.3.jar).
+		        nightbuild     : Same process a buildRelease but no copy to release folder and 
+			                      different version number (eg. xynautils-jms-N20081010-0100.jar)
+			     integration    : Same process a buildRelease but no copy to release folder and 
+                               different version number (eg. xynautils-jms-I20081010-1200.jar)
+			
+			     All targets include run of unit tests and findBugs analysis.
+			</echo>
+  </target>
+
+  <!-- ================================= 
+          target: buildRelease              
+         =================================
+-->
+  <target name="buildRelease"
+          depends="checkRelease"
+          description="Create new release.">
+    <if>
+      <isset property="svn.branch" />
+      <then>
+        <checkout branch="${svn.branch}" />
+      </then>
+      <else>
+        <checkout />
+      </else>
+    </if>
+    <buildVersion basedir="${root.dir}"
+                  destdir="${release.build.dir}"
+                  version="${release.number}" />
+    <!-- build zip file -->
+    <zipDeliveryItems srcdir="${release.build.dir}"
+                      destdir="${release.dir}"
+                      name="${project.name}-${release.number}" />
+    <!-- clean up -->
+    <delete dir="${root.dir}" />
+    <!-- TODO: update wiki -->
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: checkRelease                      
+         - - - - - - - - - - - - - - - - -
+-->
+  <target name="checkRelease">
+    <available file="${release.dir}/${project.name}-${release.number}.zip"
+               property="existsRelease" />
+    <available file="${release.dir}/${project.name}-${release.number}.tar.gz"
+               property="existsRelease" />
+    <fail if="existsRelease"
+          message="A release for ${project.name}-${release.number} already exists." />
+  </target>
+
+  <!-- ================================= 
+          target: nightbuild              
+         =================================
+-->
+  <target name="nightbuild"
+          depends="copySources"
+          description="Create nightbuild">
+    <buildVersion basedir="${root.dir}"
+                  destdir="${release.build.dir}"
+                  version="N${timestamp}" />
+    <!-- build zip file -->
+    <zipDeliveryItems srcdir="${release.build.dir}"
+                      destdir="${release.dir}"
+                      name="${project.name}-N${timestamp}" />
+    <!-- clean up -->
+    <delete dir="${root.dir}" />
+    <unzip dest="${release.dir}"
+           src="${release.dir}/${project.name}-N${timestamp}.zip" />
+    <move file="${release.dir}/${project.name}-N${timestamp}"
+          tofile="${release.dir}/${project.name}" failonerror="false" />
+  </target>
+
+  <!-- ================================= 
+	          target: integration              
+	         =================================
+-->
+  <target name="integration"
+          depends="copySources"
+          description="Create integration build">
+    <delete dir="${release.dir}/${project.name}" />
+    <delete>
+      <fileset dir="${release.dir}">
+        <include name="${project.name}-I*.zip" />
+      </fileset>
+    </delete>
+    <buildVersion basedir="${root.dir}"
+                  destdir="${release.build.dir}"
+                  version="I${timestamp}" />
+    <!-- build zip file -->
+    <zipDeliveryItems srcdir="${release.build.dir}"
+                      destdir="${release.dir}"
+                      name="${project.name}-I${timestamp}" />
+    <!-- clean up -->
+    <delete dir="${root.dir}" />
+    <unzip dest="${release.dir}"
+           src="${release.dir}/${project.name}-I${timestamp}.zip" />
+    <move file="${release.dir}/${project.name}-I${timestamp}"
+          tofile="${release.dir}/${project.name}" failonerror="false"/>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+	          target: copySources                      
+	         - - - - - - - - - - - - - - - - -
+-->
+  <target name="copySources">
+    <delete verbose="true" failonerror="false">
+      <dirset dir="${release.dir}">
+        <include name="checkout_*/**" />
+      </dirset>
+    </delete>
+    <copy todir="${root.dir}" overwrite="true">
+      <fileset dir="${basedir}">
+        <include name="**/*" />
+        <exclude name=".metadata/**" />
+        <exclude name="**/.svn" />
+        <exclude name="**/classes/**" />
+        <exclude name="**/deploy" />
+        <!--<exclude name="delivery/**" />-->
+        <exclude name="**/.*/**" />
+        <exclude name="**/output/**" />
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildVersion       
+         = = = = = = = = = = = = = = = = =
+-->
+  <macrodef name="buildVersion"
+            description="Compile project, build jar and javadoc from it, run tests and findbugs on it.
+		Stores results in destdir. Do all of the java stuff.">
+    <attribute name="version" description="Version number of the build." />
+    <attribute name="basedir"
+               default="${basedir}"
+               description="Directory of project." />
+    <attribute name="destdir"
+               default="${release.build.dir}"
+               description="Directory to store the build." />
+    <sequential>
+      <buildJar basedir="@{basedir}"
+                destfile="@{destdir}/${project.name}-@{version}.jar" />
+      <copy todir="@{destdir}" flatten="true">
+        <fileset dir="@{basedir}">
+          <include name="lib/**/*.jar" />
+        </fileset>
+      </copy>
+      <buildSourceJar basedir="@{basedir}"
+                      destfile="@{destdir}/${project.name}-@{version}-src.jar" />
+      <buildJavadoc basedir="@{basedir}" todir="@{destdir}/javadoc" />
+      <!-- TODO: generate jar of test classes -->
+      <!-- run JUnit tests -->
+      <mkdir dir="@{destdir}/testresults" />
+      <runTests srcdir="@{basedir}" destdir="@{destdir}/testresults" />
+      <!-- run FindBugs -->
+      <findBugs srcdir="@{basedir}"
+                destfile="@{destdir}/testresults/findbugs-${project.name}.xml" />
+      <!-- TODO: run Cobertura Coverage -->
+      <!-- TODO: create release notes from svn log -->
+    </sequential>
+  </macrodef>
+
+  <!-- ================================= 
+          target: updateAllJavadoc              
+         =================================
+-->
+  <target name="updateAllJavadoc"
+          description="Generates the Java Documentation for all projects in the workspace 
+		                  and moves it to the users public_html folder">
+    <tstamp>
+      <format property="timestamp" pattern="yyyyMMdd_HHmm" locale="de,DE" />
+    </tstamp>
+    <move file="${alldoc.dir}"
+          tofile="${alldoc.dir}_${timestamp}"
+          failonerror="no"
+          verbose="yes" />
+    <property name="utils.dir" value="${basedir}/../.." />
+    <javadoc destdir="${alldoc.dir}"
+             packagenames="com.gip.xyna.utils.*"
+             version="true"
+             author="true"
+             windowtitle="Xyna Utils Documentation">
+      <link href="http://java.sun.com/j2se/1.5.0/docs/api" />
+      <link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
+      <classpath>
+        <fileset dir="${utils.dir}">
+          <include name="**/lib/*.jar" />
+        </fileset>
+      </classpath>
+      <fileset dir="${utils.dir}">
+        <exclude name="**/test/**/*.java" />
+        <include name="**/*.java" />
+      </fileset>
+      <group title="BPEL" packages="com.gip.xyna.utils.bpel*" />
+      <group title="Database" packages="com.gip.xyna.utils.db*" />
+      <group title="Exceptions">
+        <package name="com.gip.xyna.utils.exceptions*" />
+        <package name="com.gip.xyna._1_5_5.faults._1" />
+      </group>
+      <group title="JMS" packages="com.gip.xyna.utils.jms*" />
+      <group title="Logging" packages="com.gip.xyna.utils.logging*" />
+      <group title="Mail" packages="com.gip.xyna.utils.mail*" />
+      <group title="Security">
+        <package name="com.gip.xyna.utils" />
+        <package name="com.gip.xyna.utils.encryption" />
+        <package name="com.gip.xyna.utils.io" />
+      </group>
+      <group title="SOAP" packages="com.gip.xyna.utils.soap*" />
+      <group title="XML" packages="com.gip.xyna.utils.xml*" />
+      <group title="XynaTree" packages="com.gip.xyna.utils.xynatree*" />
+    </javadoc>
+  </target>
+
+</project>

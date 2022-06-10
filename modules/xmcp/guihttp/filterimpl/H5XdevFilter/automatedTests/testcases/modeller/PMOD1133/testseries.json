@@ -1,0 +1,7 @@
+{
+  "tests": [
+    "pmod1133_changedMemberName.json",
+	"pmod1133_changedMemberType_unrelated.json",
+    "pmod1133_changedMemberType_related.json"
+  ]
+}

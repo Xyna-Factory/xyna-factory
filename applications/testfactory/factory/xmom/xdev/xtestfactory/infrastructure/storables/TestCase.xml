@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Storable" BaseTypePath="xnwh.persistence" Label="Test Case" TypeName="TestCase" TypePath="xdev.xtestfactory.infrastructure.storables" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Persistence>
+      <Reference>coveredFeatures</Reference>
+    </Persistence>
+  </Meta>
+  <Data Label="ID" VariableName="iD">
+    <Meta>
+      <Persistence>
+        <Type>UniqueIdentifier</Type>
+      </Persistence>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Test Process Reference" VariableName="testProcessReference">
+    <Meta>
+      <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Test Series Reference" VariableName="testSeriesReference">
+    <Meta>
+      <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Mass Process Reference" VariableName="massProcessReference">
+    <Meta>
+      <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+    <Restriction>
+      <MaxLength>1000</MaxLength>
+    </Restriction>
+  </Data>
+  <Data IsList="true" Label="Covered Features" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="coveredFeatures"/>
+  <Data Label="Priority" VariableName="priority">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="Author" ReferenceName="User" ReferencePath="xfmg.xopctrl" VariableName="author"/>
+  <Data Label="Responsible User" ReferenceName="User" ReferencePath="xfmg.xopctrl" VariableName="responsibleUser"/>
+  <Data Label="Test Data Selector" ReferenceName="TestDataSelector" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDateSelector"/>
+  <Data IsList="true" Label="Test Data Selector Instances" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstances"/>
+  <Data Label="Test Type" VariableName="testType">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Mass Rate" VariableName="massRate">
+    <Meta>
+      <Type>Double</Type>
+    </Meta>
+  </Data>
+  <Data Label="Duration" VariableName="duration">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="Mass Load" VariableName="massLoad">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="Task Count" VariableName="taskCount">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Deleted" VariableName="deleted">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="IsTemplate" VariableName="isTemplate">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Associated Test Case Chain" VariableName="associatedTestCaseChain">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

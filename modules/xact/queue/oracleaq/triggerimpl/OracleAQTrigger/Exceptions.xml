@@ -1,0 +1,156 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+	Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="DE">
+	<Description Language="DE">Exceptions OracleAQ Trigger.
+		Diese Datei dient gleichzeitig als Dokumentation der Fehlermeldungen.
+	</Description>
+	<!-- BLACK_SERVER_HOME muss sowohl beim build als auch zur laufzeit korrekt gesetzt sein. -->
+	<Import File="${BLACK_SERVER_HOME}/Exceptions.xml" />
+
+	<ExceptionType Code="XYNA-09670"
+		TypeName="ORACLEAQTRIGGER_DBConnectionCreationException" TypePath="com.gip.xyna.xact.trigger.oracleaq.exception"
+		BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+		<Data Label="Database Schema" VariableName="databaseSchema">
+			<Meta>
+				<Type>String</Type>
+			</Meta>
+		</Data>
+		<Data Label="Jdbc Url" VariableName="jdbcUrl">
+			<Meta>
+				<Type>String</Type>
+			</Meta>
+		</Data>
+		<MessageText Language="DE">Verbindung zu Datenbankschema %0% mit JDBC URL %1% konnte nicht geöffnet werden.</MessageText>
+      <MessageText Language="EN">Could not open connection to database schema %0% with JDBC URL %1%.</MessageText>
+   </ExceptionType>
+
+  <ExceptionType Code="XYNA-09671"
+    TypeName="ORACLEAQTRIGGER_QueueNotFoundException" TypePath="com.gip.xyna.xact.trigger.oracleaq.exception"
+    BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+    <Data Label="queueName" VariableName="queueName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="Database Schema" VariableName="databaseSchema">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="Jdbc Url" VariableName="jdbcUrl">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Queue %0% in Datenbankschema %1% und JDBC URL %2% konnte nicht gefunden werden.</MessageText>
+      <MessageText Language="EN">Could not find queue with name %0% at database schema %1% and JDBC URL %2%.</MessageText>
+   </ExceptionType>
+
+  <ExceptionType Code="XYNA-09672"
+    TypeName="ORACLEAQTRIGGER_DBPackageCreationException" TypePath="com.gip.xyna.xact.trigger.oracleaq.exception"
+    BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+    <Data Label="Database Schema" VariableName="databaseSchema">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="Jdbc Url" VariableName="jdbcUrl">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">PL/SQL Package konnte in Datenbankschema %0% mit JDBC URL %1% nicht angelegt werden.</MessageText>
+      <MessageText Language="EN">Could not create PL/SQL package in database schema %0% at JDBC URL %1%.</MessageText>
+  </ExceptionType>
+
+  <ExceptionType Code="XYNA-09673"
+    TypeName="ORACLEAQTRIGGER_ResponseQueueNotConfiguredException" TypePath="com.gip.xyna.xact.trigger.oracleaq.exception">
+    <MessageText Language="DE">Für diesen Oracle AQ Trigger ist keine Antwort Queue konfiguriert.</MessageText>
+      <MessageText Language="EN">No response queue configured for this Oracle AQ trigger.</MessageText>
+   </ExceptionType>
+
+  <ExceptionType Code="XYNA-09674"
+    TypeName="ORACLEAQTRIGGER_EnqueueResponseException" TypePath="com.gip.xyna.xact.trigger.oracleaq.exception">
+    <Data Label="queueName" VariableName="queueName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="Database Schema" VariableName="databaseSchema">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="Jdbc Url" VariableName="jdbcUrl">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Fehler beim Einstellen einer Antwort in die Queue %0% im Schema %1% mit JDBC URL %2%.</MessageText>
+      <MessageText Language="EN">Error trying to enqueue response message in queue %0% in schema %1% with JDBC %2%.</MessageText>
+   </ExceptionType>
+
+  <ExceptionType Code="XYNA-09675"
+    TypeName="ORACLEAQTRIGGER_CouldNotBeStoppedException" TypePath="com.gip.xyna.xact.trigger.oracleaq.exception"
+    BaseTypeName="XACT_TriggerCouldNotBeStoppedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+    <Data Label="queueName" VariableName="queueName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="Database Schema" VariableName="databaseSchema">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="Jdbc Url" VariableName="jdbcUrl">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Fehler beim Stoppen des Triggers für Queue %0% in Datenbankschema %1% und JDBC URL %2%.</MessageText>
+      <MessageText Language="EN">Error stopping trigger for queue with name %0% at database schema %1% and JDBC URL %2%.</MessageText>
+   </ExceptionType>
+
+  <ExceptionType Code="XYNA-09676"
+    TypeName="ORACLEAQTRIGGER_UnregisteredQueueException" TypePath="com.gip.xyna.xact.trigger.oracleaq.exception"
+    BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+    <Data Label="Unique Name" VariableName="uniqueName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Für den eindeutigen Namen %0% ist im Queue Management keine Queue registriert.</MessageText>
+      <MessageText Language="EN">For the unique name %0% no queue is registered in queue management.</MessageText>
+   </ExceptionType>
+
+  <ExceptionType Code="XYNA-09677"
+    TypeName="ORACLEAQTRIGGER_WrongQueueTypeException" TypePath="com.gip.xyna.xact.trigger.oracleaq.exception"
+    BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+    <Data Label="Unique Name" VariableName="uniqueName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Die Queue mit dem eindeutigen Namen %0%  ist nicht als Typ ORACLE_AQ registriert.</MessageText>
+      <MessageText Language="EN">The queue with unique name %0% is not registered as of type ORACLE_AQ.</MessageText>
+   </ExceptionType>
+
+ </ExceptionStore>

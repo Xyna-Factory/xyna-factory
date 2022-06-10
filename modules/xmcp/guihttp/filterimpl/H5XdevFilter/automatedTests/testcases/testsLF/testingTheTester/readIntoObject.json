@@ -1,0 +1,26 @@
+{
+  "$meta":
+  {
+    "name": "readIntoObject",
+	"description" : "Testes read operation with convertToObject."
+  },
+  "operations":
+  [
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/workflows",
+	  "payload": {"label": "New Workflow"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!var!",
+	  "pathInResponse": "xmomItem/$meta",
+	  "convertToObject": true
+	},
+    {
+      "operation": "print",
+      "variable": "!var!"
+    }
+  ]
+}

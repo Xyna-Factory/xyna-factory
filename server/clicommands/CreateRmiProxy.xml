@@ -1,0 +1,29 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="creatermiproxy" Groups="User Management" Description="Creates a new rmi proxy for given roles"/>
+  <Argument Name="proxyName" Description="The name of the new proxy. "/>
+  <Argument Name="registryHost" Description="The rmi registry host of the new proxy." Optional="true"/>
+  <Argument Name="registryPort" Description="The rmi registry port of the new proxy." Optional="true"/>
+  <Argument Name="port" Description="The rmi communication port of the new proxy." Optional="true"/>
+  <Argument Name="documentation" Description="The documentation of the new proxy" Optional="true"/>
+  <Argument Name="roles" Description="The name of the using roles" MultipleValues="true" Optional="true"/>
+  <Argument Name="rights" Description="Additional rights" MultipleValues="true" Optional="true"/>
+  <BoolOption Name="p" LongName="nopublic" Description="Exclude public methods"  Optional="true" />
+  <BoolOption Name="d" LongName="deprecated" Description="Include deprecated methods"  Optional="true" />
+</XynaCommandLineCommand>

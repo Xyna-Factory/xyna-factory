@@ -1,0 +1,10 @@
+{
+  "tests":
+  [
+    "SimpleForeach.json",
+	"DoubleForeach.json",
+	"Retry.json",
+    "RetryMultiForeach.json",
+	"ResetProperty.json"
+  ]
+}

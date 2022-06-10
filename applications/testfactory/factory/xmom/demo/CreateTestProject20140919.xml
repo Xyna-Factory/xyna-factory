@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Create Test Project 20140919" TypeName="CreateTestProject20140919" TypePath="demo" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Create Test Project 20140919" Name="CreateTestProject20140919">
+    <Input/>
+    <Output/>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="2" Label="Create Test Project" ReferenceName="CreateTestProject" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+    </ServiceReference>
+    <Function ID="7" Label="Create System Under Test">
+      <Source RefID="6"/>
+      <Source RefID="226"/>
+      <Target RefID="6"/>
+      <Invoke Operation="CreateSystemUnderTest" ServiceID="6">
+        <Source RefID="226">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="6"/>
+    </Function>
+    <Function ID="3" Label="Create Test Project">
+      <Source RefID="2"/>
+      <Source RefID="261"/>
+      <Source RefID="314"/>
+      <Source RefID="315"/>
+      <Target RefID="2"/>
+      <Target RefID="4"/>
+      <Invoke Operation="CreateTestProject" ServiceID="2">
+        <Source RefID="261">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="314">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="315">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="2">
+        <Target RefID="4"/>
+      </Receive>
+    </Function>
+    <Data ID="4" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject54">
+      <Source RefID="3"/>
+    </Data>
+    <ServiceReference ID="6" Label="Create System Under Test" ReferenceName="CreateSystemUnderTest" ReferencePath="sok">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Data ID="226" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest">
+      <Target RefID="7"/>
+      <Data ID="228" Label="ID" VariableName="iD">
+        <Meta>
+          <Type>long</Type>
+          <Persistence>
+            <Type>UniqueIdentifier</Type>
+          </Persistence>
+        </Meta>
+        <Value>0</Value>
+      </Data>
+      <Data ID="229" Label="Name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Demo 2014-09-19 SUT</Value>
+      </Data>
+      <Data ID="230" Label="Version" VariableName="version">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>1.0</Value>
+      </Data>
+      <Data ID="231" Label="Description" VariableName="description">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Das System Under Test für die Demo am Freitag, dem 19. September.</Value>
+      </Data>
+      <Data ID="253" IsList="true" Label="Feature" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="feature">
+        <Value>
+          <Data ID="238" Label="Feature" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables">
+            <Data ID="232" Label="ID" VariableName="iD">
+              <Meta>
+                <Type>long</Type>
+                <Persistence>
+                  <Type>UniqueIdentifier</Type>
+                </Persistence>
+              </Meta>
+              <Value>0</Value>
+            </Data>
+            <Data ID="233" Label="Name" VariableName="name">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Top-Funktionalität</Value>
+            </Data>
+            <Data ID="234" Label="Priority" VariableName="priority">
+              <Meta>
+                <Documentation>10 = high
+1 = low</Documentation>
+                <Type>int</Type>
+              </Meta>
+              <Value>5</Value>
+            </Data>
+            <Data ID="235" Label="Description" VariableName="description">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Dies ist das erste Demo-Feature.</Value>
+            </Data>
+            <Data ID="236" Label="Type" VariableName="type">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Funktional</Value>
+            </Data>
+            <Data ID="237" Label="Feature Group" VariableName="featureGroup">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+          </Data>
+        </Value>
+        <Value>
+          <Data ID="245" Label="Feature" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables">
+            <Data ID="239" Label="ID" VariableName="iD">
+              <Meta>
+                <Type>long</Type>
+                <Persistence>
+                  <Type>UniqueIdentifier</Type>
+                </Persistence>
+              </Meta>
+              <Value>0</Value>
+            </Data>
+            <Data ID="240" Label="Name" VariableName="name">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Super-Performance</Value>
+            </Data>
+            <Data ID="241" Label="Priority" VariableName="priority">
+              <Meta>
+                <Documentation>10 = high
+1 = low</Documentation>
+                <Type>int</Type>
+              </Meta>
+              <Value>7</Value>
+            </Data>
+            <Data ID="242" Label="Description" VariableName="description">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value><![CDATA[Das zweite Feature für die Demo. Dieses ist ]]></Value>
+            </Data>
+            <Data ID="243" Label="Type" VariableName="type">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Nicht-funktional</Value>
+            </Data>
+            <Data ID="244" Label="Feature Group" VariableName="featureGroup">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+          </Data>
+        </Value>
+        <Value>
+          <Data ID="252" Label="Feature" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables">
+            <Data ID="246" Label="ID" VariableName="iD">
+              <Meta>
+                <Type>long</Type>
+                <Persistence>
+                  <Type>UniqueIdentifier</Type>
+                </Persistence>
+              </Meta>
+              <Value>0</Value>
+            </Data>
+            <Data ID="247" Label="Name" VariableName="name">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Höchste Zuverlässigkeit</Value>
+            </Data>
+            <Data ID="248" Label="Priority" VariableName="priority">
+              <Meta>
+                <Documentation>10 = high
+1 = low</Documentation>
+                <Type>int</Type>
+              </Meta>
+              <Value>3</Value>
+            </Data>
+            <Data ID="249" Label="Description" VariableName="description">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Das dritte Feature für die Demo.</Value>
+            </Data>
+            <Data ID="250" Label="Type" VariableName="type">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Funktional</Value>
+            </Data>
+            <Data ID="251" Label="Feature Group" VariableName="featureGroup">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+          </Data>
+        </Value>
+      </Data>
+      <Data ID="260" IsList="true" Label="Interface" ReferenceName="Interface" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="interface0">
+        <Value>
+          <Data ID="259" Label="Interface" ReferenceName="Interface" ReferencePath="xdev.xtestfactory.infrastructure.storables">
+            <Data ID="254" Label="ID" VariableName="iD">
+              <Meta>
+                <Type>long</Type>
+                <Persistence>
+                  <Type>UniqueIdentifier</Type>
+                </Persistence>
+              </Meta>
+              <Value>0</Value>
+            </Data>
+            <Data ID="255" Label="Name" VariableName="name">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Demo-Interface</Value>
+            </Data>
+            <Data ID="256" Label="Description" VariableName="description">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Das Demo-Interface hat noch keinen XSD-Bezug.</Value>
+            </Data>
+            <Data ID="257" Label="Type" VariableName="type">
+              <Meta>
+                <Documentation>The only allowed value currently is "XSD", more will follow.</Documentation>
+                <Type>String</Type>
+              </Meta>
+              <Value>XSD</Value>
+            </Data>
+            <Data ID="258" Label="Data Model Reference" VariableName="dataModelReference">
+              <Meta>
+                <Documentation>TODO: Klären, in welcher Form die Referenz z.B. auf das XSD hier abgelegt wird.</Documentation>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+          </Data>
+        </Value>
+      </Data>
+    </Data>
+    <Data ID="261" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject367">
+      <Target RefID="3"/>
+      <Data ID="263" Label="ID" VariableName="iD">
+        <Meta>
+          <Type>long</Type>
+          <Persistence>
+            <Type>UniqueIdentifier</Type>
+          </Persistence>
+        </Meta>
+        <Value>0</Value>
+      </Data>
+      <Data ID="264" Label="Name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Demo 2014-09-19</Value>
+      </Data>
+      <Data ID="265" Label="Workspace Reference" VariableName="workspaceReference">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Demo 2014-09-19</Value>
+      </Data>
+      <Data ID="266" Label="Version" VariableName="version">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>1.0</Value>
+      </Data>
+      <Data ID="267" Label="Description" VariableName="description">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Dies ist ein Test-Projekt für die Demonstration der Entwicklungsfortschritte der nächsten Generation der Xyna Test Factory.</Value>
+      </Data>
+      <Data ID="274" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest">
+        <Data ID="268" Label="ID" VariableName="iD">
+          <Meta>
+            <Type>long</Type>
+            <Persistence>
+              <Type>UniqueIdentifier</Type>
+            </Persistence>
+          </Meta>
+          <Value>0</Value>
+        </Data>
+        <Data ID="269" Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>Demo 2014-09-19 SUT</Value>
+        </Data>
+        <Data ID="270" Label="Version" VariableName="version">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>1.0</Value>
+        </Data>
+        <Data ID="271" Label="Description" VariableName="description">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="272" IsList="true" Label="Feature" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="feature"/>
+        <Data ID="273" IsList="true" Label="Interface" ReferenceName="Interface" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="interface0"/>
+      </Data>
+      <Data ID="279" Label="System Under Test Instance" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance">
+        <Data ID="275" Label="ID" VariableName="iD">
+          <Meta>
+            <Type>long</Type>
+            <Persistence>
+              <Type>UniqueIdentifier</Type>
+            </Persistence>
+          </Meta>
+          <Value>0</Value>
+        </Data>
+        <Data ID="276" Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="277" Label="Description" VariableName="description">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="278" IsList="true" Label="System Under Test Instance Property" ReferenceName="SystemUnderTestInstanceProperty" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="systemUnderTestInstanceProperty"/>
+      </Data>
+      <Data ID="308" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+        <Value>
+          <Data ID="293" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables">
+            <Data ID="280" Label="ID" VariableName="iD">
+              <Meta>
+                <Type>long</Type>
+                <Persistence>
+                  <Type>UniqueIdentifier</Type>
+                </Persistence>
+              </Meta>
+              <Value>0</Value>
+            </Data>
+            <Data ID="281" Label="Name" VariableName="name">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Funktionaler Test</Value>
+            </Data>
+            <Data ID="282" Label="Test Process Reference" VariableName="testProcessReference">
+              <Meta>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+            <Data ID="283" Label="Test Series Reference" VariableName="testSeriesReference">
+              <Meta>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+            <Data ID="284" Label="Mass Process Reference" VariableName="massProcessReference">
+              <Meta>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+            <Data ID="285" Label="Description" VariableName="description">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Dies ist ein Demo-Testfall, der funktionale Tests durchführt.</Value>
+            </Data>
+            <Data ID="286" IsList="true" Label="Covered Features" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="coveredFeatures"/>
+            <Data ID="287" Label="Priority" VariableName="priority">
+              <Meta>
+                <Type>int</Type>
+              </Meta>
+              <Value>4</Value>
+            </Data>
+            <Data ID="289" Label="Author" ReferenceName="User" ReferencePath="xfmg.xopctrl" VariableName="author">
+              <Data ID="288" Label="Name" VariableName="name">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+                <Value>Leo</Value>
+              </Data>
+            </Data>
+            <Data ID="291" Label="Responsible User" ReferenceName="User" ReferencePath="xfmg.xopctrl" VariableName="responsibleUser">
+              <Data ID="290" Label="Name" VariableName="name">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+                <Value>Bernhard</Value>
+              </Data>
+            </Data>
+          </Data>
+        </Value>
+        <Value>
+          <Data ID="307" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables">
+            <Data ID="294" Label="ID" VariableName="iD">
+              <Meta>
+                <Type>long</Type>
+                <Persistence>
+                  <Type>UniqueIdentifier</Type>
+                </Persistence>
+              </Meta>
+              <Value>0</Value>
+            </Data>
+            <Data ID="295" Label="Name" VariableName="name">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Nicht-funktionaler Test</Value>
+            </Data>
+            <Data ID="296" Label="Test Process Reference" VariableName="testProcessReference">
+              <Meta>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+            <Data ID="297" Label="Test Series Reference" VariableName="testSeriesReference">
+              <Meta>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+            <Data ID="298" Label="Mass Process Reference" VariableName="massProcessReference">
+              <Meta>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
+                <Type>String</Type>
+              </Meta>
+            </Data>
+            <Data ID="299" Label="Description" VariableName="description">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>Dieser Demo-Testfall wird mal ein Massen-Test.</Value>
+            </Data>
+            <Data ID="300" IsList="true" Label="Covered Features" ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="coveredFeatures"/>
+            <Data ID="301" Label="Priority" VariableName="priority">
+              <Meta>
+                <Type>int</Type>
+              </Meta>
+              <Value>7</Value>
+            </Data>
+            <Data ID="303" Label="Author" ReferenceName="User" ReferencePath="xfmg.xopctrl" VariableName="author">
+              <Data ID="302" Label="Name" VariableName="name">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+                <Value>Leo</Value>
+              </Data>
+            </Data>
+            <Data ID="305" Label="Responsible User" ReferenceName="User" ReferencePath="xfmg.xopctrl" VariableName="responsibleUser">
+              <Data ID="304" Label="Name" VariableName="name">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+                <Value>Sven</Value>
+              </Data>
+            </Data>
+          </Data>
+        </Value>
+      </Data>
+      <Data ID="310" Label="Project Owner" ReferenceName="User" ReferencePath="xfmg.xopctrl" VariableName="projectOwner">
+        <Data ID="309" Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>Leo</Value>
+        </Data>
+      </Data>
+      <Data ID="311" IsList="true" Label="Users With Access" ReferenceName="User" ReferencePath="xfmg.xopctrl" VariableName="usersWithAccess"/>
+      <Data ID="312" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport"/>
+    </Data>
+    <Data ID="314" Label="Test Project Creation Parameter" ReferenceName="TestProjectCreationParameter" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testProjectCreationParameter">
+      <Target RefID="3"/>
+      <Data ID="318" Label="rename order input source" VariableName="renameOrderInputSource">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="315" Label="Source Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename539">
+      <Target RefID="3"/>
+      <Data ID="319" Label="Workspacename" VariableName="workspacename">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="61"/>
+  </Operation>
+</Service>

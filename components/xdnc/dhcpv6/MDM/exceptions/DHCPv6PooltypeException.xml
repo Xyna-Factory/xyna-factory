@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore Name="ExceptionStore" Version="1.8" xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XYNA-XACT-09003" Label="DHCPv6PooltypeException" TypeName="DHCPv6PooltypeException" TypePath="xdnc.dhcpv6.exceptions">
+    <Meta>
+      <Documentation>Exception, falls kein passender Pooltype bestimmt werden konnte</Documentation>
+    </Meta>
+    <Data Label="pooltype" VariableName="pooltype">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="reason" VariableName="reason">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="EN">Pool Type: %0%, possible reason: %1%</MessageText>
+    <MessageText Language="DE">Pool Type: %0%, potentielle Ursache: %1%</MessageText>
+  </ExceptionType>
+</ExceptionStore>

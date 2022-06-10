@@ -1,0 +1,28 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="addinheritancerule" Groups="Parameter Inheritance Management" Description="Adds a parameter inheritance rule to an ordertype."/>
+  <Argument Name="orderType" Description="The ordertype that should use the inheritance rule."/>
+  <Argument Name="applicationName" Description="The name of the application containing the ordertype." Optional = "true"/>
+  <Argument Name="versionName" Description="The version name of the application containing the ordertype" Optional = "true"/>
+  <Argument Name="workspaceName" Description="The name of the workspace containing the ordertype." Optional = "true"/>
+  <Argument Name="parameterType" Description="The type of the parameter. Valid types are: MonitoringLevel, SuspensionBackupMode"/>
+  <Argument Name="value" Description="The value of the parameter"/>
+  <Argument Name="childFilter" Description="The filter for the child ordertype hierarchy to which the inheritance rule will be applied. If not set the rule apply to the own ordertype." Optional = "true"/>  
+  <Argument Name="precedence" Description="The precedence of the inheritancerule. Default is 0" Optional = "true"/>  
+</XynaCommandLineCommand>

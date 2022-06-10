@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="494" Label="Create RoleTableEntry" TypeName="CreateRoleTableEntry" TypePath="xmcp.xacm.rolemanagement.subwfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,openDocumentation,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Create RoleTableEntry" Name="CreateRoleTableEntry">
+    <Input>
+      <Data ID="256" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName">
+        <Target RefID="505"/>
+        <Target RefID="510"/>
+      </Data>
+      <Data ID="252" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole252">
+        <Target RefID="505"/>
+        <Target RefID="510"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="425" Label="Role Table Entry" ReferenceName="RoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleTableEntry425">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+    </Throws>
+    <Function ID="510" Label="Get Description of Role">
+      <Source RefID="509"/>
+      <Source RefID="252"/>
+      <Source RefID="256"/>
+      <Target RefID="509"/>
+      <Target RefID="512"/>
+      <Invoke Operation="getDescriptionOfRole" ServiceID="509">
+        <Source RefID="252"/>
+        <Source RefID="256"/>
+      </Invoke>
+      <Receive ServiceID="509">
+        <Target RefID="512"/>
+      </Receive>
+    </Function>
+    <Mappings ID="505" Label="Mapping">
+      <Source RefID="256"/>
+      <Source RefID="252"/>
+      <Source RefID="512"/>
+      <Target RefID="503"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="504" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName504"/>
+        <Source RefID="256"/>
+      </Input>
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Source RefID="252"/>
+      </Input>
+      <Input>
+        <Data ID="513" Label="User Authentication Role Description" ReferenceName="UserAuthenticationRoleDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRoleDescription513"/>
+        <Source RefID="512"/>
+      </Input>
+      <Output>
+        <Data ID="506" Label="Role Table Entry" ReferenceName="RoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleTableEntry506"/>
+        <Target RefID="503"/>
+      </Output>
+      <Mapping>%3%.documentation=%2%.description</Mapping>
+      <Mapping>%3%.domain=%0%.name</Mapping>
+      <Mapping>%3%.role=%1%.role</Mapping>
+    </Mappings>
+    <Data ID="503" Label="Role Table Entry" ReferenceName="RoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleTableEntry">
+      <Source RefID="505"/>
+      <Target RefID="3"/>
+    </Data>
+    <ServiceReference ID="509" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="510"/>
+      <Target RefID="510"/>
+    </ServiceReference>
+    <Data ID="512" Label="User Authentication Role Description" ReferenceName="UserAuthenticationRoleDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRoleDescription">
+      <Source RefID="510"/>
+      <Target RefID="505"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="503"/>
+      <Target RefID="425"/>
+      <Copy>
+        <Source RefID="503"/>
+        <Target RefID="425"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

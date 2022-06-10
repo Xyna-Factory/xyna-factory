@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+
+<antlib>
+
+  <!-- = = = = = = = = = = = = = = = = =
+            macrodef: getVersion          
+           = = = = = = = = = = = = = = = = = -->
+  <macrodef name="getVersion"
+            description="Reads Xyna Propeties for database or application server version">
+    <attribute name="tag"
+               description="Indicator 'db' for receiving database version or 'as' for application server version." />
+    <attribute name="result"
+               description="Name of a property in whiche the result is stored" />
+    <attribute name="default"
+               default="1.0"
+               description="Version to use if Xyna Property could not found" />
+    <sequential>
+      <var name="@{result}" unset="true" />
+      <property name="getVersionTmpFile" value="getVersionTmpFile.txt" />
+      <sqlplus user="${db.userid}"
+               password="${db.password}"
+               path="${sql.dir}/update"
+               executable="${sqlplus.path}"
+               file="get_@{tag}version.sql"
+               output="${getVersionTmpFile}"
+               connectstring="${db.connectstring}"
+               parameter="${server.hostname}" />
+      <replaceregexp file="${getVersionTmpFile}"
+                     flags="g"
+                     match="\s*"
+                     replace="" />
+      <var name="getVersionResult" unset="true" />
+      <loadfile property="getVersionResult" srcFile="${getVersionTmpFile}" />
+      <delete file="${getVersionTmpFile}" quiet="true" />
+      <if>
+        <!-- falls *.version nicht in db existiert, dann kann sie sein: 
+             1.0 - ?. ab ? wurde *.version angelegt. -->
+        <equals arg1="${getVersionResult}" arg2="notFound" />
+        <then>
+          <var name="@{result}" value="@{default}" />
+          <echo message="Use default value '@{default}' for xyna property xyna.@{tag}.version" />
+        </then>
+        <else>
+          <var name="@{result}" value="${getVersionResult}" />
+          <echo message="Got '${@{result}}' for xyna property xyna.@{tag}.version" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: updateSequential          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="updateSequential"
+            description="update sequentiell von alter version auf neue">
+    <attribute name="update.dir"
+               description="Directory in which update files are stored." />
+    <sequential>
+      <property file="@{update.dir}/release/order.properties" />
+      <!-- update step by step -->
+      <for list="${release.order}" delimiter=";" param="release">
+        <sequential>
+          <updateStep update.dir="@{update.dir}" release="@{release}" />
+        </sequential>
+      </for>
+      <sqlplus user="${db.userid}"
+               password="${db.password}"
+               executable="${sqlplus.path}"
+               path="${sql.dir}/update"
+               file="revalidate.sql"
+               connectstring="${db.connectstring}" />
+      <validateDatabase />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: updateStep
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="updateStep" description="Execute a single update step.">
+    <attribute name="update.dir"
+               description="Directory in which all update data is stored" />
+    <attribute name="release"
+               description="Update step to execute (same time folder with update data for this release)" />
+    <attribute name="db.version.onnotfound" default="1.0" description="DB-Version to set if no version could be found, eg. XynaProperty table not exists" />
+    <attribute name="as.version.onnotfound" default="1.0" description="AS-Version to set if no version could be found, eg. XynaProperty table not exists" />    
+    <sequential>
+      <property name="release.dir@{release}"
+                value="@{update.dir}/release/@{release}" />
+      <fail message="Directory &quot;${release.dir@{release}}&quot; not exists">
+        <condition>
+          <not>
+            <available file="${release.dir@{release}}" type="dir" />
+          </not>
+        </condition>
+      </fail>
+      <!-- contains version.start und version.end -->
+      <property file="${release.dir@{release}}/version.properties"
+                prefix="@{release}" />
+      <getVersion tag="db" result="db.version@{release}" />
+      <getVersion tag="as" result="as.version@{release}" />
+      <if>
+        <!-- database update is possible -->
+        <equals arg1="${db.version@{release}}"
+                arg2="${@{release}.version.start}" />
+        <then>
+          <echo message="Execute update from ${@{release}.version.start} to ${@{release}.version.end}" />
+          <trycatch>
+            <try>
+              <ant antfile="${release.dir@{release}}/update.xml"
+                   target="updateAll"
+                   inheritrefs="true"
+                   inheritall="true">
+                <property name="sql.release.version.dir" value="${release.dir@{release}}" />
+              </ant>
+            </try>
+            <catch>
+              <sqlplus user="${db.userid}"
+                       password="${db.password}"
+                       executable="${sqlplus.path}"
+                       path="${release.dir@{release}}"
+                       file="update.sql"
+                       parameter="${db.userid}"
+                       connectstring="${db.connectstring}" />
+              <ant antfile="${release.dir@{release}}/update.xml"
+                   target="update"
+                   inheritrefs="true"
+                   inheritall="true" />
+            </catch>
+          </trycatch>
+          <if>
+            <not>
+              <!-- bei version ? gabs noch nicht xynaproperty tabelle -->
+              <equals arg1="${@{release}.version.start}" arg2="@{db.version.onnotfound}" />
+            </not>
+            <then>
+              <!-- update xyna property db.version -->
+              <sqlplus user="${db.userid}"
+                       password="${db.password}"
+                       executable="${sqlplus.path}"
+                       path="${sql.dir}/update"
+                       file="set_dbversion.sql"
+                       parameter="${@{release}.version.end}"
+                       connectstring="${db.connectstring}" />
+              <!-- update xyna property as.version -->
+              <sqlplus user="${db.userid}"
+                       password="${db.password}"
+                       executable="${sqlplus.path}"
+                       path="${sql.dir}/update"
+                       file="set_asversion.sql"
+                       parameter="${@{release}.version.end} ${server.hostname}"
+                       connectstring="${db.connectstring}" />
+            </then>
+          </if>
+        </then>
+        <elseif>
+          <!-- application server update possible -->
+          <equals arg1="${as.version@{release}}"
+                  arg2="${@{release}.version.start}" />
+          <then>
+            <ant antfile="${release.dir@{release}}/update.xml"
+                 target="updateNoDB"
+                 inheritrefs="true"
+                 inheritall="true" />
+            <if>
+              <not>
+                <!-- bei version ? gabs noch nicht xynaproperty tabelle -->
+                <!-- TODO: parametize -->
+                <equals arg1="${@{release}.version.start}" arg2="@{as.version.onnotfound}" />
+              </not>
+              <then>
+                <sqlplus user="${db.userid}"
+                         password="${db.password}"
+                         executable="${sqlplus.path}"
+                         path="${sql.dir}/update"
+                         file="set_asversion.sql"
+                         parameter="${@{release}.version.end} ${server.hostname}"
+                         connectstring="${db.connectstring}" />
+              </then>
+            </if>
+          </then>
+        </elseif>
+        <else>
+          <echo message="Skip sequential update from ${@{release}.version.start} to ${@{release}.version.end}" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: validateDatabase          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="validateDatabase">
+    <sequential>
+      <var name="db.version" />
+      <getVersion tag="db" result="db.version.validateDB" />
+      <echo message="validateDatabase: db.version.validateDB=${db.version.validateDB}" />
+      <fail message="Xyna Property xyna.db.version=${db.version.validateDB} is not up-to-date: ${release.number}.">
+        <condition>
+          <and>
+            <not>
+              <equals arg1="${db.version.validateDB}" arg2="${release.number}" />
+            </not>
+            <not>
+              <!-- differences are allowed at integration build -->
+              <contains string="${release.number}" substring="I" />
+            </not>
+            <not>
+              <!-- differences are allowed at nightbuild -->
+              <contains string="${release.number}" substring="N" />
+            </not>
+          </and>
+        </condition>
+      </fail>
+      <echo message="Database version fits release number." />
+      <sqlplus user="${db.userid}"
+               password="${db.password}"
+               executable="${sqlplus.path}"
+               path="${sql.dir}/update"
+               file="checkinvalid.sql"
+               connectstring="${db.connectstring}" />
+      <echo message="Database content is valid." />
+    </sequential>
+  </macrodef>
+
+</antlib>

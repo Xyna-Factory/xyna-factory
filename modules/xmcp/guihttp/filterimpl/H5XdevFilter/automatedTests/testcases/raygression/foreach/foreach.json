@@ -1,0 +1,10 @@
+{
+    "testseries": [
+        "foreach_001/testseries.json",
+        "foreach_002/testseries.json",
+        "foreach_003/testseries.json",
+        "foreach_005/testseries.json",
+        "foreach_006/testseries.json",
+        "foreach_007/testseries.json"
+    ]
+}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="XynaRadiusServices" TypeName="XynaRadiusServices" TypePath="xact.radius" Version="1.8">
+  <Meta>
+    <IsXynaComponent>true</IsXynaComponent>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>XynaRadiusServicesImpl.jar</Libraries>
+  <Service Label="XynaRadiusServices" TypeName="XynaRadiusServices">
+    <Operation IsStatic="true" Label="Add Privilege Level" Name="addPrivilegeLevel">
+      <Input>
+        <Data Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel"/>
+        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.addPrivilegeLevel(privilegeLevel, node);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add temporary radius user" Name="addTemporaryRadiusUser">
+      <Input>
+        <Data Label="IPv 4" ReferenceName="IPv4" ReferencePath="base" VariableName="iPv4"/>
+        <Data Label="Radius User Data" ReferenceName="RadiusUserData" ReferencePath="xact.radius" VariableName="radiusUserData22"/>
+      </Input>
+      <Output>
+        <Data Label="Radius Add User Result" ReferenceName="RadiusAddUserResult" ReferencePath="xact.radius" VariableName="radiusAddUserResult23"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.addTemporaryRadiusUser(iPv4, radiusUserData22);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Authenticate Radius User" Name="authenticateRadiusUser">
+      <Meta>
+        <Abstract.UID>F74BE8C3-0834-6E63-244D-948D233F8EB3</Abstract.UID>
+        <FixedHeight>32</FixedHeight>
+        <FixedWidth>505</FixedWidth>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node"/>
+        <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code"/>
+        <Data Label="Request Authenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator"/>
+        <Data Label="Source IP" ReferenceName="SourceIP" ReferencePath="xact.radius" VariableName="sourceIP"/>
+      </Input>
+      <Output>
+        <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code0"/>
+        <Data Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole28"/>
+        <Data Label="NAS-Identifier" ReferenceName="NASIdentifier" ReferencePath="xact.radius" VariableName="nASIdentifier29"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.authenticateRadiusUser(node, code, requestAuthenticator, sourceIP);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Clean Users" Name="cleanUsers">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.radius.XynaRadiusServicesImpl.cleanUsers();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Xyna Property" Name="getXynaProperty">
+      <Input>
+        <Data Label="Xyna property key" ReferenceName="XynaPropertyKey" ReferencePath="xact.radius" VariableName="xynaPropertyKey31"/>
+      </Input>
+      <Output>
+        <Data Label="Xyna property string value" ReferenceName="XynaPropertyStringValue" ReferencePath="xact.radius" VariableName="xynaPropertyStringValue32"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getXynaProperty(xynaPropertyKey31);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="processAccessRequest" Name="processAccessRequest">
+      <Input>
+        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node"/>
+        <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code"/>
+        <Data Label="Identifier" ReferenceName="Identifier" ReferencePath="xact.radius" VariableName="identifier"/>
+        <Data Label="Request Authenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator"/>
+        <Data Label="Source IP" ReferenceName="SourceIP" ReferencePath="xact.radius" VariableName="sourceIP"/>
+      </Input>
+      <Output>
+        <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code7"/>
+        <Data Label="Shared Secret" ReferenceName="SharedSecret" ReferencePath="xact.radius" VariableName="sharedSecret"/>
+        <Data Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.processAccessRequest(node, code, identifier, requestAuthenticator, sourceIP);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<!-- Hier könnte man zb auch Logmeldungen in verschiedenen Sprachen speichern -->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+              Name="ExampleExceptionStore" Version="1.0" Type="ExceptionMasterFile"
+              DefaultLanguage="DE">
+  <Description>zeigt, wie man Fehlernachrichten in XML verwaltet.</Description>
+  <Include File="AdditionalStorage.1.1.xml"/>
+  <Import File="${SOME_DIR}/Reference.1.1.xml"/>
+  <ExceptionType Code="XYNATEST2-00001" TypeName="TestException1" TypePath="ex.test" >
+    <MessageText Language="DE">Es ist ein Fehler passiert</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNATEST2-00002" TypeName="TestException2" TypePath="ex.test" >
+    <Description>Für total unerwartete Fehler!</Description>
+    <Data Label="Fehlerbeschreibung in kurz" VariableName="errorDescription">
+    	<Meta>
+    		<Type>int</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="DE">Es ist der unerwartete Fehler %0% passiert</MessageText>
+    <MessageText Language="EN">Unexpected Error %0% occurred</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNATEST2-00002a" TypeName="TestException3" TypePath="ex.test" >
+    <MessageText Language="DE">Es ist %0% ein Fehler passiert</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNATEST2-00005" TypeName="TestException5" TypePath="ex.test" BaseTypeName="TestBaseException" BaseTypePath="ex.test3">
+    <MessageText Language="DE">Es ist TestEx5 Fehler passiert</MessageText>
+  </ExceptionType>
+</ExceptionStore>

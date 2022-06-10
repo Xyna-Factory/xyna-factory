@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Protocol Message" TypeName="ProtocolMessage" TypePath="xfmg.xfmon.protocolmsg" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Representaion of a protocol message.
+Detailed documentation available on the member variables.</Documentation>
+  </Meta>
+  <Data Label="Root Order Id" VariableName="rootOrderId">
+    <Meta>
+      <Documentation>Id of the root order that stored the message.
+Might only be available if OrderContext Mapping has been enabled for that order.</Documentation>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Origin Id" VariableName="originId">
+    <Meta>
+      <Documentation>Id of the order directly invoking the store of the message.
+Might only be available if OrderContext-Mapping has been enabled for that order.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Connection Id" VariableName="connectionId">
+    <Meta>
+      <Documentation>An identification for the protocol connection.
+This id is not guaranteed to be unique among different connection / adapter types and should therefore be set together with adapter name or protocol name.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Partner Address" VariableName="partnerAddress">
+    <Meta>
+      <Documentation>Address identifying the communication partner.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Local Address" VariableName="localAddress">
+    <Meta>
+      <Documentation>Address identifying the local address (might not always be available).</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Protocol Name" VariableName="protocolName">
+    <Meta>
+      <Documentation>Name of the protocol.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Protocol Adapter Name" VariableName="protocolAdapterName">
+    <Meta>
+      <Documentation>Name of the protocol adapter, e.g. the name of the service group offering the communication services.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Message Type" VariableName="messageType">
+    <Meta>
+      <Documentation>Type of the message. Different protocols might choose different names for their message types or not be able to differentiate message types at all.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Time" VariableName="time">
+    <Meta>
+      <Documentation>Unix timestamp from the point of the message store insertion.</Documentation>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Communication Direction" VariableName="communicationDirection">
+    <Meta>
+      <Documentation>Wether the message was sent ('out') or received ('in').</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Payload" ReferenceName="ProtocolPayload" ReferencePath="xfmg.xfmon.protocolmsg" VariableName="payload">
+    <Meta>
+      <Documentation>Protocol specific implementation of the message payload.</Documentation>
+    </Meta>
+  </Data>
+</DataType>

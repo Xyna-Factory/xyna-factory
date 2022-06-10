@@ -1,0 +1,34 @@
+[
+  {
+    "type": "additionalFunctionFile",
+    "value": "createDatatype.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "createStorable.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "addSimpleTypeMemberToDatatype.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "createException.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "addComplexTypeMemberToDatatype.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "changeDatatypeParent.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+	"value": "changeExceptionParent.json"
+  },
+   {
+    "type": "additionalFunctionFile",
+	"value": "repairDatatype.json"
+  }
+]

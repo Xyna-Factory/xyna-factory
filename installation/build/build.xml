@@ -1,0 +1,910 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build" basedir=".">
+
+	<loadproperties srcfile="${ant.file.build}/../build.properties" />
+
+	<import file="ant-xyna.xml" />
+	<import file="macros.xml" />
+
+	<property name="exceptionsxml.components.token" value="&lt;!-- Components (do not modify this line. it is used by the buildscripts to include dynamic components) -->" />
+
+	<property name="server.dir" value="${root.dir}/server" />
+	<property name="trigger.dir" value="${root.dir}/triggerimpl" />
+	<property name="persistencelayers.dir" value="${root.dir}/persistencelayers" />
+	<property name="clusterproviders.dir" value="${root.dir}/clusterproviders" />
+	
+	<property name="components.dir" value="${root.dir}/components" />
+	<property name="configserver.dir" value="${root.dir}/modules/xact/velocity/mdmimpl" />
+
+	<property name="xdhcpman.dir" value="${root.dir}/applications/dhcp/gui" />
+	<property name="xtestfact.dir" value="${root.dir}/xfm/testfactory" />
+
+	<property name="components.oracle.aq.dir" value="${root.dir}/components/xact/oracleaq" />
+	<property name="oracle.aq.trigger.dir" value="${components.oracle.aq.dir}/triggerimpl/OracleAQTrigger" />
+	<property name="aq.adapter.dir" value="${components.oracle.aq.dir}/mdmimpl/AQAdapterService" />
+
+	<property name="components.snmp.dir" value="${root.dir}/components/xact/snmp" />
+	<property name="snmp.trigger.dir" value="${components.snmp.dir}/triggerimpl/SNMPTrigger" />
+	<property name="snmp.service.dir" value="${components.snmp.dir}/mdmimpl/SNMPService" />
+	<property name="snmp.sharedLibs.dir" value="${components.snmp.dir}/sharedLibsImpl/SNMPSharedLibs" />
+
+	<property name="coherence.dir" value="${root.dir}/coherence/" />
+
+	<property name="components.xnwh.pooltypes.dir" value="${root.dir}/components/xnwh/pools/DefaultConnectionPoolTypes" />
+
+
+	<!--- - - - - - - - - - - - - - - - -
+              target: build
+           - - - - - - - - - - - - - - - - - -->
+	<target name="build"
+          depends="checkAppVersion, buildServer, refreshCommonLibXyna, buildModules, buildPersistenceLayers, buildClusterProviders, copyInstallScripts,
+                   buildComponents, buildTrigger, buildFilter, buildServices, 
+									 buildTemplateMechanismStandalone, buildNetworkAvailability, prepareMDM, copyInitScripts, buildJavaDoc,
+                   buildPlugins, copyCheckScripts"
+          description="build all"/>
+  
+        <path id="javadoc.libraries">
+          <fileset dir="${root.dir}/common/lib/xyna">
+            <include name="**/*.jar"/>
+          </fileset>
+          <fileset dir="${root.dir}/server/lib">
+            <include name="**/*.jar"/>
+          </fileset>
+        </path>
+ 
+
+	<!-- - - - - - - - - - - - - - - - - -
+	          target: buildJavaDoc
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="buildJavaDoc">
+		<javadoc destdir="${build.dir}/doc/api" author="false" version="true" use="true"
+	      windowtitle="Xyna Factory API" verbose="true" encoding="iso-8859-1" failonerror="true" classpathref="javadoc.libraries">
+			<fileset dir="${server.dir}/src">
+				<include name="**/*.java" />
+			</fileset>
+	<!--		<fileset dir="${persistencelayers.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${clusterproviders.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${trigger.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${components.dir}">
+				<include name="**/*.java" />
+			</fileset> -->
+			<doctitle>
+				<![CDATA[<h1>Xyna Factory API</h1>]]></doctitle>
+		<bottom>
+			<![CDATA[<i>Copyright 2022 GIP SmartMercial GmbH, Germany</i>]]></bottom>
+</javadoc>
+<jar destfile="${build.dir}/server/lib/xynafactory-javadoc.jar" basedir="${build.dir}/doc/api"/>
+<delete dir="${build.dir}/doc/api">
+</delete>
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+            target: buildModules  
+           - - - - - - - - - - - - - - - - - -->
+<target name="buildModules" description="build Modules" depends="buildServer, checkModules" >
+<ant dir="${root.dir}/modules" target="build-all">
+	<property name="target.dir"        value="${build.dir}/components" />
+	<property name="third_parties.dir" value="${build.dir}/third_parties" />
+</ant>
+</target>
+
+  <target name="checkModules" >
+      <exec executable="${root.dir}/installation/build/findduplicateexceptioncodes.sh" inputstring="" outputproperty="errors" >
+        <arg value="${root.dir}/modules" /> 
+      </exec>
+      <echo message="duplicate exception codes: ${errors}" />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: buildComponents
+         - - - - - - - - - - - - - - - - - -->
+<target name="buildComponents" depends="buildServer" >
+
+<xynaTarget name="xsor" if="xyna.xnwh.xsor">
+		       <ant dir="${components.dir}/xnwh/xcs/xsor" target="build">
+		       <property name="target.dir"
+		       value="${build.dir}/components/xnwh/xcs/xsor" />
+		       </ant>
+</xynaTarget>
+
+<!-- DefaultConnectionPoolTypes wird immer gebaut -->
+<ant target="conpooltypes" />
+
+<copyLicense from="${components.dir}/third_parties/" to="${build.dir}/third_parties" />
+
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: refreshCommonLibXyna
+         - - - - - - - - - - - - - - - - - -->
+<target name="refreshCommonLibXyna" depends="buildServer">
+<copy todir="${root.dir}/common/lib/xyna">
+	<fileset dir="${build.dir}/server/lib">
+		<include name="**/xynafactory.jar" />
+	</fileset>
+</copy>
+</target>
+
+
+
+<!-- - - - - - - - - - - - - - - - - -
+    target: prepareMDM
+   - - - - - - - - - - - - - - - - - -->
+<target name="prepareMDM">
+<echo message="Calling com.gip.xyna.MdmDeliveryHelper with libs from ${build.dir}/server/lib"/>
+<java
+  		fork="true"
+  		classname="com.gip.xyna.MdmDeliveryHelper"
+  		failonerror="true">
+	<arg value="${build.dir}/"/>
+	<classpath>
+		<fileset dir="${build.dir}/server/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</classpath>
+</java>
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+         target: buildServer
+        - - - - - - - - - - - - - - - - - -->
+<target name="buildServer">
+<xynaTarget name="buildServer" if="xyna.server">
+	<ant dir="${server.dir}">
+		<target name="prepare" />
+		<target name="buildJar" />
+		<target name="buildTemplate" />
+		<target name="buildTemplateNew" />
+		<property name="build.dir" value="${build.dir}/server/lib" />
+	</ant>
+	<copyJar from="${server.dir}/lib" to="${build.dir}/server/lib" />
+	<copyLicense from="${server.dir}/lib" to="${build.dir}/server/lib" />
+	<copyLicense from="${server.dir}/lib" to="${build.dir}/third_parties" />
+	<copy todir="${build.dir}/third_parties">
+		<fileset dir="${server.dir}/lib">
+			<include name="README.txt" />
+		</fileset>
+	</copy>
+	<copy todir="${build.dir}/server/resources">
+		<fileset dir="${root.dir}/_Interfaces">
+			<include name="XMDM.xsd" />
+		</fileset>
+		<fileset dir="${root.dir}/installation/sql">
+			<include name="**/create.sql" />
+		</fileset>
+	</copy>
+	<copy todir="${build.dir}/server">
+		<fileset dir="${server.dir}">
+			<include name="exceptions/**" />
+			<include name="Exceptions.xml" />
+			<include name="log4j2.xml" />
+			<include name="server.policy" />
+			<include name="xynafactory.sh" />
+			<include name="product_lib.sh" />
+			<include name="mysql.properties" />
+		</fileset>
+	</copy>
+	<!-- codegroup definitions. müssen derzeit manuell über "./xynafactory.sh exportcodegroups" erstellt werden. -->
+	<copy todir="${build.dir}/server/storage/BlackExceptionCodeManagement">
+		<fileset dir="${root.dir}/installation">
+			<include name="codegroup.xml" />
+			<include name="codepattern.xml" />
+		</fileset>
+	</copy>
+	<move todir="${build.dir}/server">
+		<fileset dir="${build.dir}/server/lib" includes="**/*.zip" />
+	</move>
+	<chmod file="${build.dir}/server/xynafactory.sh" perm="755" />
+	<mkdir dir="${build.dir}/revisions/rev_workingset/sharedLibs" />
+</xynaTarget>
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+	          target: buildPersistenceLayers
+	         - - - - - - - - - - - - - - - - - -->
+<target name="buildPersistenceLayers" depends="conpooltypes">
+<xynaTarget name="buildPersistenceLayers">
+	<ant dir="${persistencelayers.dir}">
+		<target name="buildJarsAndXml" />
+		<property name="source.persistence.dir" value="${persistencelayers.dir}" />
+		<property name="target.persistence.dir" value="${build.dir}/server/persistencelayers" />
+		<property name="target.persistence.config.dir" value="${build.dir}/server/storage/persistence" />
+		<property name="copy.libs.to.server.dir" value="true"/>
+		<property name="target.server.lib.dir" value="${build.dir}/server/lib"/>
+	</ant>
+</xynaTarget>
+
+<xynaTarget name="XynaClusterPersistenceLayer" if="xyna.persistencelayers.XynaClusterPersistenceLayer">
+		       <ant dir="${components.dir}/xnwh/xcs/XynaClusterPersistenceLayer" target="build">
+		       <property name="target.dir"
+		       value="${build.dir}/components/xnwh/xcs/XynaClusterPersistenceLayer" />
+		       </ant>
+</xynaTarget>
+
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: buildClusterProviders
+         - - - - - - - - - - - - - - - - - -->
+<target name="buildClusterProviders">
+<xynaTarget name="buildClusterProviders">
+	<ant dir="${clusterproviders.dir}">
+		<target name="buildJarsAndXml" />
+		<property name="source.clusterproviders.dir" value="${clusterproviders.dir}" />
+		<property name="target.clusterproviders.dir" value="${build.dir}/server/clusterproviders" />
+	</ant>
+</xynaTarget>
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: buildTrigger
+         - - - - - - - - - - - - - - - - - -->
+<target name="buildTrigger">
+<xynaTarget name="buildSMLTrigger" if="xyna.trigger.sml">
+	<ant target="build" dir="${trigger.dir}/SMLTrigger">
+		<property name="target.dir"
+                  value="${build.dir}/revisions/rev_workingset/saved/trigger/SMLTrigger" />
+	</ant>
+</xynaTarget>
+
+<copyLicense from="${trigger.dir}/third_parties/" to="${build.dir}/third_parties" />
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: buildFilter
+         - - - - - - - - - - - - - - - - - -->
+<target name="buildFilter">
+
+
+<!-- Factory Management SNMP Filter -->
+<xynaTarget name="buildFactoryManagementSNMPFilter" if="xyna.trigger.snmp">
+	<ant target="build" dir="${components.dir}/xfmg/xfctrl/xprop/factorymanagement/filterimpl/FactoryManagementSNMP">
+		<property name="target.dir"
+                  value="${build.dir}/components/xfmg/xfctrl/xprop/factorymanagement/filterimpl/FactoryManagementSNMP" />
+	</ant>
+</xynaTarget>
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: buildServices
+         - - - - - - - - - - - - - - - - - -->
+<target name="buildServices">
+
+<!-- SIP Adapter -->
+<xynaTarget name="buildSipService" if="xyna.service.sip">
+	<ant dir="${components.dir}/xact/sip/mdmimpl/SipUserAgentService" target="build">
+		<property name="target.dir"
+                  value="${build.dir}/components/xact/sip/mdmimpl/SipUserAgentService" />
+	</ant>
+	<copy todir="${build.dir}/components/xact/sip/XMOM">
+		<fileset dir="${components.dir}/xact/sip/XMOM">
+			<include name="**/*.xml" />
+		</fileset>
+	</copy>
+</xynaTarget>
+</target>
+
+
+<!--- - - - - - - - - - - - - - - - -
+          target: buildFractalModellerComponents
+        - - - - - - - - - - - - - - - - - -->
+<target name="buildFractalModellerComponents">
+<!-- Prepare -->
+<delete dir="${build.dir}/server/xfracmod_lib" failonerror="false" />
+<!-- Style -->
+<xynaTarget name="buildStyle" if="xyna.style">
+	<ant dir="${style.dir}" inheritall="false">
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+
+<!-- Einfuegen diverser Releaseinformationen in das GUI-interne Versionsmanagement -->
+<condition property="xservercon.versioning" value="true" else="false">
+	<available file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as" />
+</condition>
+<if>
+	<equals arg1="${xservercon.versioning}" arg2="true" />
+	<then>
+		<copy todir="${xservercon.dir}" overwrite="true">
+			<fileset dir="${xservercon.dir}/src/com/gip/xyna/blackedition">
+				<include name="ApplicationVersionManagement.as" />
+			</fileset>
+		</copy>
+		<echo message="Embed build information: ${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"/>
+
+		<if>
+			<isset property="delivery.name" />
+			<then>
+				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
+                     token="LOCAL_DELIVERY_NAME"
+                     value="${delivery.name}"/>
+				<echo message="Delivery name: ${delivery.name}"/>
+			</then>
+			<else>
+				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
+                     token="LOCAL_DELIVERY_NAME"
+                     value="XynaBlackEdition (ANT Build)"/>
+				<echo message="Delivery name: XynaBlackEdition (ANT Build)"/>
+			</else>
+		</if>
+
+		<if>
+			<isset property="timestamp" />
+			<then>
+				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
+                     token="LOCAL_TIMESTAMP"
+                     value="${timestamp}"/>
+				<echo message="Timestamp: ${timestamp}"/>
+			</then>
+			<else>
+				<tstamp>
+					<format property="xservercon.versioning.timestamp" pattern="yyyyMMdd_HHmm" locale="de,DE" />
+				</tstamp>
+				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
+                     token="LOCAL_TIMESTAMP"
+                     value="${xservercon.versioning.timestamp}"/>
+				<echo message="Timestamp: ${xservercon.versioning.timestamp}"/>
+			</else>
+		</if>
+
+		<if>
+			<isset property="release.number" />
+			<then>
+				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
+                     token="LOCAL_BUILD"
+                     value="${release.number}"/>
+				<echo message="Release number: ${release.number}"/>
+			</then>
+			<else>
+				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
+                     token="LOCAL_BUILD"
+                     value="ANT_BUILD"/>
+				<echo message="Release number: ANT_BUILD"/>
+			</else>
+		</if>
+
+		<if>
+			<isset property="svn.tag" />
+			<then>
+				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
+                     token="LOCAL_SVN_TAG"
+                     value="${svn.tag}"/>
+				<echo message="SVN tag: ${svn.tag}"/>
+			</then>
+		</if>
+
+		<if>
+			<isset property="svn.branch" />
+			<then>
+				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
+                     token="LOCAL_SVN_BRANCH"
+                     value="${svn.branch}"/>
+				<echo message="SVN branch: ${svn.branch}"/>
+			</then>
+		</if>
+	</then>
+</if>
+
+<!-- Server Connection -->
+<ant dir="${xservercon.dir}" inheritall="false">
+	<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+</ant>
+
+<!-- Aufraeumen des zwecks Einbettung von Releaseinformationen geaenderten Codes -->
+<if>
+	<equals arg1="${xservercon.versioning}" arg2="true" />
+	<then>
+		<move todir="${xservercon.dir}/src/com/gip/xyna/blackedition" overwrite="true">
+			<fileset dir="${xservercon.dir}">
+				<include name="ApplicationVersionManagement.as" />
+			</fileset>
+		</move>
+	</then>
+</if>
+
+<!-- MDM -->
+<ant dir="${mdmswc.dir}" inheritall="false">
+	<target name="cleanup"/>
+</ant>
+<copy todir="${mdmswc.dir}/lib" overwrite="true">
+	<fileset dir="${build.dir}/server/xfracmod_lib">
+		<include name="*.swc" />
+		<include name="*LICENSE*.txt" />
+	</fileset>
+</copy>
+<ant dir="${mdmswc.dir}" inheritall="false">
+	<target name="buildComp"/>
+	<target name="cleanup"/>
+	<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+</ant>
+<!-- Process Modeller -->
+<xynaTarget name="buildProcessModeller" if="xyna.processmodeller">
+	<ant dir="${xprocmod.dir}" inheritall="false">
+		<target name="cleanup"/>
+	</ant>
+	<copy todir="${xprocmod.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<ant dir="${xprocmod.dir}" inheritall="false">
+		<target name="buildComp"/>
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+<!-- Process Monitor -->
+<xynaTarget name="buildProcessMonitor" if="xyna.processmonitor">
+	<ant dir="${xprocmon.dir}" inheritall="false">
+		<target name="cleanup"/>
+	</ant>
+	<copy todir="${xprocmon.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<ant dir="${xprocmon.dir}" inheritall="false">
+		<target name="buildComp"/>
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+<!-- User Management -->
+<xynaTarget name="buildUserManagement" if="xyna.usermanagement">
+	<ant dir="${xuserman.dir}" inheritall="false">
+		<target name="cleanup"/>
+	</ant>
+	<copy todir="${xuserman.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<ant dir="${xuserman.dir}" inheritall="false">
+		<target name="buildComp"/>
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+<!-- Topology Modeller 2 -->
+<xynaTarget name="buildTopologyModeller2" if="xyna.topologymodeller2">
+	<ant dir="${xtopmod2.dir}" inheritall="false">
+		<target name="cleanup"/>
+	</ant>
+	<copy todir="${xtopmod2.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<ant dir="${xtopmod2.dir}" inheritall="false">
+		<target name="buildComp"/>
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+<!-- Sequence Modeller -->
+<xynaTarget name="buildSequenceModeller" if="xyna.sequencemodeller">
+	<ant dir="${xseqmod.dir}" inheritall="false">
+		<target name="cleanup"/>
+	</ant>
+	<copy todir="${xseqmod.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<ant dir="${xseqmod.dir}" inheritall="false">
+		<target name="buildComp"/>
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+<!-- Factory Manager 2 -->
+<xynaTarget name="buildFactoryManager2" if="xyna.factorymanager2">
+	<ant dir="${xfactman.dir}" inheritall="false">
+		<target name="cleanup"/>
+	</ant>
+	<copy todir="${xfactman.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<ant dir="${xfactman.dir}" inheritall="false">
+		<target name="buildComp"/>
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+<!-- Test Factory -->
+<xynaTarget name="buildTestFactory" if="xyna.testfactory">
+	<ant dir="${xtestfact.dir}" inheritall="false">
+		<target name="cleanup"/>
+	</ant>
+	<copy todir="${xtestfact.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<ant dir="${xtestfact.dir}" inheritall="false">
+		<target name="buildComp"/>
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+<!-- Flow Technology -->
+<xynaTarget name="buildFlowTech" if="xyna.flowtech">
+	<ant dir="${xflowtech.dir}" inheritall="false">
+		<target name="cleanup"/>
+	</ant>
+	<copy todir="${xflowtech.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<ant dir="${xflowtech.dir}" inheritall="false">
+		<property name="build.dir" value="${build.dir}/server/xfracmod_lib" />
+	</ant>
+</xynaTarget>
+<!-- Language Properties -->
+<copy todir="${build.dir}/server/xfracmod_lib/language">
+	<fileset dir="${triptychon.dir}/html-template/language"
+               includes="language*.txt" />
+</copy>
+</target>
+
+<!--- - - - - - - - - - - - - - - - -
+          target: buildDHCPManagementGUIComponents
+        - - - - - - - - - - - - - - - - - -->
+<target name="buildDHCPManagementGUIComponents" depends="buildFractalModellerComponents">
+<!-- Prepare -->
+<delete dir="${build.dir}/server/xdhcpman_lib" failonerror="false" />
+</target>
+
+<!--- - - - - - - - - - - - - - - - -
+          target: buildFractalModeller
+        - - - - - - - - - - - - - - - - - -->
+<target description="build Fractal Modeller" name="buildFractalModeller" depends="buildFractalModellerComponents, buildXTFSpecials">
+<!-- Fractal Modeller -->
+<xynaTarget name="buildFractalModeller" if="xyna.fractalmodeller">
+	<!-- Prepare -->
+	<delete dir="${build.dir}/server/xfracmod" failonerror="false" />
+	<!-- Style -->
+	<xynaTarget name="buildStyle" if="xyna.style">
+		<copy todir="${build.dir}/server/xfracmod/styles" overwrite="true">
+			<fileset dir="${build.dir}/server/xfracmod_lib/styles"/>
+		</copy>
+	</xynaTarget>
+	<!-- Copy required Libraries -->
+	<copy todir="${triptychon.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<!-- Build properties-files -->
+	<ant dir="${xprocmod.dir}" inheritall="false">
+		<target name="buildConfigFile" />
+		<property name="build.dir" value="${build.dir}/server/xfracmod" />
+	</ant>
+	<!-- Triptychon (mit SWF) -->
+	<ant dir="${triptychon.dir}" inheritall="false">
+		<target name="prepare" />
+		<target name="buildApp" />
+		<target name="buildWar" />
+		<target name="cleanup" />
+		<property name="build.dir" value="${build.dir}/server/xfracmod" />
+	</ant>
+	<copy todir="${build.dir}/server/xfracmod">
+		<fileset dir="${triptychon.dir}">
+			<include name="*.xml" />
+			<include name="*.properties" />
+		</fileset>
+	</copy>
+	<replace file="${build.dir}/server/xfracmod/geronimo-web.xml"
+               token="TOKEN_RELEASE_NUMBER"
+               value="${release.number}" />
+	<!-- Third party licences -->
+	<mkdir dir="${build.dir}/server/xfracmod/third_parties" />
+	<copy todir="${build.dir}/server/xfracmod/third_parties">
+		<fileset dir="${root.dir}/xfm/third_parties">
+			<exclude name="readme.txt" />
+		</fileset>
+	</copy>
+</xynaTarget>
+</target>
+
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: buildXTFSpecials
+         - - - - - - - - - - - - - - - - - -->
+<target name="buildXTFSpecials" depends="buildFractalModellerComponents">
+<!-- Process Modeller standalone -->
+<xynaTarget name="buildProcessModellerStandalone"
+                if="xyna.processmodeller.standalone">
+	<!-- Prepare -->
+	<delete dir="${build.dir}/server/xprcmod_so" failonerror="false" />
+	<!-- Style -->
+	<xynaTarget name="buildStyle" if="xyna.style">
+		<copy todir="${build.dir}/server/xprcmod_so/styles" overwrite="true">
+			<fileset dir="${build.dir}/server/xfracmod_lib/styles"/>
+		</copy>
+	</xynaTarget>
+	<!-- Copy Language Files -->
+	<copy todir="${build.dir}/server/xprcmod_so/language">
+		<fileset dir="${triptychon.dir}/html-template/language"
+                 includes="language*.txt" />
+	</copy>
+	<!-- Copy required Libraries -->
+	<copy todir="${xprocmod.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<!-- Process Modeller (mit SWF) -->
+	<ant dir="${xprocmod.dir}" inheritall="false">
+		<target name="buildApp"/>
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xprcmod_so" />
+	</ant>
+	<!-- War-File -->
+	<ant dir="${triptychon.dir}" inheritall="false">
+		<target name="buildHTML" />
+		<target name="buildWar" />
+		<property name="build.dir" value="${build.dir}/server/xprcmod_so" />
+	</ant>
+</xynaTarget>
+<!-- Process Monitor Plugin -->
+<xynaTarget name="buildProcessMonitorPlugin"
+                if="xyna.processmonitor.plugin">
+	<!-- Prepare -->
+	<delete dir="${build.dir}/server/xprcmon_plugin" failonerror="false" />
+	<!-- Style -->
+	<xynaTarget name="buildStyle" if="xyna.style">
+		<copy todir="${build.dir}/server/xprcmon_plugin/styles" overwrite="true">
+			<fileset dir="${build.dir}/server/xfracmod_lib/styles"/>
+		</copy>
+	</xynaTarget>
+	<!-- Copy Language Files -->
+	<copy todir="${build.dir}/server/xprcmon_plugin/language">
+		<fileset dir="${triptychon.dir}/html-template/language"
+                 includes="language*.txt" />
+	</copy>
+	<!-- Copy required Libraries -->
+	<copy todir="${xprocmon.dir}/lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+	<!-- Process Monitor -->
+	<ant dir="${xprocmon.dir}" inheritall="false">
+		<target name="cleanup"/>
+		<property name="build.dir" value="${build.dir}/server/xprcmon_plugin" />
+	</ant>
+	<ant dir="${xprocmon.dir}" inheritall="false">
+		<target name="buildConfigFile" />
+		<property name="build.dir" value="${build.dir}/server/xprcmon_plugin" />
+	</ant>
+</xynaTarget>
+</target>
+
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: buildUserManagementLib
+         - - - - - - - - - - - - - - - - - -->
+<target name="buildUserManagementLib" depends="buildFractalModellerComponents">
+<!-- User Management Libraries -->
+<xynaTarget name="buildUserManagementLibraries"
+                if="xyna.usermanagement.libraries">
+	<!-- Prepare -->
+	<delete dir="${build.dir}/server/xuserman_lib" failonerror="false" />
+	<!-- Style -->
+	<xynaTarget name="buildStyle" if="xyna.style">
+		<copy todir="${build.dir}/server/xuserman_lib/styles" overwrite="true">
+			<fileset dir="${build.dir}/server/xfracmod_lib/styles"/>
+		</copy>
+	</xynaTarget>
+	<!-- Copy Language Files -->
+	<copy todir="${build.dir}/server/xuserman_lib/language">
+		<fileset dir="${triptychon.dir}/html-template/language"
+                 includes="language*.txt" />
+	</copy>
+	<!-- Copy required Libraries -->
+	<copy todir="${build.dir}/server/xuserman_lib" overwrite="true">
+		<fileset dir="${build.dir}/server/xfracmod_lib">
+			<include name="XynaUtils*.swc" />
+			<include name="as3crypto.swc" />
+			<include name="serverconnection.swc" />
+			<include name="*UserManagement*.swc" />
+			<include name="*LICENSE*.txt" />
+		</fileset>
+	</copy>
+
+	<ant dir="${xuserman.dir}" inheritall="false">
+		<target name="buildConfigFile" />
+		<property name="build.dir" value="${build.dir}/server/xuserman_lib" />
+	</ant>
+</xynaTarget>
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+          target: buildTemplateMechanismStandalone
+         - - - - - - - - - - - - - - - - - -->
+<target name="buildTemplateMechanismStandalone">
+<xynaTarget name="buildTemplateProvider" if="xyna.templatemechanism.standalone">
+	<mkdir dir="${build.dir}/TemplateMechanismStandalone/TemplateProvider"/>
+	<ant dir="${configserver.dir}/xact.templates.TemplateProvider">
+		<target name="buildStandaloneNoTargetModification" />
+		<property name="target.dir"
+                  value="${build.dir}/TemplateMechanismStandalone/TemplateProvider" />
+	</ant>
+</xynaTarget>
+<xynaTarget name="buildVelocityTemplate" if="xyna.templatemechanism.standalone">
+	<mkdir dir="${build.dir}/TemplateMechanismStandalone/VelocityService"/>
+	<ant dir="${configserver.dir}/xact.templates.VelocityService">
+		<target name="buildStandaloneNoTargetModification" />
+		<property name="target.dir"
+                  value="${build.dir}/TemplateMechanismStandalone/VelocityService" />
+	</ant>
+</xynaTarget>
+</target>
+
+
+<target name="buildNetworkAvailability">
+<xynaTarget name="buildNetworkAvailability">
+	<ant dir="${root.dir}/components/xact/NetworkAvailability/" target="build">
+		<property name="target.dir"
+                  value="${build.dir}/components/xact/NetworkAvailability" />
+	</ant>
+</xynaTarget>
+</target>
+
+<target name="copyCheckScripts" description="copyCheckScripts">
+	<mkdir dir="${build.dir}/CheckScripts" />
+	<copy todir="${build.dir}/CheckScripts">
+		<fileset dir="${basedir}/../CheckScripts/">
+			<include name="*" />
+		</fileset>
+	</copy>
+</target>
+<!--- - - - - - - - - - - - - - - - -
+              target: copyInitScripts
+            - - - - - - - - - - - - - - - - - -->
+<target name="copyInitScripts">
+<xynaTarget name="copyInitScripts">
+	<copy todir="${build.dir}/etc">
+		<fileset dir="${basedir}/../etc/">
+			<include name="initd_xynafactory*"/>
+		</fileset>
+	</copy>
+</xynaTarget>
+</target>
+
+<!--- - - - - - - - - - - - - - - - -
+        target: copyInstallScripts
+        - - - - - - - - - - - - - - - - - -->
+<target name="copyInstallScripts">
+<xynaTarget name="copyInstallScripts">
+	<copy todir="${build.dir}/installation">
+		<fileset dir="${root.dir}/installation/install">
+			<include name="root.sh"/>
+		</fileset>
+	</copy>
+	<copy todir="${build.dir}">
+		<fileset dir="${root.dir}">
+			<include name="**.sh"/>
+		</fileset>
+	</copy>
+	<exec executable="svn" failonerror="true">
+		<arg line="export ${func_lib.svn.url} ${build.dir}/func_lib" />
+	</exec>
+	<replace file="${build.dir}/func_lib/func_lib.sh"
+               token="TOKEN_RELEASE_NUMBER"
+               value="${release.number}" />
+</xynaTarget>
+</target>
+
+
+<!-- - - - - - - - - - - - - - - - - -
+	              target: conpooltypes
+	             - - - - - - - - - - - - - - - - - -->
+<target name="conpooltypes">
+<ant dir="${components.xnwh.pooltypes.dir}" target="build">
+	<property name="target.dir"
+	          value="${build.dir}/server/conpooltypes" />
+</ant>
+<copy todir="${root.dir}/common/lib/xyna">
+	<fileset dir="${build.dir}/server/conpooltypes" casesensitive="false">
+		<include name="**/*.jar" />
+		<include name="**/*NOTICE*" />
+		<include name="**/*LICENCE*" />
+		<include name="**/*LICENSE*" />
+	</fileset>
+</copy>
+</target>
+
+
+<!-- - - - - - - - - - - - - - - - - -
+                target: plugins
+                - - - - - - - - - - - - - - - - - -->
+<target name="buildPlugins">
+
+<ant dir="${root.dir}/datamodeltypes" target="build">
+	<property name="target.dir" value="${build.dir}/server/datamodeltypes" />
+	<property name="third_parties.dir" value="${build.dir}/third_parties" />
+	<propertyset >
+		<propertyref prefix="xyna.datamodeltype"/>
+	</propertyset>
+</ant>
+
+<ant dir="${root.dir}/orderinputsources" target="build">
+	<property name="target.dir" value="${build.dir}/server/orderinputsourcetypes" />
+	<propertyset >
+		<propertyref prefix="xyna.orderInputSource"/>
+	</propertyset>
+</ant>
+
+
+</target>
+
+
+<!-- - - - - - - - - - - - - - - - - -
+	              target: ComponentsQueue
+	             - - - - - - - - - - - - - - - - - -->
+
+<target name="componentsQueue">
+<ant dir="${root.dir}/components/xact/queue" target="build">
+	<property name="target.dir"
+				value="${build.dir}/components/xact/queue" />
+</ant>
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+	              target: ComponentsMail
+	             - - - - - - - - - - - - - - - - - -->
+
+<target name="componentsMail">
+<ant dir="${root.dir}/components/xact/mail/mdmimpl/MailAdapterImpl" target="build">
+	<property name="target.dir"
+	        value="${build.dir}/components/xact/mail" />
+</ant>
+</target>
+
+<target name="checkAppVersion" description="checks all application.xmls">
+    <exec failonerror="true" dir="." executable="./checkAppVersions.py" />
+</target>
+
+
+
+
+</project>

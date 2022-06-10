@@ -1,0 +1,44 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="createpackage" Groups="Backup and Restore" 
+      Description="Creates a package containing all elements specified within the package definition file and the elements' dependencies.">
+      <!--  Siehe auch installpackage, uninstallpackage, backup. => TODO siehe auch-referenzen verallgemeinern -->
+      <ExtendedDescription>
+The xml file looks like this:
+&lt;XynaPackage&gt;
+  &lt;Workflow&gt;mdmPath.WorkflowName&lt;/Workflow&gt;
+  &lt;Datatype&gt;mdmPath.DatatypeName&lt;/Datatype&gt;
+  &lt;ExceptionType&gt;mdmPath.ExceptionName&lt;/ExceptionType&gt;
+  &lt;Trigger&gt;triggerName&lt;/Trigger&gt;
+  &lt;Filter&gt;filterName&lt;/Filter&gt;
+  &lt;Capacity&gt;capacityName&lt;/Capacity&gt;
+  &lt;CronLSOrder&gt;id&lt;/CronLSOrder&gt;
+  &lt;XynaProperty&gt;propertyName&lt;/XynaProperty&gt;
+  &lt;File&gt;pathReleativeToXynaDir.filename&lt;/File&gt;
+&lt;/XynaPackage&gt;
+All elements inside of the XML tag XynaPackage are optional and may occur more than once.
+Dependencies (subworkflows, datatypes, etc.) will automatically be included in the package. This can be circumvented by setting the ignoreDependencies attribute like this: 
+&lt;Workflow ignoreDependencies="true"&gt;mdmPath.WorkflowName&lt;/Workflow&gt;
+      </ExtendedDescription>
+  </CommandDefinition>
+  <Argument Name="DeliveryItem" Description="The definition of the package to be created"/>
+  <Argument Name="TargetFile" Description="The file that the created package is written to"/>
+  <BoolOption Name="v" LongName="verbose" Description="Enable verbose output"/>
+  <BoolOption Name="i" LongName="includexynacomp" Description="Include Xyna components within the package"/>
+</XynaCommandLineCommand>

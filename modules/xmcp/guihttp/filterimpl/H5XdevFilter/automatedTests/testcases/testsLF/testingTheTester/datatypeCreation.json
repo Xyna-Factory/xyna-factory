@@ -1,0 +1,37 @@
+{
+  "$meta":
+  {
+    "name": "datatypeCreation",
+	"description": "Testet das erstellen und entfernen eines Datatypes über Funktionsaufrufe."
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rndLabel!"
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "default workspace",
+		"!path!": "lf.automatedTests.generated",
+		"!label!": "!rndLabel!"
+	  },
+	  "mapOutput": {"!name!" : "!name!"}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/lf.automatedTests.generated/!name!/close",
+	  "payload": {"force":false}
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/lf.automatedTests.generated/!name!/delete",
+	  "payload": {"force":false}
+	}
+  ]
+}

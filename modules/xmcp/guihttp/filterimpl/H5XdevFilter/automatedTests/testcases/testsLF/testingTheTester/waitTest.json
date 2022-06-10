@@ -1,0 +1,9 @@
+{
+  "operations":
+  [
+    {
+      "operation": "wait",
+      "seconds": 5
+    }
+  ]
+}

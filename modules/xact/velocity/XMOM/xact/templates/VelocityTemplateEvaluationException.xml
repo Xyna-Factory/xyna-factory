@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 6.1 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2015
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 172334 $
+ * $Date: 2015-07-13 16:46:01 +0200 (Mo, 13. Jul 2015) $
+ --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XYNA-XACT-00004" Label="Velocity Template Evaluation Exception" TypeName="VelocityTemplateEvaluationException" TypePath="xact.templates">
+    <Meta>
+      <IsXynaComponent>true</IsXynaComponent>
+    </Meta>
+    <Data Label="Velocity Template" ReferenceName="VelocityTemplate" ReferencePath="xact.templates" VariableName="velocityTemplate0"/>
+    <Data Label="Template Input Data" ReferenceName="TemplateInputData" ReferencePath="xact.templates" VariableName="templateInputData"/>
+    <MessageText Language="EN">Velocity evaluation failed: %0%</MessageText>
+  </ExceptionType>
+</ExceptionStore>

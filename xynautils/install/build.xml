@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="xynautils-install" basedir=".">
+
+  <!--Next release version for the archive file-->
+  <property name="release.number" value="2.3.2.0" />
+  <!--Name of the utils project-->
+  <property name="utils.name" value="install" />
+
+  <pathconvert property="antutils.release">
+    <mapper type="regexp" from="xynautils-ant-(.*).jar" to="\1" />
+    <fileset dir="${basedir}/install/lib">
+      <include name="xynautils-ant*.jar" />
+    </fileset>
+  </pathconvert>
+
+  <!--Master build file-->
+  <property name="build.file" value="../install/xynautils/masterbuild.xml" />
+
+  <!--Import all targets from master build file-->
+  <import file="${build.file}" />
+
+  <!-- = = = = = = = = = = = = = = = = =
+	          macrodef: buildVersion       
+	         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="buildVersion">
+    <attribute name="version" description="Version number of the build." />
+    <attribute name="basedir"
+               default="${basedir}"
+               description="Directory of project." />
+    <attribute name="destdir" description="Directory to store the build." />
+    <sequential>
+      <replace file="@{basedir}/build/ant-xyna.xml">
+        <replacefilter token="TOKEN_UTILS_RELEASE_NUMBER" value="@{version}" />
+        <replacefilter token="TOKEN_ANTUTILS_RELEASE_NUMBER"
+                       value="${antutils.release}" />
+      </replace>
+      <copy todir="@{destdir}/installation">
+        <!-- TODO: exclude files stored in jars -->
+        <fileset dir="@{basedir}">
+          <include name="**/*" />
+          <exclude name="**/*Macros.xml" />
+          <exclude name="delivery/svn.xml" />
+          <exclude name="integration/ciMacros.xml" />
+          <exclude name="build.xml" />
+          <exclude name="**/installDB.xml" />
+          <exclude name="install/update.xml" />
+          <exclude name="xynautils/**" />
+          <exclude name="test*/**" />
+          <exclude name="build_*_*/**" />
+          <exclude name="lib.*/**" />
+          <exclude name="*.jpr" />
+          <exclude name="**/antlib.xml" />
+          <exclude name="**/installOracle.xml" />
+          <exclude name="**/installXyna.xml" />
+          <exclude name="**/installGeronimo.xml" />
+        </fileset>
+      </copy>
+      <copy todir="@{destdir}/installation/lib" flatten="true">
+        <fileset dir="${basedir}/lib">
+          <include name="**/*.jar" />
+          <include name="**/*.txt" />
+        </fileset>
+      </copy>
+      <!-- create build jar -->
+      <copy todir="@{basedir}/com/gip/xyna/utils">
+        <fileset dir="@{basedir}">
+          <include name="build/buildMacros.xml" />
+          <include name="build/xynaMacros.xml" />
+          <include name="build/antlib.xml" />
+          <include name="delivery/deliveryMacros.xml" />
+          <include name="delivery/svn.xml" />
+          <include name="integration/ciMacros.xml" />
+        </fileset>
+      </copy>
+      <jar destfile="@{destdir}/installation/build/lib/xynautils-build-@{version}.jar">
+        <fileset dir="@{basedir}" includes="com/**" />
+        <manifest>
+          <attribute name="Vendor" value="${vendor.name}" />
+          <attribute name="Version" value="${release.number}" />
+          <attribute name="Build-Date" value="${timestamp}" />
+        </manifest>
+      </jar>
+      <delete dir="@{basedir}/com" />
+      <!-- create install jar -->
+      <copy file="@{basedir}/build/xynaMacros.xml" todir="@{basedir}/install" />
+      <copy todir="@{basedir}/com/gip/xyna/utils">
+        <fileset dir="@{basedir}">
+          <include name="install/xynaMacros.xml" />
+          <include name="install/installXyna.xml" />
+          <include name="install/installOracle.xml" />
+          <include name="install/installGeronimo.xml" />
+          <include name="install/installDB.xml" />
+          <include name="install/update.xml" />
+          <include name="install/antlib.xml" />
+        </fileset>
+      </copy>
+      <jar destfile="@{destdir}/installation/install/lib/xynautils-install-@{version}.jar">
+        <fileset dir="@{basedir}" includes="com/**" />
+        <manifest>
+          <attribute name="Vendor" value="${vendor.name}" />
+          <attribute name="Version" value="${release.number}" />
+          <attribute name="Build-Date" value="${timestamp}" />
+        </manifest>
+      </jar>
+      <delete dir="@{basedir}/com" />
+    </sequential>
+  </macrodef>
+
+</project>

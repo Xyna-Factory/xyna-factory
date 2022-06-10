@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "Mapping.json",
+	"Service.json"
+  ]
+}

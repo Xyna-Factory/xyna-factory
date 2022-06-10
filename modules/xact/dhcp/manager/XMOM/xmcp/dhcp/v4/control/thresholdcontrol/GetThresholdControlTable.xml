@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get ThresholdControl Table" TypeName="GetThresholdControlTable" TypePath="xmcp.dhcp.v4.control.thresholdcontrol" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(1728)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get ThresholdControl Table" Name="GetThresholdControlTable">
+    <Input>
+      <Data ID="22" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo22">
+        <Target RefID="18"/>
+        <Target RefID="12"/>
+        <Target RefID="15"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="23" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo23">
+        <Source RefID="24"/>
+      </Data>
+      <Data ID="74" IsList="true" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type74">
+        <Source RefID="24"/>
+      </Data>
+    </Output>
+    <Choice ID="18" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="22"/>
+      <Target RefID="17"/>
+      <Target RefID="21"/>
+      <Input>
+        <Data ID="9" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo9"/>
+        <Source RefID="22"/>
+      </Input>
+      <Case ID="4" Label="true" Premise="%0%.bootstrap">
+        <Mappings ID="11" Label="Mapping">
+          <Target RefID="10"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,openDocumentation,FlatMode</FixedDetailOptions>
+            <Documentation>TODO: disable sort/filter evtl. setzen, wenn die Funktion nicht zur Verfügung stehen soll</Documentation>
+          </Meta>
+          <Output>
+            <Data ID="90" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="10"/>
+          </Output>
+          <Mapping>%0%["0"].name="DHCP-Relay"</Mapping>
+          <Mapping>%0%["0"].path="dHCPRelay"</Mapping>
+          <Mapping>%0%["1"].name="Pool-Type"</Mapping>
+          <Mapping>%0%["1"].path="poolType"</Mapping>
+          <Mapping>%0%["2"].name="Threshold"</Mapping>
+          <Mapping>%0%["2"].path="threshold"</Mapping>
+        </Mappings>
+        <Mappings ID="12" Label="Mapping">
+          <Source RefID="10"/>
+          <Source RefID="22"/>
+          <Target RefID="13"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="91" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+            <Source RefID="22"/>
+          </Input>
+          <Input>
+            <Data ID="2" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn2"/>
+            <Source RefID="10"/>
+          </Input>
+          <Output>
+            <Data ID="3" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo3"/>
+            <Target RefID="13"/>
+          </Output>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+          <Mapping>%2%.rootType="xmcp.dhcp.v4.control.thresholdcontrol.Threshold_Type"</Mapping>
+        </Mappings>
+        <Assign ID="19">
+          <Source RefID="13"/>
+          <Source RefID="10"/>
+          <Target RefID="17"/>
+          <Target RefID="21"/>
+          <Copy>
+            <Source RefID="13"/>
+            <Target RefID="17"/>
+          </Copy>
+          <Copy>
+            <Source RefID="10"/>
+            <Target RefID="21"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="8" Label="false">
+        <Mappings ID="15" Label="1:1">
+          <Source RefID="22"/>
+          <Target RefID="14"/>
+          <Target RefID="16"/>
+          <Input>
+            <Data ID="5" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5"/>
+            <Source RefID="22"/>
+          </Input>
+          <Output>
+            <Data ID="6" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo6"/>
+            <Target RefID="14"/>
+          </Output>
+          <Output>
+            <Data ID="7" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn7"/>
+            <Target RefID="16"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%2%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="20">
+          <Source RefID="14"/>
+          <Source RefID="16"/>
+          <Target RefID="17"/>
+          <Target RefID="21"/>
+          <Copy>
+            <Source RefID="14"/>
+            <Target RefID="17"/>
+          </Copy>
+          <Copy>
+            <Source RefID="16"/>
+            <Target RefID="21"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="10" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn10">
+      <Source RefID="11"/>
+      <Target RefID="12"/>
+      <Target RefID="19"/>
+    </Data>
+    <Data ID="13" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo13">
+      <Source RefID="12"/>
+      <Target RefID="19"/>
+    </Data>
+    <Data ID="14" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo14">
+      <Source RefID="15"/>
+      <Target RefID="20"/>
+    </Data>
+    <Data ID="16" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn16">
+      <Source RefID="15"/>
+      <Target RefID="20"/>
+    </Data>
+    <Data ID="17" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo17">
+      <Source RefID="18"/>
+      <Source RefID="19"/>
+      <Source RefID="20"/>
+      <Target RefID="62"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="21" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn21">
+      <Source RefID="18"/>
+      <Source RefID="19"/>
+      <Source RefID="20"/>
+    </Data>
+    <ServiceReference ID="39" Label="PoolUsageThreshold" ReferenceName="PoolUsageThreshold.PoolUsageThreshold" ReferencePath="xmcp.dhcp.v4.control">
+      <Source RefID="40"/>
+      <Target RefID="40"/>
+    </ServiceReference>
+    <Function ID="40" Label="PoolUsageThreshold Get All Rows">
+      <Source RefID="39"/>
+      <Source RefID="217"/>
+      <Target RefID="39"/>
+      <Target RefID="41"/>
+      <Invoke Operation="getAllRows" ServiceID="39">
+        <Source RefID="217">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="39">
+        <Target RefID="41"/>
+      </Receive>
+    </Function>
+    <Data ID="41" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype">
+      <Source RefID="40"/>
+      <Target RefID="57"/>
+    </Data>
+    <Mappings ID="57" Label="Extract RowList Threshold">
+      <Source RefID="41"/>
+      <Target RefID="67"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="56" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype56"/>
+        <Source RefID="41"/>
+      </Input>
+      <Output>
+        <Data ID="97" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="row_ctype"/>
+        <Target RefID="67"/>
+      </Output>
+      <Mapping>%1%=%0%.payload.getAllRowsOutput.row</Mapping>
+    </Mappings>
+    <ServiceReference ID="61" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="62"/>
+      <Target RefID="62"/>
+    </ServiceReference>
+    <Foreach ID="147">
+      <Source RefID="67"/>
+      <Target RefID="149"/>
+      <InputList RefID="67">
+        <Data ID="146" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="row_ctype146">
+          <Target RefID="73"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="149">
+        <Data ID="148" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type148">
+          <Source RefID="73"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="73" Label="Assign IDs and Threshold">
+        <Source RefID="146"/>
+        <Target RefID="148"/>
+        <Meta>
+          <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="75" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="row_ctype75"/>
+          <Source RefID="146"/>
+        </Input>
+        <Output>
+          <Data ID="25" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type"/>
+          <Target RefID="148"/>
+        </Output>
+        <Mapping>%1%.pooltypeID=%0%.poolTypeID</Mapping>
+        <Mapping>%1%.sharedNetworkID=%0%.sharedNetworkID</Mapping>
+        <Mapping>%1%.threshold=%0%.threshold*"100"</Mapping>
+      </Mappings>
+    </Foreach>
+    <Function ID="85" Label="Pooltype Get All Rows">
+      <Source RefID="84"/>
+      <Source RefID="191"/>
+      <Target RefID="84"/>
+      <Target RefID="86"/>
+      <Invoke Operation="getAllRows" ServiceID="84">
+        <Source RefID="191">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="84">
+        <Target RefID="86"/>
+      </Receive>
+    </Function>
+    <Mappings ID="107" Label="Extract RowList Pooltype">
+      <Source RefID="86"/>
+      <Target RefID="115"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="106" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype106"/>
+        <Source RefID="86"/>
+      </Input>
+      <Output>
+        <Data ID="114" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="row_ctype114"/>
+        <Target RefID="115"/>
+      </Output>
+      <Mapping>%1%=%0%.payload.getAllRowsOutput.row</Mapping>
+    </Mappings>
+    <Foreach ID="228">
+      <Source RefID="149"/>
+      <Target RefID="229"/>
+      <InputList RefID="149">
+        <Data ID="227" Label="Threshold_Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type227">
+          <Target RefID="225"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="229">
+        <Data ID="226" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type_0">
+          <Source RefID="225"/>
+        </Data>
+      </OutputList>
+      <Function ID="225" Label="Fetch PooltypeName for ID Threshold_Type">
+        <Source RefID="115"/>
+        <Source RefID="224"/>
+        <Source RefID="227"/>
+        <Target RefID="226"/>
+        <Target RefID="224"/>
+        <Invoke Operation="FetchPooltypeNameForIDThreshold_Type" ServiceID="224">
+          <Source RefID="115"/>
+          <Source RefID="227"/>
+        </Invoke>
+        <Receive ServiceID="224">
+          <Target RefID="226"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="188" Label="Shared Network Get All Rows">
+      <Source RefID="187"/>
+      <Source RefID="190"/>
+      <Target RefID="187"/>
+      <Target RefID="189"/>
+      <Invoke Operation="getAllRows" ServiceID="187">
+        <Source RefID="190">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="187">
+        <Target RefID="189"/>
+      </Receive>
+    </Function>
+    <Mappings ID="198" Label="Extract Rows From Shared Network">
+      <Source RefID="189"/>
+      <Target RefID="199"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="200" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="response_ctype200"/>
+        <Source RefID="189"/>
+      </Input>
+      <Output>
+        <Data ID="196" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype196"/>
+        <Target RefID="199"/>
+      </Output>
+      <Mapping>%1%=%0%.payload.getAllRowsOutput.row</Mapping>
+    </Mappings>
+    <Foreach ID="240">
+      <Source RefID="229"/>
+      <Target RefID="241"/>
+      <InputList RefID="229">
+        <Data ID="239" Label="Threshold_Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type239">
+          <Target RefID="237"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="241">
+        <Data ID="238" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type238">
+          <Source RefID="237"/>
+        </Data>
+      </OutputList>
+      <Function ID="237" Label="Fetch DHCPRelay For ID Threshold_Type">
+        <Source RefID="199"/>
+        <Source RefID="236"/>
+        <Source RefID="239"/>
+        <Target RefID="238"/>
+        <Target RefID="236"/>
+        <Invoke Operation="FetchDHCPRelayForIDThreshold_Type" ServiceID="236">
+          <Source RefID="199"/>
+          <Source RefID="239">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="236">
+          <Target RefID="238"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="62" Label="Sort and Filter Table">
+      <Source RefID="61"/>
+      <Source RefID="17"/>
+      <Source RefID="241"/>
+      <Target RefID="61"/>
+      <Target RefID="184"/>
+      <Invoke Operation="sortAndFilterTable" ServiceID="61">
+        <Source RefID="17">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="241">
+          <Meta>
+            <ExpectedType>xmcp.dhcp.v4.control.thresholdcontrol.Threshold_Type</ExpectedType>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="61">
+        <Target RefID="184">
+          <Meta>
+            <ExpectedType>xmcp.dhcp.v4.control.thresholdcontrol.Threshold_Type</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="67" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="row_ctype67">
+      <Source RefID="57"/>
+      <Target RefID="147"/>
+    </Data>
+    <ServiceReference ID="84" Label="Pooltype" ReferenceName="Pooltype.Pooltype" ReferencePath="xmcp.dhcp.v4.pooltypeconfig">
+      <Source RefID="85"/>
+      <Target RefID="85"/>
+    </ServiceReference>
+    <Data ID="86" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype86">
+      <Source RefID="85"/>
+      <Target RefID="107"/>
+    </Data>
+    <Data ID="115" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="row_ctype115">
+      <Source RefID="107"/>
+      <Target RefID="225"/>
+    </Data>
+    <Data ID="149" IsList="true" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type149">
+      <Source RefID="147"/>
+      <Target RefID="228"/>
+    </Data>
+    <Data ID="184" IsList="true" Label="Threshold_Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type184">
+      <Source RefID="62"/>
+      <Target RefID="24"/>
+    </Data>
+    <ServiceReference ID="187" Label="SharedNetwork" ReferenceName="SharedNetwork.SharedNetwork" ReferencePath="xmcp.dhcp.v4.control">
+      <Source RefID="188"/>
+      <Target RefID="188"/>
+    </ServiceReference>
+    <Data ID="189" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="response_ctype189">
+      <Source RefID="188"/>
+      <Target RefID="198"/>
+    </Data>
+    <Data ID="190" Label="GetAllRowsRequest_ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype190">
+      <Target RefID="188"/>
+      <Data ID="211" Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data ID="209" Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="210" Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="212" Label="GetAllRowsInput" VariableName="getAllRowsInput">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="191" Label="GetAllRowsRequest_ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype89">
+      <Target RefID="85"/>
+      <Data ID="215" Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data ID="213" Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="214" Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="216" Label="GetAllRowsInput" VariableName="getAllRowsInput">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="199" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype199">
+      <Source RefID="198"/>
+      <Target RefID="237"/>
+    </Data>
+    <Data ID="217" Label="GetAllRowsRequest_ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages" VariableName="const_GetAllRowsRequest_ctype">
+      <Target RefID="40"/>
+      <Data ID="220" Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data ID="218" Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="219" Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="221" Label="GetAllRowsInput" VariableName="getAllRowsInput">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <ServiceReference ID="224" Label="Fetch PooltypeName for ID Threshold_Type" ReferenceName="FetchPooltypeNameForIDThreshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol">
+      <Source RefID="225"/>
+      <Target RefID="225"/>
+    </ServiceReference>
+    <Data ID="229" IsList="true" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type226">
+      <Source RefID="228"/>
+      <Target RefID="240"/>
+    </Data>
+    <ServiceReference ID="236" Label="Fetch DHCPRelay For ID Threshold_Type" ReferenceName="FetchDHCPRelayForIDThreshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol">
+      <Source RefID="237"/>
+      <Target RefID="237"/>
+    </ServiceReference>
+    <Data ID="241" IsList="true" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type3">
+      <Source RefID="240"/>
+      <Target RefID="62"/>
+    </Data>
+    <Assign ID="24">
+      <Source RefID="17"/>
+      <Source RefID="184"/>
+      <Target RefID="23"/>
+      <Target RefID="74"/>
+      <Copy>
+        <Source RefID="17">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="23"/>
+      </Copy>
+      <Copy>
+        <Source RefID="184">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="74"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

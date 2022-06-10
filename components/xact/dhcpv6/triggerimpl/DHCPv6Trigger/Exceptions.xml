@@ -1,0 +1,111 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+	Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="DE">
+	<Description Language="DE">Exceptions DHCP Trigger.
+		Diese Datei dient gleichzeitig als Dokumentation der Fehlermeldungen.
+	</Description>
+	<!-- BLACK_SERVER_HOME muss sowohl beim build als auch zur laufzeit korrekt gesetzt sein. -->
+	<Import File="${BLACK_SERVER_HOME}/Exceptions.xml" />
+	<ExceptionType Code="XYNA-09700"
+		TypeName="DHCPTRIGGER_DatagramSocketCreationException" TypePath="com.gip.xyna.xact.trigger.dhcp"
+		BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+		<Data Label="connectionParameters" VariableName="connectionParameters">
+			<Meta>
+				<Type>String</Type>
+			</Meta>
+		</Data>
+		<MessageText Language="DE">Der DHCP-Trigger konnte nicht gestartet werden, weil das DatagramSocket nicht erfolgreich erstellt werden konnte. Verbindungsparameter waren: %0%</MessageText>
+      <MessageText Language="EN">DHCP Trigger could not create datagram socket with connection parameters %0%.</MessageText>
+   </ExceptionType>
+   	<ExceptionType Code="XYNA-09701"
+		TypeName="DHCPTRIGGER_InitializationException" TypePath="com.gip.xyna.xact.trigger.dhcp"
+		BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+		<Data Label="connectionParameters" VariableName="connectionParameters">
+			<Meta>
+				<Type>String</Type>
+			</Meta>
+		</Data>
+		<MessageText Language="DE">Der DHCP-Trigger konnte nicht gestartet werden, weil das DatagramSocket nicht erfolgreich erstellt werden konnte. Verbindungsparameter waren: %0%</MessageText>
+      <MessageText Language="EN">DHCP Trigger could not create datagram socket with connection parameters %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09702"
+		TypeName="DHCPTRIGGER_ReceiveException" TypePath="com.gip.xyna.xact.trigger.dhcp">
+		<Data Label="connectionParameters" VariableName="connectionParameters">
+			<Meta>
+				<Type>String</Type>
+			</Meta>
+		</Data>
+		<MessageText Language="DE">Der DHCP-Trigger wurde durch einen unerwarteten Fehler beim Daten-Empfang unterbrochen: %0%</MessageText>
+      <MessageText Language="EN">The DHCP Trigger was interrupted unexpectedly while receiving data: %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09703" TypeName="DHCPTRIGGER_PORT_ALREADY_IN_USE" TypePath="com.gip.xyna.xact.trigger.dhcp"
+                   BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="port" VariableName="port">
+         <Meta>
+            <Type>int</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Port %0% wird bereits benutzt.</MessageText>
+      <MessageText Language="EN">Port %0% is already in use.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09604" TypeName="DHCPTRIGGER_SocketCloseException" TypePath="com.gip.xyna.xact.trigger.dhcp" BaseTypeName="XACT_TriggerCouldNotBeStoppedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="port" VariableName="port">
+         <Meta>
+            <Type>int</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das Socket an Port %0% konnte nicht erfolgreich geschlossen werden.</MessageText>
+      <MessageText Language="EN">Socket on port %0% could not be closed successfully.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09605" TypeName="DHCPTRIGGER_ERROR_STOPPING_TRIGGER" TypePath="com.gip.xyna.xact.trigger.dhcp">
+      <Data Label="port" VariableName="port">
+         <Meta>
+            <Type>int</Type>
+         </Meta>
+      </Data>
+      <Data Label="errorMsg" VariableName="errorMsg">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler beim Stoppen des DHCP-Triggers an Port %0%: %1%</MessageText>
+      <MessageText Language="EN">Error stopping DHCP Trigger on port %0%: %1%</MessageText>
+   </ExceptionType>
+
+<!--   <ExceptionType Code="XYNA-09610" TypeName="HTTPTRIGGER_HTTP_STREAM_ERROR" TypePath="com.gip.xyna.xact.trigger.http">
+      <Data Label="errorMsg" VariableName="errorMsg">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Beim Lesen aus Socket ist ein Fehler aufgetreten: %0%</MessageText>
+      <MessageText Language="EN">Error reading from socket: %0%</MessageText>
+   </ExceptionType> -->
+
+   <ExceptionType Code="XYNA-09620" TypeName="DHCPTRIGGER_DHCP_INVALID_STARTPARAMETERS" TypePath="com.gip.xyna.xact.trigger.dhcp">
+      <Data Label="parameterDescriptions" VariableName="parameterDescriptions">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Ungültige StartParameter für HTTPTrigger. Erwartet: %0%</MessageText>
+      <MessageText Language="EN">Invalid start parameter for HTTPTrigger. Expected: %0%</MessageText>
+   </ExceptionType>
+</ExceptionStore>

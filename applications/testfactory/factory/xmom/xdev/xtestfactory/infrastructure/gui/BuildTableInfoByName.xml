@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Build TableInfo By Name" TypeName="BuildTableInfoByName" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,hScroll(8)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Build TableInfo By Name" Name="BuildTableInfoByName">
+    <Input>
+      <Data ID="23" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text">
+        <Target RefID="31"/>
+        <Target RefID="61"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="24" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo24">
+        <Source RefID="25"/>
+      </Data>
+    </Output>
+    <Choice ID="31" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="23"/>
+      <Target RefID="57"/>
+      <Input>
+        <Data ID="50" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text50"/>
+        <Source RefID="23">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="29" Label="true" Premise="%0%.text==null">
+        <Mappings ID="37" Label="Mapping">
+          <Target RefID="56"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="55" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo55"/>
+            <Target RefID="56"/>
+          </Output>
+          <Mapping>%0%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="48">
+          <Source RefID="56"/>
+          <Target RefID="57"/>
+          <Copy>
+            <Source RefID="56"/>
+            <Target RefID="57"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="30" Label="false">
+        <Function ID="61" Label="Build TableColumns By DataType">
+          <Source RefID="60"/>
+          <Source RefID="23"/>
+          <Target RefID="60"/>
+          <Target RefID="62"/>
+          <Invoke Operation="BuildTableColumnsByDataType" ServiceID="60">
+            <Source RefID="23"/>
+          </Invoke>
+          <Receive ServiceID="60">
+            <Target RefID="62"/>
+          </Receive>
+        </Function>
+        <Mappings ID="17" Label="Mapping">
+          <Source RefID="62"/>
+          <Target RefID="18"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="16" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn16"/>
+            <Source RefID="62"/>
+          </Input>
+          <Output>
+            <Data ID="28" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+            <Target RefID="18"/>
+          </Output>
+          <Mapping>%1%.columns=%0%</Mapping>
+        </Mappings>
+        <Assign ID="49">
+          <Source RefID="18"/>
+          <Target RefID="57"/>
+          <Copy>
+            <Source RefID="18"/>
+            <Target RefID="57"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="18" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo18">
+      <Source RefID="17"/>
+      <Target RefID="49"/>
+    </Data>
+    <Data ID="22" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo22">
+      <Source RefID="21"/>
+      <Target RefID="25"/>
+    </Data>
+    <Data ID="56" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo56">
+      <Source RefID="37"/>
+      <Target RefID="48"/>
+    </Data>
+    <Data ID="57" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo57">
+      <Source RefID="31"/>
+      <Source RefID="48"/>
+      <Source RefID="49"/>
+      <Target RefID="21"/>
+    </Data>
+    <Mappings ID="21" Label="Mapping">
+      <Source RefID="57"/>
+      <Target RefID="22"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="19" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo19"/>
+        <Source RefID="57"/>
+      </Input>
+      <Output>
+        <Data ID="20" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo20"/>
+        <Target RefID="22"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+      <Mapping>%1%.bootstrap="false"</Mapping>
+    </Mappings>
+    <ServiceReference ID="60" Label="Build TableColumns By DataType" ReferenceName="BuildTableColumnsByDataType" ReferencePath="xdev.xtestfactory.infrastructure.gui">
+      <Source RefID="61"/>
+      <Target RefID="61"/>
+    </ServiceReference>
+    <Data ID="62" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn17">
+      <Source RefID="61"/>
+      <Target RefID="17"/>
+    </Data>
+    <Assign ID="25">
+      <Source RefID="22"/>
+      <Target RefID="24"/>
+      <Copy>
+        <Source RefID="22">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="24"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

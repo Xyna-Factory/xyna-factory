@@ -1,0 +1,537 @@
+{
+  "meta":
+  {
+    "name": "pmom69Test",
+	"description": "Execute a workflow containing a service (loaded from app) and open audit",
+	"created": "23.03.2020",
+	"updated": "23.03.2020"
+  },
+  "operations":
+  [
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON69.PMON69",
+		"!input!": [
+			{
+				"$meta": {
+					"fqn": "xmcp.h5x.regression.PMON69.InOutDataType",
+					"rtc": {
+						"application": "!applicationName!",
+						"version":"!applicationVersion!"
+					}
+				},
+				"name":"Test1",
+				"age":10
+			},
+			{
+				"$meta": {
+					"fqn": "xmcp.h5x.regression.PMON69.InOutDataType",
+					"rtc": {
+						"application": "!applicationName!",
+						"version":"!applicationVersion!"
+					}
+				},
+				"name":"Test2",
+				"age":5
+			}
+		],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 4,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+    {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list",
+        "expectedValue": "3"
+    },
+	{
+	  "operation": "read",
+	  "targetVariable": "!workflowStatus!",
+	  "pathInResponse": "info/$list[0]/status",
+      "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!workflowStatus!",
+	  "value": "Finished"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!wf_input0!",
+	  "pathInResponse": "info/$list[id=wf]/inputs[0]",
+	  "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!wf_input0!"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!wf_input1!",
+	  "pathInResponse": "info/$list[id=wf]/inputs[1]",
+	  "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!wf_input1!"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wf_input0!",
+		"path": "name",
+		"targetVariable": "!wf_input0_name!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!wf_input0_name!",
+	  "value": "Test1"
+	},
+		{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wf_input0!",
+		"path": "age",
+		"targetVariable": "!wf_input0_age!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!wf_input0_age!",
+	  "value": "10"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wf_input1!",
+		"path": "name",
+		"targetVariable": "!wf_input1_name!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!wf_input1_name!",
+	  "value": "Test2"
+	},
+		{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wf_input1!",
+		"path": "age",
+		"targetVariable": "!wf_input1_age!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!wf_input1_age!",
+	  "value": "5"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!wf_output!",
+	  "pathInResponse": "info/$list[id=wf]/outputs[0]",
+	  "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!wf_output!"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wf_output!",
+		"path": "name",
+		"targetVariable": "!wf_output_name!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!wf_output_name!",
+	  "value": "Test"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wf_output!",
+		"path": "age",
+		"targetVariable": "!wf_output_age!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!wf_output_age!",
+	  "value": "10"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!mapping1_input!",
+	  "pathInResponse": "info/$list[id=step158]/inputs[0]",
+	  "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!mapping1_input!"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping1_input!",
+		"path": "maxObjects",
+		"targetVariable": "!mapping1_input_maxObjects!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping1_input_maxObjects!",
+	  "value": "-1"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping1_input!",
+		"path": "queryHistory",
+		"targetVariable": "!mapping1_input_queryHistory!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping1_input_queryHistory!",
+	  "value": "true"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!mapping1_output!",
+	  "pathInResponse": "info/$list[id=step158]/outputs[0]",
+	  "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!mapping1_output!"
+	},	
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping1_output!",
+		"path": "name",
+		"targetVariable": "!mapping1_output_name!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping1_output_name!",
+	  "value": "Test"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping1_output!",
+		"path": "age",
+		"targetVariable": "!mapping1_output_age!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping1_output_age!",
+	  "value": "10"
+	},	
+	{
+	  "operation": "read",
+	  "targetVariable": "!mapping2_input0!",
+	  "pathInResponse": "info/$list[id=step6]/inputs[0]",
+	  "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!mapping2_input0!"
+	},	
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input0!",
+		"path": "stringMember",
+		"targetVariable": "!mapping2_input0_stringMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input0_stringMember!",
+	  "value": "Test"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input0!",
+		"path": "intMember",
+		"targetVariable": "!mapping2_input0_intMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input0_intMember!",
+	  "value": "-1"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input0!",
+		"path": "smallLongMember",
+		"targetVariable": "!mapping2_input0_smallLongMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input0_smallLongMember!",
+	  "value": "-1"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input0!",
+		"path": "smallDoubleMember",
+		"targetVariable": "!mapping2_input0_smallDoubleMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input0_smallDoubleMember!",
+	  "value": "-1.0"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input0!",
+		"path": "smallBooleanMember",
+		"targetVariable": "!mapping2_input0_smallBooleanMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input0_smallBooleanMember!",
+	  "value": "true"
+	},
+	
+	
+	{
+	  "operation": "read",
+	  "targetVariable": "!mapping2_input1!",
+	  "pathInResponse": "info/$list[id=step6]/inputs[1]",
+	  "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!mapping2_input1!"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/stringMember",
+		"targetVariable": "!mapping2_input1_simpleDataType1_stringMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_stringMember!",
+	  "value": "Test"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/intMember",
+		"targetVariable": "!mapping2_input1_simpleDataType1_intMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_intMember!",
+	  "value": "0"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/integerMember",
+		"targetVariable": "!mapping2_input1_simpleDataType1_integerMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_integerMember!",
+	  "value": "10"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/smallLongMember",
+		"targetVariable": "!mapping2_input1_simpleDataType1_smallLongMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_smallLongMember!",
+	  "value": "1"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/longMember",
+		"targetVariable": "!mapping2_input1_simpleDataType1_longMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_longMember!",
+	  "value": "10"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/smallDoubleMember",
+		"targetVariable": "!mapping2_input1_simpleDataType1_smallDoubleMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_smallDoubleMember!",
+	  "value": "0.0"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/doubleMember",
+		"targetVariable": "!mapping2_input1_simpleDataType1_doubleMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_doubleMember!",
+	  "value": "23.0"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/smallBooleanMember",
+		"targetVariable": "!mapping2_input1_simpleDataType1_smallBooleanMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_smallBooleanMember!",
+	  "value": "true"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType1/doubleMember0",
+		"targetVariable": "!mapping2_input1_simpleDataType1_doubleMember0!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType1_doubleMember0!",
+	  "value": "500.23"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType2/intMember",
+		"targetVariable": "!mapping2_input1_simpleDataType12_intMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType12_intMember!",
+	  "value": "0"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType2/smallLongMember",
+		"targetVariable": "!mapping2_input1_simpleDataType12_smallLongMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType12_smallLongMember!",
+	  "value": "0"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType2/smallDoubleMember",
+		"targetVariable": "!mapping2_input1_simpleDataType12_smallDoubleMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType12_smallDoubleMember!",
+	  "value": "0.0"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mapping2_input1!",
+		"path": "simpleDataType2/smallBooleanMember",
+		"targetVariable": "!mapping2_input1_simpleDataType12_smallBooleanMember!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!mapping2_input1_simpleDataType12_smallBooleanMember!",
+	  "value": "true"
+	}	
+	
+  ]
+}

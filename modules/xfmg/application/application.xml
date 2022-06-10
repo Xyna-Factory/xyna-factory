@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
+<Application applicationName="GlobalApplicationMgmt" factoryVersion="" versionName="1.0.10" xmlVersion="1.1">
+  <ApplicationInfo>
+    <Description Lang="DE">GlobalApplicationManagementServices</Description>
+    <Description Lang="EN">GlobalApplicationManagementServices</Description>
+    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>FileMgmt</ApplicationName>
+        <VersionName>1.0.10</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>Processing</ApplicationName>
+        <VersionName>1.0.15</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>Node</ApplicationName>
+        <VersionName>1.0.2</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Ordertypes>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.CreateRemoteRuntimeContexts</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.DeleteRemoteRuntimeContexts</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.ExportApplication</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.ImportApplication</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.ListApplications</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.ListLocalApplications</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.ListRuntimeDependencyContextDetails</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.MigrateRuntimeContextDependencies</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.ModifyRuntimeDependencyContext</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.RemoveApplications</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.StartApplications</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xfmg.xfctrl.appmgmt.StopApplications</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.CreateRemoteRuntimeContextOnOneNode</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.DeleteRemoteRuntimeContextOnOneNode</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.ImportApplicationOnOneNode</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.ListApplicationsForOneNode</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.ListRuntimeDependencyContextDetailsOnOneNode</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.MigrateRuntimeContextDependenciesOnOneNode</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.ModifyRuntimeDependencyContextOnOneNode</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.RemoveOneApplicationFromOneNode</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.StartOneApplicationOnOneNode</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.xfctrl.appmgmt.subwfs.StopOneApplicationOnOneNode</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.RemoteOperationResult</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ApplicationDefinitionDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ApplicationDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ApplicationState</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.AuditMode</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.CLI</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.CapacityImportSettings</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ConfigurationSettings</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.CreateRemoteRuntimeContexts</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.DeleteRemoteRuntimeContexts</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.Error</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ExcludeCapacities</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ExcludeXynaProperties</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ExportApplication</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ImportApplication</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ImportCapacitiesOnly</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ImportSettings</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ImportXynaPropertiesOnly</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.IncludeCapacities</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.IncludeXynaProperties</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ListApplicationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ListApplications</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ListLocalApplications</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ListRuntimeDependencyContextDetails</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ListRuntimeDependencyContextsParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.MigrateRuntimeContextDependencies</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.MigrateRuntimeContextDependencyParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.ModifyRuntimeDependencyContext</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.xfctrl.appmgmt.NoNodeSelectedException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.NodeMigrationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.OrderEntranceType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.RMI</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.RemoteApplicationDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.RemoteRuntimeContext</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.RemoteRuntimeDependencyContextDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.RemoveApplicationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.RemoveApplications</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.RepositoryAccess</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.Running</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.RuntimeDependencyContextDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.StartApplicationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.StartApplications</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.StopApplicationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.StopApplications</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.Stopped</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.TriggerInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.Warning</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.Workingcopy</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.WorkspaceDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.XynaPropertyImportSettings</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.CreateRemoteRuntimeContextOnOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.DeleteRemoteRuntimeContextOnOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.ImportApplicationOnOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.ListApplicationsForOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.ListRuntimeDependencyContextDetailsOnOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.MigrateRuntimeContextDependenciesOnOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.ModifyRuntimeDependencyContextOnOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.RemoveOneApplicationFromOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.StartOneApplicationOnOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.appmgmt.subwfs.StopOneApplicationOnOneNode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xprc.xpce.ApplicationDefinition</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>
+

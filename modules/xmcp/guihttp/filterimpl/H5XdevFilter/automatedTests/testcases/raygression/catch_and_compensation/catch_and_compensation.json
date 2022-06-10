@@ -1,0 +1,14 @@
+{
+    "testseries":
+    [
+      "catch_and_compensation_001/testseries.json",
+      "catch_and_compensation_002/testseries.json",
+      "catch_and_compensation_003/testseries.json",
+      "catch_and_compensation_004/testseries.json",
+      "catch_and_compensation_006/testseries.json",
+      "catch_and_compensation_008/testseries.json",
+      "catch_and_compensation_009/testseries.json",
+      "catch_and_compensation_010/testseries.json",
+      "catch_and_compensation_011/testseries.json"
+    ]
+  }

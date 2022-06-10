@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Column Transformation" TypeName="ColumnTransformation" TypePath="xmcp.tables.datatypes.transformation" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Column Transformation" TypeName="ColumnTransformation">
+    <Operation IsAbstract="true" IsStatic="false" Label="Transform Request" Name="transformRequest">
+      <Input>
+        <Data ID="4" Label="Column Filter" ReferenceName="ColumnFilter" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="columnFilter4"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Column Filter" ReferenceName="ColumnFilter" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="columnFilter7"/>
+      </Output>
+    </Operation>
+    <Operation IsAbstract="true" IsStatic="false" Label="Transform Request With Path" Name="transformRequestWithPath">
+      <Input>
+        <Data ID="40" Label="Column Filter" ReferenceName="ColumnFilter" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="columnFilter40"/>
+        <Data ID="49" Label="Column Path" ReferenceName="ColumnPath" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="columnPath49"/>
+      </Input>
+      <Output>
+        <Data ID="45" Label="Column Filter" ReferenceName="ColumnFilter" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="columnFilter45"/>
+      </Output>
+    </Operation>
+  </Service>
+</DataType>

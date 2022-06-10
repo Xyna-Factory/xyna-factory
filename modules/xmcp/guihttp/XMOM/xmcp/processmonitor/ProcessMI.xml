@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Process MI" TypeName="ProcessMI" TypePath="xmcp.processmonitor" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Process MI" Name="ProcessMI">
+    <Input>
+      <Data ID="7" IsList="true" Label="Manual Interaction Id" ReferenceName="ManualInteractionId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionId">
+        <Target RefID="5"/>
+      </Data>
+      <Data ID="8" Label="Manual Interaction Response" ReferenceName="ManualInteractionResponse" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionResponse">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="9" IsList="true" Label="Manual Interaction Process Response" ReferenceName="ManualInteractionProcessResponse" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionProcessResponse9">
+        <Source RefID="10"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="4" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Process MI">
+      <Source RefID="4"/>
+      <Source RefID="7"/>
+      <Source RefID="8"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="processMI" ServiceID="4">
+        <Source RefID="7"/>
+        <Source RefID="8"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" IsList="true" Label="Manual Interaction Process Response" ReferenceName="ManualInteractionProcessResponse" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionProcessResponse">
+      <Source RefID="5"/>
+      <Target RefID="10"/>
+    </Data>
+    <Assign ID="10">
+      <Source RefID="6"/>
+      <Target RefID="9"/>
+      <Copy>
+        <Source RefID="6"/>
+        <Target RefID="9"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

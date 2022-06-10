@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="4" Label="Query Test Case By Name and Test Project" TypeName="QueryTestCaseByNameAndTestProject" TypePath="xdev.xtestfactory.infrastructure.util" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="3" Label="Query Test Case By Name and Test Project" Name="QueryTestCaseByNameAndTestProject">
+    <Meta>
+      <Abstract.UID>830CB83E-5D39-6982-8107-4C7FF8F5B27F</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="1" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="0" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase163">
+        <Source RefID="5"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Function ID="44" Label="Determine Current Test Project">
+      <Source RefID="43"/>
+      <Target RefID="43"/>
+      <Target RefID="45"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="43"/>
+      <Receive ServiceID="43">
+        <Target RefID="45"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="43" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="44"/>
+      <Target RefID="44"/>
+    </ServiceReference>
+    <Data ID="45" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="44"/>
+      <Target RefID="47"/>
+    </Data>
+    <Function ID="47" IsAbstract="true" Label="Service">
+      <Source RefID="46"/>
+      <Source RefID="45"/>
+      <Target RefID="46"/>
+      <Target RefID="49"/>
+      <Meta>
+        <Abstract.UID>72008F9F-1DAF-9E1E-FB87-4C87A42D7EFA</Abstract.UID>
+      </Meta>
+      <ServiceReference ID="46" Label="Service" ReferenceName="AbstractService">
+        <Source RefID="47"/>
+        <Target RefID="47"/>
+      </ServiceReference>
+      <Service IsAbstract="true" Label="Service" TypeName="AbstractService">
+        <Operation IsAbstract="true" Name="service">
+          <Input>
+            <Data Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38"/>
+          </Input>
+          <Output>
+            <Data IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+          </Output>
+        </Operation>
+      </Service>
+      <Invoke Operation="service" ServiceID="46">
+        <Source RefID="45">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="46">
+        <Target RefID="49"/>
+      </Receive>
+    </Function>
+    <Data ID="49" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase49">
+      <Source RefID="47"/>
+    </Data>
+    <Assign ID="5">
+      <Source RefID="1"/>
+      <Target RefID="0"/>
+      <Copy>
+        <Source RefID="1"/>
+        <Target RefID="0"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

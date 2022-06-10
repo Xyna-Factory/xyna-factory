@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="CSV Datamodel Services" TypeName="CSVDatamodelServices" TypePath="xfmg.xfctrl.datamodel.csv" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>CSVDatamodelServicesImpl.jar</Libraries>
+  <Service Label="CSV Datamodel Services" TypeName="CSVDatamodelServices">
+    <Operation IsStatic="true" Label="Fill Default CSV Parameter" Name="fillDefaultCSVParameter">
+      <Meta>
+        <Abstract.UID>5C11F007-EEB6-32F3-1AE7-16BA8298213D</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="CSV Parameter" ReferenceName="CSVParameter" ReferencePath="xfmg.xfctrl.datamodel.csv.parameter" VariableName="cSVParameter78"/>
+      </Input>
+      <Output>
+        <Data Label="CSV Parameter" ReferenceName="CSVParameter" ReferencePath="xfmg.xfctrl.datamodel.csv.parameter" VariableName="cSVParameter"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.csv.CSVDatamodelServicesImpl.fillDefaultCSVParameter(cSVParameter78);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Read CSV Document" Name="readCSVDocument">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="CSV Parameter" ReferenceName="CSVParameter" ReferencePath="xfmg.xfctrl.datamodel.csv.parameter" VariableName="cSVParameter"/>
+        <Data Label="Row Type Template" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.csv.CSVDatamodelServicesImpl.readCSVDocument(document, cSVParameter, anyType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Read CSV Document With Options" Name="readCSVDocumentWithOptions">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="CSV Parameter" ReferenceName="CSVParameter" ReferencePath="xfmg.xfctrl.datamodel.csv.parameter" VariableName="cSVParameter"/>
+        <Data Label="Row Type Template" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+        <Data Label="CSV Read Options" ReferenceName="CSVReadOptions" ReferencePath="xfmg.xfctrl.datamodel.csv.parameter" VariableName="cSVReadOptions"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.csv.CSVDatamodelServicesImpl.readCSVDocumentWithOptions(document, cSVParameter, anyType, cSVReadOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write CSV Document" Name="writeCSVDocument">
+      <Meta>
+        <Abstract.UID>ACE1491D-A281-C694-20F7-16BB62990C2D</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="CSV Parameter" ReferenceName="CSVParameter" ReferencePath="xfmg.xfctrl.datamodel.csv.parameter" VariableName="cSVParameter"/>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.csv.CSVDatamodelServicesImpl.writeCSVDocument(cSVParameter, anyType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write CSV Document with Options" Name="writeCSVDocumentWithOptions">
+      <Meta>
+        <Abstract.UID>325F73A1-B3BE-12CF-883E-16BBCB321D1C</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="CSV Parameter" ReferenceName="CSVParameter" ReferencePath="xfmg.xfctrl.datamodel.csv.parameter" VariableName="cSVParameter"/>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+        <Data Label="CSV Write Options" ReferenceName="CSVWriteOptions" ReferencePath="xfmg.xfctrl.datamodel.csv.parameter" VariableName="cSVWriteOptions"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.csv.CSVDatamodelServicesImpl.writeCSVDocumentWithOptions(cSVParameter, anyType, cSVWriteOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

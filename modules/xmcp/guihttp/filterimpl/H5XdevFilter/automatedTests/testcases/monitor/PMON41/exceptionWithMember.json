@@ -1,0 +1,95 @@
+{
+  "meta":
+  {
+    "name": "throwSimpleExceptionTest",
+	"description": "Execute a workflow containing a service (loaded from app) and open audit",
+	"created": "13.03.2020",
+	"updated": "30.03.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON41.ExceptionWithMember",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 1,
+		"!retryLength!": 0,
+		"!errorsLength!": 1,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!exception!",
+	  "pathInResponse": "info/$list[id=step10]/error/exception",
+      "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!exception!",
+	  "value": "xmcp.h5x.regression.PMON41.exceptions.ExceptionWithMember"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step10]/status",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Failed"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!exceptionInput!",
+	  "pathInResponse": "info/$list[id=step10]/inputs[0]",
+	  "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!exceptionInput!"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!exceptionInput!",
+		"path": "reason",
+		"targetVariable": "!reason!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!reason!",
+	  "value": "TestReason"
+	}
+  ]
+}

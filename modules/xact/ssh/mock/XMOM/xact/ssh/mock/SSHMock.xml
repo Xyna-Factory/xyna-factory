@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SSHMock" TypeName="SSHMock" TypePath="xact.ssh.mock" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SSHMockImpl.jar</Libraries>
+  <Service Label="SSHMock" TypeName="SSHMock">
+    <Operation ID="45" IsStatic="true" Label="Combine to Response" Name="combineToResponse">
+      <Input>
+        <Data ID="41" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+        <Data ID="42" Label="Response Result" ReferenceName="ResponseResult" ReferencePath="xact.ssh.mock.result" VariableName="responseResult"/>
+      </Input>
+      <Output>
+        <Data ID="43" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response"/>
+      </Output>
+      <Throws>
+        <Exception ID="44" Label="No Session Found Exception" ReferenceName="NoSessionFoundException" ReferencePath="xact.ssh.mock" VariableName="noSessionFoundException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.mock.SSHMockImpl.combineToResponse(sSHSession, responseResult);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Session Data" Name="createSessionData">
+      <Meta>
+        <Abstract.UID>AE8289E4-10FE-D43E-1F51-99577E688391</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="Mocked Device" ReferenceName="MockedDevice" ReferencePath="xact.ssh.mock" VariableName="mockedDevice"/>
+        <Data Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Parse Behavior Exception" ReferenceName="ParseBehaviorException" ReferencePath="xact.ssh.mock" VariableName="parseBehaviorException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.ssh.mock.SSHMockImpl.createSessionData(sSHSession, document, mockedDevice, sSHSessionCustomization);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="50" IsStatic="true" Label="Execute Command" Name="executeCommand">
+      <Input>
+        <Data ID="46" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+        <Data ID="47" Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Input>
+      <Output>
+        <Data ID="48" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result"/>
+      </Output>
+      <Throws>
+        <Exception ID="49" Label="No Session Found Exception" ReferenceName="NoSessionFoundException" ReferencePath="xact.ssh.mock" VariableName="noSessionFoundException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.mock.SSHMockImpl.executeCommand(sSHSession, command);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="11" IsStatic="true" Label="Get Current Prompt" Name="getCurrentPrompt">
+      <Input>
+        <Data ID="8" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+      </Input>
+      <Output>
+        <Data ID="9" Label="Prompt" ReferenceName="Prompt" ReferencePath="xact.ssh.mock" VariableName="prompt44"/>
+      </Output>
+      <Throws>
+        <Exception ID="10" Label="No Session Found Exception" ReferenceName="NoSessionFoundException" ReferencePath="xact.ssh.mock" VariableName="noSessionFoundException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.mock.SSHMockImpl.getCurrentPrompt(sSHSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="15" IsStatic="true" Label="Get Mocked Device" Name="getMockedDevice">
+      <Input>
+        <Data ID="12" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+      </Input>
+      <Output>
+        <Data ID="13" Label="Mocked Device" ReferenceName="MockedDevice" ReferencePath="xact.ssh.mock" VariableName="mockedDevice"/>
+      </Output>
+      <Throws>
+        <Exception ID="14" Label="No Session Found Exception" ReferenceName="NoSessionFoundException" ReferencePath="xact.ssh.mock" VariableName="noSessionFoundException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.mock.SSHMockImpl.getMockedDevice(sSHSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="19" IsStatic="true" Label="Get MOTD" Name="getMOTD">
+      <Input>
+        <Data ID="16" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+      </Input>
+      <Output>
+        <Data ID="17" Label="Response Result" ReferenceName="ResponseResult" ReferencePath="xact.ssh.mock.result" VariableName="responseResult"/>
+      </Output>
+      <Throws>
+        <Exception ID="18" Label="No Session Found Exception" ReferenceName="NoSessionFoundException" ReferencePath="xact.ssh.mock" VariableName="noSessionFoundException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.mock.SSHMockImpl.getMOTD(sSHSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="25" IsStatic="true" Label="Remove Session Data" Name="removeSessionData">
+      <Meta>
+        <Abstract.UID>2C5327E1-9798-B520-CDEA-978229991654</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="24" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.ssh.mock.SSHMockImpl.removeSessionData(sSHSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="28" IsStatic="true" Label="Retrieve Session Customization" Name="retrieveSessionCustomization">
+      <Meta>
+        <Abstract.UID>613CB067-8DF3-1AB9-4B96-9951775FB902</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="26" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+      </Input>
+      <Output>
+        <Data ID="27" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.mock.SSHMockImpl.retrieveSessionCustomization(sSHSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="32" IsStatic="true" Label="Retrieve Stored Session Data " Name="retrieveStoredSessionData">
+      <Meta>
+        <Abstract.UID>E22680A0-1F1E-8EE7-37A2-9937237CF716</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="29" Label="Session Store Key" ReferenceName="SessionStoreKey" ReferencePath="xact.ssh.mock" VariableName="sessionStoreKey"/>
+        <Data ID="30" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+      </Input>
+      <Output>
+        <Data ID="31" Label="Mocked Device" ReferenceName="MockedDevice" ReferencePath="xact.ssh.mock" VariableName="mockedDevice"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.mock.SSHMockImpl.retrieveStoredSessionData(sessionStoreKey, sSHSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="35" IsStatic="true" Label="Store Session Data" Name="storeSessionData">
+      <Meta>
+        <Abstract.UID>40B4AEFA-B19D-B666-A6E0-97826BD89359</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="33" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+        <Data ID="34" Label="Session Store Parameter" ReferenceName="SessionStoreParameter" ReferencePath="xact.ssh.mock" VariableName="sessionStoreParameter"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.ssh.mock.SSHMockImpl.storeSessionData(sSHSession, sessionStoreParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

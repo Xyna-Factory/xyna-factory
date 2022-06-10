@@ -1,0 +1,34 @@
+{
+  "tests":
+  [
+    "payloadParameterReplacement.json",
+    "payloadParameterReplacementWithJson.json",
+    "parameterReplacementWithSubJson.json",
+    "datatypeCreation.json",
+    "unquoteResponse.json",
+    "unquoteSetFromVariable.json",
+    "saveAndDeployFunctionTest.json",
+    "createServiceGroupFunctionTest.json",
+    "successTest.json",
+    "successTestSubtestcases.json",
+    "multiSetTest.json",
+    "selectLastListIndexTest.json",
+    "addSimpleTypeMemberToDatatypeFunctionTest.json",
+    "createExceptionFunctiontest.json",
+    "setRandomTest.json",
+    "testReplace.json",
+    "stringToJsonTest.json",
+    "assertBiggerTest.json",
+    "convertToJson.json",
+    "assertContains.json",
+    "ignoreOperationTest.json",
+    "assertStartsWith.json",
+    "assertEndsWith.json",
+    "testAdd.json",
+    "currentTimeTest.json",
+    "iterationTest.json",
+    "assertDoesNotContain.json",
+    "assertNotEquals.json",
+	"readListLength.json"
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.10.2020",
+    "updated": "15.10.2020"
+  },
+  "operations": [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd!"
+	},
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Exception_Type!": "New Exception Type"
+        },
+        {
+          "!redo!": "redo"
+        },
+        {
+          "!path!": "autoTest.generated.!rnd!"
+        },
+        {
+          "!New_Exception_Type_5!": "New Exception Type 5"
+        },
+        {
+          "!English_message!": "English message"
+        },
+        {
+          "!EN!": "EN"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1602748745807.NewExceptionType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1602748745807!",
+      "variable": "!new_1602748745807.NewExceptionType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/id",
+      "targetVariable": "!memberVarArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/itemTypes[0]",
+      "targetVariable": "!xmcp.processmodeller.datatypes.Data!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Data!",
+      "variable": "!xmcp.processmodeller.datatypes.Data!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewExceptionType!",
+      "variable": "!new_1602748745807.NewExceptionType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=exceptionMessages]/id",
+      "targetVariable": "!exceptionMessageArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "!Data!",
+          "type": "memberVar"
+        },
+        "index": -1,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1602748745807!/!NewExceptionType!/objects/!memberVarArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[id=memberVarArea]/items/$list",
+      "targetVariable": "!memberVarCount!",
+      "getListLength": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!memberVarCount!",
+      "value": "1"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1602748745807!/!NewExceptionType!/undo"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]",
+	  "fieldName": "items"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1602748745807!/!NewExceptionType!/!redo!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list",
+      "targetVariable": "!memberVarCount!",
+      "getListLength": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!memberVarCount!",
+      "value": "1"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type_5!",
+        "path": "!path!",
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1602748745807!/!NewExceptionType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!path.NewExceptionType5!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewExceptionType5!",
+      "variable": "!path.NewExceptionType5!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!path!/!NewExceptionType5!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "messageLanguage": "!EN!",
+        "messageText": "!English_message!",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!path!/!NewExceptionType5!/objects/!exceptionMessageArea!/change"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[id=exceptionMessageArea]/items/$list[0]/message",
+      "targetVariable": "!exceptionMessage!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!exceptionMessage!",
+      "value": "!English_message!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!path!/!NewExceptionType5!/undo"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "basePath": "xmomItem/areas/$list[id=exceptionMessageArea]",
+	  "fieldName": "items"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!path!/!NewExceptionType5!/!redo!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=exceptionMessageArea]/items/$list[0]/message",
+      "targetVariable": "!exceptionMessage!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!exceptionMessage!",
+      "value": "!English_message!"
+    }
+  ]
+}

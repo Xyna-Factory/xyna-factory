@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="3" Label="List applications for one node" TypeName="ListApplicationsForOneNode" TypePath="xfmg.xfctrl.appmgmt.subwfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,openCatches</FixedDetailOptions>
+  </Meta>
+  <Operation ID="2" Label="List applications for one node" Name="ListApplicationsForOneNode">
+    <Target RefID="20"/>
+    <Meta>
+      <Abstract.UID>692E5F38-C80D-575A-50C5-3235323520DA</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="1" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode">
+        <Target RefID="6"/>
+        <Target RefID="14"/>
+        <Target RefID="27"/>
+      </Data>
+      <Data ID="34" Label="List application parameter" ReferenceName="ListApplicationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="listApplicationParameter">
+        <Target RefID="6"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="0" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails">
+        <Source RefID="4"/>
+        <Source RefID="21"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="5" Label="Global Application Managment Services" ReferenceName="GlobalApplicationManagmentServices.GlobalApplicationManagmentServices" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="6"/>
+      <Target RefID="6"/>
+    </ServiceReference>
+    <Function ID="6" Label="List applications">
+      <Source RefID="5"/>
+      <Source RefID="1"/>
+      <Source RefID="34"/>
+      <Target RefID="5"/>
+      <Target RefID="7"/>
+      <Meta>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+        <FixedWidth>196</FixedWidth>
+        <FixedHeight>35</FixedHeight>
+        <Documentation>Output der Form:
+
+App1, 1.0, initiale Lieferung, STOPPED
+App1, 2.0, Bugfix 4811, RUNNING
+App2, 1.3, Test, RUNNING</Documentation>
+      </Meta>
+      <Invoke Operation="listApplications" ServiceID="5">
+        <Source RefID="1"/>
+        <Source RefID="34"/>
+      </Invoke>
+      <Receive ServiceID="5">
+        <Target RefID="7"/>
+      </Receive>
+    </Function>
+    <Data ID="7" IsList="true" Label="Application Details" ReferenceName="ApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="applicationDetails">
+      <Source RefID="6"/>
+      <Target RefID="14"/>
+    </Data>
+    <Mappings ID="14" Label="Build operation result: success">
+      <Source RefID="7"/>
+      <Source RefID="1"/>
+      <Target RefID="12"/>
+      <Input>
+        <Data ID="13" IsList="true" Label="Application Details" ReferenceName="ApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="applicationDetails13"/>
+        <Source RefID="7"/>
+      </Input>
+      <Input>
+        <Data ID="16" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode16"/>
+        <Source RefID="1"/>
+      </Input>
+      <Local>
+        <Data ID="19" Label="value" VariableName="value">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+          <Value>true</Value>
+        </Data>
+      </Local>
+      <Output>
+        <Data ID="15" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails15"/>
+        <Target RefID="12"/>
+      </Output>
+      <Mapping>%3%.applicationDetails~=%0%</Mapping>
+      <Mapping>%3%.factoryNode~=%1%</Mapping>
+      <Mapping>%3%.success~=%2%</Mapping>
+    </Mappings>
+    <Data ID="12" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails12">
+      <Source RefID="14"/>
+      <Target RefID="4"/>
+    </Data>
+    <Exception ID="20" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception">
+      <Source RefID="2"/>
+      <Target RefID="31"/>
+    </Exception>
+    <Data ID="28" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails28">
+      <Source RefID="27"/>
+      <Target RefID="21"/>
+    </Data>
+    <ServiceReference ID="30" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="31"/>
+      <Target RefID="31"/>
+    </ServiceReference>
+    <Data ID="32" Label="Exception Message" ReferenceName="ExceptionMessage" ReferencePath="core.exception" VariableName="exceptionMessage">
+      <Source RefID="31"/>
+      <Target RefID="27"/>
+    </Data>
+    <Assign ID="4">
+      <Source RefID="12"/>
+      <Target RefID="0"/>
+      <Copy>
+        <Source RefID="12"/>
+        <Target RefID="0"/>
+      </Copy>
+    </Assign>
+    <Catch ExceptionID="20" ID="22">
+      <Function ID="31" Label="Get Exception Message">
+        <Source RefID="30"/>
+        <Source RefID="20"/>
+        <Target RefID="30"/>
+        <Target RefID="32"/>
+        <Invoke Operation="getExceptionMessage" ServiceID="30">
+          <Source RefID="20"/>
+        </Invoke>
+        <Receive ServiceID="30">
+          <Target RefID="32"/>
+        </Receive>
+      </Function>
+      <Mappings ID="27" Label="Build operation result: failed">
+        <Source RefID="1"/>
+        <Source RefID="32"/>
+        <Target RefID="28"/>
+        <Input>
+          <Data ID="24" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode24"/>
+          <Source RefID="1"/>
+        </Input>
+        <Input>
+          <Data ID="33" Label="Exception Message" ReferenceName="ExceptionMessage" ReferencePath="core.exception" VariableName="exceptionMessage33"/>
+          <Source RefID="32"/>
+        </Input>
+        <Local>
+          <Data ID="25" Label="value" VariableName="value25">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Local>
+        <Output>
+          <Data ID="26" Label="Remote Application Details" ReferenceName="RemoteApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteApplicationDetails26"/>
+          <Target RefID="28"/>
+        </Output>
+        <Mapping>%3%.errorMessage~=%1%.message</Mapping>
+        <Mapping>%3%.factoryNode~=%0%</Mapping>
+        <Mapping>%3%.success~=%2%</Mapping>
+      </Mappings>
+      <Assign ID="21">
+        <Source RefID="28"/>
+        <Target RefID="0"/>
+        <Copy>
+          <Source RefID="28"/>
+          <Target RefID="0"/>
+        </Copy>
+      </Assign>
+    </Catch>
+  </Operation>
+</Service>

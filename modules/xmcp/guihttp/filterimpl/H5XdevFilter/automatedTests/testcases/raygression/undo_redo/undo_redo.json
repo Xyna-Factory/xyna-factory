@@ -1,0 +1,10 @@
+{
+    "testseries": [
+        "undo_redo_001/testseries.json",
+        "undo_redo_002/testseries.json",
+        "undo_redo_003/testseries.json",
+        "undo_redo_004/testseries.json",
+        "undo_redo_005/testseries.json",
+        "undo_redo_006/testseries.json"
+    ]
+}

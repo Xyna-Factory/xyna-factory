@@ -1,0 +1,36 @@
+{
+  "meta": 
+  {
+    "name": "stringToJsonTest",
+	"description": "testet die Funktion stringToJson",
+	"created": "10.12.2019",
+	"updated": "10.12.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!stringToConvert!",
+	  "value": "\n{\n    \"Text\": {\n        \"$meta\": {\n            \"fqn\": \"base.Text\",\n            \"rtc\": {\n                \"application\": \"Base\",\n                \"version\": \"1.0.15\"\n            }\n        },\n        \"$id\": \"step7-var6\",\n        \"$source\": \"8\",\n        \"text\": \"someInput\"\n    }\n}"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "stringToJson",
+	  "mapInput": { "!stringToConvert!": "!stringToConvert!" },
+	  "mapOutput": { "!jsonResult!": "!result!" }
+	},
+	{
+	  "operation": "setFromVariable",
+	  "targetVariable": "!finalResult!",
+	  "sourceVariable": "!result!",
+	  "path": "Text/text",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!finalResult!",
+	  "value": "someInput"
+	}
+  ]
+}

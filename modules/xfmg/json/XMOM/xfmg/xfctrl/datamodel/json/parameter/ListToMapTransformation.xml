@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="List to Map Transformation" TypeName="ListToMapTransformation" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Transform arrays/lists into maps (and vice versa when parsing), by using the member identified by "keyName" as the key for the map-entries.
+
+Example:
+pathToList=list
+keyName=id
+
+=&gt; transforms
+
+{"list" :
+[{"id" : 0, "x" : "y"},
+  {"id" : 1, "x" : "y2"}]}
+
+into
+
+{"list" :
+{"0" : {"id" : 0, "x" : "y"},
+ "1" : {"id" : 1, "x : "y2"}}}
+
+Map keys will be converted into strings, if they were numbers or booleans.</Documentation>
+  </Meta>
+  <Data Label="Path to List" VariableName="pathToList">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Path given by member var names (not labels!), separated by dots. If member var name is a list, then append "[]", except if path ends with the list.
+
+Example:
+router.interfaces vs router.interfaces[].supportedtypes</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Key Name" VariableName="keyName">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Member var name to use as map key. Keys may not be null.</Documentation>
+    </Meta>
+  </Data>
+</DataType>

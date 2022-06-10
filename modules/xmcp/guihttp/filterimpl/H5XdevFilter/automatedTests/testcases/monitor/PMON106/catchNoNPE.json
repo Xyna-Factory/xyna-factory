@@ -1,0 +1,71 @@
+{
+  "meta":
+  {
+    "name": "catchExceptionTest",
+	"description": "Execute a workflow containing wait in a foreach and open audit",
+	"created": "07.04.2020",
+	"updated": "07.04.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON106.PMON106",
+		"!input!": [{"$meta":{"fqn":"xprc.waitsuspend.TimeConfiguration","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"$list":[{"$meta":{"fqn":"xprc.waitsuspend.RelativeTimeConfiguration"},"timeInSeconds":{"$meta":{"fqn":"xprc.waitsuspend.Seconds"},"timeUnitInSeconds":1}},{"$meta":{"fqn":"xprc.waitsuspend.RelativeTimeConfiguration"},"timeInSeconds":{"$meta":{"fqn":"xprc.waitsuspend.Seconds"},"timeUnitInSeconds":1}}]}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 2,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=wf]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	}
+  ]
+}

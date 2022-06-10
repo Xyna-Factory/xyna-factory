@@ -1,0 +1,166 @@
+GIP-BLACK-XFMG-XFMON-MIB DEFINITIONS ::= BEGIN
+IMPORTS
+	xfmg FROM GIP-BLACK-MIB;
+
+------------------------------------------------------
+-- Copyright 2022 GIP SmartMercial GmbH, Germany
+--
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+--
+--  http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+------------------------------------------------------
+--
+xfMon MODULE-IDENTITY
+        LAST-UPDATED "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        ORGANIZATION "GIP AG"
+        CONTACT-INFO "GIP AG"
+        DESCRIPTION  ""
+        REVISION     "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        DESCRIPTION  ""
+	::= { xfmg 1 }
+
+
+sysInfo OBJECT IDENTIFIER
+	::= { xfMon 1 }
+
+
+--
+-- XFMG.XFMon.SysInfo
+--
+
+jvmMaxHeapSize OBJECT-TYPE
+  SYNTAX  Gauge
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Maximum heap size of the JVM in kilo bytes [kB]."
+  ::= { sysInfo 1 }
+
+
+jvmCurrentUsedHeap OBJECT-TYPE
+  SYNTAX  Gauge
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Amount of JVM heap space currently used in kilo bytes [kB]."
+  ::= { sysInfo 2 }
+  
+
+jvmCurrentHeapSize OBJECT-TYPE
+  SYNTAX  Gauge
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Current heap size of the JVM in kilo bytes [kB]."
+  ::= { sysInfo 3 }
+
+
+upTime OBJECT-TYPE
+  SYNTAX  Gauge
+  MAX-ACCESS read-only
+  STATUS  current
+  DESCRIPTION
+    "Uptime of the VM in seconds [s]."
+  ::= { sysInfo 4 }
+
+
+ -- ################################################################
+
+threadPoolTable OBJECT-TYPE
+    SYNTAX  SEQUENCE OF ThreadPoolEntry
+    MAX-ACCESS not-accessible
+    STATUS  current
+    DESCRIPTION
+        "Table of thread pool statistics."
+    ::= { sysInfo 5 }
+
+
+threadPoolEntry OBJECT-TYPE
+        SYNTAX  ThreadPoolEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION
+                "Entry for a thread pool."
+        INDEX {
+                orderType
+        }
+        ::= { threadPoolTable 1 }
+
+
+ThreadPoolEntry ::= SEQUENCE {
+		name			OCTET STRING,
+		currentsize		INTEGER,
+		max				INTEGER,
+        completed       Gauge,
+        rejected        Gauge
+		}
+
+
+name OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Name of the thread pool."
+        ::= { threadPoolEntry 1 }
+
+
+currentsize OBJECT-TYPE
+        SYNTAX  INTEGER
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Number of threads currently active."
+        ::= { threadPoolEntry 2 }
+
+
+max OBJECT-TYPE
+        SYNTAX  INTEGER
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Maximum number of threads."
+        ::= { threadPoolEntry 3 }
+
+
+completed OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Count of completed tasks."
+        ::= { threadPoolEntry 4 }
+
+
+rejected OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Count of rejected tasks."
+        ::= { threadPoolEntry 5 }
+
+
+networkAvailability OBJECT IDENTIFIER
+	::= { xfMon 2 }
+
+
+status OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Reports the status of the network availability.
+				Returns 'OK' if the specified host is reachable.
+				Returns 'ERROR' if the specified host is not reachable."
+        ::= { networkAvailability 1 }
+
+END

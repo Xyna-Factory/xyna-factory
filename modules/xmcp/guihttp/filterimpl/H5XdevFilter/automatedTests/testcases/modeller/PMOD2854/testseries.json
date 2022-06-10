@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "refresh.json",
+	"stealLock.json"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "testseries":
+  [
+    "labels_001/testseries.json",
+    "labels_002/testseries.json",
+    "labels_003/testseries.json",
+    "labels_004/testseries.json",
+    "labels_006/testseries.json",
+    "labels_008/testseries.json"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+    "testseries": [
+        "xacm_001/testseries.json",
+        "xacm_002/testseries.json",
+        "xacm_003/testseries.json",
+        "xacm_004/testseries.json",
+        "xacm_005/testseries.json",
+        "xacm_006/testseries.json",
+        "xacm_007/testseries.json",
+        "xacm_008/testseries.json",
+        "xacm_009/testseries.json",
+        "xacm_010/testseries.json",
+        "xacm_011/testseries.json",
+        "xacm_012/testseries.json",
+        "xacm_013/testseries.json",
+        "xacm_014/testseries.json",
+        "xacm_015/testseries.json",
+        "xacm_016/testseries.json",
+        "xacm_017/testseries.json",
+        "xacm_018/testseries.json",
+        "xacm_019/testseries.json",
+        "xacm_020/testseries.json",
+        "xacm_023/testseries.json",
+        "xacm_024/testseries.json",
+        "xacm_025/testseries.json",
+        "xacm_026/testseries.json",
+        "xacm_027/testseries.json",
+        "xacm_028/testseries.json",
+        "xacm_029/testseries.json",
+        "xacm_030/testseries.json",
+        "xacm_031/testseries.json"
+    ]
+}

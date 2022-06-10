@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "16.7.2020",
+    "updated": "16.7.2020"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.DeleteOrde!": "xmcp.factorymanager.orderinputsources.DeleteOrderInputSource"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.OrderInput!": "xmcp.factorymanager.orderinputsources.OrderInputSourceId"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.GetOrderIn!": "xmcp.factorymanager.orderinputsources.GetOrderInputSources"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!name!": "name"
+        },
+        {
+          "!Application!": "Application"
+        },
+        {
+          "!applicationName!": "applicationName"
+        },
+        {
+          "!Version!": "Version"
+        },
+        {
+          "!versionName!": "versionName"
+        },
+        {
+          "!Workspace!": "Workspace"
+        },
+        {
+          "!workspaceName!": "workspaceName"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Source_Type!": "Source Type"
+        },
+        {
+          "!sourceType.label!": "sourceType.label"
+        },
+        {
+          "!Order_Type!": "Order Type"
+        },
+        {
+          "!orderType.type!": "orderType.type"
+        },
+        {
+          "!Worksteps_using_Sources!": "Worksteps using Sources"
+        },
+        {
+          "!referencedInputSourceCount!": "referencedInputSourceCount"
+        },
+        {
+          "!State!": "State"
+        },
+        {
+          "!state!": "state"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.orderinputsources.OrderInput!"
+            },
+            "id": 123456789123456789
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.orderinputsources.DeleteOrde!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!readName1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!readName1!",
+      "value": "No object found"
+    }
+  ]
+}

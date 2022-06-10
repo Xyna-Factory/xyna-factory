@@ -1,0 +1,19 @@
+{
+  "testseries":
+  [
+    "query_000/testseries.json",
+    "query_001/testseries.json",
+    "query_002/testseries.json",
+    "query_003/testseries.json",
+    "query_004/testseries.json",
+    "query_005/testseries.json",
+    "query_006/testseries.json",
+    "query_008/testseries.json",
+    "query_009/testseries.json",
+    "query_010/testseries.json",
+    "query_011/testseries.json",
+    "query_012/testseries.json",
+    "query_017/testseries.json",
+    "query_018/testseries.json"
+  ]
+}

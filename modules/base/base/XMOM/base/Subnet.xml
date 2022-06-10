@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Subnet" TypeName="Subnet" TypePath="base" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="address" VariableName="address">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="prefix length" VariableName="prefixLength">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Subnet Service" TypeName="Subnet">
+    <Operation IsStatic="false" IsAbstract="true" Label="toNetmask" Name="toNetmask">
+      <Output> 
+       <Data ID="1" Label="netmask" VariableName="netmask">
+         <Meta>
+           <Type>String</Type>
+         </Meta>
+       </Data>
+      </Output>
+    </Operation>
+    <Operation IsStatic="false" IsAbstract="true" Label="toWildcard" Name="toWildcard">
+      <Output>
+       <Data ID="2" Label="wildcard" VariableName="wildcard">
+         <Meta>
+           <Type>String</Type>
+         </Meta>
+       </Data>
+      </Output>
+    </Operation>
+    <Operation IsStatic="false" IsAbstract="true" Label="toPrefixlength" Name="toPrefixlength">
+      <Output>
+       <Data ID="3" Label="prefixlength" VariableName="prefixlength">
+         <Meta>
+           <Type>String</Type>
+         </Meta>
+       </Data>
+      </Output>
+    </Operation>
+  </Service>
+</DataType>

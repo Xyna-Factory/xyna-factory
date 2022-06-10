@@ -1,0 +1,44 @@
+[
+  {
+    "docu": "Get Information about an application, given by applicationName.",
+    "type": "function",
+	"functionName": "getApplicationVersion",
+	"input": ["!applicationName!"],
+	"output": 
+	[
+	  "!url!",
+	  "!applicationName!",
+	  "!applicationVersion!"
+	],
+	"operations":
+	[
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "/runtimeContext/GuiHttp%252F/startorder",
+	    "payload": {"orderType":"xmcp.factorymanager.shared.GetRuntimeContexts","input":[],"async":false}
+	  },
+	  {
+	    "operation": "read",
+		"pathInResponse": "output[0]/$list[name=!applicationName!]/versionName",
+		"targetVariable": "!applicationVersion!",
+		"unquoteResult": true
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!applicationName!",
+		"modification": { "operation": "urlencode" }
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!applicationVersion!",
+		"modification":{ "operation": "urlencode" }
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!url!",
+		"value": "/runtimeContext/!applicationName!%252F!applicationVersion!"
+	  }
+	]
+  }
+]

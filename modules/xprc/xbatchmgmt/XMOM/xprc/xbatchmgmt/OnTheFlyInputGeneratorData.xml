@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="InputGeneratorData" BaseTypePath="xprc.xbatchmgmt" IsAbstract="false" Label="On The Fly Input Generator Data" TypeName="OnTheFlyInputGeneratorData" TypePath="xprc.xbatchmgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Each slave order gets one storable instance of the corresponding storable table as input.
+
+The dynamic storable input can be extended by a constant part.
+
+Use case 1: Slave order has only one input: The storable specified here
+Use case 2: Slave order has multiple inputs, one of which is the storable. The others are constant.</Documentation>
+  </Meta>
+  <Data Label="Maximum Inputs" VariableName="maximumInputs">
+    <Meta>
+      <Type>Integer</Type>
+      <Documentation>Maximum number of slaves to be started.
+The batch process may end before this number is reached because of its master order's time constraints .</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Constant Input" ReferenceName="InputPayload" ReferencePath="xprc.xpce" VariableName="constantInput">
+    <Meta>
+      <Documentation>optional.
+
+Must be a list of inputs, where one list element has to be null/empty. The null element will be substituted by the storable instance provided by the query. The other elements will be forwarded as constant inputs to the slave order.
+
+Example when using XML Input:
+&lt;Container&gt; &lt;!-- arbitrary root element to wrap the list elements --&gt;
+  &lt;!-- first constant input --&gt;
+  &lt;Data VariableName="n/a" ReferenceName="OrderId" ReferencePath="xprc.xpce" &gt;
+    &lt;Data VariableName="orderId"&gt;
+      &lt;Value&gt;123&lt;/Value&gt;
+    &lt;/Data&gt;
+  &lt;/Data&gt;
+  &lt;!-- second input is empty--&gt;
+  &lt;Data/&gt;
+  &lt;!-- third input is constant --&gt;
+  &lt;Data VariableName="n/a" ReferenceName="OrderType" ReferencePath="xprc.xpce" &gt;
+    &lt;Data VariableName="orderType"&gt;
+      &lt;Value&gt;a.b.c&lt;/Value&gt;
+    &lt;/Data&gt;
+  &lt;/Data&gt;
+&lt;/Container&gt;</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Storable" VariableName="storable">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The fully qualified name of the storable (path + "." + name) to be used as input for the slave orders.
+
+The storable must have an unique "unique identifier membervar". It may lead to unintended consequences if used with an underlying database view without an unique column (modelled unique identifier membervar is not unique).</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Sort Criteria" VariableName="sortCriteria">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>optional. 
+
+In which order the storables are returned. The ordering always includes the unique id (ascending) of the storable automatically as the last sorting criteria.
+
+Format:
+col, col*
+col = "%0%." memberVarName ", " ( "\"desc\"" |"\"asc\"" )
+
+Example: %0%.devicetype, "desc", %0%.macaddress, "asc"</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Query" VariableName="query">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>optional.
+
+Filter criteria for the storable query.
+
+Format: The same as for the filter criteria in PersistenceServices.query
+
+Example: %0%.deviceId &lt; "3" || %0%.deviceId = "42"</Documentation>
+    </Meta>
+  </Data>
+</DataType>

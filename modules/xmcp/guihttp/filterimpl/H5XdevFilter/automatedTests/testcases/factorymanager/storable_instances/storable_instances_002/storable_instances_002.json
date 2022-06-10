@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "storable_instances"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xnwh.persistence.Query!": "xnwh.persistence.Query"
+        },
+        {
+          "!autotest.generated.ARANDOM.Storable_instances!": "autotest.generated.!rnd!.Storable_instances"
+        },
+        {
+          "!xnwh.persistence.SelectionMask!": "xnwh.persistence.SelectionMask"
+        },
+        {
+          "!xnwh.persistence.FilterCondition!": "xnwh.persistence.FilterCondition"
+        },
+        {
+          "!xnwh.persistence.SortCriterion!": "xnwh.persistence.SortCriterion"
+        },
+        {
+          "!xnwh.persistence.QueryParameter!": "xnwh.persistence.QueryParameter"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xnwh.persistence.Store!": "xnwh.persistence.Store"
+        },
+        {
+          "!1!": "1"
+        },
+        {
+          "!2!": "2"
+        },
+        {
+          "!xnwh.persistence.StoreParameter!": "xnwh.persistence.StoreParameter"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!autotest.generated.ARANDOM.Storable_instances!",
+              "rtc": {
+                "workspace": "!default_workspace!"
+              }
+            },
+            "data": "!1!",
+            "data0": "!2!",
+            "data1": {
+              "$meta": {
+                "fqn": "base.Text"
+              },
+              "text": "Text"
+            },
+            "uniqueIdentifier": 111
+          },
+          {
+            "$meta": {
+              "fqn": "xnwh.persistence.StoreParameter"
+            },
+            "forceRecursiveStore": false,
+            "historizePreviousObject": false,
+            "keepMetaFieldData": false
+          }
+        ],
+        "orderType": "xnwh.persistence.Store"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    }
+  ]
+}

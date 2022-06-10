@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Capacity Services" TypeName="CapacityServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>CapacityServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="Capacity Services" TypeName="CapacityServices">
+    <Operation IsStatic="true" Label="Change capacity" Name="changeCapacity">
+      <Input>
+        <Data Label="Capacity Information" ReferenceName="CapacityInformation" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityInformation"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Capacity Update Exception" ReferenceName="CapacityUpdateException" ReferencePath="xmcp.factorymanager.capacities.exceptions" VariableName="capacityUpdateException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.CapacityServicesImpl.changeCapacity(capacityInformation);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create capacity" Name="createCapacity">
+      <Input>
+        <Data Label="Capacity Information" ReferenceName="CapacityInformation" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityInformation"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Capacity Create Exception" ReferenceName="CapacityCreateException" ReferencePath="xmcp.factorymanager.capacities.exceptions" VariableName="capacityCreateException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.CapacityServicesImpl.createCapacity(capacityInformation);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get details" Name="getDetails">
+      <Input>
+        <Data Label="Capacity Name" ReferenceName="CapacityName" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityName"/>
+      </Input>
+      <Output>
+        <Data Label="Capacity Information" ReferenceName="CapacityInformation" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityInformation"/>
+      </Output>
+      <Throws>
+        <Exception Label="Capacity Load Exception" ReferenceName="CapacityLoadException" ReferencePath="xmcp.factorymanager.capacities.exceptions" VariableName="capacityLoadException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.CapacityServicesImpl.getDetails(capacityName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get list entries" Name="getListEntries">
+      <Input>
+        <Data Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Capacity Information" ReferenceName="CapacityInformation" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityInformation"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.CapacityServicesImpl.getListEntries(tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Remove capacity" Name="removeCapacity">
+      <Input>
+        <Data Label="Capacity Name" ReferenceName="CapacityName" ReferencePath="xmcp.factorymanager.capacities" VariableName="capacityName"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Capacity Delete Exception" ReferenceName="CapacityDeleteException" ReferencePath="xmcp.factorymanager.capacities.exceptions" VariableName="capacityDeleteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.CapacityServicesImpl.removeCapacity(capacityName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

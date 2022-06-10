@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="PoolUsageThresholdDeleteRowsWithNullConditions" TypeName="PoolUsageThresholdDeleteRowsWithNullConditions" TypePath="xmcp.dhcp.v4.control.thresholdcontrol" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="PoolUsageThresholdDeleteRowsWithNullConditions" Name="PoolUsageThresholdDeleteRowsWithNullConditions">
+    <Input>
+      <Data ID="17" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type">
+        <Target RefID="15"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="8" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype8">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="4" Label="PoolUsageThreshold" ReferenceName="PoolUsageThreshold.PoolUsageThreshold" ReferencePath="xmcp.dhcp.v4.control">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Mappings ID="15" Label="Mapping">
+      <Source RefID="17"/>
+      <Target RefID="14"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="16" Label="Threshold  Type" ReferenceName="Threshold_Type" ReferencePath="xmcp.dhcp.v4.control.thresholdcontrol" VariableName="threshold_Type16"/>
+        <Source RefID="17"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype"/>
+        <Target RefID="14"/>
+      </Output>
+      <Mapping>%1%.deleteRowsWithNullConditionsInput.poolTypeID=%0%.pooltypeID</Mapping>
+      <Mapping>%1%.deleteRowsWithNullConditionsInput.sharedNetworkID=%0%.sharedNetworkID</Mapping>
+      <Mapping>%1%.deleteRowsWithNullConditionsInput.threshold=%0%.threshold</Mapping>
+    </Mappings>
+    <Choice ID="20" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="14"/>
+      <Target RefID="33"/>
+      <Input>
+        <Data Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages"/>
+        <Source RefID="14"/>
+      </Input>
+      <Case ID="18" Label="true" Premise="length(%0%.deleteRowsWithNullConditionsInput.threshold)==&quot;1&quot;">
+        <Mappings ID="27" Label="concat &quot;0.0&quot;">
+          <Source RefID="14"/>
+          <Target RefID="26"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="28" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype28"/>
+            <Source RefID="14"/>
+          </Input>
+          <Output>
+            <Data ID="25" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype25"/>
+            <Target RefID="26"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%1%.deleteRowsWithNullConditionsInput.threshold=concat("0.0",%0%.deleteRowsWithNullConditionsInput.threshold)</Mapping>
+        </Mappings>
+        <Assign ID="34">
+          <Source RefID="26"/>
+          <Target RefID="33"/>
+          <Copy>
+            <Source RefID="26"/>
+            <Target RefID="33"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="19" Label="false">
+        <Mappings ID="31" Label="concat &quot;0.&quot;">
+          <Source RefID="14"/>
+          <Target RefID="32"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="29" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype29"/>
+            <Source RefID="14"/>
+          </Input>
+          <Output>
+            <Data ID="30" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype30"/>
+            <Target RefID="32"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%1%.deleteRowsWithNullConditionsInput.threshold=concat("0.",%0%.deleteRowsWithNullConditionsInput.threshold)</Mapping>
+        </Mappings>
+        <Assign ID="35">
+          <Source RefID="32"/>
+          <Target RefID="33"/>
+          <Copy>
+            <Source RefID="32"/>
+            <Target RefID="33"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="5" Label="Delete Rows With Null Conditions">
+      <Source RefID="4"/>
+      <Source RefID="33"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="deleteRowsWithNullConditions" ServiceID="4">
+        <Source RefID="33">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="14" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype14">
+      <Source RefID="15"/>
+      <Target RefID="20"/>
+      <Target RefID="27"/>
+      <Target RefID="31"/>
+    </Data>
+    <Data ID="26" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype26">
+      <Source RefID="27"/>
+      <Target RefID="34"/>
+    </Data>
+    <Data ID="32" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype32">
+      <Source RefID="31"/>
+      <Target RefID="35"/>
+    </Data>
+    <Data ID="33" Label="DeleteRowsWithNullConditionsRequest_ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype33">
+      <Source RefID="20"/>
+      <Source RefID="34"/>
+      <Source RefID="35"/>
+      <Target RefID="5"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="6"/>
+      <Target RefID="8"/>
+      <Copy>
+        <Source RefID="6"/>
+        <Target RefID="8"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

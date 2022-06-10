@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DeploymentItems" TypeName="DeploymentItems" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>DeploymentItemsImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="DeploymentItems" TypeName="DeploymentItems">
+    <Operation IsStatic="true" Label="Delete" Name="delete">
+      <Input>
+        <Data IsList="true" Label="Delete deployment item param" ReferenceName="DeleteDeploymentItemParam" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deleteDeploymentItem"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Delete Deployment item result" ReferenceName="DeleteDeploymentItemResult" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deleteDeploymentItemResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="Delete DeploymentItem Exception" ReferenceName="DeleteDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="deleteDeploymentItemException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.delete(deleteDeploymentItem, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Deploy" Name="deploy">
+      <Input>
+        <Data IsList="true" Label="Deployment item id" ReferenceName="DeploymentItemId" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItemId"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem"/>
+      </Output>
+      <Throws>
+        <Exception Label="Deploy DeploymentItem Exception" ReferenceName="DeployDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="deployDeploymentItemException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.deploy(deploymentItemId, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get deployment item" Name="getDeploymentItem">
+      <Input>
+        <Data Label="Deployment item id" ReferenceName="DeploymentItemId" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItemId"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load DeploymentItem Exception" ReferenceName="LoadDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="loadDeploymentItemException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.getDeploymentItem(deploymentItemId, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get list entries" Name="getListEntries">
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load deployment items exception" ReferenceName="LoadDeploymentItemsException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="loadDeploymentItemsException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.getListEntries(tableInfo, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Undeploy" Name="undeploy">
+      <Input>
+        <Data IsList="true" Label="Undeploy deployment item param" ReferenceName="UndeployDeploymentItemParam" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="undeployDeploymentItem"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Undeploy Deployment item result" ReferenceName="UndeployDeploymentItemResult" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="undeployDeploymentItemResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="UnDeploy DeploymentItem Exception" ReferenceName="UnDeployDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="unDeployDeploymentItemException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.undeploy(undeployDeploymentItem, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

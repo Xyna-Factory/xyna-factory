@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1254" Label="Get Capacity" TypeName="GetCapacity" TypePath="xmcp.processmonitor.resources" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Capacity" Name="GetCapacity">
+    <Input>
+      <Data ID="306" Label="Name" ReferenceName="Name" ReferencePath="xmcp.processmonitor.resources" VariableName="name306">
+        <Target RefID="271"/>
+        <Target RefID="528"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="10" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity10">
+        <Source RefID="1"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="1198" Label="Get Capacities" ReferenceName="GetCapacities" ReferencePath="xmcp.processmonitor.resources">
+      <Source RefID="1197"/>
+      <Target RefID="1197"/>
+    </ServiceReference>
+    <Mappings ID="271" Label="Mapping">
+      <Source RefID="306"/>
+      <Target RefID="289"/>
+      <Input>
+        <Data ID="343" Label="Name" ReferenceName="Name" ReferencePath="xmcp.processmonitor.resources" VariableName="name343">
+          <Source RefID="271"/>
+        </Data>
+        <Source RefID="306"/>
+      </Input>
+      <Output>
+        <Data ID="288" Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.processmonitor.resources" VariableName="filter288">
+          <Source RefID="271"/>
+        </Data>
+        <Target RefID="289"/>
+      </Output>
+      <Mapping>%1%.filter=%0%.name</Mapping>
+    </Mappings>
+    <Function ID="1197" Label="Get Capacities">
+      <Source RefID="1198"/>
+      <Source RefID="289"/>
+      <Source RefID="1255"/>
+      <Target RefID="1198"/>
+      <Target RefID="1200"/>
+      <Invoke Operation="GetCapacities" ServiceID="1198">
+        <Source RefID="289"/>
+        <Source RefID="1255">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="1198">
+        <Target RefID="1200"/>
+      </Receive>
+    </Function>
+    <Foreach ID="1225">
+      <Source RefID="1200"/>
+      <Target RefID="1227"/>
+      <InputList RefID="1200">
+        <Data ID="1226" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity1226">
+          <Target RefID="667"/>
+          <Target RefID="528"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="1227">
+        <Data ID="1097" IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity1097">
+          <Source RefID="528"/>
+          <Source RefID="532"/>
+          <Source RefID="534"/>
+        </Data>
+      </OutputList>
+      <Choice ID="528" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="1226"/>
+        <Source RefID="306"/>
+        <Target RefID="1097"/>
+        <Input>
+          <Data ID="551" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity551">
+            <Source RefID="528"/>
+          </Data>
+          <Source RefID="1226">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="618" Label="Name" ReferenceName="Name" ReferencePath="xmcp.processmonitor.resources" VariableName="name618">
+            <Source RefID="528"/>
+          </Data>
+          <Source RefID="306"/>
+        </Input>
+        <Case ID="529" Label="true" Premise="%0%.name==%1%.name">
+          <Mappings ID="667" Label="Match">
+            <Source RefID="1226"/>
+            <Target RefID="850"/>
+            <Input>
+              <Data ID="684" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity684">
+                <Source RefID="667"/>
+              </Data>
+              <Source RefID="1226">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="849" IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity849">
+                <Source RefID="667"/>
+              </Data>
+              <Target RefID="850"/>
+            </Output>
+            <Mapping>%1%["0"]=%0%</Mapping>
+          </Mappings>
+          <Assign ID="532">
+            <Source RefID="850"/>
+            <Target RefID="1097"/>
+            <Copy>
+              <Source RefID="850"/>
+              <Target RefID="1097"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="530" Label="false">
+          <Mappings ID="783" Label="No match">
+            <Target RefID="800"/>
+            <Meta>
+              <FixedDetailOptions>FillMode</FixedDetailOptions>
+            </Meta>
+            <Output>
+              <Data ID="701" IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity701">
+                <Source RefID="667"/>
+              </Data>
+              <Target RefID="800"/>
+            </Output>
+          </Mappings>
+          <Assign ID="534">
+            <Source RefID="800"/>
+            <Target RefID="1097"/>
+            <Copy>
+              <Source RefID="800"/>
+              <Target RefID="1097"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+      <Data ID="800" IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity800">
+        <Source RefID="667"/>
+        <Source RefID="783"/>
+        <Target RefID="534"/>
+      </Data>
+      <Data ID="850" IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity850">
+        <Source RefID="667"/>
+        <Target RefID="532"/>
+      </Data>
+    </Foreach>
+    <Choice ID="1259" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="1227"/>
+      <Target RefID="1269"/>
+      <Input>
+        <Data IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources"/>
+        <Source RefID="1227">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="1257" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Mappings ID="901" Label="Found Capacity">
+          <Source RefID="1227"/>
+          <Target RefID="1268"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="918" IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity918">
+              <Source RefID="901"/>
+            </Data>
+            <Source RefID="1227">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="1266" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity1266"/>
+            <Target RefID="1268"/>
+          </Output>
+          <Mapping>%1%=%0%["0"]</Mapping>
+        </Mappings>
+        <Assign ID="1270">
+          <Source RefID="1268"/>
+          <Target RefID="1269"/>
+          <Copy>
+            <Source RefID="1268"/>
+            <Target RefID="1269"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="1258" Label="false">
+        <Mappings ID="1265" Label="Not found">
+          <Target RefID="1264"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="935" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity935">
+              <Source RefID="901"/>
+            </Data>
+            <Target RefID="1264"/>
+          </Output>
+          <Mapping>%0%=null</Mapping>
+        </Mappings>
+        <Assign ID="1271">
+          <Source RefID="1264"/>
+          <Target RefID="1269"/>
+          <Copy>
+            <Source RefID="1264"/>
+            <Target RefID="1269"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="289" Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.processmonitor.resources" VariableName="filter289">
+      <Source RefID="271"/>
+      <Target RefID="1197"/>
+    </Data>
+    <Data ID="1200" IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity1200">
+      <Source RefID="1197"/>
+      <Target RefID="1225"/>
+    </Data>
+    <Data ID="1227" IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity1227">
+      <Source RefID="1225"/>
+      <Target RefID="1227"/>
+      <Target RefID="901"/>
+      <Target RefID="1259"/>
+    </Data>
+    <Data ID="1255" IsList="true" Label="Search Flag" ReferenceName="SearchFlag" ReferencePath="xmcp.processmonitor.datatypes" VariableName="const_SearchFlag">
+      <Target RefID="1197"/>
+      <Value>
+        <Data ID="1256" Label="Search Flag" ReferenceName="IncludeUnused" ReferencePath="xmcp.processmonitor.datatypes.filter"/>
+      </Value>
+    </Data>
+    <Data ID="1264" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity">
+      <Source RefID="1265"/>
+      <Target RefID="1271"/>
+    </Data>
+    <Data ID="1268" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity1268">
+      <Source RefID="901"/>
+      <Target RefID="1270"/>
+    </Data>
+    <Data ID="1269" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity1269">
+      <Source RefID="1259"/>
+      <Source RefID="1270"/>
+      <Source RefID="1271"/>
+      <Target RefID="1"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1269"/>
+      <Target RefID="10"/>
+      <Copy>
+        <Source RefID="1269"/>
+        <Target RefID="10"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

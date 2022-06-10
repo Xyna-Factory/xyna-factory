@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Application applicationName="BatchProcessMgmt" comment="" factoryVersion="" versionName="1.0" xmlVersion="1.1">
+  <ApplicationInfo>
+    <Description Lang="DE">Konfiguration im Planning-Workflow, Starten von Aufträgen</Description>
+    <Description Lang="EN">Configuration in Planning workflow, starting orders</Description>
+    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Base</ApplicationName>
+        <VersionName>1.0</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>Ext</ApplicationName>
+        <VersionName>2.0</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Ordertypes>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xprc.xbatchmgmt.DefaultEmptyMasterWorkflow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.BatchProcessCounterFields</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.DefaultEmptyMasterWorkflow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.BatchProcessCustomizationService</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.FixedDate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.Ignore</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.ConstantInputGeneratorData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.FixedInterval</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.MissedExecution</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.SlaveOrder</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.BatchProcessInput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.CatchUpImmediately</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.OnTheFlyInputGeneratorData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.InputGeneratorData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.BatchProcessRuntimeInformation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.BatchProcessCustomFields</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.BatchProcessId</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.CatchUpNotTooLate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.SlaveExecutionPeriod</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.CatchUpInPast</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xbatchmgmt.NoBatchOrderException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+  </XMOMEntries>  
+  <OrderInputSources>
+    <OrderInputSource implicitDependency="true">
+      <Name>qu</Name>
+      <Type>Q</Type>
+      <Ordertype>ot</Ordertype>
+      <Parameter>
+        <Key>key2</Key>
+        <Value>value2</Value>
+      </Parameter>
+      <Parameter>
+        <Key>key</Key>
+        <Value>value</Value>
+      </Parameter>
+      <Documentation>Quark</Documentation>
+    </OrderInputSource>
+  </OrderInputSources>
+</Application>

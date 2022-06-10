@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XSDBaseModel" BaseTypePath="xdnc.model.xsd" IsAbstract="false" Label="SearchRowsRequest_ctype" TypeName="SearchRowsRequest_ctype" TypePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" Version="1.8">
+  <Meta>
+    <DataModel>
+      <XSDInfo>&lt;XSD Namespace="http://www.gip.com/juno/DHCP/WS/GuiFixedAttribute/Messages" Name="SearchRowsRequest_ctype"&gt;
+  &lt;RootElements&gt;
+    &lt;Root Name="SearchRowsRequest"/&gt;
+  &lt;/RootElements&gt;
+&lt;/XSD&gt;</XSDInfo>
+      <ModelName>xdnc.model.xsd.v0.GuiFixedAttribute</ModelName>
+    </DataModel>
+  </Meta>
+  <Data Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="InputHeader" Type="Element" Position="0"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="SearchRowsInput" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="searchRowsInput">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="SearchRowsInput" Type="Element" Position="1"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+</DataType>

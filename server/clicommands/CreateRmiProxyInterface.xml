@@ -1,0 +1,27 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="creatermiproxyinterface" Groups="User Management" Description="Creates the rmi interface for the given proxyName or for given roles and rights"/>
+  <Argument Name="proxyName" Description="The name of the proxy. "/>
+  <Argument Name="roles" Description="Roles used in interface if proxy does not exist" MultipleValues="true" Optional="true"/>
+  <Argument Name="rights" Description="Additional rights used in interface if proxy does not exist" MultipleValues="true" Optional="true"/>
+  <Argument Name="targetDirectory" Description="The directory within which the jar file is created" Optional="true"/>
+  <BoolOption Name="p" LongName="nopublic" Description="Exclude public methods"  Optional="true" />
+  <BoolOption Name="d" LongName="deprecated" Description="Include deprecated methods"  Optional="true" />
+  <BoolOption Name="s" LongName="showSourceOnly" Description="Show created interface only, no jar generation"  Optional="true" />
+</XynaCommandLineCommand>

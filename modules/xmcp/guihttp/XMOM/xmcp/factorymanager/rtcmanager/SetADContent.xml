@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Set AD Content" TypeName="SetADContent" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Set AD Content" Name="SetADContent">
+    <Input>
+      <Data ID="2" Label="Application Definition" ReferenceName="ApplicationDefinition" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="applicationDefinition">
+        <Target RefID="8"/>
+      </Data>
+      <Data ID="3" IsList="true" Label="Application Element" ReferenceName="ApplicationElement" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="aDElement">
+        <Target RefID="8"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Set AD Content Exception" ReferenceName="SetADContentException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="setADContentException"/>
+    </Throws>
+    <ServiceReference ID="7" Label="RtcManagerServices" ReferenceName="RtcManagerServices.RtcManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <Function ID="8" Label="Set AD Content">
+      <Source RefID="7"/>
+      <Source RefID="2"/>
+      <Source RefID="3"/>
+      <Target RefID="7"/>
+      <Invoke Operation="setADContent" ServiceID="7">
+        <Source RefID="2"/>
+        <Source RefID="3"/>
+      </Invoke>
+      <Receive ServiceID="7"/>
+    </Function>
+    <Assign ID="4"/>
+  </Operation>
+</Service>

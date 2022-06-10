@@ -1,0 +1,1003 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<OrderItem>
+  <OrderID>5608658</OrderID>
+  <Workspace>default workspace</Workspace>
+  <DestinationType>Workflow</DestinationType>
+  <Destination>pvm.pmon380.NaNTestWorkflow</Destination>
+  <StartTime>2022.04.14 10:44:33</StartTime>
+  <LastInteraction>2022.04.14 10:44:33</LastInteraction>
+  <Status>Finished</Status>
+  <Priority>7</Priority>
+  <MonitoringLevel>20</MonitoringLevel>
+<Audit><Service Label="NaN Test Workflow" TypeName="NaNTestWorkflow" TypePath="pvm.pmon380" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+  <Operation ID="0" IsStatic="false" Label="NaN Test Workflow" Name="NaNTestWorkflow">
+    <Input></Input>
+    <Output>
+      <Data ID="59" Label="NaN Test" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" VariableName="naNTest59"></Data>
+    </Output>
+    <ServiceReference ID="40" Label="NaN Test" ReferenceName="NaNTest.NaNTest" ReferencePath="pvm.pmon380"></ServiceReference>
+    <Mappings ID="10" Label="Mapping">
+      <Input>
+        <Data ID="19" Label="NaN Test" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" VariableName="naNTest19">
+          <Source RefID="10"></Source>
+        </Data>
+        <Source RefID="80">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="28" Label="NaN Test" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" VariableName="naNTest28">
+          <Source RefID="10"></Source>
+        </Data>
+        <Target RefID="29"></Target>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+    <Parameter><Input Date="2022-04-14T08:44:33.171Z"><Data InstanceID="1" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" >
+<Data VariableName="value" IsList="true" >
+<Meta><Type>double</Type></Meta><Value>1.0</Value>
+</Data>
+</Data>
+</Input><Output Date="2022-04-14T08:44:33.171Z"><Data RefInstanceID="1" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" >
+</Data>
+</Output></Parameter></Mappings>
+    <Function ID="39" Label="add NaN">
+      <Source RefID="40"></Source>
+      <Source RefID="29"></Source>
+      <Target RefID="40"></Target>
+      <Target RefID="42"></Target>
+      <Invoke Operation="addNaN" ServiceID="40">
+        <Source RefID="29"></Source>
+      </Invoke>
+      <Receive ServiceID="40">
+        <Target RefID="42"></Target>
+      </Receive>
+    <Parameter><Input Date="2022-04-14T08:44:33.171Z"><Data RefInstanceID="1" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" >
+</Data>
+</Input><Output Date="2022-04-14T08:44:33.171Z"><Data InstanceID="2" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" >
+<Data VariableName="value" IsList="true" >
+<Meta><Type>double</Type></Meta><Value>1.0</Value>
+<Value>NaN</Value>
+</Data>
+</Data>
+</Output></Parameter></Function>
+    <Data ID="29" Label="NaN Test" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" VariableName="naNTest29">
+      <Source RefID="10"></Source>
+    </Data>
+    <Data ID="42" Label="NaN Test" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" VariableName="naNTest42">
+      <Source RefID="39"></Source>
+    </Data>
+    <Data ID="80" Label="NaN Test" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" VariableName="const_NaNTest80">
+      <Data IsList="true" VariableName="value">
+        <Meta>
+          <Type>double</Type>
+        </Meta>
+        <Value>1</Value>
+      </Data>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="42"></Source>
+      <Target RefID="59"></Target>
+      <Copy>
+        <Source RefID="42">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="59"></Target>
+      </Copy>
+    </Assign>
+  <Parameter InstanceId="5608658"><Input Date="2022-04-14T08:44:33.169Z"></Input><Output Date="2022-04-14T08:44:33.172Z"><Data RefInstanceID="2" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" >
+</Data>
+</Output></Parameter></Operation>
+</Service></Audit><Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType IsAbstract="false" Label="NaN Test" TypeName="NaNTest" TypePath="pvm.pmon380" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="value" VariableName="value">
+    <Meta>
+      <Type>double</Type>
+    </Meta>
+  </Data>
+  <Service Label="NaN Test" TypeName="NaNTest">
+    <Operation IsStatic="false" Label="add NaN" Name="addNaN">
+      <Input></Input>
+      <Output>
+        <Data ID="2" Label="NaN Test" ReferenceName="NaNTest" ReferencePath="pvm.pmon380" VariableName="naNTest2"></Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java"></CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="Exception" Version="1.8">
+  <ExceptionType Code="" IsAbstract="true" Label="Exception" TypeName="Exception" TypePath="core.exception"/>
+</ExceptionStore>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="Xyna Exception" Version="1.8">
+  <ExceptionType BaseTypeName="Exception" BaseTypePath="core.exception" Code="" IsAbstract="true" Label="Server Exception" TypeName="XynaException" TypePath="core.exception"/>
+</ExceptionStore>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="Base" Version="1.8">
+  <ExceptionType BaseTypeName="XynaException" BaseTypePath="core.exception" Code="" IsAbstract="true" Label="Xyna Exception Base" TypeName="XynaExceptionBase" TypePath="core.exception"/>
+</ExceptionStore>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="TimeConfiguration" TypeName="TimeConfiguration" TypePath="xprc.waitsuspend" Version="1.8"/>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TimeConfiguration" BaseTypePath="xprc.waitsuspend" Label="AbsoluteTimeConfiguration" TypeName="AbsoluteTimeConfiguration" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="Time in seconds" ReferenceName="Seconds" ReferencePath="xprc.waitsuspend" VariableName="timeInSeconds"/>
+  <Data Label="Time in minutes" ReferenceName="Minutes" ReferencePath="xprc.waitsuspend" VariableName="timeInMinutes"/>
+  <Data Label="Time in hours" ReferenceName="Hours" ReferencePath="xprc.waitsuspend" VariableName="timeInHours"/>
+  <Data Label="Time in days" ReferenceName="Days" ReferencePath="xprc.waitsuspend" VariableName="timeInDays"/>
+  <Data Label="Time in months" ReferenceName="Months" ReferencePath="xprc.waitsuspend" VariableName="timeInMonths"/>
+  <Data Label="Time in years" ReferenceName="Years" ReferencePath="xprc.waitsuspend" VariableName="timeInYears"/>
+  <Data Label="Timezone offset" ReferenceName="TimezoneOffset" ReferencePath="xprc.waitsuspend" VariableName="timezoneOffset"/>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TimeConfiguration" BaseTypePath="xprc.waitsuspend" Label="RelativeTimeConfiguration" TypeName="RelativeTimeConfiguration" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="Time in seconds" ReferenceName="Seconds" ReferencePath="xprc.waitsuspend" VariableName="timeInSeconds"/>
+  <Data Label="Time in minutes" ReferenceName="Minutes" ReferencePath="xprc.waitsuspend" VariableName="timeInMinutes"/>
+  <Data Label="Time in hours" ReferenceName="Hours" ReferencePath="xprc.waitsuspend" VariableName="timeInHours"/>
+  <Data Label="Time in days" ReferenceName="Days" ReferencePath="xprc.waitsuspend" VariableName="timeInDays"/>
+  <Data Label="Time in months" ReferenceName="Months" ReferencePath="xprc.waitsuspend" VariableName="timeInMonths"/>
+  <Data Label="Time in years" ReferenceName="Years" ReferencePath="xprc.waitsuspend" VariableName="timeInYears"/>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Seconds" TypeName="Seconds" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="TimeUnitInSeconds" VariableName="timeUnitInSeconds">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Minutes" TypeName="Minutes" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="TimeUnitInMinutes" VariableName="timeUnitInMinutes">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Hours" TypeName="Hours" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="TimeUnitInHours" VariableName="timeUnitInHours">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Days" TypeName="Days" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="TimeUnitInDays" VariableName="timeUnitInDays">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Months" TypeName="Months" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="TimeUnitInMonths" VariableName="timeUnitInMonths">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Years" TypeName="Years" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="TimeUnitInYears" VariableName="timeUnitInYears">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="TimezoneOffset" TypeName="TimezoneOffset" TypePath="xprc.waitsuspend" Version="1.8">
+  <Data Label="Timezone offset in hours" VariableName="timezoneOffsetInHours">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="correlationId" TypeName="CorrelationId" TypePath="xprc.synchronization" Version="1.8">
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="timeout" TypeName="Timeout" TypePath="xprc.synchronization" Version="1.8">
+  <Data Label="time" VariableName="time">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Synchronization Answer" TypeName="SynchronizationAnswer" TypePath="xprc.synchronization" Version="1.8">
+  <Data Label="answer" VariableName="answer">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Reason" TypeName="Reason" TypePath="xmcp.manualinteraction" Version="1.8">
+  <Data Label="Reason" VariableName="reason">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Type" TypeName="Type" TypePath="xmcp.manualinteraction" Version="1.8">
+  <Data Label="Type" VariableName="type">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="User Group" TypeName="UserGroup" TypePath="xmcp.manualinteraction" Version="1.8">
+  <Data Label="User Group" VariableName="userGroup">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Todo" TypeName="Todo" TypePath="xmcp.manualinteraction" Version="1.8">
+  <Data Label="Todo" VariableName="todo">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Result" TypeName="Result" TypePath="xmcp.manualinteraction" Version="1.8"/>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Retry Parameter" TypeName="RetryParameter" TypePath="xprc.retry" Version="1.8">
+  <Data Label="Retry Limit" VariableName="retryLimit">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Document type" TypeName="DocumentType" TypePath="xact.templates" Version="1.8">
+  <Service Label="document type" TypeName="DocumentType">
+    <Operation ID="3" IsAbstract="true" IsStatic="false" Label="Detect critical error" Name="detectCritcalError">
+      <Input>
+        <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsAbstract="true" IsStatic="false" Label="Is response complete" Name="isResponseComplete">
+      <Input>
+        <Data ID="4" Label="response" VariableName="response">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="is complete" VariableName="isComplete">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return false;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="9" IsAbstract="true" IsStatic="false" Label="Partition commands" Name="partitionCommands">
+      <Input>
+        <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsAbstract="true" IsStatic="false" Label="Remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="PlainText" BaseTypePath="xact.templates" Label="Command line interface" TypeName="CommandLineInterface" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="command line interface" TypeName="CommandLineInterface">
+    <Operation IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          //remove first and last line
+          String[] split = response.getResponse().getContent().split(com.gip.xyna.xfmg.Constants.LINE_SEPARATOR);
+          if (split.length &gt; 2) {
+            String[] prunedResponse = new String[split.length - 2];
+            System.arraycopy(split, 1, prunedResponse, 0, split.length - 2);
+            response.getResponse().setContent(com.gip.xyna.utils.StringUtils.joinStringArray(prunedResponse, com.gip.xyna.xfmg.Constants.LINE_SEPARATOR));
+            return response;
+          } else {
+            return response;
+          }
+          </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="DocumentType" BaseTypePath="xact.templates" Label="HTML" TypeName="HTML" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="HTML" TypeName="HTML">
+    <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+      <Input>
+        <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+      <Input>
+        <Data ID="4" Label="response" VariableName="response">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="is complete" VariableName="isComplete">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return Boolean.FALSE;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+      <Input>
+        <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          XynaObjectList&lt;xact.connection.Command&gt; commands = new XynaObjectList&lt;xact.connection.Command&gt;(xact.connection.Command.class);
+          String[] split = document.getReadBuffer().split(com.gip.xyna.xfmg.Constants.LINE_SEPARATOR);
+          for (String string : split) {
+            if (string.trim().length() &gt; 0) {
+              commands.add(new xact.connection.Command(string));
+            }
+          }
+          return commands;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return response;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XML" BaseTypePath="xact.templates" Label="NETCONF" TypeName="NETCONF" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="NETCONF" TypeName="NETCONF">
+    <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+      <Input>
+        <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          <![CDATA[
+	  final String NETCONF_ERROR_TAG = "rpc-error";
+	  if (response.getResponse().getContent().contains("<" + NETCONF_ERROR_TAG + ">")) {
+	    throw new DetectedError(response.getCommand(), response.getResponse());
+	  }
+	]]>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+      <Input>
+        <Data ID="4" Label="response" VariableName="response">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="is complete" VariableName="isComplete">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          <![CDATA[
+          String text = response.trim();
+          return text.endsWith("]]]]>
+          <![CDATA[>]]]]>
+          <![CDATA[>");
+	]]>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+      <Input>
+        <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          <![CDATA[
+	List<? extends Command> commands = super.partitionCommands(document);
+	for (Command c : commands) {
+	  c.setContent(c.getContent() + "]]]]>
+          <![CDATA[>]]]]>
+          <![CDATA[>");
+	}
+	return commands;
+	]]>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          <![CDATA[
+        String trimmedResponse = response.getResponse().getContent().trim();
+	if (trimmedResponse.endsWith("]]]]>
+          <![CDATA[>]]]]>
+          <![CDATA[>")) {
+          response.getResponse().setContent(trimmedResponse.substring(0, trimmedResponse.length() - "]]]]>
+          <![CDATA[>]]]]>
+          <![CDATA[>".length()));
+        }
+        return response;
+	]]>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="DocumentType" BaseTypePath="xact.templates" Label="Plain text" TypeName="PlainText" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="plain text" TypeName="PlainText">
+    <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+      <Input>
+        <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+      <Input>
+        <Data ID="4" Label="response" VariableName="response">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="is complete" VariableName="isComplete">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return Boolean.FALSE;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+      <Input>
+        <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          XynaObjectList&lt;xact.connection.Command&gt; commands = new XynaObjectList&lt;xact.connection.Command&gt;(xact.connection.Command.class);
+          String[] split = document.getReadBuffer().split(com.gip.xyna.xfmg.Constants.LINE_SEPARATOR);
+          for (String string : split) {
+            if (string.trim().length() &gt; 0) {
+              commands.add(new xact.connection.Command(string));
+            }
+          }
+          return commands;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return response;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="DocumentType" BaseTypePath="xact.templates" Label="XML" TypeName="XML" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="XML" TypeName="XML">
+    <Operation ID="3" IsStatic="false" Label="detect critcal error" Name="detectCritcalError">
+      <Input>
+        <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+      <Input>
+        <Data ID="4" Label="response" VariableName="response">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="is complete" VariableName="isComplete">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return Boolean.FALSE;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+      <Input>
+        <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">XynaObjectList&lt;xact.connection.Command&gt; commands = new XynaObjectList&lt;xact.connection.Command&gt;(xact.connection.Command.class);
+      String configurationInstructionsXML = "&lt;root&gt;" + document.getReadBuffer() + "&lt;/root&gt;";
+      try {
+        org.w3c.dom.Document doc = com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.parseString(configurationInstructionsXML, true);
+        org.w3c.dom.NodeList allChildren = doc.getDocumentElement().getChildNodes();
+        for (int i=0; i &lt; allChildren.getLength(); i++) {
+          org.w3c.dom.Node child = allChildren.item(i);
+          if (child instanceof org.w3c.dom.Element) {
+            // TODO only add &lt;?xml... if not contained
+            commands.add(new xact.connection.Command("&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;" + com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.getXMLString((org.w3c.dom.Element) child, false)));
+          }
+        }
+      } catch (Exception e) {
+        throw new RuntimeException("", e);
+      }
+      return commands;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return response;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="encode attribute" Name="encodeAttribute">
+      <Input>
+        <Data Label="string" VariableName="string">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="encoded" VariableName="encoded">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+         return com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.replaceControlAndInvalidChars(
+          com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.escapeXMLValue(string));
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="encode element" Name="encodeElement">
+      <Input>
+        <Data Label="string" VariableName="string">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="encoded" VariableName="encoded">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+         return com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.replaceControlAndInvalidChars(
+          com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.escapeXMLValue(string));
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Document context" TypeName="DocumentContext" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Document" TypeName="Document" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>DocumentImpl.jar</Libraries>
+  <Data Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+  <Data Label="text" VariableName="text">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="document" TypeName="Document">
+    <Operation ID="3" IsStatic="false" Label="Add to buffer" Name="addToBuffer">
+      <Input>
+        <Data ID="2" Label="text" VariableName="text">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().addToBuffer(text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="5" IsStatic="false" Label="Read" Name="read">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().read();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="8" IsStatic="false" Label="Get read buffer" Name="getReadBuffer">
+      <Input/>
+      <Output>
+        <Data ID="9" Label="content" VariableName="content">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getReadBuffer();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="7" IsStatic="false" Label="Get complete buffer content" Name="getCompleteBufferContent">
+      <Input/>
+      <Output>
+        <Data ID="6" Label="content" VariableName="content">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getCompleteBufferContent();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="10" IsStatic="false" Label="Mark buffer as read" Name="markReadBufferAsSend">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().markReadBufferAsSend();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Storable" TypeName="Storable" TypePath="xnwh.persistence" Version="1.8">
+  <Meta>
+    <Documentation>Baseclass for all datatypes that can be used in the persistence services.</Documentation>
+  </Meta>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Delete parameter" TypeName="DeleteParameter" TypePath="xnwh.persistence" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Including history" VariableName="includingHistory">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling"/>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Reference handling" TypeName="ReferenceHandling" TypePath="xnwh.persistence" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Backward" VariableName="backward">
+    <Meta>
+      <Documentation>-„cascade“: Alle XMOM Storables, die ein zu löschendes XMOM Storable referenzieren, werden ebenso gelöscht. Rekursiv
+-„error“ (Default): Fehler, falls eine solche Abhängigkeit festgestellt wird
+-„delete“: Das Objekt wird entfernt. Andere XMOM Storables, die dieses Objekt referenzieren, referenzieren es jetzt nicht mehr, sind aber noch funktionstüchtig.</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Forward" VariableName="forward">
+    <Meta>
+      <Documentation>-„recursive“: Alle abhängigen XMOM Storables rekursiv löschen. Dabei wird jeweils auch das Verhalten für Rückwärtsreferenzen beachtet.
+-„keep“ (Default): Referenzierte Objekte werden nicht gelöscht sondern bleiben bestehen</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+<Import>
+  <Workspace>default workspace</Workspace>
+  <Document>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Store parameter" TypeName="StoreParameter" TypePath="xnwh.persistence" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Historize previous object" VariableName="historizePreviousObject">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Keep meta field data" VariableName="keepMetaFieldData">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Force recursive store" VariableName="forceRecursiveStore">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+</DataType>
+  </Document>
+</Import>
+</OrderItem>

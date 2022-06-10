@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="deploy" basedir=".">
+	
+  <!-- this is the relative path to the root -->
+  <property name="root.dir" value="./../.." />
+
+  <property name="common.lib.dir" value="${root.dir}/common/lib" />
+  <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
+  <property name="exception.xml.dir" value="${root.dir}/server" />
+  <property name="base.lib.dir" value="${basedir}/lib" />
+  <property name="target.dir" value="${basedir}/deploy" />
+  	
+	<condition property="host.properties.found">
+		<or>
+			<available file="${basedir}/server.properties" />
+			<available file="${root.dir}/server.properties" />
+		</or>
+	</condition>
+	
+	<property file="${basedir}/server.properties" />
+	<property file="${root.dir}/server.properties" />
+
+	<property name="project.name" value="WebSphereMQAdapterImpl" />
+	<property name="fqclassname" value="xact.jms.webspheremq.WebSphereMQAdapter" />
+	
+	<!-- depends on server make use of server variable -->
+	<property name="server.mdm.path" value="${server.path}/services/xact.jms.webspheremq.WebSphereMQAdapter" />
+	<property name="server.mdm.xml.path" value="${server.path}/../saved/XMOM/xact/jms/webspheremq" />
+	<property name="server.mdm.xml.filename" value="WebSphereMQAdapter.xml" />
+	<property name="local.xml.dir" value="${basedir}/xmldefinition" />
+	
+	<!--property name="build.import.xml.path" value="TemplateBuildImportName" /-->
+	<pathconvert targetos="unix" property="deploy.jars">
+		<path>
+			<pathelement location="TemplateDeployMainJar" />
+			<fileset dir="${basedir}/lib">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+		
+		<map from="${basedir}/lib" to="../saved/XMOM/xact/jms/webspheremq"/>
+	</pathconvert>
+	
+	<property name="deploy.sharedlibs" value=":" />
+	<property name="deploy.template" value="deploydatatype -fqDatatypeName ${fqclassname} -protectionMode TRY -registerWithXMOM true" />
+	
+	<!-- change this import to use a common build script for multiple projects -->
+	<import file="${basedir}/buildService.xml" />
+	
+	<!-- custom libraries to be included -->
+    <path id="libraries">
+      <fileset dir="${common.lib.dir}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+</project>

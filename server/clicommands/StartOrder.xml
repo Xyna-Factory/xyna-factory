@@ -1,0 +1,98 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="startorder" Groups="Misc" Description="Start an order without input parameters asynchronously (fire and forget).">
+    <ExtendedDescription>
+.
+Optional TimeConstraints
+========================
+TimeConstraints can be specified as a string in following format:
+start(TS)[_schedTimeout(TS)][_window(TW)_start(TS)[_schedTimeout(TS)]]
+TS should be an absolute or relative timestamp with unit milliseconds in format "(rel|abs):&lt;millis&gt;", 
+example rel:5000 -> relative timestamp with 5 seconds.
+TW should be the name of a time window.
+Examples:
+1) start(rel:60000)  
+.  start with delay of 60 seconds
+2) start(abs:1365080400000)
+.  start at 4.4.2013 15:00
+3) start(rel:60000)_schedTimeout(rel:10000)
+.  start in 60 seconds, schedulingTimeout in 70 seconds
+4) start(rel:0)_window(saturday_night)_start(rel:0)
+.  start in timewindow "saturday_night"
+5) start(rel:0)_window(saturday_night)_start(rel:10000)_schedTimeout(rel:10000)
+.  start in timewindow "saturday_night", but delayed with 10 seconds and schedulingTimeout after 20 seconds after timewindow-opening.
+.
+Optional Input
+==============
+The optional Input consists of one or more Data-Tags. Each of the Data-Tags has the following attributes:
+.  IsList        : Indicates that the data is a list holding multiple values
+.  ReferenceName : The Data-Type of the Input
+.  ReferencePath : Path where the Data-Type is located
+.  VariableName  : Name of the member variable the Data is assigned to (must match the variable name specified in the definition of the Data-Type)
+.  
+Each Data-Tag can either hold exactly one Value-Tag or one or more other Data-Tags, if the Data-Type is complex.
+If the nested Data is primitive it only has the VariableName-Attribute referencing to the member variable of the complex Data.
+In that case the VariableName must match the name of the member variable.
+.
+If the input data is a list then the Data-Tag gets the IsList-Attribute which is set to true.
+In that case the Data-Tag is followed by one or more Value-Tags where each holds the same type of Data.
+.
+The inner most Value-Tag holds a literal that is interpreted as the primitive data of the member variable it is being assigned to.
+.
+A sample input XML-file might look like this:
+.
+&lt;Input&gt;
+  &lt;Data ReferenceName="mdmDataType" ReferencePath="mdmPath" VariableName="varName"&gt;
+    &lt;Data VariableName="memberVarName"&gt;
+      &lt;Value&gt;value&lt;/Value&gt;
+    &lt;/Data&gt;
+    ...
+  &lt;/Data&gt;
+  &lt;Data IsList="true" ReferenceName="mdmDataListType" ReferencePath="mdmPath" VariableName="varNameList"&gt;
+    &lt;Value&gt;
+      &lt;Data VariableName="memberVarName"&gt;
+        &lt;Value&gt;value&lt;/Value&gt;
+      &lt;/Data&gt;
+      ...
+    &lt;/Value&gt;
+    &lt;Value&gt;
+      &lt;Data VariableName="memberVarName"&gt;
+        &lt;Value&gt;value&lt;/Value&gt;
+      &lt;/Data&gt;
+      ...
+    &lt;/Value&gt;
+    ...
+  &lt;/Data&gt;
+  ...
+&lt;/Input&gt;
+
+    </ExtendedDescription>
+  </CommandDefinition>
+  <Argument Name="orderType" Description="The ordertype of the order to be started"/>
+  <Argument Name="timeout" Description="The scheduling timeout used for the started order" Optional="true"/>
+  <Argument Name="timeconstraint" Description="The scheduling timeconstraint used for the started order (preferred to timeout)" Optional="true"/>
+  <Argument Name="priority" Description="The priority the order is started with (10 = highest, 1 = lowest)" Optional="true"/>
+  <Argument Name="inputPayloadFile" Description="Location of the file containing the payload that is passed to the started order. Format: &lt;Input&gt;&lt;Data&gt;...&lt;/Data&gt;&lt;Data&gt;...&lt;/Data&gt;&lt;/Input&gt; (see callservice documentation)" Optional="true"/>
+  <BoolOption Name="a" LongName="acknowledge" Description="Command blocks until Scheduler has acknowledged the order" Optional="true"/>
+  <Argument Name="applicationName" Description="The application, which the ordertype belongs." Optional="true"/>
+  <Argument Name="versionName" Description="The version of the application, which the ordertype belongs." Optional="true"/>
+  <BoolOption Name="s" LongName="synchronous" Description="Command blocks until order is executed. Prints exception if thrown." Optional="true"/>
+  <BoolOption Name="p" LongName="print" Description="Prints the workflow output" Optional="true"/>
+  <Argument Name="workspaceName" Description="The workspace, which the ordertype belongs." Optional="true"/>
+</XynaCommandLineCommand>

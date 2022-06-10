@@ -1,0 +1,42 @@
+{
+  "meta":
+  {
+    "name": "createExceptionFunctiontest",
+	"description": "Testet die Funktion createException.",
+	"created": "12.11.2019",
+	"updated": "12.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd2!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!": "autoTest.generated.!rnd1!"},
+		{"!label!": "generatedExceptionType_!rnd2!"}
+	  ]
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createException",
+	  "mapInput": 
+	  {
+	    "!path!": "!path!",
+	    "!label!": "!label!",
+		"!workspace!": "default workspace"
+	  },
+	  "mapOutput":
+	  {
+		"!name!": "!name!"
+	  }
+	}
+  ]
+}

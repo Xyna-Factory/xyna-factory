@@ -1,0 +1,352 @@
+{
+  "meta":
+  {
+    "name": "conditionalBranchingMergedCasesTest",
+	"description": "Execute a workflow containing a Conditional Branching with merged Cases (loaded from app) and open audit",
+	"created": "18.03.2020",
+	"updated": "15.12.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "set",
+	  "variable": "!workflowFQN!",
+	  "value": "xmcp.h5x.regression.PMON49.ConditionalBranchingMergedCases"
+	},
+
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "!workflowFQN!",
+		"!input!": [{"$meta":{"fqn":"base.Text","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"text":"Expected String"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 5,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step16",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "0",
+		"!pathInVariable!": "text"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!choiceInput!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!choiceInput!",
+	  "value": "Expected String"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!caseId!",
+	  "pathInResponse": "info/$list[id=step16]/caseId",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!caseId!",
+	  "value": "case16-1_input"
+	},
+	
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step16]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	}, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!branch16-0!",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/areas/$list[name=content]/items/$list[0]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branch16-0!",
+      "value": "branch16-0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch16-0!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "!workflowFQN!",
+		"!input!": [{"$meta":{"fqn":"base.Text","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"text":"Expected String 2"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 5,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step16",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "0",
+		"!pathInVariable!": "text"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!choiceInput!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!choiceInput!",
+	  "value": "Expected String 2"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!caseId!",
+	  "pathInResponse": "info/$list[id=step16]/caseId",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!caseId!",
+	  "value": "case16-0_input"
+	},
+	
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step16]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+
+    {
+      "operation": "read",
+      "targetVariable": "!branch16-0!",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/areas/$list[name=content]/items/$list[0]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branch16-0!",
+      "value": "branch16-0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch16-0!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "!workflowFQN!",
+		"!input!": [{"$meta":{"fqn":"base.Text","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"text":"Something unexpected"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 5,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step16",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "0",
+		"!pathInVariable!": "text"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!choiceInput!"
+	  }
+	},
+
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!choiceInput!",
+	  "value": "Something unexpected"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!caseId!",
+	  "pathInResponse": "info/$list[id=step16]/caseId",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!caseId!",
+	  "value": "case16-2_input"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step16]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+
+    {
+      "operation": "read",
+      "targetVariable": "!branch16-1!",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/areas/$list[name=content]/items/$list[1]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branch16-1!",
+      "value": "branch16-1"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch16-1!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    }
+  ]
+}

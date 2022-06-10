@@ -1,0 +1,6 @@
+{
+  "tests":
+  [
+    "testsLF/RedeployAllWorkflows.json"
+  ]
+}

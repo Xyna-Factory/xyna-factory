@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Veto" TypeName="GetVeto" TypePath="xmcp.factorymanager.administrativevetoes" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Veto" Name="GetVeto">
+    <Input>
+      <Data ID="8" Label="Administrative Veto Name" ReferenceName="AdministrativeVetoName" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVetoName">
+        <Target RefID="7"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="3" Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="Load administrative veto exception" ReferenceName="LoadAdministrativeVetoException" ReferencePath="xmcp.factorymanager.administrativevetoes.exceptions" VariableName="loadAdministrativeVetoException"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <Function ID="15" Label="Check Rights for Current User">
+      <Source RefID="14"/>
+      <Source RefID="17"/>
+      <Target RefID="14"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="14">
+        <Source RefID="17">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="14"/>
+    </Function>
+    <Function ID="7" Label="Get veto details">
+      <Source RefID="8"/>
+      <Source RefID="10"/>
+      <Target RefID="9"/>
+      <Target RefID="10"/>
+      <Invoke Operation="getVetoDetails" ServiceID="10">
+        <Source RefID="8"/>
+      </Invoke>
+      <Receive ServiceID="10">
+        <Target RefID="9"/>
+      </Receive>
+    </Function>
+    <Data ID="9" Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto9">
+      <Source RefID="7"/>
+      <Target RefID="2"/>
+    </Data>
+    <ServiceReference ID="10" Label="Administrative Veto Services" ReferenceName="AdministrativeVetoServices.AdministrativeVetoServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <ServiceReference ID="14" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="15"/>
+      <Target RefID="15"/>
+    </ServiceReference>
+    <Data ID="17" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="15"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.administrativeVetos:read:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="9"/>
+      <Target RefID="3"/>
+      <Copy>
+        <Source RefID="9"/>
+        <Target RefID="3"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

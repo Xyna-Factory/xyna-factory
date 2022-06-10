@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Add Followup Test Case With Output" TypeName="AddFollowupTestCaseWithOutput" TypePath="xdev.xtestfactory.infrastructure.services" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(739)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Add Followup Test Case With Output" Name="AddFollowupTestCaseWithOutput">
+    <Input>
+      <Data ID="33" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry33">
+        <Target RefID="135"/>
+      </Data>
+      <Data ID="34" Label="Test Case Entry" ReferenceName="TestCaseEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseEntry34">
+        <Target RefID="27"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="157" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase157">
+        <Source RefID="158"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Failed To Determine Test Case Chain" ReferenceName="FailedToDetermineTestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestCaseChain"/>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Determine Current Test Project">
+      <Source RefID="4"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="4"/>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="5"/>
+      <Target RefID="59"/>
+    </Data>
+    <ServiceReference ID="9" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="25"/>
+      <Source RefID="64"/>
+      <Source RefID="87"/>
+      <Source RefID="91"/>
+      <Source RefID="142"/>
+      <Target RefID="25"/>
+      <Target RefID="64"/>
+      <Target RefID="87"/>
+      <Target RefID="91"/>
+      <Target RefID="142"/>
+    </ServiceReference>
+    <Function ID="38" Label="Determine Current Test Case Chain">
+      <Source RefID="37"/>
+      <Target RefID="37"/>
+      <Target RefID="39"/>
+      <Invoke Operation="DetermineCurrentTestCaseChain" ServiceID="37"/>
+      <Receive ServiceID="37">
+        <Target RefID="39"/>
+      </Receive>
+    </Function>
+    <Mappings ID="27">
+      <Source RefID="34"/>
+      <Target RefID="26"/>
+      <Meta>
+        <IsCondition>true</IsCondition>
+      </Meta>
+      <Input>
+        <Data ID="162" Label="Test Case Entry" ReferenceName="TestCaseEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseEntry"/>
+        <Source RefID="34"/>
+      </Input>
+      <Output>
+        <Data ID="28" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition28"/>
+        <Target RefID="26"/>
+      </Output>
+      <Mapping>%1%.formula=concat("(%0%.iD==\"",replaceall(replaceall(%0%.iD,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+    </Mappings>
+    <Function ID="25" Label="Query">
+      <Source RefID="9"/>
+      <Source RefID="26"/>
+      <Source RefID="29"/>
+      <Source RefID="30"/>
+      <Target RefID="9"/>
+      <Target RefID="32"/>
+      <Meta>
+        <QueryFilter>
+          <Condition>%0%.iD==%1%.iD</Condition>
+        </QueryFilter>
+      </Meta>
+      <Invoke Operation="query" ServiceID="9">
+        <Source RefID="29">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="26">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="30">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9">
+        <Target RefID="32"/>
+      </Receive>
+    </Function>
+    <Data ID="26" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition26">
+      <Source RefID="27"/>
+      <Target RefID="25"/>
+    </Data>
+    <Data ID="29" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="25"/>
+      <Data ID="163" Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.TestCase</Value>
+      </Data>
+    </Data>
+    <Data ID="30" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="25"/>
+      <Data ID="164" Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data ID="165" Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="166" IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="32" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+      <Source RefID="25"/>
+      <Target RefID="42"/>
+    </Data>
+    <ServiceReference ID="37" Label="Determine Current Test Case Chain" ReferenceName="DetermineCurrentTestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="38"/>
+      <Target RefID="38"/>
+    </ServiceReference>
+    <Data ID="39" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain89">
+      <Source RefID="38"/>
+      <Target RefID="46"/>
+      <Target RefID="55"/>
+      <Target RefID="123"/>
+      <Target RefID="124"/>
+      <Target RefID="126"/>
+      <Target RefID="135"/>
+    </Data>
+    <Mappings ID="42" Label="Mapping">
+      <Source RefID="32"/>
+      <Target RefID="43"/>
+      <Input>
+        <Data ID="40" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase40"/>
+        <Source RefID="32"/>
+      </Input>
+      <Output>
+        <Data ID="41" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase41"/>
+        <Target RefID="43"/>
+      </Output>
+      <Mapping>%1%=%0%["0"]</Mapping>
+    </Mappings>
+    <Data ID="43" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase43">
+      <Source RefID="42"/>
+      <Target RefID="46"/>
+    </Data>
+    <Mappings ID="46" Label="Copy Test Case">
+      <Source RefID="39"/>
+      <Source RefID="43"/>
+      <Target RefID="47"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="44" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase44"/>
+        <Source RefID="43">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="167" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain"/>
+        <Source RefID="39"/>
+      </Input>
+      <Output>
+        <Data ID="45" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase45"/>
+        <Target RefID="47"/>
+      </Output>
+      <Mapping>%2%.associatedTestCaseChain=%1%.name</Mapping>
+      <Mapping>%2%.author=%0%.author</Mapping>
+      <Mapping>%2%.coveredFeatures=%0%.coveredFeatures</Mapping>
+      <Mapping>%2%.deleted=%0%.deleted</Mapping>
+      <Mapping>%2%.description=%0%.description</Mapping>
+      <Mapping>%2%.duration=%0%.duration</Mapping>
+      <Mapping>%2%.isTemplate=%0%.isTemplate</Mapping>
+      <Mapping>%2%.massLoad=%0%.massLoad</Mapping>
+      <Mapping>%2%.massProcessReference=%0%.massProcessReference</Mapping>
+      <Mapping>%2%.massRate=%0%.massRate</Mapping>
+      <Mapping>%2%.name=%0%.name</Mapping>
+      <Mapping>%2%.priority=%0%.priority</Mapping>
+      <Mapping>%2%.responsibleUser=%0%.responsibleUser</Mapping>
+      <Mapping>%2%.taskCount=%0%.taskCount</Mapping>
+      <Mapping>%2%.testDataSelectorInstances=%0%.testDataSelectorInstances</Mapping>
+      <Mapping>%2%.testDateSelector=%0%.testDateSelector</Mapping>
+      <Mapping>%2%.testProcessReference=%0%.testProcessReference</Mapping>
+      <Mapping>%2%.testSeriesReference=%0%.testSeriesReference</Mapping>
+      <Mapping>%2%.testType=%0%.testType</Mapping>
+    </Mappings>
+    <Data ID="47" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase47">
+      <Source RefID="46"/>
+      <Target RefID="51"/>
+    </Data>
+    <Mappings ID="51" Label="Remove &quot;Template&quot; from name">
+      <Source RefID="47"/>
+      <Target RefID="50"/>
+      <Input>
+        <Data ID="48" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase48"/>
+        <Source RefID="47">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="49" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase49"/>
+        <Target RefID="50"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+      <Mapping>%1%.name=replaceall(%1%.name,"Template ","")</Mapping>
+    </Mappings>
+    <Data ID="50" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase50">
+      <Source RefID="51"/>
+      <Target RefID="55"/>
+    </Data>
+    <ServiceReference ID="54" Label="Test Case Chain" ReferenceName="TestCaseChain.TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.gui.service">
+      <Source RefID="55"/>
+      <Target RefID="55"/>
+    </ServiceReference>
+    <Function ID="55" Label="Check For Name Collision">
+      <Source RefID="54"/>
+      <Source RefID="39"/>
+      <Source RefID="50"/>
+      <Target RefID="54"/>
+      <Target RefID="56"/>
+      <Invoke Operation="checkForNameCollision" ServiceID="54">
+        <Source RefID="50">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="39"/>
+      </Invoke>
+      <Receive ServiceID="54">
+        <Target RefID="56"/>
+      </Receive>
+    </Function>
+    <Data ID="56" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase486">
+      <Source RefID="55"/>
+      <Target RefID="59"/>
+      <Target RefID="108"/>
+      <Target RefID="84"/>
+      <Target RefID="104"/>
+      <Target RefID="90"/>
+      <Target RefID="135"/>
+      <Target RefID="158"/>
+    </Data>
+    <Mappings ID="59" Label="Mapping">
+      <Source RefID="6"/>
+      <Source RefID="56"/>
+      <Target RefID="60"/>
+      <Input>
+        <Data ID="168" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="6"/>
+      </Input>
+      <Input>
+        <Data ID="57" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase57"/>
+        <Source RefID="56">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="58" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject58"/>
+        <Target RefID="60"/>
+      </Output>
+      <Mapping>%2%~=%0%</Mapping>
+      <Mapping>%2%.testCase~=append(%0%.testCase,%1%)</Mapping>
+    </Mappings>
+    <Data ID="60" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject60">
+      <Source RefID="59"/>
+      <Target RefID="64"/>
+      <Target RefID="106"/>
+    </Data>
+    <Function ID="64" Label="Store">
+      <Source RefID="9"/>
+      <Source RefID="65"/>
+      <Source RefID="60"/>
+      <Target RefID="9"/>
+      <Invoke Operation="store" ServiceID="9">
+        <Source RefID="60">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="65">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9"/>
+    </Function>
+    <Data ID="65" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter404">
+      <Target RefID="64"/>
+      <Data ID="169" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="170" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="171" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <ServiceReference ID="78" Label="Query Test Case By Name in Current Test Project" ReferenceName="QueryTestCaseByNameInCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="84"/>
+      <Target RefID="84"/>
+    </ServiceReference>
+    <ServiceReference ID="79" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="85"/>
+      <Source RefID="86"/>
+      <Source RefID="90"/>
+      <Target RefID="85"/>
+      <Target RefID="86"/>
+      <Target RefID="90"/>
+    </ServiceReference>
+    <Choice ID="108" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="56"/>
+      <Input>
+        <Data ID="98" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase98"/>
+        <Source RefID="56">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="88" Label="true" Premise="%0%.testProcessReference==null">
+        <Function ID="84" Label="Query Test Case By Name in Current Test Project">
+          <Source RefID="78"/>
+          <Source RefID="56"/>
+          <Target RefID="78"/>
+          <Target RefID="99"/>
+          <Invoke Operation="QueryTestCaseByNameInCurrentTestProject" ServiceID="78">
+            <Source RefID="56">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="78">
+            <Target RefID="99"/>
+          </Receive>
+        </Function>
+        <Function ID="85" Label="Determine Workspace">
+          <Source RefID="79"/>
+          <Target RefID="79"/>
+          <Target RefID="100"/>
+          <Invoke Operation="determineWorkspace" ServiceID="79"/>
+          <Receive ServiceID="79">
+            <Target RefID="100"/>
+          </Receive>
+        </Function>
+        <Function ID="86" Label="Build Empty Order Input Source">
+          <Source RefID="79"/>
+          <Source RefID="100"/>
+          <Source RefID="99"/>
+          <Target RefID="79"/>
+          <Target RefID="101"/>
+          <Meta>
+            <Documentation>This is the "new test case" case. In this case we create an empty Order Input Source to make sure that it always exist and the user is not confused because creating an OIS is not what he is interested in.</Documentation>
+          </Meta>
+          <Invoke Operation="buildEmptyOrderInputSource" ServiceID="79">
+            <Source RefID="99">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="100"/>
+          </Invoke>
+          <Receive ServiceID="79">
+            <Target RefID="101"/>
+          </Receive>
+        </Function>
+        <Function ID="87" Label="Store">
+          <Source RefID="9"/>
+          <Source RefID="101"/>
+          <Source RefID="113"/>
+          <Target RefID="9"/>
+          <Invoke Operation="store" ServiceID="9">
+            <Source RefID="101">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="113">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="9"/>
+        </Function>
+        <Assign ID="155"/>
+      </Case>
+      <Case ID="97" Label="false">
+        <Mappings ID="103" Label="Mapping">
+          <Source RefID="110"/>
+          <Target RefID="102"/>
+          <Input>
+            <Data ID="172" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString"/>
+            <Source RefID="110">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="173" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+            <Target RefID="102"/>
+          </Output>
+          <Mapping>%1%.text=%0%.value</Mapping>
+        </Mappings>
+        <Choice ID="104" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="102"/>
+          <Source RefID="56"/>
+          <Input>
+            <Data ID="94" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase94"/>
+            <Source RefID="56">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="95" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase95"/>
+            <Source RefID="56">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="96" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text96"/>
+            <Source RefID="102"/>
+          </Input>
+          <Case ID="92" Label="true" Premise="%0%.testProcessReference!=concat(%2%.text,%1%.name)">
+            <Mappings ID="106" Label="Get Workspacename for Test Project">
+              <Source RefID="60"/>
+              <Target RefID="105"/>
+              <Input>
+                <Data ID="89" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject89"/>
+                <Source RefID="60">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="174" Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename"/>
+                <Target RefID="105"/>
+              </Output>
+              <Mapping>%1%.workspacename=%0%.workspaceReference</Mapping>
+            </Mappings>
+            <Function ID="90" Label="Clone Referenced Order Input Source">
+              <Source RefID="79"/>
+              <Source RefID="105"/>
+              <Source RefID="56"/>
+              <Source RefID="111"/>
+              <Target RefID="79"/>
+              <Target RefID="107"/>
+              <Meta>
+                <Documentation>This step is required for "clone" usecases. In these cases the OIS name does not match the test case name. In migration cases the above condition will evaluate to false because test case name and OIS name are in sync or the test process reference is empty.</Documentation>
+              </Meta>
+              <Invoke Operation="cloneReferencedOrderInputSource" ServiceID="79">
+                <Source RefID="56">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+                <Source RefID="105"/>
+                <Source RefID="105"/>
+                <Source RefID="111">
+                  <Meta>
+                    <LinkType>Constant</LinkType>
+                  </Meta>
+                </Source>
+              </Invoke>
+              <Receive ServiceID="79">
+                <Target RefID="107"/>
+              </Receive>
+            </Function>
+            <Function ID="91" Label="Store">
+              <Source RefID="9"/>
+              <Source RefID="107"/>
+              <Source RefID="112"/>
+              <Target RefID="9"/>
+              <Invoke Operation="store" ServiceID="9">
+                <Source RefID="107">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+                <Source RefID="112">
+                  <Meta>
+                    <LinkType>Constant</LinkType>
+                  </Meta>
+                </Source>
+              </Invoke>
+              <Receive ServiceID="9"/>
+            </Function>
+            <Assign ID="152"/>
+          </Case>
+          <Case ID="93" Label="false">
+            <Assign ID="153"/>
+          </Case>
+        </Choice>
+        <Assign ID="156"/>
+      </Case>
+    </Choice>
+    <Data ID="99" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase163">
+      <Source RefID="84"/>
+      <Target RefID="86"/>
+    </Data>
+    <Data ID="100" Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename100">
+      <Source RefID="85"/>
+      <Target RefID="86"/>
+    </Data>
+    <Data ID="101" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase101">
+      <Source RefID="86"/>
+      <Target RefID="87"/>
+    </Data>
+    <Data ID="102" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text102">
+      <Source RefID="103"/>
+      <Target RefID="104"/>
+    </Data>
+    <Data ID="105" Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename105">
+      <Source RefID="106"/>
+      <Target RefID="90"/>
+    </Data>
+    <Data ID="107" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase67">
+      <Source RefID="90"/>
+      <Target RefID="91"/>
+    </Data>
+    <Data ID="110" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyString">
+      <Target RefID="103"/>
+      <Data ID="175" Label="Value" VariableName="value">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value><![CDATA[Order Input Source for Test Case ]]></Value>
+      </Data>
+      <Data ID="176" Label="Property Name" VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.testcase.orderinputsource.prefix</Value>
+      </Data>
+      <Data ID="177" Label="Behaviour if Property not Set" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+    </Data>
+    <Data ID="111" Label="Test Project Creation Parameter" ReferenceName="TestProjectCreationParameter" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="const_TestProjectCreationParameter">
+      <Target RefID="90"/>
+      <Data ID="178" Label="create workspace and import infrastructure" VariableName="createWorkspaceAndImportInfrastructure">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="179" Label="rename order input source" VariableName="renameOrderInputSource">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Data ID="112" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="91"/>
+      <Data ID="180" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="181" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="182" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="113" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter">
+      <Target RefID="87"/>
+      <Data ID="183" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="184" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="185" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Mappings ID="135" Label="Mapping">
+      <Source RefID="39"/>
+      <Source RefID="33"/>
+      <Source RefID="56"/>
+      <Target RefID="136"/>
+      <Input>
+        <Data ID="131" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase131"/>
+        <Source RefID="56">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="132" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain132"/>
+        <Source RefID="39"/>
+      </Input>
+      <Input>
+        <Data ID="133" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry133"/>
+        <Source RefID="33"/>
+      </Input>
+      <Output>
+        <Data ID="134" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance134"/>
+        <Target RefID="136"/>
+      </Output>
+      <Mapping>%3%.author=%0%.author.name</Mapping>
+      <Mapping>%3%.status="Planned"</Mapping>
+      <Mapping>%3%.testCase=%0%</Mapping>
+      <Mapping>%3%.testCase.associatedTestCaseChain=%1%.name</Mapping>
+      <Mapping>%3%.testCaseChainName=%1%.name</Mapping>
+      <Mapping>%3%.testObject.id=%2%.testObjectId</Mapping>
+    </Mappings>
+    <Choice ID="123" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="39"/>
+      <Target RefID="128"/>
+      <Input>
+        <Data ID="122" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain122"/>
+        <Source RefID="39"/>
+      </Input>
+      <Case ID="116" Label="true" Premise="%0%.numberTestCases==&quot;0&quot;">
+        <Mappings ID="124" Label="Mapping">
+          <Source RefID="39"/>
+          <Source RefID="136"/>
+          <Source RefID="137"/>
+          <Target RefID="125"/>
+          <Input>
+            <Data ID="186" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance"/>
+            <Source RefID="136"/>
+          </Input>
+          <Input>
+            <Data ID="114" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain114"/>
+            <Source RefID="39"/>
+          </Input>
+          <Input>
+            <Data ID="187" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now"/>
+            <Source RefID="137">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="115" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain115"/>
+            <Target RefID="125"/>
+          </Output>
+          <Mapping>%3%=%1%</Mapping>
+          <Mapping>%3%.lastChange=%2%.asString()</Mapping>
+          <Mapping>%3%.numberTestCases="1"</Mapping>
+          <Mapping>%3%.testCaseInstance=append(%3%.testCaseInstance,%0%)</Mapping>
+        </Mappings>
+        <Assign ID="129">
+          <Source RefID="125"/>
+          <Target RefID="128"/>
+          <Copy>
+            <Source RefID="125"/>
+            <Target RefID="128"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="121" Label="false">
+        <Mappings ID="126" Label="Mapping">
+          <Source RefID="39"/>
+          <Source RefID="136"/>
+          <Source RefID="138"/>
+          <Target RefID="127"/>
+          <Input>
+            <Data ID="117" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance117"/>
+            <Source RefID="136"/>
+          </Input>
+          <Input>
+            <Data ID="118" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain118"/>
+            <Source RefID="39"/>
+          </Input>
+          <Input>
+            <Data ID="119" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now119"/>
+            <Source RefID="138">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="120" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain120"/>
+            <Target RefID="127"/>
+          </Output>
+          <Mapping>%3%=%1%</Mapping>
+          <Mapping>%3%.lastChange=%2%.asString()</Mapping>
+          <Mapping>%3%.numberTestCases=%3%.numberTestCases+"1"</Mapping>
+          <Mapping>%3%.testCaseInstance=append(%3%.testCaseInstance,%0%)</Mapping>
+        </Mappings>
+        <Assign ID="130">
+          <Source RefID="127"/>
+          <Target RefID="128"/>
+          <Copy>
+            <Source RefID="127"/>
+            <Target RefID="128"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="125" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain125">
+      <Source RefID="124"/>
+      <Target RefID="129"/>
+    </Data>
+    <Data ID="127" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain127">
+      <Source RefID="126"/>
+      <Target RefID="130"/>
+    </Data>
+    <Data ID="128" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain128">
+      <Source RefID="123"/>
+      <Source RefID="129"/>
+      <Source RefID="130"/>
+      <Target RefID="142"/>
+    </Data>
+    <Data ID="136" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance136">
+      <Source RefID="135"/>
+      <Target RefID="124"/>
+      <Target RefID="126"/>
+    </Data>
+    <Data ID="137" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="const_Now">
+      <Target RefID="124"/>
+      <Data ID="188" Label="Date" VariableName="date">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="189" Label="Format" ReferenceName="YyyyMMDdTHHMmSs" ReferencePath="base.date.format" VariableName="format"/>
+    </Data>
+    <Data ID="138" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now138">
+      <Target RefID="126"/>
+      <Data ID="190" Label="Date" VariableName="date">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="191" Label="Format" ReferenceName="YyyyMMDdTHHMmSs" ReferencePath="base.date.format" VariableName="format"/>
+    </Data>
+    <Function ID="142" Label="Store">
+      <Source RefID="9"/>
+      <Source RefID="143"/>
+      <Source RefID="128"/>
+      <Target RefID="9"/>
+      <Meta>
+        <Documentation>Speichern der Test Case Chain.</Documentation>
+      </Meta>
+      <Invoke Operation="store" ServiceID="9">
+        <Source RefID="128">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="143">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9"/>
+    </Function>
+    <Data ID="143" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter143">
+      <Target RefID="142"/>
+      <Data ID="192" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="193" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="194" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="158">
+      <Source RefID="56"/>
+      <Target RefID="157"/>
+      <Copy>
+        <Source RefID="56">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="157"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

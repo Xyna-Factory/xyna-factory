@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="KeyValueStore" BaseTypePath="xact.ssh.mock" IsAbstract="true" Label="Mocked Device" TypeName="MockedDevice" TypePath="xact.ssh.mock" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Sleep Behavior" ReferenceName="SleepBehavior" ReferencePath="xact.ssh.mock" VariableName="sleepBehavior"/>
+  <Service Label="Mocked Device" TypeName="MockedDevice">
+    <Operation IsAbstract="true" IsStatic="false" Label="Create Behavior" Name="createBehavior">
+      <Input>
+        <Data Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().createBehavior();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsAbstract="true" IsStatic="false" Label="Disconnect" Name="disconnect">
+      <Input>
+        <Data Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+      </Input>
+      <Output>
+        <Data Label="Session Store Parameter" ReferenceName="SessionStoreParameter" ReferencePath="xact.ssh.mock" VariableName="sessionStoreParameter"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().disconnect(sSHSession);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsAbstract="true" IsStatic="false" Label="Special Request" Name="specialRequest">
+      <Input>
+        <Data Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+        <Data Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+        <Data Label="Execution Result" ReferenceName="ExecutionResult" ReferencePath="xact.ssh.mock.result" VariableName="executionResult"/>
+      </Input>
+      <Output>
+        <Data Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().specialRequest();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsAbstract="true" IsStatic="false" Label="Unknown Command" Name="unknownCommand">
+      <Input>
+        <Data Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession"/>
+        <Data Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Input>
+      <Output>
+        <Data Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().unknownCommand();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

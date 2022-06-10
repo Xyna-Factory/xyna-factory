@@ -1,0 +1,341 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "26.3.2021",
+    "updated": "26.3.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+		{
+          "!FMAN61%20-%20Dependent%20Workspace%20B!": "FMAN61%20-%20Dependent%20Workspace%20B"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!xprc.waitsuspend.WaitAndSuspendFeature!": "xprc.waitsuspend.WaitAndSuspendFeature"
+        },
+        {
+          "!wait!": "wait"
+        },
+        {
+          "!Wait!": "Wait"
+        },
+        {
+          "!fman319!": "fman319"
+        },
+        {
+          "!Waiting!": "Waiting"
+        },
+        {
+          "!xprc.waitsuspend.Hours!": "xprc.waitsuspend.Hours"
+        },
+        {
+          "!xprc.waitsuspend.RelativeTimeConfiguration!": "xprc.waitsuspend.RelativeTimeConfiguration"
+        },
+        {
+          "!FMAN61_-_Dependent_Workspace_A!": "FMAN61 - Dependent Workspace A"
+        },
+        {
+          "!FMAN61_-_Dependent_Workspace_B!": "FMAN61 - Dependent Workspace B"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.MigrateRTCsReques!": "xmcp.factorymanager.rtcmanager.MigrateRTCsRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.RTCMigration!": "xmcp.factorymanager.rtcmanager.RTCMigration"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.FactoryNode!": "xmcp.factorymanager.rtcmanager.FactoryNode"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.Workspace!": "xmcp.factorymanager.rtcmanager.Workspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.MigrateRTCs!": "xmcp.factorymanager.rtcmanager.MigrateRTCs"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1616780183532.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1616780183532!",
+      "variable": "!new_1616780183532.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1616780183532.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id",
+      "targetVariable": "!step0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=input]/id",
+      "targetVariable": "!wf_input!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "fqn": "!xprc.waitsuspend.WaitAndSuspendFeature!",
+          "label": "!Wait!",
+          "operation": "!wait!",
+          "type": "service"
+        },
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/objects/!step0!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[fqn=!xprc.waitsuspend.WaitAndSuspendFeature!]/id",
+      "targetVariable": "!step10!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/items/$list[name=timeConfigurationParameter]/id",
+      "targetVariable": "!var10-in0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/items/$list[name=timeConfigurationParameter]/rtc/name",
+      "targetVariable": "!Base!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=input]/items/$list[name=timeConfigurationParameter]/rtc/version",
+      "targetVariable": "!1.0.18!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "index": -1,
+        "revision": 1,
+        "targetId": "!wf_input!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/objects/!var10-in0!/copy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!Waiting!",
+        "path": "!fman319!",
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!new_1616780183532!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=label]/fqn",
+      "targetVariable": "!fman319.Waiting!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!fman319!/!Waiting!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!fman319!/!Waiting!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!fman319!/!Waiting!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!fman319!/!Waiting!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/xmom/workflows/!fman319!/!Waiting!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": true,
+        "customStringContainer": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xprc.waitsuspend.RelativeTimeConfiguration!",
+              "rtc": {
+                "application": "!Base!",
+                "version": "!1.0.18!"
+              }
+            },
+            "timeInHours": {
+              "$meta": {
+                "fqn": "!xprc.waitsuspend.Hours!"
+              },
+              "timeUnitInHours": 1
+            }
+          }
+        ],
+        "orderType": "!fman319.Waiting!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!FMAN61%20-%20Dependent%20Workspace%20B!/startorder"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.MigrateRTCsReques!"
+            },
+            "abortProblemeticOrders": false,
+            "rTCMigration": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.RTCMigration!"
+                  },
+                  "factoryNode": {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+                    },
+                    "isLocal": true,
+                    "name": "!local!"
+                  },
+                  "source": {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!"
+                    },
+                    "isActive": false,
+                    "name": "!FMAN61_-_Dependent_Workspace_B!",
+                    "state": "!OK!"
+                  },
+                  "target": {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!"
+                    },
+                    "isActive": false,
+                    "name": "!FMAN61_-_Dependent_Workspace_A!",
+                    "state": "!OK!"
+                  }
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.RTCMigration!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.MigrateRTCs!"
+      },
+      "requestType": "POST",
+	  "acceptError": true,
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/$list[0]/message",
+      "targetVariable": "!message!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!message!",
+      "value": "Active order"
+    }
+  ]
+}

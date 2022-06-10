@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!servicegroups!": "servicegroups"
+        },
+        {
+          "!New_Service_Group!": "New Service Group"
+        },
+        {
+          "!undo_redo_005!": "undo_redo_005"
+        },
+        {
+          "!memberService!": "memberService"
+        },
+        {
+          "!autoTest.generated.CpdplcML!": "autoTest.generated.!rnd!"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Service_Group!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1594821006452.NewServiceGroup!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1594821006452!",
+      "variable": "!new_1594821006452.NewServiceGroup!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewServiceGroup!",
+      "variable": "!new_1594821006452.NewServiceGroup!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=methodsArea]/id",
+      "targetVariable": "!memberMethodsArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!sg!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!undo_redo_005!",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594821006452!/!NewServiceGroup!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Service",
+          "type": "!memberService!"
+        },
+        "index": -1,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594821006452!/!NewServiceGroup!/objects/!memberMethodsArea!/insert"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594821006452!/!NewServiceGroup!/undo"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!undo_redo_005!",
+        "path": "!autoTest.generated.CpdplcML!",
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594821006452!/!NewServiceGroup!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/fqn",
+      "targetVariable": "!autoTest.generated.CpdplcML.Undo_redo_005!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Undo_redo_005!",
+      "variable": "!autoTest.generated.CpdplcML.Undo_redo_005!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autoTest.generated.CpdplcML!/!Undo_redo_005!/deploy"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "items",
+      "basePath": "updates/$list[0]/areas/$list[id=memberMethodsArea]"
+    }
+  ]
+}

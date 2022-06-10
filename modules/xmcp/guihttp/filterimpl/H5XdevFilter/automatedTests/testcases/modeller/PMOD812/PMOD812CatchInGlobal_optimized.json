@@ -1,0 +1,514 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-815", 
+    "created": "27.1.2020", 
+    "updated": "27.1.2020"
+  }, 
+  "operations": [
+    {
+      "operation": "setRandom", 
+      "variable": "!rnd!"
+    }, 
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!New_Workflow!": "New Workflow"
+        }, 
+        {
+          "!New_Exception_Type!": "New Exception Type"
+        }, 
+        {
+          "!PMOD812_Generated_Exception!": "PMOD812 Generated Exception"
+        }, 
+        {
+          "!autoTest.generated.pmod812!": "autoTest.generated.pmod812.!rnd!"
+        }, 
+        {
+          "!PMOD812_Support!": "PMOD812 Support"
+        }, 
+        {
+          "!PMOD812_Test_Workflow_Global_Catch!": "PMOD812 Test Workflow Global Catch"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Workflow!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    }, 
+    {
+      "callIdRef": 0, 
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "readId": 0, 
+      "targetVariable": "!new_1580120634991.NewWorkflow!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewWorkflow!", 
+      "variable": "!new_1580120634991.NewWorkflow!"
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1580120634991!", 
+      "variable": "!new_1580120634991.NewWorkflow!"
+    }, 
+    {
+      "callIdRef": 0, 
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id", 
+      "readId": 5, 
+      "targetVariable": "!step0!", 
+      "unquoteResult": true
+    }, 
+    {
+      "callIdRef": 0, 
+      "operation": "read", 
+      "pathInResponse": "xmomItem/id", 
+      "readId": 7, 
+      "targetVariable": "!wf!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=errorHandling]/items/$list[0]/id", 
+      "targetVariable": "!exceptionHandlingWf!", 
+      "unquoteResult": true
+    }, 
+    {
+      "callIdRef": 0, 
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=errorHandling]/items/$list[id=!exceptionHandlingWf!]/areas/$list[name=content]/id", 
+      "readId": 8, 
+      "targetVariable": "!branchArea!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120634991!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Workflow!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    }, 
+    {
+      "callIdRef": 2, 
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "readId": 1, 
+      "targetVariable": "!new_1580120636379.NewWorkflow!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1580120636379!", 
+      "variable": "!new_1580120636379.NewWorkflow!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120636379!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Exception_Type!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    }, 
+    {
+      "callIdRef": 4, 
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "readId": 2, 
+      "targetVariable": "!new_1580120638277.NewExceptionType!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewExceptionType!", 
+      "variable": "!new_1580120638277.NewExceptionType!"
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1580120638277!", 
+      "variable": "!new_1580120638277.NewExceptionType!"
+    }, 
+    {
+      "callIdRef": 4, 
+      "operation": "read", 
+      "pathInResponse": "xmomItem/id", 
+      "readId": 4, 
+      "targetVariable": "!dt!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!PMOD812_Generated_Exception!", 
+        "revision": 0
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1580120638277!/!NewExceptionType!/objects/typeInfoArea/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!PMOD812_Generated_Exception!", 
+        "path": "!autoTest.generated.pmod812!", 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1580120638277!/!NewExceptionType!/save"
+    }, 
+    {
+      "callIdRef": 6, 
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!dt!]/fqn", 
+      "readId": 3, 
+      "targetVariable": "!autoTest.generated.pmod812.PMOD812GeneratedException!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!PMOD812GeneratedException!", 
+      "variable": "!autoTest.generated.pmod812.PMOD812GeneratedException!"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.pmod812!/!PMOD812GeneratedException!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.pmod812!/!PMOD812GeneratedException!/close"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "maxCount": 100
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects?q=pmod812"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!autoTest.generated.pmod812.PMOD812GeneratedException!", 
+          "isList": false, 
+          "label": "!PMOD812_Generated_Exception!", 
+          "type": "exception"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120636379!/!NewWorkflow!/objects/!step0!/insert"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120636379!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!PMOD812_Support!", 
+        "path": "!autoTest.generated.pmod812!", 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120636379!/!NewWorkflow!/save"
+    }, 
+    {
+      "callIdRef": 12, 
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/fqn", 
+      "readId": 6, 
+      "targetVariable": "!autoTest.generated.pmod812.PMOD812Support!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!PMOD812Support!", 
+      "variable": "!autoTest.generated.pmod812.PMOD812Support!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "label": "!PMOD812_Support!", 
+        "path": "!autoTest.generated.pmod812!", 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/save"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "maxCount": 100
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects?q=pmod812"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/close"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!autoTest.generated.pmod812.PMOD812Support!", 
+          "label": "!PMOD812_Support!", 
+          "operation": "!autoTest.generated.pmod812.PMOD812Support!", 
+          "type": "service"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120634991!/!NewWorkflow!/objects/!step0!/insert"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120634991!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/orderinputsources"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "!autoTest.generated.pmod812.PMOD812GeneratedException!", 
+          "type": "branch"
+        }, 
+        "index": -1, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120634991!/!NewWorkflow!/objects/!branchArea!/insert"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120634991!/!NewWorkflow!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/orderinputsources"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!PMOD812_Test_Workflow_Global_Catch!", 
+        "path": "!autoTest.generated.pmod812!", 
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1580120634991!/!NewWorkflow!/save"
+    }, 
+    {
+      "callIdRef": 24, 
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=label]/fqn", 
+      "readId": 9, 
+      "targetVariable": "!autoTest.generated.pmod812.PMOD812TestWorkflowGlobalCatch!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!PMOD812TestWorkflowGlobalCatch!", 
+      "variable": "!autoTest.generated.pmod812.PMOD812TestWorkflowGlobalCatch!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812TestWorkflowGlobalCatch!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "label": "!PMOD812_Test_Workflow_Global_Catch!", 
+        "path": "!autoTest.generated.pmod812!", 
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812TestWorkflowGlobalCatch!/save"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/orderinputsources"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812TestWorkflowGlobalCatch!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/orderinputsources"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "maxCount": 100
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects?q=pmod812"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812TestWorkflowGlobalCatch!/close"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.pmod812!/!PMOD812GeneratedException!/delete"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "maxCount": 100
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects?q=pmod812"
+    }, 
+    {
+      "acceptError": true, 
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812TestWorkflowGlobalCatch!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812TestWorkflowGlobalCatch!?repair=true"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "repairResult/$list[0]/location", 
+      "targetVariable": "!readLocation!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812TestWorkflowGlobalCatch!/dataflow"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod812!/!PMOD812Support!/orderinputsources"
+    }, 
+    {
+      "constraint": "equals", 
+      "operation": "assert", 
+      "value": "workflow", 
+      "variable": "!readLocation!"
+    }
+  ]
+}

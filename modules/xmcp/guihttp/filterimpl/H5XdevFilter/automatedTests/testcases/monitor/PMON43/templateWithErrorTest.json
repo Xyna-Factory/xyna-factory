@@ -1,0 +1,72 @@
+{
+  "meta":
+  {
+    "name": "templateWithError",
+	"description": "Execute a workflow containing a template (loaded from app) that throws an exception and open audit",
+	"created": "13.02.2020",
+	"updated": "30.03.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON43.TemplateWithError",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 4,
+		"!retryLength!": 0,
+		"!errorsLength!": 1,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+      "operation": "read",
+	  "targetVariable": "!exception!",
+	  "pathInResponse": "info/$list[id=step4]/error/exception",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!exception!",
+	  "value": "java.lang.Exception"
+	},
+	{
+      "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step4]/status",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Failed"
+	}
+  ]
+}

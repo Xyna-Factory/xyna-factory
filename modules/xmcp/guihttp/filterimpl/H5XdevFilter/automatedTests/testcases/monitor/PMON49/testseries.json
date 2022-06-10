@@ -1,0 +1,18 @@
+{
+  "tests":
+  [
+    "typeChoice.json",
+	"conditionalBranchingBranchException.json",
+    "conditionalBranchingConditionException.json",
+    "conditionalBranchingUserOutput.json",
+    "conditionalBranchingMergedCases.json",
+    "conditionalBranchingText.json",
+	"conditionalBranchingDefaultOnly.json",
+    "conditionalChoiceBoolean.json",
+	"conditionalChoiceText.json",
+	"conditionalChoiceBooleanText.json",
+	"conditionalChoiceNested.json",
+	"conditionalChoiceBranchException.json",
+	"conditionalChoiceConditionException.json"
+  ]
+}

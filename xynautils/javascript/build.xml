@@ -1,0 +1,80 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="Simple JavaScript style checker for Ant" default="dist" basedir=".">
+
+  <property name="project.name" value="Simple JavaScript style checker for Ant"/>
+
+  <property name="src" location="${basedir}/src"/>
+  <property name="build" location="${basedir}/build"/>
+  <property name="classes" location="${build}/classes"/>
+  <property name="example_data" location="${basedir}/example_data"/>
+
+  <path id="classpath">
+  	<fileset dir="${basedir}/lib">
+	    <include name="**/*.jar"/>
+	  </fileset>
+  </path>
+
+  <path id="classpath.jscheckstyle">
+    <pathelement location="${build}/JavaScriptCheckStyle.jar"/>
+  </path>
+
+  <target name="init">
+    <tstamp>
+      <format property="buildtime" pattern="yyyy-MM-dd HH:mm:ss"/>
+    </tstamp>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${classes}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the code" >
+    <javac srcdir="${src}" destdir="${classes}">
+        <classpath>
+            <path refid="classpath"/>
+        </classpath>
+    </javac>
+  </target>
+
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <jar jarfile="${build}/JavaScriptCheckStyle.jar" basedir="${classes}">
+        <manifest>
+          <attribute name="Implementation-Title" value="JavaScript check style task for Ant"/>
+          <attribute name="Implementation-Vendor" value="GIP Exyr GmbH"/>
+          <attribute name="Implementation-Version" value="build ${buildtime}"/> 
+          <attribute name="Built-By" value="${user.name}"/>
+        </manifest>
+    </jar>
+  </target>
+
+  <target name="all" depends="dist"/>
+
+  <target name="clean" description="clean up" >
+    <delete dir="${build}"/>
+  </target>
+
+  <target name="js-checkstyle" depends="dist">
+    <taskdef name="jscheckstyle" classname="com.gip.xyna.utils.javascript.checkstyle.ant.JavaScriptCheckStyleTask"
+        classpathref="classpath.jscheckstyle"/>
+    <jscheckstyle maxLineLength="100" characterSet="ISO-8859-15">
+      <fileset dir="${example_data}">
+        <include name="**/*.js"/>
+      </fileset>
+    </jscheckstyle>
+  </target>
+
+</project>

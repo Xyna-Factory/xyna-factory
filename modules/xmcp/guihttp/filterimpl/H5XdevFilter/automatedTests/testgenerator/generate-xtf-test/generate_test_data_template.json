@@ -1,0 +1,156 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "8.7.2020",
+    "updated": "8.7.2020"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!PMODRegressionTests%201!": "PMODRegressionTests%201"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xdev.xtestfactory.infrastructure.gui.StoreTestDa!": "xdev.xtestfactory.infrastructure.gui.StoreTestDataInstance"
+        },
+        {
+          "!testcases/raygression/exceptions/exceptions_001/!": "testcases/raygression/exceptions/exceptions_002/testseries.json"
+        },
+        {
+          "!qs.xact.filter.H5xdevFilter.Modeller.HTML5Filter!": "qs.xact.filter.H5xdevFilter.Modeller.HTML5FilterModellerTestData"
+        },
+        {
+          "!PMODRegressionTests_1!": "PMODRegressionTests 1"
+        },
+        {
+          "!Raygression:_exceptions_001!": "Raygression: exceptions_002"
+        },
+        {
+          "!base.Text!": "base.Text"
+        },
+        {
+          "!xdev.xtestfactory.infrastructure.gui.GetTestData!": "xdev.xtestfactory.infrastructure.gui.GetTestDataInstances"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.21!": "0.6.21"
+        },
+        {
+          "!xTFTestCaseName!": "xTFTestCaseName"
+        },
+        {
+          "!XTFTest_Case_Name!": "XTFTest Case Name"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!autoTesterTestSeriesName!": "autoTesterTestSeriesName"
+        },
+        {
+          "!Auto_Tester_Test_Series_Name!": "Auto Tester Test Series Name"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!qs.xact.filter.H5xdevFilter.Modeller.HTML5Filter!",
+              "rtc": {
+                "workspace": "!PMODRegressionTests_1!"
+              }
+            },
+            "autoTesterTestSeriesName": "!testcases/raygression/exceptions/exceptions_001/!",
+            "nextToBeDrawn": false,
+            "used": false,
+            "xTFTestCaseName": "!Raygression:_exceptions_001!"
+          },
+          {
+            "$meta": {
+              "fqn": "!base.Text!"
+            },
+            "text": "!qs.xact.filter.H5xdevFilter.Modeller.HTML5Filter!"
+          }
+        ],
+        "orderType": "!xdev.xtestfactory.infrastructure.gui.StoreTestDa!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!PMODRegressionTests%201!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.21!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!XTFTest_Case_Name!",
+                  "path": "!xTFTestCaseName!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Auto_Tester_Test_Series_Name!",
+                  "path": "!autoTesterTestSeriesName!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "length": 0,
+            "pageIndex": 0,
+            "pageSize": 0,
+            "rootType": "!qs.xact.filter.H5xdevFilter.Modeller.HTML5Filter!",
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!base.Text!"
+            },
+            "text": "!qs.xact.filter.H5xdevFilter.Modeller.HTML5Filter!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xdev.xtestfactory.infrastructure.gui.GetTestData!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!PMODRegressionTests%201!/!startorder!"
+    }
+  ]
+}

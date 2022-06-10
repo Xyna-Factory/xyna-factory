@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SubnetInsertRow" TypeName="SubnetInsertRow" TypePath="xmcp.dhcp.v4.netconfigurator" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="SubnetInsertRow" Name="SubnetInsertRow">
+    <Input>
+      <Data ID="73" Label="Insert Row Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype73"/>
+    </Input>
+    <Output>
+      <Data ID="134" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype134"/>
+      <Data ID="95" Label="Insert Row Output" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype95"/>
+    </Output>
+    <ServiceReference ID="4" Label="Subnet" ReferenceName="Subnet.Subnet" ReferencePath="xmcp.dhcp.v4.netconfigurator"/>
+    <Mappings ID="38" Label="Build Input">
+      <Input>
+        <Data ID="86" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype86">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="73"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Insert Row Request ctype" ReferenceName="InsertRowRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="insertRowRequest_ctype">
+          <Target RefID="5"/>
+        </Data>
+        <Target RefID="56"/>
+      </Output>
+      <Mapping>%1%.insertRowInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Insert Row">
+      <Source RefID="4"/>
+      <Source RefID="56"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="insertRow" ServiceID="4">
+        <Source RefID="56"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="47" Label="Extract Output">
+      <Input>
+        <Data ID="8" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="response_ctype8">
+          <Source RefID="9"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="147" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype147">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="405"/>
+      </Output>
+      <Output>
+        <Data ID="108" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype108">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="109"/>
+      </Output>
+      <Mapping>%2%=%0%.payload.insertRowOutput</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="56" Label="Insert Row Request ctype" ReferenceName="InsertRowRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="insertRowRequest_ctype56">
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="109" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype109">
+      <Source RefID="47"/>
+    </Data>
+    <Data ID="405" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype405">
+      <Source RefID="47"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="405"/>
+      <Source RefID="109"/>
+      <Target RefID="134"/>
+      <Target RefID="95"/>
+      <Copy>
+        <Source RefID="405"/>
+        <Target RefID="134"/>
+      </Copy>
+      <Copy>
+        <Source RefID="109">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="95"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

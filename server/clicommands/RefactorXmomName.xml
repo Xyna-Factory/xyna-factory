@@ -1,0 +1,29 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="refactorxmomname" Groups="Refactoring" Description="Renames a xmom object."/>
+  <Argument Name="sourcefqname" Description="The full qualified name of the object to be renamed"/>
+  <Argument Name="targetfqname" Description="The desired full qualified name"/>
+  <Argument Name="targettype" Description="Valid values are: Datatype, Workflow, Exception, Path" Optional="true"/>
+  <Argument Name="label" Description="The desired label" Optional="true"/>
+  <Argument Name="username" Description="The name of the user responsible for the refactoring" Optional="true"/>
+  <Argument Name="password" Description="Matching password for the user" Optional="true"/>
+  <BoolOption Name="c" LongName="ignoreconflicts" Description="Conflicts will be ignored" Optional="true"/>
+  <BoolOption Name="s" LongName="ignorestorables" Description="Changes to modelled storables will be ignored" Optional="true"/>
+  <Argument Name="workspaceName" Description="The name of the workspace in which the object should be renamed." Optional="true"/>
+</XynaCommandLineCommand>

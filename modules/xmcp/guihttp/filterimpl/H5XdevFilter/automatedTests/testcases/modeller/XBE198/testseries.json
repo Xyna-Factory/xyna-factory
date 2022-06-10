@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "XBE198_ConstantIneritance.json",
+	"XBE198_ConstantAbstractList.json"
+  ]
+}

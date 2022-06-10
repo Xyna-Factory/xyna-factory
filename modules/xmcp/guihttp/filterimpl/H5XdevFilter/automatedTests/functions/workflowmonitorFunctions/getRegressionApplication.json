@@ -1,0 +1,49 @@
+[
+  {
+    "docu": "Get Information about the regressionTestApplication. ApplicationName is kinda given.",
+    "type": "function",
+	"functionName": "getRegressionApplication",
+	"input": [],
+	"output": 
+	[
+	  "!url!",
+	  "!applicationName!",
+	  "!applicationVersion!"
+	],
+	"operations":
+	[
+	  {
+	    "operation": "set",
+		"variable": "!applicationName!",
+		"value": "RegressionTestApp"
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "/runtimeContext/GuiHttp%252F/startorder",
+	    "payload": {"orderType":"xmcp.factorymanager.shared.GetRuntimeContexts","input":[],"async":false}
+	  },
+	  {
+	    "operation": "read",
+		"pathInResponse": "output[0]/$list[name=!applicationName!]/versionName",
+		"targetVariable": "!applicationVersion!",
+		"unquoteResult": true
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!applicationName!",
+		"modification": { "operation": "urlencode" }
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!applicationVersion!",
+		"modification":{ "operation": "urlencode" }
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!url!",
+		"value": "/runtimeContext/!applicationName!%252F!applicationVersion!"
+	  }
+	]
+  }
+]

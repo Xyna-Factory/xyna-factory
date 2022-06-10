@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Queue" BaseTypePath="xact.queue" IsAbstract="false" Label="WebSphere MQ" TypeName="WebSphereMQ" TypePath="xact.queue" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>WebSphereMQImpl.jar</Libraries>
+  <SharedLibraries>webspheremq</SharedLibraries>
+  <Service Label="WebSphere MQ" TypeName="WebSphereMQ">
+    <Operation ID="5" IsStatic="false" Label="Dequeue Synchronously (with Options)" Name="dequeueSynchronously_withOptions" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="0" Label="Dequeue Options" ReferenceName="DequeueOptions" ReferencePath="xact.queue" VariableName="dequeueOptions"/>
+      </Input>
+      <Output>
+        <Data ID="1" Label="Queue Message" ReferenceName="QueueMessage" ReferencePath="xact.queue" VariableName="queueMessage"/>
+      </Output>
+      <Throws>
+        <Exception ID="2" Label="No Such Message Exception" ReferenceName="NoSuchMessageException" ReferencePath="xact.queue" VariableName="noSuchMessageException"/>
+        <Exception ID="3" Label="No Connection Exception" ReferenceName="NoConnectionException" ReferencePath="xact.queue" VariableName="noConnectionException"/>
+        <Exception ID="4" Label="Dequeue Failed Exception" ReferenceName="DequeueFailedException" ReferencePath="xact.queue" VariableName="dequeueFailedException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().dequeueSynchronously_withOptions(correlatedXynaOrder, dequeueOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="11" IsStatic="false" Label="Enqueue (with Options)" Name="enqueue_withOptions" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="6" Label="Correlation Id" ReferenceName="CorrelationId" ReferencePath="xact.queue" VariableName="correlationId"/>
+        <Data ID="7" Label="Queue Message" ReferenceName="QueueMessage" ReferencePath="xact.queue" VariableName="queueMessage"/>
+        <Data ID="8" Label="Enqueue Options" ReferenceName="EnqueueOptions" ReferencePath="xact.queue" VariableName="enqueueOptions"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="9" Label="No Connection Exception" ReferenceName="NoConnectionException" ReferencePath="xact.queue" VariableName="noConnectionException"/>
+        <Exception ID="10" Label="Enqueue Failed Exception" ReferenceName="EnqueueFailedException" ReferencePath="xact.queue" VariableName="enqueueFailedException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().enqueue_withOptions(correlatedXynaOrder, correlationId, queueMessage, enqueueOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

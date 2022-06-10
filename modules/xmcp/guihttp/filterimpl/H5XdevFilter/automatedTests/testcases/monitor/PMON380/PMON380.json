@@ -1,0 +1,49 @@
+{
+  "meta":
+  {
+    "name": "importAuditTest",
+    "description": "Import an audit and check the result.",
+    "created": "12.04.2021",
+    "updated": "12.04.2021"
+  },
+  "operations":
+  [
+    {
+      "operation": "upload",
+      "file": "PMON380_order.xml",
+      "relativeToThis": true,
+      "fileIdVar": "!fileId!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/importedAudits/!fileId!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "info/$list[id=step39]/outputs",
+      "targetVariable": "!serviceOutput!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!serviceOutput!",
+      "value": "\\\"NaN\\\""
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "info/$list[id=wf]/outputs",
+      "targetVariable": "!wfOutput!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!wfOutput!",
+      "value": "\\\"NaN\\\""
+    }
+  ]
+}

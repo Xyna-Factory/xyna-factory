@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="DocumentType" BaseTypePath="xact.templates" Label="HTML" TypeName="HTML" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Service Label="HTML" TypeName="HTML">
+    <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+      <Input>
+        <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+      <Input>
+        <Data ID="4" Label="response" VariableName="response">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="is complete" VariableName="isComplete">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return Boolean.FALSE;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+      <Input>
+        <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          XynaObjectList&lt;xact.connection.Command&gt; commands = new XynaObjectList&lt;xact.connection.Command&gt;(xact.connection.Command.class);
+          String[] split = document.getReadBuffer().split(com.gip.xyna.xfmg.Constants.LINE_SEPARATOR);
+          for (String string : split) {
+            if (string.trim().length() &gt; 0) {
+              commands.add(new xact.connection.Command(string));
+            }
+          }
+          return commands;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return response;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Duplicate Test Project Without Update Parameter" TypeName="DuplicateTestProjectWithoutUpdateParameter" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Duplicate Test Project Without Update Parameter" Name="DuplicateTestProjectWithoutUpdateParameter">
+    <Input>
+      <Data ID="290" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+        <Target RefID="413"/>
+        <Target RefID="443"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="54" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject54">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="No TestProject With This ID" ReferenceName="NoTestProjectWithThisID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="noTestProjectWithThisID"/>
+      <Exception Label="Testproject Has No Name" ReferenceName="TestprojectHasNoName" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testprojectHasNoName"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Choice ID="413" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="290"/>
+      <Target RefID="451"/>
+      <Target RefID="452"/>
+      <Input>
+        <Data ID="414" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject414"/>
+        <Source RefID="290">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="420" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject420"/>
+        <Source RefID="290"/>
+      </Input>
+      <Case ID="422" Label="true" Premise="%0%.name==null||length(%1%.name)==&quot;0&quot;">
+        <Throw ExceptionID="434" ID="433" Label="Throw Testproject Has No Name">
+          <Source RefID="434">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="421"/>
+      </Case>
+      <Case ID="424" Label="false">
+        <Function ID="443" Label="Export Test Project">
+          <Source RefID="290"/>
+          <Source RefID="442"/>
+          <Target RefID="444"/>
+          <Target RefID="442"/>
+          <Invoke Operation="ExportTestProject" ServiceID="442">
+            <Source RefID="290"/>
+          </Invoke>
+          <Receive ServiceID="442">
+            <Target RefID="444"/>
+          </Receive>
+        </Function>
+        <Function ID="446" Label="Import Test Project">
+          <Source RefID="445"/>
+          <Source RefID="444"/>
+          <Target RefID="447"/>
+          <Target RefID="445"/>
+          <Invoke Operation="ImportTestProject" ServiceID="445">
+            <Source RefID="444"/>
+          </Invoke>
+          <Receive ServiceID="445">
+            <Target RefID="447"/>
+          </Receive>
+        </Function>
+        <Assign ID="423">
+          <Source RefID="444"/>
+          <Source RefID="447"/>
+          <Target RefID="451"/>
+          <Target RefID="452"/>
+          <Copy>
+            <Source RefID="444"/>
+            <Target RefID="451"/>
+          </Copy>
+          <Copy>
+            <Source RefID="447"/>
+            <Target RefID="452"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Exception ID="434" Label="Testproject Has No Name" ReferenceName="TestprojectHasNoName" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="const_TestprojectHasNoName">
+      <Target RefID="433"/>
+    </Exception>
+    <ServiceReference ID="442" Label="Export Test Project" ReferenceName="ExportTestProject" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="443"/>
+      <Target RefID="443"/>
+    </ServiceReference>
+    <Data ID="444" Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID43">
+      <Source RefID="443"/>
+      <Target RefID="446"/>
+      <Target RefID="423"/>
+    </Data>
+    <ServiceReference ID="445" Label="Import Test Project" ReferenceName="ImportTestProject" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="446"/>
+      <Target RefID="446"/>
+    </ServiceReference>
+    <Data ID="447" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject447">
+      <Source RefID="446"/>
+      <Target RefID="423"/>
+    </Data>
+    <Data ID="451" Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID">
+      <Source RefID="413"/>
+      <Source RefID="423"/>
+    </Data>
+    <Data ID="452" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject452">
+      <Source RefID="413"/>
+      <Source RefID="423"/>
+      <Target RefID="2"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="452"/>
+      <Target RefID="54"/>
+      <Copy>
+        <Source RefID="452">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="54"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

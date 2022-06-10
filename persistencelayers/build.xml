@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build_persistencelayers" default="build" basedir=".">
+
+  <import file="../installation/build/ant-xyna.xml" />
+
+  <property name="persistence.layers.token" value="&lt;!-- Persistence Layers (do not modify this line. it is used by the buildscripts to include persistence layers) -->" />
+
+  <property name="project.name" value="persistencelayers" />
+  <property name="build.dir" value="${basedir}/deploy" />
+
+  <property name="source.persistence.dir" value="${basedir}" />
+  <property name="target.persistence.dir" value="${basedir}/deploy" />
+  <property name="target.persistence.config.dir" value="${basedir}/deploy" />
+  <property name="target.persistence.config" value="${target.persistence.config.dir}/persistencelayers.xml" />
+
+  <property name="xynaLocalMemoryPersistenceLayerFqClassName" value="com.gip.xyna.xnwh.persistence.local.XynaLocalMemoryPersistenceLayer"/>
+  <property name="xynaLocalMemoryPersistenceLayerSimpleClassName" value="XynaLocalMemoryPersistenceLayer"/>
+  <property name="xynaLocalMemoryPersistenceLayerId" value="0"/>
+  <property name="xynaJavaSerializationPersistenceLayerFqClassName" value="com.gip.xyna.xnwh.persistence.javaserialization.XynaJavaSerializationPersistenceLayer"/>
+  <property name="xynaJavaSerializationPersistenceLayerSimpleClassName" value="XynaJavaSerializationPersistenceLayer"/>
+  <property name="xynaJavaSerializationPersistenceLayerId" value="1"/>
+  <property name="mySQLPersistenceLayerFqClassName" value="com.gip.xyna.xnwh.persistence.mysql.MySQLPersistenceLayer"/>
+  <property name="mySQLPersistenceLayerSimpleClassName" value="MySQLPersistenceLayer"/>
+  <property name="mySQLPersistenceLayerId" value="2"/>
+  <property name="xynaDevNullPersistenceLayerFqClassName" value="com.gip.xyna.xnwh.persistence.devnull.XynaDevNullPersistenceLayer"/>
+  <property name="xynaDevNullPersistenceLayerSimpleClassName" value="XynaDevNullPersistenceLayer"/>
+  <property name="xynaDevNullPersistenceLayerId" value="4"/>
+  <property name="xynaXMLShellPersistenceLayerFqClassName" value="com.gip.xyna.xnwh.persistence.xmlshell.XynaXMLShellPersistenceLayer"/>
+  <property name="xynaXMLShellPersistenceLayerSimpleClassName" value="XynaXMLShellPersistenceLayer"/>
+  <property name="xynaXMLShellPersistenceLayerId" value="5"/>
+  <property name="oraclePersistenceLayerFqClassName" value="com.gip.xyna.xnwh.persistence.oracle.OraclePersistenceLayer"/>
+  <property name="oraclePersistenceLayerSimpleClassName" value="OraclePersistenceLayer"/>
+  <property name="oraclePersistenceLayerId" value="6"/>
+  <property name="xynaClusterPersistenceLayerFqClassName" value="com.gip.xyna.xnwh.persistence.cluster.XynaClusterPersistenceLayer"/>
+  <property name="xynaClusterPersistenceLayerSimpleClassName" value="XynaClusterPersistenceLayer"/>
+  <property name="xynaClusterPersistenceLayerId" value="8"/>
+
+  <property name="copy.libs.to.server.dir" value="false"/>
+  <property name="target.server.lib.dir" value=""/>
+
+  <property name="cobertura" value="false"/>
+
+
+  <!-- ================================= 
+          target: build              
+         ================================= -->
+  <target name="build"
+          depends="prepare, buildJarsAndXml, test, cleanup" />
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: prepare                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="prepare">
+    <delete dir="${basedir}/deploy" failonerror="false" />
+    <delete dir="${basedir}/testresults" failonerror="false" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: buildJars                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="buildJarsAndXml">
+        <!--ant dir="${basedir}/../components/xnwh/pools/DefaultConnectionPoolTypes" target="build">
+                <property name="target.dir" value="${basedir}/../common/lib"></property>
+        </ant-->
+
+  	<copy todir="${target.persistence.config.dir}">
+  			          <fileset dir="${source.persistence.dir}">
+  			            <include name="persistencelayers.xml" />
+  			          </fileset>
+  			  </copy>
+    <xynaTarget name="buildXynaLocalMemoryPersistenceLayer" if="xyna.persistencelayers.${xynaLocalMemoryPersistenceLayerSimpleClassName}">
+      <ant dir="${source.persistence.dir}/${xynaLocalMemoryPersistenceLayerSimpleClassName}">
+        <property name="target.dir"
+                  value="${target.persistence.dir}/${xynaLocalMemoryPersistenceLayerSimpleClassName}" />
+      </ant>
+        <replace file="${target.persistence.config}"
+            token="${persistence.layers.token}"
+            value="${persistence.layers.token}${line.separator}  &lt;persistencelayers&gt;${line.separator}    &lt;id&gt;${xynaLocalMemoryPersistenceLayerId}&lt;/id&gt;${line.separator}    &lt;fullyqualifiedclassname&gt;${xynaLocalMemoryPersistenceLayerFqClassName}&lt;/fullyqualifiedclassname&gt;${line.separator}  &lt;/persistencelayers&gt;"/>
+    	<copy todir="${target.persistence.dir}/${xynaLocalMemoryPersistenceLayerSimpleClassName}">
+    	             <fileset dir="${source.persistence.dir}/${xynaLocalMemoryPersistenceLayerSimpleClassName}/lib">
+    	               <include name="*.jar" />
+    	             </fileset>
+    	</copy>
+    </xynaTarget>
+    <xynaTarget name="buildXynaJavaSerializationPersistenceLayer" if="xyna.persistencelayers.${xynaJavaSerializationPersistenceLayerSimpleClassName}">
+      <ant dir="${source.persistence.dir}/XynaJavaSerializationPersistenceLayer">
+        <property name="target.dir"
+                  value="${target.persistence.dir}/${xynaJavaSerializationPersistenceLayerSimpleClassName}" />
+      </ant>
+    	<replace file="${target.persistence.config}"
+    		            token="${persistence.layers.token}"
+    		            value="${persistence.layers.token}${line.separator}  &lt;persistencelayers&gt;${line.separator}    &lt;id&gt;${xynaJavaSerializationPersistenceLayerId}&lt;/id&gt;${line.separator}    &lt;fullyqualifiedclassname&gt;${xynaJavaSerializationPersistenceLayerFqClassName}&lt;/fullyqualifiedclassname&gt;${line.separator}  &lt;/persistencelayers&gt;"/>
+    </xynaTarget>
+    <xynaTarget name="buildXynaDevNullPersistenceLayer" if="xyna.persistencelayers.${xynaDevNullPersistenceLayerSimpleClassName}">
+      <ant dir="${source.persistence.dir}/${xynaDevNullPersistenceLayerSimpleClassName}">
+        <property name="target.dir"
+                  value="${target.persistence.dir}/${xynaDevNullPersistenceLayerSimpleClassName}" />
+      </ant>
+    	<replace file="${target.persistence.config}"
+    		    		            token="${persistence.layers.token}"
+    		    		            value="${persistence.layers.token}${line.separator}  &lt;persistencelayers&gt;${line.separator}    &lt;id&gt;${xynaDevNullPersistenceLayerId}&lt;/id&gt;${line.separator}    &lt;fullyqualifiedclassname&gt;${xynaDevNullPersistenceLayerFqClassName}&lt;/fullyqualifiedclassname&gt;${line.separator}  &lt;/persistencelayers&gt;"/>
+    </xynaTarget>
+    <xynaTarget name="buildXynaXMLShellPersistenceLayer" if="xyna.persistencelayers.${xynaXMLShellPersistenceLayerSimpleClassName}">
+      <ant dir="${source.persistence.dir}/${xynaXMLShellPersistenceLayerSimpleClassName}">
+        <property name="target.dir"
+                  value="${target.persistence.dir}/${xynaXMLShellPersistenceLayerSimpleClassName}" />
+      </ant>
+    	<replace file="${target.persistence.config.dir}/persistencelayers.xml"
+    		    		    		            token="${persistence.layers.token}"
+    		    		    		            value="${persistence.layers.token}${line.separator}  &lt;persistencelayers&gt;${line.separator}    &lt;id&gt;${xynaXMLShellPersistenceLayerId}&lt;/id&gt;${line.separator}    &lt;fullyqualifiedclassname&gt;${xynaXMLShellPersistenceLayerFqClassName}&lt;/fullyqualifiedclassname&gt;${line.separator}  &lt;/persistencelayers&gt;"/>
+    </xynaTarget>
+    <xynaTarget name="buildMySQLPersistenceLayer" if="xyna.persistencelayers.MySQLPersistenceLayer">
+      <ant dir="${source.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}">
+        <property name="target.dir"
+                  value="${target.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}" />
+      </ant>
+    	<replace file="${target.persistence.config}"
+    		    		    		            token="${persistence.layers.token}"
+    		    		    		            value="${persistence.layers.token}${line.separator}  &lt;persistencelayers&gt;${line.separator}    &lt;id&gt;${mySQLPersistenceLayerId}&lt;/id&gt;${line.separator}    &lt;fullyqualifiedclassname&gt;${mySQLPersistenceLayerFqClassName}&lt;/fullyqualifiedclassname&gt;${line.separator}  &lt;/persistencelayers&gt;"/>
+      <copy todir="${target.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}">
+             <fileset dir="${source.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}/lib">
+               <include name="*.jar" />
+             </fileset>
+      </copy>
+    </xynaTarget>
+    <xynaTarget name="buildOraclePersistenceLayer" if="xyna.persistencelayers.OraclePersistenceLayer">
+      <ant dir="${source.persistence.dir}/${oraclePersistenceLayerSimpleClassName}">
+        <property name="target.dir"
+                  value="${target.persistence.dir}/${oraclePersistenceLayerSimpleClassName}" />
+      </ant>
+    	<replace file="${target.persistence.config}"
+    		    		    		            token="${persistence.layers.token}"
+    		    		    		            value="${persistence.layers.token}${line.separator}  &lt;persistencelayers&gt;${line.separator}    &lt;id&gt;${oraclePersistenceLayerId}&lt;/id&gt;${line.separator}    &lt;fullyqualifiedclassname&gt;${oraclePersistenceLayerFqClassName}&lt;/fullyqualifiedclassname&gt;${line.separator}  &lt;/persistencelayers&gt;"/>
+	  <copy todir="${target.persistence.dir}/${oraclePersistenceLayerSimpleClassName}">
+	          <fileset dir="${source.persistence.dir}/${oraclePersistenceLayerSimpleClassName}/lib">
+	            <include name="*.jar" />
+	          </fileset>
+	  </copy>
+    </xynaTarget>
+    <!-- CHECK LICENCES BEFORE ENABLING THIS! xynaTarget name="buildXMLXStreamPersistenceLayer" if="xyna.persistencelayers.XynaXMLXStreamPersistenceLayer">
+      <ant dir="${source.persistence.dir}/${xStreamPersistenceLayerSimpleClassName}">
+        <property name="target.dir"
+                  value="${target.persistence.dir}/${xStreamPersistenceLayerSimpleClassName}" />
+      </ant>
+      <replace file="${target.persistence.config}"
+    		    		    		            token="${persistence.layers.token}"
+    		    		    		            value="${persistence.layers.token}${line.separator}  &lt;persistencelayers&gt;${line.separator}    &lt;id&gt;${xStreamPersistenceLayerId}&lt;/id&gt;${line.separator}    &lt;fullyqualifiedclassname&gt;${xStreamPersistenceLayerFqClassName}&lt;/fullyqualifiedclassname&gt;${line.separator}  &lt;/persistencelayers&gt;"/>
+	  <copy todir="${target.persistence.dir}/${xStreamPersistenceLayerSimpleClassName}">
+        <fileset dir="${source.persistence.dir}/${xStreamPersistenceLayerSimpleClassName}/lib">
+          <include name="*.jar" />
+        </fileset>
+	  </copy>
+    </xynaTarget-->
+ <!-- 	<xynaTarget name="buildXynaClusterPersistenceLayer" if="xyna.persistencelayers.${xynaClusterPersistenceLayerSimpleClassName}">
+        <ant dir="${basedir}/../components/xnwh/xcs/${xynaClusterPersistenceLayerSimpleClassName}">
+          <property name="target.dir"
+                    value="${target.persistence.dir}/${xynaClusterPersistenceLayerSimpleClassName}" />
+        </ant>
+  	    <replace file="${target.persistence.config}"
+  	        token="${persistence.layers.token}"
+  	        value="${persistence.layers.token}${line.separator}  &lt;persistencelayers&gt;${line.separator}    &lt;id&gt;${xynaClusterPersistenceLayerId}&lt;/id&gt;${line.separator}    &lt;fullyqualifiedclassname&gt;${xynaClusterPersistenceLayerFqClassName}&lt;/fullyqualifiedclassname&gt;${line.separator}  &lt;/persistencelayers&gt;"
+  	    />
+  		<if>
+            <equals arg1="true" arg2="${copy.libs.to.server.dir}"/>
+  			<then>
+  				<echo message="Copying files from ${target.persistence.dir}/${xynaClusterPersistenceLayerSimpleClassName} to ${target.server.lib.dir}"/>
+  				<move file="${target.persistence.dir}/${xynaClusterPersistenceLayerSimpleClassName}/xllci.jar" tofile="${target.server.lib.dir}/xllci.jar" />
+  				<move file="${target.persistence.dir}/${xynaClusterPersistenceLayerSimpleClassName}/XynaClusteringServicesManagement.jar" tofile="${target.server.lib.dir}/XynaClusteringServicesManagement.jar" />
+                <copy todir="${target.server.lib.dir}">
+                    <fileset dir="">
+                        <include name="xllcli.jar" />
+                        <include name="XynaClusteringServicesManagement.jar" />
+                    </fileset>
+                </copy>
+  				<delete>
+                    <fileset dir="${target.persistence.dir}/${xynaClusterPersistenceLayerSimpleClassName}">
+                         <include name="xllcli.jar"/>
+                         <include name="XynaClusteringServicesManagement.jar"/>
+                    </fileset>
+                </delete>
+            </then>
+  		</if>
+    </xynaTarget>-->
+  	<!-- remove the token from the deployable persistencelayer.xml -->
+    <replace file="${target.persistence.config}"
+        token="${persistence.layers.token}${line.separator}  "
+        value=""/>
+
+  </target>
+
+  <!-- ================================= 
+          target: test              
+         ================================= -->
+  <target name="test">
+    <path id="libraries">
+      <fileset dir="${basedir}/../common/lib">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+  	<runTests srcdir="${source.persistence.dir}/${xynaXMLShellPersistenceLayerSimpleClassName}"
+  	              destdir="${target.persistence.dir}/testresults"
+  	              cobertura="${cobertura}" />
+  	<runTests srcdir="${source.persistence.dir}/${xynaLocalMemoryPersistenceLayerSimpleClassName}"
+  	              destdir="${target.persistence.dir}/testresults"
+  	              cobertura="${cobertura}" />
+  	<runTests srcdir="${source.persistence.dir}/${xynaClusterPersistenceLayerSimpleClassName}"
+  	  	              destdir="${target.persistence.dir}/testresults"
+  	  	              cobertura="${cobertura}" />
+  	<runTests srcdir="${source.persistence.dir}/${xynaJavaSerializationPersistenceLayerSimpleClassName}"
+  	              destdir="${target.persistence.dir}/testresults"
+  	              cobertura="${cobertura}" />
+  	<runTests srcdir="${source.persistence.dir}/${xynaDevNullPersistenceLayerSimpleClassName}"
+  	              destdir="${target.persistence.dir}/testresults"
+  	              cobertura="${cobertura}" />
+    <runTests srcdir="${source.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}"
+  		          destdir="${target.persistence.dir}/testresults"
+  		          cobertura="${cobertura}" />
+    <runTests srcdir="${source.persistence.dir}/${oraclePersistenceLayerSimpleClassName}"
+  		          destdir="${target.persistence.dir}/testresults"
+  		          cobertura="${cobertura}" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: cleanup                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="cleanup">
+    <delete dir="${basedir}/classes" />
+  </target>
+
+
+</project>

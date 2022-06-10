@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XSDBaseModel" BaseTypePath="xdnc.model.xsd" IsAbstract="false" Label="Row_ctype" TypeName="Row_ctype" TypePath="xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages" Version="1.8">
+  <Meta>
+    <DataModel>
+      <XSDInfo>&lt;XSD Namespace="http://www.gip.com/juno/Deployments/WS/DeployActions/Messages" Name="Row_ctype"&gt;
+  &lt;RootElements&gt;
+    &lt;Root Name="Row"/&gt;
+    &lt;Root Name="Row"/&gt;
+  &lt;/RootElements&gt;
+&lt;/XSD&gt;</XSDInfo>
+      <ModelName>xdnc.model.xsd.v0.DeployActions</ModelName>
+    </DataModel>
+  </Meta>
+  <Data Label="Id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="Id" Type="Element" Position="0"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Deploy_Time" VariableName="deploy_Time">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="Deploy_Time" Type="Element" Position="1"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Service" VariableName="service">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="Service" Type="Element" Position="2"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="User" VariableName="user">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="User" Type="Element" Position="3"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Log" VariableName="log">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="Log" Type="Element" Position="4"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="Target" VariableName="target">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="Target" Type="Element" Position="5"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+</DataType>

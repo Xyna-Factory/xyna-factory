@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="PlainText" BaseTypePath="xact.templates" Label="Command line interface" TypeName="CommandLineInterface" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="command line interface" TypeName="CommandLineInterface">
+    <Operation IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+          //remove first and last line
+          String[] split = response.getResponse().getContent().split(com.gip.xyna.xfmg.Constants.LINE_SEPARATOR);
+          if (split.length &gt; 2) {
+            String[] prunedResponse = new String[split.length - 2];
+            System.arraycopy(split, 1, prunedResponse, 0, split.length - 2);
+            response.getResponse().setContent(com.gip.xyna.utils.StringUtils.joinStringArray(prunedResponse, com.gip.xyna.xfmg.Constants.LINE_SEPARATOR));
+            return response;
+          } else {
+            return response;
+          }
+          </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

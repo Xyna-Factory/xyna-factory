@@ -1,0 +1,484 @@
+{
+  "meta":
+  {
+    "name": "nullInList",
+	"description": "Execute a workflow with a list, containing null-entries",
+	"created": "12.02.2021",
+	"updated": "12.02.2021"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput":
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON304.NullListEntryTest",
+		"!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON304.WrappingDataType"},"textList":{"$meta":{"fqn":"base.Text"},"$list":[null,{"$meta":{"fqn":"base.Text"},"text":"a"},null]},"childList":{"$meta":{"fqn":"xmcp.h5x.regression.PMON304.ChildDataType"},"$list":[null,{"$meta":{"fqn":"xmcp.h5x.regression.PMON304.ChildDataType"},"textList":{"$meta":{"fqn":"base.Text"},"$list":[null,{"$meta":{"fqn":"base.Text"},"text":"b"},null]}},null]}}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 2,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+
+    {
+      "operation": "read",
+	  "pathInResponse": "info/$list[id=wf]/inputs[0]",
+      "targetVariable": "!wfInput!",
+      "unquoteResult": true
+    },
+	{
+		"operation": "convertToJson",
+		"variable": "!wfInput!"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "textList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "textList/$list[1]/text",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "a"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[1]/text",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "b"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[2]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[2]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+    {
+      "operation": "read",
+	  "pathInResponse": "info/$list[id=wf]/outputs[0]",
+      "targetVariable": "!wfOutput!",
+      "unquoteResult": true
+    },
+	{
+		"operation": "convertToJson",
+		"variable": "!wfOutput!"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfOutput!",
+		"path": "textList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "textList/$list[1]/text",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "a"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[1]/text",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "b"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[2]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[2]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+    {
+      "operation": "read",
+	  "pathInResponse": "info/$list[id=step24]/inputs[0]",
+      "targetVariable": "!mappingInput!",
+      "unquoteResult": true
+    },
+	{
+		"operation": "convertToJson",
+		"variable": "!mappingInput!"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mappingInput!",
+		"path": "textList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "textList/$list[1]/text",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "a"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[1]/text",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "b"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[2]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[2]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+    {
+      "operation": "read",
+	  "pathInResponse": "info/$list[id=step24]/outputs[0]",
+      "targetVariable": "!mappingOutput!",
+      "unquoteResult": true
+    },
+	{
+		"operation": "convertToJson",
+		"variable": "!mappingOutput!"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!mappingOutput!",
+		"path": "textList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "textList/$list[1]/text",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "a"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[0]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[1]/text",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "b"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[1]/textList/$list[2]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	},
+
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!wfInput!",
+		"path": "childList/$list[2]",
+		"targetVariable": "!listEntry!",
+		"unquoteResult": false
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!listEntry!",
+	  "value": "null"
+	}
+  ]
+}

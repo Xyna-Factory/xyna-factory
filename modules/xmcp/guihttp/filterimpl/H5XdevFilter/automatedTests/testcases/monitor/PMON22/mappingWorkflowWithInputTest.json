@@ -1,0 +1,85 @@
+{
+  "meta":
+  {
+    "name": "mappingWorkflowWithInputTest",
+	"description": "Execute a workflow containing a mapping (loaded from app) and open audit",
+	"created": "09.12.2019",
+	"updated": "17.02.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+	  "operation": "set",
+	  "variable": "!inputText!",
+	  "value": "someInput"
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.MappingWorkflowWithInput",
+		"!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.datatypes.CustomTextDT","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"text":"!inputText!"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 2,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step7",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "0",
+		"!pathInVariable!": "text"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!readValue!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readValue!",
+	  "value": "!inputText!"
+	}
+  ]
+}

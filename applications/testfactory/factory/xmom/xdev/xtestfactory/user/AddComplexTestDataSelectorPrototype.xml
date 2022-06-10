@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Add Complex Test Data Selector Prototype" TypeName="AddComplexTestDataSelectorPrototype" TypePath="xdev.xtestfactory.user" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,hScroll(115)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Add Complex Test Data Selector Prototype" Name="AddComplexTestDataSelectorPrototype">
+    <Input>
+      <Data ID="12" Label="Test Data Reference" ReferenceName="Text" ReferencePath="base" VariableName="text">
+        <Target RefID="6"/>
+      </Data>
+      <Data ID="2" Label="Name" ReferenceName="Text" ReferencePath="base" VariableName="text2">
+        <Target RefID="6"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="Test Data Reference required" ReferenceName="TestDataReferenceRequired" ReferencePath="xdev.xtestfactory.user" VariableName="testDataReferenceRequired"/>
+      <Exception Label="Test Data Selector Prototype Name required" ReferenceName="TestDataSelectorPrototypeNameRequired" ReferencePath="xdev.xtestfactory.user" VariableName="testDataSelectorPrototypeNameRequired"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Function ID="16" Label="Determine Current Test Project">
+      <Source RefID="15"/>
+      <Target RefID="15"/>
+      <Target RefID="17"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="15"/>
+      <Receive ServiceID="15">
+        <Target RefID="17"/>
+      </Receive>
+    </Function>
+    <Mappings ID="6" Label="Mapping">
+      <Source RefID="12"/>
+      <Source RefID="2"/>
+      <Target RefID="5"/>
+      <Input>
+        <Data ID="3" Label="Test Data Reference" ReferenceName="Text" ReferencePath="base" VariableName="text3"/>
+        <Source RefID="12">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="4" Label="Name" ReferenceName="Text" ReferencePath="base" VariableName="text4"/>
+        <Source RefID="2">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="29" Label="Test Data Selector Prototype" ReferenceName="TestDataSelectorPrototype" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorPrototype"/>
+        <Target RefID="5"/>
+      </Output>
+      <Mapping>%2%.name=%1%.text</Mapping>
+      <Mapping>%2%.testDataListRef=%0%.text</Mapping>
+      <Mapping>%2%.type="TestDataListReference_complex"</Mapping>
+    </Mappings>
+    <Data ID="5" Label="Test Data Selector Prototype" ReferenceName="TestDataSelectorPrototype" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorPrototype5">
+      <Source RefID="6"/>
+      <Target RefID="20"/>
+      <Target RefID="10"/>
+      <Target RefID="46"/>
+      <Target RefID="47"/>
+    </Data>
+    <ServiceReference ID="9" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="10"/>
+      <Source RefID="25"/>
+      <Target RefID="10"/>
+      <Target RefID="25"/>
+    </ServiceReference>
+    <Choice ID="46" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="5"/>
+      <Input>
+        <Data ID="44" Label="Test Data Selector Prototype" ReferenceName="TestDataSelectorPrototype" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorPrototype44"/>
+        <Source RefID="5"/>
+      </Input>
+      <Input>
+        <Data ID="45" Label="Test Data Selector Prototype" ReferenceName="TestDataSelectorPrototype" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorPrototype45"/>
+        <Source RefID="5"/>
+      </Input>
+      <Case ID="38" Label="true" Premise="%0%.name==null||length(%1%.name)==&quot;0&quot;">
+        <Throw ExceptionID="49" ID="48" Label="Throw Test Data Selector Prototype Name Required">
+          <Source RefID="49">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign/>
+      </Case>
+      <Case ID="43" Label="false">
+        <Choice ID="47" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="5"/>
+          <Input>
+            <Data ID="41" Label="Test Data Selector Prototype" ReferenceName="TestDataSelectorPrototype" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorPrototype41"/>
+            <Source RefID="5"/>
+          </Input>
+          <Input>
+            <Data ID="42" Label="Test Data Selector Prototype" ReferenceName="TestDataSelectorPrototype" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorPrototype42"/>
+            <Source RefID="5"/>
+          </Input>
+          <Case ID="39" Label="true" Premise="%0%.testDataListRef==null||length(%1%.testDataListRef)==&quot;0&quot;">
+            <Throw ExceptionID="51" ID="50" Label="Throw Test Data Reference Required">
+              <Source RefID="51">
+                <Meta>
+                  <LinkType>Constant</LinkType>
+                </Meta>
+              </Source>
+            </Throw>
+            <Assign/>
+          </Case>
+          <Case ID="40" Label="false">
+            <Assign/>
+          </Case>
+        </Choice>
+        <Assign/>
+      </Case>
+    </Choice>
+    <Function ID="10" Label="Store">
+      <Source RefID="9"/>
+      <Source RefID="11"/>
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+      <Invoke Operation="store" ServiceID="9">
+        <Source RefID="5">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="11">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9"/>
+    </Function>
+    <Data ID="11" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="10"/>
+      <Data ID="30" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="31" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="32" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <ServiceReference ID="15" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="16"/>
+      <Target RefID="16"/>
+    </ServiceReference>
+    <Data ID="17" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="16"/>
+      <Target RefID="20"/>
+    </Data>
+    <Mappings ID="20" Label="Mapping">
+      <Source RefID="17"/>
+      <Source RefID="5"/>
+      <Target RefID="21"/>
+      <Input>
+        <Data ID="33" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="17"/>
+      </Input>
+      <Input>
+        <Data ID="18" Label="Test Data Selector Prototype" ReferenceName="TestDataSelectorPrototype" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorPrototype18"/>
+        <Source RefID="5"/>
+      </Input>
+      <Output>
+        <Data ID="19" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject19"/>
+        <Target RefID="21"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.testDataSelectorPrototypes=append(%2%.testDataSelectorPrototypes,%1%)</Mapping>
+    </Mappings>
+    <Data ID="21" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject21">
+      <Source RefID="20"/>
+      <Target RefID="25"/>
+    </Data>
+    <Function ID="25" Label="Store">
+      <Source RefID="9"/>
+      <Source RefID="26"/>
+      <Source RefID="21"/>
+      <Target RefID="9"/>
+      <Invoke Operation="store" ServiceID="9">
+        <Source RefID="21">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="26">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9"/>
+    </Function>
+    <Data ID="26" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter">
+      <Target RefID="25"/>
+      <Data ID="34" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="35" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="36" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Exception ID="49" Label="Test Data Selector Prototype Name required" ReferenceName="TestDataSelectorPrototypeNameRequired" ReferencePath="xdev.xtestfactory.user" VariableName="const_TestDataSelectorPrototypeNameRequired">
+      <Target RefID="48"/>
+    </Exception>
+    <Exception ID="51" Label="Test Data Reference required" ReferenceName="TestDataReferenceRequired" ReferencePath="xdev.xtestfactory.user" VariableName="const_TestDataReferenceRequired">
+      <Target RefID="50"/>
+    </Exception>
+    <Assign ID="37"/>
+  </Operation>
+</Service>

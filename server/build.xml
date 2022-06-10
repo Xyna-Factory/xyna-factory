@@ -1,0 +1,315 @@
+<?xml version="1.0"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build_server" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+  <import file="../installation/build/ant-xyna.xml" xmlns:resolver="antlib:org.apache.maven.resolver.ant"/>
+
+  <property name="project.name" value="xynafactory" />
+  <property name="build.dir" value="${basedir}/deploy" />
+  <property name="target.dir.test" value="${basedir}/deploy.test" />
+  
+
+  <property name="cobertura" value="false" />
+  
+  <!-- set default for release.number (used by localbuild)  -->
+  <property name="release.number" value="${user.name}_${timestamp}" />
+
+  
+  
+  <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+  
+  <property name="target.dir" value="${basedir}/lib" />
+  
+  
+  <target name="resolve">
+    <resolver:resolve>
+        <resolver:dependencies pomRef="pom"/>
+      <resolver:remoterepos refid="xyna.repository"/>
+      <resolver:files refid="files" dir="${target.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" /> <!--scopes="compile"-->
+      <resolver:files refid="internalFiles" dir="${target.dir}/internal_xyna" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
+    </resolver:resolve>
+    <!--loadLicenses targetDir="${target.dir}" /-->
+    <!-- delete generated-resources ? -->
+  </target>
+
+
+  <!-- ================================= 
+          target: build              
+         ================================= -->
+  <target name="build"
+          depends="cleanup, prepare, buildJar, buildTemplate, test, findBugs, copyToCommonLibs" />
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: prepare                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="prepare">
+    <delete dir="${basedir}/deploy" failonerror="false" />
+    <delete dir="${basedir}/testresults" failonerror="false" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: buildJar                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="buildJar"
+          depends="resolve, genCodeClass, genCliClass"
+          description="baut Jarfile inkl. generierter Klassen">
+    <mkdir dir="${basedir}/classes" />
+    <compile basedir="${basedir}" memoryMaximumSize="1024m" target="11" />
+    <mkdir dir="${build.dir}" />
+    <jar destfile="${build.dir}/${project.name}.jar">
+      <manifest>
+        <attribute name="Vendor" value="${vendor.name}" />
+        <attribute name="Version" value="${release.number}" />
+        <attribute name="Build-Date" value="${timestamp}" />
+      </manifest>
+      <fileset dir="${basedir}/classes"
+               includes="**/*.class"
+               excludes="**/*Test*" />
+    </jar>
+  </target>
+
+  <!--<target name="buildJavaDoc" depends="buildJar">
+    <javadoc destdir="${basedir}">
+      <classpath>
+        <fileset dir="${basedir}">
+          <include name="${lib.dir}/*.jar" />
+        </fileset>
+      </classpath>
+      <packageset dir="${basedir}/src">
+        <exclude name="**/test" />
+      </packageset>
+    </javadoc>
+  </target> -->
+
+  <target name="genJD">
+    <javadoc destdir="${basedir}/javadoc"
+             encoding="ISO-8859-1"
+             version="true"
+             author="true">
+      <link href="http://java.sun.com/j2se/1.5.0/docs/api" />
+      <link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
+      <link href="http://www.dpml.net/api/ant/1.7.0" />
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+        <path refid="classpath.ant" />
+      </classpath>
+      <packageset dir="${basedir}/src">
+        <exclude name="**/test" />
+      </packageset>
+    </javadoc>
+    <jar destfile="${build.dir}/${project.name}-javadoc.jar">
+      <fileset dir="${basedir}/javadoc" excludes="index-all.html" />
+    </jar>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+             target: genCodeClass                      
+            - - - - - - - - - - - - - - - - - -->
+  <target name="genCodeClass" description="generiert Exception Klassen">
+    <delete failonerror="false">
+    <fileset dir="${basedir}/src/com/gip/xyna/xact/exceptions">
+      <include name="**/*.java" />
+        </fileset>
+    <fileset dir="${basedir}/src/com/gip/xyna/xdev/exceptions">
+      <include name="**/*.java" />
+        </fileset>
+    <fileset dir="${basedir}/src/com/gip/xyna/xfmg/exceptions">
+      <include name="**/*.java" />
+        </fileset>
+    <fileset dir="${basedir}/src/com/gip/xyna/xmcp/exceptions">
+      <include name="**/*.java" />
+        </fileset>
+    <fileset dir="${basedir}/src/com/gip/xyna/xnwh/exceptions">
+      <include name="**/*.java" />
+        </fileset>
+    <fileset dir="${basedir}/src/com/gip/xyna/xprc/exceptions">
+      <include name="**/*.java" />
+        </fileset>
+    <fileset file="${basedir}/src/com/gip/xyna/xnwh/persistence/PersistenceLayerException.java" />
+  </delete>
+  <echo>${basedir}/lib</echo>
+    <java fork="true"
+          failonerror="yes"
+          classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
+      <classpath>
+        <fileset dir="${basedir}/lib">
+		<include name="**/*.jar" />
+<include name="*.jar" />
+        </fileset>
+
+      </classpath>
+
+      <arg value="${basedir}/Exceptions.xml" />
+      <arg value="${basedir}/src" />
+    </java>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - -
+               target: buildCliClassGeneratorJar                     
+              - - - - - - - - - - - - - - - - - -->
+  <target name="buildCliClassGeneratorJar"
+          description="Baut die CLI-Klassen-Generierung in ein Standalone-Jar-File">
+    <!-- Verwendung:
+    1. zuerst sicherstellen, dass in server/lib ein aktuelles xynafactory.jar liegt.
+    2. dann dieses jar bauen
+    3. dann das jar nach server/local.lib legen
+    4. dann neue cli-klassen bauen. 
+    5. bei fehlern muss man das alte cliclassgenerator.jar zurück nach local.lib legen und erneut die cli-klassen bauen.-->
+    <delete dir="${basedir}/classes" />
+    <mkdir dir="${basedir}/classes" />
+    <javac debug="on"
+           encoding="iso8859-1"
+           fork="yes"
+           srcdir="${basedir}/src/com/gip/xyna/xmcp/xfcli/generation"
+           destdir="${basedir}/classes">
+      <classpath path="${basedir}/classes" />
+      <classpath>
+        <fileset dir="${basedir}/lib">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+    <mkdir dir="${build.dir}" />
+    <jar destfile="${build.dir}/${project.name}CLIGenerator.jar">
+      <fileset dir="${basedir}/classes" includes="**/*.class" />
+    </jar>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+             target: genCliClass                      
+            - - - - - - - - - - - - - - - - - -->
+  <target name="genCliClass" description="generiert CLI Klassen">
+    <delete failonerror="false">
+    <fileset dir="${basedir}/src/com/gip/xyna/xmcp/xfcli/generated">
+      <include name="**/*.java" />
+        </fileset>
+  </delete>
+    <java fork="true"
+          failonerror="yes"
+          classname="com.gip.xyna.xmcp.xfcli.generation.CommandLineArgumentJavaGenerator">
+      <classpath>
+        <fileset dir="${basedir}/lib">
+          <include name="**/*.jar" />
+        </fileset>
+        <!--fileset dir="${basedir}/lib.local">
+          <include name="**/*.jar" />
+        </fileset-->
+      </classpath>
+      <arg value="${basedir}/clicommands" />
+      <arg value="${basedir}/src" />
+      <arg value="com.gip.xyna.xmcp.xfcli" />
+    </java>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: buildTemplate                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="buildTemplate" description="erstellt TemplateImpl.zip">
+    <mkdir dir="${build.dir}" />
+    <zip destfile="${build.dir}/TemplateImpl.zip" basedir="TemplateImplName" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - -
+          target: buildTemplateNew
+         - - - - - - - - - - - - - - - - - -->
+  <target name="buildTemplateNew" description="erstellt TemplateImplNew.zip">
+    <mkdir dir="${build.dir}" />
+    <zip destfile="${build.dir}/TemplateImplNew.zip">
+      <zipfileset dir="TemplateImplNameNew" prefix="TemplateImplNameNew"/>
+    </zip>
+  </target>
+
+
+  <!-- ================================= 
+          target: test              
+         ================================= -->
+  <target name="test" if="test">
+    <runTests srcdir="${basedir}"
+              destdir="${basedir}/testresults"
+              cobertura="${cobertura}" />
+  </target>
+
+  <!-- ================================= 
+          target: findBugs              
+         ================================= -->
+  <target name="findBugs" if="findbugs">
+    <findBugs srcdir="${basedir}"
+              destfile="${basedir}/testresults/findBugs-${project.name}.xml" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: cleanup                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="cleanup">
+    <delete dir="${basedir}/classes" />
+  </target>
+
+  
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: copy to common libs                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="copyToCommonLibs">
+    <copy todir="${basedir}/../common/lib/xyna">
+    <fileset dir="${build.dir}">
+      <include name="${project.name}.jar" />
+    </fileset>
+  </copy>
+  </target>
+  
+
+  
+  <!-- ================================= 
+              target: buildTest (packt nicht alle Tests in das Jar, sondern nur von anderen Projekten benötigte)         
+             ================================= -->
+ <target name="buildTest" depends="build">
+   <delete dir="${basedir}/classes" />
+   <mkdir dir="${basedir}/classes" />
+   <javac debug="on"
+          encoding="iso8859-1"
+          fork="yes"
+          srcdir="${basedir}/test"
+          includes="**/AbstractPersistenceLayerTest.java"
+          destdir="${basedir}/classes">
+     
+     <classpath path="${basedir}/classes" />
+     <classpath>
+       <fileset dir="${basedir}/lib">
+         <include name="**/*.jar" />
+       </fileset>
+     </classpath>
+     <classpath>
+       <fileset dir="${ant.library.dir}">
+       <include name = "**/*.jar"/>
+       </fileset>
+     </classpath>  
+     <classpath>
+       <fileset dir="${build.dir}">
+         <include name="**/*.jar" />
+       </fileset>
+     </classpath>
+   </javac>
+   <mkdir dir="${target.dir.test}" />
+   <jar destfile="${target.dir.test}/${project.name}-test.jar">
+     <fileset dir="${basedir}/classes" includes="**/*.class" />
+   </jar>
+ </target>
+
+</project>

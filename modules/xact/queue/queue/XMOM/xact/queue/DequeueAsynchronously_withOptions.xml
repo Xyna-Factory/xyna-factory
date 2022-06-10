@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Dequeue Asynchronously (with Options)" TypeName="DequeueAsynchronously_withOptions" TypePath="xact.queue" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Dequeue Asynchronously (with Options)" Name="DequeueAsynchronously_withOptions">
+    <Input>
+      <Data ID="19" Label="Queue" ReferenceName="Queue" ReferencePath="xact.queue" VariableName="queue"/>
+      <Data ID="6" Label="Dequeue Options" ReferenceName="DequeueOptions" ReferencePath="xact.queue" VariableName="dequeueOptions"/>
+    </Input>
+    <Output>
+      <Data ID="7" Label="Queue Message" ReferenceName="QueueMessage" ReferencePath="xact.queue" VariableName="queueMessage">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Mappings ID="13" Label="Mapping">
+      <Source RefID="11"/>
+      <Target RefID="10"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="12" Label="Queue Message" ReferenceName="QueueMessage" ReferencePath="xact.queue" VariableName="queueMessage12"/>
+        <Source RefID="11">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="14" Label="Queue Message" ReferenceName="QueueMessage" ReferencePath="xact.queue" VariableName="queueMessage14"/>
+        <Target RefID="10"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+    </Mappings>
+    <Data ID="10" Label="Queue Message" ReferenceName="QueueMessage" ReferencePath="xact.queue" VariableName="queueMessage0">
+      <Source RefID="13"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="11" Label="Queue Message" ReferenceName="QueueMessage" ReferencePath="xact.queue" VariableName="queueMessage11">
+      <Target RefID="13"/>
+      <Data ID="15" Label="Message" VariableName="message">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="18" Label="Message Properties" ReferenceName="MessageProperties" ReferencePath="xact.queue" VariableName="messageProperties">
+        <Data ID="16" IsList="true" Label="Properties" ReferenceName="Property" ReferencePath="xact.queue" VariableName="properties"/>
+        <Data ID="17" Label="Priority" VariableName="priority">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </Data>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="10"/>
+      <Target RefID="7"/>
+      <Copy>
+        <Source RefID="10"/>
+        <Target RefID="7"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

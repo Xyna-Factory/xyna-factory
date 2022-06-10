@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Fill Description in Right" TypeName="FillDescriptionInRight" TypePath="xmcp.xacm.rightmanagement.subwfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth,vScroll(345)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Fill Description in Right" Name="FillDescriptionInRight">
+    <Input>
+      <Data ID="9" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right">
+        <Target RefID="15"/>
+        <Target RefID="23"/>
+        <Target RefID="35"/>
+        <Target RefID="39"/>
+      </Data>
+      <Data ID="46" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale">
+        <Target RefID="50"/>
+        <Target RefID="57"/>
+        <Target RefID="64"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="7" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right7">
+        <Source RefID="8"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="4" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Choice ID="35" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="9"/>
+      <Target RefID="41"/>
+      <Input>
+        <Data ID="36" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right36"/>
+        <Source RefID="9"/>
+      </Input>
+      <Input>
+        <Data ID="45" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right45"/>
+        <Source RefID="9"/>
+      </Input>
+      <Case ID="33" Label="true" Premise="%1%.originalRightName==null||length(%0%.originalRightName)==&quot;0&quot;">
+        <Mappings ID="15" Label="Mapping">
+          <Source RefID="9"/>
+          <Target RefID="16"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="14" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right14"/>
+            <Source RefID="9"/>
+          </Input>
+          <Output>
+            <Data ID="28" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+            <Target RefID="16"/>
+          </Output>
+          <Mapping>%1%.right=%0%.rightName</Mapping>
+        </Mappings>
+        <Assign ID="42">
+          <Source RefID="16"/>
+          <Target RefID="41"/>
+          <Copy>
+            <Source RefID="16"/>
+            <Target RefID="41"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="34" Label="false">
+        <Mappings ID="39" Label="Mapping">
+          <Source RefID="9"/>
+          <Target RefID="40"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="37" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right37"/>
+            <Source RefID="9"/>
+          </Input>
+          <Output>
+            <Data ID="38" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight38"/>
+            <Target RefID="40"/>
+          </Output>
+          <Mapping>%1%.right=%0%.originalRightName</Mapping>
+        </Mappings>
+        <Assign ID="43">
+          <Source RefID="40"/>
+          <Target RefID="41"/>
+          <Copy>
+            <Source RefID="40"/>
+            <Target RefID="41"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Choice ID="50" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="46"/>
+      <Target RefID="66"/>
+      <Input>
+        <Data Label="Locale" ReferenceName="Locale" ReferencePath="base.locale"/>
+        <Source RefID="46">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="48" Label="true" Premise="startswith(%0%.language,&quot;de&quot;)">
+        <Mappings ID="57" Label="Mapping">
+          <Source RefID="58"/>
+          <Source RefID="46"/>
+          <Target RefID="56"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data Label="de_DE German" ReferenceName="De_DEGerman" ReferencePath="base.locale" VariableName="de_DEGerman"/>
+            <Source RefID="58">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="59" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale59"/>
+            <Source RefID="46"/>
+          </Input>
+          <Output>
+            <Data ID="55" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale55"/>
+            <Target RefID="56"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.language=%1%.language</Mapping>
+        </Mappings>
+        <Assign ID="67">
+          <Source RefID="56"/>
+          <Target RefID="66"/>
+          <Copy>
+            <Source RefID="56"/>
+            <Target RefID="66"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="49" Label="false">
+        <Mappings ID="64" Label="Mapping">
+          <Source RefID="46"/>
+          <Source RefID="69"/>
+          <Target RefID="65"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data Label="en_US English" ReferenceName="En_USEnglish" ReferencePath="base.locale" VariableName="en_USEnglish"/>
+            <Source RefID="69">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="61" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale61"/>
+            <Source RefID="46"/>
+          </Input>
+          <Output>
+            <Data ID="62" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale62"/>
+            <Target RefID="65"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.language=%1%.language</Mapping>
+        </Mappings>
+        <Assign ID="68">
+          <Source RefID="65"/>
+          <Target RefID="66"/>
+          <Copy>
+            <Source RefID="65"/>
+            <Target RefID="66"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="5" Label="Get Description of Right">
+      <Source RefID="4"/>
+      <Source RefID="41"/>
+      <Source RefID="66"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="getDescriptionOfRight" ServiceID="4">
+        <Source RefID="41"/>
+        <Source RefID="66">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" Label="User Authentication Right Description" ReferenceName="UserAuthenticationRightDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRightDescription">
+      <Source RefID="5"/>
+      <Target RefID="23"/>
+    </Data>
+    <Data ID="16" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight16">
+      <Source RefID="15"/>
+      <Target RefID="42"/>
+    </Data>
+    <Mappings ID="23" Label="Mapping">
+      <Source RefID="9"/>
+      <Source RefID="6"/>
+      <Target RefID="25"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="22" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right22"/>
+        <Source RefID="9"/>
+      </Input>
+      <Input>
+        <Data ID="26" Label="User Authentication Right Description" ReferenceName="UserAuthenticationRightDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRightDescription26"/>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="24" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right24"/>
+        <Target RefID="25"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.documentation=%1%.description</Mapping>
+    </Mappings>
+    <Data ID="25" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right25">
+      <Source RefID="23"/>
+      <Target RefID="8"/>
+    </Data>
+    <Data ID="40" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight40">
+      <Source RefID="39"/>
+      <Target RefID="43"/>
+    </Data>
+    <Data ID="41" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight41">
+      <Source RefID="35"/>
+      <Source RefID="42"/>
+      <Source RefID="43"/>
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="56" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale56">
+      <Source RefID="57"/>
+      <Target RefID="67"/>
+    </Data>
+    <Data ID="58" Label="de_DE German" ReferenceName="De_DEGerman" ReferencePath="base.locale" VariableName="const_De_DEGerman">
+      <Target RefID="57"/>
+      <Data Label="language" VariableName="language">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>de-DE</Value>
+      </Data>
+      <Data Label="country" VariableName="country">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data Label="variant" VariableName="variant">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="65" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale65">
+      <Source RefID="64"/>
+      <Target RefID="68"/>
+    </Data>
+    <Data ID="66" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale66">
+      <Source RefID="50"/>
+      <Source RefID="67"/>
+      <Source RefID="68"/>
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="69" Label="en_US English" ReferenceName="En_USEnglish" ReferencePath="base.locale" VariableName="const_En_USEnglish">
+      <Target RefID="64"/>
+      <Data Label="language" VariableName="language">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>en-US</Value>
+      </Data>
+      <Data Label="country" VariableName="country">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data Label="variant" VariableName="variant">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="8">
+      <Source RefID="25"/>
+      <Target RefID="7"/>
+      <Copy>
+        <Source RefID="25">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="7"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

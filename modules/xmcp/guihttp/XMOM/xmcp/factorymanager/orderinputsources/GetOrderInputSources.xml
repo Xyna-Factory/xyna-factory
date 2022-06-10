@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get order input sources" TypeName="GetOrderInputSources" TypePath="xmcp.factorymanager.orderinputsources" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get order input sources" Name="GetOrderInputSources">
+    <Input>
+      <Data ID="9" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="8"/>
+        <Target RefID="31"/>
+        <Target RefID="45"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="66" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo66">
+        <Source RefID="25"/>
+      </Data>
+      <Data ID="67" IsList="true" Label="Order input source" ReferenceName="OrderInputSource" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="orderInputSource67">
+        <Source RefID="25"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="Load order input sources Exception" ReferenceName="LoadOrderInputSourcesException" ReferencePath="xmcp.factorymanager.orderinputsources.exceptions" VariableName="loadOrderInputSourcesException"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <Function ID="95" Label="Check Rights for Current User">
+      <Source RefID="94"/>
+      <Source RefID="97"/>
+      <Target RefID="94"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="94">
+        <Source RefID="97">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="94"/>
+    </Function>
+    <Choice ID="8" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="9"/>
+      <Target RefID="53"/>
+      <Target RefID="87"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="21" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo21"/>
+        <Source RefID="9"/>
+      </Input>
+      <Case ID="10" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="16" Label="Generate Table Columns">
+          <Target RefID="20"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,closeInputs,closeOutputs,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="22" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="20"/>
+          </Output>
+          <Mapping>%0%["0"].name="Name"</Mapping>
+          <Mapping>%0%["0"].path="name"</Mapping>
+          <Mapping>%0%["0"].sort="asc"</Mapping>
+          <Mapping>%0%["1"].name="Application"</Mapping>
+          <Mapping>%0%["1"].path="applicationName"</Mapping>
+          <Mapping>%0%["2"].name="Version"</Mapping>
+          <Mapping>%0%["2"].path="versionName"</Mapping>
+          <Mapping>%0%["3"].name="Workspace"</Mapping>
+          <Mapping>%0%["3"].path="workspaceName"</Mapping>
+          <Mapping>%0%["4"].name="Source Type"</Mapping>
+          <Mapping>%0%["4"].path="sourceType.label"</Mapping>
+          <Mapping>%0%["5"].name="Order Type"</Mapping>
+          <Mapping>%0%["5"].path="orderType.type"</Mapping>
+          <Mapping>%0%["6"].name="Worksteps using Sources"</Mapping>
+          <Mapping>%0%["6"].path="referencedInputSourceCount"</Mapping>
+          <Mapping>%0%["7"].name="State"</Mapping>
+          <Mapping>%0%["7"].path="state"</Mapping>
+        </Mappings>
+        <Mappings ID="31" Label="Mapping">
+          <Source RefID="20"/>
+          <Source RefID="9"/>
+          <Target RefID="36"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,closeInputs,closeOutputs,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="30" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo30"/>
+            <Source RefID="9"/>
+          </Input>
+          <Input>
+            <Data ID="32" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn32"/>
+            <Source RefID="20"/>
+          </Input>
+          <Output>
+            <Data ID="35" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo35"/>
+            <Target RefID="36"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="23">
+          <Source RefID="36"/>
+          <Source RefID="20"/>
+          <Target RefID="53"/>
+          <Target RefID="87"/>
+          <Copy>
+            <Source RefID="36"/>
+            <Target RefID="53"/>
+          </Copy>
+          <Copy>
+            <Source RefID="20"/>
+            <Target RefID="87"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="7" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="45" Label="Mapping">
+          <Source RefID="9"/>
+          <Target RefID="48"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,closeInputs,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="44" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo44"/>
+            <Source RefID="9"/>
+          </Input>
+          <Output>
+            <Data ID="47" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo47"/>
+            <Target RefID="48"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="90" Label="Mapping">
+          <Source RefID="48"/>
+          <Target RefID="86"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="88" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo88"/>
+            <Source RefID="48">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="89" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn89"/>
+            <Target RefID="86"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="24">
+          <Source RefID="48"/>
+          <Source RefID="86"/>
+          <Target RefID="53"/>
+          <Target RefID="87"/>
+          <Copy>
+            <Source RefID="48"/>
+            <Target RefID="53"/>
+          </Copy>
+          <Copy>
+            <Source RefID="86"/>
+            <Target RefID="87"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="20" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn20">
+      <Source RefID="16"/>
+      <Target RefID="31"/>
+      <Target RefID="23"/>
+    </Data>
+    <Data ID="36" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo36">
+      <Source RefID="31"/>
+      <Target RefID="23"/>
+    </Data>
+    <Data ID="48" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo48">
+      <Source RefID="45"/>
+      <Target RefID="90"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="53" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo53">
+      <Source RefID="8"/>
+      <Source RefID="23"/>
+      <Source RefID="24"/>
+      <Target RefID="58"/>
+    </Data>
+    <ServiceReference ID="57" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="58"/>
+      <Target RefID="58"/>
+    </ServiceReference>
+    <Function ID="58" Label="Build TableInfo and Select Columns">
+      <Source RefID="57"/>
+      <Source RefID="60"/>
+      <Source RefID="53"/>
+      <Source RefID="87"/>
+      <Target RefID="57"/>
+      <Target RefID="59"/>
+      <Meta>
+        <FixedDetailOptions>closeInputs,closeOutputs</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="57">
+        <Source RefID="53">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="60">
+          <Meta>
+            <ExpectedType>xmcp.factorymanager.orderinputsources.OrderInputSource</ExpectedType>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="87"/>
+      </Invoke>
+      <Receive ServiceID="57">
+        <Target RefID="59"/>
+      </Receive>
+    </Function>
+    <Data ID="59" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="58"/>
+      <Target RefID="64"/>
+      <Target RefID="25"/>
+    </Data>
+    <Data ID="60" Label="Order input source" ReferenceName="OrderInputSource" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="const_OrderInputSource">
+      <Target RefID="58"/>
+      <Data ID="68" Label="Id" VariableName="id">
+        <Meta>
+          <Type>long</Type>
+        </Meta>
+      </Data>
+      <Data ID="69" Label="Name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="72" Label="Application name" VariableName="applicationName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="73" Label="Version name" VariableName="versionName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="74" Label="Workspace name" VariableName="workspaceName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="75" Label="Documentation" VariableName="documentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="76" Label="State" VariableName="state">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="77" Label="Referenced input source count" VariableName="referencedInputSourceCount">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+      </Data>
+      <Data ID="78" IsList="true" Label="Parameter" ReferenceName="Parameter" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="parameter"/>
+    </Data>
+    <ServiceReference ID="63" Label="Order input sources Services" ReferenceName="OrderInputSourcesServices.OrderInputSourcesServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="64"/>
+      <Target RefID="64"/>
+    </ServiceReference>
+    <Function ID="64" Label="Get list entries">
+      <Source RefID="63"/>
+      <Source RefID="59"/>
+      <Target RefID="63"/>
+      <Target RefID="79"/>
+      <Meta>
+        <FixedDetailOptions>closeInputs</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="getListEntries" ServiceID="63">
+        <Source RefID="59">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="63">
+        <Target RefID="79"/>
+      </Receive>
+    </Function>
+    <Data ID="79" IsList="true" Label="Order input source" ReferenceName="OrderInputSource" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="orderInputSource">
+      <Source RefID="64"/>
+      <Target RefID="25"/>
+    </Data>
+    <Data ID="86" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn86">
+      <Source RefID="90"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="87" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn87">
+      <Source RefID="8"/>
+      <Source RefID="23"/>
+      <Source RefID="24"/>
+      <Target RefID="58"/>
+    </Data>
+    <ServiceReference ID="94" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="95"/>
+      <Target RefID="95"/>
+    </ServiceReference>
+    <Data ID="97" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="95"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.orderInputSources:read:*:*:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="25">
+      <Source RefID="59"/>
+      <Source RefID="79"/>
+      <Target RefID="66"/>
+      <Target RefID="67"/>
+      <Copy>
+        <Source RefID="59">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="66"/>
+      </Copy>
+      <Copy>
+        <Source RefID="79"/>
+        <Target RefID="67"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

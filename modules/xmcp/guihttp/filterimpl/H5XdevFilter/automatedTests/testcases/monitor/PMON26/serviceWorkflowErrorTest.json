@@ -1,0 +1,71 @@
+{
+  "meta":
+  {
+    "name": "serviceWorkflowErrorTest",
+	"description": "Execute a workflow containing a service (loaded from app) and open audit",
+	"created": "12.12.2019",
+	"updated": "12.12.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.CallServiceWithError",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 0,
+		"!retryLength!": 0,
+		"!errorsLength!": 1,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!serviceOrderId!",
+	  "pathInResponse": "info/$list[id=step5]/orderId"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "bigger",
+	  "variable": "!serviceOrderId!",
+	  "value": "!orderId!"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step5]/status",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Failed"
+	}
+  ]
+}

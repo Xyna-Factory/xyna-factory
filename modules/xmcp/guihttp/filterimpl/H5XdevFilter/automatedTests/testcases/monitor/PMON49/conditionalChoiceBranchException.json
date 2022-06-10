@@ -1,0 +1,124 @@
+{
+  "meta":
+  {
+    "name": "conditionalChoiceBranchExceptionTest",
+	"description": "Execute a workflow containing a Conditional Choice with a branch, throwing an Exception (loaded from app) and open audit",
+	"created": "17.03.2020",
+	"updated": "09.12.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON49.ConditionalChoiceExceptionInBranch",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 1,
+		"!retryLength!": 0,
+		"!errorsLength!": 1,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!caseId!",
+	  "pathInResponse": "info/$list[id=step6]/caseId",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!caseId!",
+	  "value": "case6-0_input"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step6]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Failed"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!exception!",
+	  "pathInResponse": "info/$list[id=step6]/error/exception",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!exception!",
+	  "value": "xmcp.h5x.regression.PMON49.ChoiceException"
+	},
+
+    {
+      "operation": "read",
+      "targetVariable": "!branch6-0!",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/areas/$list[name=content]/items/$list[0]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branch6-0!",
+      "value": "branch6-0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch6-0!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Failed"
+    }
+  ]
+}

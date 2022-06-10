@@ -1,0 +1,8 @@
+{
+  "tests":
+   [
+	"errorTest.json",
+	"assertionFailedTest.json",
+	"assertionListlengthFailedTest.json"
+   ]
+}

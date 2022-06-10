@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="DhcpdConfDeployStaticHostNewFormat" TypeName="DhcpdConfDeployStaticHostNewFormat" TypePath="xmcp.dhcp.v4.netconfigurator" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="DhcpdConfDeployStaticHostNewFormat" Name="DhcpdConfDeployStaticHostNewFormat">
+    <Input>
+      <Data ID="21" Label="Deploy Static Host Input ctype" ReferenceName="DeployStaticHostInput_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="deployStaticHostInput_ctype21">
+        <Target RefID="20"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="25" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype">
+        <Source RefID="2"/>
+      </Data>
+      <Data ID="22" Label="Dhcpd Conf Response ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="5" Label="DhcpdConf" ReferenceName="DhcpdConf.DhcpdConf" ReferencePath="xmcp.dhcp.v4.netconfigurator">
+      <Source RefID="32"/>
+      <Target RefID="32"/>
+    </ServiceReference>
+    <Mappings ID="20" Label="Build Input">
+      <Source RefID="21"/>
+      <Target RefID="19"/>
+      <Meta>
+        <FixedDetailOptions>FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="28" Label="Deploy Static Host Input ctype" ReferenceName="DeployStaticHostInput_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="deployStaticHostInput_ctype"/>
+        <Source RefID="21"/>
+      </Input>
+      <Output>
+        <Data ID="8" Label="Deploy Static Host Request ctype" ReferenceName="DeployStaticHostRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="deployStaticHostRequest_ctype"/>
+        <Target RefID="19"/>
+      </Output>
+      <Mapping>%1%.deployStaticHostInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="32" Label="Deploy Static Host New Format">
+      <Source RefID="5"/>
+      <Source RefID="19"/>
+      <Target RefID="5"/>
+      <Target RefID="33"/>
+      <Invoke Operation="deployStaticHostNewFormat" ServiceID="5">
+        <Source RefID="19"/>
+      </Invoke>
+      <Receive ServiceID="5">
+        <Target RefID="33"/>
+      </Receive>
+    </Function>
+    <Mappings ID="18" Label="Extract Output">
+      <Source RefID="33"/>
+      <Target RefID="24"/>
+      <Target RefID="27"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="9" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype9"/>
+        <Source RefID="33"/>
+      </Input>
+      <Output>
+        <Data ID="26" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype26"/>
+        <Target RefID="27"/>
+      </Output>
+      <Output>
+        <Data ID="23" Label="Dhcpd Conf Response ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype23"/>
+        <Target RefID="24"/>
+      </Output>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+      <Mapping>%2%=%0%.payload.deployStaticHostResponse</Mapping>
+    </Mappings>
+    <Data ID="19" Label="Deploy Static Host Request ctype" ReferenceName="DeployStaticHostRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="deployStaticHostRequest_ctype19">
+      <Source RefID="20"/>
+      <Target RefID="32"/>
+    </Data>
+    <Data ID="24" Label="Dhcpd Conf Response ctype" ReferenceName="DhcpdConfResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="dhcpdConfResponse_ctype24">
+      <Source RefID="18"/>
+      <Target RefID="2"/>
+    </Data>
+    <Data ID="27" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype27">
+      <Source RefID="18"/>
+      <Target RefID="2"/>
+    </Data>
+    <Data ID="33" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype33">
+      <Source RefID="32"/>
+      <Target RefID="18"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="27"/>
+      <Source RefID="24"/>
+      <Target RefID="25"/>
+      <Target RefID="22"/>
+      <Copy>
+        <Source RefID="27"/>
+        <Target RefID="25"/>
+      </Copy>
+      <Copy>
+        <Source RefID="24"/>
+        <Target RefID="22"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

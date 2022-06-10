@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Right" TypeName="DeleteRight" TypePath="xmcp.xacm.rightmanagement" Version="1.8">
+  <Meta>
+    <Documentation>Der Workflow führt die folgenden Schritte durch:
+* Löschen des Rechtes mit dem übergebenen Rechtnamen</Documentation>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,openDocumentation</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Delete Right" Name="DeleteRight">
+    <Input>
+      <Data ID="19" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right">
+        <Target RefID="25"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="6" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Mappings ID="25" Label="Create Input Parameter">
+      <Source RefID="19"/>
+      <Target RefID="26"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="22" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right22"/>
+        <Source RefID="19"/>
+      </Input>
+      <Output>
+        <Data ID="23" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight23"/>
+        <Target RefID="26"/>
+      </Output>
+      <Mapping>%1%.right=%0%.createRightNameWithParameterDefinition(%0%).rightName</Mapping>
+    </Mappings>
+    <Function ID="7" Label="Delete right">
+      <Source RefID="6"/>
+      <Source RefID="26"/>
+      <Target RefID="6"/>
+      <Invoke Operation="deleteRight" ServiceID="6">
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="6"/>
+    </Function>
+    <Data ID="26" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight26">
+      <Source RefID="25"/>
+      <Target RefID="7"/>
+    </Data>
+    <Assign ID="2"/>
+  </Operation>
+</Service>

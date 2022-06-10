@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Migration Services" TypeName="MigrationServices" TypePath="xdev.xtestfactory.infrastructure.migration" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>commons-lang3-3.4.jar</Libraries>
+  <Libraries>MigrationServicesImpl.jar</Libraries>
+  <Libraries>opencsv-3.3.jar</Libraries>
+  <Service Label="Migration Services" TypeName="MigrationServices">
+    <Operation ID="3" IsStatic="true" Label="Build And Store Order Input Source" Name="buildAndStoreOrderInputSource">
+      <Meta>
+        <Abstract.UID>CE8713D4-1C57-DB5D-8C35-DC8F167A2379</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="0" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination"/>
+        <Data ID="1" Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination8"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return MigrationServicesImpl.buildAndStoreOrderInputSource(testCaseAndOrderInputSourceCombination, workspacename);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="25" IsStatic="true" Label="Determine Test Case By Name From Given Test Project" Name="determineTestCaseByNameFromGivenTestProject">
+      <Meta>
+        <Abstract.UID>7DE5D3E8-51B0-500C-8BD3-1EB75A6E5222</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="22" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Data ID="23" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination"/>
+      </Input>
+      <Output>
+        <Data ID="24" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return MigrationServicesImpl.determineTestCaseByNameFromGivenTestProject(testProject, testCaseAndOrderInputSourceCombination);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="7" IsStatic="true" Label="Get Service And Function Objects" Name="getServiceAndFunctionObjects">
+      <Meta>
+        <Abstract.UID>5AB47F4D-7773-E210-6223-0A4CE3EDED77</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="4" Label="Test Series And List Of Test Case OIS Combination" ReferenceName="TestSeriesAndListOfTestCaseOISCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testSeriesAndListOfTestCaseOISCombination"/>
+      </Input>
+      <Output>
+        <Data ID="5" IsList="true" Label="Service Reference" ReferenceName="ServiceReference" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="serviceReference"/>
+        <Data ID="6" IsList="true" Label="Function Object" ReferenceName="FunctionObject" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="functionObject"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return MigrationServicesImpl.getServiceAndFunctionObjects(testSeriesAndListOfTestCaseOISCombination);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="16" IsStatic="true" Label="Obtain Test Case Objects Without Input Sources" Name="obtainTestCaseObjectsWithoutInputSources">
+      <Input>
+        <Data ID="8" Label="XTF 5 Testdurchfuerhungsplan CSV" ReferenceName="XTF5TestdurchfuerhungsplanCSV" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="xTF5TestdurchfuerhungsplanCSV"/>
+        <Data ID="9" IsList="true" Label="Input Generation Mapping" ReferenceName="InputGenerationMapping" ReferencePath="xdev.xtestfactory.infrastructure.migration.testcases" VariableName="inputGenerationMapping"/>
+        <Data ID="10" IsList="true" Label="Test Process Mapping" ReferenceName="TestProcessMapping" ReferencePath="xdev.xtestfactory.infrastructure.migration.testcases" VariableName="testProcessMapping"/>
+        <Data ID="11" Label="XTF 5 Testcase CSV" ReferenceName="XTF5TestcaseCSV" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="xTF5TestcaseCSV"/>
+        <Data ID="12" Label="XTF 5 Testseries CSV" ReferenceName="XTF5TestseriesCSV" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="xTF5TestseriesCSV"/>
+        <Data ID="13" Label="XTF 5 Testcasetestseries CSV" ReferenceName="XTF5TestcasetestseriesCSV" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="xTF5TestcasetestseriesCSV"/>
+      </Input>
+      <Output>
+        <Data ID="14" IsList="true" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination"/>
+        <Data ID="15" IsList="true" Label="Test Series And List Of Test Case OIS Combination" ReferenceName="TestSeriesAndListOfTestCaseOISCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testSeriesAndListOfTestCaseOISCombination"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return MigrationServicesImpl.obtainTestCaseObjectsWithoutInputSources(xTF5TestdurchfuerhungsplanCSV, inputGenerationMapping, testProcessMapping, xTF5TestcaseCSV, xTF5TestseriesCSV, xTF5TestcasetestseriesCSV);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="21" IsStatic="true" Label="Store And Deploy Workflow" Name="storeAndDeployWorkflow">
+      <Meta>
+        <Abstract.UID>956D15B6-3252-0AE3-ABA7-0B04DC99BF8C</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="17" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data ID="18" Label="Series Migration Path" ReferenceName="SeriesMigrationPath" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationPath52"/>
+        <Data ID="19" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName"/>
+        <Data ID="20" Label="Test Series And List Of Test Case OIS Combination" ReferenceName="TestSeriesAndListOfTestCaseOISCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testSeriesAndListOfTestCaseOISCombination"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">MigrationServicesImpl.storeAndDeployWorkflow(document, seriesMigrationPath52, seriesMigrationName, testSeriesAndListOfTestCaseOISCombination);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

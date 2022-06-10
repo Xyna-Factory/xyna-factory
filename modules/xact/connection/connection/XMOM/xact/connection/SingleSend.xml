@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Single send" TypeName="SingleSend" TypePath="xact.connection" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,hScroll(29),vScroll(782)</FixedDetailOptions>
+    <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Operation ID="0" Label="Single send" Name="SingleSend">
+    <Input>
+      <Data ID="7" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command">
+        <Target RefID="43"/>
+        <Target RefID="117"/>
+      </Data>
+      <Data ID="36" Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection">
+        <Target RefID="46"/>
+        <Target RefID="77"/>
+        <Target RefID="83"/>
+        <Target RefID="88"/>
+        <Target RefID="109"/>
+        <Target RefID="198"/>
+      </Data>
+      <Data ID="50" Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType50">
+        <Target RefID="49"/>
+        <Target RefID="52"/>
+        <Target RefID="46"/>
+        <Target RefID="51"/>
+        <Target RefID="83"/>
+        <Target RefID="88"/>
+        <Target RefID="109"/>
+        <Target RefID="198"/>
+      </Data>
+      <Data ID="35" Label="device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType">
+        <Target RefID="43"/>
+        <Target RefID="46"/>
+        <Target RefID="51"/>
+        <Target RefID="54"/>
+        <Target RefID="83"/>
+        <Target RefID="88"/>
+        <Target RefID="109"/>
+        <Target RefID="134"/>
+        <Target RefID="145"/>
+        <Target RefID="153"/>
+        <Target RefID="198"/>
+        <Target RefID="202"/>
+      </Data>
+      <Data ID="34" Label="send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter">
+        <Target RefID="46"/>
+        <Target RefID="153"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="63" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple63">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="ConnectionAlreadyClosed" ReferenceName="ConnectionAlreadyClosed" ReferencePath="xact.connection" VariableName="connectionAlreadyClosed"/>
+      <Exception Label="Detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      <Exception Label="Read Timeout" ReferenceName="ReadTimeout" ReferencePath="xact.connection" VariableName="readTimeout"/>
+      <Exception Label="State Changed Unexpectedly" ReferenceName="StateChangedUnexpectedly" ReferencePath="xact.connection" VariableName="stateChangedUnexpectedly"/>
+    </Throws>
+    <Function ID="43" Label="enrich command">
+      <Source RefID="42"/>
+      <Source RefID="35"/>
+      <Source RefID="7"/>
+      <Target RefID="42"/>
+      <Target RefID="44"/>
+      <Invoke Operation="enrichCommand" ServiceID="42">
+        <Source RefID="35"/>
+        <Source RefID="7"/>
+      </Invoke>
+      <Receive ServiceID="42">
+        <Target RefID="44"/>
+      </Receive>
+    </Function>
+    <Choice ID="134" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="35"/>
+      <Target RefID="150"/>
+      <Input>
+        <Data ID="157" Label="device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType157"/>
+        <Source RefID="35">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="127" Label="true" Premise="typeof(%0%,&quot;xact.connection.RuleBasedDeviceType&quot;)">
+        <Mappings ID="145" Label="get State">
+          <Source RefID="35"/>
+          <Target RefID="200"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,VisualMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="144" Label="device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType144"/>
+            <Source RefID="35"/>
+          </Input>
+          <Output>
+            <Data ID="199" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text199"/>
+            <Target RefID="200"/>
+          </Output>
+          <Mapping>%1%=%0%#cast("xact.connection.RuleBasedDeviceType").getState()</Mapping>
+        </Mappings>
+        <Assign ID="132">
+          <Source RefID="200"/>
+          <Target RefID="150"/>
+          <Copy>
+            <Source RefID="200"/>
+            <Target RefID="150"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="128" Label="false">
+        <Mappings ID="149" Label="Empty State">
+          <Target RefID="148"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,VisualMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="147" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text147"/>
+            <Target RefID="148"/>
+          </Output>
+          <Mapping>%0%.text=null</Mapping>
+        </Mappings>
+        <Assign ID="133">
+          <Source RefID="148"/>
+          <Target RefID="150"/>
+          <Copy>
+            <Source RefID="148"/>
+            <Target RefID="150"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="46" Label="send">
+      <Source RefID="45"/>
+      <Source RefID="36"/>
+      <Source RefID="35"/>
+      <Source RefID="34"/>
+      <Source RefID="44"/>
+      <Source RefID="50"/>
+      <Target RefID="45"/>
+      <Target RefID="47"/>
+      <Target RefID="96"/>
+      <Meta>
+        <FixedDetailOptions>openCatches</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="send" ServiceID="45">
+        <Source RefID="36"/>
+        <Source RefID="44">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="50"/>
+        <Source RefID="35"/>
+        <Source RefID="34"/>
+      </Invoke>
+      <Receive ServiceID="45">
+        <Target RefID="47"/>
+      </Receive>
+      <Catch ExceptionID="96" ID="98">
+        <Mappings ID="117" Label="Mapping">
+          <Source RefID="7"/>
+          <Source RefID="96"/>
+          <Target RefID="114"/>
+          <Target RefID="216"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="115" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command115"/>
+            <Source RefID="7">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Exception ID="217" Label="Read Timeout" ReferenceName="ReadTimeout" ReferencePath="xact.connection" VariableName="readTimeout217"/>
+            <Source RefID="96"/>
+          </Input>
+          <Output>
+            <Data ID="116" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple116"/>
+            <Target RefID="114"/>
+          </Output>
+          <Output>
+            <Exception ID="215" Label="Read Timeout" ReferenceName="ReadTimeout" ReferencePath="xact.connection" VariableName="readTimeout215"/>
+            <Target RefID="216"/>
+          </Output>
+          <Mapping>%2%.command.content=%0%.content</Mapping>
+          <Mapping>%3%=%1%</Mapping>
+          <Mapping>%3%.command=%0%.content</Mapping>
+        </Mappings>
+        <Function ID="109" Label="Cleanup after error">
+          <Source RefID="42"/>
+          <Source RefID="35"/>
+          <Source RefID="50"/>
+          <Source RefID="36"/>
+          <Source RefID="114"/>
+          <Target RefID="42"/>
+          <Invoke Operation="cleanupAfterError" ServiceID="42">
+            <Source RefID="35"/>
+            <Source RefID="114"/>
+            <Source RefID="50"/>
+            <Source RefID="36"/>
+          </Invoke>
+          <Receive ServiceID="42"/>
+        </Function>
+        <Throw ExceptionID="216" ID="118" Label="Throw Read Timeout">
+          <Source RefID="216">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="97">
+          <Source RefID="114"/>
+          <Target RefID="47"/>
+          <Copy>
+            <Source RefID="114"/>
+            <Target RefID="47"/>
+          </Copy>
+        </Assign>
+      </Catch>
+    </Function>
+    <Choice ID="153" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="34"/>
+      <Source RefID="35"/>
+      <Source RefID="150"/>
+      <Input>
+        <Data ID="158" Label="send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter158"/>
+        <Source RefID="34">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="180" Label="device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType180"/>
+        <Source RefID="35">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="214" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text214"/>
+        <Source RefID="150"/>
+      </Input>
+      <Case ID="151" Label="true" Premise="%0%.validateStateDoesNotChange&amp;&amp;typeof(%1%,&quot;xact.connection.RuleBasedDeviceType&quot;)&amp;&amp;%2%.text!=null">
+        <Mappings ID="202" Label="get State">
+          <Source RefID="35"/>
+          <Target RefID="203"/>
+          <Input>
+            <Data ID="201" Label="device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType201"/>
+            <Source RefID="35"/>
+          </Input>
+          <Output>
+            <Data ID="208" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+            <Target RefID="203"/>
+          </Output>
+          <Mapping>%1%=%0%#cast("xact.connection.RuleBasedDeviceType").getState()</Mapping>
+        </Mappings>
+        <Choice ID="176" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="150"/>
+          <Source RefID="203"/>
+          <Input>
+            <Data ID="181" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text181"/>
+            <Source RefID="203">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="182" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text182"/>
+            <Source RefID="150">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Case ID="174" Label="true" Premise="%0%.text==%1%.text">
+            <Assign ID="183"/>
+          </Case>
+          <Case ID="175" Label="false">
+            <Mappings ID="193" Label="Mapping">
+              <Source RefID="150"/>
+              <Source RefID="203"/>
+              <Target RefID="189"/>
+              <Meta>
+                <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+              </Meta>
+              <Input>
+                <Data ID="192" Label="Old State" ReferenceName="Text" ReferencePath="base" VariableName="text192"/>
+                <Source RefID="150">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Input>
+                <Data ID="209" Label="New State" ReferenceName="Text" ReferencePath="base" VariableName="text209"/>
+                <Source RefID="203">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Exception ID="194" Label="State Changed Unexpectedly" ReferenceName="StateChangedUnexpectedly" ReferencePath="xact.connection" VariableName="stateChangedUnexpectedly194"/>
+                <Target RefID="189"/>
+              </Output>
+              <Mapping>%2%.newState=%1%.text</Mapping>
+              <Mapping>%2%.oldState=%0%.text</Mapping>
+            </Mappings>
+            <Function ID="198" Label="Cleanup after error">
+              <Source RefID="42"/>
+              <Source RefID="47"/>
+              <Source RefID="50"/>
+              <Source RefID="36"/>
+              <Source RefID="35"/>
+              <Target RefID="42"/>
+              <Invoke Operation="cleanupAfterError" ServiceID="42">
+                <Source RefID="35">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+                <Source RefID="47"/>
+                <Source RefID="50"/>
+                <Source RefID="36"/>
+              </Invoke>
+              <Receive ServiceID="42"/>
+            </Function>
+            <Throw ExceptionID="189" ID="190" Label="Throw State Changed Unexpectedly">
+              <Source RefID="189"/>
+            </Throw>
+            <Assign ID="184"/>
+          </Case>
+        </Choice>
+        <Assign ID="159"/>
+      </Case>
+      <Case ID="152" Label="false">
+        <Assign ID="160"/>
+      </Case>
+    </Choice>
+    <Function ID="49" Label="detect critcal error">
+      <Source RefID="48"/>
+      <Source RefID="50"/>
+      <Source RefID="47"/>
+      <Target RefID="48"/>
+      <Target RefID="81"/>
+      <Meta>
+        <FixedDetailOptions>openCatches</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="detectCritcalError" ServiceID="48">
+        <Source RefID="50"/>
+        <Source RefID="47"/>
+      </Invoke>
+      <Receive ServiceID="48"/>
+      <Catch ExceptionID="81" ID="82">
+        <Function ID="83" Label="Cleanup after error">
+          <Source RefID="42"/>
+          <Source RefID="35"/>
+          <Source RefID="47"/>
+          <Source RefID="50"/>
+          <Source RefID="36"/>
+          <Target RefID="42"/>
+          <Invoke Operation="cleanupAfterError" ServiceID="42">
+            <Source RefID="35"/>
+            <Source RefID="47"/>
+            <Source RefID="50"/>
+            <Source RefID="36"/>
+          </Invoke>
+          <Receive ServiceID="42"/>
+        </Function>
+        <Throw ExceptionID="81" ID="85" Label="Throw Detected error">
+          <Source RefID="81"/>
+        </Throw>
+        <Assign ID="92"/>
+      </Catch>
+    </Function>
+    <Function ID="51" Label="detect critical error">
+      <Source RefID="42"/>
+      <Source RefID="35"/>
+      <Source RefID="47"/>
+      <Source RefID="50"/>
+      <Target RefID="42"/>
+      <Target RefID="86"/>
+      <Meta>
+        <FixedDetailOptions>openCatches</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="detectCriticalError" ServiceID="42">
+        <Source RefID="35"/>
+        <Source RefID="47"/>
+        <Source RefID="50"/>
+      </Invoke>
+      <Receive ServiceID="42"/>
+      <Catch ExceptionID="86" ID="87">
+        <Function ID="88" Label="Cleanup after error">
+          <Source RefID="42"/>
+          <Source RefID="35"/>
+          <Source RefID="47"/>
+          <Source RefID="50"/>
+          <Source RefID="36"/>
+          <Target RefID="42"/>
+          <Invoke Operation="cleanupAfterError" ServiceID="42">
+            <Source RefID="35"/>
+            <Source RefID="47"/>
+            <Source RefID="50"/>
+            <Source RefID="36"/>
+          </Invoke>
+          <Receive ServiceID="42"/>
+        </Function>
+        <Throw ExceptionID="86" ID="90" Label="Throw Detected error">
+          <Source RefID="86"/>
+        </Throw>
+        <Assign ID="93"/>
+      </Catch>
+    </Function>
+    <Function ID="52" Label="remove document type specifics">
+      <Source RefID="48"/>
+      <Source RefID="50"/>
+      <Source RefID="47"/>
+      <Target RefID="48"/>
+      <Target RefID="79"/>
+      <Meta>
+        <FixedHeight>32</FixedHeight>
+        <FixedWidth>202</FixedWidth>
+      </Meta>
+      <Invoke Operation="removeDocumentTypeSpecifics" ServiceID="48">
+        <Source RefID="50"/>
+        <Source RefID="47"/>
+      </Invoke>
+      <Receive ServiceID="48">
+        <Target RefID="79"/>
+      </Receive>
+    </Function>
+    <Function ID="54" Label="remove device specifics">
+      <Source RefID="42"/>
+      <Source RefID="35"/>
+      <Source RefID="79"/>
+      <Target RefID="42"/>
+      <Target RefID="67"/>
+      <Invoke Operation="removeDeviceSpecifics" ServiceID="42">
+        <Source RefID="35"/>
+        <Source RefID="79">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="42">
+        <Target RefID="67"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="42" Label="device type" ReferenceName="DeviceType.DeviceType" ReferencePath="xact.connection">
+      <Source RefID="43"/>
+      <Source RefID="51"/>
+      <Source RefID="54"/>
+      <Source RefID="83"/>
+      <Source RefID="88"/>
+      <Source RefID="109"/>
+      <Source RefID="198"/>
+      <Target RefID="43"/>
+      <Target RefID="51"/>
+      <Target RefID="54"/>
+      <Target RefID="83"/>
+      <Target RefID="88"/>
+      <Target RefID="109"/>
+      <Target RefID="198"/>
+    </ServiceReference>
+    <Data ID="44" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command044">
+      <Source RefID="43"/>
+      <Target RefID="46"/>
+    </Data>
+    <ServiceReference ID="45" Label="managed connection" ReferenceName="ManagedConnection.ManagedConnection" ReferencePath="xact.connection">
+      <Source RefID="46"/>
+      <Source RefID="77"/>
+      <Target RefID="46"/>
+      <Target RefID="77"/>
+    </ServiceReference>
+    <Data ID="47" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response47">
+      <Source RefID="46"/>
+      <Source RefID="97"/>
+      <Target RefID="51"/>
+      <Target RefID="49"/>
+      <Target RefID="83"/>
+      <Target RefID="88"/>
+      <Target RefID="52"/>
+      <Target RefID="198"/>
+    </Data>
+    <ServiceReference ID="48" Label="document type" ReferenceName="DocumentType.DocumentType" ReferencePath="xact.templates">
+      <Source RefID="49"/>
+      <Source RefID="52"/>
+      <Target RefID="49"/>
+      <Target RefID="52"/>
+    </ServiceReference>
+    <Data ID="67" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0">
+      <Source RefID="54"/>
+      <Target RefID="3"/>
+      <Target RefID="77"/>
+    </Data>
+    <Function ID="77" Label="Add response">
+      <Source RefID="45"/>
+      <Source RefID="36"/>
+      <Source RefID="67"/>
+      <Target RefID="45"/>
+      <Invoke Operation="addResponses" ServiceID="45">
+        <Source RefID="36"/>
+        <Source RefID="67">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="45"/>
+    </Function>
+    <Data ID="79" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response079">
+      <Source RefID="52"/>
+      <Target RefID="54"/>
+    </Data>
+    <Exception ID="81" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError81">
+      <Source RefID="49"/>
+      <Target RefID="85"/>
+    </Exception>
+    <Exception ID="86" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError86">
+      <Source RefID="51"/>
+      <Target RefID="90"/>
+    </Exception>
+    <Exception ID="96" Label="Read Timeout" ReferenceName="ReadTimeout" ReferencePath="xact.connection" VariableName="readTimeout96">
+      <Source RefID="46"/>
+      <Target RefID="117"/>
+    </Exception>
+    <Data ID="114" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple">
+      <Source RefID="117"/>
+      <Target RefID="109"/>
+      <Target RefID="97"/>
+    </Data>
+    <Data ID="148" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text148">
+      <Source RefID="149"/>
+      <Target RefID="133"/>
+    </Data>
+    <Data ID="150" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text150">
+      <Source RefID="134"/>
+      <Source RefID="132"/>
+      <Source RefID="133"/>
+      <Target RefID="176"/>
+      <Target RefID="193"/>
+      <Target RefID="153"/>
+    </Data>
+    <Exception ID="189" Label="State Changed Unexpectedly" ReferenceName="StateChangedUnexpectedly" ReferencePath="xact.connection" VariableName="stateChangedUnexpectedly189">
+      <Source RefID="193"/>
+      <Target RefID="190"/>
+    </Exception>
+    <Data ID="200" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text200">
+      <Source RefID="145"/>
+      <Target RefID="132"/>
+    </Data>
+    <Data ID="203" Label="State" ReferenceName="Text" ReferencePath="base" VariableName="text203">
+      <Source RefID="202"/>
+      <Target RefID="176"/>
+      <Target RefID="193"/>
+    </Data>
+    <Exception ID="216" Label="Read Timeout" ReferenceName="ReadTimeout" ReferencePath="xact.connection" VariableName="readTimeout216">
+      <Source RefID="117"/>
+      <Target RefID="118"/>
+    </Exception>
+    <Assign ID="3">
+      <Source RefID="67"/>
+      <Target RefID="63"/>
+      <Copy>
+        <Source RefID="67">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="63"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

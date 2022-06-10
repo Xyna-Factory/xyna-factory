@@ -1,0 +1,9 @@
+{
+  "tests":
+  [
+    "templateEmptyTest.json",
+	"templateWithContentTest.json",
+	"templateWithComplexMemberTest.json",
+	"templateWithErrorTest.json"
+  ]
+}

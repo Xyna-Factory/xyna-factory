@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="TempMethodsDHCPv6" TypeName="TempMethodsDHCPv6" TypePath="xact.dhcpv6" Version="1.8">
+  <Libraries>TempMethodsDHCPv6Impl.jar</Libraries>
+  <Service Label="TempServices" TypeName="TempServices">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xact.dhcp.TypeOnlyNode</Datatype>
+        <Datatype>xact.dhcp.TypeWithValueNode</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    
+    <Operation ID="3" IsStatic="true" Label="GenerateInput" Name="generateInput">
+      <Input>
+        <Data IsList="true" Label="requestedIAIDs" ReferenceName="IAID" ReferencePath="xact.dhcpv6" VariableName="requestedIAIDs"/>
+        <Data IsList="true" Label="requestedIPv6Addresses" ReferenceName="IP" ReferencePath="base" VariableName="requestedIPv6Addresses"/>
+      </Input>
+      <Output>
+        <Data ID="0" IsList="true" Label="input" ReferenceName="Node" ReferencePath="xact.dhcp" VariableName="input"/>
+        <Data ID="1" IsList="true" Label="output" ReferenceName="Node" ReferencePath="xact.dhcp" VariableName="output"/>
+        <Data ID="2" Label="PoolType" ReferenceName="PoolType" ReferencePath="xact.dhcp" VariableName="poolType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.dhcpv6.TempMethodsDHCPv6Impl.generateInput(requestedIAIDs, requestedIPv6Addresses);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="Generate Input For Request" Name="GenerateInputForRequest">
+      <Meta>
+        <Abstract.UID>D88D3955-DE5B-6EF2-C265-9B370615E4CF</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="requestedIAIDs" ReferenceName="IAID" ReferencePath="xact.dhcpv6" VariableName="requestedIAIDs"/>
+        <Data IsList="true" Label="requestedIPv6Addresses" ReferenceName="IP" ReferencePath="base" VariableName="requestedIPv6Addresses"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="input" ReferenceName="Node" ReferencePath="xact.dhcp" VariableName="input"/>
+        <Data ID="5" IsList="true" Label="output" ReferenceName="Node" ReferencePath="xact.dhcp" VariableName="output"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xact.dhcp" VariableName="poolType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.dhcpv6.TempMethodsDHCPv6Impl.GenerateInputForRequest(requestedIAIDs, requestedIPv6Addresses);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="Generate Input For Renew" Name="generateInputForRenew">
+      <Input>
+        <Data IsList="true" Label="requestedIAIDs" ReferenceName="IAID" ReferencePath="xact.dhcpv6" VariableName="requestedIAIDs"/>
+        <Data IsList="true" Label="requestedIPv6Addresses" ReferenceName="IP" ReferencePath="base" VariableName="requestedIPv6Addresses"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="input" ReferenceName="Node" ReferencePath="xact.dhcp" VariableName="input"/>
+        <Data IsList="true" Label="output" ReferenceName="Node" ReferencePath="xact.dhcp" VariableName="output"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xact.dhcp" VariableName="poolType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.dhcpv6.TempMethodsDHCPv6Impl.generateInputForRenew(requestedIAIDs, requestedIPv6Addresses);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+  </Service>
+</DataType>
+

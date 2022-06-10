@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "parallelInsideParallel.json",
+    "foreachInsideParallel.json"
+  ]
+}

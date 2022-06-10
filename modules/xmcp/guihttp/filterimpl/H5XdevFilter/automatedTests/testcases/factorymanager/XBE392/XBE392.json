@@ -1,0 +1,668 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.4.2021",
+    "updated": "15.4.2021"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!autoTest.generated.XBE392!": "autoTest.generated.XBE392.!rnd!"
+        },
+        {
+          "!WF_for_OIS!": "WF for OIS"
+        },
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetRuntimeContexts!": "xmcp.factorymanager.shared.GetRuntimeContexts"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.GetOrderSo!": "xmcp.factorymanager.orderinputsources.GetOrderSourceTypes"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetOrderTypes!": "xmcp.factorymanager.shared.GetOrderTypes"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.CreateOrde0!": "xmcp.factorymanager.orderinputsources.CreateOrderInputSourceRequest"
+        },
+        {
+          "!monitoringLevel!": "monitoringLevel"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.Parameter!": "xmcp.factorymanager.orderinputsources.Parameter"
+        },
+        {
+          "!customField1!": "customField1"
+        },
+        {
+          "!customField2!": "customField2"
+        },
+        {
+          "!customField3!": "customField3"
+        },
+        {
+          "!customField0!": "customField0"
+        },
+        {
+          "!priority!": "priority"
+        },
+        {
+          "!XBE-392!": "XBE-392"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!name!": "name"
+        },
+        {
+          "!applicationName!": "applicationName"
+        },
+        {
+          "!Version!": "Version"
+        },
+        {
+          "!versionName!": "versionName"
+        },
+        {
+          "!workspaceName!": "workspaceName"
+        },
+        {
+          "!Source_Type!": "Source Type"
+        },
+        {
+          "!sourceType.label!": "sourceType.label"
+        },
+        {
+          "!Order_Type!": "Order Type"
+        },
+        {
+          "!orderType.type!": "orderType.type"
+        },
+        {
+          "!Worksteps_using_Sources!": "Worksteps using Sources"
+        },
+        {
+          "!referencedInputSourceCount!": "referencedInputSourceCount"
+        },
+        {
+          "!State!": "State"
+        },
+        {
+          "!state!": "state"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!WF_using_OIS!": "WF using OIS"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.OrderInput!": "xmcp.factorymanager.orderinputsources.OrderInputSourceId"
+        },
+        {
+          "!Type!": "Type"
+        },
+        {
+          "!typeNiceName!": "typeNiceName"
+        },
+        {
+          "!id.name!": "id.name"
+        },
+        {
+          "!Open_Task!": "Open Task"
+        },
+        {
+          "!openTaskCount!": "openTaskCount"
+        },
+        {
+          "!Tags!": "Tags"
+        },
+        {
+          "!tagsNiceList!": "tagsNiceList"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1618499627399.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1618499627399!",
+      "variable": "!new_1618499627399.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1618499627399.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/rtc/name",
+      "targetVariable": "!default_workspace!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/$meta/rtc/application",
+      "targetVariable": "!GuiHttp!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=errorHandling]/items/$list[0]/id",
+      "targetVariable": "!exceptionHandlingWf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=errorHandling]/items/$list[id=!exceptionHandlingWf!]/areas/$list[name=content]/$meta/rtc/version",
+      "targetVariable": "!1.1.250!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id",
+      "targetVariable": "!step0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499627399!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499627399!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!WF_for_OIS!",
+        "path": "!autoTest.generated.XBE392!",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499627399!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/fqn",
+      "targetVariable": "!xbe392.WFForOIS!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!WFForOIS!",
+      "variable": "!xbe392.WFForOIS!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFForOIS!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFForOIS!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFForOIS!/deploy"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.orderinputsources.CreateOrde0!"
+            },
+            "name": "!XBE-392!",
+            "orderType": "!xbe392.WFForOIS!",
+            "parameter": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!monitoringLevel!",
+                  "value": "20"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!customField1!",
+                  "value": ""
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!customField2!",
+                  "value": ""
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!customField3!",
+                  "value": ""
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!customField0!",
+                  "value": ""
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!priority!",
+                  "value": "7"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "xmcp.Workspace"
+              },
+              "name": "!default_workspace!",
+              "revision": -1,
+              "type": "Workspace"
+            },
+            "sourceType": {
+              "$meta": {
+                "fqn": "xmcp.factorymanager.orderinputsources.SourceType"
+              },
+              "label": "Constant",
+              "name": "ConstantInputSource"
+            }
+          }
+        ],
+        "orderType": "xmcp.factorymanager.orderinputsources.CreateOrderInputSource"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1618499686870.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1618499686870!",
+      "variable": "!new_1618499686870.NewWorkflow!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "fqn": "!xbe392.WFForOIS!",
+          "label": "!WF_for_OIS!",
+          "operation": "!xbe392.WFForOIS!",
+          "type": "service"
+        },
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/objects/!step0!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[fqn=!xbe392.WFForOIS!]/id",
+      "targetVariable": "!step10!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step10!]/areas/$list[name=orderInputSources]/usedInputSource/id",
+      "targetVariable": "!orderInputSource10!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFForOIS!/orderinputsources"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "name": "!XBE-392!",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/objects/!orderInputSource10!/change"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFForOIS!/orderinputsources"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!WF_using_OIS!",
+        "path": "!autoTest.generated.XBE392!",
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1618499686870!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=label]/fqn",
+      "targetVariable": "!pvm.xbe392.WFUsingOIS!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!WFUsingOIS!",
+      "variable": "!pvm.xbe392.WFUsingOIS!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFUsingOIS!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFUsingOIS!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFUsingOIS!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFForOIS!/orderinputsources"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFUsingOIS!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFUsingOIS!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.XBE392!/!WFForOIS!/orderinputsources"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "xmcp.factorymanager.orderinputsources.GetOrderInputSourceRequest"
+            },
+            "inputSourceName": "!XBE-392!",
+            "revision": -1
+          }
+        ],
+        "orderType": "xmcp.factorymanager.orderinputsources.GetOrderInputSource"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/id",
+      "targetVariable": "!id!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.orderinputsources.OrderInput!"
+            },
+            "id": "!id!"
+          }
+        ],
+        "orderType": "xmcp.factorymanager.orderinputsources.DeleteOrderInputSource"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!typeNiceName!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!id.name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!State!",
+                  "path": "!state!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Open_Task!",
+                  "path": "!openTaskCount!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Tags!",
+                  "path": "!tagsNiceList!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false
+          },
+          {
+            "$meta": {
+              "fqn": "xmcp.Workspace"
+            },
+            "name": "!default_workspace!",
+            "revision": -1,
+            "type": "Workspace"
+          }
+        ],
+        "orderType": "xmcp.factorymanager.deploymentitems.GetDeploymentItems"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

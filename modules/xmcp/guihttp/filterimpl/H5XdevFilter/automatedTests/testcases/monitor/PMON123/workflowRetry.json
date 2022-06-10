@@ -1,0 +1,179 @@
+{
+  "meta":
+  {
+    "name": "oneWorkflowRetrySuccessTest",
+    "description": "Execute a workflow containing a Step that is retried on Workflow level once with success (loaded from app) and open audit",
+    "created": "24.04.2020",
+    "updated": "15.12.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+      "operation": "set",
+      "variable": "!necessaryReductions!",
+      "value": "0"
+    },
+	{
+      "operation": "set",
+      "variable": "!reducetionRetryLimit!",
+      "value": "0"
+    },
+	{
+	  "operation": "set",
+	  "variable": "!workflowInput!",
+	  "value": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"necessaryReductions":"!necessaryReductions!","reducetionRetryLimit":"!reducetionRetryLimit!"}]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTestWorkflowLevelPrepare",
+        "!input!": "!workflowInput!",
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTestWorkflowLevel",
+        "!input!": "!workflowInput!",
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 5,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check caught workflow", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=wf]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+	
+	{
+      "operation": "read",
+      "targetVariable": "!iterationContainerKeyWf!",
+      "pathInResponse": "info/$list[id=wf]/iterationContainerKey",
+      "unquoteResult": "true"
+    },
+
+    { "comment": "check step in workflow", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!iterationContainerKey!",
+      "pathInResponse": "info/$list[id=step6]/iterationContainerKey",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!iterationContainerKey!",
+      "value": "!iterationContainerKeyWf!"
+    },
+
+    { "comment": "check global catch branch in iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[0]/id",
+      "targetVariable": "!branch-0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!iterationContainerKey!",
+      "pathInResponse": "info/$list[id=!branch-0!]/iterationContainerKey",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!iterationContainerKey!",
+      "value": "!iterationContainerKeyWf!"
+    },
+
+    { "comment": "check delete step in global catch in iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!iterationContainerKey!",
+      "pathInResponse": "info/$list[id=step166]/iterationContainerKey",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!iterationContainerKey!",
+      "value": "!iterationContainerKeyWf!"
+    },
+
+    { "comment": "check retry step in global catch in iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!iterationContainerKey!",
+      "pathInResponse": "info/$list[id=step293]/iterationContainerKey",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!iterationContainerKey!",
+      "value": "!iterationContainerKeyWf!"
+    }
+  ]
+}

@@ -1,0 +1,2829 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Application applicationName="DHCP-Management" comment="redeploy of WF and serviceGroup of DhcpdConf" factoryVersion="8.2.2.23" versionName="1.4.9" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Connection</ApplicationName>
+        <VersionName>1.0.11</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>UserRoleManagement</ApplicationName>
+        <VersionName>1.0.7</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>XSD Datamodel Base</ApplicationName>
+        <VersionName>1.1.6</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>ZetaFramework</ApplicationName>
+        <VersionName>0.6.45</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Ordertypes>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.RegisterSession</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.classconfigurator.DeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.classconfigurator.GetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.classconfigurator.GetMetaInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.classconfigurator.InsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.classconfigurator.SearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.classconfigurator.UpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.conditionconfigurator.DeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.conditionconfigurator.GetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.conditionconfigurator.GetMetaInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.conditionconfigurator.InsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.conditionconfigurator.SearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.conditionconfigurator.UpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.CheckStandort</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.CheckStatusForIp</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.CheckStatusGetInstanceInfoList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.ConfigFileGenerateTlvFromStringV4</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.ConfigFileShowV4PacketsAsAskii</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.Dhcpv4PacketsGetMetaInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.Dhcpv4PacketsSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.FetchDHCPRelayForID</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.FetchPooltypeNameForID</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.PoolDeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.PoolGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.PoolInsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.PoolSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.PoolUpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.PoolUsageSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.PoolUsageThresholdGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.SharedNetworkDeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.SharedNetworkGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.SharedNetworkInsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.SharedNetworkSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.SharedNetworkUpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.StandortDeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.StandortGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.StandortInsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.StandortSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.StandortUpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.dhcppackets.GetDHCPPacketsTable</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.poolusage.FetchDHCPRelayForIDPoolUsage_Type</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.poolusage.FetchDHCPServerForStandortgruppeIDPoolUsage_Type</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.poolusage.FetchExceedsThresholdForServerAndPooltype</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.poolusage.FetchPoolForIDPoolUsage_Type</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.poolusage.FetchPooltypeNameForIDPoolUsage_Type</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.poolusage.GetPoolDetailsTable</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.poolusage.GetPoolTypeOverviewTable</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.thresholdcontrol.FetchDHCPRelayForIDThreshold_Type</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.thresholdcontrol.FetchPooltypeNameForIDThreshold_Type</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.thresholdcontrol.GetDHCPRelays</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.thresholdcontrol.GetPooltypes</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.thresholdcontrol.GetThresholdControlTable</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.thresholdcontrol.PoolUsageThresholdDeleteRowsWithNullConditions</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.thresholdcontrol.PoolUsageThresholdInsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.control.thresholdcontrol.PoolUsageThresholdUpdateRowPkWithNullConditions</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.deploymentmonitor.CountAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.deploymentmonitor.GetMetaInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.deploymentmonitor.SearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.dhcpoptions.DeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.dhcpoptions.DeployOnDPP</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.dhcpoptions.GetLocations</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.dhcpoptions.GetMetaInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.dhcpoptions.InsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.dhcpoptions.SearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.dhcpoptions.SyncCpeIPs</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.dhcpoptions.UpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.gui.GuiAttributeGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.gui.GuiAttributeSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.gui.GuiFixedAttributeGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.gui.GuiFixedAttributeSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.gui.GuiFixedAttributeUpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.gui.GuiOperatorGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.gui.GuiParameterGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.leasebrowser.CountRowsWithCondition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.leasebrowser.GetMetaInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.leasebrowser.InsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.leasebrowser.SearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.ChangeTargetsDCHPCluster</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.ConnectDataGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.ConnectDataSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.CpednsGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfActivateForMigration</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfCheckDhcpdConfNewFormat</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeactivateForMigration</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeleteForMigration</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeployCPE</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeployDhcpdConfNewFormat</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeployStaticHostNewFormat</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfDuplicateForMigration</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfUndeployCPE</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DhcpdConfUndeployStaticHostNewFormat</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.DppFixedAttributesGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.FetchPoolsForSubnets</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.FetchStandorteAndDHCPRelaysForStandortgruppe</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.FetchSubnetsForDHCPRelays</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.NetConfigTools.GetNetworkConfigSubnetTable</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StandortgruppeDeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StandortgruppeGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StandortgruppeInsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StandortgruppeUpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StandortgruppenbaumGetTreeString</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StaticHostDeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StaticHostGetAllRowsWithSessionAuthentification</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StaticHostGetMetaInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StaticHostInsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StaticHostSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.StaticHostUpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.SubnetDeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.SubnetGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.SubnetInsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.SubnetSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.SubnetUpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.TargetDeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.TargetGetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.TargetInsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.TargetSearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.TargetUpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.netconfigurator.TargetUpdateRowPkIgnoreEmpty</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.pooltypeconfig.DeleteRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.pooltypeconfig.GetAllRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.pooltypeconfig.GetMetaInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.pooltypeconfig.InsertRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.pooltypeconfig.SearchRows</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.dhcp.v4.pooltypeconfig.UpdateRow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <SharedLibs>
+    <SharedLib implicitDependency="true">
+      <SharedLib>tools</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.RegisterSession</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.Registration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.classconfigurator.ClassSG</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.classconfigurator.DeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.classconfigurator.GetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.classconfigurator.GetMetaInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.classconfigurator.InsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.classconfigurator.SearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.classconfigurator.UpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.conditionconfigurator.Condition</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.conditionconfigurator.DeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.conditionconfigurator.DeleteRowsOutput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.conditionconfigurator.GetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.conditionconfigurator.GetMetaInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.conditionconfigurator.InsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.conditionconfigurator.SearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.conditionconfigurator.UpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.CheckStandort</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.CheckStatus</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.CheckStatusForIp</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.CheckStatusGetInstanceInfoList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.ConfigFile</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.ConfigFileGenerateTlvFromStringV4</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.ConfigFileShowV4PacketsAsAskii</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.Dhcpv4Packets</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.Dhcpv4PacketsGetMetaInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.Dhcpv4PacketsSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.FetchDHCPRelayForID</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.FetchPooltypeNameForID</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.Pool</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.PoolDeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.PoolGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.PoolInsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.PoolSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.PoolUpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.PoolUsage</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.PoolUsageSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.PoolUsageThreshold</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.PoolUsageThresholdGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.SharedNetwork</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.SharedNetworkDeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.SharedNetworkGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.SharedNetworkInsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.SharedNetworkSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.SharedNetworkUpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.Standort</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.StandortDeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.StandortGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.StandortInsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.StandortSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.StandortUpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.dhcppackets.GetDHCPPacketsTable</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.poolusage.FetchDHCPRelayForIDPoolUsage_Type</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.poolusage.FetchDHCPServerForStandortgruppeIDPoolUsage_Type</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.poolusage.FetchExceedsThresholdForServerAndPooltype</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.poolusage.FetchPoolForIDPoolUsage_Type</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.poolusage.FetchPooltypeNameForIDPoolUsage_Type</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.poolusage.GetPoolDetailsTable</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.poolusage.GetPoolTypeOverviewTable</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.poolusage.PoolUsage_Type</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.DHCPRelayName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.FetchDHCPRelayForIDThreshold_Type</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.FetchPooltypeNameForIDThreshold_Type</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.GetDHCPRelays</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.GetPooltypes</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.GetThresholdControlTable</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.PoolUsageThresholdDeleteRowsWithNullConditions</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.PoolUsageThresholdInsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.PoolUsageThresholdUpdateRowPkWithNullConditions</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.PooltypeName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.control.thresholdcontrol.Threshold_Type</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.RegisterSessionResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.ColValuesDistinct_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.GetLocationsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.OutputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages.RowListOutput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages.RowListWrapper_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages.SyncCpeIPsInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages.SyncCpeIPsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.CheckStatusForIpInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.CheckStatusForIpRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.CheckStatusForIpResponse_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.GetInstanceInfoListRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.GetInstanceInfoListResponse_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.InstanceInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages.StatusElement_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages.RowList_ctype1</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages.Row_ctype1</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.Gui.WS.Messages.GetMetaInfoRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.Gui.WS.Messages.GetMetaInfoRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.GenerateTlvFromStringV4Input_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.GenerateTlvFromStringV4Request_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.ShowV4PacketsAsAsciiInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.ShowV4PacketsAsAsciiRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.TextResponse_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConfigFile.www.gip.com.juno.Gui.WS.Messages.TlvToAsciiResponse_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.DHCP.WS.Cpedns.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.DHCP.WS.Cpedns.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.DHCP.WS.Cpedns.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.DHCP.WS.Cpedns.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Cpedns.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.ColValuesDistinct_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.DeployOnDPPRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.DeployOnDPPResponse_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.GetMetaInfoRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.StatusReport_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages.CountAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Deployments.WS.DeployActions.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Gui.WS.Messages.GetMetaInfoRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DeployActions.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.CPEIdentification_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.CheckDhcpdConfInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.CheckDhcpdConfRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.DeployCPERequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.DeployCPEResponse_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.DeployDhcpdConfInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.DeployDhcpdConfRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.DeployStaticHostInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.DeployStaticHostRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.DhcpdConfResponse_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.DuplicateForMigrationRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.MigrationTargetIdentifier_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.OutputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.UndeployCPERequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.UndeployCPEResponse_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.UndeployStaticHostInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DhcpdConf.www.gip.com.juno.Gui.WS.Messages.UndeployStaticHostRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Auditv4Memory.WS.Dhcpv4Packets.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Auditv4Memory.WS.Dhcpv4Packets.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Auditv4Memory.WS.Dhcpv4Packets.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Auditv4Memory.WS.Dhcpv4Packets.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Auditv4Memory.WS.Dhcpv4Packets.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Gui.WS.Messages.GetMetaInfoRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Dhcpv4Packets.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.DHCP.WS.DppFixedAttribute.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.DHCP.WS.DppFixedAttribute.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.DHCP.WS.DppFixedAttribute.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.DHCP.WS.DppFixedAttribute.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.DppFixedAttribute.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.DHCP.WS.GuiOperator.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.DHCP.WS.GuiOperator.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.DHCP.WS.GuiOperator.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.DHCP.WS.GuiOperator.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiOperator.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.DHCP.WS.GuiParameter.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.DHCP.WS.GuiParameter.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.DHCP.WS.GuiParameter.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.DHCP.WS.GuiParameter.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.CountRowsWithConditionInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.CountRowsWithConditionRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.SearchRowsInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages.ColValuesDistinct_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages.GetMetaInfoRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages.DeleteRowsWithNullConditionsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages.UpdateRowPkWithNullConditionsInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages.UpdateRowPkWithNullConditionsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages.GetMetaInfoRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.DHCP.WS.Standort.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.Gui.WS.Messages.ColValuesDistinct_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standort.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages.ColValuesDistinct_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppenbaum.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppenbaum.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppenbaum.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppenbaum.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppenbaum.www.gip.com.juno.WS.Standortgruppenbaum.Messages.GetTreeStringRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppenbaum.www.gip.com.juno.WS.Standortgruppenbaum.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Standortgruppenbaum.www.gip.com.juno.WS.Standortgruppenbaum.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.DHCP.WS.StaticHost.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.DHCP.WS.StaticHost.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.DHCP.WS.StaticHost.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.DHCP.WS.StaticHost.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.DHCP.WS.StaticHost.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.DHCP.WS.StaticHost.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.DHCP.WS.StaticHost.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.DHCP.WS.StaticHost.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.Gui.WS.Messages.GetMetaInfoRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.StaticHost.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.DeleteRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.InsertRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.Payload_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.Response_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.RowList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.Row_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.SearchRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.UpdateRowPkIgnoreEmptyInput_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.UpdateRowPkIgnoreEmptyRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages.UpdateRowRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.Gui.WS.Messages.ErrorParameterList_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.Gui.WS.Messages.ErrorParameter_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.Gui.WS.Messages.GetAllRowsRequest_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.Gui.WS.Messages.InputHeaderContent_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.Gui.WS.Messages.MetaInfoRow_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.Gui.WS.Messages.MetaInfo_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.Gui.WS.Messages.ResponseHeader_ctype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.deploymentmonitor.CountAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.deploymentmonitor.CountAllRowsInput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.deploymentmonitor.CountAllRowsOutput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.deploymentmonitor.DeployActions</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.deploymentmonitor.GetMetaInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.deploymentmonitor.SearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.Cm</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.DHCPOptions</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.DeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.DeleteRowsOutput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.DeployOnDPP</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.DeployOnDPPInput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.GetLocations</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.GetLocationsInput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.GetMetaInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.InsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.SearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.SyncCpeIPs</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.SyncCpeIPsOutput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.dhcpoptions.UpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.GuiAttribute</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.gui.GuiAttributeGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.gui.GuiAttributeSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.GuiFixedAttribute</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.gui.GuiFixedAttributeGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.gui.GuiFixedAttributeSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.gui.GuiFixedAttributeUpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.GuiOperator</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.gui.GuiOperatorGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.GuiParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.gui.GuiParameterGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.datatypes.DeleteRowsOutput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.datatypes.ErrorParameter_GUItype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.datatypes.GetAllRowsInput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.datatypes.GetMetaInfoInput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.gui.datatypes.ResponseHeader_GUItype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.leasebrowser.CountRowsWithCondition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.leasebrowser.CountRowsWithConditionOutput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.leasebrowser.GetMetaInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.leasebrowser.InsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.leasebrowser.Leases</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.leasebrowser.SearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.ChangeTargetsDCHPCluster</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.ConnectData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.ConnectDataGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.ConnectDataSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.Cpedns</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.CpednsGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConf</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfActivateForMigration</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfCheckDhcpdConfNewFormat</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeactivateForMigration</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeleteForMigration</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeployCPE</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeployDhcpdConfNewFormat</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfDeployStaticHostNewFormat</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfDuplicateForMigration</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfUndeployCPE</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DhcpdConfUndeployStaticHostNewFormat</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DppFixedAttribute</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.DppFixedAttributesGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.FetchPoolsForSubnets</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.FetchStandorteAndDHCPRelaysForStandortgruppe</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.FetchSubnetsForDHCPRelays</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.ForceOverwrite</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.NetConfigTools.GetNetworkConfigSubnetTable</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.Standortgruppe</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StandortgruppeDeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StandortgruppeGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StandortgruppeInsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StandortgruppeUpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.Standortgruppenbaum</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StandortgruppenbaumGetTreeString</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StaticHost</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StaticHostDeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StaticHostGetAllRowsWithSessionAuthentification</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StaticHostGetMetaInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StaticHostInsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StaticHostSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.StaticHostUpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.Subnet</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.SubnetDeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.SubnetGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.SubnetInsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.SubnetSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.SubnetUpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.Target</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.TargetDeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.TargetGetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.TargetID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.TargetInsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.TargetSearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.TargetUpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.netconfigurator.TargetUpdateRowPkIgnoreEmpty</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.netconfigurator.UpdateRowPkIgnoreEmptyOutput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.pooltypeconfig.DeleteRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.pooltypeconfig.GetAllRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.pooltypeconfig.GetMetaInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.pooltypeconfig.InsertRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.dhcp.v4.pooltypeconfig.Pooltype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.pooltypeconfig.SearchRows</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.dhcp.v4.pooltypeconfig.UpdateRow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>

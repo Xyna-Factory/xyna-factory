@@ -1,0 +1,15 @@
+{
+    "testseries": [
+        "capacities_001/testseries.json",
+        "capacities_002/testseries.json",
+        "capacities_003/testseries.json",
+        "capacities_005/testseries.json",
+        "capacities_006/testseries.json",
+        "capacities_007/testseries.json",
+        "capacities_008/testseries.json",
+        "capacities_009/testseries.json",
+        "capacities_010/testseries.json",
+        "capacities_011/testseries.json",
+        "capacities_012/testseries.json"
+    ]
+}

@@ -1,0 +1,45 @@
+{
+  "meta": 
+  {
+    "name": "stringToJsonTest",
+	"description": "testet die Funktion assert mit bigger als constraint",
+	"created": "10.12.2019",
+	"updated": "07.04.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!smallValue!",
+	  "value": 1
+	},
+	{
+	  "operation": "set",
+	  "variable": "!biggerValue!",
+	  "value": 4
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "bigger",
+	  "variable": "!biggerValue!",
+	  "value": "!smallValue!"
+	},
+    {
+	  "operation": "set",
+	  "variable": "!smallValue!",
+	  "value": 4
+	},
+	{
+	  "operation": "set",
+	  "variable": "!biggerValue!",
+	  "value": 4
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "bigger",
+	  "orEquals": true,
+	  "variable": "!biggerValue!",
+	  "value": "!smallValue!"
+	}
+  ]  
+}

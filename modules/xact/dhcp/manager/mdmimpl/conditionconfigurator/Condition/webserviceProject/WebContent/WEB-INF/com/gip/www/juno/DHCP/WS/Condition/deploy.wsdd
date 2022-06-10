@@ -1,0 +1,151 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from Condition WSDL service -->
+
+  <service name="ConditionPort" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://www.gip.com/juno/DHCP/WS/Condition"/>
+      <parameter name="wsdlServiceElement" value="Condition"/>
+      <parameter name="schemaQualified" value="http://www.gip.com/juno/DHCP/WS/Condition/Messages,http://www.gip.com/juno/Gui/WS/Messages"/>
+      <parameter name="wsdlServicePort" value="ConditionPort"/>
+      <parameter name="className" value="com.gip.www.juno.DHCP.WS.Condition.ConditionBindingSkeleton"/>
+      <parameter name="wsdlPortType" value="Condition"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:MetaInfoRow_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.MetaInfoRow_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        qname="ns:InsertRowRequest_ctype"
+        type="java:com.gip.www.juno.DHCP.WS.Condition.Messages.InsertRowRequest_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:ErrorParameter_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.ErrorParameter_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        qname="ns:RowList_ctype"
+        type="java:com.gip.www.juno.DHCP.WS.Condition.Messages.Row_ctype[]"
+        innerType="cmp-ns:Row" xmlns:cmp-ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        qname="ns:SearchRowsRequest_ctype"
+        type="java:com.gip.www.juno.DHCP.WS.Condition.Messages.SearchRowsRequest_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        qname="ns:Payload_ctype"
+        type="java:com.gip.www.juno.DHCP.WS.Condition.Messages.Payload_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:ResponseHeader_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.ResponseHeader_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        qname="ns:Row_ctype"
+        type="java:com.gip.www.juno.DHCP.WS.Condition.Messages.Row_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        qname="ns:UpdateRowRequest_ctype"
+        type="java:com.gip.www.juno.DHCP.WS.Condition.Messages.UpdateRowRequest_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:GetMetaInfoRequest_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.GetMetaInfoRequest_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        qname="ns:Response_ctype"
+        type="java:com.gip.www.juno.DHCP.WS.Condition.Messages.Response_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/DHCP/WS/Condition/Messages"
+        qname="ns:DeleteRowsRequest_ctype"
+        type="java:com.gip.www.juno.DHCP.WS.Condition.Messages.DeleteRowsRequest_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:MetaInfo_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.MetaInfoRow_ctype[]"
+        innerType="cmp-ns:MetaInfoRow_ctype" xmlns:cmp-ns="http://www.gip.com/juno/Gui/WS/Messages"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:InputHeaderContent_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.InputHeaderContent_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:ErrorParameterList_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.ErrorParameter_ctype[]"
+        innerType="cmp-ns:ErrorParameter_ctype" xmlns:cmp-ns="http://www.gip.com/juno/Gui/WS/Messages"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.gip.com/juno/Gui/WS/Messages"
+        qname="ns:GetAllRowsRequest_ctype"
+        type="java:com.gip.www.juno.Gui.WS.Messages.GetAllRowsRequest_ctype"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

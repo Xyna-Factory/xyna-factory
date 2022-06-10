@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Double Format Specifier" TypeName="DoubleFormatSpecifier" TypePath="base.math" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>This type is used with the instanced service 'format' in the 'Double Number' type. It specifies the way to format the number.</Documentation>
+  </Meta>
+  <Data Label="Format Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="formatLocale">
+    <Meta>
+      <Documentation>The format locale is responsible for the format of the number as the format differs in different languages. Either use one of the predefined subtypes or set the locale member of it to the ISO 639 standart for language codes.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Number Width" VariableName="numberWidth">
+    <Meta>
+      <Documentation>Number width is the minumum amount of digits a number should have including the decimal separator excluding thousands separators. If the number is smaller than the minimum width, it is padded with zeroes from the left. If the number is larger than the minimum width, nothin happens. The Places after Decimal Point option takes precedence over this option.</Documentation>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="Places after Decimal Point" VariableName="placesAfterDecimalPoint">
+    <Meta>
+      <Documentation>This defines the exact number of decimal points behind the decimal separator. If the number has less decimal points than defined by this variable, the number is padded with zeroes to the right. If the number has more decimal points, they are rounded at the exact location this number specifies. This option takes precedence over the Number Width option.</Documentation>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="Thousands Separator" VariableName="thousandsSeparator">
+    <Meta>
+      <Documentation>This boolean states if the number should be separated by thousands separators every three digits beginning form the decimal separator to the left. The exact character do do this is specified by by the format locale.</Documentation>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+</DataType>

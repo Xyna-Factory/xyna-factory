@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType Label="AQ Adapter" TypeName="AQAdapter" TypePath="xact.jms.aq" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>AQAdapterImpl.jar</Libraries>
+  <Libraries>OracleAQTools.jar</Libraries>
+  <Service Label="AQ Adapter" TypeName="AQAdapter">
+
+    <Operation ID="3" IsStatic="true" Label="Enqueue" Name="enqueue">
+      <Input>
+        <Data ID="0" Label="Queue" ReferenceName="Queue" ReferencePath="xact.jms" VariableName="queue"/>
+        <Data ID="1" Label="Correlation ID" ReferenceName="CorrelationID" ReferencePath="xact.jms" VariableName="correlationID"/>
+        <Data ID="2" Label="JMS Text Message" ReferenceName="JMSTextMessage" ReferencePath="xact.jms" VariableName="jMSTextMessage"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.jms.aq.AQAdapterImpl.enqueue(queue, correlationID, jMSTextMessage);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Enqueue with Properties" Name="enqueueWithProperties">
+      <Input>
+        <Data Label="Queue Properties" ReferenceName="QueueProperties" ReferencePath="xact.jms" VariableName="queueProperties"/>
+        <Data Label="Queue" ReferenceName="Queue" ReferencePath="xact.jms" VariableName="queue"/>
+        <Data Label="Correlation ID" ReferenceName="CorrelationID" ReferencePath="xact.jms" VariableName="correlationID"/>
+        <Data Label="JMS Text Message" ReferenceName="JMSTextMessage" ReferencePath="xact.jms" VariableName="jMSTextMessage"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.jms.aq.AQAdapterImpl.enqueueWithProperties(queueProperties, queue, correlationID, jMSTextMessage);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+  </Service>
+</DataType>

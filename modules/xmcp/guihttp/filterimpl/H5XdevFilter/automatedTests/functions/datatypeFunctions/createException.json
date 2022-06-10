@@ -1,0 +1,79 @@
+[
+  {
+    "description": "Erstellt, deployt und schließt eine Exception mit gegebenem path und label.",
+    "type": "function",
+	"functionName": "createException",
+	"input": ["!path!", "!label!", "!workspace!"],
+	"output": ["!name!"],
+	"operations":
+	[
+	  {
+	    "operation": "set",
+		"variable": "!workspaceEscaped!",
+		"value": "!workspace!"
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!workspaceEscaped!",
+		"modification": {"operation": "urlencode" }
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!url!",
+		"value": "/runtimeContext/!workspaceEscaped!/xmom/exceptions"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!",
+		"payload": {"label":"New ExceptionType"}
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!fqnQuoted!",
+		"pathInResponse": "xmomItem/fqn"
+	  },
+	  {
+	    "operation": "invoke",
+		"functionName": "splitFQNtoPathAndName",
+		"mapInput": {"!fqn!": "!fqnQuoted!"},
+		"mapOutput": {"!path!": "!newPath!", "!name!": "!newName!"}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "PUT",
+		"url": "!url!/!newPath!/!newName!/objects/typeInfoArea/change",
+		"payload": {"label":"!label!","revision":0}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/!newPath!/!newName!/save",
+		"payload": {"revision":1,"label":"!label!","path":"!path!"}
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!fqnQuotedAfterDeploy!",
+		"pathInResponse": "updates/$list[0]/fqn"
+	  },
+	  {
+	    "operation": "invoke",
+		"functionName": "splitFQNtoPathAndName",
+		"mapInput": {"!fqn!": "!fqnQuotedAfterDeploy!"},
+		"mapOutput": {"!name!": "!name!", "!path!": "!path!"}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/!path!/!name!/deploy",
+		"payload": {"revision":2}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/!path!/!name!/close",
+		"payload": {"force":false,"revision":2}
+	  }
+	]
+  }
+]

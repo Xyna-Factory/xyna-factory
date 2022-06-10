@@ -1,0 +1,80 @@
+{
+  "meta":
+  {
+    "name": "foreachTest",
+    "description": "Execute a workflow containing a foreach with two iterations (loaded from app) and open audit",
+    "created": "24.04.2020",
+    "updated": "24.04.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.ForeachWorkflow",
+        "!input!": [],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 2,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check foreach content area", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!iterationContainerKeyForeach!",
+      "pathInResponse": "info/$list[id=step-16]/iterationContainerKey",
+	  "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "orEquals": "true",
+      "variable": "!iterationContainerKeyForeach!",
+      "value": "step16"
+    },
+
+    { "comment": "check mapping", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!iterationContainerKey!",
+      "pathInResponse": "info/$list[id=step13]/iterationContainerKey",
+	  "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "orEquals": "true",
+      "variable": "!iterationContainerKey!",
+      "value": "!iterationContainerKeyForeach!"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "19.3.2021", 
+    "updated": "19.3.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!xprc.base!": "xprc.base"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects/!xprc.base!"
+    },
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "pathToList": "objects",
+	  "entries": [
+	    {
+	      "fqn": "base.AnyType",
+		  "type": "dataType"
+	    }
+	  ]
+	}
+  ]
+}

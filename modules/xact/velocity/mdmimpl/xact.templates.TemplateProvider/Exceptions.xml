@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<MessageStore xmlns="http://www.gip.com/xyna/1.5/utils/message/storage/1.0"
+              Name="Xyna Exceptions" Version="1.0.0" DefaultLanguage="DE">
+  <Description>Exceptions Xyna. Codes finden sich in auch in Klasse
+               xact.templates.templateprovider.exceptions.Codes. Diese Datei dient
+               gleichzeitig als Dokumentation der Fehlermeldungen.</Description>
+  <JavaGen>
+    <FQClassName>xact.templates.templateprovider.exceptions.Codes</FQClassName>
+  </JavaGen>
+
+<!-- Beispiel: (siehe auch Exception-Utils Dokumentation im Wiki)
+   <Message Code="XYNA-01500">
+    <JavaGen>
+      <VarName>HTTP_INIT_ERROR</VarName>
+    </JavaGen>
+    <Parameter Number="0">
+      <Description Language="DE">errorMsg</Description>
+      <JavaGen>
+        <FQJavaType>java.lang.String</FQJavaType>
+        <Name>errorMsg</Name>
+      </JavaGen>
+    </Parameter>
+    <MessageText Language="DE">Beim Starten des HttpAdapters ist folgender Fehler aufgetreten: %0%</MessageText>
+  </Message>
+  --> 
+  <Message Code="XYNA-11000">
+    <JavaGen>
+      <VarName>VELOCITY_TEMPLATE_PROVIDER_DATA_SOURCE_CONNECTION_FAILED</VarName>
+    </JavaGen>
+    <MessageText Language="EN">Failed to connect to data source providing template parts.</MessageText>
+    <MessageText Language="DE">Verbindung zur Datenbank ist beim Versuch die Template Fragmente zur ermitteln fehlgeschlagen.</MessageText>
+  </Message> 
+  <Message Code="XYNA-11001">
+    <JavaGen>
+      <VarName>VELOCITY_TEMPLATE_PROVIDER_INITIALIZATION_FAILURE</VarName>
+    </JavaGen>
+    <MessageText Language="EN">Failed to initialize template provider.</MessageText>
+    <MessageText Language="DE">Fehler während der Initialisierung des Template Providers.</MessageText>
+  </Message>
+  <Message Code="XYNA-11002">
+    <JavaGen>
+      <VarName>VELOCITY_TEMPLATE_PROVIDER_UNKNOWN_TEMPLATE_TYPE</VarName>
+    </JavaGen>
+    <Parameter Number="0">
+      <Description Language="EN">Template type name</Description>
+      <JavaGen>
+        <FQJavaType>java.lang.String</FQJavaType>
+        <Name>templateType</Name>
+      </JavaGen>
+    </Parameter>
+    <MessageText Language="EN">Unknown template type used: &lt;%0%&gt;</MessageText>
+    <MessageText Language="DE">Es wurde ein unbekannter Template Type benutzt: &lt;%0%&gt;</MessageText>
+  </Message>
+    <Message Code="XYNA-11003">
+    <JavaGen>
+      <VarName>VELOCITY_TEMPLATE_PROVIDER_GENERATION_FAIL</VarName>
+    </JavaGen>
+    <MessageText Language="EN">Failed to generate Velocity template.</MessageText>
+    <MessageText Language="DE">Fehler beim Generieren des Velocity Templates.</MessageText>
+  </Message>  
+</MessageStore>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.gip.com/xyna/1.5/xsd/common/1.2"
+	xmlns:jms="http://xmlns.oracle.com/JMS_Headers"
+	targetNamespace="http://www.gip.com/xyna/1.5/xsd/common/1.2"
+	xmlns:xpmcom="http://www.gip.com/xyna/1.5/xsd/common/1.2"
+	elementFormDefault="qualified">
+	<element name="XynaHeader" type="xpmcom:XynaHeader_ctype" />
+	<element name="XynaStatus" type="xpmcom:XynaStatus_ctype" />
+	<complexType name="XynaHeader_ctype">
+		<attribute name="OrderNumber" type="string" use="required" />
+		<attribute name="OrderType" type="string" use="required" />
+		<attribute name="OrderTypeVersion" type="string" />
+		<attribute name="Department" type="string" use="required" />
+		<attribute name="CreationDate" type="string" use="required" />
+		<attribute name="StartTime" type="string" />
+		<attribute name="StartTimeSlot" type="string" />
+		<attribute name="Information" type="string" />
+		<attribute name="ProcessId" type="string" />
+		<attribute name="Reference" type="string" />
+		<attribute name="Source" type="string" />
+		<attribute name="Priority" type="string" />
+		<attribute name="Dependence" type="string" />
+		<attribute name="Status" type="string" />
+	</complexType>
+	<complexType name="XynaStatus_ctype">
+		<attribute name="Status" type="string" use="required" />
+		<attribute name="StatusReferenceNumber" type="string"
+			use="required" />
+		<attribute name="Information" type="string" />
+	</complexType>
+	<complexType name="XynaID_ctype">
+		<attribute name="ID0" type="string" use="required" />
+		<attribute name="ID1" type="string" />
+		<attribute name="ID2" type="string" />
+	</complexType>
+	<element name="XynaID" type="xpmcom:XynaID_ctype" />
+	<element name="StringElement" type="string" />
+	<complexType name="XynaOrderReference_ctype">
+		<attribute name="OrderID" use="required" type="string" />
+		<attribute name="Priority" type="string" />
+		<attribute name="Capacities" type="string" />
+		<attribute name="Resources" type="string" />
+	</complexType>
+	<element name="XynaOrderReference"
+		type="xpmcom:XynaOrderReference_ctype">
+	</element>
+	<complexType name="XynaOrder_ctype">
+		<sequence>
+			<element ref="xpmcom:XynaHeader" />
+			<any />
+		</sequence>
+	</complexType>
+	<element name="XynaOrder" type="xpmcom:XynaOrder_ctype" />
+</schema>

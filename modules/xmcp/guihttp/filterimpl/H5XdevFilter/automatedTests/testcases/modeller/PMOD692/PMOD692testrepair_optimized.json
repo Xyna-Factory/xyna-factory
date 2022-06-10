@@ -1,0 +1,155 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-785", 
+    "created": "14.01.2020", 
+    "updated": "14.01.2020"
+  }, 
+  "operations": [
+    {
+      "operation": "setRandom", 
+      "variable": "!rndLabel1!"
+    }, 
+    {
+      "operation": "setRandom", 
+      "variable": "!rndLabel2!"
+    }, 
+    {
+      "data": [
+        {
+          "!path!": "autoTest.generated.PMOD692"
+        }, 
+        {
+          "!label1!": "GeneratedDatatype_!rndLabel1!"
+        }, 
+        {
+          "!label2!": "GeneratedDatatype_!rndLabel2!"
+        }, 
+        {
+          "!workspaceName!": "default workspace"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "functionName": "createDatatype", 
+      "mapInput": {
+        "!label!": "!rndLabel1!", 
+        "!path!": "!path!", 
+        "!workspace!": "!workspaceName!"
+      }, 
+      "mapOutput": {
+        "!name!": "!nameDT1!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "functionName": "createDatatype", 
+      "mapInput": {
+        "!label!": "!rndLabel2!", 
+        "!path!": "!path!", 
+        "!workspace!": "!workspaceName!"
+      }, 
+      "mapOutput": {
+        "!name!": "!nameDT2!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "functionName": "addComplexTypeMemberToDatatype", 
+      "mapInput": {
+        "!datatypeName!": "!nameDT1!", 
+        "!datatypePath!": "!path!", 
+        "!insertLabel!": "removedDatatype", 
+        "!insertType!": "!path!.!nameDT2!", 
+        "!workspace!": "!workspaceName!"
+      }, 
+      "mapOutput": {
+        "!insertName!": "!nameOfMemberVariable!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT2!/close"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT2!/delete"
+    }, 
+    {
+      "acceptError": true, 
+      "comment": "Wir erwarten 409 - es muss repariert werden", 
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!"
+    }, 
+    {
+      "constraint": "listLength", 
+      "expectedValue": 1, 
+      "operation": "assert", 
+      "path": "repairs/$list"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!?repair=true"
+    }, 
+    {
+      "constraint": "listLength", 
+      "expectedValue": 1, 
+      "operation": "assert", 
+      "path": "repairResult/$list"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!rndLabel1!", 
+        "path": "!path!", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/save"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/close"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[0]/primitiveType", 
+      "targetVariable": "!type!", 
+      "unquoteResult": true
+    }, 
+    {
+      "constraint": "equals", 
+      "operation": "assert", 
+      "value": "String", 
+      "variable": "!type!"
+    }
+  ]
+}

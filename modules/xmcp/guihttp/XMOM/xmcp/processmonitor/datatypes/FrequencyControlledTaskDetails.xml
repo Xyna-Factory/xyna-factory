@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Frequency controlled task details" TypeName="FrequencyControlledTaskDetails" TypePath="xmcp.processmonitor.datatypes" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="taskId" ReferenceName="TaskId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="taskId"/>
+  <Data Label="Event creation info" VariableName="eventCreationInfo">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Label" VariableName="label">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Event count" VariableName="eventCount">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Failed events" VariableName="failedEvents">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Finished events" VariableName="finishedEvents">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Events to launch" VariableName="eventsToLaunch">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Task status" VariableName="taskStatus">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Start time" VariableName="startTime">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Stop time" VariableName="stopTime">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Application name" VariableName="applicationName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Version name" VariableName="versionName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Workspace name" VariableName="workspaceName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Running events" VariableName="runningEvents">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Max events" VariableName="maxEvents">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Datasources" ReferenceName="GraphDatasource" ReferencePath="xmcp.processmonitor.datatypes" VariableName="datasources"/>
+</DataType>

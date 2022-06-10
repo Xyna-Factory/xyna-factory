@@ -1,0 +1,551 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "7.4.2021",
+    "updated": "7.4.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.RemoveXynaPro!": "xmcp.factorymanager.xynaproperties.RemoveXynaProperty"
+        },
+        {
+          "!xyna.processmodeller.redo.limit!": "xyna.processmodeller.redo.limit"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaPropertyK!": "xmcp.factorymanager.xynaproperties.XynaPropertyKey"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper!": "xmcp.factorymanager.xynaproperties.GetXynaPropertiesTableInfo"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaPropDe!": "xmcp.factorymanager.xynaproperties.GetXynaPropertyDetails"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Key!": "Key"
+        },
+        {
+          "!xyna.processmodeller.*li*!": "xyna.processmodeller.*li*"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!key!": "key"
+        },
+        {
+          "!Value!": "Value"
+        },
+        {
+          "!value!": "value"
+        },
+        {
+          "!Default_Value!": "Default Value"
+        },
+        {
+          "!defaultValue!": "defaultValue"
+        },
+        {
+          "!Documentation!": "Documentation"
+        },
+        {
+          "!gUIDocumentation!": "gUIDocumentation"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!en-US!": "en-US"
+        },
+        {
+          "!xmcp.DocumentationLanguage!": "xmcp.DocumentationLanguage"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper0!": "xmcp.factorymanager.xynaproperties.GetXynaPropertyDetails"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetRuntimeContexts!": "xmcp.factorymanager.shared.GetRuntimeContexts"
+        },
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!redo!": "redo"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaPropertyK!"
+            },
+            "key": "!xyna.processmodeller.redo.limit!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.RemoveXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!xyna.processmodeller.*li*!",
+                  "name": "!Key!",
+                  "path": "!key!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Value!",
+                  "path": "!value!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Default_Value!",
+                  "path": "!defaultValue!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Documentation!",
+                  "path": "!gUIDocumentation!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.DocumentationLanguage!"
+            },
+            "languageTag": "!en-US!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaProper!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[0]/key",
+      "targetVariable": "!xyna.processmodeller.undo.limit!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaPropertyK!"
+            },
+            "key": "!xyna.processmodeller.undo.limit!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaProper0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaPropertyK!"
+            },
+            "key": "!xyna.processmodeller.undo.limit!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.RemoveXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!xyna.processmodeller.*li*!",
+                  "name": "!Key!",
+                  "path": "!key!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Value!",
+                  "path": "!value!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Default_Value!",
+                  "path": "!defaultValue!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Documentation!",
+                  "path": "!gUIDocumentation!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.DocumentationLanguage!"
+            },
+            "languageTag": "!en-US!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaProper!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.shared.GetRuntimeContexts!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.shared.GetRuntimeContexts!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1617786298135.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1617786298135!",
+      "variable": "!new_1617786298135.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1617786298135.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id",
+      "targetVariable": "!step0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "isAbstract": true,
+          "label": "Service",
+          "type": "service"
+        },
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/objects/!step0!/insert"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/undo"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/!redo!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1617786298135!/!NewWorkflow!/issues"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaPropertyK!"
+            },
+            "key": "!xyna.processmodeller.undo.limit!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaPropDe!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/defaultValue",
+      "targetVariable": "!defaultValue!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "notEquals",
+      "variable": "!defaultValue!",
+      "value": ""
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/documentation/$list[0]/documentation",
+      "targetVariable": "!documentation!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "notEquals",
+      "variable": "!documentation!",
+      "value": ""
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/documentation/$list[1]/documentation",
+      "targetVariable": "!documentation!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "notEquals",
+      "variable": "!documentation!",
+      "value": ""
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaPropertyK!"
+            },
+            "key": "!xyna.processmodeller.redo.limit!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.GetXynaPropDe!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/defaultValue",
+      "targetVariable": "!defaultValue!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "notEquals",
+      "variable": "!defaultValue!",
+      "value": ""
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/documentation/$list[0]/documentation",
+      "targetVariable": "!documentation!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "notEquals",
+      "variable": "!documentation!",
+      "value": ""
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/documentation/$list[1]/documentation",
+      "targetVariable": "!documentation!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "notEquals",
+      "variable": "!documentation!",
+      "value": ""
+    }
+  ]
+}

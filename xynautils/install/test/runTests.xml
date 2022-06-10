@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="runTests"
+         default="runTests"
+         basedir="."
+         xmlns:au="antlib:org.apache.ant.antunit"
+         xmlns="antlib:org.apache.tools.ant">
+
+	<import file="../build/buildMacros.xml" />
+
+	<taskdef uri="antlib:org.apache.ant.antunit"
+	         resource="org/apache/ant/antunit/antlib.xml">
+		<classpath>
+			<pathelement location="../lib.test/ant-antunit-1.1.jar" />
+		</classpath>
+	</taskdef>
+
+	<target name="runTests" depends="prepare">
+		<au:antunit failonerror="false">
+			<file file="buildMacrosTest.xml" />
+			<file file="installMacrosTest.xml" />
+			<file file="xynaTasksTest.xml" />
+			<au:plainlistener />
+			<au:xmllistener />
+		</au:antunit>
+		<antcall target="cleanup" />
+	</target>
+
+	<target name="prepare">
+		<buildJar basedir=".."
+		          destfile="../lib/xynautils-install-testbuild.jar" />
+		<mkdir dir="${basedir}/bin" />
+		<copy todir="${basedir}/bin">
+			<fileset dir="${basedir}/../install">
+				<include name="manageDestinations.sh" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="cleanup">
+		<delete file="../lib/xynautils-install-testbuild.jar" />
+		<delete dir="${basedir}/bin" />
+	</target>
+
+</project>

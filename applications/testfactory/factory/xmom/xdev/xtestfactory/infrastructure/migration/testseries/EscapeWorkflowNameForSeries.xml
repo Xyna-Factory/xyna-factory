@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="3" Label="Escape Workflow Name For Series" TypeName="EscapeWorkflowNameForSeries" TypePath="xdev.xtestfactory.infrastructure.migration.testseries" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="2" Label="Escape Workflow Name For Series" Name="EscapeWorkflowNameForSeries">
+    <Meta>
+      <Abstract.UID>A8DC87D7-B424-3903-41D1-1DF536024ED6</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="1" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName77">
+        <Target RefID="7"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="0" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName">
+        <Source RefID="4"/>
+      </Data>
+    </Output>
+    <Mappings ID="7" Label="Escape">
+      <Source RefID="1"/>
+      <Target RefID="8"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="5" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName5"/>
+        <Source RefID="1"/>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName6"/>
+        <Target RefID="8"/>
+      </Output>
+      <Mapping>%1%.name=replaceall(%0%.name,"-","")</Mapping>
+    </Mappings>
+    <Data ID="8" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName8">
+      <Source RefID="7"/>
+      <Target RefID="12"/>
+    </Data>
+    <Mappings ID="12" Label="Escape">
+      <Source RefID="8"/>
+      <Target RefID="11"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="9" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName9"/>
+        <Source RefID="8">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="10" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName10"/>
+        <Target RefID="11"/>
+      </Output>
+      <Mapping>%1%.name=replaceall(%0%.name," ","")</Mapping>
+    </Mappings>
+    <Data ID="11" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName11">
+      <Source RefID="12"/>
+      <Target RefID="16"/>
+    </Data>
+    <Mappings ID="16" Label="Escape">
+      <Source RefID="11"/>
+      <Target RefID="15"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="13" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName13"/>
+        <Source RefID="11">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="14" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName14"/>
+        <Target RefID="15"/>
+      </Output>
+      <Mapping>%1%.name=replaceall(%0%.name,"\\.","")</Mapping>
+    </Mappings>
+    <Data ID="15" Label="Series Migration Name" ReferenceName="SeriesMigrationName" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries" VariableName="seriesMigrationName15">
+      <Source RefID="16"/>
+      <Target RefID="4"/>
+    </Data>
+    <Assign ID="4">
+      <Source RefID="15"/>
+      <Target RefID="0"/>
+      <Copy>
+        <Source RefID="15">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="0"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

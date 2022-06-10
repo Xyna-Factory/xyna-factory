@@ -1,0 +1,1926 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "17.5.2021",
+    "updated": "17.5.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!xmcp.h5x.regression.PMOD2871!": "xmcp.h5x.regression.PMOD2871"
+        },
+        {
+          "!StorableDataType!": "StorableDataType"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!xmcp.h5x.regression.PMOD2871!/!StorableDataType!"
+    },
+
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textData]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "textdata"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textData]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textData]/areas/$list[name=storableProperties]"
+    },
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textData]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textData]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textData]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textData]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textData]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textDataList]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "textdatalist"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textDataList]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textDataList]/areas/$list[name=storableProperties]"
+    },
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textDataList]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textDataList]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textDataList]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textDataList]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=textDataList]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringData]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdata"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringData]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringData]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringData]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "true"
+    },
+
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "liststringdatalist"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]"
+    },
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdatalist"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "true"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/items/$list[name=stringDataList]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "complexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]"
+    },
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdataincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "textdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "textdataincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "liststringdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "complexmemberlist"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]"
+    },
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdataincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "textdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "textdataincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "liststringdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=complexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+
+
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "fieldName",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]"
+    },
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdataincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "textdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "fieldName",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "liststringdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "flatexcludedtextdataincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMember]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+
+
+	{
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!fieldName!",
+      "value": "flatcomplexmemberlist"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]"
+    },
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdataincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataInComplexMember]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "textdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+	{
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "fieldName",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=textDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "liststringdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "stringdatalistincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=stringDataListInComplexMember]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "flatexcludedtextdataincomplexmember"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isIndex",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "isUnique",
+      "basePath": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!fieldName!",
+      "value": "text"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isReference",
+      "targetVariable": "!isReference!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isReference!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isIndex",
+      "targetVariable": "!isIndex!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isIndex!",
+      "value": "false"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=flatComplexMemberList]/areas/$list[name=storableProperties]/items/$list[name=flatExcludedTextDataInComplexMember]/areas/$list[name=storableProperties]/items/$list[name=text]/areas/$list[name=storableProperties]/isUnique",
+      "targetVariable": "!isUnique!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isUnique!",
+      "value": "false"
+    },
+
+
+
+	{
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=storableMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!fieldName!",
+      "value": "storabletypeforcomplexmember"
+    },
+
+
+
+	{
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=storableMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!fieldName!",
+      "value": "storabletypeforcomplexmember"
+    },
+
+
+
+	{
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[name=storableMember]/areas/$list[name=storableProperties]/fieldName",
+      "targetVariable": "!fieldName!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!fieldName!",
+      "value": "storabletypeforcomplexmember"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XMOMStorableAccessException" BaseTypePath="xnwh.persistence" Code="XYNA-XNWH-00002" Label="XMOM Storable Validation Exception" TypeName="XMOMStorableValidationException" TypePath="xnwh.persistence">
+    <Data Label="subtype" VariableName="subtype">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="path" VariableName="path">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="restriction" VariableName="restriction">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Validierung gescheitert! Die Einschränkung '%3%' konnte auf dem Typ '%1%' für den Pfad '%2%' nicht validiert werden.</MessageText>
+    <MessageText Language="EN">Validation failed! The restriction '%3%' could not be validated on '%1%' for the field '%2%'.</MessageText>
+  </ExceptionType>
+</ExceptionStore>

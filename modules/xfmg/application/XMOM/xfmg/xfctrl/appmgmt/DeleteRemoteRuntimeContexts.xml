@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete remote runtime contexts" TypeName="DeleteRemoteRuntimeContexts" TypePath="xfmg.xfctrl.appmgmt" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Delete remote runtime contexts" Name="DeleteRemoteRuntimeContexts">
+    <Input>
+      <Data ID="7" IsList="true" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext">
+        <Target RefID="18"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="11" IsList="true" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult11">
+        <Source RefID="12"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="15" Label="Delete remote runtime context on one node" ReferenceName="DeleteRemoteRuntimeContextOnOneNode" ReferencePath="xfmg.xfctrl.appmgmt.subwfs">
+      <Source RefID="16"/>
+      <Target RefID="16"/>
+    </ServiceReference>
+    <Foreach ID="18">
+      <Source RefID="7"/>
+      <Target RefID="20"/>
+      <InputList RefID="7">
+        <Data ID="17" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext17">
+          <Target RefID="16"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="20">
+        <Data ID="19" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult19">
+          <Source RefID="16"/>
+        </Data>
+      </OutputList>
+      <Function ID="16" Label="Delete remote runtime context on one node">
+        <Source RefID="15"/>
+        <Source RefID="17"/>
+        <Target RefID="15"/>
+        <Target RefID="19"/>
+        <Invoke Operation="DeleteRemoteRuntimeContextOnOneNode" ServiceID="15">
+          <Source RefID="17"/>
+        </Invoke>
+        <Receive ServiceID="15">
+          <Target RefID="19"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Data ID="20" IsList="true" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult20">
+      <Source RefID="18"/>
+      <Target RefID="12"/>
+    </Data>
+    <Assign ID="12">
+      <Source RefID="20"/>
+      <Target RefID="11"/>
+      <Copy>
+        <Source RefID="20"/>
+        <Target RefID="11"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

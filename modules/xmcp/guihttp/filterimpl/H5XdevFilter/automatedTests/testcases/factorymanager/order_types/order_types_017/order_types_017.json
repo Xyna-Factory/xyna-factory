@@ -1,0 +1,320 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.CreateOrderType!": "xmcp.factorymanager.ordertypes.CreateOrderType"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.OrderType!": "xmcp.factorymanager.ordertypes.OrderType"
+        },
+        {
+          "!Xyna_Fractal_Workflow!": "Xyna Fractal Workflow"
+        },
+        {
+          "!xnwh.persistence.Store!": "xnwh.persistence.Store"
+        },
+        {
+          "!xmcp.factorymanager.DestinationType!": "xmcp.factorymanager.DestinationType"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!xmcp.factorymanager.ParameterInheritanceRule!": "xmcp.factorymanager.ParameterInheritanceRule"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.Capacity!": "xmcp.factorymanager.ordertypes.Capacity"
+        },
+        {
+          "!Workspace!": "Workspace"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        },
+        {
+          "!autotest.generated.SONDERZEICHEN!": "autotest.generated.!rnd!.<>^°!\\\"§$%&/\\\\()=?`´{}|;:_,.-üöä+#*'~@€µ"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetOrderTypes!": "xmcp.factorymanager.ordertypes.GetOrderTypes"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!name!": "name"
+        },
+        {
+          "!Application!": "Application"
+        },
+        {
+          "!application!": "application"
+        },
+        {
+          "!Version!": "Version"
+        },
+        {
+          "!version!": "version"
+        },
+        {
+          "!workspace!": "workspace"
+        },
+        {
+          "!Execution_Destination_Type/Name!": "Execution Destination Type/Name"
+        },
+        {
+          "!executionDestination.name!": "executionDestination.name"
+        },
+        {
+          "!Used_Capacities!": "Used Capacities"
+        },
+        {
+          "!usedCapacities!": "usedCapacities"
+        },
+        {
+          "!Priority!": "Priority"
+        },
+        {
+          "!priority!": "priority"
+        },
+        {
+          "!Monitoring_Level!": "Monitoring Level"
+        },
+        {
+          "!monitoringLevel!": "monitoringLevel"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.ordertypes.OrderType!"
+            },
+            "cleanupDestination": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.DestinationType!"
+              }
+            },
+            "executionDestination": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.DestinationType!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "!xnwh.persistence.Store!",
+              "type": "!Xyna_Fractal_Workflow!"
+            },
+            "monitoringLevel": -1,
+            "monitoringLevelIsCustom": true,
+            "name": "!autotest.generated.SONDERZEICHEN!",
+            "parameterInheritanceRules": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.ParameterInheritanceRule!"
+              }
+            },
+            "planningDestination": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.DestinationType!"
+              }
+            },
+            "planningDestinationIsCustom": false,
+            "requiredCapacities": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.ordertypes.Capacity!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.Workspace!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "!default_workspace!",
+              "revision": -1,
+              "type": "!Workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.ordertypes.CreateOrderType!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Application!",
+                  "path": "!application!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Version!",
+                  "path": "!version!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Workspace!",
+                  "path": "!workspace!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Execution_Destination_Type/Name!",
+                  "path": "!executionDestination.name!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Used_Capacities!",
+                  "path": "!usedCapacities!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Priority!",
+                  "path": "!priority!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Monitoring_Level!",
+                  "path": "!monitoringLevel!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.ordertypes.GetOrderTypes!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

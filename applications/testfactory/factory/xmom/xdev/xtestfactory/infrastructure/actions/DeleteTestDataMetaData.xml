@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Test Data Meta Data" TypeName="DeleteTestDataMetaData" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(514)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Delete Test Data Meta Data" Name="DeleteTestDataMetaData">
+    <Input>
+      <Data ID="12" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData">
+        <Target RefID="11"/>
+        <Target RefID="98"/>
+        <Target RefID="64"/>
+      </Data>
+      <Data ID="41" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="deleteParameter">
+        <Target RefID="101"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="Unkonwn Test Data Meta Data ID" ReferenceName="UnknownTestDataMetaDataID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="unkonwnTestDataMetaDataID"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="2" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+    </ServiceReference>
+    <Data ID="4" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="3"/>
+      <Target RefID="9"/>
+      <Target RefID="33"/>
+    </Data>
+    <Function ID="3" Label="Determine Current Test Project">
+      <Source RefID="2"/>
+      <Target RefID="4"/>
+      <Target RefID="2"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="2"/>
+      <Receive ServiceID="2">
+        <Target RefID="4"/>
+      </Receive>
+    </Function>
+    <Mappings ID="9" Label="Get Test Data Meta Data">
+      <Source RefID="4"/>
+      <Target RefID="8"/>
+      <Meta>
+        <FixedDetailOptions>FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="44" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="4"/>
+      </Input>
+      <Output>
+        <Data ID="10" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData10"/>
+        <Target RefID="8"/>
+      </Output>
+      <Mapping>%1%=%0%.testDataMetaData</Mapping>
+    </Mappings>
+    <Data ID="8" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData8">
+      <Source RefID="9"/>
+      <Target RefID="14"/>
+      <Target RefID="69"/>
+    </Data>
+    <Parallel ID="75">
+      <Serial ID="74">
+        <Foreach ID="14">
+          <Source RefID="8"/>
+          <Target RefID="22"/>
+          <InputList RefID="8">
+            <Data ID="13" Label="test data meta data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData13">
+              <Target RefID="11"/>
+              <Target RefID="27"/>
+            </Data>
+          </InputList>
+          <OutputList RefID="22">
+            <Data ID="21" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData21">
+              <Source RefID="11"/>
+              <Source RefID="23"/>
+              <Source RefID="24"/>
+            </Data>
+          </OutputList>
+          <Choice ID="11" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="12"/>
+            <Source RefID="13"/>
+            <Target RefID="21"/>
+            <Input>
+              <Data ID="45" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData45"/>
+              <Source RefID="12">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Input>
+              <Data ID="46" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData46"/>
+              <Source RefID="13">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Case ID="39" Label="true" Premise="%0%.iD==%1%.iD">
+              <Mappings ID="26" Label="Empty List">
+                <Target RefID="17"/>
+                <Meta>
+                  <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+                </Meta>
+                <Output>
+                  <Data ID="25" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData25"/>
+                  <Target RefID="17"/>
+                </Output>
+              </Mappings>
+              <Assign ID="23">
+                <Source RefID="17"/>
+                <Target RefID="21"/>
+                <Copy>
+                  <Source RefID="17"/>
+                  <Target RefID="21"/>
+                </Copy>
+              </Assign>
+            </Case>
+            <Case ID="40" Label="false">
+              <Mappings ID="27" Label="Keep Entry">
+                <Source RefID="13"/>
+                <Target RefID="20"/>
+                <Meta>
+                  <FixedDetailOptions>FlatMode</FixedDetailOptions>
+                </Meta>
+                <Input>
+                  <Data ID="47" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData0"/>
+                  <Source RefID="13">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="28" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData28"/>
+                  <Target RefID="20"/>
+                </Output>
+                <Mapping>%1%["0"]=%0%</Mapping>
+              </Mappings>
+              <Assign ID="24">
+                <Source RefID="20"/>
+                <Target RefID="21"/>
+                <Copy>
+                  <Source RefID="20"/>
+                  <Target RefID="21"/>
+                </Copy>
+              </Assign>
+            </Case>
+          </Choice>
+        </Foreach>
+        <Mappings ID="33" Label="Put Into Test Project">
+          <Source RefID="4"/>
+          <Source RefID="22"/>
+          <Target RefID="31"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="32" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject32"/>
+            <Source RefID="4"/>
+          </Input>
+          <Input>
+            <Data ID="34" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData34"/>
+            <Source RefID="22">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="35" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject35"/>
+            <Target RefID="31"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.testDataMetaData=%1%</Mapping>
+        </Mappings>
+      </Serial>
+      <Serial ID="106">
+        <Foreach ID="69">
+          <Source RefID="8"/>
+          <Target RefID="70"/>
+          <InputList RefID="8">
+            <Data ID="68" Label="test data meta data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData68">
+              <Target RefID="64"/>
+              <Target RefID="62"/>
+            </Data>
+          </InputList>
+          <OutputList RefID="70">
+            <Data ID="67" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData_0">
+              <Source RefID="64"/>
+              <Source RefID="65"/>
+              <Source RefID="66"/>
+            </Data>
+          </OutputList>
+          <Choice ID="64" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="68"/>
+            <Source RefID="12"/>
+            <Target RefID="67"/>
+            <Input>
+              <Data ID="57" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData57"/>
+              <Source RefID="68">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Input>
+              <Data ID="58" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData58"/>
+              <Source RefID="12">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Case ID="53" Label="true" Premise="%0%.iD==%1%.iD">
+              <Mappings ID="62" Label="Keep Entry">
+                <Source RefID="68"/>
+                <Target RefID="61"/>
+                <Meta>
+                  <FixedDetailOptions>FlatMode</FixedDetailOptions>
+                  <IsTemplate>false</IsTemplate>
+                </Meta>
+                <Input>
+                  <Data ID="54" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData54"/>
+                  <Source RefID="68">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="55" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData55"/>
+                  <Target RefID="61"/>
+                </Output>
+                <Mapping>%1%["0"]=%0%</Mapping>
+              </Mappings>
+              <Assign ID="65">
+                <Source RefID="61"/>
+                <Target RefID="67"/>
+                <Copy>
+                  <Source RefID="61"/>
+                  <Target RefID="67"/>
+                </Copy>
+              </Assign>
+            </Case>
+            <Case ID="56" Label="false">
+              <Mappings ID="60" Label="Empty List">
+                <Target RefID="59"/>
+                <Meta>
+                  <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+                  <IsTemplate>false</IsTemplate>
+                </Meta>
+                <Output>
+                  <Data ID="52" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData52"/>
+                  <Target RefID="59"/>
+                </Output>
+              </Mappings>
+              <Assign ID="66">
+                <Source RefID="59"/>
+                <Target RefID="67"/>
+                <Copy>
+                  <Source RefID="59"/>
+                  <Target RefID="67"/>
+                </Copy>
+              </Assign>
+            </Case>
+          </Choice>
+        </Foreach>
+        <Choice ID="78" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="70"/>
+          <Target RefID="86"/>
+          <Input>
+            <Data ID="105" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData105"/>
+            <Source RefID="70">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Case ID="76" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+            <Mappings ID="84" Label="Pick First And Only">
+              <Source RefID="70"/>
+              <Target RefID="82"/>
+              <Meta>
+                <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+              </Meta>
+              <Input>
+                <Data ID="83" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData83"/>
+                <Source RefID="70">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="85" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData85"/>
+                <Target RefID="82"/>
+              </Output>
+              <Mapping>%1%=%0%["0"]</Mapping>
+            </Mappings>
+            <Assign ID="87">
+              <Source RefID="82"/>
+              <Target RefID="86"/>
+              <Copy>
+                <Source RefID="82"/>
+                <Target RefID="86"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="77" Label="false">
+            <Mappings ID="98" Label="Build Exception">
+              <Source RefID="12"/>
+              <Target RefID="96"/>
+              <Meta>
+                <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+              </Meta>
+              <Input>
+                <Data ID="97" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData97"/>
+                <Source RefID="12">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Exception ID="99" Label="Unkonwn Test Data Meta Data ID" ReferenceName="UnknownTestDataMetaDataID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="unkonwnTestDataMetaDataID99"/>
+                <Target RefID="96"/>
+              </Output>
+              <Mapping>%1%.iD=%0%.iD</Mapping>
+            </Mappings>
+            <Throw ExceptionID="96" ID="92" Label="Throw Unkonwn Test Data Meta Data ID">
+              <Source RefID="96"/>
+            </Throw>
+            <Assign ID="88"/>
+          </Case>
+        </Choice>
+      </Serial>
+    </Parallel>
+    <Data ID="17" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData17">
+      <Source RefID="26"/>
+      <Target RefID="23"/>
+    </Data>
+    <Data ID="20" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData20">
+      <Source RefID="27"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="22" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData22">
+      <Source RefID="14"/>
+      <Target RefID="33"/>
+    </Data>
+    <Data ID="31" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject0">
+      <Source RefID="33"/>
+      <Target RefID="37"/>
+    </Data>
+    <ServiceReference ID="36" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="37"/>
+      <Source RefID="101"/>
+      <Target RefID="37"/>
+      <Target RefID="101"/>
+    </ServiceReference>
+    <Function ID="37" Label="Store">
+      <Source RefID="36"/>
+      <Source RefID="31"/>
+      <Source RefID="38"/>
+      <Target RefID="36"/>
+      <Invoke Operation="store" ServiceID="36">
+        <Source RefID="31">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="38">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="36"/>
+    </Function>
+    <Data ID="38" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter">
+      <Target RefID="37"/>
+      <Data ID="48" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="49" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="50" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+    </Data>
+    <Data ID="59" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData59">
+      <Source RefID="60"/>
+      <Target RefID="66"/>
+    </Data>
+    <Data ID="61" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData61">
+      <Source RefID="62"/>
+      <Target RefID="65"/>
+    </Data>
+    <Data ID="70" IsList="true" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData67">
+      <Source RefID="69"/>
+      <Target RefID="78"/>
+      <Target RefID="84"/>
+    </Data>
+    <Data ID="82" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData82">
+      <Source RefID="84"/>
+      <Target RefID="87"/>
+    </Data>
+    <Data ID="86" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData86">
+      <Source RefID="78"/>
+      <Source RefID="87"/>
+      <Target RefID="101"/>
+      <Target RefID="111"/>
+    </Data>
+    <Exception ID="96" Label="Unkonwn Test Data Meta Data ID" ReferenceName="UnknownTestDataMetaDataID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="unkonwnTestDataMetaDataID96">
+      <Source RefID="98"/>
+      <Target RefID="92"/>
+    </Exception>
+    <Function ID="101" Label="Delete">
+      <Source RefID="36"/>
+      <Source RefID="41"/>
+      <Source RefID="86"/>
+      <Target RefID="36"/>
+      <Invoke Operation="delete" ServiceID="36">
+        <Source RefID="86">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="41"/>
+      </Invoke>
+      <Receive ServiceID="36"/>
+    </Function>
+    <ServiceReference ID="110" Label="Delete All Test Data Content" ReferenceName="DeleteAllTestDataContent" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="111"/>
+      <Target RefID="111"/>
+    </ServiceReference>
+    <Function ID="111" Label="Delete All Test Data Content">
+      <Source RefID="110"/>
+      <Source RefID="86"/>
+      <Target RefID="110"/>
+      <Invoke Operation="DeleteAllTestDataContent" ServiceID="110">
+        <Source RefID="86">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="110"/>
+    </Function>
+    <Assign ID="51"/>
+  </Operation>
+</Service>

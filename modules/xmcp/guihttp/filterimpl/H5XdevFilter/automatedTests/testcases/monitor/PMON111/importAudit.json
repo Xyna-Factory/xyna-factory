@@ -1,0 +1,142 @@
+{
+  "meta":
+  {
+    "name": "importAuditTest",
+	"description": "Import a audit and check the result.",
+	"created": "07.04.2020",
+	"updated": "07.04.2020"
+  },
+  "operations":
+  [
+	{
+	  "operation": "upload",
+	  "file": "Order_2214063_GetRuntimeContexts.xml",
+	  "relativeToThis": true,
+	  "fileIdVar": "!fileId!"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/importedAudits/!fileId!"
+	},
+	{
+      "operation": "read",
+      "pathInResponse": "orderId",
+      "targetVariable": "!orderId!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!orderId!",
+      "value": "\"Imported 2214063\""
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "dataflow/$list",
+      "expectedValue": "1"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list",
+      "expectedValue": "2"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "rollback/$list",
+      "expectedValue": "0"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "rootRtc/name",
+      "targetVariable": "!workspaceName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!workspaceName!",
+      "value": "GuiHttp"
+    },
+	{
+      "operation": "read",
+	  "targetVariable": "!workflowStatus!",
+	  "pathInResponse": "info/$list[id=wf]/status",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!workflowStatus!",
+	  "value": "Finished"
+	},
+    {
+      "operation": "call", 
+      "payload": {"orderId":"Imported 2214063","objects":[{"fqn":"xmcp.Application","rtc":{"application":"GuiHttp","version":"1.1.74"}}]}, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/GuiHttp%252F/structure"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmcp.Application/$object/label", 
+      "targetVariable": "!label!", 
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!label!",
+      "value": "Application"
+    },
+    {
+      "operation": "read", 
+      "pathInResponse": "xmcp.Application/versionName/$label", 
+      "targetVariable": "!labelVersionName!", 
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!labelVersionName!",
+      "value": "Version Name"
+    },
+    {
+      "operation": "read", 
+      "pathInResponse": "xmcp.Application/name/$label", 
+      "targetVariable": "!labelName!", 
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!labelName!",
+      "value": "Name"
+    },
+    {
+      "operation": "read", 
+      "pathInResponse": "xmcp.Application/type/$label", 
+      "targetVariable": "!labelType!", 
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!labelType!",
+      "value": "Type"
+    },
+    {
+      "operation": "read", 
+      "pathInResponse": "xmcp.Application/getGUIRepresentation()/$label", 
+      "targetVariable": "!labelMethod!", 
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!labelMethod!",
+      "value": "getGUIRepresentation"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "Test Reference": "PMOD958", 
+    "created": "17.02.2020", 
+    "updated": "17.02.2020"
+  },
+  "operations": [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd!"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/default%20workspace/xmom/paths?hierarchy=compact"
+	},
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "paths[path=xmcp]/children[path=h5x]/children[path=regression]/children[path=PMOD948]",
+      "expectedValue": 2
+    }
+  ]
+}

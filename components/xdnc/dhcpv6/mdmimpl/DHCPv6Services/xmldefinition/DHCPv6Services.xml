@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType Label="DHCPv6Services" TypeName="DHCPv6Services" TypePath="xdnc.dhcpv6" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>     
+  </Meta>
+  <Libraries>DHCPv6ServicesImpl.jar</Libraries>
+  <SharedLibraries>IPv6SharedLib</SharedLibraries>
+  <SharedLibraries>DHCPClusterStateSharedLib</SharedLibraries>
+  <Service Label="DHCPv6Services" TypeName="DHCPv6Services">
+
+  <Meta>
+     <AdditionalDependencies>
+        <Datatype>xdnc.dhcp.TypeWithValueNode</Datatype>
+        <Datatype>xdnc.dhcpv6.DHCPv6Request</Datatype>
+        <Datatype>xdnc.dhcp.TypeOnlyNode</Datatype>
+        <Datatype>xdnc.dhcpv6.DHCPv6Solicit</Datatype>
+        <Datatype>xdnc.dhcpv6.DHCPv6Renew</Datatype>
+        <Datatype>xdnc.dhcpv6.DHCPv6Rebind</Datatype>
+        <Datatype>xdnc.dhcpv6.DHCPv6Decline</Datatype>
+        <Datatype>xdnc.dhcpv6.DHCPv6Release</Datatype>
+        <Datatype>xdnc.dhcp.SubOptionsConfigured</Datatype>
+        <Datatype>xdnc.dhcp.SubOptionsNotConfigured</Datatype>
+        <XynaProperty>xdnc.dhcpv6.config.defaultReservationTime</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.defaultLeaseTime</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.pools.configfile</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.domainname</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.partnerState</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.partnerbinding</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.myname</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.myState</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.bindingToBeSetForStaticIPs</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.leasetimeforstaticips</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.my_eth0</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.partners_eth1</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.reservationpreferredlifetime</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.reloadoptionsv6</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.limitsmalllargepools</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.expireoffsetinms</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.bindingToSelectFrom</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.bindingToBeSet</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.bindingToCleanup</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.minfreeratio</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.minfreeleases</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.mindiffleases</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.leaseslowwatermark</XynaProperty>
+        <XynaProperty>xdnc.dhcp.config.disjoinedtimeinseconds</XynaProperty>
+        <XynaProperty>xdnc.dhcp.config.enableMCLT</XynaProperty>
+        <XynaProperty>xdnc.dhcp.config.MCLTinSeconds</XynaProperty>
+        <XynaProperty>xact.dhcpv6.lockfilter</XynaProperty>
+        <XynaProperty>xact.dhcpv6.hashv6</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.config.clustermode</XynaProperty>
+        <XynaProperty>xact.dhcpv6.serveridentifier</XynaProperty>
+        <XynaProperty>xact.dhcpv6.hashv6passval</XynaProperty>
+        <XynaProperty>xdnc.dhcpv6.isPrimaryServer</XynaProperty>
+        <XynaProperty>xdnc.dhcp.config.doPoolDeploymentFor</XynaProperty>
+        <Datatype>xdnc.dhcp.Successful</Datatype>
+        <Datatype>xdnc.dhcp.Failed</Datatype>
+        <Datatype>xdnc.dhcp.NoIpAssigned</Datatype>
+        
+      </AdditionalDependencies>     
+    </Meta>
+
+    <Operation IsStatic="true" Label="Determine DHCPv6 Message Type" Name="determineDHCPv6MessageType">
+      <Input>
+        <Data IsList="true" Label="inputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="inputoptions"/>
+      </Input>
+      <Output>
+        <Data Label="messagetype" ReferenceName="DHCPv6MessageType" ReferencePath="xdnc.dhcpv6" VariableName="messagetype"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6_InvalidMessageTypeException" ReferenceName="DHCPv6_InvalidMessageTypeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6_InvalidMessageTypeException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.determineDHCPv6MessageType(inputoptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="Process LeaseQuery" Name="processLeaseQuery">
+      <Input>
+        <Data IsList="true" Label="inputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="inputoptions"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="outputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="outputoptions"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6InconsistentDataException" ReferenceName="DHCPv6InconsistentDataException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InconsistentDataException"/>
+        <Exception Label="DHCPv6InvalidOptionException" ReferenceName="DHCPv6InvalidOptionException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidOptionException"/>
+        <Exception Label="DHCPv6MultipleMacAddressesForIPException" ReferenceName="DHCPv6MultipleMacAddressesForIPException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6MultipleMacAddressesForIPException"/>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.processLeaseQuery(inputoptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Process BulkLeaseQuery" Name="processBulkLeaseQuery">
+      <Input>
+        <Data IsList="true" Label="inputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="inputoptions"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="outputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="outputoptions"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6InconsistentDataException" ReferenceName="DHCPv6InconsistentDataException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InconsistentDataException"/>
+        <Exception Label="DHCPv6InvalidOptionException" ReferenceName="DHCPv6InvalidOptionException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidOptionException"/>
+        <Exception Label="DHCPv6MultipleMacAddressesForIPException" ReferenceName="DHCPv6MultipleMacAddressesForIPException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6MultipleMacAddressesForIPException"/>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.processBulkLeaseQuery(inputoptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+    <Operation IsStatic="true" Label="Process Decline" Name="processDecline">
+      <Input>
+        <Data IsList="true" Label="inputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="inputoptions"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="outputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="outputoptions"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.processDecline(inputoptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Process Release" Name="processRelease">
+      <Input>
+        <Data IsList="true" Label="inputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="inputoptions"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="outputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="outputoptions"/>
+        <Data Label="leaseTime" ReferenceName="LeaseTime" ReferencePath="xdnc.dhcp" VariableName="leaseTime"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.processRelease(inputoptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+
+    <Operation IsStatic="true" Label="Process Leases" Name="processLeases">
+      <Input>
+        <Data IsList="true" Label="superpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="superpools"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.processLeases(superpools);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Sort Superpools" Name="sortSuperPools">
+      <Input>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="outputsuperpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="outputsuperpools"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.sortSuperPools();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+    <Operation IsStatic="true" Label="Resize Superpools: Delete Expired Leases" Name="resizeSuperPools_DeleteExpiredLeases">
+      <Input>
+        <Data Label="inputsuperpool" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="inputsuperpool"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.resizeSuperPools_deleteExpiredLeases(inputsuperpool);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+
+    <Operation IsStatic="true" Label="Set Superpool Status" Name="setSuperPoolStatus">
+      <Input>
+        <Data Label="inputsuperpool" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="inputsuperpool"/>
+        <Data Label="superpoolstatus" ReferenceName="SuperPoolStatus" ReferencePath="xdnc.dhcpv6" VariableName="superpoolstatus"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.setSuperPoolStatus(inputsuperpool,superpoolstatus);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+    
+    <Operation IsStatic="true" Label="Clean SuperPools" Name="cleanSuperPools">
+      <Input>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.cleanSuperPools();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+
+
+    <Operation IsStatic="true" Label="Clean Large Superpools: Delete Expired Leases" Name="cleanLargeSuperPools_DeleteExpiredLeases">
+      <Input>
+        <Data Label="inputsuperpool" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="inputsuperpool"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.cleanLargeSuperPools_deleteExpiredLeases(inputsuperpool);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Clean Small Superpools: Delete Expired Leases" Name="cleanSmallSuperPools_DeleteExpiredLeases">
+      <Input>
+        <Data Label="inputsuperpool" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="inputsuperpool"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.cleanSmallSuperPools_deleteExpiredLeases(inputsuperpool);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Set Superpool Checksum" Name="setSuperPoolChecksum">
+      <Input>
+        <Data Label="inputsuperpool" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="inputsuperpool"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.setSuperPoolChecksum(inputsuperpool);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+    <Operation IsStatic="true" Label="Compute Superpool" Name="computeSuperPool">
+      <Input>
+        <Data IsList="true" Label="inputsuperpool" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="inputsuperpool"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.computeSuperPool(inputsuperpool);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+    <Operation IsStatic="true" Label="Get And Set Lease By Mac and IAID" Name="getAndSetLeaseByMacAndIAID">
+      <Input>
+        <Data Label="inputlease" ReferenceName="Lease" ReferencePath="xdnc.dhcpv6" VariableName="inputlease"/>
+      </Input>
+      <Output>
+        <Data Label="outputlease" ReferenceName="Lease" ReferencePath="xdnc.dhcpv6" VariableName="outputlease"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.getAndSetLeaseByMacAndIAID(inputlease);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Get And Set Lease By Mac and IAID and IP and Prefix" Name="getAndSetLeaseByMacAndIAIDandIPandPrefix">
+      <Input>
+        <Data Label="inputlease" ReferenceName="Lease" ReferencePath="xdnc.dhcpv6" VariableName="inputlease"/>
+      </Input>
+      <Output>
+        <Data Label="outputlease" ReferenceName="Lease" ReferencePath="xdnc.dhcpv6" VariableName="outputlease"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.getAndSetLeaseByMacAndIAIDAndIPAndPrefix(inputlease);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Get And Set Free IP Small Pools" Name="getAndSetFreeIPSmallPools">
+      <Input>
+        <Data Label="inputlease" ReferenceName="Lease" ReferencePath="xdnc.dhcpv6" VariableName="inputlease"/>
+      </Input>
+      <Output>
+        <Data Label="outputlease" ReferenceName="Lease" ReferencePath="xdnc.dhcpv6" VariableName="outputlease"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.getAndSetFreeIPSmallPools(inputlease);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    
+    <Operation IsStatic="true" Label="Send NoAddrsAvail" Name="sendNoAddrsAvail">
+      <Input>
+        <Data IsList="true" Label="inputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="inputoptions"/>
+        <Exception Label="DHCPv 6 Pooltype Exception" ReferenceName="DHCPv6PooltypeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6PooltypeException"/>
+        <Data Label="messagetype" ReferenceName="DHCPv6MessageType" ReferencePath="xdnc.dhcpv6" VariableName="messagetype"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Reply-Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="replyoptions"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6_InvalidMessageTypeException" ReferenceName="DHCPv6_InvalidMessageTypeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6_InvalidMessageTypeException"/>
+        <Exception Label="DHCPv6NoOutputOptionsSetException" ReferenceName="DHCPv6NoOutputOptionsSetException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6NoOutputOptionsSetException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.sendNoAddrsAvail(inputoptions, dHCPv6PooltypeException, messagetype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    
+    
+    <Operation IsStatic="true" Label="Determine SuperPool" Name="determineSuperPool">
+      <Input>
+        <Data IsList="true" Label="inputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="inputoptions"/>
+        <Data Label="pooltype" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="pooltype"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="addressSuperpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="addressSuperpools"/>
+        <Data IsList="true" Label="prefixSuperpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="prefixSuperpools"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6PooltypeException" ReferenceName="DHCPv6PooltypeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6PooltypeException"/>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+        <Exception Label="DHCPv6InvalidOptionException" ReferenceName="DHCPv6InvalidOptionException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidOptionException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.determineSuperPool(inputoptions, pooltype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+    <Operation IsStatic="true" Label="generateIPPools" Name="generateIPPools">
+      <Input>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6SpecificPropertyNotSetException" ReferenceName="DHCPv6SpecificPropertyNotSetException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6SpecificPropertyNotSetException"/>        
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.generateIPPools();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+
+    <Operation IsStatic="true" Label="rebalance SuperPools" Name="rebalanceSuperPools">
+      <Input>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.rebalanceSuperPools();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Determine Pooltype and Class Options" Name="determinePooltypeAndClassOptions">
+      <Meta>
+        <Abstract.UID>9B40C375-EF60-47FC-1F74-68C120530F76</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node19"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="poolType"/>
+        <Data Label="DNS-Flag" ReferenceName="DNSFlag" ReferencePath="xdnc.dhcp" VariableName="dNSFlag"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6InconsistentDataException" ReferenceName="DHCPv6InconsistentDataException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InconsistentDataException"/>
+        <Exception Label="DHCPv6InvalidDBEntriesException" ReferenceName="DHCPv6InvalidDBEntriesException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidDBEntriesException"/>
+        <Exception Label="DHCPv6NoPoolTypeForClassException" ReferenceName="DHCPv6NoPoolTypeForClassException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6NoPoolTypeForClassException"/>
+        <Exception Label="DHCPv6AttributeNotFoundForClassException" ReferenceName="DHCPv6AttributeNotFoundForClassException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6AttributeNotFoundForClassException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.determinePooltypeAndClassOptions(node);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Send Data to DHCPAdapter" Name="start_DHCPAdapter">
+      <Input>
+        <Data IsList="true" Label="Request Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="requestoptions"/>
+        <Data IsList="true" Label="Reply Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="replyoptions"/>
+        <Data Label="Reserved Host" ReferenceName="ReservedHost" ReferencePath="xdnc.dhcp" VariableName="reservedhost"/>
+        <Data Label="Lease Time" ReferenceName="LeaseTime" ReferencePath="xdnc.dhcp" VariableName="leasetime"/>       
+        <Data Label="dnsFlag" ReferenceName="DNSFlag" ReferencePath="xdnc.dhcp" VariableName="dnsFlag"/>
+      </Input>
+      <Output>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.start_DHCPAdapter(requestoptions, replyoptions, reservedhost, leasetime, dnsFlag);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+    <Operation IsStatic="true" Label="Send Data to ConfigfileGenerator" Name="start_ConfigfileGenerator">
+      <Input>
+        <Data IsList="true" Label="Request Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="requestoptions"/>
+        <Data IsList="true" Label="Reply Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="replyoptions"/>
+      </Input>
+      <Output>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.start_ConfigfileGenerator(requestoptions, replyoptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+    <Operation IsStatic="true" Label="restoreOptionsAdm" Name="restoreOptionsAdm">
+      <Input>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.restoreOptionsAdm();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+
+
+
+    <Operation IsStatic="true" Label="loadGuiData" Name="loadGuiData">
+      <Input>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6NoUniqueDppFixedAttributeException" ReferenceName="DHCPv6NoUniqueDppFixedAttributeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6NoUniqueDppFixedAttributeException"/>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.loadGuiData();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    
+    <Operation IsStatic="true" Label="deleteHostFromLeasesTable" Name="deleteHostFromLeasesTable">
+      <Input>
+        <Data Label="IPv6-Address" ReferenceName="IPv6" ReferencePath="com.gip.xyna.3.0.XMDM" VariableName="ip"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+        <Exception Label="DHCPv6InvalidDBEntriesException" ReferenceName="DHCPv6InvalidDBEntriesException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidDBEntriesException"/>      
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.deleteHostFromLeasesTable(ip);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+        <Operation IsStatic="true" Label="writeHostToLeasesTable" Name="writeHostToLeasesTable">
+      <Input>
+        <Data Label="mac" ReferenceName="MAC" ReferencePath="com.gip.xyna.3.0.XMDM" VariableName="mac"/>
+      </Input>
+      <Output>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6InvalidDBEntriesException" ReferenceName="DHCPv6InvalidDBEntriesException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidDBEntriesException"/>      
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdnc.dhcpv6.DHCPv6ServicesImpl.writeHostToLeasesTable(mac);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    
+    <!-- neue Operations fuer Workflow-Umbau -->
+    
+    <Operation IsStatic="true" Label="Determine Address And Prefix Requests" Name="determineAddressAndPrefixRequests">
+      <Input>
+        <Data IsList="true" Label="input options from request" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="requested IANAs" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node0"/>
+        <Data IsList="true" Label="requested IAPDs" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.determineAddressAndPrefixRequests(node);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="determine pool type and set device class options" Name="determinePoolTypeAndSetDeviceClassOptions">
+      <Input>
+        <Data IsList="true" Label="input options from request" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="already set IA-Nodes" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node32"/>
+        <Data IsList="true" Label="output options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node33"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="poolType"/>
+        <Data Label="DNS-Flag" ReferenceName="DNSFlag" ReferencePath="xdnc.dhcp" VariableName="dNSFlag"/>
+        <Data Label="Lease Times" ReferenceName="LeaseTime" ReferencePath="xdnc.dhcp" VariableName="leaseTime8"/>
+        <Data Label="Existence Reserved Hosts" ReferenceName="ReservedHost" ReferencePath="xdnc.dhcp" VariableName="reservedHost9"/>
+        <Data Label="Reply Status" ReferenceName="ReplyStatus" ReferencePath="xdnc.dhcp" VariableName="replyStatus10"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6InconsistentDataException" ReferenceName="DHCPv6InconsistentDataException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InconsistentDataException"/>
+        <Exception Label="DHCPv6InvalidDBEntriesException" ReferenceName="DHCPv6InvalidDBEntriesException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidDBEntriesException"/>
+        <Exception Label="DHCPv6NoPoolTypeForClassException" ReferenceName="DHCPv6NoPoolTypeForClassException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6NoPoolTypeForClassException"/>
+        <Exception Label="DHCPv6AttributeNotFoundForClassException" ReferenceName="DHCPv6AttributeNotFoundForClassException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6AttributeNotFoundForClassException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.determinePoolTypeAndSetDeviceClassOptions(node);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="Check reserved Hosts" Name="checkReservedHosts">
+      <Input>
+        <Data IsList="true" Label="requested IA-Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node3"/>
+        <Data IsList="true" Label="input options from request" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node5"/>
+        <Data IsList="true" Label="already set IA-Nodes" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node4"/>
+        <Data IsList="true" Label="output options previous step" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node"/>
+        <Data IsList="true" Label="superpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="superpools"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="poolType"/>
+        <Data Label="DNS-Flag" ReferenceName="DNSFlag" ReferencePath="xdnc.dhcp" VariableName="dNSFlag"/>
+        <Data Label="Lease Times" ReferenceName="LeaseTime" ReferencePath="xdnc.dhcp" VariableName="leaseTime"/>
+        <Data Label="Existence Reserved Hosts" ReferenceName="ReservedHost" ReferencePath="xdnc.dhcp" VariableName="reservedHost"/>
+        <Data Label="Reply Status" ReferenceName="ReplyStatus" ReferencePath="xdnc.dhcp" VariableName="replyStatus"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="remaining requested IA-Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node2"/>
+        <Data IsList="true" Label="output options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node6"/>
+        <Data IsList="true" Label="already set IA-Nodes" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node31"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="poolType34"/>
+        <Data Label="DNS-Flag" ReferenceName="DNSFlag" ReferencePath="xdnc.dhcp" VariableName="dNSFlag7"/>
+        <Data Label="Lease Times" ReferenceName="LeaseTime" ReferencePath="xdnc.dhcp" VariableName="leaseTime8"/>
+        <Data Label="Existence Reserved Hosts" ReferenceName="ReservedHost" ReferencePath="xdnc.dhcp" VariableName="reservedHost9"/>
+        <Data Label="Reply Status" ReferenceName="ReplyStatus" ReferencePath="xdnc.dhcp" VariableName="replyStatus10"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.checkReservedHosts(node3, node5, node4, node, superpools, poolType, dNSFlag, leaseTime, reservedHost, replyStatus);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="dynamic lease allocation" Name="dynamicLeaseAllocation">
+      <Input>
+        <Data IsList="true" Label="remaining requested IA-Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node"/>
+        <Data IsList="true" Label="input options from request" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node38"/>
+        <Data IsList="true" Label="already set IA-Nodes" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node39"/>
+        <Data IsList="true" Label="output options previous step" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node40"/>
+        <Data IsList="true" Label="Super Pools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="superPool"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="poolType"/>
+        <Data Label="DNS-Flag" ReferenceName="DNSFlag" ReferencePath="xdnc.dhcp" VariableName="dNSFlag"/>
+        <Data Label="Lease Times" ReferenceName="LeaseTime" ReferencePath="xdnc.dhcp" VariableName="leaseTime"/>
+        <Data Label="Existence Reserved Hosts" ReferenceName="ReservedHost" ReferencePath="xdnc.dhcp" VariableName="reservedHost"/>
+        <Data Label="Reply Status" ReferenceName="ReplyStatus" ReferencePath="xdnc.dhcp" VariableName="replyStatus"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="already set IA-Nodes" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node41"/>
+        <Data IsList="true" Label="output options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node42"/>
+        <Data Label="DNS-Flag" ReferenceName="DNSFlag" ReferencePath="xdnc.dhcp" VariableName="dNSFlag43"/>
+        <Data Label="Lease Times" ReferenceName="LeaseTime" ReferencePath="xdnc.dhcp" VariableName="leaseTime44"/>
+        <Data Label="Existence Reserved Hosts" ReferenceName="ReservedHost" ReferencePath="xdnc.dhcp" VariableName="reservedHost45"/>
+        <Data Label="Reply Status" ReferenceName="ReplyStatus" ReferencePath="xdnc.dhcp" VariableName="replyStatus46"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.dynamicLeaseAllocation(node, node38, node39, node40, superPool, poolType, dNSFlag, leaseTime, reservedHost, replyStatus);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="assemble final reply options" Name="assembleFinalReplyOptions">
+      <Input>
+        <Data IsList="true" Label="input options from request" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node"/>
+        <Data IsList="true" Label="already set IA-Nodes" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node55"/>
+        <Data IsList="true" Label="output options previous step" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node56"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="reply options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node57"/>
+        <Data Label="configFileGeneratorFlag" ReferenceName="ConfigFileGeneratorFlag" ReferencePath="xdnc.dhcp" VariableName="configFileGeneratorFlag"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6InvalidOptionException" ReferenceName="DHCPv6InvalidOptionException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidOptionException"/>
+        <Exception Label="DHCPv6NoOutputOptionsSetException" ReferenceName="DHCPv6NoOutputOptionsSetException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6NoOutputOptionsSetException"/>
+        <Exception Label="DHCPv6_InvalidMessageTypeException" ReferenceName="DHCPv6_InvalidMessageTypeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6_InvalidMessageTypeException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.assembleFinalReplyOptions(node, node55, node56);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="assemble NoAddrsAvail" Name="assembleNoAddrsAvail">
+      <Input>
+        <Data IsList="true" Label="input options from request" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node"/>
+        <Data IsList="true" Label="already set IA-Nodes" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node55"/>
+        <Data IsList="true" Label="output options previous step" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node56"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="poolType"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="reply options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node57"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCPv6InvalidOptionException" ReferenceName="DHCPv6InvalidOptionException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidOptionException"/>
+        <Exception Label="DHCPv6NoOutputOptionsSetException" ReferenceName="DHCPv6NoOutputOptionsSetException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6NoOutputOptionsSetException"/>
+        <Exception Label="DHCPv6_InvalidMessageTypeException" ReferenceName="DHCPv6_InvalidMessageTypeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6_InvalidMessageTypeException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.assembleNoAddrsAvail(node, node55, node56, poolType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+    <Operation IsStatic="true" Label="Set pool type options" Name="setPoolTypeOptions">
+      <Input>
+        <Data IsList="true" Label="input options from request" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node"/>
+        <Data IsList="true" Label="output options previous step" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node21"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="poolType"/>
+        <Data Label="Reply Status" ReferenceName="ReplyStatus" ReferencePath="xdnc.dhcp" VariableName="replyStatus"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="output options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node22"/>
+        <Data Label="Pool Type" ReferenceName="PoolType" ReferencePath="xdnc.dhcp" VariableName="poolType23"/>
+        <Data Label="Config File Generator Flag" ReferenceName="ConfigFileGeneratorFlag" ReferencePath="xdnc.dhcp" VariableName="configFileGeneratorFlag"/>
+        <Data Label="Reply Status" ReferenceName="ReplyStatus" ReferencePath="xdnc.dhcp" VariableName="replyStatus24"/>
+      </Output>
+      <Throws>
+        <Exception Label="Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdnc.dhcpv6.DHCPv6ServicesImpl.setPoolTypeOptions(node, node21, poolType, replyStatus);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

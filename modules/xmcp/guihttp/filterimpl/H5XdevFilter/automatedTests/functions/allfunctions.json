@@ -1,0 +1,22 @@
+[
+  {
+    "type": "additionalFunctionFile",
+    "value": "workflowFunctions/workflowfunctions.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "datatypeFunctions/datatypeFunctions.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "modificationFunctions/modificationFunctions.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "servicegroupFunctions/servicegroupFunctions.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "workflowmonitorFunctions/workflowmonitorFunctions.json"
+  }
+]

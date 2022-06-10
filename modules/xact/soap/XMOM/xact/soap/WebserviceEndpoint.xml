@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Web Service Endpoint" TypeName="WebserviceEndpoint" TypePath="xact.soap" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Host" VariableName="host">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Path With Leading Slash" VariableName="pathWithLeadingSlash">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Use HTTPS" VariableName="useHTTPS">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Port" VariableName="port">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Service Label="Web Service Endpoint" TypeName="WebserviceEndpoint">
+    <Operation IsStatic="false" Label="Build Connect String" Name="buildConnectString">
+      <Input/>
+      <Output>
+        <Data Label="Web Service Connect String" ReferenceName="WebserviceConnectString" ReferencePath="xact.soap" VariableName="webserviceConnectString"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new WebserviceConnectString((useHTTPS ? "https:/" : "http:/") + host + ":" + port + pathWithLeadingSlash);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

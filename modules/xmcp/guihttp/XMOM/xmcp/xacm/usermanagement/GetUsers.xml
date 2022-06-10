@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Users" TypeName="GetUsers" TypePath="xmcp.xacm.usermanagement" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(1541)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="Get Users" Name="GetUsers">
+    <Input>
+      <Data ID="7" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+    </Input>
+    <Output>
+      <Data ID="48" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo48"/>
+      <Data ID="50" IsList="true" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user"/>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights14633"/>
+      <Exception Label="Load Users Exception" ReferenceName="LoadUsersException" ReferencePath="xmcp.xacm.usermanagement.exceptions" VariableName="loadUsersException14634"/>
+    </Throws>
+    <ServiceReference ID="10" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared"/>
+    <ServiceReference ID="4" Label="UserManagement" ReferenceName="UserManagement.UserManagement" ReferencePath="xmcp.xacm"/>
+    <ServiceReference ID="43" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables"/>
+    <Function ID="11" Label="Check Rights for Current User">
+      <Source RefID="10"/>
+      <Source RefID="51"/>
+      <Target RefID="10"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="10">
+        <Source RefID="51">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="10"/>
+    </Function>
+    <Mappings ID="9525" Label="Create Date Transformation">
+      <Input>
+        <Data ID="10274" Label="ISO8601ToUnixTimestampTransformation" ReferenceName="ISO8601ToUnixTimestampTransformation" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="iSO8601ToUnixTimestampTransformation10274">
+          <Source RefID="9525"/>
+        </Data>
+        <Source RefID="10608">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="10357" Label="ISO8601ToUnixTimestampTransformation" ReferenceName="ISO8601ToUnixTimestampTransformation" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="iSO8601ToUnixTimestampTransformation10357">
+          <Source RefID="9525"/>
+        </Data>
+        <Target RefID="10358"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+    </Mappings>
+    <Choice ID="28" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="7"/>
+      <Target RefID="40"/>
+      <Target RefID="37"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="27" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo27"/>
+        <Source RefID="7"/>
+      </Input>
+      <Case ID="18" Label="" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="30" Label="Generate Table Columns">
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="14170" Label="Creation Date Transformation" ReferenceName="ISO8601ToUnixTimestampTransformation" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="iSO8601ToUnixTimestampTransformation14170">
+              <Source RefID="30"/>
+            </Data>
+            <Source RefID="10358"/>
+          </Input>
+          <Output>
+            <Data ID="55" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="29"/>
+          </Output>
+          <Mapping>%1%["0"].name="Locked"</Mapping>
+          <Mapping>%1%["0"].path="locked"</Mapping>
+          <Mapping>%1%["0"].shrink="true"</Mapping>
+          <Mapping>%1%["1"].name="User"</Mapping>
+          <Mapping>%1%["1"].path="user"</Mapping>
+          <Mapping>%1%["1"].sort="asc"</Mapping>
+          <Mapping>%1%["2"].name="Role"</Mapping>
+          <Mapping>%1%["2"].path="role"</Mapping>
+          <Mapping>%1%["3"].name="Domains"</Mapping>
+          <Mapping>%1%["3"].path="domains"</Mapping>
+          <Mapping>%1%["4"].name="Creation Date"</Mapping>
+          <Mapping>%1%["4"].path="creationDateISO8601"</Mapping>
+          <Mapping>%1%["4"].transformation#cast("xmcp.tables.datatypes.transformation.ISO8601ToUnixTimestampTransformation")=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="31" Label="Mapping">
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="20" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo20"/>
+            <Source RefID="7"/>
+          </Input>
+          <Input>
+            <Data ID="21" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn21"/>
+            <Source RefID="29"/>
+          </Input>
+          <Output>
+            <Data ID="22" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo22"/>
+            <Target RefID="32"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="38">
+          <Source RefID="32"/>
+          <Source RefID="29"/>
+          <Target RefID="40"/>
+          <Target RefID="37"/>
+          <Copy>
+            <Source RefID="32"/>
+            <Target RefID="40"/>
+          </Copy>
+          <Copy>
+            <Source RefID="29"/>
+            <Target RefID="37"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="19" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="33" Label="Mapping">
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="23" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo23"/>
+            <Source RefID="7"/>
+          </Input>
+          <Output>
+            <Data ID="24" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo24"/>
+            <Target RefID="34"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="36" Label="Mapping">
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="25" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo25"/>
+            <Source RefID="34">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="26" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn26"/>
+            <Target RefID="35"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="39">
+          <Source RefID="34"/>
+          <Source RefID="35"/>
+          <Target RefID="40"/>
+          <Target RefID="37"/>
+          <Copy>
+            <Source RefID="34"/>
+            <Target RefID="40"/>
+          </Copy>
+          <Copy>
+            <Source RefID="35"/>
+            <Target RefID="37"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="44" Label="Build TableInfo and Select Columns">
+      <Source RefID="43"/>
+      <Source RefID="40"/>
+      <Source RefID="47"/>
+      <Source RefID="37"/>
+      <Target RefID="43"/>
+      <Target RefID="46"/>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="43">
+        <Source RefID="40">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="47">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xmcp.xacm.usermanagement.datatypes.User</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="37"/>
+      </Invoke>
+      <Receive ServiceID="43">
+        <Target RefID="46"/>
+      </Receive>
+    </Function>
+    <Mappings ID="146" Label="Extract Columns">
+      <Input>
+        <Data ID="395" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo395">
+          <Source RefID="146"/>
+        </Data>
+        <Source RefID="46">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="229" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn229">
+          <Source RefID="146"/>
+        </Data>
+        <Target RefID="230"/>
+      </Output>
+      <Mapping>%1%=%0%.columns</Mapping>
+    </Mappings>
+    <Foreach ID="1208">
+      <Source RefID="230"/>
+      <Target RefID="1210"/>
+      <InputList RefID="230">
+        <Data ID="1209" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn1209"/>
+      </InputList>
+      <OutputList RefID="1210">
+        <Data ID="1045" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn1045">
+          <Source RefID="878"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="878" Label="Transform Column Filters">
+        <Input>
+          <Data ID="961" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn961">
+            <Source RefID="878"/>
+          </Data>
+          <Source RefID="1209">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Output>
+          <Data ID="1044" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn1044">
+            <Source RefID="878"/>
+          </Data>
+          <Target RefID="1045"/>
+        </Output>
+        <Mapping>%1%=%0%</Mapping>
+        <Mapping>%1%.filter=%0%.getTransformedFilter().value</Mapping>
+      </Mappings>
+    </Foreach>
+    <Mappings ID="4687" Label="Remap Columns onto Table Info">
+      <Meta>
+        <Documentation>Remap column of readable creation date onto column with timestamp for extracting the users</Documentation>
+      </Meta>
+      <Input>
+        <Data ID="5016" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5016">
+          <Source RefID="4687"/>
+        </Data>
+        <Source RefID="46">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5183" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn5183">
+          <Source RefID="4687"/>
+        </Data>
+        <Source RefID="1210">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="5099" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5099">
+          <Source RefID="4687"/>
+        </Data>
+        <Target RefID="5100"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.columns=%1%</Mapping>
+      <Mapping>%2%.columns["4"].path="creationDate"</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Get users">
+      <Source RefID="4"/>
+      <Source RefID="5100"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="getUsers" ServiceID="4">
+        <Source RefID="5100">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Foreach ID="12095">
+      <Source RefID="6"/>
+      <Target RefID="12263"/>
+      <Target RefID="12351"/>
+      <InputList RefID="6">
+        <Data ID="12096" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user12096"/>
+      </InputList>
+      <OutputList RefID="12263">
+        <Data ID="12262" Label="Unix Timestamp" ReferenceName="UnixTimestamp" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="unixTimestamp12262">
+          <Source RefID="11997"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="12351">
+        <Data ID="12350" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user12350">
+          <Source RefID="11997"/>
+        </Data>
+      </OutputList>
+      <Choice ID="11997" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="12096"/>
+        <Target RefID="12262"/>
+        <Target RefID="12350"/>
+        <Meta>
+          <OuterConditionPart>%0%?</OuterConditionPart>
+        </Meta>
+        <Input>
+          <Data ID="12083" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user12083">
+            <Source RefID="11997"/>
+          </Data>
+          <Source RefID="12096"/>
+        </Input>
+        <Case ID="11998" IsDefault="true" Label="default">
+          <Mappings ID="11188" Label="Map Creation Date into a Timestamp Type">
+            <Input>
+              <Data ID="11440" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user11440">
+                <Source RefID="11188"/>
+              </Data>
+              <Source RefID="12096">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="11271" Label="Unix Timestamp" ReferenceName="UnixTimestamp" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="unixTimestamp11271">
+                <Source RefID="11188"/>
+              </Data>
+              <Target RefID="12250"/>
+            </Output>
+            <Mapping>%1%.value=%0%.creationDate</Mapping>
+          </Mappings>
+          <Mappings ID="9189" Label="Transform Timestamp to ISO 8601 Date">
+            <Input>
+              <Data ID="9191" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user9191"/>
+              <Source RefID="12096">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Input>
+              <Data ID="9193" Label="ISO8601ToUnixTimestampTransformation" ReferenceName="ISO8601ToUnixTimestampTransformation" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="iSO8601ToUnixTimestampTransformation9193"/>
+              <Source RefID="10358"/>
+            </Input>
+            <Input>
+              <Data ID="9194" Label="Unix Timestamp" ReferenceName="UnixTimestamp" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="unixTimestamp9194"/>
+              <Source RefID="12250"/>
+            </Input>
+            <Output>
+              <Data ID="9196" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user9196"/>
+              <Target RefID="9283"/>
+            </Output>
+            <Mapping>%3%=%0%</Mapping>
+            <Mapping>%3%.creationDateISO8601=%1%.transformResponse(%2%).value</Mapping>
+          </Mappings>
+          <Assign ID="12000">
+            <Source RefID="12250"/>
+            <Source RefID="9283"/>
+            <Target RefID="12262"/>
+            <Target RefID="12350"/>
+            <Copy>
+              <Source RefID="12250"/>
+              <Target RefID="12262"/>
+            </Copy>
+            <Copy>
+              <Source RefID="9283"/>
+              <Target RefID="12350"/>
+            </Copy>
+          </Assign>
+          <Data ID="12250" Label="Unix Timestamp" ReferenceName="UnixTimestamp" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="unixTimestamp12250">
+            <Source RefID="11188"/>
+          </Data>
+        </Case>
+      </Choice>
+      <Data ID="9283" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user9283"/>
+    </Foreach>
+    <Function ID="66" Label="Set Length">
+      <Source RefID="43"/>
+      <Source RefID="46"/>
+      <Source RefID="12351"/>
+      <Target RefID="43"/>
+      <Target RefID="67"/>
+      <Invoke Operation="setLength" ServiceID="43">
+        <Source RefID="46">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="12351">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="43">
+        <Target RefID="67"/>
+      </Receive>
+    </Function>
+    <Data ID="6" IsList="true" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user1">
+      <Source RefID="5"/>
+      <Target RefID="66"/>
+    </Data>
+    <Data ID="29" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn29">
+      <Source RefID="30"/>
+      <Target RefID="31"/>
+    </Data>
+    <Data ID="32" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo32">
+      <Source RefID="31"/>
+      <Target RefID="38"/>
+    </Data>
+    <Data ID="34" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo34">
+      <Source RefID="33"/>
+      <Target RefID="36"/>
+    </Data>
+    <Data ID="35" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn35">
+      <Source RefID="36"/>
+      <Target RefID="39"/>
+    </Data>
+    <Data ID="37" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn37">
+      <Source RefID="38"/>
+      <Source RefID="28"/>
+      <Source RefID="39"/>
+      <Target RefID="44"/>
+    </Data>
+    <Data ID="40" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo40">
+      <Source RefID="38"/>
+      <Source RefID="28"/>
+      <Source RefID="39"/>
+      <Target RefID="44"/>
+    </Data>
+    <Data ID="46" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="44"/>
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="47" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="const_User">
+      <Target RefID="44"/>
+      <Data ID="56" Label="User" VariableName="user">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="57" Label="Role" VariableName="role">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="58" Label="locked" VariableName="locked">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data ID="59" Label="Domains" VariableName="domains">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="60" Label="Creation date" VariableName="creationDate">
+        <Meta>
+          <Type>Long</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="51" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="11"/>
+      <Value>
+        <Data ID="62" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data ID="61" Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>USER_MANAGEMENT</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Data ID="67" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo74">
+      <Source RefID="66"/>
+      <Target RefID="49"/>
+    </Data>
+    <Data ID="230" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn230">
+      <Source RefID="146"/>
+    </Data>
+    <Data ID="1210" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn1210">
+      <Source RefID="1208"/>
+      <Target RefID="1210"/>
+    </Data>
+    <Data ID="5100" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5100">
+      <Source RefID="4687"/>
+    </Data>
+    <Data ID="10358" Label="ISO8601ToUnixTimestampTransformation" ReferenceName="ISO8601ToUnixTimestampTransformation" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="iSO8601ToUnixTimestampTransformation10358">
+      <Source RefID="9525"/>
+    </Data>
+    <Data ID="10608" Label="ISO8601ToUnixTimestampTransformation" ReferenceName="ISO8601ToUnixTimestampTransformation" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="const_ISO8601ToUnixTimestampTransformation10608">
+      <Data VariableName="timezoneOffset">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>1</Value>
+      </Data>
+    </Data>
+    <Data ID="12263" IsList="true" Label="Unix Timestamp" ReferenceName="UnixTimestamp" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="unixTimestamp12263">
+      <Source RefID="12095"/>
+      <Target RefID="12263"/>
+    </Data>
+    <Data ID="12351" IsList="true" Label="User" ReferenceName="User" ReferencePath="xmcp.xacm.usermanagement.datatypes" VariableName="user12351">
+      <Source RefID="12095"/>
+      <Target RefID="12351"/>
+    </Data>
+    <Assign ID="49">
+      <Source RefID="67"/>
+      <Source RefID="12351"/>
+      <Target RefID="48"/>
+      <Target RefID="50"/>
+      <Copy>
+        <Source RefID="67">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="48"/>
+      </Copy>
+      <Copy>
+        <Source RefID="12351">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="50"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

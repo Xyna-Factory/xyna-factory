@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 8.2.11.7 (Black Edition)
+ * Xyna Factory Management
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2015
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 267163 $
+ * $Date: 2019-10-21 17:35:06 +0200 (Mo, 21. Okt 2019) $
+ --><Application applicationName="VelocityTemplateEngine" comment="" factoryVersion="" versionName="1.2" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Base</ApplicationName>
+        <VersionName>1.0.19</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>templatestorables</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.templates.ConfigFile</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.templates.TemplateInputData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.templates.TemplateProvider</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.templates.TemplateType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.templates.VelocityService</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.templates.VelocityTemplate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.templates.VelocityTemplateEvaluationException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.templates.VelocityTemplatePart</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>

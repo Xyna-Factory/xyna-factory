@@ -1,0 +1,562 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "1.2.2021",
+    "updated": "1.2.2021"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+	{
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Data_Type!": "New Data Type"
+        },
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.GetDeploymen!": "xmcp.factorymanager.deploymentitems.GetDeploymentItem"
+        },
+        {
+          "!dataType!": "dataType"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.DeploymentIt!": "xmcp.factorymanager.deploymentitems.DeploymentItemId"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        },
+        {
+          "!relations!": "relations"
+        },
+        {
+          "!autoTest.generated.pmod2526!": "autoTest.generated.pmod2526.!rnd!"
+        },
+        {
+          "!Data_&_Type!": "Data & Type"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!workflow!": "workflow"
+        },
+        {
+          "!issues!": "issues"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/rtc/$meta/fqn",
+      "targetVariable": "!xmcp.processmodeller.datatypes.Workspace!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Workspace!",
+      "variable": "!xmcp.processmodeller.datatypes.Workspace!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/rtc/name",
+      "targetVariable": "!default_workspace!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1612196191776.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1612196191776.NewDataType0!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1612196191776!",
+      "variable": "!new_1612196191776.NewDataType0!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/$meta/fqn",
+      "targetVariable": "!xmcp.processmodeller.datatypes.DataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!DataType!",
+      "variable": "!xmcp.processmodeller.datatypes.DataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!"
+            },
+            "name": "!new_1612196191776.NewDataType!",
+            "type": "!dataType!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewDataType!",
+      "variable": "!new_1612196191776.NewDataType0!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1612196191776!/!NewDataType!/!relations!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!Data_&_Type!",
+        "path": "!autoTest.generated.pmod2526!",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1612196191776!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "saveState",
+      "targetVariable": "!saveState!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!saveState!",
+      "value": "true"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!pvm.pmod2526.DataType!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.pmod2526!/!DataType!/deploy"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "deploymentState",
+      "targetVariable": "!deploymentState!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!deploymentState!",
+      "value": "DEPLOYED"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!"
+            },
+            "name": "!pvm.pmod2526.DataType!",
+            "type": "!dataType!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.pmod2526!/!DataType!/!relations!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!"
+            },
+            "name": "!pvm.pmod2526.DataType!",
+            "type": "!dataType!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.pmod2526!/!DataType!/!relations!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1612196214883.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1612196214883!",
+      "variable": "!new_1612196214883.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1612196214883.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id",
+      "targetVariable": "!step0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=input]/id",
+      "targetVariable": "!wf_input!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!"
+            },
+            "name": "!new_1612196214883.NewWorkflow!",
+            "type": "!workflow!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/!relations!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "type": "typeChoice"
+        },
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/objects/!step0!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[0]/id",
+      "targetVariable": "!step6!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step6!]/areas/$list[name=input]/id",
+      "targetVariable": "!formulaArea6!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step6!]/areas/$list[name=input]/items/$list[0]/id",
+      "targetVariable": "!formula6-0_input!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=content]/items/$list[id=!step6!]/areas/$list[name=input]/items/$list[id=!formula6-0_input!]/expression",
+      "targetVariable": "!%0%!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "expression": "!%0%!",
+          "type": "formula",
+          "variables": [
+            {
+              "fqn": "!pvm.pmod2526.DataType!",
+              "isList": false,
+              "label": "!Data_&_Type!",
+              "type": "variable"
+            }
+          ]
+        },
+        "index": -1,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/objects/!formulaArea6!/insert"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "fqn": "!pvm.pmod2526.DataType!",
+          "isList": false,
+          "label": "!Data_&_Type!",
+          "type": "variable"
+        },
+        "index": -1,
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/objects/!wf_input!/insert"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!New_Workflow!",
+        "path": "!autoTest.generated.pmod2526!",
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1612196214883!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=label]/fqn",
+      "targetVariable": "!pvm.pmod2526.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod2526!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!"
+            },
+            "name": "!pvm.pmod2526.NewWorkflow!",
+            "type": "!workflow!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod2526!/!NewWorkflow!/!relations!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod2526!/!NewWorkflow!/!issues!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod2526!/!NewWorkflow!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod2526!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!"
+            },
+            "name": "!pvm.pmod2526.NewWorkflow!",
+            "type": "!workflow!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.pmod2526!/!NewWorkflow!/!relations!"
+    }
+  ]
+}

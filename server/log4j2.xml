@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Configuration packages="com.gip.xyna.utils.logging" status="warn">
+  <Appenders>
+    <!-- config appender stdout -->
+    <Console name="STDOUT" target="SYSTEM_OUT">
+      <!-- Pattern to output the caller's file name and line number. -->
+      <PatternLayout pattern="%d{dd-MM-yyyy HH:mm:ss} XYNA %5p [%t] (%F:%L) - %x %m%n%ex{full}" charset="UTF-8"/>
+      <!-- <PatternLayout pattern="%d{dd-MM-yyyy HH:mm:ss} XYNA %5p [%t] (%F) - %x %m%n%ex{full}" charset="UTF-8"/> -->
+    </Console>
+    
+    <!-- config standard appender syslog -->
+    <XynaSyslog name="SYSLOG" host="localhost" facility="LOCAL0" charset="UTF-8">
+      <!-- http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html: %C, %M, %L are extremely slow -->
+      <PatternLayout pattern="XYNA %-5p [%t] (%C:%M:%L) - %x %m%n"/>
+      <!-- <PatternLayout pattern="%d{dd-MM-yyyy HH:mm:ss} XYNA %-5p - %x %m%n"/> -->
+    </XynaSyslog>
+    
+    <!-- config appender syslog without [%x] -->
+    <XynaSyslog name="SYSLOGNoContext" host="localhost" facility="LOCAL0" charset="UTF-8">
+      <PatternLayout pattern="XYNA %-5p (%C:%M:%L) - %m%n"/>
+    </XynaSyslog>
+    
+    <!-- configuration properties set to default values 
+    <XynaAsync name="ASYNC" blocking="true", queueSize="10000" discardedMessageThreshold="32" maxEventRate="0"> -->
+    <XynaAsync name="ASYNC">
+      <AppenderRef ref="SYSLOG"/>
+    </XynaAsync>
+  </Appenders>
+  
+  <Loggers>
+    <!-- xynafactory.sh pipes stdout to syslog. -->
+    <Root level="debug">
+      <AppenderRef ref="ASYNC" />
+    </Root>
+    
+    <!-- utils debugoutput -->
+    <Logger name="xyna.utils" level="error"/>
+    <Logger name="xyna.utils.database" level="info"/>
+    <Logger name="com.gip.xyna.utils.db" level="info"/>
+    
+    <!-- classloading debugoutput -->
+    <Logger name="com.gip.xyna.xfmg.xfctrl.classloading" level="warn"/>
+    <Logger name="com.gip.xyna.xfmg.xfctrl.classloading.persistence" level="warn"/>
+    
+    <!-- suppress info output that is printed for every single started order -->
+    <Logger name="com.gip.xyna.xprc.xpce.planning.MasterWorkflowPreScheduler" level="warn"/>
+
+    <!-- information provided each scheduler run -->
+    <Logger name="com.gip.xyna.xprc.xsched.scheduling.SchedulerAlgorithmUsingUrgencyAndDemand" level="info"/>
+    
+    <Logger name="com.gip.xyna.xprc.xpce.monitoring" level="info"/>
+    <Logger name="com.gip.xyna.xprc.xsched.capacities" level="info"/>
+    <Logger name="com.gip.xyna.xprc.xfractwfe.fractalworkflowexecution.fractalplanning.DefaultPlanning" level="info"/>
+    <Logger name="com.gip.xyna.xprc.xfractwfe.fractalworkflowexecution.ProcessManager" level="info"/>
+    
+    <!-- xml persistencelayer -->
+    <Logger name="com.gip.xyna.xnwh.persistence.xml" level="info"/>
+    
+    <!-- sqlspam by ods -->
+    <Logger name="ods.sqllogger" level="warn"/>
+
+    <!-- sql-logging by persistencelayer
+         INFO = OPEN/CLOSE
+         DEBUG = sql details
+         TRACE = "select count(*)" for upserts -->
+    <Logger name="xyna.sql" level="info"/>
+    <Logger name="xyna.sql.com.gip.xyna.xprc.xprcods.orderarchive" level="debug"/>
+    <Logger name="xyna.sql.com.gip.xyna.xprc.xsched.ordersuspension" level="debug"/>
+    <Logger name="xyna.sql.com.gip.xyna.xprc.xfractwfe.specialpurpose.synchronization" level="debug"/>
+    
+    <!-- SynchronizationCleanupThread -->
+    <Logger name="xyna.sql.com.gip.xyna.xprc.xfractwfe.specialpurpose.synchronization.SingleConnectionSynchronizationManagementAlgorithm$SingleConnectionCleanUpAlgorithm.call" level="info"/>
+    <Logger name="xyna.sql.com.gip.xyna.xprc.xfractwfe.specialpurpose.synchronization.SynchronizationManagement$CleanupRunnable.run" level="warn"/>
+    
+    <Logger name="xyna.sql.com.gip.xyna.xprc.xsched.cronlikescheduling" level="debug" />
+    
+    <!-- trace: see loggernames for sql-logging -->
+    <Logger name="com.gip.xyna.xnwh.persistence.XynaSQLUtilsLogger" level="debug"/>
+  </Loggers>
+</Configuration>
+

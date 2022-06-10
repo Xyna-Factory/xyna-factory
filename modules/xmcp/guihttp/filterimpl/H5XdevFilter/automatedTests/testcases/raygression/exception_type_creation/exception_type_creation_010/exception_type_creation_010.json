@@ -1,0 +1,191 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "10.7.2020",
+    "updated": "10.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Exception_Type!": "New Exception Type"
+        },
+        {
+          "!exception_type_creation_010!": "exception_type_creation_010"
+        },
+        {
+          "!DE!": "DE"
+        },
+        {
+          "!autotest.generated.ARANDOM!": "autotest.generated.!rnd!"
+        },
+        {
+          "!changed!": "changed"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1594368875113.NewExceptionType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1594368875113!",
+      "variable": "!new_1594368875113.NewExceptionType!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewExceptionType!",
+      "variable": "!new_1594368875113.NewExceptionType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=exceptionMessages]/id",
+      "targetVariable": "!exceptionMessageArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!exception_type_creation_010!",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1594368875113!/!NewExceptionType!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "messageLanguage": "!DE!",
+        "messageText": "change",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1594368875113!/!NewExceptionType!/objects/!exceptionMessageArea!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!exception_type_creation_010!",
+        "path": "!autotest.generated.ARANDOM!",
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1594368875113!/!NewExceptionType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!autotest.generated.ARANDOM.Exception_type_creati!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Exception_type_creation_010!",
+      "variable": "!autotest.generated.ARANDOM.Exception_type_creati!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autotest.generated.ARANDOM!/!Exception_type_creation_010!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "messageLanguage": "!DE!",
+        "messageText": "!changed!",
+        "revision": 2
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autotest.generated.ARANDOM!/!Exception_type_creation_010!/objects/!exceptionMessageArea!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!exception_type_creation_010!",
+        "path": "!autotest.generated.ARANDOM!",
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autotest.generated.ARANDOM!/!Exception_type_creation_010!/save"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autotest.generated.ARANDOM!/!Exception_type_creation_010!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autotest.generated.ARANDOM!/!Exception_type_creation_010!/close"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autotest.generated.ARANDOM!/!Exception_type_creation_010!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[id=exceptionMessageArea]/items/$list[0]/message",
+      "targetVariable": "!output!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!output!",
+      "value": "changed"
+    }
+  ]
+}

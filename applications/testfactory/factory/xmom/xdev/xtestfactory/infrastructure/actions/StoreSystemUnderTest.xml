@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Store System Under Test" TypeName="StoreSystemUnderTest" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Store System Under Test" Name="StoreSystemUnderTest">
+    <Input>
+      <Data ID="4" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest">
+        <Target RefID="3"/>
+        <Target RefID="7"/>
+      </Data>
+      <Data ID="5" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter">
+        <Target RefID="3"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="8" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest8">
+        <Source RefID="7"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="2" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+    </ServiceReference>
+    <Function ID="3" Label="Store">
+      <Source RefID="2"/>
+      <Source RefID="4"/>
+      <Source RefID="5"/>
+      <Target RefID="2"/>
+      <Invoke Operation="store" ServiceID="2">
+        <Source RefID="4"/>
+        <Source RefID="5"/>
+      </Invoke>
+      <Receive ServiceID="2"/>
+    </Function>
+    <Assign ID="7">
+      <Source RefID="4"/>
+      <Target RefID="8"/>
+      <Copy>
+        <Source RefID="4"/>
+        <Target RefID="8"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

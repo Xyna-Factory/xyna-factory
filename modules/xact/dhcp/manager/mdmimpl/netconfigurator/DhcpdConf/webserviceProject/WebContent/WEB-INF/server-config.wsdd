@@ -1,0 +1,84 @@
+<ns1:deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java" xmlns:ns1="http://xml.apache.org/axis/wsdd/">
+ <ns1:globalConfiguration>
+  <ns1:parameter name="sendMultiRefs" value="true"/>
+  <ns1:parameter name="disablePrettyXML" value="true"/>
+  <ns1:parameter name="adminPassword" value="admin"/>
+  <ns1:parameter name="dotNetSoapEncFix" value="true"/>
+  <ns1:parameter name="enableNamespacePrefixOptimization" value="false"/>
+  <ns1:parameter name="sendXMLDeclaration" value="true"/>
+  <ns1:parameter name="sendXsiTypes" value="true"/>
+  <ns1:parameter name="attachments.implementation" value="org.apache.axis.attachments.AttachmentsImpl"/>
+  <ns1:requestFlow>
+   <ns1:handler type="java:org.apache.axis.handlers.JWSHandler">
+    <ns1:parameter name="scope" value="session"/>
+   </ns1:handler>
+   <ns1:handler type="java:org.apache.axis.handlers.JWSHandler">
+    <ns1:parameter name="scope" value="request"/>
+    <ns1:parameter name="extension" value=".jwr"/>
+   </ns1:handler>
+  </ns1:requestFlow>
+ </ns1:globalConfiguration>
+ <ns1:handler name="LocalResponder" type="java:org.apache.axis.transport.local.LocalResponder"/>
+ <ns1:handler name="URLMapper" type="java:org.apache.axis.handlers.http.URLMapper"/>
+ <ns1:handler name="Authenticate" type="java:org.apache.axis.handlers.SimpleAuthenticationHandler"/>
+ <ns1:service name="AdminService" provider="java:MSG">
+  <ns1:parameter name="allowedMethods" value="AdminService"/>
+  <ns1:parameter name="enableRemoteAdmin" value="false"/>
+  <ns1:parameter name="className" value="org.apache.axis.utils.Admin"/>
+  <ns1:namespace>http://xml.apache.org/axis/wsdd/</ns1:namespace>
+ </ns1:service>
+ <ns1:service name="Version" provider="java:RPC">
+  <ns1:parameter name="allowedMethods" value="getVersion"/>
+  <ns1:parameter name="className" value="org.apache.axis.Version"/>
+ </ns1:service>
+ <ns1:service name="DhcpdConfPort" provider="java:RPC" style="document" use="literal">
+  <ns1:parameter name="allowedMethods" value="*"/>
+  <ns1:parameter name="typeMappingVersion" value="1.2"/>
+  <ns1:parameter name="wsdlPortType" value="DhcpdConf"/>
+  <ns1:parameter name="className" value="com.gip.www.juno.WS.DhcpdConf.DhcpdConfBindingSkeleton"/>
+  <ns1:parameter name="wsdlServicePort" value="DhcpdConfPort"/>
+  <ns1:parameter name="schemaQualified" value="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:parameter name="wsdlTargetNamespace" value="http://www.gip.com/juno/WS/DhcpdConf"/>
+  <ns1:parameter name="wsdlServiceElement" value="DhcpdConf"/>
+  <ns2:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns1:DuplicateForMigrationRequest_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.DuplicateForMigrationRequest_ctype" xmlns:ns1="http://www.gip.com/juno/Gui/WS/Messages" xmlns:ns2="http://xml.apache.org/axis/wsdd/"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns2:UndeployCPEResponse_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.UndeployCPEResponse_ctype" xmlns:ns2="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns3:ErrorParameter_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.ErrorParameter_ctype" xmlns:ns3="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns4:Payload_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.Payload_ctype" xmlns:ns4="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns5:DeployStaticHostInput_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.DeployStaticHostInput_ctype" xmlns:ns5="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns6:DhcpdConfResponse_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.DhcpdConfResponse_ctype" xmlns:ns6="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns7:OutputHeaderContent_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.OutputHeaderContent_ctype" xmlns:ns7="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns8:UndeployStaticHostRequest_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.UndeployStaticHostRequest_ctype" xmlns:ns8="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns9:ResponseHeader_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.ResponseHeader_ctype" xmlns:ns9="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns10:DeployCPERequest_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.DeployCPERequest_ctype" xmlns:ns10="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns11:CheckDhcpdConfInput_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.CheckDhcpdConfInput_ctype" xmlns:ns11="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns12:MigrationTargetIdentifier_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.MigrationTargetIdentifier_ctype" xmlns:ns12="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns13:CheckDhcpdConfRequest_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.CheckDhcpdConfRequest_ctype" xmlns:ns13="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns14:DeployDhcpdConfRequest_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.DeployDhcpdConfRequest_ctype" xmlns:ns14="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns15:DeployCPEResponse_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.DeployCPEResponse_ctype" xmlns:ns15="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns16:DeployDhcpdConfInput_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.DeployDhcpdConfInput_ctype" xmlns:ns16="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns17:InputHeaderContent_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.InputHeaderContent_ctype" xmlns:ns17="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns18:CPEIdentification_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.CPEIdentification_ctype" xmlns:ns18="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns19:UndeployCPERequest_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.UndeployCPERequest_ctype" xmlns:ns19="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns20:Response_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.Response_ctype" xmlns:ns20="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns21:DeployStaticHostRequest_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.DeployStaticHostRequest_ctype" xmlns:ns21="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns22:UndeployStaticHostInput_ctype" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.gip.www.juno.Gui.WS.Messages.UndeployStaticHostInput_ctype" xmlns:ns22="http://www.gip.com/juno/Gui/WS/Messages"/>
+  <ns1:arrayMapping innerType="ns23:ErrorParameter_ctype" languageSpecificType="java:com.gip.www.juno.Gui.WS.Messages.ErrorParameter_ctype[]" qname="ns23:ErrorParameterList_ctype" xmlns:ns23="http://www.gip.com/juno/Gui/WS/Messages"/>
+ </ns1:service>
+ <ns1:transport name="http">
+  <ns1:requestFlow>
+   <ns1:handler type="URLMapper"/>
+   <ns1:handler type="java:org.apache.axis.handlers.http.HTTPAuthHandler"/>
+  </ns1:requestFlow>
+  <ns1:parameter name="qs:list" value="org.apache.axis.transport.http.QSListHandler"/>
+  <ns1:parameter name="qs:wsdl" value="org.apache.axis.transport.http.QSWSDLHandler"/>
+  <ns1:parameter name="qs.list" value="org.apache.axis.transport.http.QSListHandler"/>
+  <ns1:parameter name="qs.method" value="org.apache.axis.transport.http.QSMethodHandler"/>
+  <ns1:parameter name="qs:method" value="org.apache.axis.transport.http.QSMethodHandler"/>
+  <ns1:parameter name="qs.wsdl" value="org.apache.axis.transport.http.QSWSDLHandler"/>
+ </ns1:transport>
+ <ns1:transport name="local">
+  <ns1:responseFlow>
+   <ns1:handler type="LocalResponder"/>
+  </ns1:responseFlow>
+ </ns1:transport>
+</ns1:deployment>

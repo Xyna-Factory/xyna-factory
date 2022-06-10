@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "PMOD3185.json",
+    "PMOD3185_copy.json"
+  ]
+}

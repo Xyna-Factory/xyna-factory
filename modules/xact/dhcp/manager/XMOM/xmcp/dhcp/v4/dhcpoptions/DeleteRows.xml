@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DeleteRows" TypeName="DeleteRows" TypePath="xmcp.dhcp.v4.dhcpoptions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="DeleteRows" Name="DeleteRows">
+    <Input>
+      <Data ID="76" Label="DeleteRowsInput" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="row_ctype76"/>
+    </Input>
+    <Output>
+      <Data ID="236" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype236"/>
+      <Data ID="175" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.dhcpoptions" VariableName="deleteRowsOutput175"/>
+    </Output>
+    <ServiceReference ID="4" Label="DHCPOptions" ReferenceName="DHCPOptions.DHCPOptions" ReferencePath="xmcp.dhcp.v4.dhcpoptions"/>
+    <Mappings ID="28" Label="Build Input">
+      <Input>
+        <Data ID="55" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="row_ctype55"/>
+        <Source RefID="76"/>
+      </Input>
+      <Output>
+        <Data ID="45" Label="Delete Rows Request ctype" ReferenceName="DeleteRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="deleteRowsRequest_ctype45">
+          <Source RefID="28"/>
+        </Data>
+        <Target RefID="46"/>
+      </Output>
+      <Mapping>%1%.deleteRowsInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Delete Rows">
+      <Source RefID="4"/>
+      <Source RefID="46"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="deleteRows" ServiceID="4">
+        <Source RefID="46"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="139" Label="Extract Output">
+      <Input>
+        <Data ID="156" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="response_ctype156">
+          <Source RefID="139"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="257" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype257">
+          <Source RefID="139"/>
+        </Data>
+        <Target RefID="258"/>
+      </Output>
+      <Output>
+        <Data ID="165" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.dhcpoptions" VariableName="deleteRowsOutput165">
+          <Source RefID="139"/>
+        </Data>
+        <Target RefID="166"/>
+      </Output>
+      <Mapping>%2%.deleteRowsOutput=%0%.payload.deleteRowsOutput</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="46" Label="Delete Rows Request ctype" ReferenceName="DeleteRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="deleteRowsRequest_ctype46">
+      <Source RefID="28"/>
+    </Data>
+    <Data ID="166" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.dhcpoptions" VariableName="deleteRowsOutput166">
+      <Source RefID="139"/>
+    </Data>
+    <Data ID="258" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype258">
+      <Source RefID="139"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="258"/>
+      <Source RefID="166"/>
+      <Target RefID="236"/>
+      <Target RefID="175"/>
+      <Copy>
+        <Source RefID="258"/>
+        <Target RefID="236"/>
+      </Copy>
+      <Copy>
+        <Source RefID="166"/>
+        <Target RefID="175"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

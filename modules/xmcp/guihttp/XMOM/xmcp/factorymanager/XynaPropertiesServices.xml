@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Xyna Properties Services" TypeName="XynaPropertiesServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>XynaPropertiesServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="Xyna Properties Services" TypeName="XynaPropertiesServices">
+    <Operation IsStatic="true" Label="Change Property" Name="changeProperty">
+      <Input>
+        <Data Label="Xyna Property" ReferenceName="XynaProperty" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaProperty"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Property Update Exception" ReferenceName="PropertyUpdateException" ReferencePath="xmcp.factorymanager.xynaproperties.exceptions" VariableName="propertyUpdateException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.XynaPropertiesServicesImpl.changeProperty(xynaProperty);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Property" Name="createProperty">
+      <Input>
+        <Data Label="Xyna Property" ReferenceName="XynaProperty" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaProperty"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Property Create Exception" ReferenceName="PropertyCreateException" ReferencePath="xmcp.factorymanager.xynaproperties.exceptions" VariableName="propertyCreateException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.XynaPropertiesServicesImpl.createProperty(xynaProperty);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get entry details" Name="getEntryDetails">
+      <Input>
+        <Data Label="Xyna Property Key" ReferenceName="XynaPropertyKey" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaPropertyKey"/>
+      </Input>
+      <Output>
+        <Data Label="Xyna Property" ReferenceName="XynaProperty" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaProperty"/>
+      </Output>
+      <Throws>
+        <Exception Label="Property load exception" ReferenceName="PropertyLoadException" ReferencePath="xmcp.factorymanager.xynaproperties.exceptions" VariableName="propertyLoadException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.XynaPropertiesServicesImpl.getEntryDetails(xynaPropertyKey);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get list entries" Name="getListEntries" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+        <Data Label="Documentation Language" ReferenceName="DocumentationLanguage" ReferencePath="xmcp" VariableName="documentationLanguage"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Xyna Property" ReferenceName="XynaProperty" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaProperty"/>
+      </Output>
+      <Throws>
+        <Exception ID="1" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights1"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.XynaPropertiesServicesImpl.getListEntries(correlatedXynaOrder, tableInfo, documentationLanguage);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Remove Property" Name="removeProperty">
+      <Input>
+        <Data Label="Xyna Property Key" ReferenceName="XynaPropertyKey" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaPropertyKey"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Property Delete Exception" ReferenceName="PropertyDeleteException" ReferencePath="xmcp.factorymanager.xynaproperties.exceptions" VariableName="propertyDeleteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.XynaPropertiesServicesImpl.removeProperty(xynaPropertyKey);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

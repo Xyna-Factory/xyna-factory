@@ -1,0 +1,4241 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "author": "patrick.vonmassow",
+    "created": "9.6.2022",
+    "updated": "9.6.2022"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.DeleteApplication!": "xmcp.factorymanager.rtcmanager.DeleteApplicationDefinition"
+        },
+        {
+          "!FMAN512_AD1!": "FMAN512 AD1"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ApplicationDefini!": "xmcp.factorymanager.rtcmanager.ApplicationDefinitionDetails"
+        },
+        {
+          "!GuiHttp!": "GuiHttp"
+        },
+        {
+          "!1.1.353.7!": "1.1.353.7"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetWorkspaces!": "xmcp.factorymanager.rtcmanager.GetWorkspaces"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetADDetails!": "xmcp.factorymanager.rtcmanager.GetADDetails"
+        },
+        {
+          "!FMAN512_AD2!": "FMAN512 AD2"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!": "xmcp.factorymanager.rtcmanager.ApplicationDefinition"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!": "xmcp.factorymanager.rtcmanager.GetDependentRTCs"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionForward"
+        },
+        {
+          "!OK!": "OK"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!": "xmcp.factorymanager.rtcmanager.GetDependentRTCsRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionBackwards"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon!": "xmcp.factorymanager.rtcmanager.GetApplicationContent"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!": "xmcp.factorymanager.rtcmanager.GetApplicationContentRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetIssues!": "xmcp.factorymanager.rtcmanager.GetIssues"
+        },
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!NewWorkflow!": "NewWorkflow"
+        },
+        {
+          "!0!": "0"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!autoTest.generated.FMAN512!": "autoTest.generated.FMAN512.!rnd!"
+        },
+        {
+          "!WF_in_no_AD!": "WF in no AD"
+        },
+        {
+          "!WF_in_AD1!": "WF in AD1"
+        },
+        {
+          "!WF_in_AD2!": "WF in AD2"
+        },
+        {
+          "!WF_in_AD1_and_AD2!": "WF in AD1 and AD2"
+        },
+        {
+          "!New_Data_Type!": "New Data Type"
+        },
+        {
+          "!DT_in_no_AD!": "DT in no AD"
+        },
+        {
+          "!DT_in_AD1!": "DT in AD1"
+        },
+        {
+          "!DT_in_AD2!": "DT in AD2"
+        },
+        {
+          "!DT_in_AD1_and_AD2!": "DT in AD1 and AD2"
+        },
+        {
+          "!New_Exception_Type!": "New Exception Type"
+        },
+        {
+          "!ET_in_no_AD!": "ET in no AD"
+        },
+        {
+          "!ET_in_AD1!": "ET in AD1"
+        },
+        {
+          "!ET_in_AD2!": "ET in AD2"
+        },
+        {
+          "!ET_in_AD1_and_AD2!": "ET in AD1 and AD2"
+        },
+        {
+          "!New_Service_Group!": "New Service Group"
+        },
+        {
+          "!SG_in_no_AD!": "SG in no AD"
+        },
+        {
+          "!SG_in_AD1!": "SG in AD1"
+        },
+        {
+          "!SG_in_AD2!": "SG in AD2"
+        },
+        {
+          "!SG_in_AD1_and_AD2!": "SG in AD1 and AD2"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.CreateApplication!": "xmcp.factorymanager.rtcmanager.CreateApplicationDefinition"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.Workspace!": "xmcp.factorymanager.rtcmanager.Workspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.CreateADRequest!": "xmcp.factorymanager.rtcmanager.CreateADRequest"
+        },
+        {
+          "!Type!": "Type"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!elementType!": "elementType"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!AD1!": "AD1"
+        },
+        {
+          "!name!": "name"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.44.1!": "0.6.44.1"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.SetADContent!": "xmcp.factorymanager.rtcmanager.SetADContent"
+        },
+        {
+          "!DATATYPE!": "DATATYPE"
+        },
+        {
+          "!explicit!": "explicit"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ApplicationElemen!": "xmcp.factorymanager.rtcmanager.ApplicationElement"
+        },
+        {
+          "!EXCEPTION!": "EXCEPTION"
+        },
+        {
+          "!WORKFLOW!": "WORKFLOW"
+        },
+        {
+          "!State!": "State"
+        },
+        {
+          "!runtimeContext.state!": "runtimeContext.state"
+        },
+        {
+          "!runtimeContext.name!": "runtimeContext.name"
+        },
+        {
+          "!rtcType!": "rtcType"
+        },
+        {
+          "!AD2!": "AD2"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetWorkspaceDetai!": "xmcp.factorymanager.rtcmanager.GetWorkspaceDetails"
+        },
+        {
+          "!RegressionTestImportApp!": "RegressionTestImportApp"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte!": "xmcp.factorymanager.rtcmanager.GetWorkspaceContent"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte0!": "xmcp.factorymanager.rtcmanager.GetWorkspaceContentRequest"
+        },
+        {
+          "!Application_Definitions!": "Application Definitions"
+        },
+        {
+          "!applicationDefinitions!": "applicationDefinitions"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.Issue!": "xmcp.factorymanager.rtcmanager.Issue"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!": "xmcp.factorymanager.rtcmanager.WorkspaceDetails"
+        },
+        {
+          "!-1!": "-1"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD1!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.DeleteApplication!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaces!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD2!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetADDetails!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD2!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD2!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD2!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD2!",
+            "sourceVersion": "",
+            "state": "!OK!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetIssues!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD2!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.DeleteApplication!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaces!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758771903.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758771903!",
+      "variable": "!new_1654758771903.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758771903!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758771903!/!NewWorkflow!/warnings"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758771903!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!WF_in_no_AD!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758771903!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/fqn",
+      "targetVariable": "!FMAN512.WFInNoAD!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!WFInNoAD!",
+      "variable": "!FMAN512.WFInNoAD!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInNoAD!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInNoAD!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInNoAD!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInNoAD!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInNoAD!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInNoAD!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInNoAD!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInNoAD!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758786665.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758786665!",
+      "variable": "!new_1654758786665.NewWorkflow!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758786665!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758786665!/!NewWorkflow!/warnings"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758786665!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!WF_in_AD1!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758786665!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=label]/fqn",
+      "targetVariable": "!FMAN512.WFInAD1!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!WFInAD1!",
+      "variable": "!FMAN512.WFInAD1!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758800815.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758800815!",
+      "variable": "!new_1654758800815.NewWorkflow!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758800815!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758800815!/!NewWorkflow!/warnings"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758800815!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!WF_in_AD2!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758800815!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=label]/fqn",
+      "targetVariable": "!FMAN512.WFInAD2!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!WFInAD2!",
+      "variable": "!FMAN512.WFInAD2!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD2!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD2!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD2!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD2!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD2!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD2!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD2!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD2!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758814408.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758814408!",
+      "variable": "!new_1654758814408.NewWorkflow!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758814408!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758814408!/!NewWorkflow!/warnings"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758814408!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!WF_in_AD1_and_AD2!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1654758814408!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/areas/$list[name=label]/fqn",
+      "targetVariable": "!FMAN512.WFInAD1AndAD2!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!WFInAD1AndAD2!",
+      "variable": "!FMAN512.WFInAD1AndAD2!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1AndAD2!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1AndAD2!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1AndAD2!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1AndAD2!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1AndAD2!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1AndAD2!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1AndAD2!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN512!/!WFInAD1AndAD2!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1654758830195.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758830195!",
+      "variable": "!new_1654758830195.NewDataType!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewDataType!",
+      "variable": "!new_1654758830195.NewDataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!DT_in_no_AD!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1654758830195!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!FMAN512.DTInNoAD!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!DTInNoAD!",
+      "variable": "!FMAN512.DTInNoAD!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.FMAN512!/!DTInNoAD!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.FMAN512!/!DTInNoAD!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1654758841720.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758841720!",
+      "variable": "!new_1654758841720.NewDataType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!DT_in_AD1!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1654758841720!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!FMAN512.DTInAD1!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!DTInAD1!",
+      "variable": "!FMAN512.DTInAD1!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.FMAN512!/!DTInAD1!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.FMAN512!/!DTInAD1!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1654758854792.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758854792!",
+      "variable": "!new_1654758854792.NewDataType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!DT_in_AD2!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1654758854792!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!FMAN512.DTInAD2!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!DTInAD2!",
+      "variable": "!FMAN512.DTInAD2!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.FMAN512!/!DTInAD2!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.FMAN512!/!DTInAD2!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1654758865297.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758865297!",
+      "variable": "!new_1654758865297.NewDataType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!DT_in_AD1_and_AD2!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1654758865297!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!FMAN512.DTInAD1AndAD2!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!DTInAD1AndAD2!",
+      "variable": "!FMAN512.DTInAD1AndAD2!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.FMAN512!/!DTInAD1AndAD2!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated.FMAN512!/!DTInAD1AndAD2!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758878063.NewExceptionType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758878063!",
+      "variable": "!new_1654758878063.NewExceptionType!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewExceptionType!",
+      "variable": "!new_1654758878063.NewExceptionType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!ET_in_no_AD!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1654758878063!/!NewExceptionType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!FMAN512.ETInNoAD!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!ETInNoAD!",
+      "variable": "!FMAN512.ETInNoAD!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.FMAN512!/!ETInNoAD!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.FMAN512!/!ETInNoAD!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758888544.NewExceptionType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758888544!",
+      "variable": "!new_1654758888544.NewExceptionType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!ET_in_AD1!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1654758888544!/!NewExceptionType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!FMAN512.ETInAD1!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!ETInAD1!",
+      "variable": "!FMAN512.ETInAD1!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.FMAN512!/!ETInAD1!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.FMAN512!/!ETInAD1!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758900984.NewExceptionType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758900984!",
+      "variable": "!new_1654758900984.NewExceptionType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!ET_in_AD2!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1654758900984!/!NewExceptionType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!FMAN512.ETInAD2!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!ETInAD2!",
+      "variable": "!FMAN512.ETInAD2!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.FMAN512!/!ETInAD2!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.FMAN512!/!ETInAD2!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758912942.NewExceptionType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758912942!",
+      "variable": "!new_1654758912942.NewExceptionType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!ET_in_AD1_and_AD2!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1654758912942!/!NewExceptionType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!FMAN512.ETInAD1AndAD2!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!ETInAD1AndAD2!",
+      "variable": "!FMAN512.ETInAD1AndAD2!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.FMAN512!/!ETInAD1AndAD2!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!autoTest.generated.FMAN512!/!ETInAD1AndAD2!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Service_Group!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758925426.NewServiceGroup!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758925426!",
+      "variable": "!new_1654758925426.NewServiceGroup!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewServiceGroup!",
+      "variable": "!new_1654758925426.NewServiceGroup!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!sg!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!SG_in_no_AD!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!new_1654758925426!/!NewServiceGroup!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/fqn",
+      "targetVariable": "!FMAN512.SGInNoAD!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!SGInNoAD!",
+      "variable": "!FMAN512.SGInNoAD!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!autoTest.generated.FMAN512!/!SGInNoAD!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!autoTest.generated.FMAN512!/!SGInNoAD!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Service_Group!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758935313.NewServiceGroup!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758935313!",
+      "variable": "!new_1654758935313.NewServiceGroup!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!SG_in_AD1!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!new_1654758935313!/!NewServiceGroup!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!FMAN512.SGInAD1!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!SGInAD1!",
+      "variable": "!FMAN512.SGInAD1!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!autoTest.generated.FMAN512!/!SGInAD1!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!autoTest.generated.FMAN512!/!SGInAD1!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Service_Group!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758948817.NewServiceGroup!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758948817!",
+      "variable": "!new_1654758948817.NewServiceGroup!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!SG_in_AD2!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!new_1654758948817!/!NewServiceGroup!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!FMAN512.SGInAD2!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!SGInAD2!",
+      "variable": "!FMAN512.SGInAD2!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!autoTest.generated.FMAN512!/!SGInAD2!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!autoTest.generated.FMAN512!/!SGInAD2!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Service_Group!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1654758960341.NewServiceGroup!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1654758960341!",
+      "variable": "!new_1654758960341.NewServiceGroup!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!SG_in_AD1_and_AD2!",
+        "path": "!autoTest.generated.FMAN512!",
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!new_1654758960341!/!NewServiceGroup!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!FMAN512.SGInAD1AndAD2!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!SGInAD1AndAD2!",
+      "variable": "!FMAN512.SGInAD1AndAD2!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!autoTest.generated.FMAN512!/!SGInAD1AndAD2!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": "!0!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/servicegroups/!autoTest.generated.FMAN512!/!SGInAD1AndAD2!/close"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaces!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.CreateADRequest!"
+            },
+            "documentation": "",
+            "name": "!FMAN512_AD1!",
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!default_workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.CreateApplication!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaces!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaces!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.CreateADRequest!"
+            },
+            "documentation": "",
+            "name": "!FMAN512_AD2!",
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!default_workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.CreateApplication!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaces!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD1!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetADDetails!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD1!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD1!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD1!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD1!",
+            "sourceVersion": "",
+            "state": "!OK!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetIssues!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "documentation": "",
+              "name": "!FMAN512_AD1!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!AD1!",
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "documentation": "",
+              "name": "!FMAN512_AD1!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD1!",
+            "workspaceName": "!default_workspace!"
+          },
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!DATATYPE!",
+                "name": "!FMAN512.DTInAD1!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!DATATYPE!",
+                "name": "!FMAN512.DTInAD1AndAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!EXCEPTION!",
+                "name": "!FMAN512.ETInAD1!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!EXCEPTION!",
+                "name": "!FMAN512.ETInAD1AndAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!DATATYPE!",
+                "name": "!FMAN512.SGInAD1!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!DATATYPE!",
+                "name": "!FMAN512.SGInAD1AndAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!WORKFLOW!",
+                "name": "!FMAN512.WFInAD1!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!WORKFLOW!",
+                "name": "!FMAN512.WFInAD1AndAD2!",
+                "originRTC": "!default_workspace!"
+              }
+            ],
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.SetADContent!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD1!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD2!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetADDetails!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!State!",
+                  "path": "!runtimeContext.state!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!runtimeContext.name!",
+                  "pre": true,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!rtcType!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD2!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!State!",
+                  "path": "!runtimeContext.state!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!runtimeContext.name!",
+                  "pre": true,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!rtcType!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD2!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD2!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD2!",
+            "sourceVersion": "",
+            "state": "!OK!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetIssues!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "documentation": "",
+              "name": "!FMAN512_AD2!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!AD2!",
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "documentation": "",
+              "name": "!FMAN512_AD2!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!FMAN512_AD2!",
+            "workspaceName": "!default_workspace!"
+          },
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!DATATYPE!",
+                "name": "!FMAN512.DTInAD1AndAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!DATATYPE!",
+                "name": "!FMAN512.DTInAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!EXCEPTION!",
+                "name": "!FMAN512.ETInAD1AndAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!EXCEPTION!",
+                "name": "!FMAN512.ETInAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!DATATYPE!",
+                "name": "!FMAN512.SGInAD1AndAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!DATATYPE!",
+                "name": "!FMAN512.SGInAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!WORKFLOW!",
+                "name": "!FMAN512.WFInAD1AndAD2!",
+                "originRTC": "!default_workspace!"
+              },
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
+                  "rtc": {
+                    "application": "!GuiHttp!",
+                    "version": "!1.1.353.7!"
+                  }
+                },
+                "dependencyType": "!explicit!",
+                "elementType": "!WORKFLOW!",
+                "name": "!FMAN512.WFInAD2!",
+                "originRTC": "!default_workspace!"
+              }
+            ],
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.SetADContent!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "name": "!FMAN512_AD2!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!default_workspace!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "name": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaceDetai!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!2!",
+      "variable": "!1.2!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!State!",
+                  "path": "!runtimeContext.state!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!runtimeContext.name!",
+                  "pre": true,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!rtcType!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "applicationDefinitions": {
+                "$list": [
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD1!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD2!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!RegressionTestImportApp!",
+                    "sourceVersion": "!2!",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  }
+                ],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                }
+              },
+              "isActive": false,
+              "name": "!default_workspace!",
+              "state": "!OK!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!State!",
+                  "path": "!runtimeContext.state!",
+                  "pre": false,
+                  "shrink": true
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Name!",
+                  "path": "!runtimeContext.name!",
+                  "pre": true,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!rtcType!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "applicationDefinitions": {
+                "$list": [
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD1!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD2!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!RegressionTestImportApp!",
+                    "sourceVersion": "!2!",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  }
+                ],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                }
+              },
+              "isActive": false,
+              "name": "!default_workspace!",
+              "state": "!OK!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte0!"
+            },
+            "onlyUnassigned": false,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "applicationDefinitions": {
+                "$list": [
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD1!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD2!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!RegressionTestImportApp!",
+                    "sourceVersion": "!2!",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  }
+                ],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                }
+              },
+              "isActive": false,
+              "name": "!default_workspace!",
+              "state": "!OK!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+              "rtc": {
+                "application": "!GuiHttp!",
+                "version": "!1.1.353.7!"
+              }
+            },
+            "applicationDefinitions": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                  },
+                  "name": "!FMAN512_AD1!",
+                  "sourceVersion": "",
+                  "state": "!OK!",
+                  "workspaceName": "!default_workspace!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                  },
+                  "name": "!FMAN512_AD2!",
+                  "sourceVersion": "",
+                  "state": "!OK!",
+                  "workspaceName": "!default_workspace!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                  },
+                  "name": "!RegressionTestImportApp!",
+                  "sourceVersion": "!2!",
+                  "state": "!OK!",
+                  "workspaceName": "!default_workspace!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+              }
+            },
+            "isActive": false,
+            "name": "!default_workspace!",
+            "state": "!OK!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetIssues!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!FMAN512!",
+      "variable": "!autoTest.generated.FMAN512!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!autoTest.generated.FMAN512!",
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Application_Definitions!",
+                  "path": "!applicationDefinitions!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte0!"
+            },
+            "onlyUnassigned": false,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "applicationDefinitions": {
+                "$list": [
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD1!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD2!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!RegressionTestImportApp!",
+                    "sourceVersion": "!2!",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  }
+                ],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                }
+              },
+              "isActive": false,
+              "name": "!default_workspace!",
+              "state": "!OK!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "output[1]/$list",
+      "expectedValue": "20",
+      "comment": "4x (WF, DT, ET, SG and Order Type)"
+    },
+
+	{
+      "operation": "read",
+      "pathInResponse": "output[1]",
+      "targetVariable": "!filteredWorkspaceContent!",
+      "unquoteResult": false
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.WFInNoAD!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": ""
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.WFInAD1!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD1!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.WFInAD2!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.WFInAD1AndAD2!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.DTInNoAD!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": ""
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.DTInAD1!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD1!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.DTInAD2!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.DTInAD1AndAD2!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.ETInNoAD!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": ""
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.ETInAD1!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD1!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.ETInAD2!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.ETInAD1AndAD2!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.SGInNoAD!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": ""
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.SGInAD1!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD1!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.SGInAD2!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.SGInAD1AndAD2!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!applicationDefinitions!",
+      "value": "!FMAN512_AD2!"
+    },
+
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte0!"
+            },
+            "onlyUnassigned": false,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "applicationDefinitions": {
+                "$list": [
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD1!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD2!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!RegressionTestImportApp!",
+                    "sourceVersion": "!2!",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  }
+                ],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                }
+              },
+              "isActive": false,
+              "issues": {
+                "$list": [],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.Issue!"
+                }
+              },
+              "name": "!default_workspace!",
+              "revision": "!-1!",
+              "state": "!OK!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!autoTest.generated.FMAN512!",
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Application_Definitions!",
+                  "path": "!applicationDefinitions!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte0!"
+            },
+            "onlyUnassigned": false,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "applicationDefinitions": {
+                "$list": [
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD1!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD2!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!RegressionTestImportApp!",
+                    "sourceVersion": "!2!",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  }
+                ],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                }
+              },
+              "isActive": false,
+              "issues": {
+                "$list": [],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.Issue!"
+                }
+              },
+              "name": "!default_workspace!",
+              "revision": "!-1!",
+              "state": "!OK!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+
+	{
+      "operation": "read",
+      "pathInResponse": "output[1]",
+      "targetVariable": "!filteredWorkspaceContentDetails!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!filteredWorkspaceContent!",
+      "value": "!filteredWorkspaceContentDetails!"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "application": "!ZetaFramework!",
+                "version": "!0.6.44.1!"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Type!",
+                  "path": "!elementType!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!autoTest.generated.FMAN512!",
+                  "name": "!Name!",
+                  "path": "!name!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!asc!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Application_Definitions!",
+                  "path": "!applicationDefinitions!",
+                  "pre": false,
+                  "shrink": false
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte0!"
+            },
+            "onlyUnassigned": true,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!",
+                "rtc": {
+                  "application": "!GuiHttp!",
+                  "version": "!1.1.353.7!"
+                }
+              },
+              "applicationDefinitions": {
+                "$list": [
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD1!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!FMAN512_AD2!",
+                    "sourceVersion": "",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  },
+                  {
+                    "$meta": {
+                      "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                    },
+                    "name": "!RegressionTestImportApp!",
+                    "sourceVersion": "!2!",
+                    "state": "!OK!",
+                    "workspaceName": "!default_workspace!"
+                  }
+                ],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+                }
+              },
+              "isActive": false,
+              "issues": {
+                "$list": [],
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.Issue!"
+                }
+              },
+              "name": "!default_workspace!",
+              "revision": "!-1!",
+              "state": "!OK!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaceConte!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "output[1]/$list",
+      "expectedValue": "5",
+      "comment": "WF, DT, ET, SG and Order Type"
+    },
+
+	{
+      "operation": "read",
+      "pathInResponse": "output[1]",
+      "targetVariable": "!filteredWorkspaceContent!",
+      "unquoteResult": false
+    },
+    {
+      "operation": "assert",
+      "constraint": "doesNotContain",
+      "variable": "!filteredWorkspaceContent!",
+      "value": "!FMAN512_AD1!"
+    },
+	{
+      "operation": "assert",
+      "constraint": "doesNotContain",
+      "variable": "!filteredWorkspaceContent!",
+      "value": "!FMAN512_AD2!"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.WFInNoAD!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": ""
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.DTInNoAD!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": ""
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.ETInNoAD!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": ""
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "output[1]/$list[name=!FMAN512.SGInNoAD!]/applicationDefinitions",
+      "targetVariable": "!applicationDefinitions!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!applicationDefinitions!",
+      "value": ""
+    }
+  ]
+}

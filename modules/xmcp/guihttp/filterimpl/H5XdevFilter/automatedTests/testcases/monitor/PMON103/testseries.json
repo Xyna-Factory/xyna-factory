@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "ForeachRetry.json",
+	"RetryForeach.json",
+	"RetryMultiForeach.json"
+  ]
+}

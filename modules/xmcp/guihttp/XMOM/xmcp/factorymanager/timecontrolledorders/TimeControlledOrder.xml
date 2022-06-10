@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Time controlled order" TypeName="TimeControlledOrder" TypePath="xmcp.factorymanager.timecontrolledorders" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Id" ReferenceName="TCOId" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="id"/>
+  <Data Label="Name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Enabled" VariableName="enabled">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Order destination" ReferenceName="OrderDestination" ReferencePath="xmcp.factorymanager.shared" VariableName="orderDestination"/>
+  <Data Label="Input payload" VariableName="inputPayload">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Planning horizon" ReferenceName="OrderExecutionTime" ReferencePath="xmcp.factorymanager.shared" VariableName="planningHorizon"/>
+  <Data Label="TCO Execution Restriction" ReferenceName="TCOExecutionRestriction" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="tCOExecutionRestriction"/>
+  <Data Label="Order customs" ReferenceName="OrderCustoms" ReferencePath="xmcp.factorymanager.shared" VariableName="orderCustoms"/>
+  <Data Label="Filter Criteria" VariableName="filterCriteria">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Storable Fqn" VariableName="storableFqn">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Sort Criteria" VariableName="sortCriteria">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="archived" VariableName="archived">
+    <Meta>
+      <Type>Boolean</Type>
+    </Meta>
+  </Data>
+</DataType>

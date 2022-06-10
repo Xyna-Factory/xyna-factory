@@ -1,0 +1,27 @@
+[
+  {
+    "type": "function",
+	"functionName": "startWorkflow",
+	"input": 
+	[
+	  "!ordertype!",
+	  "!input!"
+	],
+	"output":[ "!output!"],
+	"operations":
+	[
+	
+      {
+        "operation": "call",
+        "requestType": "POST",
+        "url": "/runtimeContext/GuiHttp%252F/startorder",
+        "payload":{"orderType":"!ordertype!","input":"!input!","async":false,"monitoringLevel":20,"priority":7}
+      },
+      {
+        "operation": "read",
+        "targetVariable": "!output!",
+        "pathInResponse": "output"
+      }
+	]
+  }
+]

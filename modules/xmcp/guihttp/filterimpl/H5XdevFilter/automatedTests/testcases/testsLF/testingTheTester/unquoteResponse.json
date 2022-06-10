@@ -1,0 +1,33 @@
+{
+  "$meta":
+  {
+    "name": "unquoteResponse",
+	"description" : "Testet die unquoteResult option der read operation."
+  },
+  "operations":
+  [
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/workflows",
+	  "payload": {"label": "New Workflow"}
+	},
+	{
+      "operation": "read",
+	  "targetVariable": "!newPathQuoted!",
+	  "pathInResponse": "xmomItem/fqn"
+    },
+	{
+	  "operation": "read",
+	  "targetVariable": "!newPathUnquoted!",
+	  "pathInResponse": "xmomItem/fqn",
+      "unquoteResult": "True"	  
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!newPathQuoted!",
+	  "value": "\"!newPathUnquoted!\""
+	}
+  ]
+}

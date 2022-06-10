@@ -1,0 +1,410 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="EN">
+   <Description Language="">Exceptions für XACT Department. Diese Datei dient
+		gleichzeitig als Dokumentation der Fehlermeldungen.
+		CodeRange 09200 - 09599 (siehe BlackExceptionCodeManagement)</Description>
+   <ExceptionType Code="XYNA-09240" TypeName="XACT_TriggerNotFound" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="nameOfTrigger" VariableName="nameOfTrigger">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Trigger %0% wurde nicht gefunden</MessageText>
+      <MessageText Language="EN">trigger not found: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09241" TypeName="XACT_FilterNotFound" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="nameOfFilter" VariableName="nameOfFilter">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Filter %0% nicht gefunden</MessageText>
+      <MessageText Language="EN">filter not found: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09242" TypeName="XACT_TriggerInstanceNotFound" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="nameOfTriggerInstance" VariableName="nameOfTriggerInstance">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Trigger Instanz %0% nicht gefunden</MessageText>
+      <MessageText Language="EN">trigger instance not found: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09243" TypeName="XACT_JarFileUnzipProblem" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="problematisches jarFile" VariableName="jarFile">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="errorMsg" VariableName="errorMsg">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler beim Entpacken und Speichern des JarFiles %0%: %1%</MessageText>
+      <MessageText Language="EN">error unzipping and saving jarfiles %0%: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09244" TypeName="XACT_ErrorClosingStream" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="stream-info" VariableName="streamInfo">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="errorMsg" VariableName="errorMsg">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler beim Schliessen des Streams "%0%": %1%</MessageText>
+      <MessageText Language="EN">error closing stream "%0%": %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09245" TypeName="XACT_ClassNotFoundInJarFile" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="fqClassName" VariableName="fqClassName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="jarFiles" VariableName="jarFiles">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Class %0% konnte in angegebenen JarFiles %1% nicht gefunden werden</MessageText>
+      <MessageText Language="EN">could not find class %0% in provided jarfiles %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09246" TypeName="XACT_ClassInstantiationErrorInTriggerImpl" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="fqClassName" VariableName="fqClassName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Klasse %0% konnte nicht instantiiert werden</MessageText>
+      <MessageText Language="EN">could not instantiate class %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09248" TypeName="XACT_DeploymentDirNotFound" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="deploymentDir" VariableName="deploymentDir">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Deployment-Verzeichniss %0% nicht gefunden</MessageText>
+      <MessageText Language="EN">Deployment directory %0% not found</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09249" TypeName="XACT_TriggerMayNotBeRemovedIsDeployedException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="nameOfTrigger" VariableName="nameOfTrigger">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Trigger %0% ist noch deployed und kann nicht gelöscht werden</MessageText>
+      <MessageText Language="EN">The trigger %0% is still deployed and can't be removed</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09250" TypeName="XACT_FilterMayNotBeRemovedIsDeployedException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="nameOfFilter" VariableName="nameOfFilter">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Filter %0% ist noch deployed und kann nicht gelöscht werden</MessageText>
+      <MessageText Language="EN">The filter %0% is still deployed and can't be removed</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09251" TypeName="XACT_WrongTriggerException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="nameOfTrigger" VariableName="nameOfTrigger">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Filter passt nicht zum Trigger %0%.</MessageText>
+      <MessageText Language="EN">The filter may not be added to trigger %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09252" TypeName="XACT_DuplicateTriggerDefinitionException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="fqClassNameOfTrigger" VariableName="fqClassNameOfTrigger">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es existiert bereits ein Trigger mit der Klasse %0%.</MessageText>
+      <MessageText Language="EN">Trigger class %0% has already been added.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09253" TypeName="XACT_DuplicateFilterDefinitionException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="fqClassNameOfFilter" VariableName="fqClassNameOfFilter">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es existiert bereits ein Filter mit der Klasse %0%.</MessageText>
+      <MessageText Language="EN">Filter class %0% has already been added.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09310" TypeName="XACT_SML_UnexpectedTLValue" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="expectedByte" VariableName="expectedByte">
+         <Meta>
+            <Type>java.lang.Byte</Type>
+         </Meta>
+      </Data>
+      <Data Label="foundByte" VariableName="foundByte">
+         <Meta>
+            <Type>java.lang.Byte</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">SML PARSING ERROR: Erwartetes TL-Feld: %0%, gefunden: %1%</MessageText>
+      <MessageText Language="EN">SML PARSING ERROR: Expected TL field: %0%, found: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09311" TypeName="XACT_SML_IllegalFieldFormat" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="malformattedField" VariableName="malformattedField">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="malformattedValue" VariableName="malformattedValue">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">SML PARSING ERROR: Fehlerhaftes Format beim Parsen von %0%, unerwarteter Wert: %1%</MessageText>
+      <MessageText Language="EN">SML PARSING ERROR: Erroneous format found while parsing %0%, illegal value: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09312" TypeName="XACT_SML_CRCError" TypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">SML PARSING ERROR: Konnte CRC16-Check nicht erfolgreich durchfuehren</MessageText>
+      <MessageText Language="EN">SML PARSING ERROR: Could not validate CRC16 check</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09320" TypeName="XACT_SML_EncodingException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="typeToBeEncoded" VariableName="typeToBeEncoded">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="valueToBeEncoded" VariableName="valueToBeEncoded">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">SML ENCODING ERROR: Fehler beim Encodieren von %0%, unerwarteter Wert: %1%</MessageText>
+      <MessageText Language="EN">SML ENCODING ERROR: Error encoding %0%, illegal value: %1%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09330" TypeName="XACT_TriggerInitException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="reason" VariableName="reason">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Trigger konnte nicht initialisiert werden: %0%</MessageText>
+      <MessageText Language="EN">Trigger could not be initialized: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09331" TypeName="XACT_SocketCouldNotBeBoundException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="retryCount" VariableName="retryCount">
+         <Meta>
+            <Type>int</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Socket konnte nach %0% Wiederholungen nicht an Port gebunden werden.</MessageText>
+      <MessageText Language="EN">Socket could not be bound to port after %0% retries.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09332" TypeName="XACT_ImplClassNotFoundException" TypePath="com.gip.xyna.xact.exceptions" IsAbstract="true">
+      <Data Label="fqclassName" VariableName="fqclassName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>      
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09333" TypeName="XACT_FilterImplClassNotFoundException" TypePath="com.gip.xyna.xact.exceptions" BaseTypeName="XACT_ImplClassNotFoundException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">Die Klasse %0% für die Filter Implementierung konnte nicht gefunden werden.</MessageText>
+      <MessageText Language="EN">Class %0% of the filter implementation could not be found.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09334" TypeName="XACT_TriggerImplClassNotFoundException" TypePath="com.gip.xyna.xact.exceptions" BaseTypeName="XACT_ImplClassNotFoundException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">Die Klasse %0% für die Trigger Implementierung konnte nicht gefunden werden.</MessageText>
+      <MessageText Language="EN">Class %0% of the Trigger implementation could not be found.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09335" TypeName="XACT_IncompatibleImplException" TypePath="com.gip.xyna.xact.exceptions" IsAbstract="true">
+      <Data Label="fqclassName" VariableName="fqclassName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09336" TypeName="XACT_IncompatibleFilterImplException" TypePath="com.gip.xyna.xact.exceptions" BaseTypeName="XACT_IncompatibleImplException" BaseTypePath="com.gip.xyna.xact.exceptions" >
+      <MessageText Language="DE">Die Klasse %0% für die Filter Implementierung kann nicht instantiiert werden.</MessageText>
+      <MessageText Language="EN">The filter implementation class %0% can not be instantiated.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09337" TypeName="XACT_IncompatibleTriggerImplException" TypePath="com.gip.xyna.xact.exceptions" BaseTypeName="XACT_IncompatibleImplException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">Die Klasse %0% für die Trigger Implementierung kann nicht instantiiert werden.</MessageText>
+      <MessageText Language="EN">The trigger implementation class %0% can not be instantiated.</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-09338" TypeName="XACT_NetworkInterfaceNotFoundException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="network interface Number or Name" VariableName="networkInterfaceId">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Netzwerk Interface %0% wurde nicht gefunden.</MessageText>
+      <MessageText Language="EN">Network interface %0% not found.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09339" TypeName="XACT_NoNetworkInterfacePresentException" TypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">Kein Netzwerk Interface vorhanden.</MessageText>
+      <MessageText Language="EN">No network interface present.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09340" TypeName="XACT_InterfaceNoIPConfiguredException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="network interface" VariableName="networkInterface">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Netzwerk Interface %0% ist keine IP zugeordnet.</MessageText>
+      <MessageText Language="EN">Network interface %0% has no ip assigned.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09341" TypeName="XACT_InterfaceNoIPv4ConfiguredException" TypePath="com.gip.xyna.xact.exceptions" BaseTypeName="XACT_InterfaceNoIPConfiguredException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">Netzwerk Interface %0% ist keine IPv4 zugeordnet.</MessageText>
+      <MessageText Language="EN">Network interface %0% has no ipv4 assigned.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09342" TypeName="XACT_InvalidStartParameterException" TypePath="com.gip.xyna.xact.exceptions" IsAbstract="true">
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09343" TypeName="XACT_InvalidTriggerStartParameterValueException" TypePath="com.gip.xyna.xact.exceptions" BaseTypeName="XACT_InvalidStartParameterException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="invalid value" VariableName="invalidValue">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Parameter %0% ist für Trigger nicht gültig.</MessageText>
+      <MessageText Language="EN">Invalid trigger start parameter %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09344" TypeName="XACT_InvalidStartParameterCountException" TypePath="com.gip.xyna.xact.exceptions" BaseTypeName="XACT_InvalidStartParameterException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">Ungültige Anzahl von Start Parametern.</MessageText>
+      <MessageText Language="EN">Invalid number of start parameters.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09345" TypeName="XACT_TriggerDeploymentMultipleException" TypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">Während des Deployments der Trigger sind mehrere Fehler aufgetreten.</MessageText>
+      <MessageText Language="EN">Several Errors occured durching trigger deployment.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09346" TypeName="XACT_StartParameterDefinitionsChangedException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="trigger name" VariableName="triggerName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Startparameter des Triggers %0% haben sich geändert und sind nicht kompatibel bereits deployten Triggern.</MessageText>
+      <MessageText Language="EN">Startparameters of trigger %0% have changed. Triggers deployed before have incompatible startparameters.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09347" TypeName="XACT_TriggerCouldNotBeStartedException" TypePath="com.gip.xyna.xact.exceptions" IsAbstract="true">
+   	  <Description Language="DE" >Trigger Impls können hier von ableiten</Description>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09348" TypeName="XACT_TriggerCouldNotBeStoppedException" TypePath="com.gip.xyna.xact.exceptions" IsAbstract="true">
+   	  <Description Language="DE" >Trigger Impls können hier von ableiten</Description>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-09349" TypeName="XACT_LibOfFilterImplNotFoundException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="library" VariableName="lib">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="filter name" VariableName="filterName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>      
+      <MessageText Language="DE">Die Bibliothek %0% des Filters %1% konnte nicht gefunden werden.</MessageText>
+      <MessageText Language="EN">Library %0% of filter %1% could not be found.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09350" TypeName="XACT_LibOfTriggerImplNotFoundException" TypePath="com.gip.xyna.xact.exceptions">
+      <Data Label="library" VariableName="lib">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="trigger name" VariableName="triggerName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>      
+      <MessageText Language="DE">Die Bibliothek %0% des Triggers %1% konnte nicht gefunden werden.</MessageText>
+      <MessageText Language="EN">Library %0% of trigger %1% could not be found.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09351" TypeName="XACT_AdditionalDependencyDeploymentException" TypePath="com.gip.xyna.xact.exceptions" >
+      <Data Label="nameOfObjectWhichHasAdditionalDependencies" VariableName="nameOfObjectWhichHasAdditionalDependencies">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+   	  <MessageText Language="EN">Deployment of additional dependencies of %0% failed.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09352" TypeName="XACT_InterfaceNoIPv6ConfiguredException" TypePath="com.gip.xyna.xact.exceptions" BaseTypeName="XACT_InterfaceNoIPConfiguredException" BaseTypePath="com.gip.xyna.xact.exceptions">
+      <MessageText Language="DE">Netzwerk Interface %0% ist keine IPv6-Adresse zugeordnet.</MessageText>
+      <MessageText Language="EN">Network interface %0% has no ipv6 address assigned.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09353" TypeName="XACT_ErrorDuringTriggerAdditionRollback" TypePath="com.gip.xyna.xact.exceptions">
+     <Data Label="trigger name" VariableName="triggerName">
+       <Meta>
+         <Type>String</Type>
+       </Meta>
+     </Data> 
+     <MessageText Language="DE">Fehler bei dem Versuch nach einem fehlerhaftem Hinzufügen eines Triggers %0% den Ausgangszustand wiederherzustellen.</MessageText>
+     <MessageText Language="EN">Error while trying to rollback the addition of trigger %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09354" TypeName="XACT_ErrorDuringFilterAdditionRollback" TypePath="com.gip.xyna.xact.exceptions">
+     <Data Label="filter name" VariableName="filterName">
+       <Meta>
+         <Type>String</Type>
+       </Meta>
+     </Data> 
+     <MessageText Language="DE">Fehler bei dem Versuch nach einem fehlerhaftem Hinzufügen eines Filters %0% den Ausgangszustand wiederherzustellen.</MessageText>
+     <MessageText Language="EN">Error while trying to rollback the addition of filter %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09355" TypeName="XACT_OldFilterVersionInstantiationException" TypePath="com.gip.xyna.xact.exceptions">
+     <Data Label="filter instance name" VariableName="filterInstanceName">
+       <Meta>
+         <Type>String</Type>
+       </Meta>
+     </Data> 
+     <Data Label="old version of filter" VariableName="versionOld">
+       <Meta>
+         <Type>String</Type>
+       </Meta>
+     </Data>     
+     <Data Label="trigger instance name" VariableName="triggerInstanceName">
+       <Meta>
+         <Type>String</Type>
+       </Meta>
+     </Data> 
+     <Data Label="new version" VariableName="versionNew">
+       <Meta>
+         <Type>String</Type>
+       </Meta>
+     </Data>     
+     <MessageText Language="DE">Filter %0% aus Version %1% konnte zum Binden an Trigger %2% in Version %3% nicht instanziiert werden.</MessageText>
+     <MessageText Language="EN">Could not instantiate filter %0% of version %1% to bind to trigger %2% in version %3%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09356" TypeName="XACT_TriggerInstanceNeedsEnabledTriggerException" TypePath="com.gip.xyna.xact.exceptions">
+     <Data Label="trigger name" VariableName="triggerName">
+       <Meta>
+         <Type>String</Type>
+       </Meta>
+     </Data> 
+     <MessageText Language="DE">Trigger Instanz kann nicht enabled werden, wenn der zugehörige Trigger '%0%' nicht erfolgreich hinzugefügt wurde.</MessageText>
+     <MessageText Language="EN">Trigger instance can not be enabled without its trigger '%0%' being added successfully first.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-09357" TypeName="XACT_FilterInstanceNeedsEnabledFilterException" TypePath="com.gip.xyna.xact.exceptions">
+     <Data Label="filter name" VariableName="filterName">
+       <Meta>
+         <Type>String</Type>
+       </Meta>
+     </Data> 
+     <MessageText Language="DE">Filter Instanz kann nicht enabled werden, wenn der zugehörige Filter '%0%' nicht erfolgreich hinzugefügt wurde.</MessageText>
+     <MessageText Language="EN">Filter instance can not be enabled without its filter '%0%' being added successfully first.</MessageText>
+   </ExceptionType>
+</ExceptionStore>

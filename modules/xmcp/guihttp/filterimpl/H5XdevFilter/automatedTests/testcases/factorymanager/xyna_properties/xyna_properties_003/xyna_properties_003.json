@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xyna_property"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.CreateXynaPro!": "xmcp.factorymanager.xynaproperties.CreateXynaProperty"
+        },
+        {
+          "!random!": "!rnd!"
+        },
+        {
+          "!en-US!": "en-US"
+        },
+        {
+          "!xmcp.DocumentationLanguage!": "xmcp.DocumentationLanguage"
+        },
+        {
+          "!xmcp.Documentation!": "xmcp.Documentation"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaProperty!": "xmcp.factorymanager.xynaproperties.XynaProperty"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper!": "xmcp.factorymanager.xynaproperties.GetXynaPropertiesTableInfo"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Key!": "Key"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!key!": "key"
+        },
+        {
+          "!Value!": "Value"
+        },
+        {
+          "!value!": "value"
+        },
+        {
+          "!Default_Value!": "Default Value"
+        },
+        {
+          "!defaultValue!": "defaultValue"
+        },
+        {
+          "!gUIDocumentation!": "gUIDocumentation"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.GetXynaProper0!": "xmcp.factorymanager.xynaproperties.GetXynaPropertyDetails"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaPropertyK!": "xmcp.factorymanager.xynaproperties.XynaPropertyKey"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "documentation": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.Documentation!"
+                  },
+                  "language": {
+                    "$meta": {
+                      "fqn": "!xmcp.DocumentationLanguage!"
+                    },
+                    "languageTag": "!en-US!"
+                  }
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.Documentation!"
+              }
+            },
+            "key": "!autotest.generated.random!",
+            "value": "!random!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.CreateXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Documentation!",
+      "variable": "!xmcp.Documentation!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "documentation": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.Documentation!"
+                  },
+                  "language": {
+                    "$meta": {
+                      "fqn": "!xmcp.DocumentationLanguage!"
+                    },
+                    "languageTag": "!en-US!"
+                  }
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.Documentation!"
+              }
+            },
+            "key": "!autotest.generated.random!",
+            "value": "!random!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.CreateXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!readName1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!readName1!",
+      "value": "already exists"
+    }
+  ]
+}

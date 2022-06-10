@@ -1,0 +1,72 @@
+{
+  "meta":
+  {
+    "name": "saveAndDeployFunctionTest",
+	"description": "Testet die Funktion saveAndDeploy. Entfernt den erstellten Workflow.",
+	"created": "06.11.2019",
+	"updated": "06.11.2019"
+  },
+  
+  "operations":
+  [
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput":
+	  {
+	    "!newPath!": "!newPath!",
+		"!newWorkflowName!": "!newWFName!",
+		"!url!": "!wfUrl!"
+	  }
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!genLabel!",
+	  "length": 8
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!genPath!",
+	  "length": 8
+	},
+	{
+	  "operation": "set",
+	  "variable": "!genPath!",
+	  "value": "autoTests.saveAndDeployFunctionTest.!genPath!"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "saveAndDeploy",
+	  "mapInput": 
+	  {
+	    "!wfUrl!" : "!wfUrl!",
+		"!path!" : "!genPath!",
+		"!label!": "!genLabel!",
+		"!revision!": "!revision!"
+	  },
+	  "mapOutput": 
+	  {
+	    "!wfName!" : "!newWfName!",
+		"!wfUrl!" : "!wfUrl!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/close",
+	  "payload": {"force":false,"revision":"!revision!"}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/delete",
+	  "payload": {"force":false}
+	}
+  ]
+}

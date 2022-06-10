@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Roles" TypeName="GetRoles" TypePath="xmcp.xacm.usermanagement" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Roles" Name="GetRoles">
+    <Input/>
+    <Output>
+      <Data ID="7" IsList="true" Label="Role name" ReferenceName="RoleName" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleName7">
+        <Source RefID="8"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Get Roles Exception" ReferenceName="GetRolesException" ReferencePath="xmcp.xacm.usermanagement.exceptions" VariableName="getRolesException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="UserManagement" ReferenceName="UserManagement.UserManagement" ReferencePath="xmcp.xacm">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Get Roles">
+      <Source RefID="4"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="getRoles" ServiceID="4"/>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" IsList="true" Label="Role name" ReferenceName="RoleName" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleName">
+      <Source RefID="5"/>
+      <Target RefID="8"/>
+    </Data>
+    <Assign ID="8">
+      <Source RefID="6"/>
+      <Target RefID="7"/>
+      <Copy>
+        <Source RefID="6"/>
+        <Target RefID="7"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

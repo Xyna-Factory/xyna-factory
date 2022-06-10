@@ -1,0 +1,25 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="registerqueue" Groups="QueueManagement" Description="Register a queue."/>
+  <Argument Name="uniqueName" Description="arbitrary unique name to identify the queue among all registered queues"/>
+  <Argument Name="externalName" Description="actual name of the queue used by the external queue provider"/>
+  <Argument Name="queueType" Description="Type of queue (Possible values: ORACLE_AQ, WEBSPHERE_MQ, ACTIVE_MQ)"/>
+  <Argument Name="connectParameters" Description="Additional parameters needed to create a connection to the queue, depending on queue type (ORACLE_AQ: username, password, Jdbc URL; WEBSPHERE_MQ: queueManager, hostname, port, channel; ACTIVE_MQ: hostname, port)" MultipleValues="true"/>
+
+</XynaCommandLineCommand>

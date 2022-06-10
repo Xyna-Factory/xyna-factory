@@ -1,0 +1,388 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "16.7.2020",
+    "updated": "16.7.2020"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetRuntimeContexts!": "xmcp.factorymanager.shared.GetRuntimeContexts"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.GetOrderSo!": "xmcp.factorymanager.orderinputsources.GetOrderSourceTypes"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetOrderTypes!": "xmcp.factorymanager.shared.GetOrderTypes"
+        },
+        {
+          "!Workspace!": "Workspace"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        },
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!signature!": "signature"
+        },
+        {
+          "!xnwh.persistence.Query!": "xnwh.persistence.Query"
+        },
+        {
+          "!xnwh.persistence.SelectionMask!": "xnwh.persistence.SelectionMask"
+        },
+        {
+          "!Base!": "Base"
+        },
+        {
+          "!1.0.17!": "1.0.17"
+        },
+        {
+          "!xnwh.persistence.FilterCondition!": "xnwh.persistence.FilterCondition"
+        },
+        {
+          "!xnwh.persistence.QueryParameter!": "xnwh.persistence.QueryParameter"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.CreateOrde!": "xmcp.factorymanager.orderinputsources.CreateOrderInputSource"
+        },
+        {
+          "!ConstantInputSource!": "ConstantInputSource"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.SourceType!": "xmcp.factorymanager.orderinputsources.SourceType"
+        },
+        {
+          "!randomDescription!": "randomDescription"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.CreateOrde0!": "xmcp.factorymanager.orderinputsources.CreateOrderInputSourceRequest"
+        },
+        {
+          "!20!": "20"
+        },
+        {
+          "!monitoringLevel!": "monitoringLevel"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.Parameter!": "xmcp.factorymanager.orderinputsources.Parameter"
+        },
+        {
+          "!2!": "2"
+        },
+        {
+          "!customField1!": "customField1"
+        },
+        {
+          "!3!": "3"
+        },
+        {
+          "!customField2!": "customField2"
+        },
+        {
+          "!4!": "4"
+        },
+        {
+          "!customField3!": "customField3"
+        },
+        {
+          "!1!": "1"
+        },
+        {
+          "!customField0!": "customField0"
+        },
+        {
+          "!7!": "7"
+        },
+        {
+          "!priority!": "priority"
+        },
+        {
+          "xfqnx:xxnwh.persistence.SelectionMas": "[{\"$meta\":{\"fqn\":\"xnwh.persistence.SelectionMask\",\"rtc\":{\"application\":\"Base\",\"version\":\"1.0.17\"}},\"rootType\":\"autotest.generated.storable\",\"columns\":[]},{\"$meta\":{\"fqn\":\"xnwh.persistence.FilterCondition\",\"rtc\":{\"application\":\"Base\",\"version\":\"1.0.17\"}}},{\"$meta\":{\"fqn\":\"xnwh.persistence.QueryParameter\",\"rtc\":{\"application\":\"Base\",\"version\":\"1.0.17\"}}}]"
+        },
+        {
+          "!inputData!": "inputData"
+        },
+        {
+          "!autotest.generated!": "autotest.generated"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.GetOrderIn!": "xmcp.factorymanager.orderinputsources.GetOrderInputSources"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!name!": "name"
+        },
+        {
+          "!Application!": "Application"
+        },
+        {
+          "!applicationName!": "applicationName"
+        },
+        {
+          "!Version!": "Version"
+        },
+        {
+          "!versionName!": "versionName"
+        },
+        {
+          "!workspaceName!": "workspaceName"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Source_Type!": "Source Type"
+        },
+        {
+          "!sourceType.label!": "sourceType.label"
+        },
+        {
+          "!Order_Type!": "Order Type"
+        },
+        {
+          "!orderType.type!": "orderType.type"
+        },
+        {
+          "!Worksteps_using_Sources!": "Worksteps using Sources"
+        },
+        {
+          "!referencedInputSourceCount!": "referencedInputSourceCount"
+        },
+        {
+          "!State!": "State"
+        },
+        {
+          "!state!": "state"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.shared.GetRuntimeContexts!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.orderinputsources.GetOrderSo!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "revision": -1,
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.shared.GetOrderTypes!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "fqn": "!xnwh.persistence.Query!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!signature!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!xnwh.persistence.SelectionMask!",
+            "rtc": {
+  "workspace": "default workspace"
+}
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!xnwh.persistence.FilterCondition!",
+            "rtc": {
+  "workspace": "default workspace"
+}
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "objects": [
+          {
+            "fqn": "!xnwh.persistence.QueryParameter!",
+            "rtc": {
+  "workspace": "default workspace"
+}
+          }
+        ]
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/structure"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.orderinputsources.CreateOrde0!"
+            },
+            "documentation": "!randomDescription!",
+            "name": "!autotest.generated!",
+            "orderType": "!xnwh.persistence.Query!",
+            "parameter": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!monitoringLevel!",
+                  "value": "!20!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!customField1!",
+                  "value": "!2!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!customField2!",
+                  "value": "!3!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!customField3!",
+                  "value": "!4!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!customField0!",
+                  "value": "!1!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!priority!",
+                  "value": "!7!"
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+                  },
+                  "key": "!inputData!",
+                  "value": "!xfqnx:xxnwh.persistence.SelectionMas!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.orderinputsources.Parameter!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.Workspace!"
+              },
+              "name": "!default_workspace!",
+              "revision": -1,
+              "type": "!Workspace!"
+            },
+            "sourceType": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.orderinputsources.SourceType!"
+              },
+              "name": "!ConstantInputSource!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.orderinputsources.CreateOrde!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!ois5!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "print",
+      "variable": "!ois5!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

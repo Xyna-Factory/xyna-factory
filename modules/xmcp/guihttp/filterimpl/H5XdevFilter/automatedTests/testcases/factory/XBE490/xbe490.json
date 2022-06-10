@@ -1,0 +1,16 @@
+{
+  "operations": [
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/startorder",
+	  "payload": {"orderType":"xmcp.h5x.regression.xbe490.CheckNetDatatypes","input":[],"async":false,"customStringContainer":[null,null,null,null]}
+	},
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "stackTrace",
+      "basePath": ""
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "PMOD2426.json",
+    "PMOD2426_subscope.json"
+  ]
+}

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<wsdl:definitions xmlns:gui="http://www.gip.com/juno/Gui/WS/Messages" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.gip.com/juno/WS/CheckStatus" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CheckStatus" targetNamespace="http://www.gip.com/juno/WS/CheckStatus">
+
+  <wsdl:types>
+    <xsd:schema>
+      <xsd:import namespace="http://www.gip.com/juno/Gui/WS/Messages" schemaLocation="CheckStatusMessages.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+
+  <wsdl:message name="CheckStatusForIpRequestMessage">
+    <wsdl:part element="gui:CheckStatusForIpRequest" name="CheckStatusForIpRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="CheckStatusForIpResponseMessage">
+    <wsdl:part element="gui:CheckStatusForIpResponse" name="CheckStatusForIpResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="CheckStatusForIpv6RequestMessage">
+    <wsdl:part element="gui:CheckStatusForIpv6Request" name="CheckStatusForIpv6Request"/>
+  </wsdl:message>
+
+  <wsdl:message name="CheckStatusForIpv6ResponseMessage">
+    <wsdl:part element="gui:CheckStatusForIpv6Response" name="CheckStatusForIpv6Response"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetInstanceInfoListRequestMessage">
+    <wsdl:part element="gui:GetInstanceInfoListRequest" name="GetInstanceInfoListRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetInstanceInfoListResponseMessage">
+    <wsdl:part element="gui:GetInstanceInfoListResponse" name="GetInstanceInfoListResponse"/>
+  </wsdl:message>
+
+
+  <wsdl:portType name="CheckStatus">
+
+     <wsdl:operation name="CheckStatusForIp">
+      <wsdl:input message="tns:CheckStatusForIpRequestMessage"/>
+      <wsdl:output message="tns:CheckStatusForIpResponseMessage"/>
+    </wsdl:operation>
+
+     <wsdl:operation name="CheckStatusForIpv6">
+      <wsdl:input message="tns:CheckStatusForIpv6RequestMessage"/>
+      <wsdl:output message="tns:CheckStatusForIpv6ResponseMessage"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetInstanceInfoList">
+      <wsdl:input message="tns:GetInstanceInfoListRequestMessage"/>
+      <wsdl:output message="tns:GetInstanceInfoListResponseMessage"/>
+    </wsdl:operation>
+
+  </wsdl:portType>
+
+  <wsdl:binding name="CheckStatusBinding" type="tns:CheckStatus">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="CheckStatusForIp">
+      <soap:operation soapAction="CheckStatusForIp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="CheckStatusForIpv6">
+      <soap:operation soapAction="CheckStatusForIpv6"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetInstanceInfoList">
+      <soap:operation soapAction="GetInstanceInfoList"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+  </wsdl:binding>
+
+  <wsdl:service name="CheckStatus">
+    <wsdl:port binding="tns:CheckStatusBinding" name="CheckStatusPort">
+      <soap:address location="http://localhost:8080/CheckStatus/services/CheckStatusPort"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

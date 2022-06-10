@@ -1,0 +1,376 @@
+{
+  "meta":
+  {
+    "name": "oneWorkflowRetryFailTest",
+    "description": "Execute a workflow containing a Step that is retried on Workflow level once and fails (loaded from app) and open audit",
+    "created": "03.04.2020",
+    "updated": "03.04.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+      "operation": "set",
+      "variable": "!necessaryReductions!",
+      "value": "1"
+    },
+	{
+      "operation": "set",
+      "variable": "!reducetionRetryLimit!",
+      "value": "0"
+    },
+	{
+	  "operation": "set",
+	  "variable": "!workflowInput!",
+	  "value": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"necessaryReductions":"!necessaryReductions!","reducetionRetryLimit":"!reducetionRetryLimit!"}]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTestWorkflowLevelPrepare",
+        "!input!": "!workflowInput!",
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTestWorkflowLevel",
+        "!input!": "!workflowInput!",
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 5,
+        "!retryLength!": 0,
+        "!errorsLength!": 1,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check caught workflow iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=wf]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Failed"
+    },
+	
+	{
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=wf]/error/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException"
+    },
+	
+	{
+      "operation": "invoke",
+      "functionName": "readStepVariableValue",
+      "mapInput":
+      {
+        "!stepId!": "wf",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "necessaryReductions"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!necessaryReductions0!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!necessaryReductions0!",
+      "value": "!necessaryReductions!"
+    },
+	
+	{
+      "operation": "invoke",
+      "functionName": "readStepVariableValue",
+      "mapInput":
+      {
+        "!stepId!": "wf",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "reducetionRetryLimit"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!reducetionRetryLimit0!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!reducetionRetryLimit0!",
+      "value": "!reducetionRetryLimit!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=wf]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=wf]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    { "comment": "check step in workflow iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step6]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Failed"
+    },
+	
+	{
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=step6]/error/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step6]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step6]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!orderIdIteration0!",
+      "pathInResponse": "info/$list[id=step6]/orderId"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!orderIdIteration0!",
+      "value": "0"
+    },
+
+    { "comment": "check global catch branch in iteration 0", "operation": "comment" },
+
+
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[name=content]/items/$list[1]/id",
+      "targetVariable": "!branch-1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch-1!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Failed"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=!branch-1!]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    { "comment": "check mapping step in global catch in iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step303]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step303]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step303]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    { "comment": "check retry step in global catch in iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step306]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Failed"
+    },
+	
+	{
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=step306]/error/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step306]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step306]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    }
+  ]
+}

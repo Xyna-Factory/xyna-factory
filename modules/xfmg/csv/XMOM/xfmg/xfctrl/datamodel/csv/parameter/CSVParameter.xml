@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="CSV Parameter" TypeName="CSVParameter" TypePath="xfmg.xfctrl.datamodel.csv.parameter" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Header" VariableName="header">
+    <Meta>
+      <Documentation>Enumeration(none,labels,paths)
+Default: none
+
+none: no header
+labels: xmom labels
+paths: xfl like paths</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Masker" VariableName="masker">
+    <Meta>
+      <Documentation>Default "\""</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Separator" VariableName="separator">
+    <Meta>
+      <Documentation>Default ","</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="LineSeparator" VariableName="lineSeparator">
+    <Meta>
+      <Documentation>Default "\n"</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Null Representation" VariableName="nullRepresentation">
+    <Meta>
+      <Documentation>Default ""</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="End of File" VariableName="endOfFile">
+    <Meta>
+      <Documentation>Default ""</Documentation>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<!-- Form-label wird direkt angezeigt, deshalb sollte es nicht "Form" enthalten --> 
+<Form xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Workflow" TypePath="xmcp.factorymanager.orderinputsourcetype" TypeName="WorkflowInputSourceForm">
+  <Label Language="EN">Workflow</Label>          
+  <Label Language="DE">Workflow</Label>
+  <Documentation Language="EN">Creation of order input by executing another workflow. The output of that workflow is then used as input for the ordertype to be started originally. The workflow must contain xprc.xpce.OrderCreationParameter as output. All additional output parameter will be forwarded to the original workflow.</Documentation>
+  <Documentation Language="DE">Die Inputdaten für den zu startenden Ordertype werden mit Hilfe eines weiteren Workflows ermittelt. Der Output dieses weiteren Workflows ist genau der Input des zu startenden Ordertypes. Der Hilfs-Workflow muss als Output xprc.xpce.OrderCreationParameter enthalten. Die restlichen Ouput Parameter werden genauso weitergereicht an den Workflow, für den diese Input Source erstellt wird.</Documentation>
+  <Input>
+    <Data Label="Workflow Input Source" ReferenceName="WorkflowInputSource" ReferencePath="xmcp.factorymanager.orderinputsourcetype" VariableName="workflow"/>
+  </Input>
+  <FormItem Label="Generating Order Type">
+    <Label Language="EN">Generating Order Type</Label>          
+    <Label Language="DE">Generierender Auftragstyp</Label>
+    <DataLink>%0%.generatingOrderType</DataLink>
+    <ItemRenderer ClassName="xfmg.factorymanager.orderinputsourcemanager.GenerationOrderTypeSelector"/>
+  </FormItem>
+</Form>

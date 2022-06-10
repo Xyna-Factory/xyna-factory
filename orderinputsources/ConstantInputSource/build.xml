@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+  <import file="../../installation/build/ant-xyna.xml" />
+
+  <property name="project.name.local" value="ConstantInputSource" />
+
+  <property name="target.dir" value="${basedir}/deploy" />
+
+        <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+
+        <path id="libraries">
+                <fileset dir="${basedir}/lib/xyna">
+                  <include name="**/*.jar" />
+                </fileset>
+        </path>
+
+
+  <!-- ================================= 
+	         target: build             
+	        ================================= -->
+  <target name="build" depends="resolve">
+    <genCodeClass basedir="${basedir}" lookupjar="y" />
+    <buildJar destfile="${target.dir}/${project.name.local}.jar" />
+    <copy todir="${target.dir}">
+      <fileset dir="${basedir}/lib">
+        <include name="**/*.jar" />
+        <include name="**/*LICENSE*" />
+        <include name="**/*NOTICE*" />
+      </fileset>     
+    </copy>
+  </target>
+
+      <target name="resolve">
+        <resolver:resolve>
+          <resolver:dependencies pomRef="pom"/>
+          <resolver:remoterepos refid="xyna.repository"/>
+          <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
+          <!--resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/-->
+        </resolver:resolve>
+        <!--loadLicenses targetDir="${basedir}/lib" /-->
+        <!-- delete generated-resources ? -->
+      </target>
+
+	  	
+</project>

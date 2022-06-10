@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="3" Label="Add Radius Nodes for all RD-Types" TypeName="AddRadiusNodesForAllRDTypes" TypePath="xact.radius" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(16)</FixedDetailOptions>
+  <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Operation ID="2" Label="Add Radius Nodes for all RD-Types" Name="AddRadiusNodesForAllRDTypes">
+    <Meta>
+      <Abstract.UID>EF94F54E-5DAE-03A6-DA46-9810E00EB622</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="26" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole26">
+        <Target RefID="28"/>
+        <Target RefID="31"/>
+        <Target RefID="34"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="0" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node">
+        <Source RefID="4"/>
+      </Data>
+    </Output>
+    <Function ID="28" Label="Create Radius Nodes Cisco">
+      <Source RefID="27"/>
+      <Source RefID="26"/>
+      <Target RefID="27"/>
+      <Target RefID="29"/>
+      <Invoke Operation="CreateRadiusNodesCisco" ServiceID="27">
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="27">
+        <Target RefID="29"/>
+      </Receive>
+    </Function>
+    <Function ID="31" Label="Create Radius Nodes One Access">
+      <Source RefID="30"/>
+      <Source RefID="26"/>
+      <Target RefID="30"/>
+      <Target RefID="32"/>
+      <Invoke Operation="CreateRadiusNodesOneAccess" ServiceID="30">
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="30">
+        <Target RefID="32"/>
+      </Receive>
+    </Function>
+    <Mappings ID="17" Label="Concatenate Node Lists">
+      <Source RefID="29"/>
+      <Source RefID="32"/>
+      <Target RefID="16"/>
+      <Input>
+        <Data ID="24" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node0"/>
+        <Source RefID="29">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="25" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node1"/>
+        <Source RefID="32">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="18" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node18"/>
+        <Target RefID="16"/>
+      </Output>
+      <Mapping>%2%~=concatlists(%0%, %1%)</Mapping>
+    </Mappings>
+    <Function ID="34" Label="Create Radius Nodes Adtran">
+      <Source RefID="33"/>
+      <Source RefID="26"/>
+      <Target RefID="33"/>
+      <Target RefID="35"/>
+      <Invoke Operation="CreateRadiusNodesAdtran" ServiceID="33">
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="33">
+        <Target RefID="35"/>
+      </Receive>
+    </Function>
+    <Data ID="16" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node16">
+      <Source RefID="17"/>
+      <Target RefID="23"/>
+    </Data>
+    <Mappings ID="23" Label="Concatenate Node Lists">
+      <Source RefID="16"/>
+      <Source RefID="35"/>
+      <Target RefID="22"/>
+      <Input>
+        <Data ID="19" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node19"/>
+        <Source RefID="16">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="20" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node20"/>
+        <Source RefID="35">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="21" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node21"/>
+        <Target RefID="22"/>
+      </Output>
+      <Mapping>%2%~=concatlists(%0%, %1%)</Mapping>
+    </Mappings>
+    <Data ID="22" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node22">
+      <Source RefID="23"/>
+      <Target RefID="4"/>
+    </Data>
+    <ServiceReference ID="27" Label="Create Radius Nodes Cisco" ReferenceName="CreateRadiusNodesCisco" ReferencePath="xact.radius">
+      <Source RefID="28"/>
+      <Target RefID="28"/>
+    </ServiceReference>
+    <Data ID="29" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node29">
+      <Source RefID="28"/>
+      <Target RefID="17"/>
+    </Data>
+    <ServiceReference ID="30" Label="Create Radius Nodes One Access" ReferenceName="CreateRadiusNodesOneAccess" ReferencePath="xact.radius">
+      <Source RefID="31"/>
+      <Target RefID="31"/>
+    </ServiceReference>
+    <Data ID="32" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node32">
+      <Source RefID="31"/>
+      <Target RefID="17"/>
+    </Data>
+    <ServiceReference ID="33" Label="Create Radius Nodes Adtran" ReferenceName="CreateRadiusNodesAdtran" ReferencePath="xact.radius">
+      <Source RefID="34"/>
+      <Target RefID="34"/>
+    </ServiceReference>
+    <Data ID="35" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node35">
+      <Source RefID="34"/>
+      <Target RefID="23"/>
+    </Data>
+    <Assign ID="4">
+      <Source RefID="22"/>
+      <Target RefID="0"/>
+      <Copy>
+        <Source RefID="22">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="0"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

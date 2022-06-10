@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="PoolUsageThreshold" TypeName="PoolUsageThreshold" TypePath="xmcp.dhcp.v4.control" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>PoolUsageThresholdImpl.jar</Libraries>
+  <Libraries>PoolUsageThreshold.jar</Libraries>
+  <SharedLibraries>tools</SharedLibraries>
+  <Service Label="PoolUsageThreshold" TypeName="PoolUsageThreshold">
+    <Operation ID="2" IsStatic="true" Label="deleteRowsWithNullConditions" Name="deleteRowsWithNullConditions" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="0" Label="Delete Rows With Null Conditions Request ctype" ReferenceName="DeleteRowsWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="deleteRowsWithNullConditionsRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data ID="1" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return PoolUsageThresholdImpl.deleteRowsWithNullConditions(correlatedXynaOrder, deleteRowsWithNullConditionsRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="5" IsStatic="true" Label="getAllRows" Name="getAllRows" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="3" Label="Get All Rows Request ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data ID="4" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return PoolUsageThresholdImpl.getAllRows(correlatedXynaOrder, getAllRowsRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="8" IsStatic="true" Label="insertRow" Name="insertRow" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="6" Label="Insert Row Request ctype" ReferenceName="InsertRowRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="insertRowRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return PoolUsageThresholdImpl.insertRow(correlatedXynaOrder, insertRowRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="updateRowPkWithNullConditions" Name="updateRowPkWithNullConditions" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Update Row Pk With Null Conditions Request ctype" ReferenceName="UpdateRowPkWithNullConditionsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="updateRowPkWithNullConditionsRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return PoolUsageThresholdImpl.updateRowPkWithNullConditions(correlatedXynaOrder, updateRowPkWithNullConditionsRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

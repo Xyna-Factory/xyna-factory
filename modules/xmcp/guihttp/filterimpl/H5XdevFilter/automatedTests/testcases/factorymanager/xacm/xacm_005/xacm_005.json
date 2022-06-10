@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    },
+    {
+      "data": [
+        {
+          "!xacm!": "xacm"
+        },
+        {
+          "!createuser!": "createuser"
+        },
+        {
+          "!XYNA!": "XYNA"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!123!": "123"
+        },
+        {
+          "!MODELLER!": "MODELLER"
+        },
+        {
+          "!xmcp.xacm.usermanagement.datatypes.CreateUserReq!": "xmcp.xacm.usermanagement.datatypes.CreateUserRequest"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "$meta": {
+          "fqn": "!xmcp.xacm.usermanagement.datatypes.CreateUserReq!"
+        },
+        "domains": [
+          "!XYNA!"
+        ],
+        "password": "!123!",
+        "role": "!MODELLER!",
+        "username": "!autotest.generated.random!"
+      },
+      "requestType": "POST",
+      "url": "/!xacm!/!createuser!"
+    }
+  ]
+}

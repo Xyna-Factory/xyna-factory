@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="delivery" default="localbuild" basedir=".">
+
+	<loadproperties srcfile="delivery.properties" />
+	<!--<property file="patch.properties" />-->
+
+	<import file="../build/ant-xyna.xml" />
+	<import file="../build/git.xml" />
+
+	<!-- =================================
+              target: release
+          ================================= -->
+	<target name="release" description="build a delivery from specified SVN-tag" >
+		<property name="root.dir" value="${delivery.dir}/checkout_${timestamp}" />
+		<property name="build.dir" value="${delivery.dir}/build_${timestamp}" />
+
+		<mkdir dir="${root.dir}" />
+
+		<!--exec failonerror="true" executable="${basedir}/check_trunk.sh" /-->
+		<!--update />
+		<exec failonerror="true" executable="svn">
+		  <arg value="commit" />
+		  <arg value="-m" />
+		  <arg value="delivery ${release.number}" />
+		  <arg value="delivery.properties"/>
+		</exec--> 
+		
+		
+		<!-- tag erstellen (welches unterverzeichnis ist hier egal) -->
+		<git_checkout branch="${svn.branch}" project="clusterproviders" destdir="${root.dir}/clusterproviders" />
+		<unzip src="${root.dir}/clusterproviders.zip" dest="${root.dir}"/>
+
+		<!-- einzelverzeichnisse -->
+		<git_checkoutTag project="components" destdir="${root.dir}/components" />
+		<unzip src="${root.dir}/components.zip" dest="${root.dir}"/>
+		<git_checkoutTag project="datamodeltypes" destdir="${root.dir}/datamodeltypes" />
+		<unzip src="${root.dir}/datamodeltypes.zip" dest="${root.dir}"/>
+		<git_checkoutTag project="installation" destdir="${root.dir}/installation" />
+		<unzip src="${root.dir}/installation.zip" dest="${root.dir}"/>
+		<git_checkoutTag project="_Interfaces" destdir="${root.dir}/_Interfaces" />
+		<unzip src="${root.dir}/_Interfaces.zip" dest="${root.dir}"/>
+		<git_checkoutTag project="misc" destdir="${root.dir}/misc" />
+		<unzip src="${root.dir}/misc.zip" dest="${root.dir}"/>
+	  <git_checkoutTag project="modules" destdir="${root.dir}/modules" />
+	  <unzip src="${root.dir}/modules.zip" dest="${root.dir}"/>
+	  <git_checkoutTag project="orderinputsources" destdir="${root.dir}/orderinputsources" />
+	  <unzip src="${root.dir}/orderinputsources.zip" dest="${root.dir}"/>
+		<git_checkoutTag project="persistencelayers" destdir="${root.dir}/persistencelayers" />
+		<unzip src="${root.dir}/persistencelayers.zip" dest="${root.dir}"/>
+		<git_checkoutTag project="server" destdir="${root.dir}/server" />
+		<unzip src="${root.dir}/server.zip" dest="${root.dir}"/>
+		<git_checkoutTag project="blackedition" destdir="${root.dir}/blackedition" />
+		<unzip src="${root.dir}/blackedition.zip" dest="${root.dir}"/>
+		<copy todir="${root.dir}" overwrite="false">
+  		<fileset dir="${root.dir}/blackedition"/>
+		</copy>
+
+		<!-- git-archiver does not preserve executable mode?-->
+		<chmod file="${root.dir}/**" perm="ugo+rx" type="file"/>
+		
+		<property file="${root.dir}/installation/delivery/patch.properties" />
+		<trycatch reference="release.error">
+			<try>
+				<buildVersion srcdir="${root.dir}"
+                      destdir="${delivery.dir}"
+                      version="${release.number}"
+                      env="false"
+                      test="false"
+                      cobertura="false"
+                      findbugs="false" />
+			</try>
+			<catch>
+				<git_removeTag />
+				<throw refid="release.error" />
+			</catch>
+			<finally>
+				<delete dir="${build.dir}" />
+				<delete dir="${root.dir}" />
+			</finally>
+		</trycatch>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+               target: localbuild
+          - - - - - - - - - - - - - - - - - -->
+	<target name="localbuild"
+          description="build a delivery from local repository" depends="checkAppVersion"> 
+		<!--exec failonerror="true" executable="${basedir}/check_trunk.sh" /-->
+		<loadproperties srcfile="../build/build.properties" />
+		<property file="${root.dir}/installation/delivery/patch.properties" />
+		<delete dir="${build.dir}" />
+		<copy todir="${build.dir}" overwrite="false">
+  		<fileset dir="${root.dir}/blackedition"/>
+		</copy>
+		<buildVersion srcdir="${root.dir}"
+                  destdir="${build.dir}"
+                  version="${release.number}"
+                  name="${delivery.name}_${release.number}_${timestamp}_localBuild"
+                  env="false"
+                  test="false"
+                  findbugs="false" />
+	</target>
+
+	<target name="test1" >
+		<loadproperties srcfile="../build/build.properties" />
+
+		<path id="libraries">
+			<fileset dir="${root.dir}/common/lib">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+
+		<delete failonerror="false">
+			<fileset dir="${root.dir}/common/lib/xyna">
+				<include name="xynafactory.jar" />
+			</fileset>
+		</delete>
+
+		<prepareRunTestsAll srcdir="${root.dir}/server" />
+		<runTestsAll srcdir="${root.dir}/server" destdir="${root.dir}/testresults1" cobertura="false" />
+
+		<copy todir="${root.dir}/common/lib/xyna" flatten="true">
+			<fileset dir="${build.dir}/server/lib">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+
+		<prepareRunTestsAll srcdir="${root.dir}/mdmimpl" />
+		<prepareRunTestsAll srcdir="${root.dir}/filterimpl" />
+		<prepareRunTestsAll srcdir="${root.dir}/triggerimpl" />
+		<prepareRunTestsAll srcdir="${root.dir}/components" />
+
+		<runTestsAll srcdir="${root.dir}/mdmimpl" destdir="${root.dir}/testresults2" cobertura="false" />
+		<runTestsAll srcdir="${root.dir}/filterimpl" destdir="${root.dir}/testresults3" cobertura="false" />
+		<runTestsAll srcdir="${root.dir}/triggerimpl" destdir="${root.dir}/testresults4" cobertura="false" />
+		<runTestsAll srcdir="${root.dir}/components" destdir="${root.dir}/testresults5" cobertura="false" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+            target: nightbuild
+           - - - - - - - - - - - - - - - - - -->
+	<target name="nightbuild">
+		<exec failonerror="true" executable="${basedir}/check_trunk.sh" />
+		<loadproperties srcfile="../build/build.properties" />
+		<delete dir="${build.dir}" />
+		<delete failonerror="false">
+			<fileset dir="${delivery.dir}">
+				<include name="${delivery.name}_N*.zip" />
+				<include name="build_*/**" />
+			</fileset>
+		</delete>
+		<ant dir="${root.dir}/installation/build" target="build" inheritall="true">
+			<property name="release.number" value="N${timestamp}" />
+		</ant>
+
+		<path id="libraries">
+			<fileset dir="${root.dir}/common/lib">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+
+		<delete failonerror="false">
+			<fileset dir="${root.dir}/common/lib/xyna">
+				<include name="xynafactory.jar" />
+			</fileset>
+		</delete>
+
+		<prepareRunTestsAll srcdir="${root.dir}/server" />
+		<runTestsAll srcdir="${root.dir}/server" destdir="${root.dir}/testresults1" cobertura="false" />
+
+		<copy todir="${root.dir}/common/lib/xyna" flatten="true">
+			<fileset dir="${build.dir}/server/lib">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+
+		<prepareRunTestsAll srcdir="${root.dir}/mdmimpl" />
+		<prepareRunTestsAll srcdir="${root.dir}/filterimpl" />
+		<prepareRunTestsAll srcdir="${root.dir}/triggerimpl" />
+		<prepareRunTestsAll srcdir="${root.dir}/components" />
+
+		<runTestsAll srcdir="${root.dir}/mdmimpl" destdir="${root.dir}/testresults2" cobertura="false" />
+		<runTestsAll srcdir="${root.dir}/filterimpl" destdir="${root.dir}/testresults3" cobertura="false" />
+		<runTestsAll srcdir="${root.dir}/triggerimpl" destdir="${root.dir}/testresults4" cobertura="false" />
+		<runTestsAll srcdir="${root.dir}/components" destdir="${root.dir}/testresults5" cobertura="false" />
+		<findBugsAll srcdir="${root.dir}" destdir="${root.dir}/testresults" />
+		<zipDeliveryItems name="${delivery.name}_N${timestamp}" destdir="${delivery.dir}" />
+		<!--
+    <buildVersion version="N${timestamp}"
+                  srcdir="${root.dir}"
+                  destdir="${delivery.dir}"
+                  env="false"
+                  name="${delivery.name}_N${timestamp}"
+                  test="false"
+                  cobertura="false"
+                  findbugs="true" />
+                  -->
+		<delete dir="${build.dir}" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+            target: integrationbuild
+           - - - - - - - - - - - - - - - - - -->
+	<target name="integrationbuild" description="integration build">
+		<exec failonerror="true" executable="${basedir}/check_trunk.sh" />
+		<loadproperties srcfile="../build/build.properties" />
+		<delete dir="${build.dir}" />
+		<delete failonerror="false">
+			<fileset dir="${delivery.dir}">
+				<include name="${delivery.name}_I*.zip" />
+				<include name="build_*/**" />
+			</fileset>
+		</delete>
+		<ant dir="${root.dir}/installation/build" target="build" inheritall="true">
+			<property name="release.number" value="I${timestamp}" />
+		</ant>
+
+		<path id="libraries">
+			<fileset dir="${root.dir}/common/lib">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+
+		<delete failonerror="false">
+			<fileset dir="${root.dir}/common/lib/xyna">
+				<include name="xynafactory.jar" />
+			</fileset>
+		</delete>
+
+		<prepareRunTestsAll srcdir="${root.dir}/server" />
+		<runTestsAll srcdir="${root.dir}/server" destdir="${root.dir}/testresults1" cobertura="false" />
+
+		<copy todir="${root.dir}/common/lib/xyna" flatten="true">
+			<fileset dir="${build.dir}/server/lib">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+
+		<zipDeliveryItems name="${delivery.name}_I${timestamp}" destdir="${delivery.dir}" />
+		<!--   <buildVersion version="I${timestamp}"
+                  srcdir="${root.dir}"
+                  destdir="${delivery.dir}"
+                  env="false"
+                  name="${delivery.name}_I${timestamp}"
+                  test="true"
+                  cobertura="false"
+                  findbugs="false" /> -->
+	</target>
+
+    <target name="checkAppVersion" description="checks all application.xmls">
+            <exec failonerror="true" dir="../build" executable="./checkAppVersions.py" />
+    </target>
+
+	<macrodef name="prepareRunTestsAll" description="copy all required jar files into lib.test">
+		<attribute name="srcdir" default="${root.dir}" description="Root directory of the project" />
+		<sequential>
+			<!-- runTests -->
+			<for param="dir">
+				<dirset dir="@{srcdir}">
+					<include name="**/test" />
+					<exclude name="**/build_*_*/**" />
+					<exclude name="**/classes*/**" />
+					<exclude name="**/bin/**" />
+				</dirset>
+				<sequential>
+					<var name="projectdir" unset="true" />
+					<dirname file="@{dir}" property="projectdir" />
+					<mkdir dir="${projectdir}/lib.test" />
+					<copy todir="${projectdir}/lib.test" flatten="true">
+						<fileset dir="${projectdir}">
+							<include name="**/lib*/**" />
+							<exclude name="**/lib.test/**" />
+							<exclude name="**/lib/xyna/**" />
+						</fileset>
+					</copy>
+				</sequential>
+			</for>
+		</sequential>
+	</macrodef>
+
+</project>

@@ -1,0 +1,10 @@
+[
+  {
+    "type": "additionalFunctionFile",
+    "value": "createServiceGroup.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "addServiceToServiceGroup.json"
+  }
+]

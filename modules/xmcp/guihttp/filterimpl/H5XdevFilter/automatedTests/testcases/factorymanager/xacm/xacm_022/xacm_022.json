@@ -1,0 +1,237 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.xacm.rolemanagement.DeleteRole!": "xmcp.xacm.rolemanagement.DeleteRole"
+        },
+        {
+          "!autotest.generated.random.SONDERZEICHEN!": "autotest.generated.!rnd!.<>°!\\\"§$%&/()=?`´{}|;:,.-üöä+#'@€µ"
+        },
+        {
+          "!xmcp.xacm.rightmanagement.datatypes.Right!": "xmcp.xacm.rightmanagement.datatypes.Right"
+        },
+        {
+          "!XYNA!": "XYNA"
+        },
+        {
+          "!xmcp.xacm.rolemanagement.datatypes.Role!": "xmcp.xacm.rolemanagement.datatypes.Role"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!xmcp.xacm.rolemanagement.QueryRolesTableInfo!": "xmcp.xacm.rolemanagement.QueryRolesTableInfo"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!roleName!": "roleName"
+        },
+        {
+          "!Domain!": "Domain"
+        },
+        {
+          "!domainName0!": "domainName0"
+        },
+        {
+          "!dsc!": "dsc"
+        },
+        {
+          "!Documentation!": "Documentation"
+        },
+        {
+          "!description!": "description"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        },
+        {
+          "!en-US!": "en-US"
+        },
+        {
+          "!base.locale.Locale!": "base.locale.Locale"
+        },
+        {
+          "!xmcp.xacm.rightmanagement.GetAllRights!": "xmcp.xacm.rightmanagement.GetAllRights"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.xacm.rolemanagement.datatypes.Role!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "domainName0": "!XYNA!",
+            "rightList": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xmcp.xacm.rightmanagement.datatypes.Right!"
+              }
+            },
+            "roleName": "!autotest.generated.random.SONDERZEICHEN!"
+          }
+        ],
+        "orderType": "!xmcp.xacm.rolemanagement.DeleteRole!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Role!",
+      "variable": "!xmcp.xacm.rolemanagement.datatypes.Role!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Role!",
+                  "path": "!roleName!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Domain!",
+                  "path": "!domainName0!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Documentation!",
+                  "path": "!description!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!dsc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!base.locale.Locale!"
+            },
+            "language": "!en-US!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.rolemanagement.QueryRolesTableInfo!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!base.locale.Locale!"
+            },
+            "language": "!en-US!"
+          }
+        ],
+        "orderType": "!xmcp.xacm.rightmanagement.GetAllRights!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

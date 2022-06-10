@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build-all" basedir=".">
+    
+    <property name="target.dir" value="${basedir}/deploy" />
+    <import file="../buildModule.xml" />
+    
+    <target name="build-all">
+        <buildModule target="build-all" dir="connection"  target.dir="${target.dir}/xact" />
+        <buildModule target="build-all" dir="devicetypes" target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="http"        target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="ldap"        target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="mail"        target.dir="${target.dir}/xact" />
+        <buildModule target="build-all" dir="queue"       target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="script"      target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="soap"        target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="snmp"        target.dir="${target.dir}/xact" />
+        <buildModule target="build-all" dir="ssh"         target.dir="${target.dir}/xact" />
+		<buildModule target="build" dir="dhcp/manager" target.dir="${basedir}/dhcp/manager/deploy" />
+    </target>
+    
+</project>

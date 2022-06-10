@@ -1,0 +1,365 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "20.7.2021",
+    "updated": "20.7.2021"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!warnings!": "warnings"
+        },
+        {
+          "!autoTest.generated.FMAN392!": "autoTest.generated.FMAN392.!rnd!"
+        },
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetRuntimeContexts!": "xmcp.factorymanager.shared.GetRuntimeContexts"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetDestinations!": "xmcp.factorymanager.ordertypes.GetDestinations"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetOrdertypeCapac!": "xmcp.factorymanager.ordertypes.GetOrdertypeCapacities"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.OrderType!": "xmcp.factorymanager.ordertypes.OrderType"
+        },
+        {
+          "!xmcp.factorymanager.DestinationType!": "xmcp.factorymanager.DestinationType"
+        },
+        {
+          "!Xyna_Fractal_Workflow!": "Xyna Fractal Workflow"
+        },
+        {
+          "!xmcp.factorymanager.ParameterInheritanceRule!": "xmcp.factorymanager.ParameterInheritanceRule"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.Capacity!": "xmcp.factorymanager.ordertypes.Capacity"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.CreateOrderType!": "xmcp.factorymanager.ordertypes.CreateOrderType"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetOrderType!": "xmcp.factorymanager.ordertypes.GetOrderType"
+        },
+        {
+          "!FMAN-392-OT!": "autoTest.generated.FMAN392.!rnd!.CreatedOT"
+        },
+        {
+          "!FMAN-3!": "FMAN-3"
+        },
+        {
+          "!Empty!": "Empty"
+        },
+        {
+          "!Xyna_Fractal_Workflow!": "Xyna Fractal Workflow"
+        },
+        {
+          "!workspace!": "workspace"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.OrderTypeName!": "xmcp.factorymanager.ordertypes.OrderTypeName"
+        },
+        {
+          "!audits!": "audits"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1626772406766.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1626772406766!",
+      "variable": "!new_1626772406766.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1626772406766.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/rtc/name",
+      "targetVariable": "!default_workspace!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=errorHandling]/items/$list[0]/id",
+      "targetVariable": "!exceptionHandlingWf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1626772406766!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1626772406766!/!NewWorkflow!/!warnings!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1626772406766!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!New_Workflow!",
+        "path": "!autoTest.generated.FMAN392!",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1626772406766!/!NewWorkflow!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!wf!]/fqn",
+      "targetVariable": "!fman392.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN392!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN392!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN392!/!NewWorkflow!/!warnings!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN392!/!NewWorkflow!/deploy"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN392!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN392!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.FMAN392!/!NewWorkflow!/!warnings!"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.ordertypes.OrderType!"
+            },
+            "cleanupDestination": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.DestinationType!"
+              }
+            },
+            "executionDestination": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.DestinationType!"
+              },
+              "name": "!fman392.NewWorkflow!",
+              "type": "!Xyna_Fractal_Workflow!"
+            },
+            "monitoringLevel": -1,
+            "monitoringLevelIsCustom": true,
+            "name": "!FMAN-392-OT!",
+            "parameterInheritanceRules": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.ParameterInheritanceRule!"
+              }
+            },
+            "planningDestination": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.DestinationType!"
+              }
+            },
+            "planningDestinationIsCustom": false,
+            "requiredCapacities": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.ordertypes.Capacity!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.Workspace!"
+              },
+              "name": "!default_workspace!",
+              "revision": -1,
+              "type": "!Workspace!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.ordertypes.CreateOrderType!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "revision": -1,
+            "type": "!Workspace!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.ordertypes.OrderTypeName!"
+            },
+            "name": "!FMAN-392-OT!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.ordertypes.GetOrderType!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/cleanupDestinationIsCustom",
+      "targetVariable": "!cleanupDestinationIsCustom!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!cleanupDestinationIsCustom!",
+      "value": "true"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/cleanupDestination/name",
+      "targetVariable": "!cleanupDestinationName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!cleanupDestinationName!",
+      "value": "!Empty!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/cleanupDestination/type",
+      "targetVariable": "!cleanupDestinationType!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!cleanupDestinationType!",
+      "value": "!Xyna_Fractal_Workflow!"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "customStringContainer": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "input": [],
+        "orderType": "!FMAN-392-OT!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "orderId",
+      "targetVariable": "!orderId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/!audits!/!orderId!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "errors/$list",
+      "expectedValue": "0"
+    }
+  ]
+}

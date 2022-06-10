@@ -1,0 +1,138 @@
+{
+  "meta":
+  {
+	"created": "14.01.2020",
+	"updated": "14.01.2020",
+	"Test Reference": "PMOD-785"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rndLabel1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rndLabel2!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!" : "autoTest.generated.PMOD692"},
+		{"!label1!": "GeneratedDatatype_!rndLabel1!"},
+		{"!label2!": "GeneratedDatatype_!rndLabel2!"},
+		{"!workspaceName!": "default workspace"}
+	  ]
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!rndLabel1!"
+	  },
+	  "mapOutput": {"!name!" : "!nameDT1!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!rndLabel2!"
+	  },
+	  "mapOutput": {"!name!" : "!nameDT2!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "addComplexTypeMemberToDatatype",
+	  "mapInput":
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!datatypePath!": "!path!",
+		"!datatypeName!": "!nameDT1!",
+		"!insertType!": "!path!.!nameDT2!",
+		"!insertLabel!": "removedDatatype"
+	  },
+	  "mapOutput":
+	  {
+	    "!insertName!" : "!nameOfMemberVariable!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT2!/close",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT2!/delete",
+	  "payload": {"force":false}
+	},
+	{
+	  "comment": "Wir erwarten 409 - es muss repariert werden",
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!",
+	  "acceptError": true
+	},
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "repairs/$list",
+      "expectedValue": 1
+    },
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!?repair=true"
+	},
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "repairResult/$list",
+      "expectedValue": 1	
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/save",
+	  "payload": {"revision":0,"path":"!path!","label":"!rndLabel1!"}
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/deploy",
+	  "payload": {"revision":0}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!/close",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT1!"
+	},
+	{
+	  "operation": "read",
+	  "pathInResponse": "xmomItem/areas/$list[id=memberVarArea]/items/$list[0]/primitiveType",
+	  "targetVariable": "!type!",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!type!",
+	  "value": "String"
+	}
+  ]
+}

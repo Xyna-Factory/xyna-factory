@@ -1,0 +1,400 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "workspaces_and_applications"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.CreateApplication!": "xmcp.factorymanager.rtcmanager.CreateApplicationDefinition"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.Workspace!": "xmcp.factorymanager.rtcmanager.Workspace"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.CreateADRequest!": "xmcp.factorymanager.rtcmanager.CreateADRequest"
+        },
+        {
+          "!autotest.generated.random.ad!": "autotest.generated.!rnd!.ad"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetWorkspaces!": "xmcp.factorymanager.rtcmanager.GetWorkspaces"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetADDetails!": "xmcp.factorymanager.rtcmanager.GetADDetails"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!": "xmcp.factorymanager.rtcmanager.GetDependentRTCs"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionForward"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!": "xmcp.factorymanager.rtcmanager.GetDependentRTCsRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionBackwards"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon!": "xmcp.factorymanager.rtcmanager.GetApplicationContent"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!": "xmcp.factorymanager.rtcmanager.GetApplicationContentRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetIssues!": "xmcp.factorymanager.rtcmanager.GetIssues"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.CreateADRequest!"
+            },
+            "documentation": "",
+            "name": "!autotest.generated.random.ad!",
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "!autotest.generated.random!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.CreateApplication!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetWorkspaces!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "set",
+      "variable": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+      "value": "xmcp.factorymanager.rtcmanager.ApplicationDefinition"
+    },
+    {
+      "operation": "set",
+      "variable": "!OK!",
+      "value": "OK"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+              "rtc": {
+                  "workspace": "default workspace"
+                }
+            },
+            "name": "!autotest.generated.random.ad!",
+            "workspaceName": "!autotest.generated.random!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetADDetails!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[name=!autotest.generated.random.ad!]/$meta/fqn",
+      "targetVariable": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "!autotest.generated.random.ad!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            }
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!"
+            },
+            "includeImplicit": true,
+            "includeUnassigned": false,
+            "referenceDirection": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "!autotest.generated.random.ad!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            }
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "!autotest.generated.random.ad!",
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": false
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
+              "rtc": {
+                  "workspace": "default workspace"
+                }
+            },
+            "name": "!autotest.generated.random.ad!",
+            "sourceVersion": "",
+            "state": "!OK!",
+            "workspaceName": "!autotest.generated.random!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetIssues!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!"
+            },
+            "application": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "documentation": "",
+              "name": "!autotest.generated.random.ad!",
+              "remoteExecution": false,
+              "sourceVersion": "",
+              "state": "!OK!",
+              "workspaceName": "!autotest.generated.random!"
+            },
+            "includeImplicit": false,
+            "includeIndirect": false,
+            "includeUnassigned": true
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetApplicationCon!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

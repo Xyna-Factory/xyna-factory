@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project basedir="." default="build" name="build">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir" >
+        <path location="${basedir}/../../../../../../../"/>
+    </pathconvert>
+
+  <property name="basic.build.dir" value="${basedir}/.." />
+  <loadproperties srcfile="${basic.build.dir}/server.properties" />
+
+  <property name="project.name" value="ActiveMQDummyFilter"/>
+
+  <property name="fqclassname" value="com.gip.xyna.xact.trigger.ActiveMQDummyFilter"/>
+  <property name="server.mdm.path" value="${server.path}/filter/ActiveMQDummyFilter"/>
+  <property name="server.mdm.xml.path" value="${server.path}/filter/ActiveMQDummyFilter"/>
+  <property name="server.mdm.xml.filename" value="ActiveMQDummyFilter.xml"/>
+
+  <property name="target.dir" value="${basedir}/deploy"/>
+  <property name="local.xml.dir" value="${basedir}/xmldefinition"/>
+  <property name="libdir" value="${basedir}/../lib"/>
+  <property name="trigger.classes.dir" value="${basedir}/../classes"/>
+  <property name="trigger.jar.file" value="ActiveMQTrigger.jar"/>
+
+  <property name="input.transmitXml" value="yes"/>
+
+
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <pathelement location="${libdir}/xyna/ant-contrib.jar"/>
+    </classpath>
+  </taskdef>
+
+  <mkdir dir="${basedir}/lib" /> <!-- buildFilter.xml expects lib folder -->
+
+  <import file="${root.dir}/installation/build/buildFilter.xml" />
+
+  <!-- =================================
+                target: deploy
+               ================================= -->
+  <target depends="build" description="Deploy jar file to xyna server." name="deploy">
+    <sshexec command="mkdir -p ${server.mdm.path}" failonerror="false" host="${server.host}" password="${server.password}" trust="true" username="${server.userid}"/>
+    <!--
+    <input addproperty="input.transmitXml" defaultvalue="no" message="Transmit local XML definition file to server? This overwrites the version stored on the server!" validargs="yes,no"/>
+    <if>
+      <equals arg1="${input.transmitXml}" arg2="yes"/>
+      <then>
+        -->
+        <echo message="Copying XML file ${local.xml.dir}/${server.mdm.xml.filename} to server">
+        </echo>
+        <scp todir="${server.userid}:${server.password}@${server.host}:${server.mdm.xml.path}" trust="true" verbose="true">
+          <fileset dir="${local.xml.dir}">
+            <include name="${server.mdm.xml.filename}"/>
+          </fileset>
+        </scp>
+        <!--
+      </then>
+    </if>
+    -->
+    <scp todir="${server.userid}:${server.password}@${server.host}:${server.mdm.path}" trust="true" verbose="true">
+      <fileset dir="${target.dir}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </scp>
+    <!--
+    <sshexec command="cd ${server.path}; ./xynafactory.sh deploydatatype ${fqclassname}" failonerror="true" host="${server.host}" password="${server.password}" trust="true" username="${server.userid}"/>
+    -->
+  </target>
+
+  <!-- =================================
+	         target: build
+	        ================================= -->
+  <target description="Build jar file with java implementation of services." name="build" depends="resolve">
+    <delete dir="${basedir}/classes"/>
+    <mkdir dir="${basedir}/classes"/>
+    <javac debug="on" destdir="${basedir}/classes" encoding="iso8859-1" fork="yes" srcdir="${basedir}/src">
+      <classpath path="${basedir}/classes"/>
+      <classpath>
+        <fileset dir="${libdir}">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <classpath path="${trigger.classes.dir}" />
+    </javac>
+    <mkdir dir="${target.dir}"/>
+    <jar destfile="${target.dir}/${project.name}.jar">
+      <fileset dir="${basedir}/classes" includes="**/*.class"/>
+      <fileset dir="${basedir}">
+        <include name="Exceptions.xml"/>
+      </fileset>
+    </jar>
+    <copy todir="${target.dir}">
+      <fileset dir="${libdir}">
+        <include name="*.jar"/>
+        <exclude name="**/xyna/*"/>
+      </fileset>
+    </copy>
+    <copy todir="${target.dir}">
+      <fileset dir="${local.xml.dir}">
+        <include name="${server.mdm.xml.filename}"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- =================================
+          target: updateMDMandXynaFactoryJar
+         ================================= -->
+  <target description="Receive new mdm.jar and xynafactory.jar from Xyna Factory" name="updateMDMandXynaFactoryJar">
+    <input addproperty="server.password" message="Enter password for user '${server.userid}' on host '${server.host}':"/>
+    <sshexec command="cd ${server.path}; ./xynafactory.sh buildmdmjar" failonerror="true" host="${server.host}" password="${server.password}" trust="true" username="${server.userid}"/>
+    <scp file="${server.userid}:${server.password}@${server.host}:${server.path}/mdm.jar" todir="${libdir}/xyna" trust="true" verbose="true"/>
+  	<scp file="${server.userid}:${server.password}@${server.host}:${server.path}/lib/xynafactory.jar" todir="${libdir}/xyna" trust="true" verbose="true"/>
+  </target>
+
+  <!-- =================================
+          target: getUserInput
+         ================================= -->
+  <target description="Receive new mdm.jar from server" name="getUserInput">
+    <input addproperty="server.password" message="Enter password for user '${server.userid}' on host '${server.host}':"/>
+  <input addproperty="filter.sharedlibs" message="Enter shared libs separated by ':' or just ':' for no shared libs:"/>
+  </target>
+
+</project>

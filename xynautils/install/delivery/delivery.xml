@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="delivery" default="release" basedir=".">
+
+  <loadproperties srcfile="delivery.properties" />
+
+  <import file="../build/ant-xyna.xml" />
+
+  <!-- =================================
+            target: release
+        ================================= -->
+  <target name="release" description="build a release from specified SVN-tag">
+    <property name="root.dir" value="${delivery.dir}/checkout_${timestamp}" />
+    <property name="build.dir" value="${delivery.dir}/build_${timestamp}" />
+    <if>
+      <isset property="svn.branch" />
+      <then>
+        <checkout branch="${svn.branch}" />
+      </then>
+      <else>
+        <checkout />
+      </else>
+    </if>
+    <property file="${root.dir}/installation/delivery/patch.properties" />
+    <trycatch reference="release.error">
+      <try>
+        <buildVersion srcdir="${root.dir}"
+                      destdir="${delivery.dir}"
+                      version="${release.number}"
+                      test="true"
+                      cobertura="false"
+                      findbugs="false" />
+      </try>
+      <catch>
+        <echo message="Error during release!" />
+        <removeTag />
+        <throw refid="release.error" />
+      </catch>
+      <finally>
+        <delete dir="${root.dir}" />
+        <delete dir="${build.dir}" />
+      </finally>
+    </trycatch>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - -
+             target: localbuild
+        - - - - - - - - - - - - - - - - - -->
+  <target name="localbuild"
+          description="build a delivery from local repository">
+    <loadproperties srcfile="../build/build.properties" />
+    <delete dir="${build.dir}" />
+    <buildVersion srcdir="${root.dir}"
+                  destdir="${delivery.dir}"
+                  version="${user.name}_${timestamp}"
+                  name="${delivery.name}_${user.name}_${timestamp}_localBuild"
+                  env="false"
+                  test="false"
+                  findbugs="false" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: nightbuild                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="nightbuild">
+    <loadproperties srcfile="../build/build.properties" />
+    <delete dir="${build.dir}" />
+    <delete failonerror="false">
+      <fileset dir="${delivery.dir}">
+        <include name="${delivery.name}_N*.zip" />
+        <include name="build_*/**" />
+      </fileset>
+    </delete>
+    <buildVersion version="N${timestamp}"
+                  srcdir="${root.dir}"
+                  destdir="${delivery.dir}"
+                  env="false"
+                  name="${delivery.name}_N${timestamp}"
+                  test="true"
+                  cobertura="true"
+                  findbugs="true" />
+    <delete dir="${build.dir}" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: integrationbuild                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="integrationbuild">
+    <loadproperties srcfile="../build/build.properties" />
+    <delete dir="${build.dir}" />
+    <delete failonerror="false">
+      <fileset dir="${delivery.dir}">
+        <include name="${delivery.name}_I*.zip" />
+        <include name="build_*/**" />
+      </fileset>
+    </delete>
+    <buildVersion version="I${timestamp}"
+                  srcdir="${root.dir}"
+                  destdir="${delivery.dir}"
+                  env="false"
+                  name="${delivery.name}_I${timestamp}"
+                  test="true"
+                  cobertura="false"
+                  findbugs="false" />
+  </target>
+
+</project>

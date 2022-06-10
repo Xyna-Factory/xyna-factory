@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.gip.com/xyna/1.5.3/xwh/1.0"
+	targetNamespace="http://www.gip.com/xyna/1.5.3/xwh/1.0"
+	xmlns:jms="http://xmlns.oracle.com/JMSHeaders"
+	xmlns:mq="http://xmlns.oracle.com/pcbpel/adapter/mq/header"
+	elementFormDefault="qualified"
+	xmlns:faults="http://www.gip.com/xyna/1.5/xsd/faults/1.0">
+	<xsd:import namespace="http://xmlns.oracle.com/JMSHeaders"
+		schemaLocation="JMSHeaders.xsd" />
+	<xsd:import schemaLocation="Faults.xsd"
+		namespace="http://www.gip.com/xyna/1.5/xsd/faults/1.0" />
+	<xsd:complexType name="BPELInformation_ctype">
+		<xsd:attribute name="InstanceId" type="xsd:string" />
+		<xsd:attribute name="StartTime" type="xsd:string" />
+	</xsd:complexType>
+	<xsd:element name="BPELInformation" type="BPELInformation_ctype" />
+	<xsd:element name="BPELSummary">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="BPELInformation" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="JMSInformation">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element name="QueueName" type="xsd:string" />
+				<xsd:element ref="jms:JMSInboundHeadersAndProperties" />
+			</xsd:all>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="JMSSummary">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="JMSInformation" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="XynaFaultBPEL">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="faults:XynaFault" />
+				<xsd:element ref="BPELSummary" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

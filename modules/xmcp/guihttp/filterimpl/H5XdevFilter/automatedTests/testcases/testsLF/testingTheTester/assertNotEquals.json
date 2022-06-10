@@ -1,0 +1,16 @@
+{
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!var!",
+	  "value": "some"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "notEquals",
+	  "variable": "!var!",
+	  "value": "Others"
+	}
+  ]
+}

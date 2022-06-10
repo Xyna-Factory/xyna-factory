@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:jms="http://xmlns.oracle.com/JMS_Headers"
+	targetNamespace="http://www.gip.com/xyna/1.5/xsd/faults/1.0"
+	xmlns:xpmcom="http://www.gip.com/xyna/1.5/xsd/faults/1.0"
+	elementFormDefault="qualified">
+	<complexType name="XynaFault_ctype">
+		<sequence>
+			<element name="Code" type="string" />
+			<element name="Summary" type="string" />
+			<element name="Details" type="string" />
+		</sequence>
+	</complexType>
+	<element name="XynaFault" type="xpmcom:XynaFault_ctype" />
+</schema>

@@ -1,0 +1,2 @@
+protocol=imap; type=store; class=com.gip.xyna.utils.mail.MockIMAPStore
+protocol=smtp; type=transport; class=com.gip.xyna.utils.mail.MockTransport

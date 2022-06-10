@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "PMOD854_workflow.json",
+	"PMOD854_datatype.json"
+  ]
+}

@@ -1,0 +1,688 @@
+{
+  "meta":
+  {
+    "name": "oneWorkflowRetrySuccessTest",
+    "description": "Execute a workflow containing a Step that is retried on Workflow level twice with success (loaded from app) and open audit",
+    "created": "03.04.2020",
+    "updated": "15.12.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+      "operation": "set",
+      "variable": "!necessaryReductions!",
+      "value": "1"
+    },
+	{
+      "operation": "set",
+      "variable": "!reducetionRetryLimit!",
+      "value": "1"
+    },
+	{
+	  "operation": "set",
+	  "variable": "!workflowInput!",
+	  "value": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"necessaryReductions":"!necessaryReductions!","reducetionRetryLimit":"!reducetionRetryLimit!"}]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTestWorkflowLevelPrepare",
+        "!input!": "!workflowInput!",
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTestWorkflowLevel",
+        "!input!": "!workflowInput!",
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 5,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check caught workflow iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=wf]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+	
+	{
+      "operation": "invoke",
+      "functionName": "readStepVariableValueInIteration",
+      "mapInput":
+      {
+        "!stepId!": "wf",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "necessaryReductions",
+		"!iterationIndex!": "0"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!necessaryReductions0!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!necessaryReductions0!",
+      "value": "!necessaryReductions!"
+    },
+	
+	{
+      "operation": "invoke",
+      "functionName": "readStepVariableValueInIteration",
+      "mapInput":
+      {
+        "!stepId!": "wf",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "reducetionRetryLimit",
+		"!iterationIndex!": "0"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!reducetionRetryLimit0!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!reducetionRetryLimit0!",
+      "value": "!reducetionRetryLimit!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=wf]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=wf]/iterations/$list[index=0]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    { "comment": "check caught workflow iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=wf]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+	
+	{
+      "operation": "invoke",
+      "functionName": "readStepVariableValueInIteration",
+      "mapInput":
+      {
+        "!stepId!": "wf",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "necessaryReductions",
+		"!iterationIndex!": "1"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!necessaryReductions1!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!necessaryReductions1!",
+      "value": "!necessaryReductions!"
+    },
+	
+	{
+      "operation": "invoke",
+      "functionName": "readStepVariableValueInIteration",
+      "mapInput":
+      {
+        "!stepId!": "wf",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "reducetionRetryLimit",
+		"!iterationIndex!": "1"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!reducetionRetryLimit1!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!reducetionRetryLimit1!",
+      "value": "!reducetionRetryLimit!"
+    },
+
+    { "comment": "check caught workflow iteration 2", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=wf]/iterations/$list[index=2]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+	
+	{
+      "operation": "invoke",
+      "functionName": "readStepVariableValueInIteration",
+      "mapInput":
+      {
+        "!stepId!": "wf",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "necessaryReductions",
+		"!iterationIndex!": "2"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!necessaryReductions2!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!necessaryReductions2!",
+      "value": "!necessaryReductions!"
+    },
+	
+	{
+      "operation": "invoke",
+      "functionName": "readStepVariableValueInIteration",
+      "mapInput":
+      {
+        "!stepId!": "wf",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "reducetionRetryLimit",
+		"!iterationIndex!": "2"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!reducetionRetryLimit2!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!reducetionRetryLimit2!",
+      "value": "!reducetionRetryLimit!"
+    },
+
+    { "comment": "check step in workflow iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Failed"
+    },
+	
+	{
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=0]/runtimeInfo/error/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=0]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!orderIdIteration0!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=0]/runtimeInfo/orderId"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!orderIdIteration0!",
+      "value": "0"
+    },
+
+    { "comment": "check step in workflow iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Failed"
+    },
+	
+	{
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=1]/runtimeInfo/error/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.ExpiredException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=1]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=1]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!orderIdIteration1!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=1]/runtimeInfo/orderId"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!orderIdIteration1!",
+      "value": "!orderIdIteration0!"
+    },
+
+    { "comment": "check step in workflow iteration 2", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=2]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=2]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=2]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!orderIdIteration2!",
+      "pathInResponse": "info/$list[id=step6]/iterations/$list[index=2]/runtimeInfo/orderId"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!orderIdIteration2!",
+      "value": "!orderIdIteration1!"
+    },
+
+    { "comment": "check global catch branch in iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[1]/id",
+      "targetVariable": "!branch-1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch-1!]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=!branch-1!]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+	{ "comment": "check global catch branch in iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[0]/id",
+      "targetVariable": "!branch-0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branch-0!]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=!branch-0!]/iterations/$list[index=1]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!branchId!",
+      "pathInResponse": "info/$list[id=!branch-0!]/iterations/$list[index=1]/runtimeInfo/id",
+	  "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branchId!",
+      "value": "branch-0"
+    },
+
+    { "comment": "check reduce step in global catch in iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step104]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step104]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step104]/iterations/$list[index=0]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    { "comment": "check delete step in global catch in iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step166]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step166]/iterations/$list[index=1]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step166]/iterations/$list[index=1]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    { "comment": "check retry step in global catch in iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step306]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step306]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    { "comment": "check retry step in global catch in iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step293]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step293]/iterations/$list[index=1]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    }
+  ]
+}

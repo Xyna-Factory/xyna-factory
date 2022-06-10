@@ -1,0 +1,226 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-792", 
+    "created": "15.01.2020", 
+    "updated": "15.01.2020"
+  }, 
+  "operations": [
+    {
+      "operation": "setRandom", 
+      "variable": "!rndLabel1!"
+    }, 
+    {
+      "operation": "setRandom", 
+      "variable": "!rndLabel2!"
+    }, 
+    {
+      "operation": "setRandom", 
+      "variable": "!rndLabel3!"
+    }, 
+    {
+      "data": [
+        {
+          "!path!": "autoTest.generated.PMOD696"
+        }, 
+        {
+          "!dtLabel!": "GeneratedDatatype_!rndLabel1!"
+        }, 
+        {
+          "!wfLabel!": "GeneratedWorkflow_!rndLabel2!"
+        }, 
+        {
+          "!memberLabel!": "GeneratedMember_!rndLabel3!"
+        }, 
+        {
+          "!workspaceName!": "default workspace"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "set", 
+      "value": "!workspaceName!", 
+      "variable": "!escapedWorkspace!"
+    }, 
+    {
+      "modification": {
+        "operation": "urlencode"
+      }, 
+      "operation": "modification", 
+      "variable": "!escapedWorkspace!"
+    }, 
+    {
+      "functionName": "createDatatype", 
+      "mapInput": {
+        "!label!": "!dtLabel!", 
+        "!path!": "!path!", 
+        "!workspace!": "!workspaceName!"
+      }, 
+      "mapOutput": {
+        "!name!": "!nameDT!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "functionName": "addSimpleTypeMemberToDatatype", 
+      "mapInput": {
+        "!datatypeName!": "!nameDT!", 
+        "!datatypePath!": "!path!", 
+        "!insertLabel!": "!memberLabel!", 
+        "!insertType!": "boolean", 
+        "!workspace!": "!workspaceName!"
+      }, 
+      "mapOutput": {
+        "!insertName!": "!memberName!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "set", 
+      "value": "!path!.!nameDT!", 
+      "variable": "!dtfqn!"
+    }, 
+    {
+      "functionName": "createNewWorkflow", 
+      "mapInput": {}, 
+      "mapOutput": {
+        "!newPath!": "!wfNewPath!", 
+        "!newWorkflowName!": "!wfNewName!", 
+        "!url!": "!newWFUrl!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "functionName": "saveAndDeploy", 
+      "mapInput": {
+        "!label!": "!wfLabel!", 
+        "!path!": "!path!", 
+        "!revision!": 0, 
+        "!wfUrl!": "!newWFUrl!"
+      }, 
+      "mapOutput": {
+        "!wfName!": "!wfName!", 
+        "!wfUrl!": "!wfUrl!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "type": "conditionalChoice"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "!wfUrl!/objects/step0/insert"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=input]/items/$list[0]/id", 
+      "targetVariable": "!formula!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!dtfqn!", 
+          "isList": false, 
+          "label": "!dtLabel!", 
+          "type": "variable"
+        }, 
+        "index": -1, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "!wfUrl!/objects/!formula!/insert"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "expression": "%0%.!memberName!"
+        }, 
+        "revision": 2
+      }, 
+      "requestType": "PUT", 
+      "url": "!wfUrl!/objects/!formula!/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!dtfqn!", 
+          "isList": false, 
+          "label": "!dtLabel!", 
+          "type": "variable"
+        }, 
+        "index": -1, 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "!wfUrl!/objects/wf_input/insert"
+    }, 
+    {
+      "functionName": "saveAndDeploy", 
+      "mapInput": {
+        "!label!": "!wfLabel!", 
+        "!path!": "!path!", 
+        "!revision!": 0, 
+        "!wfUrl!": "!wfUrl!"
+      }, 
+      "mapOutput": {
+        "!wfName!": "!wfName!", 
+        "!wfUrl!": "!wfUrl!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "!wfUrl!/close"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT!/delete"
+    }, 
+    {
+      "functionName": "repairWorkflow", 
+      "mapInput": {
+        "!expectedNumberOfRepairEntries!": 2, 
+        "!label!": "!wfLabel!", 
+        "!path!": "!path!", 
+        "!wfUrl!": "!wfUrl!"
+      }, 
+      "mapOutput": {}, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "!wfUrl!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "!wfUrl!/dataflow"
+    }, 
+    {
+      "constraint": "listLength", 
+      "expectedValue": 0, 
+      "operation": "assert", 
+      "path": "connections/$list"
+    }
+  ]
+}

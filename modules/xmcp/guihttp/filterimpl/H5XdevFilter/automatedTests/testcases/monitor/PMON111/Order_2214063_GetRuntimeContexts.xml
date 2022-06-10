@@ -1,0 +1,2404 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<OrderItem>
+  <OrderID>2214063</OrderID>
+  <Application>GuiHttp</Application>
+  <Version>1.1.74</Version>
+  <DestinationType>Workflow</DestinationType>
+  <Destination>xmcp.factorymanager.shared.GetRuntimeContexts</Destination>
+  <StartTime>2020.03.25 07:39:50</StartTime>
+  <LastInteraction>2020.03.25 07:39:50</LastInteraction>
+  <Status>Finished</Status>
+  <Priority>1</Priority>
+  <MonitoringLevel>20</MonitoringLevel>
+  <Audit>
+    <Service ID="1" Label="Get runtime contexts" TypeName="GetRuntimeContexts" TypePath="xmcp.factorymanager.shared" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+      <Meta>
+        <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+      </Meta>
+      <Operation ID="0" Label="Get runtime contexts" Name="GetRuntimeContexts">
+        <Input/>
+        <Output>
+          <Data ID="7" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext7">
+            <Source RefID="8"/>
+          </Data>
+        </Output>
+        <ServiceReference ID="4" Label="Shared Services" ReferenceName="SharedServices.SharedServices" ReferencePath="xmcp.factorymanager.shared">
+          <Source RefID="5"/>
+          <Target RefID="5"/>
+        </ServiceReference>
+        <Function ID="5" Label="Get runtime contexts">
+          <Source RefID="4"/>
+          <Target RefID="4"/>
+          <Target RefID="6"/>
+          <Invoke Operation="getRuntimeContexts" ServiceID="4"/>
+          <Receive ServiceID="4">
+            <Target RefID="6"/>
+          </Receive>
+          <Parameter>
+            <Input Date="2020-03-25T07:39:50.024Z"/>
+            <Output Date="2020-03-25T07:39:50.027Z">
+              <Data InstanceID="1" IsList="true" ReferenceName="RuntimeContext" ReferencePath="xmcp">
+                <Value>
+                  <Data InstanceID="2" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>AD 1 in Regtest 4</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2406</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="3" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>AD 1 in Regtest 4</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2407</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="4" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Base</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>1</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.10</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="5" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Base</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>962</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.15</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="6" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Connection</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>10</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.8</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="7" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>FactoryManager</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>928</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>0.1.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="8" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>FactoryManager</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>1075</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>0.1.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="9" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>FileMgmt</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>4</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.4</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="10" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>FileMgmt</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2338</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.6</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="11" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>FM REST</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>926</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>0.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="12" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>GlobalApplicationMgmt</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>5</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.9</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="13" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>GuiHttp</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2432</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.1.72</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="14" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>GuiHttp</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2578</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.1.74</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="15" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Http</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2376</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.2.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="16" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>IOSDevice</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>21</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="17" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>IOSXEDevice</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>22</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.2</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="18" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>IOSXRDevice</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>23</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="19" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>JunOSDevice</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>24</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="20" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Mail</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>17</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.2.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="21" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>MultiRoleAdvancedUser</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>956</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="22" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>MultiRoleAdvancedUser</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2368</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.2</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="23" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>MyApp</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2426</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>New</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="24" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>MyApp</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2428</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>Tasty</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="25" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Net</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>9</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.3</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="26" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Node</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>3</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.2</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="27" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>OneOSDevice</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>25</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="28" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Process Monitor REST QS Export</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>932</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="29" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Processing</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>963</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.11</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="30" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Processing</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2339</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.13</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="31" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Test App</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>918</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>a</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="32" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Test App</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>919</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>A</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="33" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Test App</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>920</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>b</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="34" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Test App</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>921</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>B</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="35" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>RegExp</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>18</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="36" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>RegressionTestApp</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2577</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>28</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="37" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>ScriptExecutor</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>11</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="38" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>SNMP</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>12</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="39" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>SNMPStatistics</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>15</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.2</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="40" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>SSH</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>13</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.12</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="41" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>SSH</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2217</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.15</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="42" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>SSHTools</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>20</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="43" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Storable Operations</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2215</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="44" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>StorableOperations</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>953</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="45" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Telnet</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>14</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.1.2</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="46" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Test AD</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2498</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.2-ERROR</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="47" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>TS AD</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2410</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="48" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>TS Export</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2548</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="49" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>UserRoleManagement</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>955</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="50" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>UserRoleManagement</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2446</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.2</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="51" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>UserRoleManagement</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2463</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.3</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="52" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>UserSessionMgmt</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>19</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.2</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="53" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>WF with Lemon Tree</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>87</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="54" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>XSD Datamodel Base</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>26</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.1.6</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="55" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>XynaPropertyMgmt</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>16</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>1.0.1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="56" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>ZetaFramework</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2369</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>0.6.21</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="57" ReferenceName="Application" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Application</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>ZetaFramework</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2371</Value>
+                    </Data>
+                    <Data VariableName="versionName">
+                      <Value>0.6.22</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="58" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>asdasdasd</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2316</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="59" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>AutoTestRegressionAppWorkspace</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2202</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="60" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>BNG2a 18.2</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>1743</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="61" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>default workspace</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>-1</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="62" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>DM_Test</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>908</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="63" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Factory Manager REST</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>905</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="64" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>GuiHttp REST</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2033</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="65" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Process Modeller REST</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>1108</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="66" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Process Monitor REST QS</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>912</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="67" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Process Monitor REST QS 2</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>929</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="68" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Regtest</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2378</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="69" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Regtest 2</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2444</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="70" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Regtest 3</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2383</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="71" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Regtest 4</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2384</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="72" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Test</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>863</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="73" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>PvM Test2</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>865</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="74" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>RT WF 1</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2435</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="75" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>rter</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2322</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="76" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Sebspace</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2306</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="77" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Test</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2026</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="78" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>Test WS</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2437</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="79" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>TS Load RTA</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2333</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="80" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>TS Repository Access</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2187</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="81" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>ts.GuiHttp</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>994</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="82" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>ts.ZetaDev</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>1006</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="83" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>workspaceZumLöschen</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>2400</Value>
+                    </Data>
+                  </Data>
+                </Value>
+                <Value>
+                  <Data InstanceID="84" ReferenceName="Workspace" ReferencePath="xmcp">
+                    <Data VariableName="type">
+                      <Value>Workspace</Value>
+                    </Data>
+                    <Data VariableName="name">
+                      <Value>ZetaDev</Value>
+                    </Data>
+                    <Data VariableName="revision">
+                      <Value>848</Value>
+                    </Data>
+                  </Data>
+                </Value>
+              </Data>
+            </Output>
+          </Parameter>
+        </Function>
+        <Data ID="6" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext">
+          <Source RefID="5"/>
+          <Target RefID="8"/>
+        </Data>
+        <Assign ID="8">
+          <Source RefID="6"/>
+          <Target RefID="7"/>
+          <Copy>
+            <Source RefID="6"/>
+            <Target RefID="7"/>
+          </Copy>
+        </Assign>
+        <Parameter InstanceId="2214063">
+          <Input Date="2020-03-25T07:39:50.013Z"/>
+          <Output Date="2020-03-25T07:39:50.029Z">
+            <Data IsList="true" RefInstanceID="1" ReferenceName="RuntimeContext" ReferencePath="xmcp"/>
+          </Output>
+        </Parameter>
+      </Operation>
+    </Service>
+  </Audit>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType BaseTypeName="RuntimeContext" BaseTypePath="xmcp" Label="Application" TypeName="Application" TypePath="xmcp" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Data Label="Version Name" VariableName="versionName">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Service Label="Application" TypeName="Application">
+          <Operation IsStatic="false" Label="getGUIRepresentation" Name="getGUIRepresentation">
+            <Input/>
+            <Output>
+              <Data Label="Text" VariableName="text">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <ExceptionStore Name="ExceptionStore" Version="1.8" xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1">
+        <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="DEVEL-00307" Label="Load order types Exception" TypeName="LoadOrderTypesException" TypePath="xmcp.factorymanager.shared">
+          <Data Label="Reason" VariableName="reason">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+          </Data>
+          <MessageText Language="DE">Die 'order types' konnten nicht geladen werden. Grund: %0%</MessageText>
+          <MessageText Language="EN">Could not load 'order types'. Reason: %0%</MessageText>
+        </ExceptionType>
+      </ExceptionStore>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType Label="Shared Services" TypeName="SharedServices" TypePath="xmcp.factorymanager.shared" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>true</IsServiceGroupOnly>
+        </Meta>
+        <Libraries>SharedServicesImpl.jar</Libraries>
+        <Service Label="Shared Services" TypeName="SharedServices">
+          <Operation IsStatic="true" Label="Get default monitoring level" Name="getDefaultMonitoringLevel">
+            <Input>
+              <Data Label="Default Monitoring Level" ReferenceName="DefaultMonitoringLevel" ReferencePath="xmcp.factorymanager.shared" VariableName="defaultMonitoringLevel19"/>
+            </Input>
+            <Output>
+              <Data Label="Default Monitoring Level" ReferenceName="DefaultMonitoringLevel" ReferencePath="xmcp.factorymanager.shared" VariableName="defaultMonitoringLevel"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+          <Operation IsStatic="true" Label="Get order types" Name="getOrderTypes">
+            <Input>
+              <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+            </Input>
+            <Output>
+              <Data IsList="true" Label="Order type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.shared" VariableName="orderType9"/>
+            </Output>
+            <Throws>
+              <Exception Label="Load order types Exception" ReferenceName="LoadOrderTypesException" ReferencePath="xmcp.factorymanager.shared" VariableName="loadOrderTypesException"/>
+            </Throws>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+          <Operation IsStatic="true" Label="Get runtime contexts" Name="getRuntimeContexts">
+            <Input/>
+            <Output>
+              <Data IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+          <Operation IsStatic="true" Label="Get timezones" Name="getTimezones">
+            <Input/>
+            <Output>
+              <Data IsList="true" Label="Timezone" ReferenceName="Timezone" ReferencePath="xmcp.factorymanager.shared" VariableName="timezone"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+          <Operation IsStatic="true" Label="Has Role All Rights" Name="hasRoleAllRights">
+            <Input>
+              <Data Label="User Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+              <Data IsList="true" Label="Required Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+            </Input>
+            <Output>
+              <Data IsList="true" Label="Missing Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight32"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType Label="User Authentication Right" TypeName="UserAuthenticationRight" TypePath="xfmg.xopctrl" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Right" VariableName="right">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType IsAbstract="true" Label="Runtime Context" TypeName="RuntimeContext" TypePath="xmcp" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Data Label="Type" VariableName="type">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Revision" VariableName="revision">
+          <Meta>
+            <Type>Long</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType BaseTypeName="RuntimeContext" BaseTypePath="xmcp" Label="Workspace" TypeName="Workspace" TypePath="xmcp" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Service Label="Workspace" TypeName="Workspace">
+          <Operation IsStatic="false" Label="getGUIRepresentation" Name="getGUIRepresentation">
+            <Meta>
+              <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+            </Meta>
+            <Input/>
+            <Output>
+              <Data Label="Text" VariableName="text">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType Label="User Authentication Role" TypeName="UserAuthenticationRole" TypePath="xfmg.xopctrl" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Role" VariableName="role">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType Label="Timezone" TypeName="Timezone" TypePath="xmcp.factorymanager.shared" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Data Label="Label" VariableName="label">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType Label="Order type" TypeName="OrderType" TypePath="xmcp.factorymanager.shared" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Data Label="name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="type" VariableName="type">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Application>GuiHttp</Application>
+    <Version>1.1.74</Version>
+    <Document>
+      <DataType Label="Default Monitoring Level" TypeName="DefaultMonitoringLevel" TypePath="xmcp.factorymanager.shared" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Data Label="Level" VariableName="level">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <ExceptionStore Name="Exception" Version="1.8" xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1">
+        <ExceptionType Code="" IsAbstract="true" Label="Exception" TypeName="Exception" TypePath="core.exception"/>
+      </ExceptionStore>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <ExceptionStore Name="Xyna Exception" Version="1.8" xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1">
+        <ExceptionType BaseTypeName="Exception" BaseTypePath="core.exception" Code="" IsAbstract="true" Label="Server Exception" TypeName="XynaException" TypePath="core.exception"/>
+      </ExceptionStore>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <ExceptionStore Name="Base" Version="1.8" xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1">
+        <ExceptionType BaseTypeName="XynaException" BaseTypePath="core.exception" Code="" IsAbstract="true" Label="Xyna Exception Base" TypeName="XynaExceptionBase" TypePath="core.exception"/>
+      </ExceptionStore>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType IsAbstract="true" Label="TimeConfiguration" TypeName="TimeConfiguration" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod"/>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType BaseTypeName="TimeConfiguration" BaseTypePath="xprc.waitsuspend" Label="AbsoluteTimeConfiguration" TypeName="AbsoluteTimeConfiguration" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Time in seconds" ReferenceName="Seconds" ReferencePath="xprc.waitsuspend" VariableName="timeInSeconds"/>
+        <Data Label="Time in minutes" ReferenceName="Minutes" ReferencePath="xprc.waitsuspend" VariableName="timeInMinutes"/>
+        <Data Label="Time in hours" ReferenceName="Hours" ReferencePath="xprc.waitsuspend" VariableName="timeInHours"/>
+        <Data Label="Time in days" ReferenceName="Days" ReferencePath="xprc.waitsuspend" VariableName="timeInDays"/>
+        <Data Label="Time in months" ReferenceName="Months" ReferencePath="xprc.waitsuspend" VariableName="timeInMonths"/>
+        <Data Label="Time in years" ReferenceName="Years" ReferencePath="xprc.waitsuspend" VariableName="timeInYears"/>
+        <Data Label="Timezone offset" ReferenceName="TimezoneOffset" ReferencePath="xprc.waitsuspend" VariableName="timezoneOffset"/>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType BaseTypeName="TimeConfiguration" BaseTypePath="xprc.waitsuspend" Label="RelativeTimeConfiguration" TypeName="RelativeTimeConfiguration" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Time in seconds" ReferenceName="Seconds" ReferencePath="xprc.waitsuspend" VariableName="timeInSeconds"/>
+        <Data Label="Time in minutes" ReferenceName="Minutes" ReferencePath="xprc.waitsuspend" VariableName="timeInMinutes"/>
+        <Data Label="Time in hours" ReferenceName="Hours" ReferencePath="xprc.waitsuspend" VariableName="timeInHours"/>
+        <Data Label="Time in days" ReferenceName="Days" ReferencePath="xprc.waitsuspend" VariableName="timeInDays"/>
+        <Data Label="Time in months" ReferenceName="Months" ReferencePath="xprc.waitsuspend" VariableName="timeInMonths"/>
+        <Data Label="Time in years" ReferenceName="Years" ReferencePath="xprc.waitsuspend" VariableName="timeInYears"/>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Seconds" TypeName="Seconds" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="TimeUnitInSeconds" VariableName="timeUnitInSeconds">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Minutes" TypeName="Minutes" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="TimeUnitInMinutes" VariableName="timeUnitInMinutes">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Hours" TypeName="Hours" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="TimeUnitInHours" VariableName="timeUnitInHours">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Days" TypeName="Days" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="TimeUnitInDays" VariableName="timeUnitInDays">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Months" TypeName="Months" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="TimeUnitInMonths" VariableName="timeUnitInMonths">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Years" TypeName="Years" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="TimeUnitInYears" VariableName="timeUnitInYears">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="TimezoneOffset" TypeName="TimezoneOffset" TypePath="xprc.waitsuspend" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Timezone offset in hours" VariableName="timezoneOffsetInHours">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="correlationId" TypeName="CorrelationId" TypePath="xprc.synchronization" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="id" VariableName="id">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="timeout" TypeName="Timeout" TypePath="xprc.synchronization" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="time" VariableName="time">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="synchronizationAnswer" TypeName="SynchronizationAnswer" TypePath="xprc.synchronization" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="answer" VariableName="answer">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Reason" TypeName="Reason" TypePath="xmcp.manualinteraction" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Reason" VariableName="reason">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Type" TypeName="Type" TypePath="xmcp.manualinteraction" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Type" VariableName="type">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="User Group" TypeName="UserGroup" TypePath="xmcp.manualinteraction" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="User Group" VariableName="userGroup">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Todo" TypeName="Todo" TypePath="xmcp.manualinteraction" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Todo" VariableName="todo">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType IsAbstract="true" Label="Result" TypeName="Result" TypePath="xmcp.manualinteraction" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod"/>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Retry Parameter" TypeName="RetryParameter" TypePath="xprc.retry" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Data Label="Retry Limit" VariableName="retryLimit">
+          <Meta>
+            <Type>long</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType IsAbstract="true" Label="Document type" TypeName="DocumentType" TypePath="xact.templates" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Service Label="document type" TypeName="DocumentType">
+          <Operation ID="3" IsAbstract="true" IsStatic="false" Label="Detect critical error" Name="detectCritcalError">
+            <Input>
+              <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output/>
+            <Throws>
+              <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+            </Throws>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+          <Operation ID="6" IsAbstract="true" IsStatic="false" Label="Is response complete" Name="isResponseComplete">
+            <Input>
+              <Data ID="4" Label="response" VariableName="response">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Input>
+            <Output>
+              <Data ID="5" Label="is complete" VariableName="isComplete">
+                <Meta>
+                  <Type>Boolean</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return false;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="9" IsAbstract="true" IsStatic="false" Label="Partition commands" Name="partitionCommands">
+            <Input>
+              <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+            </Input>
+            <Output>
+              <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return null;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="12" IsAbstract="true" IsStatic="false" Label="Remove document type specifics" Name="removeDocumentTypeSpecifics">
+            <Input>
+              <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output>
+              <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return null;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType BaseTypeName="PlainText" BaseTypePath="xact.templates" Label="Command line interface" TypeName="CommandLineInterface" TypePath="xact.templates" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Service Label="command line interface" TypeName="CommandLineInterface">
+          <Operation IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+            <Input>
+              <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output>
+              <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">//remove first and last line
+          String[] split = response.getResponse().getContent().split(com.gip.xyna.xfmg.Constants.LINE_SEPARATOR);
+          if (split.length &gt; 2) {
+            String[] prunedResponse = new String[split.length - 2];
+            System.arraycopy(split, 1, prunedResponse, 0, split.length - 2);
+            response.getResponse().setContent(com.gip.xyna.utils.StringUtils.joinStringArray(prunedResponse, com.gip.xyna.xfmg.Constants.LINE_SEPARATOR));
+            return response;
+          } else {
+            return response;
+          }</CodeSnippet>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType BaseTypeName="DocumentType" BaseTypePath="xact.templates" Label="HTML" TypeName="HTML" TypePath="xact.templates" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Service Label="HTML" TypeName="HTML">
+          <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+            <Input>
+              <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output/>
+            <Throws>
+              <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+            </Throws>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+          <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+            <Input>
+              <Data ID="4" Label="response" VariableName="response">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Input>
+            <Output>
+              <Data ID="5" Label="is complete" VariableName="isComplete">
+                <Meta>
+                  <Type>Boolean</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return Boolean.FALSE;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+            <Input>
+              <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+            </Input>
+            <Output>
+              <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">XynaObjectList&lt;xact.connection.Command&gt; commands = new XynaObjectList&lt;xact.connection.Command&gt;(xact.connection.Command.class);
+          String[] split = document.getReadBuffer().split(com.gip.xyna.xfmg.Constants.LINE_SEPARATOR);
+          for (String string : split) {
+            if (string.trim().length() &gt; 0) {
+              commands.add(new xact.connection.Command(string));
+            }
+          }
+          return commands;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+            <Input>
+              <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output>
+              <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return response;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType BaseTypeName="XML" BaseTypePath="xact.templates" Label="NETCONF" TypeName="NETCONF" TypePath="xact.templates" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Service Label="NETCONF" TypeName="NETCONF">
+          <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+            <Input>
+              <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output/>
+            <Throws>
+              <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+            </Throws>
+            <SourceCode>
+              <CodeSnippet Type="Java"><![CDATA[
+	  final String NETCONF_ERROR_TAG = "rpc-error";
+	  if (response.getResponse().getContent().contains("<" + NETCONF_ERROR_TAG + ">")) {
+	    throw new DetectedError(response.getCommand(), response.getResponse());
+	  }
+	]]></CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+            <Input>
+              <Data ID="4" Label="response" VariableName="response">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Input>
+            <Output>
+              <Data ID="5" Label="is complete" VariableName="isComplete">
+                <Meta>
+                  <Type>Boolean</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">
+                <![CDATA[
+          String text = response.trim();
+          return text.endsWith("]]]]>
+                <![CDATA[>]]]]>
+                <![CDATA[>");
+	]]>
+              </CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+            <Input>
+              <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+            </Input>
+            <Output>
+              <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">
+                <![CDATA[
+	List<? extends Command> commands = super.partitionCommands(document);
+	for (Command c : commands) {
+	  c.setContent(c.getContent() + "]]]]>
+                <![CDATA[>]]]]>
+                <![CDATA[>");
+	}
+	return commands;
+	]]>
+              </CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+            <Input>
+              <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output>
+              <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">
+                <![CDATA[
+        String trimmedResponse = response.getResponse().getContent().trim();
+	if (trimmedResponse.endsWith("]]]]>
+                <![CDATA[>]]]]>
+                <![CDATA[>")) {
+          response.getResponse().setContent(trimmedResponse.substring(0, trimmedResponse.length() - "]]]]>
+                <![CDATA[>]]]]>
+                <![CDATA[>".length()));
+        }
+        return response;
+	]]>
+              </CodeSnippet>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType BaseTypeName="DocumentType" BaseTypePath="xact.templates" Label="Plain text" TypeName="PlainText" TypePath="xact.templates" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Service Label="plain text" TypeName="PlainText">
+          <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+            <Input>
+              <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output/>
+            <Throws>
+              <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+            </Throws>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+          <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+            <Input>
+              <Data ID="4" Label="response" VariableName="response">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Input>
+            <Output>
+              <Data ID="5" Label="is complete" VariableName="isComplete">
+                <Meta>
+                  <Type>Boolean</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return Boolean.FALSE;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+            <Input>
+              <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+            </Input>
+            <Output>
+              <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">XynaObjectList&lt;xact.connection.Command&gt; commands = new XynaObjectList&lt;xact.connection.Command&gt;(xact.connection.Command.class);
+          String[] split = document.getReadBuffer().split(com.gip.xyna.xfmg.Constants.LINE_SEPARATOR);
+          for (String string : split) {
+            if (string.trim().length() &gt; 0) {
+              commands.add(new xact.connection.Command(string));
+            }
+          }
+          return commands;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+            <Input>
+              <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output>
+              <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return response;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType BaseTypeName="DocumentType" BaseTypePath="xact.templates" Label="XML" TypeName="XML" TypePath="xact.templates" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Service Label="XML" TypeName="XML">
+          <Operation ID="3" IsStatic="false" Label="detect critcal error" Name="detectCritcalError">
+            <Input>
+              <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output/>
+            <Throws>
+              <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+            </Throws>
+            <SourceCode>
+              <CodeSnippet Type="Java"/>
+            </SourceCode>
+          </Operation>
+          <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+            <Input>
+              <Data ID="4" Label="response" VariableName="response">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Input>
+            <Output>
+              <Data ID="5" Label="is complete" VariableName="isComplete">
+                <Meta>
+                  <Type>Boolean</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return Boolean.FALSE;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+            <Input>
+              <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+            </Input>
+            <Output>
+              <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">XynaObjectList&lt;xact.connection.Command&gt; commands = new XynaObjectList&lt;xact.connection.Command&gt;(xact.connection.Command.class);
+      String configurationInstructionsXML = "&lt;root&gt;" + document.getReadBuffer() + "&lt;/root&gt;";
+      try {
+        org.w3c.dom.Document doc = com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.parseString(configurationInstructionsXML, true);
+        org.w3c.dom.NodeList allChildren = doc.getDocumentElement().getChildNodes();
+        for (int i=0; i &lt; allChildren.getLength(); i++) {
+          org.w3c.dom.Node child = allChildren.item(i);
+          if (child instanceof org.w3c.dom.Element) {
+            // TODO only add &lt;?xml... if not contained
+            commands.add(new xact.connection.Command("&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;" + com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.getXMLString((org.w3c.dom.Element) child, false)));
+          }
+        }
+      } catch (Exception e) {
+        throw new RuntimeException("", e);
+      }
+      return commands;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+            <Input>
+              <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+            </Input>
+            <Output>
+              <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return response;</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation Label="encode attribute" Name="encodeAttribute">
+            <Input>
+              <Data Label="string" VariableName="string">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Input>
+            <Output>
+              <Data Label="encoded" VariableName="encoded">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.replaceControlAndInvalidChars(
+          com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.escapeXMLValue(string));</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation Label="encode element" Name="encodeElement">
+            <Input>
+              <Data Label="string" VariableName="string">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Input>
+            <Output>
+              <Data Label="encoded" VariableName="encoded">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.replaceControlAndInvalidChars(
+          com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.escapeXMLValue(string));</CodeSnippet>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Document context" TypeName="DocumentContext" TypePath="xact.templates" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Document" TypeName="Document" TypePath="xact.templates" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Libraries>DocumentImpl.jar</Libraries>
+        <Data Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+        <Data Label="text" VariableName="text">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Service Label="document" TypeName="Document">
+          <Operation ID="3" IsStatic="false" Label="Add to buffer" Name="addToBuffer">
+            <Input>
+              <Data ID="2" Label="text" VariableName="text">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Input>
+            <Output/>
+            <SourceCode>
+              <CodeSnippet Type="Java">getImplementationOfInstanceMethods().addToBuffer(text);</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="5" IsStatic="false" Label="Read" Name="read">
+            <Input/>
+            <Output/>
+            <SourceCode>
+              <CodeSnippet Type="Java">getImplementationOfInstanceMethods().read();</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="8" IsStatic="false" Label="Get read buffer" Name="getReadBuffer">
+            <Input/>
+            <Output>
+              <Data ID="9" Label="content" VariableName="content">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getReadBuffer();</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="7" IsStatic="false" Label="Get complete buffer content" Name="getCompleteBufferContent">
+            <Input/>
+            <Output>
+              <Data ID="6" Label="content" VariableName="content">
+                <Meta>
+                  <Type>String</Type>
+                </Meta>
+              </Data>
+            </Output>
+            <SourceCode>
+              <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getCompleteBufferContent();</CodeSnippet>
+            </SourceCode>
+          </Operation>
+          <Operation ID="10" IsStatic="false" Label="Mark buffer as read" Name="markReadBufferAsSend">
+            <Input/>
+            <Output/>
+            <SourceCode>
+              <CodeSnippet Type="Java">getImplementationOfInstanceMethods().markReadBufferAsSend();</CodeSnippet>
+            </SourceCode>
+          </Operation>
+        </Service>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType IsAbstract="true" Label="Storable" TypeName="Storable" TypePath="xnwh.persistence" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <Documentation>Baseclass for all datatypes that can be used in the persistence services.</Documentation>
+        </Meta>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Delete parameter" TypeName="DeleteParameter" TypePath="xnwh.persistence" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Data Label="Including history" VariableName="includingHistory">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+        <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling"/>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Reference handling" TypeName="ReferenceHandling" TypePath="xnwh.persistence" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Data Label="Backward" VariableName="backward">
+          <Meta>
+            <Documentation>-„cascade“: Alle XMOM Storables, die ein zu löschendes XMOM Storable referenzieren, werden ebenso gelöscht. Rekursiv
+-„error“ (Default): Fehler, falls eine solche Abhängigkeit festgestellt wird
+-„delete“: Das Objekt wird entfernt. Andere XMOM Storables, die dieses Objekt referenzieren, referenzieren es jetzt nicht mehr, sind aber noch funktionstüchtig.</Documentation>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Forward" VariableName="forward">
+          <Meta>
+            <Documentation>-„recursive“: Alle abhängigen XMOM Storables rekursiv löschen. Dabei wird jeweils auch das Verhalten für Rückwärtsreferenzen beachtet.
+-„keep“ (Default): Referenzierte Objekte werden nicht gelöscht sondern bleiben bestehen</Documentation>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+  <Import>
+    <Document>
+      <DataType Label="Store parameter" TypeName="StoreParameter" TypePath="xnwh.persistence" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+        <Meta>
+          <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        </Meta>
+        <Data Label="Historize previous object" VariableName="historizePreviousObject">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+        <Data Label="Keep meta field data" VariableName="keepMetaFieldData">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+        <Data Label="Force recursive store" VariableName="forceRecursiveStore">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </DataType>
+    </Document>
+  </Import>
+</OrderItem>

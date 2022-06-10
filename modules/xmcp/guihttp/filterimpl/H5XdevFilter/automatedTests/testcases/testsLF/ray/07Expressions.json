@@ -1,0 +1,6 @@
+{
+  "tests":
+  [
+    "07_StringEqString.json"
+  ]
+}

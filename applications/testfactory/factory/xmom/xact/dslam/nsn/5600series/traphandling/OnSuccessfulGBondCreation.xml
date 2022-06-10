@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="On Successful GBond Creation" TypeName="OnSuccessfulGBondCreation" TypePath="xact.dslam.nsn.5600series.traphandling" Version="1.8">
+  <Meta>
+    <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Operation Label="On Successful GBond Creation" Name="OnSuccessfulGBondCreation">
+    <Input>
+      <Data ID="6" Label="host" ReferenceName="Host" ReferencePath="base" VariableName="host">
+        <Target RefID="18"/>
+      </Data>
+      <Data ID="4" Label="Bridge Port Index" ReferenceName="BridgePortIndex" ReferencePath="xact.dslam.nsn.5600series" VariableName="bridgePortIndex">
+        <Target RefID="18"/>
+      </Data>
+      <Data ID="5" Label="GBondInterfaceIndex" ReferenceName="GBondInterfaceIndex" ReferencePath="xact.dslam.nsn.5600series" VariableName="gBondInterfaceIndex">
+        <Target RefID="18"/>
+      </Data>
+      <Data ID="20" Label="correlationId" ReferenceName="CorrelationId" ReferencePath="xprc.synchronization" VariableName="correlationId">
+        <Target RefID="8"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception ReferenceName="XynaException" ReferencePath="core.exception"/>
+    </Throws>
+    <Function ID="18" Label="set GBond Data">
+      <Source RefID="17"/>
+      <Source RefID="4"/>
+      <Source RefID="5"/>
+      <Source RefID="6"/>
+      <Target RefID="17"/>
+      <Invoke Operation="setGBondData" ServiceID="17">
+        <Source RefID="4"/>
+        <Source RefID="5"/>
+        <Source RefID="6"/>
+      </Invoke>
+      <Receive ServiceID="17"/>
+    </Function>
+    <ServiceReference ID="7" Label="synchronizationService" ReferenceName="Synchronization.SynchronizationService" ReferencePath="xprc.synchronization">
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <Function ID="8" Label="notifyWaitingOrder">
+      <Source RefID="7"/>
+      <Source RefID="9"/>
+      <Source RefID="20"/>
+      <Target RefID="7"/>
+      <Invoke Operation="notifyWaitingOrder" ServiceID="7">
+        <Source RefID="20"/>
+        <Source RefID="9">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="7"/>
+    </Function>
+    <Data ID="9" Label="incomingAnswer" ReferenceName="SynchronizationAnswer" ReferencePath="xprc.synchronization" VariableName="incomingAnswer">
+      <Target RefID="8"/>
+      <Data ID="10" Label="answer" VariableName="answer">
+        <Value>ok</Value>
+      </Data>
+    </Data>
+    <ServiceReference ID="17" Label="NSN DSLAM Port Group Storage Service" ReferenceName="NSNDSLAMPortGroupStorage.NSNDSLAMPortGroupStorageService" ReferencePath="xact.dslam.nsn.5600series.storage">
+      <Source RefID="18"/>
+      <Target RefID="18"/>
+    </ServiceReference>
+    <Assign ID="11"/>
+  </Operation>
+</Service>

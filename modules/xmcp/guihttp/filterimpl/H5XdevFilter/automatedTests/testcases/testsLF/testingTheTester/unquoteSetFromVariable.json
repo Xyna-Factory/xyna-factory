@@ -1,0 +1,34 @@
+{
+  "$meta":
+  {
+    "name": "unquoteSetFromVariable",
+	"description" : "Testet die unquoteResult option der setFromVariable operation."
+  },
+  "operations":
+  [
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/workflows",
+	  "payload": {"label": "New Workflow"}
+	},
+	{
+      "operation": "read",
+	  "targetVariable": "!newPathQuoted!",
+	  "pathInResponse": "xmomItem/fqn"
+    },
+	{
+	  "operation": "setFromVariable",
+	  "targetVariable": "!newPathUnquoted!",
+	  "sourceVariable": "!newPathQuoted!",
+	  "path": "",
+      "unquoteResult": "True"	  
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!newPathQuoted!",
+	  "value": "\"!newPathUnquoted!\""
+	}
+  ]
+}

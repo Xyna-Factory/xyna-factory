@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+  <import file="../../installation/build/ant-xyna.xml" />
+
+  <property name="project.name.local2" value="XynaMemoryPersistenceLayer" />
+
+  <property name="target.dir" value="${basedir}/deploy" />
+  <property name="target.dir.test" value="${basedir}/deploy.test" />
+
+        <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+
+        <path id="libraries">
+                <fileset dir="${basedir}/lib/xyna">
+                  <include name="**/*.jar" />
+                </fileset>
+        </path>
+
+
+  <!-- ================================= 
+	         target: build             
+	        ================================= -->
+  <target name="build" depends="resolve">
+    <buildJar destfile="${target.dir}/${project.name.local2}.jar" />
+  </target>
+
+  	<!-- ================================= 
+  		         target: buildTest             
+  		        ================================= -->
+  <target name="buildTest" depends="build">
+    <delete dir="${basedir}/classes" />
+    <mkdir dir="${basedir}/classes" />
+    <javac debug="on"
+           encoding="iso8859-1"
+           fork="yes"
+           srcdir="${basedir}/test"
+           destdir="${basedir}/classes">
+      <classpath path="${basedir}/classes" />
+      <classpath>
+        <fileset dir="${basedir}/lib">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+      <classpath>
+        <fileset dir="${basedir}/lib.test">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+      <classpath>
+        <fileset dir="${ant.library.dir}">
+    	  <include name = "**/*.jar"/>
+        </fileset>
+      </classpath>	
+      <classpath>
+      	<fileset dir="${target.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+    <mkdir dir="${target.dir.test}" />
+    <jar destfile="${target.dir.test}/${project.name.local2}-test.jar">
+      <fileset dir="${basedir}/classes" includes="**/*.class" />
+      <fileset dir="${basedir}">
+        <include name="Exceptions.xml" />
+      </fileset>
+    </jar>
+  </target>
+
+      <target name="resolve">
+        <resolver:resolve>
+          <resolver:dependencies pomRef="pom"/>
+          <resolver:remoterepos refid="xyna.repository"/>
+          <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
+          <resolver:files refid="files" dir="${basedir}/lib.test" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="test"/>
+          <!--resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/-->
+        </resolver:resolve>
+        <!--loadLicenses targetDir="${basedir}/lib" /-->
+        <!-- delete generated-resources ? -->
+      </target>
+
+</project>

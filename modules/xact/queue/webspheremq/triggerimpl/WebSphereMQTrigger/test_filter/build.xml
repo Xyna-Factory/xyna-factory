@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="deploy" basedir=".">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir">
+        <path location="${basedir}/../../../../../../.." />
+    </pathconvert>
+
+    <property name="project.name" value="WebSphereMQDummyFilter" />
+    <property name="fqclassname" value="com.gip.xyna.xact.trigger.WebSphereMQDummyFilter" />
+    <property name="server.mdm.xml.filename" value="WebSphereMQDummyFilter.xml" />
+    <property name="mdm.xml.name" value="WebSphereMQDummyFilter" />
+    <property name="mdm.xml.filename" value="WebSphereMQDummyFilter" />
+
+    <property name="trigger.name" value="WebSphereMQ" />
+    <property name="filter.name" value="WebSphereMQDummyFilter" />
+    
+    <mkdir dir="${basedir}/lib" /> <!-- buildFilter.xml expects lib folder -->
+    
+    <target name="prepareLibs" description="Prepare libs">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xact/queue/webspheremq/triggerimpl/WebsphereMQTrigger">
+            <property name="target.dir" value="${basedir}/lib/xyna" />
+        </ant>
+    </target>
+
+    <import file="${root.dir}/installation/build/buildFilter.xml" />
+
+</project>

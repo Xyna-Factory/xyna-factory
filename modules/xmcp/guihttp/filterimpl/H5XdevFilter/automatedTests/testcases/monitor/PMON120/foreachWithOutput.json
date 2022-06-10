@@ -1,0 +1,330 @@
+{
+  "meta":
+  {
+    "name": "foreachWithOutput",
+    "description": "Execute a workflow containing a foreach with two iterations and a connected output (loaded from app) and open audit",
+    "created": "21.04.2020",
+    "updated": "21.04.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON120.ForeachWithOutput",
+        "!input!": [{"$meta":{"fqn":"base.Text","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"$list":[{"$meta":{"fqn":"base.Text"},"text":"Text A"},{"$meta":{"fqn":"base.Text"},"text":"Text B"}]}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 4,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check workflow input and output", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!wfInputRaw!",
+      "pathInResponse": "info/$list[id=wf]/inputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!wfInputRaw!",
+      "targetVariable": "!wfInputJson!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!wfInput0!",
+      "sourceVariable": "!wfInputJson!",
+      "path": "$list[0]/text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!wfInput1!",
+      "sourceVariable": "!wfInputJson!",
+      "path": "$list[1]/text",
+      "unquoteResult": "true"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!wfOutputRaw!",
+      "pathInResponse": "info/$list[id=wf]/outputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!wfOutputRaw!",
+      "targetVariable": "!wfOutputJson!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!wfOutput0!",
+      "sourceVariable": "!wfOutputJson!",
+      "path": "$list[0]/text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!wfOutput1!",
+      "sourceVariable": "!wfOutputJson!",
+      "path": "$list[1]/text",
+      "unquoteResult": "true"
+    },
+
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfOutput0!",
+      "value": "!wfInput0! modified"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfOutput1!",
+      "value": "!wfInput1! modified"
+    },
+
+    { "comment": "check IterationRuntimeInfo input and output", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!itContainerInput0Raw!",
+      "pathInResponse": "info/$list[id=step-10]/iterations/$list[index=0]/runtimeInfo/inputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!itContainerInput0Raw!",
+      "targetVariable": "!itContainerInput0Json!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!itContainerInput0!",
+      "sourceVariable": "!itContainerInput0Json!",
+      "path": "text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfInput0!",
+      "value": "!itContainerInput0!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!itContainerInput1Raw!",
+      "pathInResponse": "info/$list[id=step-10]/iterations/$list[index=1]/runtimeInfo/inputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!itContainerInput1Raw!",
+      "targetVariable": "!itContainerInput1Json!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!itContainerInput1!",
+      "sourceVariable": "!itContainerInput1Json!",
+      "path": "text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfInput1!",
+      "value": "!itContainerInput1!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!itContainerOutput0Raw!",
+      "pathInResponse": "info/$list[id=step-10]/iterations/$list[index=0]/runtimeInfo/outputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!itContainerOutput0Raw!",
+      "targetVariable": "!itContainerOutput0Json!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!itContainerOutput0!",
+      "sourceVariable": "!itContainerOutput0Json!",
+      "path": "text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfOutput0!",
+      "value": "!itContainerOutput0!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!itContainerOutput1Raw!",
+      "pathInResponse": "info/$list[id=step-10]/iterations/$list[index=1]/runtimeInfo/outputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!itContainerOutput1Raw!",
+      "targetVariable": "!itContainerOutput1Json!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!itContainerOutput1!",
+      "sourceVariable": "!itContainerOutput1Json!",
+      "path": "text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfOutput1!",
+      "value": "!itContainerOutput1!"
+    },
+
+    { "comment": "check sub workflow input and output", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!subWfInput0Raw!",
+      "pathInResponse": "info/$list[id=step8]/iterations/$list[index=0]/runtimeInfo/inputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!subWfInput0Raw!",
+      "targetVariable": "!subWfInput0Json!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!subWfInput0!",
+      "sourceVariable": "!subWfInput0Json!",
+      "path": "text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfInput0!",
+      "value": "!subWfInput0!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!subWfInput1Raw!",
+      "pathInResponse": "info/$list[id=step8]/iterations/$list[index=1]/runtimeInfo/inputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!subWfInput1Raw!",
+      "targetVariable": "!subWfInput1Json!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!subWfInput1!",
+      "sourceVariable": "!subWfInput1Json!",
+      "path": "text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfInput1!",
+      "value": "!subWfInput1!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!subWfOutput0Raw!",
+      "pathInResponse": "info/$list[id=step8]/iterations/$list[index=0]/runtimeInfo/outputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!subWfOutput0Raw!",
+      "targetVariable": "!subWfOutput0Json!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!subWfOutput0!",
+      "sourceVariable": "!subWfOutput0Json!",
+      "path": "text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfOutput0!",
+      "value": "!subWfOutput0!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!subWfOutput1Raw!",
+      "pathInResponse": "info/$list[id=step8]/iterations/$list[index=1]/runtimeInfo/outputs[0]",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "convertToJson",
+      "variable": "!subWfOutput1Raw!",
+      "targetVariable": "!subWfOutput1Json!"
+    },
+    {
+      "operation": "setFromVariable",
+      "targetVariable": "!subWfOutput1!",
+      "sourceVariable": "!subWfOutput1Json!",
+      "path": "text",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!wfOutput1!",
+      "value": "!subWfOutput1!"
+    }
+  ]
+}

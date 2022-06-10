@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "inputRemovedBasetype.json",
+	"inputRemovedSupertype.json",
+	"inputRemovedSuperAndBasetype.json"
+  ]
+}

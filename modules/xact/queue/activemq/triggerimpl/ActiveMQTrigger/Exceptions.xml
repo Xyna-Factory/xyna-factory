@@ -1,0 +1,42 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+	Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="DE">
+	<Description Language="DE">Exceptions ActiveMQ Trigger.
+		Diese Datei dient gleichzeitig als Dokumentation der Fehlermeldungen.
+	</Description>
+	<!-- BLACK_SERVER_HOME muss sowohl beim build als auch zur laufzeit korrekt gesetzt sein. -->
+	<Import File="${BLACK_SERVER_HOME}/Exceptions.xml" />
+	<ExceptionType Code="XYNA-09630"
+		TypeName="ActiveMQTRIGGER_QueueConnectionCreationException" TypePath="com.gip.xyna.xact.trigger.jmsmq"
+		BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+		<Data Label="queueName" VariableName="queueName">
+			<Meta>
+				<Type>String</Type>
+			</Meta>
+		</Data>
+		<Data Label="url" VariableName="url">
+			<Meta>
+				<Type>String</Type>
+			</Meta>
+		</Data>
+		<MessageText Language="DE">Verbindung zu Queue %0% an Url %1% konnte nicht initialisiert werden.</MessageText>
+      <MessageText Language="EN">Could not initialize connection to queue %0% at url %1%.</MessageText>
+   </ExceptionType>
+ </ExceptionStore>

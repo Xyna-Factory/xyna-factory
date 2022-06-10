@@ -1,0 +1,40 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="setdomaintypespecificdata" Groups="User Management" Description="Assigns the type specific data to the specified domain.">
+	  <ExtendedDescription>
+Known type parameter:
+RADIUS: 
+  ordertype - ordertype of the authentification order.
+  server - one or more RADIUS servers in the form &lt;IPv4/IPv6&gt;,&lt;Port&gt;,&lt;PresharedKey&gt;
+LDAP
+  ordertype - ordertype of the authentification order.
+  workspace - workspace the ordertype should be executed in
+  application - application the ordertype should be executed in
+  version - version the ordertype should be executed in
+  server - one or more LDAP servers in the form &lt;Hostname&gt;,&lt;Port&gt;
+    followed by optional SSLParameter ,&lt;keystorePath&gt;,&lt;keystoreType&gt;
+	  and an optional ,&lt;passphrase&gt; if the trustStoreData is not located
+	  in the same keystorePath a specific trustStore can be specified
+	  (keystore passphrase is not optional in those cases (',,' for no passphrase))
+	  with the parameters &lt;truststorePath&gt;,&lt;truststoreType&gt;,&lt;passphrase&gt;
+	  </ExtendedDescription>
+  </CommandDefinition>
+  <Argument Name="domainName" Description="The domain for which the information will be set"/>
+  <Argument Name="domainTypeSpecificData" Description="The type specific data as key value pairs (entered as key=value)" MultipleValues="true"/>
+</XynaCommandLineCommand>

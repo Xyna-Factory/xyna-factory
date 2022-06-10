@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.gip.com/juno/Gui/WS/Messages" elementFormDefault="qualified" targetNamespace="http://www.gip.com/juno/Gui/WS/Messages">
+
+  <xsd:include schemaLocation="JunoGuiCommon.xsd"/>
+
+
+  <xsd:complexType name="ConfigFileGeneratorParameters_ctype">
+    <xsd:sequence>
+      <xsd:element name="CmtsMicSecret" type="xsd:string"/>
+      <xsd:element name="Context" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="TextConfigGeneratorParameters_ctype">
+    <xsd:sequence>
+      <xsd:element name="Context" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="DeviceDetails_ctype">
+    <xsd:sequence>
+      <xsd:element name="VendorName" type="xsd:string"/>
+      <xsd:element name="ModelName" type="xsd:string"/>
+      <xsd:element name="HardwareRevision" type="xsd:string"/>
+      <xsd:element name="SoftwareRevision" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CableModemRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="MacAddress" type="xsd:string"/>
+      <xsd:element name="IpAddress" type="xsd:string"/>
+      <xsd:element name="FileName" type="xsd:string"/>
+      <xsd:element name="DeviceDetails" type="DeviceDetails_ctype"/>
+      <xsd:element name="version" type="xsd:string"/>
+      <xsd:element name="IsSendSnmpNotification" type="xsd:boolean"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="MtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="MacAddress" type="xsd:string"/>
+      <xsd:element name="IpAddress" type="xsd:string"/>
+      <xsd:element name="FileName" type="xsd:string"/>
+      <xsd:element name="DeviceDetails" type="DeviceDetails_ctype"/>
+      <xsd:element name="requestPktc" type="xsd:string"/>
+      <xsd:element name="version" type="xsd:string"/>
+      <xsd:element name="IsSendSnmpNotification" type="xsd:boolean"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!--
+  <xsd:complexType name="InitializedCableModem_ctype" >
+    <xsd:sequence>
+      <xsd:element name="MacAddress" type="xsd:string" />
+      <xsd:element name="DownstreamSpeed" type="xsd:string" />
+      <xsd:element name="UpstreamSpeed" type="xsd:string" />
+      <xsd:element name="Mode" type="xsd:string" />
+      <xsd:element name="NumberOfCPEs" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  -->
+  <xsd:complexType name="InitializedCableModem_ctype">
+    <xsd:sequence>
+     <xsd:element name="MacAddress" nillable="true" type="xsd:string"/>
+     <xsd:element name="DownstreamSpeed" nillable="true" type="xsd:string"/>
+     <xsd:element name="UpstreamSpeed" nillable="true" type="xsd:string"/>
+     <xsd:element name="Mode" nillable="true" type="xsd:string"/>
+     <xsd:element name="NumberOfCPEs" nillable="true" type="xsd:string"/>
+     <xsd:element name="xml" nillable="true" type="xsd:string"/>
+     <xsd:element name="CpeIPs" nillable="true" type="xsd:string"/>
+     <xsd:element name="ipMode" nillable="true" type="xsd:string"/>
+     <xsd:element name="mtaEnable" nillable="true" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UnregisteredCableModem_ctype">
+    <xsd:sequence>
+      <xsd:element name="MacAddress" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!--
+  <xsd:complexType name="SipMtaPort_ctype" >
+    <xsd:sequence>
+      <xsd:element name="PortNumber" type="xsd:string" />
+      <xsd:element name="DirectoryNumber" type="xsd:string" />
+      <xsd:element name="UserName" type="xsd:string" />
+      <xsd:element name="Password" type="xsd:string" />
+      <xsd:element name="RegistrarServer" type="xsd:string" />
+      <xsd:element name="ProxyServer" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  -->
+  <xsd:complexType name="SipMtaPort_ctype">
+    <xsd:sequence>
+     <xsd:element name="PortNumber" nillable="true" type="xsd:string"/>
+     <xsd:element name="DirectoryNumber" nillable="true" type="xsd:string"/>
+     <xsd:element name="UserName" nillable="true" type="xsd:string"/>
+     <xsd:element name="Password" nillable="true" type="xsd:string"/>
+     <xsd:element name="RegistrarServer" nillable="true" type="xsd:string"/>
+     <xsd:element name="ProxyServer" nillable="true" type="xsd:string"/>
+     <xsd:element name="xml" nillable="true" type="xsd:string"/>
+     <xsd:element name="localNumber" nillable="true" type="xsd:string"/>
+     <xsd:element name="areaCode" nillable="true" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SipMtaPortList_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort1" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort2" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort3" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort4" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort5" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort6" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort7" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort8" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort9" type="SipMtaPort_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="SipMtaPort10" type="SipMtaPort_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PortNumberList_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="PortNumber" type="xsd:int"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!--
+  <xsd:complexType name="SipMta_ctype" >
+    <xsd:sequence>
+      <xsd:element name="Mac" type="xsd:string" />
+      <xsd:element name="SoftswitchType" type="xsd:string" />
+      <xsd:element name="Softswitch" type="xsd:string" />
+      <xsd:element name="SipPorts" type="SipMtaPortList_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="NcsMta_ctype" >
+    <xsd:sequence>
+      <xsd:element name="Mac" type="xsd:string" />
+      <xsd:element name="SoftswitchType" type="xsd:string" />
+      <xsd:element name="Softswitch" type="xsd:string" />
+      <xsd:element name="PortNumbers" type="PortNumberList_ctype" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="IsdnMta_ctype" >
+    <xsd:sequence>
+      <xsd:element name="Mac" type="xsd:string" />
+      <xsd:element name="SoftswitchType" type="xsd:string" />
+      <xsd:element name="Softswitch" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  -->
+  <xsd:complexType name="NcsMta_ctype">
+    <xsd:sequence>
+     <xsd:element name="Mac" nillable="true" type="xsd:string"/>
+     <xsd:element name="SoftswitchType" nillable="true" type="xsd:string"/>
+     <xsd:element name="Softswitch" nillable="true" type="xsd:string"/>
+     <xsd:element name="PortNumbers" nillable="true" type="PortNumberList_ctype"/>
+     <xsd:element name="xml" nillable="true" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SipMta_ctype">
+    <xsd:sequence>
+     <xsd:element name="Mac" nillable="true" type="xsd:string"/>
+     <xsd:element name="SoftswitchType" nillable="true" type="xsd:string"/>
+     <xsd:element name="Softswitch" nillable="true" type="xsd:string"/>
+     <xsd:element name="SipPorts" nillable="true" type="SipMtaPortList_ctype"/>
+     <xsd:element name="xml" nillable="true" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="IsdnMta_ctype">
+    <xsd:sequence>
+     <xsd:element name="Mac" nillable="true" type="xsd:string"/>
+     <xsd:element name="SoftswitchType" nillable="true" type="xsd:string"/>
+     <xsd:element name="Softswitch" nillable="true" type="xsd:string"/>
+     <xsd:element name="SipPorts" nillable="true" type="SipMtaPortList_ctype"/>
+     <xsd:element name="xml" nillable="true" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UninitializedMta_ctype">
+    <xsd:sequence>
+      <xsd:element name="Mac" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UnregisteredMta_ctype">
+    <xsd:sequence>
+      <xsd:element name="Mac" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForInitializedCableModemInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="ConfigFileGeneratorParameters" type="ConfigFileGeneratorParameters_ctype"/>
+      <xsd:element name="CableModemRequest" type="CableModemRequest_ctype"/>
+      <xsd:element name="InitializedCableModem" type="InitializedCableModem_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForUnregisteredCableModemInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="ConfigFileGeneratorParameters" type="ConfigFileGeneratorParameters_ctype"/>
+      <xsd:element name="CableModemRequest" type="CableModemRequest_ctype"/>
+      <xsd:element name="UnregisteredCableModem" type="UnregisteredCableModem_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromStringInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="Host" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GenerateTlvFromStringV4Input_ctype">
+    <xsd:sequence>
+      <xsd:element name="Host" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForSipMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="ConfigFileGeneratorParameters" type="ConfigFileGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="SipMta" type="SipMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForNcsMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="ConfigFileGeneratorParameters" type="ConfigFileGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="NcsMta" type="NcsMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForIsdnMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="ConfigFileGeneratorParameters" type="ConfigFileGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="IsdnMta" type="IsdnMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForUninitializedMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="ConfigFileGeneratorParameters" type="ConfigFileGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="UninitializedMta" type="UninitializedMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForUnregisteredMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="ConfigFileGeneratorParameters" type="ConfigFileGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="UnregisteredMta" type="UnregisteredMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+
+   <xsd:complexType name="GenerateAsciiFromTemplateForInitializedCableModemInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="TextConfigGeneratorParameters" type="TextConfigGeneratorParameters_ctype"/>
+      <xsd:element name="CableModemRequest" type="CableModemRequest_ctype"/>
+      <xsd:element name="InitializedCableModem" type="InitializedCableModem_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForUnregisteredCableModemInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="TextConfigGeneratorParameters" type="TextConfigGeneratorParameters_ctype"/>
+      <xsd:element name="CableModemRequest" type="CableModemRequest_ctype"/>
+      <xsd:element name="UnregisteredCableModem" type="UnregisteredCableModem_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromStringInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="Host" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GenerateAsciiFromStringV4Input_ctype">
+    <xsd:sequence>
+      <xsd:element name="Host" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ShowPacketsAsAsciiInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="Host" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="ShowV4PacketsAsAsciiInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="Host" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForSipMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="TextConfigGeneratorParameters" type="TextConfigGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="SipMta" type="SipMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForNcsMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="TextConfigGeneratorParameters" type="TextConfigGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="NcsMta" type="NcsMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForIsdnMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="TextConfigGeneratorParameters" type="TextConfigGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="IsdnMta" type="IsdnMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForUninitializedMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="TextConfigGeneratorParameters" type="TextConfigGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="UninitializedMta" type="UninitializedMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForUnregisteredMtaInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="TextConfigGeneratorParameters" type="TextConfigGeneratorParameters_ctype"/>
+      <xsd:element name="MtaRequest" type="MtaRequest_ctype"/>
+      <xsd:element name="UnregisteredMta" type="UnregisteredMta_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForInitializedCableModemRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromTemplateForInitializedCableModemInput" type="GenerateAsciiFromTemplateForInitializedCableModemInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForInitializedCableModemRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromTemplateForInitializedCableModemInput" type="GenerateTlvFromTemplateForInitializedCableModemInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForUnregisteredCableModemRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromTemplateForUnregisteredCableModemInput" type="GenerateAsciiFromTemplateForUnregisteredCableModemInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="GenerateTlvFromTemplateForUnregisteredCableModemRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromTemplateForUnregisteredCableModemInput" type="GenerateTlvFromTemplateForUnregisteredCableModemInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="GenerateAsciiFromStringRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromStringInput" type="GenerateAsciiFromStringInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GenerateAsciiFromStringV4Request_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromStringV4Input" type="GenerateAsciiFromStringV4Input_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ShowPacketsAsAsciiRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="ShowPacketsAsAsciiInput" type="ShowPacketsAsAsciiInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="ShowV4PacketsAsAsciiRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="ShowV4PacketsAsAsciiInput" type="ShowV4PacketsAsAsciiInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="GenerateTlvFromStringRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromStringInput" type="GenerateTlvFromStringInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="GenerateTlvFromStringV4Request_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromStringV4Input" type="GenerateTlvFromStringV4Input_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForSipMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromTemplateForSipMtaInput" type="GenerateAsciiFromTemplateForSipMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForSipMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromTemplateForSipMtaInput" type="GenerateTlvFromTemplateForSipMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForNcsMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromTemplateForNcsMtaInput" type="GenerateAsciiFromTemplateForNcsMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForNcsMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromTemplateForNcsMtaInput" type="GenerateTlvFromTemplateForNcsMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForIsdnMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromTemplateForIsdnMtaInput" type="GenerateAsciiFromTemplateForIsdnMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForIsdnMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromTemplateForIsdnMtaInput" type="GenerateTlvFromTemplateForIsdnMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForUninitializedMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromTemplateForUninitializedMtaInput" type="GenerateAsciiFromTemplateForUninitializedMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForUninitializedMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromTemplateForUninitializedMtaInput" type="GenerateTlvFromTemplateForUninitializedMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="GenerateAsciiFromTemplateForUnregisteredMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateAsciiFromTemplateForUnregisteredMtaInput" type="GenerateAsciiFromTemplateForUnregisteredMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenerateTlvFromTemplateForUnregisteredMtaRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GenerateTlvFromTemplateForUnregisteredMtaInput" type="GenerateTlvFromTemplateForUnregisteredMtaInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+
+  <xsd:complexType name="TlvToAsciiInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="Text" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="TlvToAsciiResponse_ctype">
+    <xsd:sequence>
+      <xsd:element name="Text" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="TextResponse_ctype">
+    <xsd:sequence>
+      <xsd:element name="Text" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="TlvToAsciiRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="TlvToAsciiInput" type="TlvToAsciiInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+
+
+  <xsd:complexType name="Response_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="ResponseHeader_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Payload" type="Payload_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="Payload_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1" minOccurs="0" name="TlvToAsciiResponse" type="TlvToAsciiResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromTemplateForInitializedCableModemResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromTemplateForInitializedCableModemResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromTemplateForUnregisteredCableModemResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromTemplateForUnregisteredCableModemResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromStringResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromStringV4Response" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="ShowPacketsAsAsciiResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="ShowV4PacketsAsAsciiResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromStringResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromStringV4Response" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromTemplateForSipMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromTemplateForSipMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromTemplateForNcsMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromTemplateForNcsMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromTemplateForIsdnMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromTemplateForIsdnMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromTemplateForUninitializedMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromTemplateForUninitializedMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateAsciiFromTemplateForUnregisteredMtaResponse" type="TextResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GenerateTlvFromTemplateForUnregisteredMtaResponse" type="TextResponse_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:element name="TlvToAsciiRequest" type="TlvToAsciiRequest_ctype"/>
+  <xsd:element name="TlvToAsciiResponse" type="Response_ctype"/>
+
+
+  <xsd:element name="GenerateAsciiFromTemplateForInitializedCableModemRequest" type="GenerateAsciiFromTemplateForInitializedCableModemRequest_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForInitializedCableModemRequest" type="GenerateTlvFromTemplateForInitializedCableModemRequest_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForUnregisteredCableModemRequest" type="GenerateAsciiFromTemplateForUnregisteredCableModemRequest_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForUnregisteredCableModemRequest" type="GenerateTlvFromTemplateForUnregisteredCableModemRequest_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromStringRequest" type="GenerateAsciiFromStringRequest_ctype"/>
+        
+  <xsd:element name="GenerateAsciiFromStringV4Request" type="GenerateAsciiFromStringV4Request_ctype"/>
+        
+  <xsd:element name="GenerateTlvFromStringRequest" type="GenerateTlvFromStringRequest_ctype"/>
+        
+  <xsd:element name="GenerateTlvFromStringV4Request" type="GenerateTlvFromStringV4Request_ctype"/>
+
+  <xsd:element name="ShowPacketsAsAsciiRequest" type="ShowPacketsAsAsciiRequest_ctype"/>
+        
+  <xsd:element name="ShowV4PacketsAsAsciiRequest" type="ShowV4PacketsAsAsciiRequest_ctype"/>
+
+
+  <xsd:element name="GenerateAsciiFromTemplateForSipMtaRequest" type="GenerateAsciiFromTemplateForSipMtaRequest_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForSipMtaRequest" type="GenerateTlvFromTemplateForSipMtaRequest_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForNcsMtaRequest" type="GenerateAsciiFromTemplateForNcsMtaRequest_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForNcsMtaRequest" type="GenerateTlvFromTemplateForNcsMtaRequest_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForIsdnMtaRequest" type="GenerateAsciiFromTemplateForIsdnMtaRequest_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForIsdnMtaRequest" type="GenerateTlvFromTemplateForIsdnMtaRequest_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForUninitializedMtaRequest" type="GenerateAsciiFromTemplateForUninitializedMtaRequest_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForUninitializedMtaRequest" type="GenerateTlvFromTemplateForUninitializedMtaRequest_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForUnregisteredMtaRequest" type="GenerateAsciiFromTemplateForUnregisteredMtaRequest_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForUnregisteredMtaRequest" type="GenerateTlvFromTemplateForUnregisteredMtaRequest_ctype"/>
+
+
+
+  <xsd:element name="GenerateAsciiFromTemplateForInitializedCableModemResponse" type="Response_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForInitializedCableModemResponse" type="Response_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForUnregisteredCableModemResponse" type="Response_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForUnregisteredCableModemResponse" type="Response_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromStringResponse" type="Response_ctype"/>
+        
+  <xsd:element name="GenerateAsciiFromStringV4Response" type="Response_ctype"/>
+        
+  <xsd:element name="GenerateTlvFromStringResponse" type="Response_ctype"/>
+        
+  <xsd:element name="GenerateTlvFromStringV4Response" type="Response_ctype"/>
+
+  <xsd:element name="ShowPacketsAsAsciiResponse" type="Response_ctype"/>
+
+  <xsd:element name="ShowV4PacketsAsAsciiResponse" type="Response_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForSipMtaResponse" type="Response_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForSipMtaResponse" type="Response_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForNcsMtaResponse" type="Response_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForNcsMtaResponse" type="Response_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForIsdnMtaResponse" type="Response_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForIsdnMtaResponse" type="Response_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForUninitializedMtaResponse" type="Response_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForUninitializedMtaResponse" type="Response_ctype"/>
+
+  <xsd:element name="GenerateAsciiFromTemplateForUnregisteredMtaResponse" type="Response_ctype"/>
+  <xsd:element name="GenerateTlvFromTemplateForUnregisteredMtaResponse" type="Response_ctype"/>
+
+</xsd:schema>

@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.xacm.rolemanagement.CreateRole!": "xmcp.xacm.rolemanagement.CreateRole"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.xacm.rightmanagement.datatypes.Right!": "xmcp.xacm.rightmanagement.datatypes.Right"
+        },
+        {
+          "!XYNA!": "XYNA"
+        },
+        {
+          "!xmcp.xacm.rolemanagement.datatypes.Role!": "xmcp.xacm.rolemanagement.datatypes.Role"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.xacm.rolemanagement.datatypes.Role!"
+            },
+            "domainName0": "!XYNA!",
+            "rightList": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xmcp.xacm.rightmanagement.datatypes.Right!"
+              }
+            },
+            "roleName": "!autotest.generated.random!"
+          }
+        ],
+        "orderType": "!xmcp.xacm.rolemanagement.CreateRole!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!readName1!",
+      "unquoteResult": true
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "meta":
+  {
+    "name": "multipleQueriesTest",
+	"description": "Execute a workflow containing a service (loaded from app) and open audit",
+	"created": "20.03.2020",
+	"updated": "20.03.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON45.MultipleQueries",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 6,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+    {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list",
+        "expectedValue": "6"
+    },
+	{
+		"operation": "set",
+		"variable": "!stepIdQuery1!",
+		"value": "step5"
+	},
+    {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list[id=!stepIdQuery1!]/inputs",
+        "expectedValue": "3"
+    },
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=!stepIdQuery1!]/status",
+      "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+	{
+		"operation": "invoke",
+		"functionName": "assertQuery",
+		"mapInput": {
+			"!stepId!": "!stepIdQuery1!",
+			"!rootTypeFqn!": "xmcp.h5x.regression.PMON45.Storable1",
+			"!filterConditionFormula!": "(%0%.name==\"Test\")",
+			"!maxObjects!": -1,
+			"!queryHistory!": "true",
+			"!firstSortCriterion!": "%0%.name",
+			"!firstSortCriterionReverse!": "false"
+		}
+	},
+	{
+		"operation": "set",
+		"variable": "!stepIdQuery2!",
+		"value": "step15"
+	},
+    {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list[id=!stepIdQuery2!]/inputs",
+        "expectedValue": "3"
+    },
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=!stepIdQuery2!]/status",
+      "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+	{
+		"operation": "invoke",
+		"functionName": "assertQuery",
+		"mapInput": {
+			"!stepId!": "!stepIdQuery2!",
+			"!rootTypeFqn!": "xmcp.h5x.regression.PMON45.Storable2",
+			"!filterConditionFormula!": "(%0%.name==\"Testing\")",
+			"!maxObjects!": 10,
+			"!queryHistory!": "false",
+			"!firstSortCriterion!": "%0%.name",
+			"!firstSortCriterionReverse!": "false"
+		}
+	}
+  ]
+}

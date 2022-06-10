@@ -1,0 +1,96 @@
+[
+  {
+    "docu": "!workspace! should be unescaped like 'default workspace'. Assumes the datatype is not open. Closes the Datatype after inserting !insertName! and deploying.",
+	"type": "function",
+	"functionName": "addComplexTypeMemberToDatatype",
+	"input": ["!workspace!", "!datatypePath!", "!datatypeName!", "!insertType!", "!insertLabel!"],
+	"output": ["!insertName!"],
+	"operations":
+	[
+	  {
+	    "operation": "set",
+		"variable": "!escapedWorkspace!",
+	    "value": "!workspace!"
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!escapedWorkspace!",
+		"modification": { "operation": "urlencode" }
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!url!",
+		"value": "/runtimeContext/!escapedWorkspace!/xmom/datatypes/!datatypePath!/!datatypeName!"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "GET",
+		"url": "!url!"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/objects/memberVarArea/insert",
+		"payload": {"index":-1,"content":{"type":"memberVar","label":"!insertLabel!"},"revision":0}
+	  },
+	  {
+	    "docu": "can't rely on !insertLabel!, because there might be multiple memberVariables with the same Label",
+	    "operation": "read",
+		"targetVariable": "!memberVar!",
+		"pathInResponse": "updates/$list[fqn=!datatypePath!.!datatypeName!]/areas/$list[id=memberVarArea]/items/$list[last]/id",
+		"unquoteResult": "True"
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!insertName!",
+		"pathInResponse": "updates/$list[fqn=!datatypePath!.!datatypeName!]/areas/$list[id=memberVarArea]/items/$list[last]/name",
+		"unquoteResult": "True"
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!revision!",
+		"pathInResponse": "revision"
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!datatypeLabel!",
+		"pathInResponse": "updates/$list[fqn=!datatypePath!.!datatypeName!]/label",
+		"unquoteResult": "True"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "PUT",
+		"url": "!url!/objects/!memberVar!/change",
+		"payload": {"primitiveType":"","fqn":"!insertType!","revision":"!revision!"}
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!revision!",
+		"pathInResponse": "revision"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/save",
+		"payload": {"revision":"!revision!","label":"!datatypeLabel!","path":"!datatypePath!"}
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!revision!",
+		"pathInResponse": "revision"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/deploy",
+		"payload": {"revision":"!revision!"}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/close",
+		"payload": {"force":true,"revision":"!revision!"}
+	  }
+	]
+  }
+]

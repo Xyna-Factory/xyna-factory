@@ -1,0 +1,16 @@
+{
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!var!",
+	  "value": "stringcontainingTESTandOthers"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "doesNotContain",
+	  "variable": "!var!",
+	  "value": "TEEST"
+	}
+  ]
+}

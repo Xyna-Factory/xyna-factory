@@ -1,0 +1,14 @@
+{
+  "testseries":
+  [
+	"testingTheTester/alltests.json",
+	"ray/rayTests.json"
+  ],
+  "tests":
+  [
+    "emptyTest.json",
+	"PMOD481.json",
+	"PMOD483.json",
+	"ConstantStore.json"
+  ]
+}

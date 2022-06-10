@@ -1,0 +1,100 @@
+{
+  "meta":
+  {
+    "name": "catchExceptionTest",
+	"description": "Execute a workflow with a catch and check the audit.",
+	"created": "14.04.2020",
+	"updated": "09.12.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON112.PMON112",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 0,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=wf]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[0]/id",
+      "targetVariable": "!branchId!",
+      "unquoteResult": true
+    },
+	{
+	  "operation": "read",
+	  "targetVariable": "!input0_JSON!",
+	  "pathInResponse": "info/$list[id=!branchId!]/inputs[0]",
+      "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!input0_JSON!"
+	},
+	{
+		"operation": "setFromVariable",
+		"sourceVariable": "!input0_JSON!",
+		"path": "successfulCommands/$meta/fqn",
+		"targetVariable": "!meta_fqn!",
+		"unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!meta_fqn!",
+	  "value": "xact.connection.CommandResponseTuple"
+	}
+  ]
+}

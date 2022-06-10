@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="ISO-8859-15" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.gip.com/xyna/xdev/xfractmod" targetNamespace="http://www.gip.com/xyna/xdev/xfractmod"
+	elementFormDefault="qualified">
+  <xsd:complexType name="MDMObject">
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Source" type="MDMEdge" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Target" type="MDMEdge" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="Meta" type="Meta" />
+    </xsd:choice>
+    <xsd:attribute name="ID" type="xsd:string" />
+    <xsd:attribute name="Label" type="xsd:string" />
+    <xsd:attribute name="IsAbstract" type="xsd:boolean" />
+  </xsd:complexType>
+  <xsd:complexType name="MDMType">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:attribute name="TypeName" type="xsd:string" use="required" />
+        <xsd:attribute name="TypePath" type="xsd:string" use="required" />
+        <xsd:attribute name="BaseTypeName" type="xsd:string" />
+        <xsd:attribute name="BaseTypePath" type="xsd:string" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MDMReference">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:attribute name="ReferenceName" type="xsd:string" use="optional" />
+        <xsd:attribute name="ReferencePath" type="xsd:string" use="optional" />
+        <xsd:attribute name="VariableName" type="xsd:string" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MDMEdge">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="Meta" type="Meta" />
+    </xsd:sequence>
+    <!-- nicht verknüpfte parameter haben keine refid. -->
+    <xsd:attribute name="RefID" use="optional" type="xsd:string" />
+    <xsd:attribute name="Path" type="xsd:string" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="Choice">
+    <xsd:complexContent>
+      <xsd:extension base="MDMType">
+        <xsd:sequence>
+          <xsd:element name="Input" maxOccurs="unbounded" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="Data" type="Data" />
+                  <xsd:element name="Exception" type="Exception"/>
+                </xsd:choice>
+                <xsd:element minOccurs="0" maxOccurs="1" name="Source" type="MDMEdge" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Case" maxOccurs="unbounded" minOccurs="0">
+            <xsd:complexType>
+              <xsd:complexContent>
+                <xsd:extension base="Serial">
+                  <xsd:attribute name="Premise" use="optional" type="xsd:string" />
+                  <xsd:attribute name="Alias" use="optional" type="xsd:string" />
+				  <xsd:attribute name="IsDefault" use="optional" type="xsd:boolean" />
+                </xsd:extension>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Parameter" type="Parameter" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Choice" type="Choice" />
+  <xsd:complexType name="Mappings">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:sequence>
+          <xsd:element name="Input" maxOccurs="unbounded" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="Data"
+                               type="Data"/>
+                  <xsd:element name="Exception" type="Exception" minOccurs="1"/>
+                </xsd:choice>
+                <xsd:element minOccurs="0" maxOccurs="1" name="Source"
+                             type="MDMEdge"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Local" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:choice>
+                <xsd:element maxOccurs="1" minOccurs="0" name="Data"
+                             type="Data"/>
+                <xsd:element name="Exception" type="Exception" minOccurs="1"/>
+              </xsd:choice>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Output" maxOccurs="unbounded" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="Data"
+                               type="Data"/>
+                  <xsd:element name="Exception" type="Exception" minOccurs="1"/>
+                </xsd:choice>
+                <xsd:element minOccurs="0" maxOccurs="1" name="Target"
+                             type="MDMEdge"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Mapping" type="xsd:string" maxOccurs="unbounded"
+                       minOccurs="0"/>
+          <xsd:element minOccurs="0" name="Parameter" type="Parameter"
+                       maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Mappings" type="Mappings"/>
+  <xsd:complexType name="CodeSnippet">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="Type" use="required" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>
+              Gibt den Typ des Codesegments an: method,
+              imports, etc - ein
+              String, den der Codegenerator versteht
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="Description" use="optional" type="xsd:string" />
+        <xsd:attribute name="IsCancelable" use="optional" type="xsd:string" />
+        <xsd:attribute name="Active" use="optional" type="xsd:boolean" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Data">
+    <xsd:complexContent>
+      <xsd:extension base="MDMReference">
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="Data" type="Data" maxOccurs="unbounded" minOccurs="0" />
+          <xsd:element name="Exception" type="Exception" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Value" maxOccurs="unbounded" minOccurs="0" />
+          <xsd:element name="Restriction" type="Restriction" maxOccurs="unbounded" minOccurs="0" />
+        </xsd:choice>
+        <xsd:attribute name="IsList" type="xsd:boolean" default="false" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Restriction">
+    <xsd:choice maxOccurs="unbounded">
+      <xsd:element name="DefaultValue" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="DefaultComplexValue" type="Data" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="UndefinedValue" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="DefaultType" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="PossibleValue" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="PossibleComplexValue" type="Data" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="PossibleType" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+    </xsd:choice>
+  </xsd:complexType>
+  <xsd:element name="DataType">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="MDMType">
+          <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="Exception" minOccurs="0" maxOccurs="unbounded" type="Exception" />
+            <xsd:element name="Libraries"
+                           minOccurs="0"
+                           maxOccurs="unbounded"
+                           type="xsd:string">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Liste von jarfiles, pfadangaben relativ zu
+                  mdm-pfad des objects/&lt;objectname&gt;
+                  beispiel:
+                  &lt;Libraries&gt;myjar.jar&lt;/Libraries&gt;
+                  in a.b.c.MyClass.xml
+                  bedeutet, dass die datei im
+                  verzeichnis a/b/c/MyClass gesucht wird.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SharedLibraries"
+                         minOccurs="0"
+                         maxOccurs="unbounded"
+                         type="xsd:string">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Liste von Namen von sharedLibs
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Data" type="Data" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="Service" maxOccurs="unbounded" minOccurs="0">
+              <xsd:complexType>
+                <xsd:complexContent>
+                  <xsd:extension base="MDMObject">
+                    <xsd:sequence>
+                      <xsd:element name="Operation" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>
+                          <xsd:complexContent>
+                            <xsd:extension base="Operation">
+                              <xsd:choice minOccurs="0"> <!-- falls operation abstract definiert ist, muss choice nicht existieren -->
+                                <xsd:element name="SourceCode">
+                                  <xsd:complexType>
+                                    <xsd:sequence>
+                                      <xsd:element minOccurs="1" maxOccurs="1"
+                                                   name="CodeSnippet"
+                                                   type="CodeSnippet">
+                                        <xsd:annotation>
+                                          <xsd:documentation>
+                                            Bei einem Adapter müssen eventuell
+                                            mehrere Methoden implementiert
+                                            werden. z.B. eine für den
+                                            Socketverbindung, eine für die
+                                            Datentransformation und eine zur
+                                            Bestimmung des OrderTypes.
+                                          </xsd:documentation>
+                                        </xsd:annotation>
+                                      </xsd:element>
+                                    </xsd:sequence>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element name="Call" type="MDMReference" />
+                              </xsd:choice>
+                              <xsd:attribute name="IsFinal" type="xsd:boolean" />                                      
+                            </xsd:extension>
+                          </xsd:complexContent>
+                        </xsd:complexType>
+                      </xsd:element>
+                    </xsd:sequence>
+                    <xsd:attribute name="TypeName" type="xsd:string"
+                                   use="required"/>
+                  </xsd:extension>
+                </xsd:complexContent>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ServiceReference" maxOccurs="unbounded"
+                         minOccurs="0" type="MDMReference"/>
+          </xsd:choice>
+          <xsd:attribute name="Version" type="xsd:string" use="required"/>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="Exception">
+    <xsd:complexContent>
+      <xsd:extension base="MDMReference">
+        <xsd:sequence>
+          <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="Data" type="Data"/>
+            <xsd:element name="Value" />
+            <xsd:element name="Exception" type="Exception"/>
+          </xsd:choice>
+          <xsd:element name="StackTrace" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="ErrorMessage" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="IsList" type="xsd:boolean"
+                       default="false" />
+        <xsd:attribute name="ErrorType" type="xsd:string" use="optional"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Exception" type="Exception" />
+  <xsd:complexType name="Foreach">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:sequence>
+          <xsd:sequence>
+            <xsd:element name="InputList" maxOccurs="unbounded">
+              <xsd:complexType>
+                <xsd:complexContent>
+                  <xsd:extension base="MDMEdge">
+                    <xsd:choice>
+                      <xsd:element name="Data" type="Data"/>
+                      <xsd:element name="Exception" type="Exception"/>
+                    </xsd:choice>
+                  </xsd:extension>
+                </xsd:complexContent>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="OutputList" maxOccurs="unbounded" minOccurs="0">
+              <xsd:complexType>
+                <xsd:complexContent>
+                  <xsd:extension base="MDMEdge">
+                    <xsd:choice>
+                      <xsd:element name="Data" type="Data"/>
+                      <xsd:element name="Exception" type="Exception"/>
+                    </xsd:choice>
+                  </xsd:extension>
+                </xsd:complexContent>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+          <xsd:choice>
+            <xsd:element name="Foreach" type="Foreach"/>
+            <xsd:element name="Function" type="Function"/>
+            <xsd:element name="Mappings" type="Mappings"/>
+            <xsd:element name="Choice" type="Choice"/>
+          </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="IsParallel" type="xsd:boolean" use="optional" default="false"/>
+        <xsd:attribute name="LimitType" type="xsd:string" use="optional" default="false"/>
+        <xsd:attribute name="Limit" type="xsd:string" use="optional" default="false"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Function">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:sequence minOccurs="1" maxOccurs="1">
+          <xsd:element name="ServiceReference" type="MDMReference" minOccurs="0" maxOccurs="1" />
+          <xsd:element name="Service" minOccurs="0" maxOccurs="1" >
+    		<xsd:complexType>
+     		  <xsd:complexContent>
+                <xsd:extension base="MDMObject">
+          	      <xsd:sequence>
+                    <xsd:element name="Operation" type="Operation" />
+                  </xsd:sequence>
+                  <xsd:attribute name="TypeName" type="xsd:string" use="required" />
+                </xsd:extension>
+              </xsd:complexContent>
+	        </xsd:complexType>
+          </xsd:element>  
+          <xsd:element name="Invoke" maxOccurs="1" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="Source" maxOccurs="unbounded" minOccurs="0"
+                             type="MDMEdge"/>
+              </xsd:sequence>
+              <xsd:attribute name="ServiceID" use="required" type="xsd:string"/>
+              <xsd:attribute name="Operation" use="required" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Receive" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="Target" maxOccurs="unbounded" minOccurs="0"
+                             type="MDMEdge"/>
+              </xsd:sequence>
+              <xsd:attribute name="ServiceID" use="required" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="RemoteDispatching" minOccurs="0" maxOccurs="1" >
+            <xsd:complexType>
+              <xsd:attribute name="RemoteDestination" use="required" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Catch" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:complexContent>
+                <xsd:extension base="Serial">
+                  <xsd:attribute name="ExceptionID" type="xsd:string"
+	                               use="required"/>
+                </xsd:extension>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Compensate" minOccurs="0" type="Serial"/>
+          <xsd:element minOccurs="0" name="Parameter" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:complexContent>
+                <xsd:extension base="Parameter"/>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Assign">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:sequence minOccurs="1" maxOccurs="1">
+          <xsd:element name="Copy" maxOccurs="unbounded" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="Source" maxOccurs="1" minOccurs="1"
+                             type="MDMEdge"/>
+                <xsd:element name="Target" maxOccurs="1" minOccurs="1"
+                             type="MDMEdge"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Retry">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:attribute name="RetryParameterID"/>
+        <xsd:attribute name="RetryFunctionID"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Meta">
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="Type" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            Mögliche Werte: String, Integer, Parallel der erste sinnvoll
+            passende wird verwendet
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LinkType" type="xsd:string"/>
+      <xsd:element name="Description" type="xsd:string"/>
+      <xsd:element name="Documentation" type="xsd:string"/>
+      <xsd:element name="Version" type="xsd:string"/>
+      <xsd:element name="CurrentVersion" type="xsd:boolean"/>
+      <xsd:element name="IsXynaComponent" type="xsd:string"/>
+      <xsd:element name="AdditionalDependencies" type="xsd:anyType"/>
+      <xsd:element name="Detached" type="xsd:string"/>
+      <xsd:element name="FreeCapacities" type="xsd:string"/>
+      <xsd:element name="SpecialPurpose" type="xsd:string"/>
+      <xsd:element name="Abstract.UID" type="xsd:string"/>
+      <xsd:element name="Abstract.PrototypeUID" type="xsd:string"/>
+      <xsd:element name="IsServiceGroupOnly" type="xsd:boolean"/>
+      <xsd:element name="IsTemplate" type="xsd:boolean"/>
+      <xsd:element name="IsCondition" type="xsd:boolean"/>
+      <xsd:element name="FixedWidth" type="xsd:string"/>
+      <xsd:element name="FixedHeight" type="xsd:string"/>
+      <xsd:element name="FixedDetailOptions" type="xsd:string"/>
+	  <xsd:element name="OuterConditionPart" type="xsd:string"/>
+      <xsd:element name="UserOutput" type="xsd:string"/>
+      <xsd:element name="ExpectedType" type="xsd:string"/>
+      <xsd:element name="OrderInputSource" type="xsd:string"/>
+	  <xsd:element name="QueryFilter">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Condition" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+          </xsd:sequence>
+        </xsd:complexType>
+	  </xsd:element>
+      <xsd:element name="Persistence">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="Type" type="xsd:string"/>
+            <xsd:choice maxOccurs="unbounded" minOccurs="0">
+              <xsd:element name="Index" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+              <xsd:element name="Constraint" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+              <xsd:element name="Reference" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+              <xsd:element name="CustomField0" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+              <xsd:element name="CustomField1" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+              <xsd:element name="CustomField2" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+              <xsd:element name="CustomField3" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+              <xsd:element name="Transient" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+              <xsd:element name="Flat" type="xsd:string" minOccurs="0"
+                           maxOccurs="unbounded"/>
+            </xsd:choice>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DataModel">
+        <xsd:complexType>
+          <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="Oid" type="xsd:string" />
+            <xsd:element name="SnmpType" type="xsd:string"/>
+            <xsd:element name="ModelName" type="xsd:string"/>
+            <xsd:element name="BaseModel" type="xsd:string"/>
+            <xsd:element name="XSDInfo" type="xsd:string"/>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="PathMap">
+        <xsd:complexType>
+          <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="BaseModel" type="xsd:string" />
+            <xsd:element name="PathKey" type="xsd:string" />
+            <!-- Falls PathValue Elemen vorhanden ist, aber leer ist, dann bedeutet das, dass es keinen Value geben soll. -->
+            <xsd:element name="PathValue" type="xsd:string" minOccurs="0" />
+	    <xsd:element name="InheritFromDataModel" minOccurs="0" >
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="Path" type="xsd:string" />
+                  <xsd:element name="Value" type="xsd:string" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:choice>
+  </xsd:complexType>
+  <xsd:complexType name="MetaForOperation">
+    <xsd:complexContent>
+      <xsd:extension base="Meta">
+        <xsd:choice minOccurs="0">
+          <xsd:sequence>
+            <xsd:element name="Planning" type="MDMReference" maxOccurs="1"
+                       minOccurs="0"/>
+            <xsd:element name="Cleanup" type="MDMReference" maxOccurs="1"
+                       minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MDMObjectForOperation">
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Source"
+              type="MDMEdge" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Target"
+              type="MDMEdge" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="Meta"
+              type="MetaForOperation" />
+    </xsd:choice>
+
+
+    <xsd:attribute name="ID" type="xsd:string"/>
+    <xsd:attribute name="Label" type="xsd:string"/>
+    <xsd:attribute name="IsAbstract" type="xsd:boolean"/>
+  </xsd:complexType>
+  <xsd:complexType name="Operation">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObjectForOperation">
+        <xsd:sequence>
+          <xsd:element name="Input" maxOccurs="1" minOccurs="0">
+            <xsd:complexType>
+              <xsd:choice minOccurs="0" maxOccurs="unbounded" >
+                <xsd:element name="Data" type="Data" />
+                <xsd:element name="Exception" type="Exception"/>
+              </xsd:choice>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Output" minOccurs="0">
+            <xsd:complexType>
+              <xsd:choice minOccurs="0" maxOccurs="unbounded" >
+                <xsd:element name="Data" type="Data" />
+                <xsd:element name="Exception" type="Exception"/>
+              </xsd:choice>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="Throws" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="Exception" type="Exception" minOccurs="0" maxOccurs="unbounded"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="Name" type="xsd:string"/>
+        <xsd:attribute name="IsStatic" type="xsd:boolean"/>
+        <xsd:attribute name="RequiresXynaOrder" type="xsd:boolean"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Parallel">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="Choice" type="Choice" minOccurs="1" maxOccurs="1"/>
+          <xsd:element name="Function" type="Function"/>
+          <xsd:element name="Serial" type="Serial"/>
+          <xsd:element name="Throw" type="Throw"/>
+          <xsd:element name="Parallel" type="Parallel"/>
+          <xsd:element name="Foreach" type="Foreach"/>
+          <xsd:element name="Mappings" type="Mappings"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Serial">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="Choice" type="Choice"/>
+          <xsd:element name="Data" type="Data"/>
+          <xsd:element name="Exception" type="Exception" />
+          <xsd:element name="Foreach" type="Foreach"/>
+          <xsd:element name="Function" type="Function"/>
+          <xsd:element name="Serial" type="Serial"/>
+          <xsd:element name="Parallel" type="Parallel"/>
+          <xsd:element name="ServiceReference" type="MDMReference"/>
+          <xsd:element name="Throw" type="Throw"/>
+          <xsd:element name="Assign" type="Assign"/>
+          <xsd:element name="Retry" type="Retry"/>
+          <xsd:element name="Mappings" type="Mappings"/>
+        </xsd:choice>
+        <xsd:attribute name="IsParallel" type="xsd:boolean"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Service">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="MDMType">
+          <xsd:sequence>
+            <xsd:element name="Operation">
+              <xsd:complexType>
+                <xsd:complexContent>
+                  <xsd:extension base="Operation">
+                    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+                      <xsd:element maxOccurs="1" name="Choice" type="Choice"/>
+                      <xsd:element name="Data">
+                        <xsd:complexType>
+                          <xsd:complexContent>
+                            <xsd:extension base="Data"/>
+                          </xsd:complexContent>
+                        </xsd:complexType>
+                      </xsd:element>
+                      <xsd:element name="Exception" type="Exception"/>
+                      <xsd:element name="Function" type="Function"/>
+                      <xsd:element name="Serial" type="Serial"/>
+                      <xsd:element name="Parallel" type="Parallel"/>
+                      <xsd:element name="ServiceReference" type="MDMReference"/>
+                      <xsd:element name="Throw" type="Throw"/>
+                      <xsd:element name="Assign" type="Assign"/>
+                      <xsd:element name="Parameter" type="Parameter"/>
+                      <xsd:element name="Foreach" type="Foreach"/>
+                      <xsd:element name="Mappings" type="Mappings"/>
+                      <xsd:element name="Catch">
+                        <xsd:complexType>
+                          <xsd:complexContent>
+                            <xsd:extension base="Serial">
+                              <xsd:attribute name="ExceptionID" type="xsd:string"
+                                             use="required"/>
+                            </xsd:extension>
+                          </xsd:complexContent>
+                        </xsd:complexType>
+                      </xsd:element>
+                    </xsd:choice>
+                  </xsd:extension>
+                </xsd:complexContent>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+          <xsd:attribute name="Version" type="xsd:string" use="required"/>
+        </xsd:extension>
+      </xsd:complexContent>
+	</xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="Throw">
+    <xsd:complexContent>
+      <xsd:extension base="MDMObject">
+        <xsd:attribute name="ExceptionID" type="xsd:string" use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Parameter">
+    <xsd:sequence>
+      <xsd:element name="Input" minOccurs="0">
+        <xsd:complexType>
+          <xsd:choice minOccurs="0" maxOccurs="unbounded" >
+            <xsd:element name="Data" type="Data" />
+            <xsd:element name="Exception" type="Exception" />
+          </xsd:choice>
+          <xsd:attribute name="Date"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Output" maxOccurs="1" minOccurs="0">
+        <xsd:complexType>
+          <xsd:choice minOccurs="0" maxOccurs="unbounded" >
+            <xsd:element name="Data" type="Data" />
+            <xsd:element name="Exception" type="Exception" />
+          </xsd:choice>
+          <xsd:attribute name="Date"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Compensations" maxOccurs="1" minOccurs="0">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="CompensateFunction" maxOccurs="unbounded"
+                         minOccurs="0">
+              <xsd:complexType>
+                <xsd:attribute name="RefID" use="required"/>
+                <xsd:attribute name="Status" use="required"/>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:choice>
+          <xsd:attribute name="Status" use="required"/>
+          <xsd:attribute name="FirstCompensationOrderID" default="true"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Error" maxOccurs="1" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Exception" type="Exception"/>
+          </xsd:sequence>
+          <xsd:attribute name="Date"/>
+          <xsd:attribute name="ErrorMessage"/>
+          <xsd:attribute name="ErrorType"/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="ForeachIndices" type="xsd:string" use="optional" />
+    <xsd:attribute name="Status" type="xsd:string"/>
+    <xsd:attribute name="OrderID" type="xsd:string"/>
+    <xsd:attribute name="InstanceID" type="xsd:string"/>
+    <xsd:attribute name="ParentOrderID" type="xsd:string"/>
+  </xsd:complexType>
+</xsd:schema>

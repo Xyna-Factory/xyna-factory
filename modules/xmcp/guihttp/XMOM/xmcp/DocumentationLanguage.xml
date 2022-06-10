@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Documentation Language" TypeName="DocumentationLanguage" TypePath="xmcp" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Language Tag" VariableName="languageTag">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Values:
+en-US
+de-DE</Documentation>
+    </Meta>
+  </Data>
+  <Service Label="Documentation Language" TypeName="DocumentationLanguage">
+    <Operation ID="16" IsStatic="false" Label="Convert" Name="convert">
+      <Meta>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+        <Documentation>Converts from the languageTag used by the GUI (de-DE, en-US) to server-representation (DE, EN)</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data ID="15" Label="Text" VariableName="text">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">DocumentationLanguage language = this;
+
+if(language == null || language.getLanguageTag() == null || language.getLanguageTag().length() == 0){
+  return "EN"; //default
+}
+
+return language.getLanguageTag().substring(0, 2).toUpperCase();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Convert to gui DocumentationLanguage" Name="convertToGuiDocumentationLanguage">
+      <Meta>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+        <Documentation>Converts from server-representation (DE, EN)  to languageTag used by the GUI (de-DE, en-US)</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="LanguageTag" VariableName="languageTag">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="Documentation Language" ReferenceName="DocumentationLanguage" ReferencePath="xmcp" VariableName="documentationLanguage"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">String s = null;
+switch(languageTag) {
+      case "DE": s = "de-DE"; break;
+      case "EN": s = "en-US"; break;
+      default: return null; 
+}
+
+DocumentationLanguage result = new DocumentationLanguage();
+result.setLanguageTag(s);
+return result;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

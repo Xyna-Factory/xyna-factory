@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Test Case Instances From Test Case Chain" TypeName="GetTestCaseInstancesFromTestCaseChain" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(2238)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Test Case Instances From Test Case Chain" Name="GetTestCaseInstancesFromTestCaseChain">
+    <Input>
+      <Data ID="21" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo21">
+        <Target RefID="206"/>
+        <Target RefID="199"/>
+      </Data>
+      <Data ID="15" Label="Test Case Chain Entry" ReferenceName="TestCaseChainEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseChainEntry">
+        <Target RefID="440"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="22" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="386" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry386">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Choice ID="199" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="21"/>
+      <Target RefID="219"/>
+      <Input>
+        <Data ID="486" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo486"/>
+        <Source RefID="21">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="197" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Function ID="211" Label="Build TableInfo">
+          <Source RefID="210"/>
+          <Source RefID="496"/>
+          <Target RefID="210"/>
+          <Target RefID="464"/>
+          <Meta>
+            <Documentation>Falls TableInfo leer, befüllen.
+Verionsfeld (String) noch einbauen</Documentation>
+            <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+          </Meta>
+          <Invoke Operation="BuildTableInfo" ServiceID="210">
+            <Source RefID="496">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="210">
+            <Target RefID="464"/>
+          </Receive>
+        </Function>
+        <Mappings ID="232" Label="Mapping">
+          <Source RefID="464"/>
+          <Target RefID="465"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="230" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo230"/>
+            <Source RefID="464">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="289" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="465"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Foreach ID="302">
+          <Source RefID="465"/>
+          <Target RefID="429"/>
+          <InputList RefID="465">
+            <Data ID="466" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn466">
+              <Target RefID="300"/>
+              <Target RefID="427"/>
+              <Target RefID="423"/>
+              <Target RefID="419"/>
+              <Target RefID="310"/>
+            </Data>
+          </InputList>
+          <OutputList RefID="429">
+            <Data ID="428" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn428">
+              <Source RefID="300"/>
+              <Source RefID="313"/>
+              <Source RefID="341"/>
+              <Source RefID="342"/>
+              <Source RefID="343"/>
+              <Source RefID="314"/>
+            </Data>
+          </OutputList>
+          <Choice ID="300" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="466"/>
+            <Target RefID="428"/>
+            <Meta>
+              <OuterConditionPart>%0%.path?</OuterConditionPart>
+            </Meta>
+            <Input>
+              <Data ID="340" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn340"/>
+              <Source RefID="466"/>
+            </Input>
+            <Case ID="303" Premise="%0%.path==&quot;status&quot;">
+              <Mappings ID="310" Label="Mapping">
+                <Source RefID="466"/>
+                <Target RefID="309"/>
+                <Meta>
+                  <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+                </Meta>
+                <Input>
+                  <Data ID="307" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn307"/>
+                  <Source RefID="466">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="308" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn308"/>
+                  <Target RefID="309"/>
+                </Output>
+                <Mapping>%1%=append(%1%,%0%)</Mapping>
+              </Mappings>
+              <Assign ID="313">
+                <Source RefID="309"/>
+                <Target RefID="428"/>
+                <Copy>
+                  <Source RefID="309"/>
+                  <Target RefID="428"/>
+                </Copy>
+              </Assign>
+            </Case>
+            <Case ID="328" Premise="%0%.path==&quot;author&quot;">
+              <Mappings ID="419" Label="Mapping">
+                <Source RefID="466"/>
+                <Target RefID="418"/>
+                <Meta>
+                  <FixedDetailOptions>FlatMode</FixedDetailOptions>
+                </Meta>
+                <Input>
+                  <Data ID="416" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn416"/>
+                  <Source RefID="466">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="417" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn417"/>
+                  <Target RefID="418"/>
+                </Output>
+                <Mapping>%1%=append(%1%,%0%)</Mapping>
+              </Mappings>
+              <Assign ID="341">
+                <Source RefID="418"/>
+                <Target RefID="428"/>
+                <Copy>
+                  <Source RefID="418"/>
+                  <Target RefID="428"/>
+                </Copy>
+              </Assign>
+            </Case>
+            <Case ID="329" Premise="%0%.path==&quot;testCaseName&quot;">
+              <Mappings ID="423" Label="Mapping">
+                <Source RefID="466"/>
+                <Target RefID="422"/>
+                <Input>
+                  <Data ID="420" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn420"/>
+                  <Source RefID="466">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="421" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn421"/>
+                  <Target RefID="422"/>
+                </Output>
+                <Mapping>%1%=append(%1%,%0%)</Mapping>
+              </Mappings>
+              <Assign ID="342">
+                <Source RefID="422"/>
+                <Target RefID="428"/>
+                <Copy>
+                  <Source RefID="422"/>
+                  <Target RefID="428"/>
+                </Copy>
+              </Assign>
+            </Case>
+            <Case ID="330" Premise="%0%.path==&quot;testObjectId&quot;">
+              <Mappings ID="427" Label="Mapping">
+                <Source RefID="466"/>
+                <Target RefID="426"/>
+                <Input>
+                  <Data ID="424" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn424"/>
+                  <Source RefID="466">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="425" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn425"/>
+                  <Target RefID="426"/>
+                </Output>
+                <Mapping>%1%=append(%1%,%0%)</Mapping>
+              </Mappings>
+              <Assign ID="343">
+                <Source RefID="426"/>
+                <Target RefID="428"/>
+                <Copy>
+                  <Source RefID="426"/>
+                  <Target RefID="428"/>
+                </Copy>
+              </Assign>
+            </Case>
+            <Case ID="299" IsDefault="true" Label="default">
+              <Mappings ID="306" Label="Mapping">
+                <Target RefID="305"/>
+                <Meta>
+                  <FixedDetailOptions>FillMode</FixedDetailOptions>
+                </Meta>
+                <Output>
+                  <Data ID="304" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn304"/>
+                  <Target RefID="305"/>
+                </Output>
+              </Mappings>
+              <Assign ID="314">
+                <Source RefID="305"/>
+                <Target RefID="428"/>
+                <Copy>
+                  <Source RefID="305"/>
+                  <Target RefID="428"/>
+                </Copy>
+              </Assign>
+            </Case>
+          </Choice>
+        </Foreach>
+        <Mappings ID="278" Label="Mapping">
+          <Source RefID="429"/>
+          <Target RefID="277"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="275" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn275"/>
+            <Source RefID="429">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="276" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo276"/>
+            <Target RefID="277"/>
+          </Output>
+          <Mapping>%1%.bootstrap="false"</Mapping>
+          <Mapping>%1%.columns=%0%</Mapping>
+        </Mappings>
+        <Assign ID="202">
+          <Source RefID="277"/>
+          <Target RefID="219"/>
+          <Copy>
+            <Source RefID="277"/>
+            <Target RefID="219"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="198" Label="false">
+        <Mappings ID="206" Label="Mapping">
+          <Source RefID="21"/>
+          <Target RefID="207"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="204" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo204"/>
+            <Source RefID="21"/>
+          </Input>
+          <Output>
+            <Data ID="205" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo205"/>
+            <Target RefID="207"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="203">
+          <Source RefID="207"/>
+          <Target RefID="219"/>
+          <Copy>
+            <Source RefID="207"/>
+            <Target RefID="219"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="572" Label="Determine Current Test Project">
+      <Source RefID="571"/>
+      <Target RefID="573"/>
+      <Target RefID="571"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="571"/>
+      <Receive ServiceID="571">
+        <Target RefID="573"/>
+      </Receive>
+    </Function>
+    <Mappings ID="440">
+      <Source RefID="15"/>
+      <Source RefID="573"/>
+      <Target RefID="439"/>
+      <Meta>
+        <IsCondition>true</IsCondition>
+      </Meta>
+      <Input>
+        <Data ID="485" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="573"/>
+      </Input>
+      <Input>
+        <Data ID="529" Label="Test Case Chain Entry" ReferenceName="TestCaseChainEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseChainEntry529"/>
+        <Source RefID="15">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="441" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition441"/>
+        <Target RefID="439"/>
+      </Output>
+      <Mapping>%2%.formula=concat("(%0%.testProjectId==\"",replaceall(replaceall(%0%.iD,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\") &amp;&amp; (%0%.id==\"",replaceall(replaceall(%1%.id,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+    </Mappings>
+    <Function ID="438" Label="Query">
+      <Source RefID="437"/>
+      <Source RefID="439"/>
+      <Source RefID="442"/>
+      <Source RefID="443"/>
+      <Target RefID="437"/>
+      <Target RefID="445"/>
+      <Meta>
+        <QueryFilter>
+          <Condition>%0%.testProjectId==%1%.iD</Condition>
+          <Condition>%0%.id==%2%.id</Condition>
+        </QueryFilter>
+        <FixedDetailOptions>openConfiguration,openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="query" ServiceID="437">
+        <Source RefID="442">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="439">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="443">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="437">
+        <Target RefID="445"/>
+      </Receive>
+    </Function>
+    <Choice ID="540" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="445"/>
+      <Target RefID="559"/>
+      <Input>
+        <Data ID="576" IsList="true" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain576"/>
+        <Source RefID="445">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="538" Label="true" Premise="length(%0%)!=&quot;0&quot;">
+        <Mappings ID="460" Label="Mapping">
+          <Source RefID="445"/>
+          <Target RefID="462"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="459" IsList="true" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain459"/>
+            <Source RefID="445"/>
+          </Input>
+          <Output>
+            <Data ID="461" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain461"/>
+            <Target RefID="462"/>
+          </Output>
+          <Mapping>%1%=%0%["0"]</Mapping>
+        </Mappings>
+        <Mappings ID="137" Label="Mapping">
+          <Source RefID="462"/>
+          <Target RefID="545"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="134" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain134"/>
+            <Source RefID="462">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="135" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance135"/>
+            <Target RefID="545"/>
+          </Output>
+          <Mapping>%1%=%0%.testCaseInstance</Mapping>
+        </Mappings>
+        <Choice ID="148" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Target RefID="550"/>
+          <Case ID="141" Label="true" Premise="&quot;true&quot;">
+            <Foreach ID="548">
+              <Source RefID="545"/>
+              <Target RefID="549"/>
+              <InputList RefID="545">
+                <Data ID="547" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance547">
+                  <Target RefID="150"/>
+                </Data>
+              </InputList>
+              <OutputList RefID="549">
+                <Data ID="546" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry_0">
+                  <Source RefID="150"/>
+                </Data>
+              </OutputList>
+              <Mappings ID="150" Label="Mapping">
+                <Source RefID="547"/>
+                <Source RefID="462"/>
+                <Target RefID="546"/>
+                <Meta>
+                  <FixedDetailOptions>FlatMode,openConfiguration</FixedDetailOptions>
+                </Meta>
+                <Input>
+                  <Data ID="138" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance138"/>
+                  <Source RefID="547"/>
+                </Input>
+                <Input>
+                  <Data ID="577" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain577"/>
+                  <Source RefID="462">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="387" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry"/>
+                  <Target RefID="546"/>
+                </Output>
+                <Mapping>%2%.author=%0%.author</Mapping>
+                <Mapping>%2%.status=%0%.status</Mapping>
+                <Mapping>%2%.testCaseChainId=%1%.id</Mapping>
+                <Mapping>%2%.testCaseId=%0%.testCase.iD</Mapping>
+                <Mapping>%2%.testCaseName=%0%.testCase.name</Mapping>
+                <Mapping>%2%.testObjectId=%0%.testObject.id</Mapping>
+              </Mappings>
+            </Foreach>
+            <Assign ID="157">
+              <Source RefID="549"/>
+              <Target RefID="550"/>
+              <Copy>
+                <Source RefID="549"/>
+                <Target RefID="550"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="143" Label="false">
+            <Mappings ID="154" Label="Mapping">
+              <Target RefID="467"/>
+              <Meta>
+                <FixedDetailOptions>FillMode</FixedDetailOptions>
+              </Meta>
+              <Output>
+                <Data ID="373" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry373"/>
+                <Target RefID="467"/>
+              </Output>
+            </Mappings>
+            <Assign ID="158">
+              <Source RefID="467"/>
+              <Target RefID="550"/>
+              <Copy>
+                <Source RefID="467"/>
+                <Target RefID="550"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Mappings ID="482" Label="Mapping">
+          <Source RefID="219"/>
+          <Target RefID="481"/>
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="479" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo479"/>
+            <Source RefID="219">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="480" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn480"/>
+            <Target RefID="481"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Function ID="515" Label="Sort And Filter Test Case Instances">
+          <Source RefID="514"/>
+          <Source RefID="550"/>
+          <Source RefID="481"/>
+          <Target RefID="516"/>
+          <Target RefID="514"/>
+          <Invoke Operation="sortAndFilterTestCaseInstances" ServiceID="514">
+            <Source RefID="550"/>
+            <Source RefID="481"/>
+          </Invoke>
+          <Receive ServiceID="514">
+            <Target RefID="516"/>
+          </Receive>
+        </Function>
+        <Assign ID="560">
+          <Source RefID="516"/>
+          <Target RefID="559"/>
+          <Copy>
+            <Source RefID="516"/>
+            <Target RefID="559"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="539" Label="false">
+        <Mappings ID="557" Label="Mapping">
+          <Target RefID="558"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="555" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry555"/>
+            <Target RefID="558"/>
+          </Output>
+        </Mappings>
+        <Assign ID="561">
+          <Source RefID="558"/>
+          <Target RefID="559"/>
+          <Copy>
+            <Source RefID="558"/>
+            <Target RefID="559"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="207" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo207">
+      <Source RefID="206"/>
+      <Target RefID="203"/>
+    </Data>
+    <ServiceReference ID="210" Label="Build TableInfo" ReferenceName="BuildTableInfo" ReferencePath="xdev.xtestfactory.infrastructure.gui">
+      <Source RefID="211"/>
+      <Target RefID="211"/>
+    </ServiceReference>
+    <Data ID="219" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo219">
+      <Source RefID="199"/>
+      <Source RefID="202"/>
+      <Source RefID="203"/>
+      <Target RefID="3"/>
+      <Target RefID="482"/>
+    </Data>
+    <Data ID="277" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo277">
+      <Source RefID="278"/>
+      <Target RefID="202"/>
+    </Data>
+    <Data ID="305" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn305">
+      <Source RefID="306"/>
+      <Target RefID="314"/>
+    </Data>
+    <Data ID="309" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn309">
+      <Source RefID="310"/>
+      <Target RefID="313"/>
+    </Data>
+    <Data ID="418" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn418">
+      <Source RefID="419"/>
+      <Target RefID="341"/>
+    </Data>
+    <Data ID="422" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn422">
+      <Source RefID="423"/>
+      <Target RefID="342"/>
+    </Data>
+    <Data ID="426" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn426">
+      <Source RefID="427"/>
+      <Target RefID="343"/>
+    </Data>
+    <Data ID="429" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn429">
+      <Source RefID="302"/>
+      <Target RefID="278"/>
+    </Data>
+    <ServiceReference ID="437" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="438"/>
+      <Target RefID="438"/>
+    </ServiceReference>
+    <Data ID="439" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition">
+      <Source RefID="440"/>
+      <Target RefID="438"/>
+    </Data>
+    <Data ID="442" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="438"/>
+      <Data ID="487" Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.TestCaseChain</Value>
+      </Data>
+    </Data>
+    <Data ID="443" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="438"/>
+      <Data ID="488" Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data ID="489" Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="490" IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="445" IsList="true" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain">
+      <Source RefID="438"/>
+      <Target RefID="460"/>
+      <Target RefID="540"/>
+    </Data>
+    <Data ID="462" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain462">
+      <Source RefID="460"/>
+      <Target RefID="137"/>
+      <Target RefID="150"/>
+    </Data>
+    <Data ID="464" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo202">
+      <Source RefID="211"/>
+      <Target RefID="232"/>
+    </Data>
+    <Data ID="465" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn465">
+      <Source RefID="232"/>
+      <Target RefID="302"/>
+    </Data>
+    <Data ID="467" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry467">
+      <Source RefID="154"/>
+      <Target RefID="158"/>
+    </Data>
+    <Data ID="481" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn481">
+      <Source RefID="482"/>
+      <Target RefID="515"/>
+    </Data>
+    <Data ID="496" Label="Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="const_TestCaseInstanceEntry">
+      <Target RefID="211"/>
+      <Data ID="505" Label="Test Case Name" VariableName="testCaseName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="506" Label="Status" VariableName="status">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="507" Label="Author" VariableName="author">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="508" Label="Test Case Id" VariableName="testCaseId">
+        <Meta>
+          <Type>long</Type>
+        </Meta>
+      </Data>
+      <Data ID="509" Label="Test Object Id" VariableName="testObjectId">
+        <Meta>
+          <Type>long</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <ServiceReference ID="514" Label="Test Case Chain" ReferenceName="TestCaseChain.TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.gui.service">
+      <Source RefID="515"/>
+      <Target RefID="515"/>
+    </ServiceReference>
+    <Data ID="516" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry2">
+      <Source RefID="515"/>
+      <Target RefID="560"/>
+    </Data>
+    <Data ID="545" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance545">
+      <Source RefID="137"/>
+      <Target RefID="548"/>
+    </Data>
+    <Data ID="549" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry546">
+      <Source RefID="548"/>
+      <Target RefID="157"/>
+    </Data>
+    <Data ID="550" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry550">
+      <Source RefID="148"/>
+      <Source RefID="157"/>
+      <Source RefID="158"/>
+      <Target RefID="515"/>
+    </Data>
+    <Data ID="558" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry558">
+      <Source RefID="557"/>
+      <Target RefID="561"/>
+    </Data>
+    <Data ID="559" IsList="true" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry559">
+      <Source RefID="540"/>
+      <Source RefID="560"/>
+      <Source RefID="561"/>
+      <Target RefID="3"/>
+    </Data>
+    <ServiceReference ID="571" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="572"/>
+      <Target RefID="572"/>
+    </ServiceReference>
+    <Data ID="573" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="572"/>
+      <Target RefID="440"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="219"/>
+      <Source RefID="559"/>
+      <Target RefID="22"/>
+      <Target RefID="386"/>
+      <Copy>
+        <Source RefID="219">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="22"/>
+      </Copy>
+      <Copy>
+        <Source RefID="559"/>
+        <Target RefID="386"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Time Series Management" TypeName="TimeSeriesManagement" TypePath="xnwh.timeseries" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>TimeSeriesManagementImpl.jar</Libraries>
+  <Service Label="Time Series Management" TypeName="TimeSeriesManagement">
+    <Operation IsStatic="true" Label="Add Data To Time Series" Name="addDataToTimeSeries">
+      <Meta>
+        <Abstract.UID>A598553D-300E-4F7B-900A-846A602E6817</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Time Series Id" ReferenceName="TimeSeriesId" ReferencePath="xnwh.timeseries" VariableName="timeSeriesId"/>
+        <Data Label="Time Series Data Point" ReferenceName="TimeSeriesDataPoint" ReferencePath="xnwh.timeseries" VariableName="timeSeriesDataPoint"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xnwh.timeseries.TimeSeriesManagementImpl.addDataToTimeSeries(timeSeriesId, timeSeriesDataPoint);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Time Series" Name="createTimeSeries">
+      <Meta>
+        <Abstract.UID>B5C7DBE7-1137-E5D5-EA93-846A2CC3054F</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Time Series Definition" ReferenceName="TimeSeriesDefinition" ReferencePath="xnwh.timeseries" VariableName="timeSeriesDefinition"/>
+      </Input>
+      <Output>
+        <Data Label="Time Series Id" ReferenceName="TimeSeriesId" ReferencePath="xnwh.timeseries" VariableName="timeSeriesId"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xnwh.timeseries.TimeSeriesManagementImpl.createTimeSeries(timeSeriesDefinition);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Time Series" Name="deleteTimeSeries">
+      <Meta>
+        <Abstract.UID>39A8E144-EC22-9924-853C-846AC03A1CB4</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Time Series Id" ReferenceName="TimeSeriesId" ReferencePath="xnwh.timeseries" VariableName="timeSeriesId"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xnwh.timeseries.TimeSeriesManagementImpl.deleteTimeSeries(timeSeriesId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Fetch Data Of Time Series" Name="fetchDataOfTimeSeries">
+      <Meta>
+        <Documentation>Tries to return data in the given interval, with the given resolution and the given data aggregation type. The result may use a different time interval and resolution (see FetchedData).</Documentation>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+        <Abstract.UID>A98D7043-66DD-2104-450F-846A834346B5</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Time Series Id" ReferenceName="TimeSeriesId" ReferencePath="xnwh.timeseries" VariableName="timeSeriesId"/>
+        <Data Label="Interval" ReferenceName="Interval" ReferencePath="xnwh.timeseries" VariableName="interval"/>
+        <Data Label="Resolution" ReferenceName="RelativeDate" ReferencePath="base.date" VariableName="relativeDate"/>
+        <Data Label="Data Aggregation Type" ReferenceName="DataAggregationType" ReferencePath="xnwh.timeseries" VariableName="dataAggregationType"/>
+      </Input>
+      <Output>
+        <Data Label="Fetched Data" ReferenceName="FetchedData" ReferencePath="xnwh.timeseries" VariableName="fetchedData"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xnwh.timeseries.TimeSeriesManagementImpl.fetchDataOfTimeSeries(timeSeriesId, interval, relativeDate, dataAggregationType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Time Series Definition" Name="getTimeSeriesDefinition">
+      <Meta>
+        <Abstract.UID>72E4E945-EAB4-3BB8-E6F0-846AD89FD8B7</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Time Series Id" ReferenceName="TimeSeriesId" ReferencePath="xnwh.timeseries" VariableName="timeSeriesId"/>
+      </Input>
+      <Output>
+        <Data Label="Time Series Definition" ReferenceName="TimeSeriesDefinition" ReferencePath="xnwh.timeseries" VariableName="timeSeriesDefinition"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xnwh.timeseries.TimeSeriesManagementImpl.getTimeSeriesDefinition(timeSeriesId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Time Series Meta Data" Name="getTimeSeriesMetaData">
+      <Meta>
+        <Abstract.UID>0267780D-0EC7-98DF-CFEF-846B67B0A707</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Time Series Id" ReferenceName="TimeSeriesId" ReferencePath="xnwh.timeseries" VariableName="timeSeriesId"/>
+      </Input>
+      <Output>
+        <Data Label="Time Series Meta Data" ReferenceName="TimeSeriesMetaData" ReferencePath="xnwh.timeseries" VariableName="timeSeriesMetaData"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xnwh.timeseries.TimeSeriesManagementImpl.getTimeSeriesMetaData(timeSeriesId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

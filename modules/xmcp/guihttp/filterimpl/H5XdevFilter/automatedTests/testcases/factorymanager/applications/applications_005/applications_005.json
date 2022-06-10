@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "workspaces_and_applications"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetRTADetails!": "xmcp.factorymanager.rtcmanager.GetRTADetails"
+        },
+        {
+          "!1!": "1"
+        },
+        {
+          "!local!": "local"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.RuntimeApplicatio!": "xmcp.factorymanager.rtcmanager.RuntimeApplication"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!autotest.generated.random.ad!": "autotest.generated.!rnd!.ad_doesnt_exist"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!": "xmcp.factorymanager.rtcmanager.GetDependentRTCs"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionForward"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!": "xmcp.factorymanager.rtcmanager.GetDependentRTCsRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionBackwards"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon!": "xmcp.factorymanager.rtcmanager.GetApplicationContent"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!": "xmcp.factorymanager.rtcmanager.GetApplicationContentRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetIssues!": "xmcp.factorymanager.rtcmanager.GetIssues"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.RuntimeApplicatio!",
+              "rtc": {
+                "workcpase": "default workspace"
+              }
+            },
+            "factoryNode": "!local!",
+            "isLocal": true,
+            "name": "!autotest.generated.random.ad!",
+            "version": "!1!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetRTADetails!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!readName1!",
+      "unquoteResult": true
+    }
+  ]
+}

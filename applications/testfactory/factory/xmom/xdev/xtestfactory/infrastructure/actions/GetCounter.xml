@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Counter" TypeName="GetCounter" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Counter" Name="GetCounter">
+    <Input>
+      <Data ID="21" Label="Counter ID" ReferenceName="CounterID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="counterID">
+        <Target RefID="14"/>
+        <Target RefID="67"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="69" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter69">
+        <Source RefID="8"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Counter Not Found" ReferenceName="CounterNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="counterNotFound"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Mappings ID="14">
+      <Source RefID="21"/>
+      <Target RefID="13"/>
+      <Meta>
+        <IsCondition>true</IsCondition>
+      </Meta>
+      <Input>
+        <Data ID="20" Label="Counter ID" ReferenceName="CounterID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="counterID20"/>
+        <Source RefID="21">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="15" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition15"/>
+        <Target RefID="13"/>
+      </Output>
+      <Mapping>%1%.formula=concat("(%0%.iD==\"",replaceall(replaceall(%0%.iD,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+    </Mappings>
+    <Function ID="12" Label="Query">
+      <Source RefID="11"/>
+      <Source RefID="13"/>
+      <Source RefID="16"/>
+      <Source RefID="17"/>
+      <Target RefID="11"/>
+      <Target RefID="19"/>
+      <Meta>
+        <QueryFilter>
+          <Condition>%0%.iD==%1%.iD</Condition>
+        </QueryFilter>
+      </Meta>
+      <Invoke Operation="query" ServiceID="11">
+        <Source RefID="16">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="13">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="17">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="11">
+        <Target RefID="19"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="11" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="12"/>
+      <Target RefID="12"/>
+    </ServiceReference>
+    <Data ID="13" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition">
+      <Source RefID="14"/>
+      <Target RefID="12"/>
+    </Data>
+    <Data ID="16" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="12"/>
+      <Data ID="51" Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.Counter</Value>
+      </Data>
+    </Data>
+    <Data ID="17" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="12"/>
+      <Data ID="52" Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data ID="53" Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="54" IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="19" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter">
+      <Source RefID="12"/>
+      <Target RefID="30"/>
+      <Target RefID="49"/>
+    </Data>
+    <Choice ID="49" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="19"/>
+      <Target RefID="59"/>
+      <Input>
+        <Data ID="55" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter55"/>
+        <Source RefID="19">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="47" Label="true" Premise="length(%0%)==&quot;0&quot;">
+        <Mappings ID="67" Label="Create Exception">
+          <Source RefID="21"/>
+          <Target RefID="64"/>
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="66" Label="Counter ID" ReferenceName="CounterID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="counterID66"/>
+            <Source RefID="21"/>
+          </Input>
+          <Output>
+            <Exception ID="68" Label="Counter Not Found" ReferenceName="CounterNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="counterNotFound68"/>
+            <Target RefID="64"/>
+          </Output>
+          <Mapping>%1%.counterId=%0%.iD</Mapping>
+        </Mappings>
+        <Throw ExceptionID="64" ID="65" Label="Throw Counter Not Found">
+          <Source RefID="64"/>
+        </Throw>
+        <Assign ID="56"/>
+      </Case>
+      <Case ID="48" Label="false">
+        <Mappings ID="30" Label="Get first and only Counter">
+          <Source RefID="19"/>
+          <Target RefID="28"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="29" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter29"/>
+            <Source RefID="19"/>
+          </Input>
+          <Output>
+            <Data ID="58" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter26"/>
+            <Target RefID="28"/>
+          </Output>
+          <Mapping>%1%=%0%["0"]</Mapping>
+        </Mappings>
+        <Assign ID="57">
+          <Source RefID="28"/>
+          <Target RefID="59"/>
+          <Copy>
+            <Source RefID="28"/>
+            <Target RefID="59"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="28" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter28">
+      <Source RefID="30"/>
+      <Target RefID="57"/>
+    </Data>
+    <Data ID="59" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter59">
+      <Source RefID="49"/>
+      <Source RefID="57"/>
+      <Target RefID="8"/>
+    </Data>
+    <Exception ID="64" Label="Counter Not Found" ReferenceName="CounterNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="counterNotFound64">
+      <Source RefID="67"/>
+      <Target RefID="65"/>
+    </Exception>
+    <Assign ID="8">
+      <Source RefID="59"/>
+      <Target RefID="69"/>
+      <Copy>
+        <Source RefID="59"/>
+        <Target RefID="69"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

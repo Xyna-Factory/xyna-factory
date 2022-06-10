@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get PoolType Overview Table" TypeName="GetPoolTypeOverviewTable" TypePath="xmcp.dhcp.v4.control.poolusage" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(1300)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get PoolType Overview Table" Name="GetPoolTypeOverviewTable">
+    <Input>
+      <Data ID="4" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="21"/>
+        <Target RefID="24"/>
+        <Target RefID="26"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="5" IsList="true" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="8" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="9"/>
+      <Target RefID="9"/>
+    </ServiceReference>
+    <Choice ID="21" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Target RefID="29"/>
+      <Target RefID="32"/>
+      <Input>
+        <Data ID="20" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo20"/>
+        <Source RefID="4"/>
+      </Input>
+      <Case ID="15" Label="true" Premise="%0%.bootstrap">
+        <Mappings ID="23" Label="Mapping">
+          <Target RefID="22"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+            <FixedWidth>268</FixedWidth>
+            <FixedHeight>32</FixedHeight>
+          </Meta>
+          <Output>
+            <Data ID="46" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="22"/>
+          </Output>
+          <Mapping>%0%["0"].name="DHCP-Server"</Mapping>
+          <Mapping>%0%["0"].path="dHCPServer"</Mapping>
+          <Mapping>%0%["1"].name="DHCP-Relay"</Mapping>
+          <Mapping>%0%["1"].path="dHCPRelay"</Mapping>
+          <Mapping>%0%["2"].name="Pool-Type"</Mapping>
+          <Mapping>%0%["2"].path="poolType"</Mapping>
+          <Mapping>%0%["3"].name="Size"</Mapping>
+          <Mapping>%0%["3"].path="size"</Mapping>
+          <Mapping>%0%["4"].name="Used"</Mapping>
+          <Mapping>%0%["4"].path="used"</Mapping>
+          <Mapping>%0%["5"].name="Used (%)"</Mapping>
+          <Mapping>%0%["5"].path="usedFraction"</Mapping>
+          <Mapping>%0%["6"].name="Exceeds Threshold"</Mapping>
+          <Mapping>%0%["6"].path="exceedsThreshold"</Mapping>
+        </Mappings>
+        <Mappings ID="24" Label="Mapping">
+          <Source RefID="4"/>
+          <Source RefID="22"/>
+          <Target RefID="25"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="12" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo12"/>
+            <Source RefID="4"/>
+          </Input>
+          <Input>
+            <Data ID="13" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn13"/>
+            <Source RefID="22"/>
+          </Input>
+          <Output>
+            <Data ID="14" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo14"/>
+            <Target RefID="25"/>
+          </Output>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+          <Mapping>%2%.rootType="xmcp.dhcp.v4.control.poolusage.PoolUsage_Type"</Mapping>
+        </Mappings>
+        <Assign ID="30">
+          <Source RefID="22"/>
+          <Source RefID="25"/>
+          <Target RefID="29"/>
+          <Target RefID="32"/>
+          <Copy>
+            <Source RefID="22"/>
+            <Target RefID="29"/>
+          </Copy>
+          <Copy>
+            <Source RefID="25"/>
+            <Target RefID="32"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="19" Label="false">
+        <Mappings ID="26" Label="1:1">
+          <Source RefID="4"/>
+          <Target RefID="27"/>
+          <Target RefID="28"/>
+          <Input>
+            <Data ID="16" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo16"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data ID="17" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo17"/>
+            <Target RefID="27"/>
+          </Output>
+          <Output>
+            <Data ID="18" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn18"/>
+            <Target RefID="28"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%2%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="31">
+          <Source RefID="28"/>
+          <Source RefID="27"/>
+          <Target RefID="29"/>
+          <Target RefID="32"/>
+          <Copy>
+            <Source RefID="28"/>
+            <Target RefID="29"/>
+          </Copy>
+          <Copy>
+            <Source RefID="27"/>
+            <Target RefID="32"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="36" Label="PoolUsage SearchRows PoolID &lt; 1.000.000">
+      <Source RefID="35"/>
+      <Source RefID="64"/>
+      <Target RefID="35"/>
+      <Target RefID="37"/>
+      <Invoke Operation="searchRows" ServiceID="35">
+        <Source RefID="64">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="35">
+        <Target RefID="37"/>
+      </Receive>
+    </Function>
+    <Function ID="61" Label="PoolUsage SearchRows PoolID &gt;= 1.000.000">
+      <Source RefID="35"/>
+      <Source RefID="65"/>
+      <Target RefID="35"/>
+      <Target RefID="63"/>
+      <Invoke Operation="searchRows" ServiceID="35">
+        <Source RefID="65">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="35">
+        <Target RefID="63"/>
+      </Receive>
+    </Function>
+    <Mappings ID="72" Label="Extract RowList PoolUsage">
+      <Source RefID="37"/>
+      <Source RefID="63"/>
+      <Target RefID="73"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="74" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="response_ctype74"/>
+        <Source RefID="37">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="70" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="response_ctype70"/>
+        <Source RefID="63">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="80" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="row_ctype"/>
+        <Target RefID="73"/>
+      </Output>
+      <Mapping>%2%=concatlists(%0%.payload.searchRowsOutput.row,%1%.payload.searchRowsOutput.row)</Mapping>
+    </Mappings>
+    <Foreach ID="78">
+      <Source RefID="73"/>
+      <Target RefID="79"/>
+      <InputList RefID="73">
+        <Data ID="77" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="row_ctype77">
+          <Target RefID="45"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="79">
+        <Data ID="75" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type_0">
+          <Source RefID="45"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="45" Label="Assign IDs and known attributes">
+        <Source RefID="77"/>
+        <Target RefID="75"/>
+        <Meta>
+          <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          <FixedWidth>420</FixedWidth>
+          <FixedHeight>32</FixedHeight>
+        </Meta>
+        <Input>
+          <Data ID="76" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="row_ctype76"/>
+          <Source RefID="77"/>
+        </Input>
+        <Output>
+          <Data ID="43" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type43"/>
+          <Target RefID="75"/>
+        </Output>
+        <Mapping>%1%.poolID=%0%.poolID</Mapping>
+        <Mapping>%1%.pooltypeID=%0%.poolTypeID</Mapping>
+        <Mapping>%1%.sharedNetworkID=%0%.sharedNetworkID</Mapping>
+        <Mapping>%1%.size=%0%.size</Mapping>
+        <Mapping>%1%.standortGruppeID=%0%.standortGruppeID</Mapping>
+        <Mapping>%1%.used=%0%.used</Mapping>
+        <Mapping>%1%.usedFraction=%0%.usedFraction*"100"</Mapping>
+      </Mappings>
+    </Foreach>
+    <Function ID="106" Label="PoolUsageThreshold Get All Rows">
+      <Source RefID="105"/>
+      <Source RefID="109"/>
+      <Target RefID="108"/>
+      <Target RefID="105"/>
+      <Invoke Operation="getAllRows" ServiceID="105">
+        <Source RefID="109">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="105">
+        <Target RefID="108"/>
+      </Receive>
+    </Function>
+    <Mappings ID="112" Label="Extract RowList Threshold">
+      <Source RefID="108"/>
+      <Target RefID="113"/>
+      <Input>
+        <Data ID="110" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype110"/>
+        <Source RefID="108"/>
+      </Input>
+      <Output>
+        <Data ID="111" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="row_ctype111"/>
+        <Target RefID="113"/>
+      </Output>
+      <Mapping>%1%=%0%.payload.getAllRowsOutput.row</Mapping>
+    </Mappings>
+    <Foreach ID="119">
+      <Source RefID="79"/>
+      <Target RefID="121"/>
+      <InputList RefID="79">
+        <Data ID="118" Label="PoolUsage_Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type118">
+          <Target RefID="117"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="121">
+        <Data ID="120" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type62">
+          <Source RefID="117"/>
+        </Data>
+      </OutputList>
+      <Function ID="117" Label="Fetch ExceedsThreshold for Server and Pooltype">
+        <Source RefID="113"/>
+        <Source RefID="116"/>
+        <Source RefID="118"/>
+        <Target RefID="116"/>
+        <Target RefID="120"/>
+        <Invoke Operation="FetchExceedsThresholdForServerAndPooltype" ServiceID="116">
+          <Source RefID="113"/>
+          <Source RefID="118"/>
+        </Invoke>
+        <Receive ServiceID="116">
+          <Target RefID="120"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="273" Label="Standortgruppe Get All Rows">
+      <Source RefID="272"/>
+      <Source RefID="293"/>
+      <Target RefID="272"/>
+      <Target RefID="274"/>
+      <Invoke Operation="getAllRows" ServiceID="272">
+        <Source RefID="293">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="272">
+        <Target RefID="274"/>
+      </Receive>
+    </Function>
+    <Mappings ID="218" Label="Extract RowList Standortgruppe">
+      <Source RefID="274"/>
+      <Target RefID="221"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="217" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="response_ctype217"/>
+        <Source RefID="274"/>
+      </Input>
+      <Output>
+        <Data ID="219" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="row_ctype219"/>
+        <Target RefID="221"/>
+      </Output>
+      <Mapping>%1%=%0%.payload.getAllRowsOutput.row</Mapping>
+    </Mappings>
+    <Foreach ID="228">
+      <Source RefID="121"/>
+      <Target RefID="229"/>
+      <InputList RefID="121">
+        <Data ID="227" Label="PoolUsage_Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type227">
+          <Target RefID="225"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="229">
+        <Data ID="226" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type_3">
+          <Source RefID="225"/>
+        </Data>
+      </OutputList>
+      <Function ID="225" Label="Fetch DHCPServer for StandortgruppeID PoolUsage_Type">
+        <Source RefID="221"/>
+        <Source RefID="224"/>
+        <Source RefID="227"/>
+        <Target RefID="226"/>
+        <Target RefID="224"/>
+        <Invoke Operation="FetchDHCPServerForStandortgruppeIDPoolUsage_Type" ServiceID="224">
+          <Source RefID="221"/>
+          <Source RefID="227">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="224">
+          <Target RefID="226"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="267" Label="SharedNetwork Get All Rows">
+      <Source RefID="266"/>
+      <Source RefID="292"/>
+      <Target RefID="266"/>
+      <Target RefID="268"/>
+      <Invoke Operation="getAllRows" ServiceID="266">
+        <Source RefID="292">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="266">
+        <Target RefID="268"/>
+      </Receive>
+    </Function>
+    <Mappings ID="169" Label="Mapping">
+      <Source RefID="268"/>
+      <Target RefID="172"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="168" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="response_ctype168"/>
+        <Source RefID="268"/>
+      </Input>
+      <Output>
+        <Data ID="170" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype170"/>
+        <Target RefID="172"/>
+      </Output>
+      <Mapping>%1%=%0%.payload.getAllRowsOutput.row</Mapping>
+    </Mappings>
+    <Foreach ID="244">
+      <Source RefID="229"/>
+      <Target RefID="245"/>
+      <InputList RefID="229">
+        <Data ID="243" Label="PoolUsage_Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type243">
+          <Target RefID="161"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="245">
+        <Data ID="231" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type_1">
+          <Source RefID="161"/>
+        </Data>
+      </OutputList>
+      <Function ID="161" Label="Fetch DHCPRelay For ID PoolUsage_Type">
+        <Source RefID="172"/>
+        <Source RefID="160"/>
+        <Source RefID="243"/>
+        <Target RefID="160"/>
+        <Target RefID="231"/>
+        <Invoke Operation="FetchDHCPRelayForIDPoolUsage_Type" ServiceID="160">
+          <Source RefID="172"/>
+          <Source RefID="243">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="160">
+          <Target RefID="231"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="289" Label="Pooltype Get All Rows">
+      <Source RefID="288"/>
+      <Source RefID="291"/>
+      <Target RefID="288"/>
+      <Target RefID="290"/>
+      <Invoke Operation="getAllRows" ServiceID="288">
+        <Source RefID="291">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="288">
+        <Target RefID="290"/>
+      </Receive>
+    </Function>
+    <Mappings ID="137" Label="Extract RowList Pooltype">
+      <Source RefID="290"/>
+      <Target RefID="149"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="136" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype136"/>
+        <Source RefID="290"/>
+      </Input>
+      <Output>
+        <Data ID="138" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="row_ctype138"/>
+        <Target RefID="149"/>
+      </Output>
+      <Mapping>%1%=%0%.payload.getAllRowsOutput.row</Mapping>
+    </Mappings>
+    <Foreach ID="258">
+      <Source RefID="245"/>
+      <Target RefID="259"/>
+      <InputList RefID="245">
+        <Data ID="257" Label="PoolUsage_Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type257">
+          <Target RefID="147"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="259">
+        <Data ID="256" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type_4">
+          <Source RefID="147"/>
+        </Data>
+      </OutputList>
+      <Function ID="147" Label="Fetch PooltypeName for ID PoolUsage_Type">
+        <Source RefID="149"/>
+        <Source RefID="146"/>
+        <Source RefID="257"/>
+        <Target RefID="256"/>
+        <Target RefID="146"/>
+        <Invoke Operation="FetchPooltypeNameForIDPoolUsage_Type" ServiceID="146">
+          <Source RefID="149"/>
+          <Source RefID="257">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="146">
+          <Target RefID="256"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="9" Label="Sort and Filter Table">
+      <Source RefID="32"/>
+      <Source RefID="8"/>
+      <Source RefID="259"/>
+      <Target RefID="11"/>
+      <Target RefID="8"/>
+      <Invoke Operation="sortAndFilterTable" ServiceID="8">
+        <Source RefID="32">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="259">
+          <Meta>
+            <ExpectedType>xmcp.dhcp.v4.control.poolusage.PoolUsage_Type</ExpectedType>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="8">
+        <Target RefID="11">
+          <Meta>
+            <ExpectedType>xmcp.dhcp.v4.control.poolusage.PoolUsage_Type</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="11" IsList="true" Label="PoolUsage_Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type11">
+      <Source RefID="9"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="22" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn22">
+      <Source RefID="23"/>
+      <Target RefID="24"/>
+      <Target RefID="30"/>
+    </Data>
+    <Data ID="25" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo25">
+      <Source RefID="24"/>
+      <Target RefID="30"/>
+    </Data>
+    <Data ID="27" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo27">
+      <Source RefID="26"/>
+      <Target RefID="31"/>
+    </Data>
+    <Data ID="28" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn28">
+      <Source RefID="26"/>
+      <Target RefID="31"/>
+    </Data>
+    <Data ID="29" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn29">
+      <Source RefID="21"/>
+      <Source RefID="30"/>
+      <Source RefID="31"/>
+    </Data>
+    <Data ID="32" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo32">
+      <Source RefID="21"/>
+      <Source RefID="30"/>
+      <Source RefID="31"/>
+      <Target RefID="9"/>
+      <Target RefID="3"/>
+    </Data>
+    <ServiceReference ID="35" Label="PoolUsage" ReferenceName="PoolUsage.PoolUsage" ReferencePath="xmcp.dhcp.v4.control">
+      <Source RefID="36"/>
+      <Source RefID="61"/>
+      <Target RefID="36"/>
+      <Target RefID="61"/>
+    </ServiceReference>
+    <Data ID="37" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="response_ctype">
+      <Source RefID="36"/>
+      <Target RefID="72"/>
+    </Data>
+    <Data ID="63" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="response_ctype63">
+      <Source RefID="61"/>
+      <Target RefID="72"/>
+    </Data>
+    <Data ID="64" Label="SearchRowsRequest_ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="const_SearchRowsRequest_ctype">
+      <Target RefID="36"/>
+      <Data ID="83" Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data ID="81" Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="82" Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="91" Label="SearchRowsInput" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="searchRowsInput">
+        <Data ID="84" Label="PoolID" VariableName="poolID">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>&amp;lt; 1000000</Value>
+        </Data>
+        <Data ID="85" Label="SharedNetworkID" VariableName="sharedNetworkID">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="86" Label="PoolTypeID" VariableName="poolTypeID">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="87" Label="StandortGruppeID" VariableName="standortGruppeID">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="88" Label="Size" VariableName="size">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="89" Label="Used" VariableName="used">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="90" Label="UsedFraction" VariableName="usedFraction">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+    </Data>
+    <Data ID="65" Label="SearchRowsRequest_ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="searchRowsRequest_ctype">
+      <Target RefID="61"/>
+      <Data ID="94" Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data ID="92" Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="93" Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="102" Label="SearchRowsInput" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="searchRowsInput">
+        <Data ID="95" Label="PoolID" VariableName="poolID">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>&amp;gt;= 1000000</Value>
+        </Data>
+        <Data ID="96" Label="SharedNetworkID" VariableName="sharedNetworkID">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="97" Label="PoolTypeID" VariableName="poolTypeID">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="98" Label="StandortGruppeID" VariableName="standortGruppeID">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="99" Label="Size" VariableName="size">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="100" Label="Used" VariableName="used">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="101" Label="UsedFraction" VariableName="usedFraction">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+    </Data>
+    <Data ID="73" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsage.www.gip.com.juno.SnmpTrap.WS.PoolUsage.Messages" VariableName="row_ctype73">
+      <Source RefID="72"/>
+      <Target RefID="78"/>
+    </Data>
+    <Data ID="79" IsList="true" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type75">
+      <Source RefID="78"/>
+      <Target RefID="119"/>
+    </Data>
+    <ServiceReference ID="105" Label="PoolUsageThreshold" ReferenceName="PoolUsageThreshold.PoolUsageThreshold" ReferencePath="xmcp.dhcp.v4.control">
+      <Source RefID="106"/>
+      <Target RefID="106"/>
+    </ServiceReference>
+    <Data ID="108" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="response_ctype108">
+      <Source RefID="106"/>
+      <Target RefID="112"/>
+    </Data>
+    <Data ID="109" Label="GetAllRowsRequest_ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages" VariableName="const_GetAllRowsRequest_ctype">
+      <Target RefID="106"/>
+      <Data ID="124" Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data ID="122" Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="123" Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data ID="125" Label="GetAllRowsInput" VariableName="getAllRowsInput">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="113" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.PoolUsageThreshold.www.gip.com.juno.SnmpTrap.WS.PoolUsageThreshold.Messages" VariableName="row_ctype113">
+      <Source RefID="112"/>
+      <Target RefID="117"/>
+    </Data>
+    <ServiceReference ID="116" Label="Fetch ExceedsThreshold for Server and Pooltype" ReferenceName="FetchExceedsThresholdForServerAndPooltype" ReferencePath="xmcp.dhcp.v4.control.poolusage">
+      <Source RefID="117"/>
+      <Target RefID="117"/>
+    </ServiceReference>
+    <Data ID="121" IsList="true" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type121">
+      <Source RefID="119"/>
+      <Target RefID="228"/>
+    </Data>
+    <ServiceReference ID="146" Label="Fetch PooltypeName for ID PoolUsage_Type" ReferenceName="FetchPooltypeNameForIDPoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage">
+      <Source RefID="147"/>
+      <Target RefID="147"/>
+    </ServiceReference>
+    <Data ID="149" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="row_ctype149">
+      <Source RefID="137"/>
+      <Target RefID="147"/>
+    </Data>
+    <ServiceReference ID="160" Label="Fetch DHCPRelay For ID PoolUsage_Type" ReferenceName="FetchDHCPRelayForIDPoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage">
+      <Source RefID="161"/>
+      <Target RefID="161"/>
+    </ServiceReference>
+    <Data ID="172" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype172">
+      <Source RefID="169"/>
+      <Target RefID="161"/>
+    </Data>
+    <Data ID="221" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="row_ctype221">
+      <Source RefID="218"/>
+      <Target RefID="225"/>
+    </Data>
+    <ServiceReference ID="224" Label="Fetch DHCPServer for StandortgruppeID PoolUsage_Type" ReferenceName="FetchDHCPServerForStandortgruppeIDPoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage">
+      <Source RefID="225"/>
+      <Target RefID="225"/>
+    </ServiceReference>
+    <Data ID="229" IsList="true" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type226">
+      <Source RefID="228"/>
+      <Target RefID="244"/>
+    </Data>
+    <Data ID="245" IsList="true" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type231">
+      <Source RefID="244"/>
+      <Target RefID="258"/>
+    </Data>
+    <Data ID="259" IsList="true" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type256">
+      <Source RefID="258"/>
+      <Target RefID="9"/>
+    </Data>
+    <ServiceReference ID="266" Label="SharedNetwork" ReferenceName="SharedNetwork.SharedNetwork" ReferencePath="xmcp.dhcp.v4.control">
+      <Source RefID="267"/>
+      <Target RefID="267"/>
+    </ServiceReference>
+    <Data ID="268" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="response_ctype268">
+      <Source RefID="267"/>
+      <Target RefID="169"/>
+    </Data>
+    <ServiceReference ID="272" Label="Standortgruppe" ReferenceName="Standortgruppe.Standortgruppe" ReferencePath="xmcp.dhcp.v4.netconfigurator">
+      <Source RefID="273"/>
+      <Target RefID="273"/>
+    </ServiceReference>
+    <Data ID="274" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="response_ctype274">
+      <Source RefID="273"/>
+      <Target RefID="218"/>
+    </Data>
+    <ServiceReference ID="288" Label="Pooltype" ReferenceName="Pooltype.Pooltype" ReferencePath="xmcp.dhcp.v4.pooltypeconfig">
+      <Source RefID="289"/>
+      <Target RefID="289"/>
+    </ServiceReference>
+    <Data ID="290" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.DHCP.WS.Pooltype.Messages" VariableName="response_ctype290">
+      <Source RefID="289"/>
+      <Target RefID="137"/>
+    </Data>
+    <Data ID="291" Label="GetAllRowsRequest_ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype">
+      <Target RefID="289"/>
+      <Data Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pooltype.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data Label="GetAllRowsInput" VariableName="getAllRowsInput">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="292" Label="GetAllRowsRequest_ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype269">
+      <Target RefID="267"/>
+      <Data Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data Label="GetAllRowsInput" VariableName="getAllRowsInput">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="293" Label="GetAllRowsRequest_ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype275">
+      <Target RefID="273"/>
+      <Data Label="InputHeader" ReferenceName="InputHeaderContent_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.Gui.WS.Messages" VariableName="inputHeader">
+        <Data Label="username" VariableName="username">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="password" VariableName="password">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data Label="GetAllRowsInput" VariableName="getAllRowsInput">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="11"/>
+      <Source RefID="32"/>
+      <Target RefID="5"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="32">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+      <Copy>
+        <Source RefID="11">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="5"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

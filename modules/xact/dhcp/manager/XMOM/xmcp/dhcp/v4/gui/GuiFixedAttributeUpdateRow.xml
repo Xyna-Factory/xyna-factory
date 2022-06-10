@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="GuiFixedAttributeUpdateRow" TypeName="GuiFixedAttributeUpdateRow" TypePath="xmcp.dhcp.v4.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(264)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="GuiFixedAttributeUpdateRow" Name="GuiFixedAttributeUpdateRow">
+    <Input>
+      <Data ID="27" Label="Update Row Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype27">
+        <Target RefID="34"/>
+        <Target RefID="19"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="21" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype">
+        <Source RefID="9"/>
+      </Data>
+      <Data ID="24" Label="Update Row Output" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="4" Label="GuiFixedAttribute" ReferenceName="GuiFixedAttribute.GuiFixedAttribute" ReferencePath="xmcp.dhcp.v4.gui">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Mappings ID="34" Label="Build Search Rows input">
+      <Source RefID="27"/>
+      <Target RefID="36"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="33" Label="Update Row Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype33"/>
+        <Source RefID="27"/>
+      </Input>
+      <Output>
+        <Data ID="35" Label="search Row Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype35"/>
+        <Target RefID="36"/>
+      </Output>
+      <Mapping>%1%.guiFixedAttributeID=%0%.guiFixedAttributeID</Mapping>
+    </Mappings>
+    <Function ID="40" Label="Gui Fixed Attribute Search Rows">
+      <Source RefID="39"/>
+      <Source RefID="36"/>
+      <Target RefID="39"/>
+      <Target RefID="41"/>
+      <Target RefID="42"/>
+      <Invoke Operation="GuiFixedAttributeSearchRows" ServiceID="39">
+        <Source RefID="36">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="39">
+        <Target RefID="41"/>
+        <Target RefID="42"/>
+      </Receive>
+    </Function>
+    <Choice ID="45" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="41"/>
+      <Source RefID="42"/>
+      <Target RefID="53"/>
+      <Target RefID="58"/>
+      <Input>
+        <Data Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes"/>
+        <Source RefID="41">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data Label="Search Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages"/>
+        <Source RefID="42">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="43" Label="true" Premise="%0%.description==&quot;Ok&quot;&amp;&amp;length(%1%.row)!=&quot;0&quot;">
+        <Mappings ID="19" Label="Build Input">
+          <Source RefID="27"/>
+          <Source RefID="42"/>
+          <Target RefID="18"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="28" Label="Update Row Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype28"/>
+            <Source RefID="27">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data Label="Search Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="rowList_ctype"/>
+            <Source RefID="42"/>
+          </Input>
+          <Output>
+            <Data ID="7" Label="Update Row Request ctype" ReferenceName="UpdateRowRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="updateRowRequest_ctype"/>
+            <Target RefID="18"/>
+          </Output>
+          <Mapping>%2%.updateRowInput=%1%.row["0"]</Mapping>
+          <Mapping>%2%.updateRowInput.value=%0%.value</Mapping>
+        </Mappings>
+        <Function ID="5" Label="Update Row">
+          <Source RefID="4"/>
+          <Source RefID="18"/>
+          <Target RefID="4"/>
+          <Target RefID="6"/>
+          <Invoke Operation="updateRow" ServiceID="4">
+            <Source RefID="18"/>
+          </Invoke>
+          <Receive ServiceID="4">
+            <Target RefID="6"/>
+          </Receive>
+        </Function>
+        <Mappings ID="20" Label="Extract Output">
+          <Source RefID="6"/>
+          <Target RefID="23"/>
+          <Target RefID="26"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="8" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="response_ctype8"/>
+            <Source RefID="6"/>
+          </Input>
+          <Output>
+            <Data ID="22" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype22"/>
+            <Target RefID="23"/>
+          </Output>
+          <Output>
+            <Data ID="25" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype25"/>
+            <Target RefID="26"/>
+          </Output>
+          <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+          <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+          <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+          <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+          <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+          <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+          <Mapping>%2%=%0%.payload.updateRowOutput</Mapping>
+        </Mappings>
+        <Assign ID="54">
+          <Source RefID="23"/>
+          <Source RefID="26"/>
+          <Target RefID="53"/>
+          <Target RefID="58"/>
+          <Copy>
+            <Source RefID="23"/>
+            <Target RefID="53"/>
+          </Copy>
+          <Copy>
+            <Source RefID="26"/>
+            <Target RefID="58"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="44" Label="false">
+        <Mappings ID="52" Label="Build output">
+          <Source RefID="41"/>
+          <Target RefID="51"/>
+          <Target RefID="57"/>
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="59" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype59"/>
+            <Source RefID="41"/>
+          </Input>
+          <Output>
+            <Data ID="50" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype50"/>
+            <Target RefID="51"/>
+          </Output>
+          <Output>
+            <Data ID="56" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype56"/>
+            <Target RefID="57"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="55">
+          <Source RefID="51"/>
+          <Source RefID="57"/>
+          <Target RefID="53"/>
+          <Target RefID="58"/>
+          <Copy>
+            <Source RefID="51"/>
+            <Target RefID="53"/>
+          </Copy>
+          <Copy>
+            <Source RefID="57"/>
+            <Target RefID="58"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="20"/>
+    </Data>
+    <Data ID="18" Label="Update Row Request ctype" ReferenceName="UpdateRowRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="updateRowRequest_ctype18">
+      <Source RefID="19"/>
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="23" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype23">
+      <Source RefID="20"/>
+      <Target RefID="54"/>
+    </Data>
+    <Data ID="26" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype26">
+      <Source RefID="20"/>
+      <Target RefID="54"/>
+    </Data>
+    <Data ID="36" Label="Update Row Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype36">
+      <Source RefID="34"/>
+      <Target RefID="40"/>
+    </Data>
+    <ServiceReference ID="39" Label="GuiFixedAttributeSearchRows" ReferenceName="GuiFixedAttributeSearchRows" ReferencePath="xmcp.dhcp.v4.gui">
+      <Source RefID="40"/>
+      <Target RefID="40"/>
+    </ServiceReference>
+    <Data ID="41" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype41">
+      <Source RefID="40"/>
+      <Target RefID="45"/>
+      <Target RefID="52"/>
+    </Data>
+    <Data ID="42" Label="Search Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="rowList_ctype24">
+      <Source RefID="40"/>
+      <Target RefID="19"/>
+      <Target RefID="45"/>
+    </Data>
+    <Data ID="51" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype51">
+      <Source RefID="52"/>
+      <Target RefID="55"/>
+    </Data>
+    <Data ID="53" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype53">
+      <Source RefID="45"/>
+      <Source RefID="54"/>
+      <Source RefID="55"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="57" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype57">
+      <Source RefID="52"/>
+      <Target RefID="55"/>
+    </Data>
+    <Data ID="58" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiFixedAttribute.www.gip.com.juno.DHCP.WS.GuiFixedAttribute.Messages" VariableName="row_ctype58">
+      <Source RefID="45"/>
+      <Source RefID="54"/>
+      <Source RefID="55"/>
+      <Target RefID="9"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="58"/>
+      <Source RefID="53"/>
+      <Target RefID="24"/>
+      <Target RefID="21"/>
+      <Copy>
+        <Source RefID="53">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="21"/>
+      </Copy>
+      <Copy>
+        <Source RefID="58">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="24"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

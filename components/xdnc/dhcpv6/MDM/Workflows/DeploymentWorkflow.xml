@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="DeploymentWorkflow" TypeName="DeploymentWorkflow" TypePath="xdnc.dhcpv6" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>lowDetailsMode,hideDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="DeploymentWorkflow" Name="DeploymentWorkflow">
+    <Input/>
+    <Output/>
+    <Throws>
+      <Exception Label="DHCPv6SpecificPropertyNotSetException" ReferenceName="DHCPv6SpecificPropertyNotSetException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6SpecificPropertyNotSetException"/>
+    </Throws>
+    <Function ID="4" Label="Generate IP Pools">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+      <Invoke Operation="GenerateIPPools" ServiceID="3"/>
+      <Receive ServiceID="3"/>
+    </Function>
+    <ServiceReference ID="3" Label="Generate IP Pools" ReferenceName="GenerateIPPools" ReferencePath="xdnc.dhcpv6">
+      <Source RefID="4"/>
+      <Target RefID="4"/>
+    </ServiceReference>
+    <ServiceReference ID="5" Label="DHCPv6Services" ReferenceName="DHCPv6Services.DHCPv6Services" ReferencePath="xdnc.dhcpv6">
+      <Source RefID="6"/>
+      <Source RefID="14"/>
+      <Source RefID="24"/>
+      <Source RefID="30"/>
+      <Source RefID="35"/>
+      <Source RefID="8"/>
+      <Target RefID="6"/>
+      <Target RefID="14"/>
+      <Target RefID="24"/>
+      <Target RefID="30"/>
+      <Target RefID="35"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <Function ID="6" Label="Sort Superpools">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+      <Target RefID="7"/>
+      <Invoke Operation="sortSuperPools" ServiceID="5"/>
+      <Receive ServiceID="5">
+        <Target RefID="7"/>
+      </Receive>
+    </Function>
+    <Data ID="7" IsList="true" Label="outputsuperpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="outputsuperpools">
+      <Source RefID="6"/>
+      <Target RefID="16"/>
+      <Target RefID="26"/>
+      <Target RefID="32"/>
+      <Target RefID="35"/>
+      <Target RefID="8"/>
+    </Data>
+    <Function ID="35" Label="Process Leases">
+      <Source RefID="5"/>
+      <Source RefID="7"/>
+      <Target RefID="5"/>
+      <Invoke Operation="processLeases" ServiceID="5">
+        <Source RefID="7"/>
+      </Invoke>
+      <Receive ServiceID="5"/>
+    </Function>
+    <Function ID="8" Label="Compute Superpool">
+      <Source RefID="5"/>
+      <Source RefID="7"/>
+      <Target RefID="5"/>
+      <Invoke Operation="computeSuperPool" ServiceID="5">
+        <Source RefID="7"/>
+      </Invoke>
+      <Receive ServiceID="5"/>
+    </Function>
+    <Foreach ID="32">
+      <Source RefID="7"/>
+      <InputList RefID="7">
+        <Data ID="31" Label="outputsuperpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="outputsuperpools31">
+          <Target RefID="30"/>
+        </Data>
+      </InputList>
+      <Function ID="30" Label="Set Superpool Checksum">
+        <Source RefID="5"/>
+        <Source RefID="31"/>
+        <Target RefID="5"/>
+        <Invoke Operation="setSuperPoolChecksum" ServiceID="5">
+          <Source RefID="31"/>
+        </Invoke>
+        <Receive ServiceID="5"/>
+      </Function>
+    </Foreach>
+    <Foreach ID="26">
+      <Source RefID="7"/>
+      <InputList RefID="7">
+        <Data ID="25" Label="outputsuperpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="outputsuperpools25">
+          <Target RefID="24"/>
+        </Data>
+      </InputList>
+      <Function ID="24" Label="Set Superpool Status Active">
+        <Source RefID="5"/>
+        <Source RefID="25"/>
+        <Source RefID="27"/>
+        <Target RefID="5"/>
+        <Invoke Operation="setSuperPoolStatus" ServiceID="5">
+          <Source RefID="25"/>
+          <Source RefID="27">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="5"/>
+      </Function>
+    </Foreach>
+    <Data ID="27" Label="superpoolstatus" ReferenceName="SuperPoolStatus" ReferencePath="xdnc.dhcpv6" VariableName="superpoolstatus27">
+      <Target RefID="24"/>
+      <Data ID="29" Label="Status" VariableName="status">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>active</Value>
+      </Data>
+    </Data>
+    <Foreach ID="16">
+      <Source RefID="7"/>
+      <InputList RefID="7">
+        <Data ID="15" Label="outputsuperpools" ReferenceName="SuperPool" ReferencePath="xdnc.dhcpv6" VariableName="outputsuperpools15">
+          <Target RefID="14"/>
+        </Data>
+      </InputList>
+      <Function ID="14" Label="Resize Superpools: Delete Expired Leases">
+        <Source RefID="5"/>
+        <Source RefID="15"/>
+        <Target RefID="5"/>
+        <Invoke Operation="resizeSuperPools_DeleteExpiredLeases" ServiceID="5">
+          <Source RefID="15"/>
+        </Invoke>
+        <Receive ServiceID="5"/>
+      </Function>
+    </Foreach>
+    <Assign ID="2"/>
+  </Operation>
+</Service>

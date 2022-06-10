@@ -1,0 +1,32 @@
+{
+  "meta":
+  {
+    "description": "Testet die Modificationsoperation replace",
+	"created": "10.12.2019",
+	"updated": "10.12.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!testString!",
+	  "value": "thisIsAtestAndItContainsAnothertest"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!testString!",
+	  "modification":
+	  {
+	    "operation": "replace",
+		"toReplace": "test",
+		"replacement": "success"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!testString!",
+	  "value": "thisIsAsuccessAndItContainsAnothersuccess"
+	}
+  ]
+}

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="165" Label="ConnectDataSearchRows" TypeName="ConnectDataSearchRows" TypePath="xmcp.dhcp.v4.netconfigurator" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="ConnectDataSearchRows" Name="ConnectDataSearchRows">
+    <Input>
+      <Data ID="112" Label="Search Rows Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="row_ctype112">
+        <Target RefID="38"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="150" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype150">
+        <Source RefID="9"/>
+      </Data>
+      <Data ID="99" Label="Search Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="rowList_ctype99">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="4" Label="ConnectData" ReferenceName="ConnectData.ConnectData" ReferencePath="xmcp.dhcp.v4.netconfigurator">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Mappings ID="38" Label="Build Input">
+      <Source RefID="112"/>
+      <Target RefID="166"/>
+      <Meta>
+        <FixedDetailOptions>FlatMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="row_ctype"/>
+        <Source RefID="112"/>
+      </Input>
+      <Output>
+        <Data Label="Search Rows Request ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="searchRowsRequest_ctype"/>
+        <Target RefID="166"/>
+      </Output>
+      <Mapping>%1%.searchRowsInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Search Rows">
+      <Source RefID="4"/>
+      <Source RefID="166"/>
+      <Target RefID="4"/>
+      <Target RefID="7"/>
+      <Invoke Operation="searchRows" ServiceID="4">
+        <Source RefID="166"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="7"/>
+      </Receive>
+    </Function>
+    <Mappings ID="47" Label="Extract Output">
+      <Source RefID="7"/>
+      <Target RefID="164"/>
+      <Target RefID="90"/>
+      <Input>
+        <Data ID="8" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="response_ctype8">
+          <Source RefID="9"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Output>
+        <Data ID="163" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype163">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="164"/>
+      </Output>
+      <Output>
+        <Data ID="89" Label="RowList_ctype" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="rowList_ctype89">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="90"/>
+      </Output>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+      <Mapping>%2%=%0%.payload.searchRowsOutput</Mapping>
+    </Mappings>
+    <Data ID="7" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+      <Target RefID="47"/>
+    </Data>
+    <Data ID="90" Label="RowList_ctype" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="rowList_ctype90">
+      <Source RefID="47"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="164" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype164">
+      <Source RefID="47"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="166" Label="Search Rows Request ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.ConnectData.www.gip.com.juno.DHCP.WS.ConnectData.Messages" VariableName="searchRowsRequest_ctype166">
+      <Source RefID="38"/>
+      <Target RefID="5"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="164"/>
+      <Source RefID="90"/>
+      <Target RefID="150"/>
+      <Target RefID="99"/>
+      <Copy>
+        <Source RefID="164"/>
+        <Target RefID="150"/>
+      </Copy>
+      <Copy>
+        <Source RefID="90"/>
+        <Target RefID="99"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

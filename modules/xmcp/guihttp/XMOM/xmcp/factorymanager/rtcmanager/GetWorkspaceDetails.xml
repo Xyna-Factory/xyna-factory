@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Workspace Details" TypeName="GetWorkspaceDetails" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Workspace Details" Name="GetWorkspaceDetails">
+    <Input>
+      <Data ID="11" Label="Workspace" ReferenceName="Workspace" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspace">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="7" Label="Workspace Details" ReferenceName="WorkspaceDetails" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspaceDetails7">
+        <Source RefID="8"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Get Workspace Details Exception" ReferenceName="GetWorkspaceDetailsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getWorkspaceDetailsException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="RtcManagerServices" ReferenceName="RtcManagerServices.RtcManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Get Workspace Details">
+      <Source RefID="4"/>
+      <Source RefID="11"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="getWorkspaceDetails" ServiceID="4">
+        <Source RefID="11"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" Label="Workspace Details" ReferenceName="WorkspaceDetails" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspaceDetails">
+      <Source RefID="5"/>
+      <Target RefID="8"/>
+    </Data>
+    <Assign ID="8">
+      <Source RefID="6"/>
+      <Target RefID="7"/>
+      <Copy>
+        <Source RefID="6"/>
+        <Target RefID="7"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

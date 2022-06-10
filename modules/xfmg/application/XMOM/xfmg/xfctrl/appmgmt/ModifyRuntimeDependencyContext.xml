@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Modify runtime dependency context" TypeName="ModifyRuntimeDependencyContext" TypePath="xfmg.xfctrl.appmgmt" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Modify runtime dependency context" Name="ModifyRuntimeDependencyContext">
+    <Input>
+      <Data ID="6" IsList="true" Label="Remote Runtime Dependency Context Details" ReferenceName="RemoteRuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeDependencyContextDetails">
+        <Target RefID="17"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Foreach ID="17">
+      <Source RefID="6"/>
+      <InputList RefID="6">
+        <Data ID="16" Label="Remote Runtime Dependency Context Details" ReferenceName="RemoteRuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeDependencyContextDetails16">
+          <Target RefID="18"/>
+          <Target RefID="22"/>
+        </Data>
+      </InputList>
+      <Choice ID="18" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="16"/>
+        <Input>
+          <Data Label="Remote Runtime Dependency Context Details" ReferenceName="RemoteRuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt"/>
+          <Source RefID="16"/>
+        </Input>
+        <Case ID="14" Label="true" Premise="%0%!=null">
+          <Mappings ID="22" Label="extract">
+            <Source RefID="16"/>
+            <Target RefID="23"/>
+            <Target RefID="25"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="20" Label="Remote Runtime Dependency Context Details" ReferenceName="RemoteRuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeDependencyContextDetails20"/>
+              <Source RefID="16">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+              <Target RefID="23"/>
+            </Output>
+            <Output>
+              <Data IsList="true" Label="Runtime Dependency Context Details" ReferenceName="RuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="runtimeDependencyContextDetails"/>
+              <Target RefID="25"/>
+            </Output>
+            <Mapping>%1%=%0%.factoryNode</Mapping>
+            <Mapping>%2%=%0%.runtimeDependencyContextDetails</Mapping>
+          </Mappings>
+          <Foreach ID="31">
+            <Source RefID="25"/>
+            <InputList RefID="25">
+              <Data ID="30" Label="Runtime Dependency Context Details" ReferenceName="RuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="runtimeDependencyContextDetails30">
+                <Target RefID="29"/>
+              </Data>
+            </InputList>
+            <Function ID="29" Label="Modify runtime dependency context on one node">
+              <Source RefID="23"/>
+              <Source RefID="28"/>
+              <Source RefID="30"/>
+              <Target RefID="28"/>
+              <Invoke Operation="ModifyRuntimeDependencyContextOnOneNode" ServiceID="28">
+                <Source RefID="23"/>
+                <Source RefID="30"/>
+              </Invoke>
+              <Receive ServiceID="28"/>
+            </Function>
+          </Foreach>
+          <Assign/>
+        </Case>
+        <Case ID="15" Label="false">
+          <Assign/>
+        </Case>
+      </Choice>
+    </Foreach>
+    <Data ID="23" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode23">
+      <Source RefID="22"/>
+      <Target RefID="29"/>
+    </Data>
+    <Data ID="25" IsList="true" Label="Runtime Dependency Context Details" ReferenceName="RuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="runtimeDependencyContextDetails25">
+      <Source RefID="22"/>
+      <Target RefID="31"/>
+    </Data>
+    <ServiceReference ID="28" Label="Modify runtime dependency context on one node" ReferenceName="ModifyRuntimeDependencyContextOnOneNode" ReferencePath="xfmg.xfctrl.appmgmt.subwfs">
+      <Source RefID="29"/>
+      <Target RefID="29"/>
+    </ServiceReference>
+    <Assign/>
+  </Operation>
+</Service>

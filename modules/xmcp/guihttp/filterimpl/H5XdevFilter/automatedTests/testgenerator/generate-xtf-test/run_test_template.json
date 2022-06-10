@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "8.7.2020", 
+    "updated": "8.7.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!PMODRegressionTests%201!": "PMODRegressionTests%201"
+        }, 
+        {
+          "!startorder!": "startorder"
+        }, 
+        {
+          "!RAYGRESSIONTESTNAME!": "RAYGRESSIONTESTNAME"
+        }, 
+        {
+          "!qs.xact.filter.H5xdevFilter.XTFTestCaseName!": "qs.xact.filter.H5xdevFilter.XTFTestCaseName"
+        }, 
+        {
+          "!AutoTesterWorkspace!": "AutoTesterWorkspace"
+        }, 
+        {
+          "!qs.xact.filter.H5xdevFilter.Modeller.RunSingleTe!": "qs.xact.filter.H5xdevFilter.Modeller.RunSingleTest"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "async": false, 
+        "customStringContainer": [
+          null, 
+          null, 
+          null, 
+          null
+        ], 
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!qs.xact.filter.H5xdevFilter.XTFTestCaseName!", 
+              "rtc": {
+                "workspace": "!AutoTesterWorkspace!"
+              }
+            }, 
+            "name": "!RAYGRESSIONTESTNAME!"
+          }
+        ], 
+        "monitoringLevel": 20, 
+        "orderType": "!qs.xact.filter.H5xdevFilter.Modeller.RunSingleTe!", 
+        "priority": 7
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!PMODRegressionTests%201!/!startorder!"
+    }
+  ]
+}

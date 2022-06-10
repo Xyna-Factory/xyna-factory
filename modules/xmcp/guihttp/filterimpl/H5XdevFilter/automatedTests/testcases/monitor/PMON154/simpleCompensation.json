@@ -1,0 +1,241 @@
+{
+  "meta":
+  {
+    "name": "simpleCompensation",
+    "description": "Execute a workflow containing a Step with a compensation, followed by a throw step (loaded from app) and open audit",
+    "created": "08.05.2020",
+    "updated": "08.05.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON154.SimpleCompensation",
+        "!input!": [],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 3,
+		"!retryLength!": 0,
+		"!errorsLength!": 1,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+
+    { "comment": "check originally executed step", "operation": "comment" },
+
+    {
+      "operation": "invoke",
+      "functionName": "readStepVariableValue",
+      "mapInput":
+      {
+        "!stepId!": "step16",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "text"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!stepInput!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!stepInput!",
+      "value": "Some input"
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "readStepVariableValue",
+      "mapInput":
+      {
+        "!stepId!": "step16",
+        "!variableAreaName!": "outputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "text"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!stepOutput!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!stepOutput!",
+      "value": "Some input extended"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step16]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!stepStartTime!",
+      "pathInResponse": "info/$list[id=step16]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!stepStartTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!stepLastUpdate!",
+      "pathInResponse": "info/$list[id=step16]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+	  "orEquals": "true",
+      "variable": "!stepLastUpdate!",
+      "value": "!stepStartTime!"
+    },
+
+    { "comment": "check compensation step", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!compensationStepId!",
+      "pathInResponse": "workflow/areas/$list[3]/items/$list[0]/areas/$list[name=errorHandling]/items/$list[1]/areas/$list[0]/items/$list[0]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!compensationStepId!",
+      "value": "step23"
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "readStepVariableValue",
+      "mapInput":
+      {
+        "!stepId!": "!compensationStepId!",
+        "!variableAreaName!": "inputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "text"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!compensationStepInput!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!compensationStepInput!",
+      "value": "!stepOutput!"
+    },
+
+    {
+      "operation": "invoke",
+      "functionName": "readStepVariableValue",
+      "mapInput":
+      {
+        "!stepId!": "!compensationStepId!",
+        "!variableAreaName!": "outputs",
+        "!indexInArea!": "0",
+        "!pathInVariable!": "text"
+      },
+      "mapOutput":
+      {
+        "!result!" : "!compensationStepOutput!"
+      }
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!compensationStepOutput!",
+      "value": "!stepInput!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!compensationStepId!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!compensationStepStartTime!",
+      "pathInResponse": "info/$list[id=!compensationStepId!]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+	  "orEquals": "true",
+      "variable": "!compensationStepStartTime!",
+      "value": "!stepLastUpdate!"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!compensationStepLastUpdate!",
+      "pathInResponse": "info/$list[id=!compensationStepId!]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+	  "orEquals": "true",
+      "variable": "!compensationStepLastUpdate!",
+      "value": "!compensationStepStartTime!"
+    }
+  ]
+}

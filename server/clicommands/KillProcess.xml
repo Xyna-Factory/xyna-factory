@@ -1,0 +1,23 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="killprocess" Groups="Misc" Description="Tries to abort a given order (and all orders belonging to its family) and especially frees the capacities that it uses. Cancels the order if it is waiting to be scheduled and frees its allocated capacities. Tries to interrupt the executing thread(s) if the order is already running."/>
+  <Argument Name="orderId" Description="The ID of the order to be aborted"/>
+  <BoolOption Name="i" LongName="ignoreResourcesWhenResuming" Description="If set, an order waiting to be resumed in the scheduler will ignore its capacities and vetos. Only applicable if the order abortion will result in the execution of its workflows compensation." Optional="true"/>
+  <BoolOption Name="f" LongName="force" Description="If set, hanging coded services will be tried to stop via Thread.stop after not responding to Thread.interrupt/abort. Attention: Depending on the implementation of the coded servce being stopped, this may result in harmful side effects for the server infrastructure." Optional="true"/>
+</XynaCommandLineCommand>

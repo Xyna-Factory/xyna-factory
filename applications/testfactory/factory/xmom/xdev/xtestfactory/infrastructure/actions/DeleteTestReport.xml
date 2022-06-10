@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Test Report" TypeName="DeleteTestReport" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,hScroll(163),vScroll(988)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Delete Test Report" Name="DeleteTestReport">
+    <Input>
+      <Data ID="13" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport">
+        <Target RefID="20"/>
+        <Target RefID="48"/>
+        <Target RefID="58"/>
+        <Target RefID="66"/>
+      </Data>
+      <Data ID="14" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="deleteParameter">
+        <Target RefID="48"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="2" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+    </ServiceReference>
+    <Function ID="3" Label="Determine Current Test Project">
+      <Source RefID="2"/>
+      <Target RefID="2"/>
+      <Target RefID="4"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="2"/>
+      <Receive ServiceID="2">
+        <Target RefID="4"/>
+      </Receive>
+    </Function>
+    <Data ID="4" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="3"/>
+      <Target RefID="9"/>
+      <Target RefID="41"/>
+    </Data>
+    <Mappings ID="9" Label="Mapping">
+      <Source RefID="4"/>
+      <Target RefID="8"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="17" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="4"/>
+      </Input>
+      <Output>
+        <Data ID="10" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport10"/>
+        <Target RefID="8"/>
+      </Output>
+      <Mapping>%1%=%0%.testReport</Mapping>
+    </Mappings>
+    <Data ID="8" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport8">
+      <Source RefID="9"/>
+      <Target RefID="24"/>
+    </Data>
+    <Foreach ID="24">
+      <Source RefID="8"/>
+      <Target RefID="34"/>
+      <InputList RefID="8">
+        <Data ID="23" Label="test report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport23">
+          <Target RefID="20"/>
+          <Target RefID="32"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="34">
+        <Data ID="33" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport33">
+          <Source RefID="20"/>
+          <Source RefID="18"/>
+          <Source RefID="19"/>
+        </Data>
+      </OutputList>
+      <Choice ID="20" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="13"/>
+        <Source RefID="23"/>
+        <Target RefID="33"/>
+        <Input>
+          <Data ID="22" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport22"/>
+          <Source RefID="13">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="51" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport51"/>
+          <Source RefID="23">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Case ID="11" Label="true" Premise="%0%.iD==%1%.iD">
+          <Mappings ID="29" Label="Empty List">
+            <Target RefID="27"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+            </Meta>
+            <Output>
+              <Data ID="28" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport28"/>
+              <Target RefID="27"/>
+            </Output>
+          </Mappings>
+          <Assign ID="18">
+            <Source RefID="27"/>
+            <Target RefID="33"/>
+            <Copy>
+              <Source RefID="27"/>
+              <Target RefID="33"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="12" Label="false">
+          <Mappings ID="32" Label="Keep It">
+            <Source RefID="23"/>
+            <Target RefID="31"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="35" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport35"/>
+              <Source RefID="23">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="30" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport30"/>
+              <Target RefID="31"/>
+            </Output>
+            <Mapping>%1%["0"]=%0%</Mapping>
+          </Mappings>
+          <Assign ID="19">
+            <Source RefID="31"/>
+            <Target RefID="33"/>
+            <Copy>
+              <Source RefID="31"/>
+              <Target RefID="33"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+    </Foreach>
+    <Data ID="27" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport27">
+      <Source RefID="29"/>
+      <Target RefID="18"/>
+    </Data>
+    <Data ID="31" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport31">
+      <Source RefID="32"/>
+      <Target RefID="19"/>
+    </Data>
+    <Data ID="34" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport34">
+      <Source RefID="24"/>
+      <Target RefID="41"/>
+    </Data>
+    <Mappings ID="41" Label="Set Updated List in Test Project">
+      <Source RefID="4"/>
+      <Source RefID="34"/>
+      <Target RefID="39"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="40" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject40"/>
+        <Source RefID="4"/>
+      </Input>
+      <Input>
+        <Data ID="42" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport42"/>
+        <Source RefID="34">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="43" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject43"/>
+        <Target RefID="39"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.testReport=%1%</Mapping>
+    </Mappings>
+    <Data ID="39" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject39">
+      <Source RefID="41"/>
+      <Target RefID="45"/>
+    </Data>
+    <ServiceReference ID="44" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="45"/>
+      <Source RefID="48"/>
+      <Source RefID="56"/>
+      <Source RefID="64"/>
+      <Source RefID="74"/>
+      <Source RefID="83"/>
+      <Target RefID="45"/>
+      <Target RefID="48"/>
+      <Target RefID="56"/>
+      <Target RefID="64"/>
+      <Target RefID="74"/>
+      <Target RefID="83"/>
+    </ServiceReference>
+    <Function ID="45" Label="Store">
+      <Source RefID="44"/>
+      <Source RefID="39"/>
+      <Source RefID="46"/>
+      <Target RefID="44"/>
+      <Invoke Operation="store" ServiceID="44">
+        <Source RefID="39">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="46">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="44"/>
+    </Function>
+    <Data ID="46" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="45"/>
+      <Data ID="52" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="53" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="54" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Parallel>
+      <Serial>
+        <Mappings ID="58">
+          <Source RefID="13"/>
+          <Target RefID="57"/>
+          <Meta>
+            <IsCondition>true</IsCondition>
+          </Meta>
+          <Input>
+            <Data ID="72" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport72"/>
+            <Source RefID="13">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="59" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition59"/>
+            <Target RefID="57"/>
+          </Output>
+          <Mapping>%1%.formula=concat("(%0%.firstTestReport.iD==\"",replaceall(replaceall(%0%.iD,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+        </Mappings>
+        <Function ID="56" Label="Query">
+          <Source RefID="57"/>
+          <Source RefID="60"/>
+          <Source RefID="61"/>
+          <Source RefID="44"/>
+          <Target RefID="44"/>
+          <Target RefID="71"/>
+          <Meta>
+            <QueryFilter>
+              <Condition>%0%.firstTestReport.iD==%1%.iD</Condition>
+            </QueryFilter>
+            <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Invoke Operation="query" ServiceID="44">
+            <Source RefID="60">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="57">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="61">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="44">
+            <Target RefID="71"/>
+          </Receive>
+        </Function>
+        <Foreach ID="76">
+          <Source RefID="71"/>
+          <InputList RefID="71">
+            <Data ID="75" Label="test report entry feature" ReferenceName="TestReportEntryFeature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReportEntryFeature75">
+              <Target RefID="74"/>
+            </Data>
+          </InputList>
+          <Function ID="74" Label="Delete TRE-F">
+            <Source RefID="44"/>
+            <Source RefID="75"/>
+            <Source RefID="79"/>
+            <Target RefID="44"/>
+            <Invoke Operation="delete" ServiceID="44">
+              <Source RefID="75">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+              <Source RefID="79">
+                <Meta>
+                  <LinkType>Constant</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="44"/>
+          </Function>
+        </Foreach>
+      </Serial>
+      <Serial>
+        <Mappings ID="66">
+          <Source RefID="13"/>
+          <Target RefID="65"/>
+          <Meta>
+            <IsCondition>true</IsCondition>
+          </Meta>
+          <Input>
+            <Data ID="81" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport81"/>
+            <Source RefID="13">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="67" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition67"/>
+            <Target RefID="65"/>
+          </Output>
+          <Mapping>%1%.formula=concat("(%0%.firstTestReport.iD==\"",replaceall(replaceall(%0%.iD,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+        </Mappings>
+        <Function ID="64" Label="Query">
+          <Source RefID="44"/>
+          <Source RefID="65"/>
+          <Source RefID="68"/>
+          <Source RefID="69"/>
+          <Target RefID="44"/>
+          <Target RefID="80"/>
+          <Meta>
+            <QueryFilter>
+              <Condition>%0%.firstTestReport.iD==%1%.iD</Condition>
+            </QueryFilter>
+            <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Invoke Operation="query" ServiceID="44">
+            <Source RefID="68">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="65">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="69">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="44">
+            <Target RefID="80"/>
+          </Receive>
+        </Function>
+        <Foreach ID="85">
+          <Source RefID="80"/>
+          <InputList RefID="80">
+            <Data ID="84" Label="test report entry test case" ReferenceName="TestReportEntryTestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReportEntryTestCase84">
+              <Target RefID="83"/>
+            </Data>
+          </InputList>
+          <Function ID="83" Label="Delete TRE-TC">
+            <Source RefID="44"/>
+            <Source RefID="84"/>
+            <Source RefID="86"/>
+            <Target RefID="44"/>
+            <Invoke Operation="delete" ServiceID="44">
+              <Source RefID="84">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+              <Source RefID="86">
+                <Meta>
+                  <LinkType>Constant</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="44"/>
+          </Function>
+        </Foreach>
+      </Serial>
+    </Parallel>
+    <Data ID="57" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition">
+      <Source RefID="58"/>
+      <Target RefID="56"/>
+    </Data>
+    <Data ID="60" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="56"/>
+      <Data Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature</Value>
+      </Data>
+    </Data>
+    <Data ID="61" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="56"/>
+      <Data Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="65" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition65">
+      <Source RefID="66"/>
+      <Target RefID="64"/>
+    </Data>
+    <Data ID="68" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask">
+      <Target RefID="64"/>
+      <Data Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCase</Value>
+      </Data>
+    </Data>
+    <Data ID="69" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="queryParameter">
+      <Target RefID="64"/>
+      <Data Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="71" IsList="true" Label="Test Report Entry - Feature" ReferenceName="TestReportEntryFeature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReportEntryFeature">
+      <Source RefID="56"/>
+      <Target RefID="76"/>
+    </Data>
+    <Function ID="48" Label="Delete Test Report">
+      <Source RefID="44"/>
+      <Source RefID="14"/>
+      <Source RefID="13"/>
+      <Target RefID="44"/>
+      <Invoke Operation="delete" ServiceID="44">
+        <Source RefID="13">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="14"/>
+      </Invoke>
+      <Receive ServiceID="44"/>
+    </Function>
+    <Data ID="79" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter">
+      <Target RefID="74"/>
+      <Data Label="Including history" VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data Label="Backward" VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>error</Value>
+        </Data>
+        <Data Label="Forward" VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>keep</Value>
+        </Data>
+      </Data>
+    </Data>
+    <Data ID="80" IsList="true" Label="Test Report Entry - Test Case" ReferenceName="TestReportEntryTestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReportEntryTestCase">
+      <Source RefID="64"/>
+      <Target RefID="85"/>
+    </Data>
+    <Data ID="86" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="deleteParameter86">
+      <Target RefID="83"/>
+      <Data Label="Including history" VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data Label="Backward" VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>error</Value>
+        </Data>
+        <Data Label="Forward" VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>keep</Value>
+        </Data>
+      </Data>
+    </Data>
+    <Assign ID="21"/>
+  </Operation>
+</Service>

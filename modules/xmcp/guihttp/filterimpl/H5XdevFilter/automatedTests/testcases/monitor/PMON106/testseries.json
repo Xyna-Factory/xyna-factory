@@ -1,0 +1,6 @@
+{
+  "tests":
+  [
+    "catchNoNPE.json"
+  ]
+}

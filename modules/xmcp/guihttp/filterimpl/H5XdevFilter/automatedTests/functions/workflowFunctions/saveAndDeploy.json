@@ -1,0 +1,91 @@
+[
+  {
+    "meta": 
+	{
+	  "comment": "Input: !wfUrl! ist /runtimeContext/<runtimeContextEscaped>/xmom/workflows/<path>/<name>, !path! ist der Pfad unter dem gespeichert werden soll, !label! ist das Label unter dem gespeichert weden soll, revision ist die aktuelle Revision. Output: !wfName! ist der neue Name des Workflows, !wfUrl! ist die neue Workflow url /runtimeContext/<runtimeContextEscaped>/xmom/workflows/<!path!>/<!wfName!>"
+	},
+    "type" : "function",
+	"functionName": "saveAndDeploy",
+	"input": ["!wfUrl!", "!path!", "!label!", "!revision!"],
+	"output": ["!wfName!", "!wfUrl!"],
+	"operations":
+	[
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!wfUrl!/save",
+	    "payload": {"revision":"!revision!","path":"!path!","label":"!label!"}
+	  },
+	  {
+	    "operation": "read",
+	    "targetVariable": "!wfFqn!",
+	    "pathInResponse": "updates/$list[0]/fqn",
+		"unquoteResult": "True"
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!wfName!",
+		"value": "!wfFqn!"
+	  },
+	  {
+		"operation": "modification",
+		"variable": "!wfName!",
+		"modification" : 
+		{
+		  "operation": "substring",
+		  "divider": ".",
+		  "keep": "after",
+		  "direction": "inversed"
+		}
+	  },
+	  {
+	    "meta": {"comment": "remove leading /"},
+	    "operation": "set",
+		"variable": "!escapedRuntimeContext!",
+		"value": "!wfUrl!"
+	  },
+	  {
+		"operation": "modification",
+		"variable": "!escapedRuntimeContext!",
+		"modification" : 
+		{
+		  "operation": "substring",
+		  "divider": "/",
+		  "keep": "after"
+		}
+	  },
+	  {
+	    "meta": {"comment": "remove runtimeContext/"},
+		"operation": "modification",
+		"variable": "!escapedRuntimeContext!",
+		"modification" : 
+		{
+		  "operation": "substring",
+		  "divider": "/",
+		  "keep": "after"
+		}
+	  },
+	  {
+		"operation": "modification",
+		"variable": "!escapedRuntimeContext!",
+		"modification" : 
+		{
+		  "operation": "substring",
+		  "divider": "/",
+		  "keep": "before"
+		}
+	  },
+	  {
+		"operation": "set",
+		"variable": "!wfUrl!",
+		"value": "/runtimeContext/!escapedRuntimeContext!/xmom/workflows/!path!/!wfName!"
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!wfUrl!/deploy",
+	    "payload": {"revision":"!revision!"}
+	  }
+	]
+  }
+]

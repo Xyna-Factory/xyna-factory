@@ -1,0 +1,167 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "storable_instances"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xnwh.persistence.Delete!": "xnwh.persistence.Delete"
+        },
+        {
+          "!changed!": "changed"
+        },
+        {
+          "!autotest.generated.ARANDOM.Storable_instances!": "autotest.generated.!rnd!.Storable_instances"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xnwh.persistence.ReferenceHandling!": "xnwh.persistence.ReferenceHandling"
+        },
+        {
+          "!xnwh.persistence.DeleteParameter!": "xnwh.persistence.DeleteParameter"
+        },
+        {
+          "!xnwh.persistence.Query!": "xnwh.persistence.Query"
+        },
+        {
+          "!xnwh.persistence.SelectionMask!": "xnwh.persistence.SelectionMask"
+        },
+        {
+          "!xnwh.persistence.FilterCondition!": "xnwh.persistence.FilterCondition"
+        },
+        {
+          "!xnwh.persistence.SortCriterion!": "xnwh.persistence.SortCriterion"
+        },
+        {
+          "!xnwh.persistence.QueryParameter!": "xnwh.persistence.QueryParameter"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!autotest.generated.ARANDOM.Storable_instances!",
+              "rtc": {
+                "workspace": "!default_workspace!"
+              }
+            },
+            "data": "!changed!",
+            "data0": "!changed!",
+            "uniqueIdentifier": 2682154
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.DeleteParameter!"
+            },
+            "includingHistory": false,
+            "referenceHandling": {
+              "$meta": {
+                "fqn": "!xnwh.persistence.ReferenceHandling!"
+              },
+              "backward": "delete",
+              "forward": ""
+            }
+          }
+        ],
+        "orderType": "!xnwh.persistence.Delete!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.SelectionMask!"
+            },
+            "columns": [],
+            "rootType": "!autotest.generated.ARANDOM.Storable_instances!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.FilterCondition!"
+            },
+            "formula": ""
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.QueryParameter!"
+            },
+            "maxObjects": -1,
+            "queryHistory": false,
+            "sortCriterion": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xnwh.persistence.SortCriterion!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xnwh.persistence.Query!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.SelectionMask!"
+            },
+            "columns": [],
+            "rootType": "!autotest.generated.ARANDOM.Storable_instances!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.FilterCondition!"
+            },
+            "formula": ""
+          },
+          {
+            "$meta": {
+              "fqn": "!xnwh.persistence.QueryParameter!"
+            },
+            "maxObjects": -1,
+            "queryHistory": false,
+            "sortCriterion": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xnwh.persistence.SortCriterion!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xnwh.persistence.Query!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/!startorder!"
+    }
+  ]
+}

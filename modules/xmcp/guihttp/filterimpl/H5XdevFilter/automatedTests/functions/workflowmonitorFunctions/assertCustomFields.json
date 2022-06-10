@@ -1,0 +1,103 @@
+[
+  {
+    "docu": "assert custom field labels and values",
+	"type": "function",
+	"functionName": "assertCustomFields",
+	"input":
+	[
+	  "!expectedCustomFieldValues!",
+	  "!orderId!"
+	],
+	"output":[],
+	"operations":
+	[
+	  {
+	    "description": "turn expected values into fields",
+	    "operation": "setFromVariable",
+		"targetVariable": "!expectedCustomField1Value!",
+		"sourceVariable": "!expectedCustomFieldValues!",
+		"path": "[0]"
+	  },
+	  {
+	    "operation": "setFromVariable",
+		"targetVariable": "!expectedCustomField2Value!",
+		"sourceVariable": "!expectedCustomFieldValues!",
+		"path": "[1]"
+	  },
+	  {
+	    "operation": "setFromVariable",
+		"targetVariable": "!expectedCustomField3Value!",
+		"sourceVariable": "!expectedCustomFieldValues!",
+		"path": "[2]"
+	  },
+	  {
+	    "operation": "setFromVariable",
+		"targetVariable": "!expectedCustomField4Value!",
+		"sourceVariable": "!expectedCustomFieldValues!",
+		"path": "[3]"
+	  },
+	  {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "customFields/$list",
+        "expectedValue": 4
+      },
+      {
+        "operation": "read",
+        "pathInResponse": "customFields",
+        "targetVariable": "!customFields!"
+      },
+      {
+	    "description": "turn read values into fields",
+	    "operation": "setFromVariable",
+		"targetVariable": "!customField1ReadValue!",
+		"sourceVariable": "!customFields!",
+		"path": "$list[0]/value"
+	  },
+	  {
+	    "operation": "setFromVariable",
+		"targetVariable": "!customField2ReadValue!",
+		"sourceVariable": "!customFields!",
+		"path": "$list[1]/value"
+	  },
+	        {
+	    "operation": "setFromVariable",
+		"targetVariable": "!customField3ReadValue!",
+		"sourceVariable": "!customFields!",
+		"path": "$list[2]/value"
+	  },
+	  {
+	    "operation": "setFromVariable",
+		"targetVariable": "!customField4ReadValue!",
+		"sourceVariable": "!customFields!",
+		"path": "$list[3]/value"
+	  },
+	  
+	  {
+	    "description": "compare",
+	    "operation": "assert",
+		"constraint": "equals",
+		"variable": "!customField1ReadValue!",
+		"value": "!expectedCustomField1Value!"
+	  },
+	  {
+	    "operation": "assert",
+		"constraint": "equals",
+		"variable": "!customField2ReadValue!",
+		"value": "!expectedCustomField2Value!"
+	  },
+	  {
+	    "operation": "assert",
+		"constraint": "equals",
+		"variable": "!customField3ReadValue!",
+		"value": "!expectedCustomField3Value!"
+	  },
+	  {
+	    "operation": "assert",
+		"constraint": "equals",
+		"variable": "!customField4ReadValue!",
+		"value": "!expectedCustomField4Value!"
+	  }
+	]
+  }
+]

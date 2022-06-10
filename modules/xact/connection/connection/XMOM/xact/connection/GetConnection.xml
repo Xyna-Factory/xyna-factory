@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get connection" TypeName="GetConnection" TypePath="xact.connection" Version="1.8">
+  <Meta>
+    <IsXynaComponent>true</IsXynaComponent>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,openCatches</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get connection" Name="GetConnection">
+    <Input>
+      <Data ID="6" Label="connection parameter" ReferenceName="ConnectionParameter" ReferencePath="xact.connection" VariableName="connectionParameter6">
+        <Target RefID="100"/>
+      </Data>
+      <Data ID="49" Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType">
+        <Target RefID="100"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="8" Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <Function ID="100" Label="Connect">
+      <Source RefID="99"/>
+      <Source RefID="6"/>
+      <Source RefID="49"/>
+      <Target RefID="99"/>
+      <Target RefID="101"/>
+      <Meta>
+        <FixedDetailOptions>openCompensation</FixedDetailOptions>
+      </Meta>
+      <ServiceReference ID="99" Label="Connection Parameter" ReferenceName="ConnectionParameter.ConnectionParameter" ReferencePath="xact.connection">
+        <Source RefID="100"/>
+        <Target RefID="100"/>
+      </ServiceReference>
+      <Invoke Operation="connect" ServiceID="99">
+        <Source RefID="6"/>
+        <Source RefID="49"/>
+      </Invoke>
+      <Receive ServiceID="99">
+        <Target RefID="101"/>
+      </Receive>
+      <Compensate ID="107">
+        <Function ID="106" Label="Return connection">
+          <Source RefID="105"/>
+          <Source RefID="101"/>
+          <Target RefID="105"/>
+          <ServiceReference ID="105" Label="Return connection" ReferenceName="ReturnConnection" ReferencePath="xact.connection">
+            <Source RefID="106"/>
+            <Target RefID="106"/>
+          </ServiceReference>
+          <Invoke Operation="ReturnConnection" ServiceID="105">
+            <Source RefID="101"/>
+          </Invoke>
+          <Receive ServiceID="105"/>
+        </Function>
+      </Compensate>
+    </Function>
+    <Data ID="101" Label="Managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection101">
+      <Source RefID="100"/>
+      <Target RefID="106"/>
+      <Target RefID="9"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="101"/>
+      <Target RefID="8"/>
+      <Copy>
+        <Source RefID="101"/>
+        <Target RefID="8"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

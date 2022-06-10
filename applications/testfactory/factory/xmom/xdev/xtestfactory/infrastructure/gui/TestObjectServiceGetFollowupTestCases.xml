@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Test Object Service: Get Followup Test Cases" TypeName="TestObjectServiceGetFollowupTestCases" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation</FixedDetailOptions>
+    <Documentation>liefert alle testfälle, die mit "Template  " beginnen. Ist die Implementierung der Instanzmethode im TestObject und kann deshalb vom Kunden überschrieben werden.</Documentation>
+  </Meta>
+  <Operation ID="0" Label="Test Object Service: Get Followup Test Cases" Name="TestObjectServiceGetFollowupTestCases">
+    <Input>
+      <Data ID="5" Label="Test Object" ReferenceName="TestObject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testObject"/>
+      <Data ID="4" Label="Test Case Instance Entry" ReferenceName="TestCaseInstanceEntry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testCaseInstanceEntry"/>
+    </Input>
+    <Output>
+      <Data ID="181" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase181">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Function ID="128" Label="Determine Current Test Project">
+      <Source RefID="127"/>
+      <Target RefID="127"/>
+      <Target RefID="129"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="127"/>
+      <Receive ServiceID="127">
+        <Target RefID="129"/>
+      </Receive>
+    </Function>
+    <Mappings ID="131" Label="Mapping">
+      <Source RefID="129"/>
+      <Target RefID="132"/>
+      <Input>
+        <Data ID="184" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="129"/>
+      </Input>
+      <Output>
+        <Data ID="185" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+        <Target RefID="132"/>
+      </Output>
+      <Mapping>%1%=%0%.testCase</Mapping>
+    </Mappings>
+    <Foreach ID="146">
+      <Source RefID="132"/>
+      <Target RefID="176"/>
+      <InputList RefID="132">
+        <Data ID="145" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase145">
+          <Target RefID="147"/>
+          <Target RefID="165"/>
+        </Data>
+      </InputList>
+      <InputList RefID="132">
+        <Data ID="189" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase189">
+          <Target RefID="147"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="176">
+        <Data ID="175" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase175">
+          <Source RefID="147"/>
+          <Source RefID="156"/>
+          <Source RefID="157"/>
+        </Data>
+      </OutputList>
+      <Choice ID="147" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="145"/>
+        <Source RefID="189"/>
+        <Target RefID="175"/>
+        <Input>
+          <Data ID="144" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase144"/>
+          <Source RefID="145"/>
+        </Input>
+        <Input>
+          <Data Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables"/>
+          <Source RefID="189"/>
+        </Input>
+        <Case ID="141" Label="true" Premise="startswith(%0%.name,&quot;Template &quot;)||startswith(%1%.name,&quot;template &quot;)">
+          <Mappings ID="165" Label="Mapping">
+            <Source RefID="145"/>
+            <Target RefID="170"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="186" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase163"/>
+              <Source RefID="145">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="164" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase164"/>
+              <Target RefID="170"/>
+            </Output>
+            <Mapping>%1%["0"]=%0%</Mapping>
+            <Mapping>%1%["0"].name=substring(%0%.name,length("Template "))</Mapping>
+          </Mappings>
+          <Assign ID="156">
+            <Source RefID="170"/>
+            <Target RefID="175"/>
+            <Copy>
+              <Source RefID="170"/>
+              <Target RefID="175"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="143" Label="false">
+          <Mappings ID="173" Label="Mapping">
+            <Target RefID="174"/>
+            <Meta>
+              <FixedDetailOptions>FillMode</FixedDetailOptions>
+            </Meta>
+            <Output>
+              <Data ID="172" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase172"/>
+              <Target RefID="174"/>
+            </Output>
+          </Mappings>
+          <Assign ID="157">
+            <Source RefID="174"/>
+            <Target RefID="175"/>
+            <Copy>
+              <Source RefID="174"/>
+              <Target RefID="175"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+    </Foreach>
+    <ServiceReference ID="127" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="128"/>
+      <Target RefID="128"/>
+    </ServiceReference>
+    <Data ID="129" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="128"/>
+      <Target RefID="131"/>
+    </Data>
+    <Data ID="132" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase132">
+      <Source RefID="131"/>
+      <Target RefID="146"/>
+    </Data>
+    <Data ID="170" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase170">
+      <Source RefID="165"/>
+      <Target RefID="156"/>
+    </Data>
+    <Data ID="174" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase174">
+      <Source RefID="173"/>
+      <Target RefID="157"/>
+    </Data>
+    <Data ID="176" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase176">
+      <Source RefID="146"/>
+      <Target RefID="2"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="176"/>
+      <Target RefID="181"/>
+      <Copy>
+        <Source RefID="176">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="181"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

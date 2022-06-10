@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="NSN DSLAM Storage" TypeName="NSNDSLAMStorage" TypePath="xact.dslam.nsn.5600series.storage" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Libraries>NSNDSLAMStorageImpl.jar</Libraries>
+  <SharedLibraries>NSNHiX5630</SharedLibraries>
+  <Service Label="NSN DSLAM Storage" TypeName="NSNDSLAMStorage">
+    <Operation IsStatic="true" Label="get full OID" Name="getFullOID">
+      <Meta>
+        <Abstract.UID>225DFCD2-031D-99D2-EFB1-035D65199848</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Port Index" ReferenceName="VariableContent" ReferencePath="xact.snmp" VariableName="variableContent"/>
+        <Data Label="OID" ReferenceName="OID" ReferencePath="xact.snmp" VariableName="oID"/>
+      </Input>
+      <Output>
+        <Data Label="OID" ReferenceName="OID" ReferencePath="xact.snmp" VariableName="oID0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.snmp.OID result = new xact.snmp.OID();
+result.setOID(oID.getOID()+"."+variableContent.getContent());
+return result;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsStatic="true" Label="get SNMP Connection Data" Name="getSNMPConnectionData">
+      <Input>
+        <Data ID="9" Label="DSLAM Host Name" ReferenceName="DSLAMHostName" ReferencePath="xact.dslam" VariableName="dSLAMHostName"/>
+      </Input>
+      <Output>
+        <Data ID="10" Label="SNMP Connection Data" ReferenceName="SNMPConnectionDataV3" ReferencePath="xact.snmp" VariableName="connectionData"/>
+      </Output>
+      <Throws>
+        <Exception ID="11" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.dslam.nsn._5600series.storage.NSNDSLAMStorageImpl.getSNMPConnectionData(dSLAMHostName)</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="8" IsStatic="true" Label="extract Firmware Version" Name="extractFirmwareVersion">
+      <Input>
+        <Data ID="4" IsList="true" Label="Var Binding" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding"/>
+        <Data ID="5" Label="DSLAM Host Name" ReferenceName="DSLAMHostName" ReferencePath="xact.dslam" VariableName="dSLAMHostName"/>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Firmware Version DSLAM" ReferenceName="FirmwareVersionDSLAM" ReferencePath="xact.dslam" VariableName="firmwareVersionDSLAM"/>
+      </Output>
+      <Throws>
+        <Exception ID="7" Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.dslam.nsn._5600series.storage.NSNDSLAMStorageImpl.extractFirmwareVersion(varBinding, dSLAMHostName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="3" IsStatic="true" Label="create" Name="create">
+      <Input>
+        <Data ID="0" Label="DSLAM Host Name" ReferenceName="DSLAMHostName" ReferencePath="xact.dslam" VariableName="dSLAMHostName"/>
+        <Data ID="1" Label="SNMP Connection Data" ReferenceName="SNMPConnectionDataV3" ReferencePath="xact.snmp" VariableName="sNMPConnectionData"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.dslam.nsn._5600series.storage.NSNDSLAMStorageImpl.create(dSLAMHostName, sNMPConnectionData)</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="15" IsStatic="true" Label="delete" Name="delete">
+      <Input>
+        <Data ID="13" Label="DSLAM Host Name" ReferenceName="DSLAMHostName" ReferencePath="xact.dslam" VariableName="dSLAMHostName"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="14" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.dslam.nsn._5600series.storage.NSNDSLAMStorageImpl.delete(dSLAMHostName)</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="18" IsStatic="true" Label="getFirstValue" Name="getFirstValue">
+      <Meta>
+        <Abstract.UID>1E586606-4228-8315-DD09-034D52596DCB</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="16" IsList="true" Label="Var Binding" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding"/>
+      </Input>
+      <Output>
+        <Data ID="17" Label="Variable Content" ReferenceName="VariableContent" ReferencePath="xact.snmp" VariableName="variableContent"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return ((xact.snmp.VarBinding)varBinding.get(0)).getValue();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,1040 @@
+{
+  "meta":
+  {
+    "name": "twoRetriesSuccessTest",
+    "description": "Execute a workflow containing a Retry (loaded from app) and open audit to check if Xyna Property xyna.processmonitor.iterationlimit works",
+    "created": "02.12.2020",
+    "updated": "15.12.2020"
+  },
+  "operations":
+  [
+	{
+      "data": [
+	    {
+          "!customFieldValues!": ["test", "", "", ""]
+        },
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!": "xmcp.factorymanager.xynaproperties.ChangeXynaProperty"
+        },
+        {
+          "!xyna.processmonitor.lazyloading.limit!": "xyna.processmonitor.lazyloading.limit"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaProperty!": "xmcp.factorymanager.xynaproperties.XynaProperty"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput":
+      {
+        "!url!": "!url!",
+        "!applicationName!" : "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+	{ "comment": "**********************", "operation": "comment" },
+    { "comment": "* no iteration limit *", "operation": "comment" },
+	{ "comment": "**********************", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "value": "-1"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput":
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTest",
+        "!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"necessaryReductions":2,"reducetionRetryLimit":2}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput":
+      {
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 11,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check caught step iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtStepId!",
+      "pathInResponse": "info/$list[3]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!orderIdIteration0!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=0]/runtimeInfo/orderId"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!orderIdIteration0!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=0]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    { "comment": "check caught step iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Unknown"
+    },
+
+    { "comment": "check caught step iteration 2", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=2]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Unknown"
+    },
+
+    { "comment": "check executed catch iteration 0", "operation": "comment" },
+
+    {
+	  "operation": "modification",
+	  "variable": "!caughtStepId!",
+	  "modification":
+	  {
+	    "operation": "replace",
+		"toReplace": "step",
+		"replacement": ""
+	  }
+	},
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[2]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[0]/id",
+      "targetVariable": "!branchU677795884-0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!branchId!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branchId!",
+      "value": "branch!caughtStepId!-0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/caughtException/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionStacktrace!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/caughtException/stacktrace",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionStacktrace!",
+      "value": "at xmcp.h5x.regression.PMON30.IterationsLeftException."
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionMessage!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/caughtException/message",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionMessage!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException:"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    { "comment": "check executed catch iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!branchId!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branchId!",
+      "value": "branch!caughtStepId!-0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/caughtException/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionStacktrace!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/caughtException/stacktrace",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionStacktrace!",
+      "value": "at xmcp.h5x.regression.PMON30.IterationsLeftException."
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionMessage!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/caughtException/message",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionMessage!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException:"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    { "comment": "check executed catch iteration 2", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[2]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[1]/id",
+      "targetVariable": "!branchU677795884-1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!branchId!",
+      "pathInResponse": "info/$list[id=!branchU677795884-1!]/iterations/$list[index=2]/runtimeInfo/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branchId!",
+      "value": "branch!caughtStepId!-1"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=!branchU677795884-1!]/iterations/$list[index=2]/runtimeInfo/caughtException/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.ExpiredException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionStacktrace!",
+      "pathInResponse": "info/$list[id=!branchU677795884-1!]/iterations/$list[index=2]/runtimeInfo/caughtException/stacktrace",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionStacktrace!",
+      "value": "at xmcp.h5x.regression.PMON30.ExpiredException."
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionMessage!",
+      "pathInResponse": "info/$list[id=!branchU677795884-1!]/iterations/$list[index=2]/runtimeInfo/caughtException/message",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionMessage!",
+      "value": "xmcp.h5x.regression.PMON30.ExpiredException:"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branchU677795884-1!]/iterations/$list[index=2]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    { "comment": "check retry iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=0]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lastUpdate!",
+      "value": "-1"
+    },
+
+    { "comment": "check retry iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=1]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=1]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lastUpdate!",
+      "value": "-1"
+    },
+
+	{ "comment": "check retry iteration 2", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step199]/iterations/$list[index=2]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step199]/iterations/$list[index=2]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step199]/iterations/$list[index=2]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lastUpdate!",
+      "value": "-1"
+    },
+
+	{ "comment": "*********************", "operation": "comment" },
+    { "comment": "* iteration limit 2 *", "operation": "comment" },
+	{ "comment": "*********************", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "value": "2"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput":
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTest",
+        "!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"necessaryReductions":2,"reducetionRetryLimit":2}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput":
+      {
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 11,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check caught step iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtStepId!",
+      "pathInResponse": "info/$list[3]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!orderIdIteration0!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=0]/runtimeInfo/orderId"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!orderIdIteration0!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=0]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    { "comment": "check caught step iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Unknown"
+    },
+
+    { "comment": "check caught step iteration 2", "operation": "comment" },
+
+    {
+      "operation": "assert",
+	  "constraint": "fieldNotInResult",
+	  "fieldName": "$list[index=2]",
+	  "basePath": "info/$list[id=!caughtStepId!]/iterations"
+    },
+
+    { "comment": "check executed catch iteration 0", "operation": "comment" },
+
+    {
+	  "operation": "modification",
+	  "variable": "!caughtStepId!",
+	  "modification":
+	  {
+	    "operation": "replace",
+		"toReplace": "step",
+		"replacement": ""
+	  }
+	},
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[2]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[0]/id",
+      "targetVariable": "!branchU677795884-0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!branchId!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branchId!",
+      "value": "branch!caughtStepId!-0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/caughtException/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionStacktrace!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/caughtException/stacktrace",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionStacktrace!",
+      "value": "at xmcp.h5x.regression.PMON30.IterationsLeftException."
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionMessage!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/caughtException/message",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionMessage!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException:"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    { "comment": "check executed catch iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!branchId!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!branchId!",
+      "value": "branch!caughtStepId!-0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionException!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/caughtException/exception",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!caughtExceptionException!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionStacktrace!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/caughtException/stacktrace",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionStacktrace!",
+      "value": "at xmcp.h5x.regression.PMON30.IterationsLeftException."
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtExceptionMessage!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/caughtException/message",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!caughtExceptionMessage!",
+      "value": "xmcp.h5x.regression.PMON30.IterationsLeftException:"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!branchU677795884-0!]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    { "comment": "check executed catch iteration 2", "operation": "comment" },
+
+    {
+      "operation": "assert",
+	  "constraint": "fieldNotInResult",
+	  "fieldName": "$list[id=!branchU677795884-1!]",
+	  "basePath": "info"
+    },
+
+    { "comment": "check retry iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=0]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=0]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=0]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lastUpdate!",
+      "value": "-1"
+    },
+
+    { "comment": "check retry iteration 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=1]/runtimeInfo/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=1]/runtimeInfo/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=step26]/iterations/$list[index=1]/runtimeInfo/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!lastUpdate!",
+      "value": "-1"
+    },
+
+	{ "comment": "check retry iteration 2", "operation": "comment" },
+
+    {
+      "operation": "assert",
+	  "constraint": "fieldNotInResult",
+	  "fieldName": "$list[id=step199]",
+	  "basePath": "info"
+    },
+
+	{ "comment": "*********************", "operation": "comment" },
+    { "comment": "* iteration limit 1 *", "operation": "comment" },
+	{ "comment": "*********************", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "value": "1"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput":
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON30.RetryTest",
+        "!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"necessaryReductions":2,"reducetionRetryLimit":2}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput":
+      {
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 11,
+        "!retryLength!": 0,
+        "!errorsLength!": 0,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check caught step iteration 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtStepId!",
+      "pathInResponse": "info/$list[3]/id",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!status!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/status",
+      "unquoteResult": "true"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!status!",
+      "value": "Finished"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!orderIdIteration0!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/orderId"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!orderIdIteration0!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!startTime!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/runningTime/start"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!startTime!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!lastUpdate!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/runningTime/lastUpdate"
+    },
+    {
+      "operation": "assert",
+      "constraint": "bigger",
+      "variable": "!lastUpdate!",
+      "value": "0"
+    },
+
+    { "comment": "reset property to default value", "operation": "comment" },
+
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "overwrittenDefaultValue": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

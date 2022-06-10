@@ -1,0 +1,10 @@
+{
+    "testseries": [
+        "storable_instances_000/testseries.json",
+        "storable_instances_001/testseries.json",
+        "storable_instances_002/testseries.json",
+        "storable_instances_003/testseries.json",
+        "storable_instances_004/testseries.json",
+        "storable_instances_005/testseries.json"
+    ]
+}

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="5" Label="Get Lease" TypeName="GetLease" TypePath="xact.dhcp.client.wf" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(68)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="4" Label="Get Lease" Name="GetLease">
+    <Meta>
+      <Abstract.UID>087090EA-3767-AA81-7684-DAA0665C74A0</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="0" IsList="true" Label="DHCP Server" ReferenceName="DHCPServer" ReferencePath="xact.dhcp.client" VariableName="dHCPServer">
+        <Target RefID="69"/>
+        <Target RefID="80"/>
+      </Data>
+      <Data ID="82" Label="MAC Address" ReferenceName="MACAddress" ReferencePath="xact.dhcp.client" VariableName="mACAddress">
+        <Target RefID="69"/>
+        <Target RefID="80"/>
+      </Data>
+      <Data ID="2" Label="Link Address" ReferenceName="LinkAddress" ReferencePath="xact.dhcp.client" VariableName="linkAddress">
+        <Target RefID="69"/>
+        <Target RefID="80"/>
+      </Data>
+      <Data ID="3" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option">
+        <Target RefID="69"/>
+        <Target RefID="301"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="93" Label="Lease" ReferenceName="Lease" ReferencePath="xact.dhcp.client" VariableName="lease93">
+        <Source RefID="6"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="DHCP Send Exception" ReferenceName="DHCPSendException" ReferencePath="xact.dhcp.client" VariableName="dHCPSendException"/>
+      <Exception Label="Duplicate Correlation ID" ReferenceName="DuplicateCorrelationID" ReferencePath="xprc.synchronization" VariableName="duplicateCorrelationID"/>
+      <Exception ID="322" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException322"/>
+    </Throws>
+    <Function ID="69" Label="Discover">
+      <Source RefID="68"/>
+      <Source RefID="0"/>
+      <Source RefID="2"/>
+      <Source RefID="3"/>
+      <Source RefID="82"/>
+      <Target RefID="68"/>
+      <Target RefID="243"/>
+      <Target RefID="244"/>
+      <Target RefID="245"/>
+      <Invoke Operation="Discover" ServiceID="68">
+        <Source RefID="0"/>
+        <Source RefID="82"/>
+        <Source RefID="2"/>
+        <Source RefID="3"/>
+      </Invoke>
+      <Receive ServiceID="68">
+        <Target RefID="243"/>
+        <Target RefID="244"/>
+        <Target RefID="245"/>
+      </Receive>
+    </Function>
+    <Choice ID="104" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="245"/>
+      <Target RefID="171"/>
+      <Target RefID="172"/>
+      <Target RefID="279"/>
+      <Input>
+        <Data ID="108" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType"/>
+        <Source RefID="245"/>
+      </Input>
+      <Case ID="102" Label="true" Premise="typeof(%0%,&quot;xact.dhcp.enums.DHCPMessageType_OFFER&quot;)">
+        <Mappings ID="301" Label="Combine Options">
+          <Source RefID="3"/>
+          <Source RefID="243"/>
+          <Target RefID="278"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,VisualMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="300" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option300"/>
+            <Source RefID="3">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option272"/>
+            <Source RefID="243">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="302" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option302"/>
+            <Target RefID="278"/>
+          </Output>
+          <Mapping>%2%=concatlists(%0%,%1%)</Mapping>
+        </Mappings>
+        <Function ID="80" Label="Request">
+          <Source RefID="82"/>
+          <Source RefID="2"/>
+          <Source RefID="89"/>
+          <Source RefID="0"/>
+          <Source RefID="278"/>
+          <Target RefID="89"/>
+          <Target RefID="114"/>
+          <Target RefID="115"/>
+          <Invoke Operation="Request" ServiceID="89">
+            <Source RefID="0"/>
+            <Source RefID="82"/>
+            <Source RefID="2"/>
+            <Source RefID="278">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="89">
+            <Target RefID="114"/>
+            <Target RefID="115"/>
+          </Receive>
+        </Function>
+        <Choice ID="135" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="114"/>
+          <Input>
+            <Data ID="132" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType132"/>
+            <Source RefID="114">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Case ID="130" Label="true" Premise="typeof(%0%,&quot;xact.dhcp.enums.DHCPMessageType_ACK&quot;)">
+            <Assign ID="142"/>
+          </Case>
+          <Case ID="131" Label="false">
+            <Mappings ID="210" Label="Mapping">
+              <Source RefID="114"/>
+              <Target RefID="181"/>
+              <Meta>
+                <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+              </Meta>
+              <Input>
+                <Data ID="209" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType209"/>
+                <Source RefID="114">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Exception ID="211" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException211"/>
+                <Target RefID="181"/>
+              </Output>
+              <Mapping>%1%.reason="no ack"</Mapping>
+            </Mappings>
+            <Throw ExceptionID="181" ID="186" Label="Throw No Lease Exception">
+              <Source RefID="181"/>
+            </Throw>
+            <Assign ID="143"/>
+          </Case>
+        </Choice>
+        <Assign ID="109">
+          <Source RefID="115"/>
+          <Source RefID="114"/>
+          <Source RefID="278"/>
+          <Target RefID="171"/>
+          <Target RefID="172"/>
+          <Target RefID="279"/>
+          <Copy>
+            <Source RefID="115"/>
+            <Target RefID="171"/>
+          </Copy>
+          <Copy>
+            <Source RefID="114"/>
+            <Target RefID="172"/>
+          </Copy>
+          <Copy>
+            <Source RefID="278"/>
+            <Target RefID="279"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="103" Label="false">
+        <Mappings ID="225" Label="Mapping">
+          <Source RefID="245"/>
+          <Target RefID="168"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="224" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType224"/>
+            <Source RefID="245"/>
+          </Input>
+          <Output>
+            <Exception ID="226" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException226"/>
+            <Target RefID="168"/>
+          </Output>
+          <Mapping>%1%.reason="no offer"</Mapping>
+        </Mappings>
+        <Throw ExceptionID="168" ID="170" Label="Throw No Lease Exception">
+          <Source RefID="168"/>
+        </Throw>
+        <Assign ID="110"/>
+      </Case>
+    </Choice>
+    <ServiceReference ID="68" Label="Discover" ReferenceName="Discover" ReferencePath="xact.dhcp.client.wf">
+      <Source RefID="69"/>
+      <Target RefID="69"/>
+    </ServiceReference>
+    <ServiceReference ID="89" Label="Request" ReferenceName="Request" ReferencePath="xact.dhcp.client.wf">
+      <Source RefID="80"/>
+      <Target RefID="80"/>
+    </ServiceReference>
+    <Data ID="114" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType77">
+      <Source RefID="80"/>
+      <Target RefID="135"/>
+      <Target RefID="210"/>
+      <Target RefID="109"/>
+    </Data>
+    <Data ID="115" Label="Lease" ReferenceName="Lease" ReferencePath="xact.dhcp.client" VariableName="lease115">
+      <Source RefID="80"/>
+      <Target RefID="109"/>
+    </Data>
+    <Exception ID="168" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException">
+      <Source RefID="225"/>
+      <Target RefID="170"/>
+    </Exception>
+    <Data ID="171" Label="Lease" ReferenceName="Lease" ReferencePath="xact.dhcp.client" VariableName="lease171">
+      <Source RefID="104"/>
+      <Source RefID="109"/>
+      <Target RefID="6"/>
+    </Data>
+    <Data ID="172" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType172">
+      <Source RefID="104"/>
+      <Source RefID="109"/>
+    </Data>
+    <Exception ID="181" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException181">
+      <Source RefID="210"/>
+      <Target RefID="186"/>
+    </Exception>
+    <Data ID="243" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option243">
+      <Source RefID="69"/>
+      <Target RefID="301"/>
+    </Data>
+    <Data ID="244" Label="DHCP Packet" ReferenceName="DHCPPacket" ReferencePath="xact.dhcp" VariableName="dHCPPacket79">
+      <Source RefID="69"/>
+    </Data>
+    <Data ID="245" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType245">
+      <Source RefID="69"/>
+      <Target RefID="104"/>
+      <Target RefID="225"/>
+    </Data>
+    <Data ID="278" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option277">
+      <Source RefID="301"/>
+      <Target RefID="80"/>
+      <Target RefID="109"/>
+    </Data>
+    <Data ID="279" IsList="true" Label="Option" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option279">
+      <Source RefID="104"/>
+      <Source RefID="109"/>
+    </Data>
+    <Assign ID="6">
+      <Source RefID="171"/>
+      <Target RefID="93"/>
+      <Copy>
+        <Source RefID="171"/>
+        <Target RefID="93"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Order Type Services" TypeName="OrderTypeServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>OrderTypeServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="Order Type Services" TypeName="OrderTypeServices">
+    <Operation IsStatic="true" Label="Change order type" Name="changeOrderType">
+      <Meta>
+        <Abstract.UID>DB0FFA36-D5AE-C013-A31D-11C329DD4C6A</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Update Order Type Exception" ReferenceName="UpdateOrderTypeException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="updateOrderTypeException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.OrderTypeServicesImpl.changeOrderType(orderTypeParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create order type" Name="createOrderType">
+      <Meta>
+        <Abstract.UID>F09DC87A-FC37-E424-A0C9-11B44618D559</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Create New Oder Type Exception" ReferenceName="CreateNewOderTypeException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="createNewOderTypeException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.OrderTypeServicesImpl.createOrderType(orderTypeParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete order type" Name="deleteOrderType">
+      <Meta>
+        <Abstract.UID>763F23BB-6D11-C7FD-A461-11C04E39722D</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+        <Data Label="Order Type Name" ReferenceName="OrderTypeName" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeName"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Delete Order Type Exception" ReferenceName="DeleteOrderTypeException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="deleteOrderTypeException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.OrderTypeServicesImpl.deleteOrderType(runtimeContext, orderTypeName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Destinations" Name="getDestinations">
+      <Input>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Destination Type" ReferenceName="DestinationType" ReferencePath="xmcp.factorymanager" VariableName="destinationType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.OrderTypeServicesImpl.getDestinations(runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get list entries" Name="getListEntries">
+      <Meta>
+        <Abstract.UID>B55E979A-AE82-62AB-F5E9-0768D44C6547</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load Order Types Exception" ReferenceName="LoadOrderTypesException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="loadOrderTypesException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.OrderTypeServicesImpl.getListEntries(tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get order type details" Name="getOrderTypeDetails">
+      <Meta>
+        <Abstract.UID>D8AB1EA6-225E-E37A-EC34-11C5B0A57724</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+        <Data Label="Order Type Name" ReferenceName="OrderTypeName" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeName"/>
+      </Input>
+      <Output>
+        <Data Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load Order Tpe Exception" ReferenceName="LoadOrderTpeException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="loadOrderTpeException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.OrderTypeServicesImpl.getOrderTypeDetails(runtimeContext, orderTypeName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

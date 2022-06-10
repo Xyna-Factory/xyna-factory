@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Save User" TypeName="SaveUser" TypePath="xmcp.vpn.user" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas,openDocumentation</FixedDetailOptions>
+    <Documentation>Diese Implementierung geht davon aus, dass es keine "kritischen" Member im Advanced User-Objekt gibt, sodass alle Member von der GUI überschrieben werden dürfen.</Documentation>
+  </Meta>
+  <Operation ID="0" Label="Save User" Name="SaveUser">
+    <Input>
+      <Data ID="2" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser">
+        <Target RefID="38"/>
+        <Target RefID="85"/>
+        <Target RefID="7"/>
+        <Target RefID="143"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      <Exception Label="Predefined Xyna Object" ReferenceName="PredefinedXynaObject" ReferencePath="xfmg.xopctrl" VariableName="predefinedXynaObject"/>
+      <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+      <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="6" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Mappings ID="143" Label="Extract User Name">
+      <Source RefID="2"/>
+      <Target RefID="141"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="142" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser142"/>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="144" Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName144"/>
+        <Target RefID="141"/>
+      </Output>
+      <Mapping>%1%.name=%0%.userName</Mapping>
+    </Mappings>
+    <Function ID="135" Label="Get role from user">
+      <Source RefID="11"/>
+      <Source RefID="141"/>
+      <Target RefID="11"/>
+      <Target RefID="136"/>
+      <Invoke Operation="getRoleFromUser" ServiceID="11">
+        <Source RefID="141"/>
+      </Invoke>
+      <Receive ServiceID="11">
+        <Target RefID="136"/>
+      </Receive>
+    </Function>
+    <Function ID="12" Label="Get All Rights From Role (Old Rights)">
+      <Source RefID="11"/>
+      <Source RefID="23"/>
+      <Source RefID="136"/>
+      <Target RefID="11"/>
+      <Target RefID="13"/>
+      <Invoke Operation="getAllRightsFromRole" ServiceID="11">
+        <Source RefID="136"/>
+        <Source RefID="23">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="11">
+        <Target RefID="13"/>
+      </Receive>
+    </Function>
+    <Function ID="38" Label="Get All Roles from Advanced User">
+      <Source RefID="37"/>
+      <Source RefID="2"/>
+      <Target RefID="37"/>
+      <Target RefID="39"/>
+      <Invoke Operation="getAllRolesFromAdvancedUser" ServiceID="37">
+        <Source RefID="2"/>
+      </Invoke>
+      <Receive ServiceID="37">
+        <Target RefID="39"/>
+      </Receive>
+    </Function>
+    <Function ID="43" Label="Combine User Roles (New Rights)">
+      <Source RefID="42"/>
+      <Source RefID="39"/>
+      <Target RefID="42"/>
+      <Target RefID="44"/>
+      <Invoke Operation="CombineUserRoles" ServiceID="42">
+        <Source RefID="39"/>
+      </Invoke>
+      <Receive ServiceID="42">
+        <Target RefID="44"/>
+      </Receive>
+    </Function>
+    <Function ID="61" Label="Determine Incremental Remove and Add Rights">
+      <Source RefID="37"/>
+      <Source RefID="13"/>
+      <Source RefID="44"/>
+      <Target RefID="62"/>
+      <Target RefID="63"/>
+      <Target RefID="37"/>
+      <Invoke Operation="determineIncrementalRemoveAndAddRights" ServiceID="37">
+        <Source RefID="13">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="44">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="37">
+        <Target RefID="62"/>
+        <Target RefID="63"/>
+      </Receive>
+    </Function>
+    <Foreach ID="69">
+      <Source RefID="62"/>
+      <InputList RefID="62">
+        <Data ID="68" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight68">
+          <Target RefID="27"/>
+        </Data>
+      </InputList>
+      <Function ID="27" Label="Revoke right from role (remove Differential Remove Rights)">
+        <Source RefID="11"/>
+        <Source RefID="68"/>
+        <Source RefID="136"/>
+        <Target RefID="11"/>
+        <Meta>
+          <FixedHeight>32</FixedHeight>
+          <FixedWidth>390.4000000000001</FixedWidth>
+        </Meta>
+        <Invoke Operation="revokeRightFromRole" ServiceID="11">
+          <Source RefID="136">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+          <Source RefID="68">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="11"/>
+      </Function>
+    </Foreach>
+    <Foreach ID="73">
+      <Source RefID="63"/>
+      <InputList RefID="63">
+        <Data ID="72" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight72">
+          <Target RefID="48"/>
+        </Data>
+      </InputList>
+      <Function ID="48" Label="Grant right to role (add Differential Add Rights)">
+        <Source RefID="11"/>
+        <Source RefID="72"/>
+        <Source RefID="136"/>
+        <Target RefID="11"/>
+        <Meta>
+          <FixedHeight>32</FixedHeight>
+          <FixedWidth>393.1999999999998</FixedWidth>
+        </Meta>
+        <Invoke Operation="grantRightToRole" ServiceID="11">
+          <Source RefID="136">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+          <Source RefID="72">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="11"/>
+      </Function>
+    </Foreach>
+    <Mappings ID="85" Label="Extract Lock State">
+      <Source RefID="2"/>
+      <Target RefID="83"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="84" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser84"/>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="87" Label="Lock State" ReferenceName="LockState" ReferencePath="base" VariableName="lockState87"/>
+        <Target RefID="83"/>
+      </Output>
+      <Mapping>%1%.locked=%0%.isLocked</Mapping>
+    </Mappings>
+    <Function ID="77" Label="Set lock state">
+      <Source RefID="11"/>
+      <Source RefID="83"/>
+      <Source RefID="141"/>
+      <Target RefID="11"/>
+      <Target RefID="150"/>
+      <Invoke Operation="setLockState" ServiceID="11">
+        <Source RefID="141"/>
+        <Source RefID="83"/>
+      </Invoke>
+      <Receive ServiceID="11">
+        <Target RefID="150"/>
+      </Receive>
+    </Function>
+    <Function ID="7" Label="Store Advanced User">
+      <Source RefID="6"/>
+      <Source RefID="8"/>
+      <Source RefID="2"/>
+      <Target RefID="6"/>
+      <Invoke Operation="store" ServiceID="6">
+        <Source RefID="2"/>
+        <Source RefID="8">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="6"/>
+    </Function>
+    <Data ID="8" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="7"/>
+      <Data ID="54" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="55" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="56" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <ServiceReference ID="11" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="12"/>
+      <Source RefID="27"/>
+      <Source RefID="48"/>
+      <Source RefID="77"/>
+      <Source RefID="135"/>
+      <Target RefID="12"/>
+      <Target RefID="27"/>
+      <Target RefID="48"/>
+      <Target RefID="77"/>
+      <Target RefID="135"/>
+    </ServiceReference>
+    <Data ID="13" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight">
+      <Source RefID="12"/>
+      <Target RefID="61"/>
+    </Data>
+    <Data ID="23" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="const_DomainName">
+      <Target RefID="12"/>
+      <Data ID="57" Label="name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>XYNA</Value>
+      </Data>
+    </Data>
+    <ServiceReference ID="37" Label="Permission Service Group" ReferenceName="PermissionServiceGroup.PermissionServiceGroup" ReferencePath="xmcp.vpn.user">
+      <Source RefID="38"/>
+      <Source RefID="61"/>
+      <Target RefID="38"/>
+      <Target RefID="61"/>
+    </ServiceReference>
+    <Data ID="39" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole39">
+      <Source RefID="38"/>
+      <Target RefID="43"/>
+    </Data>
+    <ServiceReference ID="42" Label="Combine User Roles" ReferenceName="CombineUserRoles" ReferencePath="xmcp.vpn.user.sub">
+      <Source RefID="43"/>
+      <Target RefID="43"/>
+    </ServiceReference>
+    <Data ID="44" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight44">
+      <Source RefID="43"/>
+      <Target RefID="61"/>
+    </Data>
+    <Data ID="62" IsList="true" Label="Remove Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight24">
+      <Source RefID="61"/>
+      <Target RefID="69"/>
+    </Data>
+    <Data ID="63" IsList="true" Label="Add Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight25">
+      <Source RefID="61"/>
+      <Target RefID="73"/>
+    </Data>
+    <Data ID="83" Label="Lock State" ReferenceName="LockState" ReferencePath="base" VariableName="lockState">
+      <Source RefID="85"/>
+      <Target RefID="77"/>
+    </Data>
+    <Data ID="136" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole136">
+      <Source RefID="135"/>
+      <Target RefID="12"/>
+      <Target RefID="27"/>
+      <Target RefID="48"/>
+    </Data>
+    <Data ID="141" Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName141">
+      <Source RefID="143"/>
+      <Target RefID="135"/>
+      <Target RefID="77"/>
+    </Data>
+    <Data ID="150" Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult">
+      <Source RefID="77"/>
+    </Data>
+    <Assign ID="3"/>
+  </Operation>
+</Service>

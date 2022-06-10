@@ -1,0 +1,24 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="disablecrons" Groups="Cron LS" Description="Disables all (or some) Cron Like Orders."/>
+  <Argument Name="applicationName" Description="The name of the application in which the Cron Like Orders should be disabled" Optional="true"/>
+  <Argument Name="versionName" Description="The version name of the application in which the Cron Like Orders should be disabled" Optional="true"/>
+  <Argument Name="orderType" Description="Ordertype(s) of Cron Like Orders to be disabled. If set, other Cron Like Orders will be ignored." Optional="true" MultipleValues="true"/>
+  <Argument Name="workspaceName" Description="The name of the workspace in which the Cron Like Orders should be disabled" Optional="true"/>
+</XynaCommandLineCommand>

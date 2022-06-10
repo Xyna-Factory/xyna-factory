@@ -1,0 +1,93 @@
+[
+  {
+    "docu": "reads all capacities and checkts the one with the given name",
+    "functionName": "validateCapacity",
+	"type": "function",
+    "input": ["!capacityname!", "!isActive!", "!total!", "!usage!", "!watingOrderCount!", "!runningOrderCount!"],
+    "output": [],
+    "operations":
+    [
+      {
+        "operation": "call", 
+        "payload": {
+          "async": false, 
+          "input": [
+            {
+              "$meta": {
+                "fqn": "xmcp.processmonitor.resources.Filter"
+              }
+            }, 
+            {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "xmcp.processmonitor.datatypes.filter.IncludeUnused"
+                  }
+                }
+              ], 
+              "$meta": {
+                "fqn": "xmcp.processmonitor.datatypes.SearchFlag"
+              }
+            }
+          ], 
+          "orderType": "xmcp.processmonitor.resources.GetCapacities"
+        }, 
+        "requestType": "POST", 
+        "url": "/runtimeContext/GuiHttp%252F/startorder"
+      }, 
+	
+      {
+        "operation": "read",
+        "pathInResponse": "output[0]/$list[name=!capacityname!]/isActive",
+        "targetVariable": "!readIsActive!"  
+      },
+      {
+        "operation": "assert",
+        "constraint": "equals",
+        "variable": "!readIsActive!",
+        "value": "!isActive!"
+      },
+
+      {
+        "operation": "read",
+        "pathInResponse": "output[0]/$list[name=!capacityname!]/total",
+        "targetVariable": "!readtotal!"
+      },
+      {
+        "operation": "assert",
+        "constraint": "equals",
+        "variable": "!readtotal!",
+        "value": "!total!"
+      },
+
+      {
+        "operation": "read",
+        "pathInResponse": "output[0]/$list[name=!capacityname!]/usage",
+        "targetVariable": "!readUsage!"
+      },
+      {
+        "operation": "assert",
+        "constraint": "equals",
+        "variable": "!readUsage!",
+        "value": "!usage!"
+      },	
+      {
+        "operation": "read",
+        "pathInResponse": "output[0]/$list[name=!capacityname!]/waitingOrdersCount",
+        "targetVariable": "!readwating!"
+      },
+      {
+        "operation": "assert",
+        "constraint": "equals",
+        "variable": "!readwating!",
+        "value": "!watingOrderCount!"
+      },	
+      {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "output[0]/$list[name=!capacityname!]/runningOrders",
+        "expectedValue": "!runningOrderCount!"
+      }
+    ]
+  }
+]

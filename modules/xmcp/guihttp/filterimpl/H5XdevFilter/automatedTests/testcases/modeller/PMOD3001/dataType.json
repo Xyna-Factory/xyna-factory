@@ -1,0 +1,199 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "23.6.2021",
+    "updated": "23.6.2021"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Data_Type!": "New Data Type"
+        },
+        {
+          "!autotest.generated.pmod3001!": "autotest.generated.pmod2340.!rnd!"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=typeInfo]/fqn",
+      "targetVariable": "!new_1624453851294.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1624453851294!",
+      "variable": "!new_1624453851294.NewDataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberMethods]/id",
+      "targetVariable": "!memberMethodsArea!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewDataType!",
+      "variable": "!new_1624453851294.NewDataType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Service",
+          "type": "memberMethod"
+        },
+        "index": -1,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1624453851294!/!NewDataType!/objects/!memberMethodsArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberMethods]/items/$list[0]/name",
+      "targetVariable": "!serviceAName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberMethods]/items/$list[0]/id",
+      "targetVariable": "!serviceAId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Service",
+          "type": "memberMethod"
+        },
+        "index": -1,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1624453851294!/!NewDataType!/objects/!memberMethodsArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberMethods]/items/$list[1]/name",
+      "targetVariable": "!serviceBName!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberMethods]/items/$list[1]/id",
+      "targetVariable": "!serviceBId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!New_Data_Type!",
+        "path": "!autotest.generated.pmod3001!",
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1624453851294!/!NewDataType!/save"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autotest.generated.pmod3001!/!NewDataType!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autotest.generated.pmod3001!/!NewDataType!/close"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autotest.generated.pmod3001!/!NewDataType!/objects/!serviceAName!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "focusId",
+      "targetVariable": "!focusId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!focusId!",
+      "value": "!serviceAId!"
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autotest.generated.pmod3001!/!NewDataType!/close"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autotest.generated.pmod3001!/!NewDataType!/objects/!serviceBName!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "focusId",
+      "targetVariable": "!focusId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!focusId!",
+      "value": "!serviceBId!"
+    },
+	{
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autotest.generated.pmod3001!/!NewDataType!/close"
+    }
+  ]
+}

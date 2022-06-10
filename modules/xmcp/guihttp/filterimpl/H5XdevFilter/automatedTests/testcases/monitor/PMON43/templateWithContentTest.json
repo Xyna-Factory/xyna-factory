@@ -1,0 +1,106 @@
+{
+  "meta":
+  {
+    "name": "templateWithContentTest",
+	"description": "Execute a workflow containing a template with variables (loaded from app) and open audit",
+	"created": "12.03.2020",
+	"updated": "12.03.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+	  "operation": "set",
+	  "variable": "!inputText!",
+	  "value": "someInput"
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON43.TemplateWithContent",
+		"!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.datatypes.CustomTextDT","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"text":"!inputText!"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 4,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step4",
+		"!variableAreaName!": "inputs",
+		"!indexInArea!": "0",
+		"!pathInVariable!": "text"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!readValue!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readValue!",
+	  "value": "!inputText!"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "readStepVariableValue",
+	  "mapInput":
+	  {
+	    "!stepId!": "step4",
+		"!variableAreaName!": "outputs",
+		"!indexInArea!": "0",
+		"!pathInVariable!": "text"
+	  },
+	  "mapOutput":
+	  {
+	    "!result!" : "!readValue!"
+	  }
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!readValue!",
+	  "value": "Before\\n!inputText!\\nAfter"
+	}
+  ]
+}

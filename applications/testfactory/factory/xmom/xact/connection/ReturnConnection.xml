@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Return connection" TypeName="ReturnConnection" TypePath="xact.connection" Version="1.8">
+  <Meta>
+    <IsXynaComponent>true</IsXynaComponent>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Return connection" Name="ReturnConnection">
+    <Input>
+      <Data ID="8" Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection">
+        <Target RefID="43"/>
+        <Target RefID="40"/>
+        <Target RefID="42"/>
+        <Target RefID="56"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Choice ID="43" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="8"/>
+      <Input>
+        <Data ID="38" Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection38"/>
+        <Source RefID="8"/>
+      </Input>
+      <Case ID="45" Label="SSH connection" Premise="xact.ssh.SSHConnection">
+        <Assign ID="40">
+          <Source RefID="8"/>
+          <Target RefID="39"/>
+          <Copy>
+            <Source RefID="8"/>
+            <Target RefID="39"/>
+          </Copy>
+        </Assign>
+        <Function ID="33" Label="return connection">
+          <Source RefID="15"/>
+          <Source RefID="39"/>
+          <Target RefID="15"/>
+          <Invoke Operation="returnConnection" ServiceID="15">
+            <Source RefID="39">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="15"/>
+        </Function>
+        <Assign ID="48"/>
+      </Case>
+      <Case ID="60" Label="Telnet connection" Premise="xact.telnet.TelnetConnection">
+        <Assign ID="56">
+          <Source RefID="8"/>
+          <Target RefID="55"/>
+          <Copy>
+            <Source RefID="8"/>
+            <Target RefID="55"/>
+          </Copy>
+        </Assign>
+        <Function ID="63" Label="return connection">
+          <Source RefID="62"/>
+          <Source RefID="55"/>
+          <Target RefID="62"/>
+          <Invoke Operation="returnConnection" ServiceID="62">
+            <Source RefID="55">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="62"/>
+        </Function>
+        <Assign ID="59"/>
+      </Case>
+      <Case ID="47" Label="managed connection" Premise="xact.connection.ManagedConnection">
+        <Assign ID="42"/>
+        <Assign ID="49"/>
+      </Case>
+    </Choice>
+    <ServiceReference ID="15" Label="SSH connection management" ReferenceName="SSHConnectionManagement.SSHConnectionManagement" ReferencePath="xact.ssh">
+      <Source RefID="33"/>
+      <Target RefID="33"/>
+    </ServiceReference>
+    <Data ID="39" Label="SSH connection" ReferenceName="SSHConnection" ReferencePath="xact.ssh" VariableName="sSHConnection">
+      <Source RefID="40"/>
+      <Target RefID="33"/>
+    </Data>
+    <ServiceReference ID="62" Label="Telnet Connection Management" ReferenceName="TelnetConnectionManagement.TelnetConnectionManagement" ReferencePath="xact.telnet">
+      <Source RefID="63"/>
+      <Target RefID="63"/>
+    </ServiceReference>
+    <Data ID="55" Label="Telnet connection" ReferenceName="TelnetConnection" ReferencePath="xact.telnet" VariableName="telnetConnection">
+      <Source RefID="56"/>
+      <Target RefID="63"/>
+    </Data>
+    <Assign ID="9"/>
+  </Operation>
+</Service>

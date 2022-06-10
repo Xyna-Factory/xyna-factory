@@ -1,0 +1,259 @@
+{
+  "meta":
+  {
+    "name": "exportAuditTest",
+	"description": "Export a audit and check the created XML.",
+	"created": "06.04.2020",
+	"updated": "06.04.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!workflowFQN!" : "xmcp.h5x.regression.PMON85.PMON85"}
+	  ]
+	},
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "!workflowFQN!",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 3,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=step6]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/audits/!orderId!/download"
+	},
+	{
+      "operation": "read",
+      "pathInResponse": "",
+      "targetVariable": "!xml!",
+      "unquoteResult": false
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "OrderID",
+		"outputVariable": "!XML_OrderID!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_OrderID!",
+      "value": "!orderId!"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Application",
+		"outputVariable": "!XML_Application!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Application!",
+      "value": "!applicationName!"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Version",
+		"outputVariable": "!XML_Version!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Version!",
+      "value": "!applicationVersion!"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Destination",
+		"outputVariable": "!XML_Destination!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Destination!",
+      "value": "!workflowFQN!"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "DestinationType",
+		"outputVariable": "!XML_DestinationType!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_DestinationType!",
+      "value": "Workflow"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Status",
+		"outputVariable": "!XML_Status!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Status!",
+      "value": "Finished"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Priority",
+		"outputVariable": "!XML_Priority!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Priority!",
+      "value": "7"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "MonitoringLevel",
+		"outputVariable": "!XML_MonitoringLevel!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_MonitoringLevel!",
+      "value": "20"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Audit/{http://www.gip.com/xyna/xdev/xfractmod}Service/{http://www.gip.com/xyna/xdev/xfractmod}Operation/{http://www.gip.com/xyna/xdev/xfractmod}Mappings/{http://www.gip.com/xyna/xdev/xfractmod}Parameter/{http://www.gip.com/xyna/xdev/xfractmod}Input/{http://www.gip.com/xyna/xdev/xfractmod}Data/{http://www.gip.com/xyna/xdev/xfractmod}Data/{http://www.gip.com/xyna/xdev/xfractmod}Value",
+		"outputVariable": "!XML_Parameter_Mapping_Input!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Parameter_Mapping_Input!",
+      "value": "Test"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Audit/{http://www.gip.com/xyna/xdev/xfractmod}Service/{http://www.gip.com/xyna/xdev/xfractmod}Operation/{http://www.gip.com/xyna/xdev/xfractmod}Mappings/{http://www.gip.com/xyna/xdev/xfractmod}Parameter/{http://www.gip.com/xyna/xdev/xfractmod}Output/{http://www.gip.com/xyna/xdev/xfractmod}Data/{http://www.gip.com/xyna/xdev/xfractmod}Data/{http://www.gip.com/xyna/xdev/xfractmod}Value",
+		"outputVariable": "!XML_Parameter_Mapping_Output!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Parameter_Mapping_Output!",
+      "value": "TestText"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Import/Document/{http://www.gip.com/xyna/xdev/xfractmod}DataType[@TypePath=\"xmcp.h5x.regression.PMON85\"][@TypeName=\"PMON85DataType\"]/../../Application",
+		"outputVariable": "!XML_Import_PMON85DataType_Application!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Import_PMON85DataType_Application!",
+      "value": "!applicationName!"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Import/Document/{http://www.gip.com/xyna/xdev/xfractmod}DataType[@TypePath=\"xmcp.h5x.regression.PMON85\"][@TypeName=\"PMON85DataType\"]/../../Version",
+		"outputVariable": "!XML_Import_PMON85DataType_ApplicationVersion!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Import_PMON85DataType_ApplicationVersion!",
+      "value": "!applicationVersion!"
+    },
+    
+    
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Import/Document/{http://www.gip.com/xyna/xdev/xfractmod}DataType[@TypePath=\"base\"][@TypeName=\"Text\"]/../../Application",
+		"outputVariable": "!XML_Import_Base_Text_Application!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Import_Base_Text_Application!",
+      "value": "!applicationName!"
+    },
+	{
+		"operation": "selectFromXml",
+		"inputVariable": "!xml!",
+		"xpath": "Import/Document/{http://www.gip.com/xyna/xdev/xfractmod}DataType[@TypePath=\"base\"][@TypeName=\"Text\"]/../../Version",
+		"outputVariable": "!XML_Import_Base_Text_ApplicationVersion!"
+	},
+	{
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!XML_Import_Base_Text_ApplicationVersion!",
+      "value": "!applicationVersion!"
+    }
+  ]
+}

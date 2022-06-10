@@ -1,0 +1,128 @@
+[
+  {
+    "docu": "!workspace! should be unescaped like 'default workspace'",
+    "type": "function",
+	"functionName": "createDatatype",
+	"input": ["!workspace!", "!path!", "!label!"],
+	"output": ["!name!"],
+	"operations":
+	[
+	  {
+	    "operation": "set",
+		"variable": "!escapedWorkspace!",
+		"value": "!workspace!"
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!escapedWorkspace!",
+		"modification":{ "operation": "urlencode" }
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!urlIncludingWorkspace!",
+		"value": "/runtimeContext/!escapedWorkspace!"
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!url!",
+		"value": "/runtimeContext/!escapedWorkspace!/xmom"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/datatypes",
+		"payload": {"label":"New DataType"}
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!new_fqn!",
+		"pathInResponse": "xmomItem/fqn"
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!new_fqn!",
+		"modification":
+		{
+		  "operation": "substring",
+		  "divider": "\"",
+		  "keep": "after"
+		}
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!new_fqn!",
+		"modification":
+		{
+		  "operation": "substring",
+		  "divider": "\"",
+		  "keep": "before"
+		}
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!new_path!",
+		"value": "!new_fqn!"
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!new_dtName!",
+		"value": "!new_fqn!"
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!new_path!",
+		"modification": 
+		{
+		  "operation": "substring",
+		  "divider": ".",
+		  "keep": "before",
+		  "direction": "inversed"
+		}
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!new_dtName!",
+		"modification":
+		{
+		  "operation": "substring",
+		  "divider": ".",
+		  "keep": "after",
+		  "direction": "inversed"
+		}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!urlIncludingWorkspace!/subtypes",
+		"payload": {"objects":[{"fqn":"base.AnyType","rtc":{"workspace":"!workspace!"}},{"fqn":"core.exception.XynaExceptionBase","rtc":{"workspace":"!workspace!"}}]}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/datatypes/!new_path!/!new_dtName!/save",
+		"payload": {"revision":3,"label":"!label!","path":"!path!"}
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!name!",
+		"pathInResponse": "updates/$list[0]/fqn"
+	  },
+	  {
+	    "operation": "invoke",
+		"functionName": "splitFQNtoPathAndName",
+		"mapInput": { "!fqn!" : "!name!"},
+		"mapOutput":
+		{
+		  "!name!": "!name!",
+		  "!path!": "!path!"
+		}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+        "url": "!url!/datatypes/!path!/!name!/deploy",
+		"payload": {"revision":4}
+	  }
+	]
+  }
+]

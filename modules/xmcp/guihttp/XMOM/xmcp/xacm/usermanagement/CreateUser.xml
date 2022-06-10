@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create User" TypeName="CreateUser" TypePath="xmcp.xacm.usermanagement" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create User" Name="CreateUser">
+    <Input>
+      <Data ID="58" Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials58"/>
+      <Data ID="119" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role119"/>
+    </Input>
+    <Output>
+      <Data ID="664" Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult664"/>
+    </Output>
+    <Throws>
+      <Exception ID="737" Label="Name Contains Invalid Character" ReferenceName="NameContainsInvalidCharacter" ReferencePath="xfmg.xopctrl" VariableName="nameContainsInvalidCharacter737"/>
+      <Exception ID="738" Label="Password Restriction Violation" ReferenceName="PasswordRestrictionViolation" ReferencePath="xfmg.xopctrl" VariableName="passwordRestrictionViolation738"/>
+      <Exception ID="739" Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist739"/>
+      <Exception ID="740" Label="User Already Exists" ReferenceName="UserAlreadyExists" ReferencePath="xfmg.xopctrl.exceptions" VariableName="userAlreadyExists740"/>
+    </Throws>
+    <ServiceReference ID="8" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl"/>
+    <Mappings ID="180" Label="Mapping">
+      <Input>
+        <Data ID="277" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role277">
+          <Source RefID="180"/>
+        </Data>
+        <Source RefID="119"/>
+      </Input>
+      <Output>
+        <Data ID="228" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole228">
+          <Source RefID="180"/>
+        </Data>
+        <Target RefID="229"/>
+      </Output>
+      <Mapping>%1%.role=%0%.roleName</Mapping>
+    </Mappings>
+    <Function ID="7" Label="Create user">
+      <Source RefID="8"/>
+      <Source RefID="58"/>
+      <Source RefID="229"/>
+      <Target RefID="8"/>
+      <Target RefID="10"/>
+      <Invoke Operation="createUser" ServiceID="8">
+        <Source RefID="58"/>
+        <Source RefID="229"/>
+      </Invoke>
+      <Receive ServiceID="8">
+        <Target RefID="10"/>
+      </Receive>
+    </Function>
+    <Data ID="10" Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult10">
+      <Source RefID="7"/>
+    </Data>
+    <Data ID="229" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole229">
+      <Source RefID="180"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="10"/>
+      <Target RefID="664"/>
+      <Copy>
+        <Source RefID="10"/>
+        <Target RefID="664"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

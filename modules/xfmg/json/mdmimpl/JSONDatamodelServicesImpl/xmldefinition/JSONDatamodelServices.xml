@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="JSON Datamodel Services" TypeName="JSONDatamodelServices" TypePath="xfmg.xfctrl.datamodel.json" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>JSONDatamodelServicesImpl.jar</Libraries>
+  <Service Label="JSON Datamodel Services" TypeName="JSONDatamodelServices">
+    <Operation ID="3" IsStatic="true" Label="Parse Fields from JSON" Name="parseFieldsFromJSON">
+      <Meta>
+        <Abstract.UID>AFA5C8A2-3C14-FD92-F44A-DBEA8B594636</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="0" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data ID="1" Label="JSON Base Model" ReferenceName="JSONBaseModel" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONBaseModel"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="JSON Base Model" ReferenceName="JSONBaseModel" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONBaseModel6"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return JSONDatamodelServicesImpl.parseFieldsFromJSON(document, jSONBaseModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write JSON" Name="writeJSON">
+      <Meta>
+        <Abstract.UID>CD7266B9-0AEF-C1E3-A337-DBFAF84ACC92</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="JSON Base Model" ReferenceName="JSONBaseModel" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONBaseModel"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return JSONDatamodelServicesImpl.writeJSON(jSONBaseModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SSH File Transfer" TypeName="SSHFileTransfer" TypePath="xact.ssh.file" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SSHFileTransferImpl.jar</Libraries>
+  <Service Label="SSH File Transfer" TypeName="SSHFileTransfer">
+    <Operation IsStatic="true" Label="SCP Document From Remote Host" Name="scpDocumentFromRemoteHost">
+      <Input>
+        <Data Label="SSH Server Parameter" ReferenceName="SSHServerParameter" ReferencePath="xact.ssh.file" VariableName="sSHServerParameter"/>
+        <Data Label="Target File" ReferenceName="File" ReferencePath="base" VariableName="target"/>
+        <Data Label="Document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.file.SSHFileTransferImpl.scpDocumentFromRemoteHost(sSHServerParameter, target, documentType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SCP Document To Remote Host" Name="scpDocumentToRemoteHost">
+      <Input>
+        <Data Label="SSH Server Parameter" ReferenceName="SSHServerParameter" ReferencePath="xact.ssh.file" VariableName="sSHServerParameter"/>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="Target File" ReferenceName="File" ReferencePath="base" VariableName="target"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.ssh.file.SSHFileTransferImpl.scpDocumentToRemoteHost(sSHServerParameter, document, target);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SCP File From Remote Host" Name="scpFileFromRemoteHost">
+      <Input>
+        <Data Label="SSH Server Parameter" ReferenceName="SSHServerParameter" ReferencePath="xact.ssh.file" VariableName="sSHServerParameter"/>
+        <Data Label="Source File" ReferenceName="File" ReferencePath="base" VariableName="remoteFile"/>
+        <Data Label="Target File" ReferenceName="File" ReferencePath="base" VariableName="localFile"/>
+      </Input>
+      <Output>
+        <Data Label="File Transfer Info" ReferenceName="FileTransferInfo" ReferencePath="xact.ssh.file" VariableName="fileTransferInfo"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.file.SSHFileTransferImpl.scpFileFromRemoteHost(sSHServerParameter, remoteFile, localFile);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SCP File To Remote Host" Name="scpFileToRemoteHost">
+      <Input>
+        <Data Label="SSH Server Parameter" ReferenceName="SSHServerParameter" ReferencePath="xact.ssh.file" VariableName="sSHServerParameter"/>
+        <Data Label="Source File" ReferenceName="File" ReferencePath="base" VariableName="localFile"/>
+        <Data Label="Target File" ReferenceName="File" ReferencePath="base" VariableName="remoteFile"/>
+      </Input>
+      <Output>
+        <Data Label="File Transfer Info" ReferenceName="FileTransferInfo" ReferencePath="xact.ssh.file" VariableName="fileTransferInfo"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.file.SSHFileTransferImpl.scpFileToRemoteHost(sSHServerParameter, localFile, remoteFile);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SCP From Remote Host" Name="scpFromRemoteHost">
+      <Input>
+        <Data Label="SSH Server Parameter" ReferenceName="SSHServerParameter" ReferencePath="xact.ssh.file" VariableName="sSHServerParameter"/>
+        <Data Label="Source File" ReferenceName="File" ReferencePath="base" VariableName="file"/>
+        <Data Label="Location" ReferenceName="Text" ReferencePath="base" VariableName="location"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+        <Data Label="File Transfer Info" ReferenceName="FileTransferInfo" ReferencePath="xact.ssh.file" VariableName="fileTransferInfo"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.file.SSHFileTransferImpl.scpFromRemoteHost(sSHServerParameter, file, location);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SCP To Remote Host" Name="scpToRemoteHost">
+      <Input>
+        <Data Label="SSH Server Parameter" ReferenceName="SSHServerParameter" ReferencePath="xact.ssh.file" VariableName="sSHServerParameter"/>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+        <Data Label="Target File" ReferenceName="File" ReferencePath="base" VariableName="target"/>
+      </Input>
+      <Output>
+        <Data Label="File Transfer Info" ReferenceName="FileTransferInfo" ReferencePath="xact.ssh.file" VariableName="fileTransferInfo"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.ssh.file.SSHFileTransferImpl.scpToRemoteHost(sSHServerParameter, managedFileId, target);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

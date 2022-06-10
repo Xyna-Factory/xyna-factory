@@ -1,0 +1,108 @@
+{
+  "meta":
+  {
+    "name": "ConstantStore",
+	"descrption": "Beim konstanten setzen von Store kam/kommt es zu Classloader Fehlern. Braucht einen nicht-abstrakten Erben von Storable! Die oberen beiden set-Operationen können angepasst werden.",
+	"created": "24.10.2019",
+	"updated": "24.10.2019"
+  },
+  "operations":
+  [
+    {
+      "operation": "setRandom",
+	  "variable": "!storableChildName!"
+    },
+    {
+      "operation": "set",
+	  "variable": "!storableChildPath!",
+	  "value": "lf.automatedTests.generated"
+    },
+    {
+ 	  "operation": "invoke",
+	  "functionName": "createStorable",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "default workspace",
+		"!path!": "!storableChildPath!",
+		"!label!": "!storableChildName!"
+	  },
+	  "mapOutput": {"!name!" : "!storableChildName!"}
+    },
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"service","label":"Store","fqn":"xnwh.persistence.PersistenceServices","service":"PersistenceServices","operation":"store"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!StepIdNumber!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[operation=store]"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!baseUrl!",
+	  "value": "!url!"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!baseUrl!",
+	  "modification":
+	  {
+	    "operation": "substring",
+		"divider": "/xmom",
+		"keep": "before"
+      }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!baseUrl!/subtypes",
+	  "payload": {"objects":[{"fqn":"xnwh.persistence.Storable"}]}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!baseUrl!/structure",
+	  "payload": {"objects":[{"fqn":"!storableChildPath!.!storableChildName!","rtc":{"workspace":"default workspace"}}]}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/var6-in0/constant",
+	  "payload": {"constant":"{\"$meta\":{\"fqn\":\"!storableChildPath!.!storableChildName!\",\"rtc\":{\"workspace\":\"default workspace\"}}}","revision":1}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/close",
+	  "payload": {"force":true,"revision":2}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!storableChildPath!/!storableChildName!/close",
+	  "payload": {"force":true, "revision":2}
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!storableChildPath!/!storableChildName!/delete",
+	  "payload": {"force":false}
+	}
+  ]
+}

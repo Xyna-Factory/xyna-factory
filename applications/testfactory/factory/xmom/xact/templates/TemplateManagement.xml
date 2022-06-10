@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Template Management" TypeName="TemplateManagement" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Service Label="Template Management" TypeName="TemplateManagement">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xact.templates.Document</Datatype>
+        <Datatype>xact.templates.DocumentType</Datatype>
+        <Datatype>xact.templates.NETCONF</Datatype>
+        <Datatype>xact.templates.CommandLineInterface</Datatype>
+        <Datatype>xact.templates.PlainText</Datatype>
+        <Datatype>xact.templates.XML</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation IsStatic="true" Label="Retrieve document" Name="retrieve">
+      <Meta>
+        <SpecialPurpose>RetrieveDocument</SpecialPurpose>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document13"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+	  internalDocumentFromContext.read();
+	  return internalDocumentFromContext;
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Begin document" Name="start">
+      <Meta>
+        <SpecialPurpose>StartDocumentContext</SpecialPurpose>
+      </Meta>
+      <Input>
+        <Data Label="Document Type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+      </Input>
+      <Output>
+        <Data Label="Document Context" ReferenceName="DocumentContext" ReferencePath="xact.templates" VariableName="documentContext"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new xact.templates.DocumentContext();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="End document" Name="stop">
+      <Meta>
+        <SpecialPurpose>StopDocumentContext</SpecialPurpose>
+      </Meta>
+      <Input>
+        <Data Label="Document Context" ReferenceName="DocumentContext" ReferencePath="xact.templates" VariableName="documentContext"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+	  return new xact.templates.Document(internalDocumentFromContext.getDocumentType(), internalDocumentFromContext.getCompleteBufferContent());
+	</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

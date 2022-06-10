@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "1.12.2020",
+    "updated": "1.12.2020"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!": "xmcp.factorymanager.xynaproperties.ChangeXynaProperty"
+        },
+        {
+          "!xyna.processmonitor.lazyloading.limit!": "xyna.processmonitor.lazyloading.limit"
+        },
+        {
+          "!xmcp.factorymanager.xynaproperties.XynaProperty!": "xmcp.factorymanager.xynaproperties.XynaProperty"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.xynaproperties.XynaProperty!"
+            },
+            "key": "!xyna.processmonitor.lazyloading.limit!",
+            "overwrittenDefaultValue": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.xynaproperties.ChangeXynaPro!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

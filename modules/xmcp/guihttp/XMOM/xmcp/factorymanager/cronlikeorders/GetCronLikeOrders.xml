@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get cron-like Orders" TypeName="GetCronLikeOrders" TypePath="xmcp.factorymanager.cronlikeorders" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Cron-like Orders" Name="GetCronLikeOrders">
+    <Input>
+      <Data ID="4" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="19"/>
+        <Target RefID="22"/>
+        <Target RefID="24"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="5" IsList="true" Label="Cron-like Order" ReferenceName="CronLikeOrder" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrder">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="Load Cron-like Orders Exception" ReferenceName="LoadCronLikeOrdersException" ReferencePath="xmcp.factorymanager.cronlikeorders.exceptions" VariableName="loadCronLikeOrdersException"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <Function ID="68" Label="Check Rights for Current User">
+      <Source RefID="67"/>
+      <Source RefID="71"/>
+      <Target RefID="67"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="67">
+        <Source RefID="71">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="67"/>
+    </Function>
+    <Choice ID="19" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Target RefID="28"/>
+      <Target RefID="31"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="18" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo18"/>
+        <Source RefID="4"/>
+      </Input>
+      <Case ID="9" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="21" Label="Generate Table Columns">
+          <Target RefID="20"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="44" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="20"/>
+          </Output>
+          <Mapping>%0%["0"].name="ID"</Mapping>
+          <Mapping>%0%["0"].path="iD"</Mapping>
+          <Mapping>%0%["0"].sort="asc"</Mapping>
+          <Mapping>%0%["1"].name="Name"</Mapping>
+          <Mapping>%0%["1"].path="name"</Mapping>
+          <Mapping>%0%["2"].name="Application"</Mapping>
+          <Mapping>%0%["2"].path="application"</Mapping>
+          <Mapping>%0%["3"].name="Version"</Mapping>
+          <Mapping>%0%["3"].path="version"</Mapping>
+          <Mapping>%0%["4"].name="Workspace"</Mapping>
+          <Mapping>%0%["4"].path="workspace"</Mapping>
+          <Mapping>%0%["5"].name="Order Type"</Mapping>
+          <Mapping>%0%["5"].path="destination.orderType"</Mapping>
+          <Mapping>%0%["6"].name="Start Time"</Mapping>
+          <Mapping>%0%["6"].path="executionTime.startTime"</Mapping>
+          <Mapping>%0%["7"].name="Time zone"</Mapping>
+          <Mapping>%0%["7"].path="executionTime.timezone"</Mapping>
+          <Mapping>%0%["8"].name="Status"</Mapping>
+          <Mapping>%0%["8"].path="status"</Mapping>
+        </Mappings>
+        <Mappings ID="22" Label="Set bootstrap &amp; columns">
+          <Source RefID="4"/>
+          <Source RefID="20"/>
+          <Target RefID="23"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="11" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo11"/>
+            <Source RefID="4"/>
+          </Input>
+          <Input>
+            <Data ID="12" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn12"/>
+            <Source RefID="20"/>
+          </Input>
+          <Output>
+            <Data ID="13" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo13"/>
+            <Target RefID="23"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="29">
+          <Source RefID="20"/>
+          <Source RefID="23"/>
+          <Target RefID="28"/>
+          <Target RefID="31"/>
+          <Copy>
+            <Source RefID="20"/>
+            <Target RefID="28"/>
+          </Copy>
+          <Copy>
+            <Source RefID="23"/>
+            <Target RefID="31"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="10" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="24" Label="1:1">
+          <Source RefID="4"/>
+          <Target RefID="25"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="14" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo14"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data ID="15" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo15"/>
+            <Target RefID="25"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="27" Label="Get columns from Table Info">
+          <Source RefID="25"/>
+          <Target RefID="26"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="16" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo16"/>
+            <Source RefID="25">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="17" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn17"/>
+            <Target RefID="26"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="30">
+          <Source RefID="26"/>
+          <Source RefID="25"/>
+          <Target RefID="28"/>
+          <Target RefID="31"/>
+          <Copy>
+            <Source RefID="26"/>
+            <Target RefID="28"/>
+          </Copy>
+          <Copy>
+            <Source RefID="25"/>
+            <Target RefID="31"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="20" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn20">
+      <Source RefID="21"/>
+      <Target RefID="22"/>
+      <Target RefID="29"/>
+    </Data>
+    <Data ID="23" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo23">
+      <Source RefID="22"/>
+      <Target RefID="29"/>
+    </Data>
+    <Data ID="25" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo25">
+      <Source RefID="24"/>
+      <Target RefID="27"/>
+      <Target RefID="30"/>
+    </Data>
+    <Data ID="26" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn26">
+      <Source RefID="27"/>
+      <Target RefID="30"/>
+    </Data>
+    <Data ID="28" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn28">
+      <Source RefID="19"/>
+      <Source RefID="29"/>
+      <Source RefID="30"/>
+      <Target RefID="35"/>
+    </Data>
+    <Data ID="31" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo31">
+      <Source RefID="19"/>
+      <Source RefID="29"/>
+      <Source RefID="30"/>
+      <Target RefID="35"/>
+    </Data>
+    <ServiceReference ID="34" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="35"/>
+      <Target RefID="35"/>
+    </ServiceReference>
+    <Function ID="35" Label="Build TableInfo and Select Columns">
+      <Source RefID="34"/>
+      <Source RefID="28"/>
+      <Source RefID="31"/>
+      <Source RefID="38"/>
+      <Target RefID="34"/>
+      <Target RefID="37"/>
+      <Meta>
+        <FixedWidth>384.0999999999999</FixedWidth>
+        <FixedHeight>36.84999999999991</FixedHeight>
+      </Meta>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="34">
+        <Source RefID="31">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="38">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xmcp.factorymanager.cronlikeorders.CronLikeOrder</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="28"/>
+      </Invoke>
+      <Receive ServiceID="34">
+        <Target RefID="37"/>
+      </Receive>
+    </Function>
+    <Data ID="37" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="35"/>
+      <Target RefID="3"/>
+      <Target RefID="42"/>
+    </Data>
+    <Data ID="38" Label="Cron-like Order" ReferenceName="CronLikeOrder" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="const_CronLikeOrder">
+      <Target RefID="35"/>
+      <Data ID="45" Label="ID" VariableName="iD">
+        <Meta>
+          <Type>Long</Type>
+        </Meta>
+      </Data>
+      <Data ID="46" Label="Name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="47" Label="Application" VariableName="application">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="48" Label="Version" VariableName="version">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="49" Label="Workspace" VariableName="workspace">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="56" Label="Enabled" VariableName="enabled">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Function ID="42" Label="Get list entries">
+      <Source RefID="37"/>
+      <Source RefID="63"/>
+      <Target RefID="43"/>
+      <Target RefID="63"/>
+      <Invoke Operation="getListEntries" ServiceID="63">
+        <Source RefID="37">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="63">
+        <Target RefID="43"/>
+      </Receive>
+    </Function>
+    <Data ID="43" IsList="true" Label="Cron-like Order" ReferenceName="CronLikeOrder" ReferencePath="xmcp.factorymanager.cronlikeorders" VariableName="cronLikeOrder43">
+      <Source RefID="42"/>
+      <Target RefID="3"/>
+    </Data>
+    <ServiceReference ID="63" Label="Cron-like Order Services" ReferenceName="CronLikeOrderServices.CronLikeOrderServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="42"/>
+      <Target RefID="42"/>
+    </ServiceReference>
+    <ServiceReference ID="67" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="68"/>
+      <Target RefID="68"/>
+    </ServiceReference>
+    <Data ID="71" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="68"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.cronLikeOrders:read:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="37"/>
+      <Source RefID="43"/>
+      <Target RefID="2"/>
+      <Target RefID="5"/>
+      <Copy>
+        <Source RefID="37">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+      <Copy>
+        <Source RefID="43"/>
+        <Target RefID="5"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

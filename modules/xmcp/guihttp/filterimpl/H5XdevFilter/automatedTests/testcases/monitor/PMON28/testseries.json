@@ -1,0 +1,9 @@
+{
+  "tests":
+  [
+    "regularWorkflowFail.json",
+	"globalCatch.json",
+    "globalCatchFailed.json",
+	"noAuditError.json"
+  ]
+}

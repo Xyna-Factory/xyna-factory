@@ -1,0 +1,10 @@
+{
+  "tests":
+  [
+    "foreach.json",
+	"foreachRetry.json",
+	"retry.json",
+	"retryForeach.json",
+	"workflowRetry.json"
+  ]
+}

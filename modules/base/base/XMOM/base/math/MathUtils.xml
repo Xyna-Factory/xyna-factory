@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="MathUtils" TypeName="MathUtils" TypePath="base.math" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="MathUtils" TypeName="MathUtils">
+    <Operation IsStatic="true" Label="Average of Integer List" Name="averageOfIntegerList">
+      <Input>
+        <Data IsList="true" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">int size = integerNumber.size();
+if(size == 0){
+  return null;
+}
+long sum = sumOfIntegerList(integerNumber).getValue();
+return new DoubleNumber(((double)sum)/size);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="5" IsStatic="true" Label="Average of List" Name="averageOfList">
+      <Meta>
+        <Documentation>Return the average value of the Double Numbers. return null if the List was empty.</Documentation>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="3" IsList="true" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Input>
+      <Output>
+        <Data ID="4" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">int size = doubleNumber.size();
+if(size == 0){
+  return null;
+}
+double sum = sumOfList(doubleNumber).getValue();
+return new DoubleNumber(sum/size);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="9" IsStatic="true" Label="Integer Max" Name="integerMax">
+      <Input>
+        <Data ID="6" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+        <Data ID="7" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber62"/>
+      </Input>
+      <Output>
+        <Data ID="8" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber63"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(Math.max(integerNumber.getValue(), integerNumber62.getValue()));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="13" IsStatic="true" Label="Integer Min" Name="integerMin">
+      <Input>
+        <Data ID="10" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+        <Data ID="11" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber66"/>
+      </Input>
+      <Output>
+        <Data ID="12" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber67"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new IntegerNumber(Math.min(integerNumber.getValue(), integerNumber66.getValue()));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="17" IsStatic="true" Label="Max" Name="max">
+      <Input>
+        <Data ID="14" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+        <Data ID="15" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber2"/>
+      </Input>
+      <Output>
+        <Data ID="16" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new DoubleNumber(Math.max(doubleNumber.getValue(), doubleNumber2.getValue()));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="20" IsStatic="true" Label="Maximum of Integer List" Name="maximumOfIntegerList">
+      <Input>
+        <Data ID="18" IsList="true" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data ID="19" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber65"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if(integerNumber.size() == 0){
+  return null; 
+}
+long currentMax = integerNumber.get(0).getValue();
+for(IntegerNumber i: integerNumber){
+  if(i.getValue() &gt; currentMax){
+    currentMax = i.getValue();
+  }
+}
+return new IntegerNumber(currentMax);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="23" IsStatic="true" Label="Maximum of List" Name="maximumOfList">
+      <Meta>
+        <Documentation>Returns a clone of the Double Number with the greatest value. Return null if the input List was empty.</Documentation>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="21" IsList="true" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Input>
+      <Output>
+        <Data ID="22" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if(doubleNumber.size() == 0){
+  return null; 
+}
+double currentMax = doubleNumber.get(0).getValue();
+for(DoubleNumber d: doubleNumber){
+  if(d.getValue() &gt; currentMax){
+    currentMax = d.getValue();
+  }
+}
+return new DoubleNumber(currentMax);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="27" IsStatic="true" Label="Min" Name="min">
+      <Input>
+        <Data ID="24" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+        <Data ID="25" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber2"/>
+      </Input>
+      <Output>
+        <Data ID="26" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new DoubleNumber(Math.min(doubleNumber.getValue(), doubleNumber2.getValue()));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="30" IsStatic="true" Label="Minimum of Integer List" Name="minimumOfIntegerList">
+      <Input>
+        <Data ID="28" IsList="true" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data ID="29" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber44"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if(integerNumber.size() == 0){
+  return null; 
+}
+long currentMin = integerNumber.get(0).getValue();
+for(IntegerNumber i: integerNumber){
+  if(i.getValue() &lt; currentMin){
+    currentMin = i.getValue();
+  }
+}
+return new IntegerNumber(currentMin);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="33" IsStatic="true" Label="Minimum of List" Name="minimumOfList">
+      <Meta>
+        <Documentation>Returns a clone of the Double Number with the least value. Return null if the input List was empty.</Documentation>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="31" IsList="true" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Input>
+      <Output>
+        <Data ID="32" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if(doubleNumber.size() == 0){
+  return null; 
+}
+double currentMin = doubleNumber.get(0).getValue();
+for(DoubleNumber d: doubleNumber){
+  if(d.getValue() &lt; currentMin){
+    currentMin = d.getValue();
+  }
+}
+return new DoubleNumber(currentMin);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="36" IsStatic="true" Label="Sum of Integer List" Name="sumOfIntegerList">
+      <Input>
+        <Data ID="34" IsList="true" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+      </Input>
+      <Output>
+        <Data ID="35" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber37"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if(integerNumber.size() == 0){
+  return new IntegerNumber(0); 
+}
+long sum = 0;
+for(IntegerNumber i: integerNumber){
+  sum += i.getValue();
+}
+return new IntegerNumber(sum);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="39" IsStatic="true" Label="Sum of List" Name="sumOfList">
+      <Meta>
+        <Documentation>Returns the total sum over all elements of a List of Double Numbers. Return null if the List was empty.</Documentation>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="37" IsList="true" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber"/>
+      </Input>
+      <Output>
+        <Data ID="38" Label="Double Number" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if(doubleNumber.size() == 0){
+  return new DoubleNumber(0d); 
+}
+double sum = 0;
+for(DoubleNumber d: doubleNumber){
+  sum += d.getValue();
+}
+return new DoubleNumber(sum);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "PMOD2991_conditionalBranching.json",
+    "PMOD2991_prototypeService.json"
+  ]
+}

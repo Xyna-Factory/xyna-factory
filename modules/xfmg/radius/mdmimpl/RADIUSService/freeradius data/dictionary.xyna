@@ -1,0 +1,18 @@
+    #
+    #       Unofficial xyna dictionary
+    #
+    #               $Id$
+    #
+    # vendor id = 15555
+
+    VENDOR          Xyna                        15555
+
+    #
+    #       These attributes contain the access-level value.
+    #
+    BEGIN-VENDOR    Xyna
+
+    #vendor type = 1
+    ATTRIBUTE       External-Rolename                         1     string
+
+    END-VENDOR      Xyna

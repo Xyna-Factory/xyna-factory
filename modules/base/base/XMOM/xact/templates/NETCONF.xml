@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XML" BaseTypePath="xact.templates" Label="NETCONF" TypeName="NETCONF" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="NETCONF" TypeName="NETCONF">
+    <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+      <Input>
+        <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java"><![CDATA[
+	  final String NETCONF_ERROR_TAG = "rpc-error";
+	  if (response.getResponse().getContent().contains("<" + NETCONF_ERROR_TAG + ">")) {
+	    throw new DetectedError(response.getCommand(), response.getResponse());
+	  }
+	]]>
+	</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+      <Input>
+        <Data ID="4" Label="response" VariableName="response">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="is complete" VariableName="isComplete">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java"><![CDATA[
+          String text = response.trim();
+          return text.endsWith("]]]]><![CDATA[>]]]]><![CDATA[>");
+	]]>
+	</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+      <Input>
+        <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java"><![CDATA[
+	List<? extends Command> commands = super.partitionCommands(document);
+	for (Command c : commands) {
+	  c.setContent(c.getContent() + "]]]]><![CDATA[>]]]]><![CDATA[>");
+	}
+	return commands;
+	]]>
+ 	</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+      <Input>
+        <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Input>
+      <Output>
+        <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java"><![CDATA[
+        String trimmedResponse = response.getResponse().getContent().trim();
+	if (trimmedResponse.endsWith("]]]]><![CDATA[>]]]]><![CDATA[>")) {
+          response.getResponse().setContent(trimmedResponse.substring(0, trimmedResponse.length() - "]]]]><![CDATA[>]]]]><![CDATA[>".length()));
+        }
+        return response;
+	]]>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

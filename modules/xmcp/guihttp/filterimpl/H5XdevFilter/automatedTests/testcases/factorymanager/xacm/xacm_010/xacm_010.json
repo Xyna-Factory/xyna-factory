@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.xacm.usermanagement.DeleteUser!": "xmcp.xacm.usermanagement.DeleteUser"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.xacm.usermanagement.datatypes.Username!": "xmcp.xacm.usermanagement.datatypes.Username"
+        },
+        {
+          "!xmcp.xacm.usermanagement.GetUsers!": "xmcp.xacm.usermanagement.GetUsers"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!Locked!": "Locked"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!locked!": "locked"
+        },
+        {
+          "!User!": "User"
+        },
+        {
+          "!user!": "user"
+        },
+        {
+          "!Role!": "Role"
+        },
+        {
+          "!role!": "role"
+        },
+        {
+          "!Domains!": "Domains"
+        },
+        {
+          "!domains!": "domains"
+        },
+        {
+          "!dsc!": "dsc"
+        },
+        {
+          "!Creation_Date!": "Creation Date"
+        },
+        {
+          "!creationDate!": "creationDate"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.xacm.usermanagement.datatypes.Username!"
+            },
+            "name": "!autotest.generated.random!"
+          }
+        ],
+        "orderType": "!xmcp.xacm.usermanagement.DeleteUser!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

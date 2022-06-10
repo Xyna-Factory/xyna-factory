@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "CopyFromDT.json",
+	"CopyFromET.json"
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "meta":
+  {
+	"created": "16.01.2020",
+	"updated": "16.01.2020",
+	"Test Reference": "PMOD-792",
+	"issues": "can't save StepThrow with Exception type XynaExceptionBase. See PMOD-799"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rndLabel1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rndLabel2!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!" : "autoTest.generated.PMOD696"},
+		{"!exLabel!": "GeneratedException_!rndLabel1!"},
+		{"!wfLabel!": "GeneratedWorkflow_!rndLabel2!"},
+		{"!workspaceName!": "default workspace"}
+	  ]
+	},
+	{
+	  "operation": "set",
+	  "variable": "!escapedWorkspace!",
+	  "value": "!workspaceName!"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!escapedWorkspace!",
+	  "modification":{ "operation": "urlencode" }
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createException",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!exLabel!"
+	  },
+	  "mapOutput": {"!name!" : "!nameEX!"}
+	},
+	{
+	  "operation": "set",
+	  "variable": "!exfqn!",
+	  "value": "!path!.!nameEX!"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": { },
+	  "mapOutput": 
+	  {
+	    "!newPath!" : "!wfNewPath!",
+	    "!newWorkflowName!" : "!wfNewName!",
+		"!url!": "!newWFUrl!"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "saveAndDeploy",
+	  "mapInput": { 
+	    "!wfUrl!" : "!newWFUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!wfLabel!", 
+		"!revision!" : 0},
+	  "mapOutput": 
+	  {
+	    "!wfName!" : "!wfName!", 
+	    "!wfUrl!" : "!wfUrl!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"exception","label":"!exLabel!","fqn":"!exfqn!","isList":false},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/wf_input/insert",
+	  "payload": {"index":-1,"content":{"type":"exception","label":"!exLabel!","fqn":"!exfqn!","isList":false},"revision":1}
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "saveAndDeploy",
+	  "mapInput": { 
+	    "!wfUrl!" : "!wfUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!wfLabel!", 
+		"!revision!" : 0},
+	  "mapOutput": 
+	  {
+	    "!wfName!" : "!wfName!", 
+	    "!wfUrl!" : "!wfUrl!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/close",
+	  "payload": {"force":false,"revision":4}
+	},
+    {
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameEX!/delete",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "repairWorkflow",
+	  "mapInput": 
+	  { 
+	    "!wfUrl!" : "!wfUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!wfLabel!",
+		"!expectedNumberOfRepairEntries!" : 2
+	  },
+	  "mapOutput": { }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!exceptionInputType!",
+	  "pathInResponse": "xmomItem/areas/$list[id=step0]/items/$list[0]/areas/$list[name=input]/items/$list[0]/fqn",
+	  "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equal",
+	  "variable": "!exceptionInputType!",
+	  "value": "core.exception.XynaExceptionBase"
+	}
+  ]
+}

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="File" BaseTypePath="base" Label="Managed File" TypeName="ManagedFile" TypePath="xfmg.xfctrl.filemgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Appends Document content to File. Creates File if it doesn't exist yet. Threadsafe.</Documentation>
+  </Meta>
+  <Libraries>ManagedFileImpl.jar</Libraries>
+  <Service Label="Managed File" TypeName="ManagedFile">
+    <Operation IsStatic="false" Label="create" Name="create" RequiresXynaOrder="true">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().create(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="create temporary file" Name="createTemporaryFile" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data ID="7" Label="Managed File" ReferenceName="ManagedFile" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFile"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.filemgmt.ManagedFileImpl.createTemporaryFile(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="delete" Name="delete" RequiresXynaOrder="true">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().delete(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="exists" Name="exists" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="exists" VariableName="exists">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().exists(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="read into document" Name="readIntoDocument" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().readIntoDocument(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="read into document" Name="readIntoDocument_1" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Charset" ReferenceName="Charset" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="charset"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().readIntoDocument_1(correlatedXynaOrder, charset);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="write from document" Name="writeFromDocument" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().writeFromDocument(correlatedXynaOrder, document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="write from document" Name="writeFromDocument_1" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="Charset" ReferenceName="Charset" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="charset"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().writeFromDocument_1(correlatedXynaOrder, document, charset);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="append Document" Name="appendDocument" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="113" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document113"/>
+        <Data ID="122" Label="Charset" ReferenceName="Charset" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="charset122"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().appendDocument(correlatedXynaOrder, document113, charset122);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

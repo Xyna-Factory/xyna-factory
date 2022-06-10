@@ -1,0 +1,160 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "order_types"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetRuntimeContexts!": "xmcp.factorymanager.shared.GetRuntimeContexts"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetDestinations!": "xmcp.factorymanager.ordertypes.GetDestinations"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetOrdertypeCapac!": "xmcp.factorymanager.ordertypes.GetOrdertypeCapacities"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.CreateOrderType!": "xmcp.factorymanager.ordertypes.CreateOrderType"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.OrderType!": "xmcp.factorymanager.ordertypes.OrderType"
+        },
+        {
+          "!xmcp.factorymanager.ParameterInheritanceRule!": "xmcp.factorymanager.ParameterInheritanceRule"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.Capacity!": "xmcp.factorymanager.ordertypes.Capacity"
+        },
+        {
+          "!autotest.generated!": "autotest.generated.order_types.!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetOrderTypes!": "xmcp.factorymanager.ordertypes.GetOrderTypes"
+        },
+        {
+          "!application!": "application"
+        },
+        {
+          "!Version!": "Version"
+        },
+        {
+          "!version!": "version"
+        },
+        {
+          "!workspace!": "workspace"
+        },
+        {
+          "!Execution_Destination_Type/Name!": "Execution Destination Type/Name"
+        },
+        {
+          "!executionDestination.name!": "executionDestination.name"
+        },
+        {
+          "!Used_Capacities!": "Used Capacities"
+        },
+        {
+          "!usedCapacities!": "usedCapacities"
+        },
+        {
+          "!Priority!": "Priority"
+        },
+        {
+          "!priority!": "priority"
+        },
+        {
+          "!Monitoring_Level!": "Monitoring Level"
+        },
+        {
+          "!monitoringLevel!": "monitoringLevel"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.ordertypes.OrderType!"
+            },
+            "cleanupDestination": {
+              "$meta": {
+                "fqn": "xmcp.factorymanager.DestinationType"
+              }
+            },
+            "executionDestination": {
+              "$meta": {
+                "fqn": "xmcp.factorymanager.DestinationType",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "xnwh.persistence.Store",
+              "type": "Xyna_Fractal_Workflow"
+            },
+            "monitoringLevel": -1,
+            "monitoringLevelIsCustom": true,
+            "name": "!autotest.generated!",
+            "parameterInheritanceRules": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.ParameterInheritanceRule!"
+              }
+            },
+            "planningDestination": {
+              "$meta": {
+                "fqn": "xmcp.factorymanager.DestinationType"
+              }
+            },
+            "planningDestinationIsCustom": false,
+            "requiredCapacities": {
+              "$list": [],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.ordertypes.Capacity!"
+              }
+            },
+            "runtimeContext": {
+              "$meta": {
+                "fqn": "xmcp.Workspace",
+                "rtc": {
+                  "workspace": "default workspace"
+                }
+              },
+              "name": "default workspace",
+              "revision": -1,
+              "type": "Workspace"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.ordertypes.CreateOrderType!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

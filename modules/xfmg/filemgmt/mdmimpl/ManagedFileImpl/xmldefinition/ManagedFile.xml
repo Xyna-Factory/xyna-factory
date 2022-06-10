@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="File" BaseTypePath="base" IsAbstract="true" Label="Managed File" TypeName="ManagedFile" TypePath="xfmg.xfctrl.filemgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>ManagedFileImpl.jar</Libraries>
+  <Service Label="Managed File" TypeName="ManagedFile">
+    <Operation ID="0" IsStatic="false" Label="create" Name="create">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().create();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="create temporary file" Name="createTemporaryFile">
+      <Input/>
+      <Output>
+        <Data Label="Managed File" ReferenceName="ManagedFile" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFile"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return ManagedFileImpl.createTemporaryFile();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="1" IsStatic="false" Label="delete" Name="delete">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().delete();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="2" IsStatic="false" Label="exists" Name="exists">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().exists();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="4" IsStatic="false" Label="read into document" Name="readIntoDocument">
+      <Input/>
+      <Output>
+        <Data ID="3" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().readIntoDocument();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="false" Label="write from document" Name="writeFromDocument">
+      <Input>
+        <Data ID="5" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().writeFromDocument(document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

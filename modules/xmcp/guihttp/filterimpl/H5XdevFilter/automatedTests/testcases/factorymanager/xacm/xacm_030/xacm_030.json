@@ -1,0 +1,264 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.xacm.rightmanagement.DeleteRight!": "xmcp.xacm.rightmanagement.DeleteRight"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!documentation!": "documentation"
+        },
+        {
+          "!xmcp.xacm.rightmanagement.datatypes.Right!": "xmcp.xacm.rightmanagement.datatypes.Right"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!xmcp.xacm.rightmanagement.QueryRightsTableInfo!": "xmcp.xacm.rightmanagement.QueryRightsTableInfo"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!autotes!": "autotes"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!rightName!": "rightName"
+        },
+        {
+          "!dsc!": "dsc"
+        },
+        {
+          "!Documentation!": "Documentation"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        },
+        {
+          "!en-US!": "en-US"
+        },
+        {
+          "!base.locale.Locale!": "base.locale.Locale"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.xacm.rightmanagement.datatypes.Right!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "documentation": "!documentation!",
+            "originalRightName": "!autotest.generated.random!",
+            "rightName": "!autotest.generated.random!"
+          }
+        ],
+        "orderType": "!xmcp.xacm.rightmanagement.DeleteRight!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Right!",
+      "variable": "!xmcp.xacm.rightmanagement.datatypes.Right!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!autotes!",
+                  "name": "!Right!",
+                  "path": "!rightName!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Documentation!",
+                  "path": "!documentation!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!dsc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!base.locale.Locale!"
+            },
+            "language": "!en-US!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.rightmanagement.QueryRightsTableInfo!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+    "operation": "set",
+    "variable": "!autotest.generated.SONDERZEICHEN!",
+    "value": "autotest.generated.!rnd!.<>°!\\\"§$%&/()=?`´{}|;:,.-üöä+#'@€µ"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.xacm.rightmanagement.datatypes.Right!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "documentation": "",
+            "originalRightName": "!autotest.generated.SONDERZEICHEN!",
+            "rightName": "!autotest.generated.SONDERZEICHEN!"
+          }
+        ],
+        "orderType": "!xmcp.xacm.rightmanagement.DeleteRight!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "bootstrap": false,
+            "columns": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "filter": "!autotes!",
+                  "name": "!Right!",
+                  "path": "!rightName!",
+                  "pre": false,
+                  "shrink": false
+                },
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.tables.datatypes.TableColumn!"
+                  },
+                  "break0": false,
+                  "disableFilter": false,
+                  "disableSort": false,
+                  "name": "!Documentation!",
+                  "path": "!documentation!",
+                  "pre": false,
+                  "shrink": false,
+                  "sort": "!dsc!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.tables.datatypes.TableColumn!"
+              }
+            },
+            "filterCaseSensitive": false,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!base.locale.Locale!"
+            },
+            "language": "!en-US!"
+          }
+        ],
+        "monitoringLevel": 20,
+        "orderType": "!xmcp.xacm.rightmanagement.QueryRightsTableInfo!",
+        "priority": 7
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

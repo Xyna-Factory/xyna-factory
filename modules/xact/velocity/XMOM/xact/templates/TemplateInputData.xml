@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 6.1 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2015
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 164488 $
+ * $Date: 2015-02-24 09:03:56 +0100 (Di, 24. Feb 2015) $
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Template Input Data" TypeName="TemplateInputData" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+</DataType>

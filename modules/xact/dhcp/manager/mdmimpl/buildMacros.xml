@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="buildMacros" basedir="." xmlns:oracle="antlib:oracle">
+
+<!-- 	<import file="../ant/xynaMacros.xml" /> -->
+
+	<!--
+     Description:
+   -->
+	<property name="vendor.name" value="GIP Exyr GmbH" />
+
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMdd_HHmm" locale="de,DE" />
+	</tstamp>
+
+	<property environment="env" />
+	<property name="jdev.home" value="/opt/jdeveloper/" />
+
+	<condition property="oracle.home"
+	           value="${jdev.home}"
+	           else="${env.ORACLE_HOME}">
+		<available file="${jdev.home}" />
+	</condition>
+
+	<condition property="bpel.home"
+	           value="${oracle.home}/integration/bpel"
+	           else="${oracle.home}/bpel">
+		<available file="${jdev.home}" />
+	</condition>
+
+	<!-- classpath of oc4j libraries -->
+	<path id="classpath.oc4j">
+		<fileset dir="${oracle.home}">
+			<include name="j2ee/home/lib/*.jar" />
+			<include name="lib/*.jar" />
+			<include name="jdbc/lib/*.jar" />
+			<include name="integration/lib/*.jar" />
+			<include name="bpel/lib/*.jar" />
+			<include name="webservices/lib/*.jar" />
+			<include name="opmn/lib/*.jar" />
+			<include name="ant/lib/*.jar" />
+		</fileset>
+	</path>
+
+	<path id="classpath.junit">
+		<fileset dir="/opt/common">
+			<include name="apache-ant-1.7.0/lib/junit*.jar" />
+		</fileset>
+	</path>
+
+	<condition property="findbugs.home" value="/opt/common/findbugs-1.3.2">
+		<available file="/opt/common/findbugs-1.3.2" />
+	</condition>
+
+	<condition property="findbugs.executable">
+		<and>
+			<isset property="findbugs.home" />
+			<available file="${findbugs.home}/lib/findbugs.jar" />
+		</and>
+	</condition>
+
+	<path id="classpath.findbugs">
+		<fileset dir="/opt/common/findbugs-1.3.2/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="classpath.ant">
+		<fileset dir="/opt/common">
+			<include name="apache-ant-1.7.0/lib/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildJar
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="buildJar">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="the directory from which to jar the files." />
+		<attribute name="destfile" description="the JAR file to create." />
+		<attribute name="src.dir" default="@{basedir}/src" />
+		<attribute name="classes.dir" default="@{basedir}/classes" />
+		<attribute name="lib.dir" default="@{basedir}/lib" />
+		<element name="attributes"
+		         optional="true"
+		         implicit="true"
+		         description="Additional attributes for manifest" />
+		<sequential>
+			<compile basedir="@{basedir}"
+			         src.dir="@{src.dir}"
+			         classes.dir="@{classes.dir}"
+			         lib.dir="@{lib.dir}" />
+			<dirname file="@{destfile}" property="destdir" />
+			<mkdir dir="${destdir}" />
+			<jar destfile="@{destfile}">
+				<manifest>
+					<attribute name="Vendor" value="${vendor.name}" />
+					<attribute name="Version" value="${release.number}" />
+					<attribute name="Build-Date" value="${timestamp}" />
+					<attributes />
+				</manifest>
+				<fileset dir="@{classes.dir}" />
+			</jar>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildSourceJar
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="buildSourceJar">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="the directory from which to jar the files." />
+		<attribute name="destfile" description="the JAR file to create." />
+		<element name="attributes"
+		         optional="true"
+		         implicit="true"
+		         description="Additional attributes for manifest" />
+		<sequential>
+			<jar destfile="@{destfile}" basedir="@{basedir}">
+				<include name="**/*.java" />
+				<exclude name="**/*Test.java" />
+				<exclude name="**/*Tests.java" />
+				<exclude name="**/test/**" />
+				<manifest>
+					<attribute name="Vendor" value="${vendor.name}" />
+					<attribute name="Version" value="${release.number}" />
+					<attribute name="Build-Date" value="${timestamp}" />
+					<attributes />
+				</manifest>
+			</jar>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildTestJar
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="buildTestJar">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="the directory from which to jar the files." />
+		<attribute name="destfile" description="the JAR file to create." />
+		<element name="attributes"
+		         optional="true"
+		         implicit="true"
+		         description="Additional attributes for manifest" />
+		<sequential>
+			<!-- TODO: ant-junit.jar must be available -->
+			<compile-test basedir="@{basedir}" />
+			<jar destfile="@{destfile}">
+				<manifest>
+					<attribute name="Vendor" value="${vendor.name}" />
+					<attribute name="Version" value="${release.number}" />
+					<attribute name="Build-Date" value="${timestamp}" />
+					<attributes />
+				</manifest>
+				<fileset dir="@{basedir}/classes.test" />
+			</jar>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildJavadoc
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="buildJavadoc">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="the directory from which to doc the files." />
+		<attribute name="todir" description="The directory to store the doc." />
+		<sequential>
+			<condition property="lib.dir"
+			           value="@{basedir}/lib"
+			           else="@{basedir}">
+				<available file="@{basedir}/lib" />
+			</condition>
+			<javadoc destdir="@{todir}" version="true" author="true">
+				<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
+				<link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
+				<link href="http://www.dpml.net/api/ant/1.7.0" />
+				<classpath>
+					<fileset dir="${lib.dir}">
+						<include name="**/*.jar" />
+					</fileset>
+					<path refid="classpath.ant" />
+				</classpath>
+				<packageset dir="@{basedir}/src">
+					<exclude name="**/test" />
+				</packageset>
+			</javadoc>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildEar
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="buildEar">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="Directory from which to ear the files." />
+		<attribute name="destfile" description="the EAR file to create." />
+		<attribute name="eardir"
+		           default="@{basedir}/classes"
+		           description="Directory from which to take the ear meta data" />
+		<element optional="true"
+		         name="content"
+		         implicit="true"
+		         description="FileSet to include into the ear file" />
+		<sequential>
+			<ear destfile="@{destfile}"
+			     appxml="@{eardir}/META-INF/application.xml">
+				<fileset dir="@{eardir}">
+					<include name="META-INF/**" />
+					<exclude name="META-INF/application.xml" />
+				</fileset>
+				<manifest>
+					<attribute name="Vendor" value="${vendor.name}" />
+					<attribute name="Version" value="${release.number}" />
+					<attribute name="Build-Date" value="${timestamp}" />
+				</manifest>
+				<content />
+			</ear>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildWar
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="buildWar">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="the directory from which to war the files." />
+		<attribute name="destfile" description="the WAR file to create." />
+		<attribute name="lib.dir" default="@{basedir}/lib" />
+		<attribute name="web.dir" default="@{basedir}/public_html" />
+		<element name="attributes"
+		         optional="true"
+		         implicit="true"
+		         description="Additional attributes for manifest" />
+		<sequential>
+			<compile basedir="@{basedir}" lib.dir="@{lib.dir}" />
+			<!-- <condition property="lib.dir@{basedir}"
+			           value="@{basedir}/lib"
+			           else="@{basedir}">
+				<available file="@{basedir}/lib" />
+			</condition>-->
+			<dirname file="@{destfile}" property="destdir@{basedir}" />
+			<mkdir dir="${destdir@{basedir}}" />
+			<war destfile="@{destfile}"
+			     basedir="@{basedir}/@{web.dir}"
+			     webxml="@{basedir}/@{web.dir}/WEB-INF/web.xml">
+				<!-- <lib dir="${lib.dir@{basedir}}">
+					<include name="**/*.jar" />
+				</lib>-->
+				<classes dir="@{basedir}/classes">
+					<exclude name="META-INF/**" />
+				</classes>
+				<manifest>
+					<attribute name="Vendor" value="${vendor.name}" />
+					<attribute name="Version" value="${release.number}" />
+					<attribute name="Build-Date" value="${timestamp}" />
+					<attributes />
+				</manifest>
+			</war>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: runTests
+         = = = = = = = = = = = = = = = = = -->
+	<!-- Important: needs ant-junit.jar on classpath to work -->
+	<macrodef name="runTests">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="Directory from which to test the files." />
+		<attribute name="reportdir"
+		           default="@{basedir}"
+		           description="Directory to write the reports to." />
+		<sequential>
+			<compile-test basedir="@{basedir}" />
+			<condition property="src.test.dir"
+			           value="@{basedir}/test"
+			           else="@{basedir}">
+				<available file="@{basedir}/test" />
+			</condition>
+			<junit printsummary="yes">
+				<classpath>
+					<pathelement location="@{basedir}/classes" />
+					<pathelement location="@{basedir}/classes.test" />
+					<path refid="${classpath.test.@{basedir}}" />
+					<fileset dir="@{basedir}">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+				<formatter type="xml" />
+				<batchtest todir="@{reportdir}">
+					<fileset dir="${src.test.dir}">
+						<include name="**/*Test*.java" />
+						<exclude name="**/AllTests.java" />
+					</fileset>
+				</batchtest>
+			</junit>
+			<delete dir="@{basedir}/classes.test" />
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: findBugs
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="findBugs">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="Directory from which to analyse the files." />
+		<attribute name="reportfile"
+		           default="@{basedir}/findbugs.xml"
+		           description="File to write the reports to." />
+		<sequential>
+			<fail unless="findbugs.executable"
+			      message="Unable to find findbugs.jar" />
+			<taskdef name="findbugs"
+			         classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
+			         classpathref="classpath.findbugs" />
+			<findbugs home="${findbugs.home}"
+			          output="xml"
+			          outputfile="${basedir}/findbugs.xml">
+				<auxClasspath>
+					<fileset dir="@{basedir}">
+						<include name="**/*.jar" />
+					</fileset>
+				</auxClasspath>
+				<sourcePath path="@{basedir}/src" />
+				<class location="@{basedir}/classes" />
+			</findbugs>
+			<move file="${basedir}/findbugs.xml" tofile="@{reportfile}" />
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildWorkflow
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="buildWorkflow"
+	          description="Compile workflow, validate XSLT files and copy sources to destination folder.">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="Directory from whicht to build the workflow." />
+		<attribute name="destdir"
+		           description="Directory to copy the workflow" />
+		<attribute name="revision"
+		           default="${release.number}"
+		           description="Revision number of the workflow." />
+		<attribute name="if"
+		           default="true"
+		           description="build only executes if 'if' is set to true." />
+		<sequential>
+			<if>
+				<equals arg1="@{if}" arg2="true" />
+				<then>
+					<delete dir="@{basedir}/output" />
+					<java classname="org.apache.tools.ant.launch.Launcher"
+					      fork="true"
+					      taskname="buildWorkflow"
+					      dir="@{basedir}"
+					      failonerror="true">
+						<classpath>
+							<path refid="classpath.oc4j" />
+						</classpath>
+						<arg value="-Dprocess.dir=@{basedir}" />
+						<arg value="-Doracle.home=${oracle.home}" />
+						<arg value="-Dbpel.home=${bpel.home}" />
+						<arg value="-Drev=@{revision}" />
+						<arg value="-Dcheckout.dir=${checkout.dir}" />
+						<arg value="pre-build" />
+						<arg value="validateTask" />
+						<arg value="compile" />
+					</java>
+					<!--<validateXSLT basedir="@{basedir}" />-->
+					<copy todir="@{destdir}">
+						<fileset dir="@{basedir}">
+							<exclude name="output" />
+							<exclude name="**/*.jpr" />
+							<exclude name="**/ExampleCall.xml" />
+							<exclude name="**/epv.xml" />
+							<exclude name="**/graphics.xml" />
+							<exclude name="**/.project" />
+							<exclude name="**/pre-build.xml" />
+						</fileset>
+					</copy>
+				</then>
+				<else>
+					<echo message="not building @{basedir} ..." />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: validateXSLT
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="validateXSLT"
+	          description="Validate all XSLT files of a workflow.">
+		<attribute name="basedir"
+		           default="${basedir}"
+		           description="Directory where the workflow is located." />
+		<sequential>
+			<xmlvalidate>
+				<fileset dir="@{basedir}/bpel">
+					<include name="*.xsl" />
+				</fileset>
+			</xmlvalidate>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+                macrodef: classpath-run
+               = = = = = = = = = = = = = = = = = -->
+	<macrodef name="classpath-run"
+	          description="Set classpath properties for compile. Should only called from compile macro.">
+		<attribute name="basedir" default="${basedir}" />
+		<attribute name="classes.dir" default="@{basedir}/classes" />
+		<attribute name="lib.dir" default="@{basedir}/lib" />
+		<sequential>
+			<path id="classpath.run.libs">
+				<fileset dir="@{lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+				<!--path refid="classpath.run.nolibs" /-->
+			</path>
+			<path id="classpath.run.nolibs">
+				<pathelement location="@{classes.dir}" />
+				<path refid="classpath.oc4j" />
+			</path>
+			<condition property="classpath.run.@{basedir}"
+			           value="classpath.run.libs"
+			           else="classpath.run.nolibs">
+				<available file="@{lib.dir}" />
+			</condition>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: compile
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="compile"
+	          description="Compiles all source files (excluding test sources).">
+		<attribute name="basedir" default="${basedir}" />
+		<attribute name="src.dir" default="@{basedir}/src" />
+		<attribute name="classes.dir" default="@{basedir}/classes" />
+		<attribute name="lib.dir" default="@{basedir}/lib" />
+		<attribute name="encoding" default="iso-8859-1" />
+		<sequential>
+			<classpath-run basedir="@{basedir}"
+			               classes.dir="@{classes.dir}"
+			               lib.dir="@{lib.dir}" />
+			<condition property="sourcesdir@{basedir}"
+			           value="@{src.dir}"
+			           else="@{basedir}">
+				<available file="@{src.dir}" />
+			</condition>
+			<delete dir="@{classes.dir}"
+			        includeemptydirs="true"
+			        failonerror="false" />
+			<mkdir dir="@{classes.dir}" />
+			<!-- copy meta data -->
+			<copy todir="@{classes.dir}">
+				<fileset dir="${sourcesdir@{basedir}}">
+					<exclude name="**/*.java" />
+				</fileset>
+			</copy>
+			<javac destdir="@{classes.dir}"
+			       encoding="@{encoding}"
+			       debug="on"
+			       fork="yes"
+				   includeantruntime="false">
+				<src path="${sourcesdir@{basedir}}" />
+				<classpath refid="${classpath.run.@{basedir}}" />
+			</javac>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+             macrodef: classpath-test
+            = = = = = = = = = = = = = = = = = -->
+	<macrodef name="classpath-test">
+		<attribute name="basedir" default="${basedir}" />
+		<attribute name="classes.test.dir" default="@{basedir}/classes.test" />
+		<attribute name="lib.test.dir" default="@{basedir}/lib.test" />
+		<sequential>
+			<classpath-run basedir="@{basedir}" />
+			<path id="classpath.test.libs">
+				<fileset dir="@{lib.test.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<path refid="classpath.test.nolibs" />
+			</path>
+			<path id="classpath.test.nolibs">
+				<pathelement location="@{classes.test.dir}" />
+				<path refid="${classpath.run.@{basedir}}" />
+				<path refid="classpath.junit" />
+			</path>
+			<condition property="classpath.test.@{basedir}"
+			           value="classpath.test.libs"
+			           else="classpath.test.nolibs">
+				<available file="@{lib.test.dir}" />
+			</condition>
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: compile-test
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="compile-test">
+		<attribute name="basedir" default="${basedir}" />
+		<attribute name="src.dir" default="@{basedir}/src" />
+		<attribute name="classes.dir" default="@{basedir}/classes" />
+		<attribute name="lib.dir" default="@{basedir}/lib" />
+		<attribute name="src.test.dir" default="@{basedir}/test" />
+		<attribute name="classes.test.dir" default="@{basedir}/classes.test" />
+		<attribute name="lib.test.dir" default="@{basedir}/lib.test" />
+		<attribute name="encoding" default="iso-8859-1" />
+		<sequential>
+			<classpath-test basedir="@{basedir}"
+			                classes.test.dir="@{classes.test.dir}"
+			                lib.test.dir="@{lib.test.dir}" />
+			<condition property="testdir@{basedir}"
+			           value="@{src.test.dir}"
+			           else="@{basedir}">
+				<available file="@{src.test.dir}" />
+			</condition>
+			<compile basedir="@{basedir}"
+			         src.dir="@{src.dir}"
+			         classes.dir="@{classes.dir}"
+			         lib.dir="@{lib.dir}" />
+			<delete dir="@{classes.test.dir}"
+			        includeemptydirs="true"
+			        failonerror="false" />
+			<mkdir dir="@{classes.test.dir}" />
+			<!-- copy meta data -->
+			<copy todir="@{classes.test.dir}">
+				<fileset dir="${testdir@{basedir}}">
+					<exclude name="**/*.java" />
+				</fileset>
+			</copy>
+			<javac encoding="@{encoding}"
+			       fork="yes"
+			       destdir="@{classes.test.dir}"
+			       debug="on">
+				<src path="${testdir@{basedir}}" />
+				<classpath refid="${classpath.test.@{basedir}}" />
+			</javac>
+		</sequential>
+	</macrodef>
+
+</project>

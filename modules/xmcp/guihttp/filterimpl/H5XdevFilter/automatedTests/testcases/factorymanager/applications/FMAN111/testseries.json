@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "FMAN111_Part01.json",
+    "FMAN111_Part02.json"
+  ]
+}

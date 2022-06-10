@@ -1,0 +1,38 @@
+{
+  "meta":
+  {
+    "name": "emptyTest",
+	"description": "opens a new Workflow and executes a dataflow request"
+  },
+  
+  "operations":
+  [
+    {
+      "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/workflows",
+	  "payload": {"label":"New Workflow"}
+    },
+    {
+      "operation": "read",
+	  "targetVariable": "!newPath!",
+	  "pathInResponse": "xmomItem/fqn",
+	  "unquoteResult": "True"
+    },
+    {
+      "operation": "modification",
+	  "variable": "!newPath!",
+	  "modification" : 
+	    {
+	      "operation": "substring",
+		  "divider": ".",
+		  "keep": "before"
+	    }
+    },
+    {
+      "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/default%20workspace/xmom/workflows/!newPath!/NewWorkflow/dataflow"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "tests":
+  [
+    "03_dragTypeChoiceIntoWorkflow.json",
+	"03_dragConditionalChoiceIntoWorkflow.json",
+	"03_dragConditionalBranchingIntoWorkflow.json",
+	"03_conditionalBranchingWithVariableMemberEqualsAndValuesInTheBranches.json",
+	"03_conditionalBranchingWithvariableEqualsAndValuesInTheBranches.json"
+  ]
+}

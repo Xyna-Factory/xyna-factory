@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="50" Label="Request" TypeName="Request" TypePath="xact.dhcp.client.wf" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(5)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="49" Label="Request" Name="Request">
+    <Meta>
+      <Abstract.UID>FF701A49-7878-9DFE-837A-DFC900FB0855</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="46" IsList="true" Label="DHCP Server" ReferenceName="DHCPServer" ReferencePath="xact.dhcp.client" VariableName="dHCPServer">
+        <Target RefID="55"/>
+      </Data>
+      <Data ID="1" Label="MAC Address" ReferenceName="MACAddress" ReferencePath="xact.dhcp.client" VariableName="mACAddress">
+        <Target RefID="55"/>
+      </Data>
+      <Data ID="47" Label="Link Address" ReferenceName="LinkAddress" ReferencePath="xact.dhcp.client" VariableName="linkAddress">
+        <Target RefID="55"/>
+      </Data>
+      <Data ID="48" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option">
+        <Target RefID="55"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="77" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType77">
+        <Source RefID="51"/>
+      </Data>
+      <Data ID="45" Label="Lease" ReferenceName="Lease" ReferencePath="xact.dhcp.client" VariableName="lease">
+        <Source RefID="51"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="DHCP Send Exception" ReferenceName="DHCPSendException" ReferencePath="xact.dhcp.client" VariableName="dHCPSendException"/>
+      <Exception Label="Duplicate Correlation ID" ReferenceName="DuplicateCorrelationID" ReferencePath="xprc.synchronization" VariableName="duplicateCorrelationID"/>
+      <Exception ID="116" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException116"/>
+    </Throws>
+    <ServiceReference ID="54" Label="DHCPv4 Client Service" ReferenceName="DHCPv4ClientService.DHCPv4ClientService" ReferencePath="xact.dhcp.client">
+      <Source RefID="55"/>
+      <Source RefID="68"/>
+      <Target RefID="55"/>
+      <Target RefID="68"/>
+    </ServiceReference>
+    <Function ID="55" Label="Send Request">
+      <Source RefID="54"/>
+      <Source RefID="1"/>
+      <Source RefID="47"/>
+      <Source RefID="48"/>
+      <Source RefID="58"/>
+      <Source RefID="46"/>
+      <Target RefID="54"/>
+      <Target RefID="57"/>
+      <Invoke Operation="sendRequest" ServiceID="54">
+        <Source RefID="46"/>
+        <Source RefID="1"/>
+        <Source RefID="47"/>
+        <Source RefID="58">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="48"/>
+      </Invoke>
+      <Receive ServiceID="54">
+        <Target RefID="57"/>
+      </Receive>
+    </Function>
+    <Data ID="57" Label="correlationId" ReferenceName="CorrelationId" ReferencePath="xprc.synchronization" VariableName="correlationId">
+      <Source RefID="55"/>
+      <Target RefID="62"/>
+    </Data>
+    <Data ID="58" Label="DHCP Message Type" ReferenceName="DHCPMessageType_REQUEST" ReferencePath="xact.dhcp.enums" VariableName="const_DHCPMessageType_REQUEST">
+      <Target RefID="55"/>
+    </Data>
+    <ServiceReference ID="61" Label="synchronizationService" ReferenceName="Synchronization.SynchronizationService" ReferencePath="xprc.synchronization">
+      <Source RefID="62"/>
+      <Target RefID="62"/>
+    </ServiceReference>
+    <Function ID="62" Label="Await">
+      <Source RefID="61"/>
+      <Source RefID="63"/>
+      <Source RefID="57"/>
+      <Target RefID="61"/>
+      <Target RefID="70"/>
+      <Target RefID="107"/>
+      <Invoke Operation="awaitNotification" ServiceID="61">
+        <Source RefID="57"/>
+        <Source RefID="63">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="61">
+        <Target RefID="70">
+          <Meta>
+            <ExpectedType>xact.dhcp.DHCPPacket</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+      <Catch ExceptionID="107" ID="109">
+        <Mappings ID="111" Label="Mapping">
+          <Target RefID="110"/>
+          <Output>
+            <Exception Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException"/>
+            <Target RefID="110"/>
+          </Output>
+          <Mapping>%0%.reason="Timeout"</Mapping>
+        </Mappings>
+        <Throw ExceptionID="110" ID="112" Label="Throw No Lease Exception">
+          <Source RefID="110"/>
+        </Throw>
+        <Assign ID="108"/>
+      </Catch>
+    </Function>
+    <Data ID="63" Label="timeout" ReferenceName="Timeout" ReferencePath="xprc.synchronization" VariableName="timeout">
+      <Target RefID="62"/>
+      <Data ID="74" Label="time" VariableName="time">
+        <Meta>
+          <Type>Integer</Type>
+        </Meta>
+        <Value>3</Value>
+      </Data>
+    </Data>
+    <Function ID="68" Label="Extract Lease">
+      <Source RefID="54"/>
+      <Source RefID="70"/>
+      <Target RefID="54"/>
+      <Target RefID="75"/>
+      <Target RefID="76"/>
+      <Invoke Operation="extractLease" ServiceID="54">
+        <Source RefID="70"/>
+      </Invoke>
+      <Receive ServiceID="54">
+        <Target RefID="75"/>
+        <Target RefID="76"/>
+      </Receive>
+    </Function>
+    <Data ID="70" Label="DHCP Packet" ReferenceName="DHCPPacket" ReferencePath="xact.dhcp" VariableName="dHCPPacket">
+      <Source RefID="62"/>
+      <Source RefID="108"/>
+      <Target RefID="68"/>
+    </Data>
+    <Data ID="75" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType">
+      <Source RefID="68"/>
+      <Target RefID="51"/>
+    </Data>
+    <Data ID="76" Label="Lease" ReferenceName="Lease" ReferencePath="xact.dhcp.client" VariableName="lease76">
+      <Source RefID="68"/>
+      <Target RefID="51"/>
+    </Data>
+    <Exception ID="107" Label="Timeout During Synchronization" ReferenceName="TimeoutDuringSynchronization" ReferencePath="xprc.synchronization" VariableName="timeoutDuringSynchronization">
+      <Source RefID="62"/>
+    </Exception>
+    <Exception ID="110" Label="No Lease Exception" ReferenceName="NoLeaseException" ReferencePath="xact.dhcp.client" VariableName="noLeaseException110">
+      <Source RefID="111"/>
+      <Target RefID="112"/>
+    </Exception>
+    <Assign ID="51">
+      <Source RefID="75"/>
+      <Source RefID="76"/>
+      <Target RefID="77"/>
+      <Target RefID="45"/>
+      <Copy>
+        <Source RefID="75"/>
+        <Target RefID="77"/>
+      </Copy>
+      <Copy>
+        <Source RefID="76"/>
+        <Target RefID="45"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="RtcManagerServices" TypeName="RtcManagerServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>RtcManagerServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="RtcManagerServices" TypeName="RtcManagerServices">
+    <Operation IsStatic="true" Label="Check Dependent RTC Change" Name="checkDependentRTCChange" RequiresXynaOrder="true">
+      <Input/>
+      <Output/>
+      <Throws>
+        <Exception Label="Set Dependent RTCs Exception" ReferenceName="SetDependentRTCsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="setDependentRTCsException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.checkDependentRTCChange(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Clear Workspace" Name="clearWorkspace" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="1" Label="Clear Workspace Request" ReferenceName="ClearWorkspaceRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="clearWorkspaceRequest"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="2" Label="Clear Workspace Exception" ReferenceName="ClearWorkspaceException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="clearWorkspaceException"/>
+        <Exception ID="3" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights1"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.clearWorkspace(correlatedXynaOrder, clearWorkspaceRequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Application Definition" Name="createApplicationDefinition" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="5" Label="Create AD Request" ReferenceName="CreateADRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="createADRequest"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="6" Label="Create Application Definition Exception" ReferenceName="CreateApplicationDefinitionException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="createApplicationDefinitionException"/>
+        <Exception ID="7" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights2"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.createApplicationDefinition(correlatedXynaOrder, createADRequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create RTA" Name="createRTA" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="9" Label="Create RTA Request" ReferenceName="CreateRTARequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="createRTARequest"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="10" Label="Create RTA Exception" ReferenceName="CreateRTAException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="createRTAException"/>
+        <Exception ID="11" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights3"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.createRTA(correlatedXynaOrder, createRTARequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Workspace" Name="createWorkspace" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="13" Label="Create Workspace Request" ReferenceName="CreateWorkspaceRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="createWorkspaceRequest"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="14" Label="Create Workspace Exception" ReferenceName="CreateWorkspaceException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="createWorkspaceException"/>
+        <Exception ID="15" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights4"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.createWorkspace(correlatedXynaOrder, createWorkspaceRequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Application Definition" Name="deleteApplicationDefinition" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="17" Label="Application Definition" ReferenceName="ApplicationDefinition" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="applicationDefinition"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="18" Label="Delete Application Definition Exception" ReferenceName="DeleteApplicationDefinitionException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="deleteApplicationDefinitionException"/>
+        <Exception ID="19" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights5"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.deleteApplicationDefinition(correlatedXynaOrder, applicationDefinition);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete RTA" Name="deleteRTA" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="21" Label="Delete RTA Request" ReferenceName="DeleteRTARequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="deleteRTARequest"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="22" Label="Delete RTA Exception" ReferenceName="DeleteRTAException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="deleteRTAException"/>
+        <Exception ID="23" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights6"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.deleteRTA(correlatedXynaOrder, deleteRTARequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Workspace" Name="deleteWorkspace" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="25" Label="Delete Workspace Request" ReferenceName="DeleteWorkspaceRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="deleteWorkspaceRequest"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="26" Label="Delete Workspace Exception" ReferenceName="DeleteWorkspaceException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="deleteWorkspaceException"/>
+        <Exception ID="27" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights7"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.deleteWorkspace(correlatedXynaOrder, deleteWorkspaceRequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Export RTA" Name="exportRTA" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="29" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication"/>
+      </Input>
+      <Output>
+        <Data ID="30" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+      </Output>
+      <Throws>
+        <Exception ID="31" Label="Export RTA Exception" ReferenceName="ExportRTAException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="exportRTAException"/>
+        <Exception ID="32" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights8"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.exportRTA(correlatedXynaOrder, runtimeApplication);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get AD Details" Name="getADDetails" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="34" Label="Application Definition" ReferenceName="ApplicationDefinition" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="applicationDefinition"/>
+      </Input>
+      <Output>
+        <Data ID="35" Label="Application Definition Details" ReferenceName="ApplicationDefinitionDetails" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="applicationDefinitionDetails"/>
+      </Output>
+      <Throws>
+        <Exception ID="36" Label="Get AD Details Exception" ReferenceName="GetADDetailsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getADDetailsException"/>
+        <Exception ID="37" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights9"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getADDetails(correlatedXynaOrder, applicationDefinition);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Application Content" Name="getApplicationContent" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="39" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+        <Data ID="40" Label="Get Application Content Request" ReferenceName="GetApplicationContentRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="getADContentRequest"/>
+      </Input>
+      <Output>
+        <Data ID="41" IsList="true" Label="Application Element" ReferenceName="ApplicationElement" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="aDElement"/>
+      </Output>
+      <Throws>
+        <Exception ID="42" Label="Get Application Content Exception" ReferenceName="GetApplicationContentException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getADContentException"/>
+        <Exception ID="43" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights10"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getApplicationContent(correlatedXynaOrder, tableInfo, getADContentRequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Dependent RTCs" Name="getDependentRTCs" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="45" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5"/>
+        <Data ID="46" Label="Get Dependent RTCs Request" ReferenceName="GetDependentRTCsRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="getDependetRTCsRequest11"/>
+      </Input>
+      <Output>
+        <Data ID="47" IsList="true" Label="Dependency" ReferenceName="Dependency" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="dependency"/>
+      </Output>
+      <Throws>
+        <Exception ID="48" Label="Get Dependent RTC Exception" ReferenceName="GetDependentRTCException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getDependentRTCException10"/>
+        <Exception ID="49" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights11"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getDependentRTCs(correlatedXynaOrder, tableInfo5, getDependetRTCsRequest11);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Factory Nodes" Name="getFactoryNodes" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data ID="51" IsList="true" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="factoryNode"/>
+      </Output>
+      <Throws>
+        <Exception ID="52" Label="Get Factory Nodes Exception" ReferenceName="GetFactoryNodesException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getFactoryNodesException"/>
+        <Exception ID="53" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights12"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getFactoryNodes(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Issues" Name="getIssues" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="55" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data ID="56" IsList="true" Label="Issue" ReferenceName="Issue" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="issue"/>
+      </Output>
+      <Throws>
+        <Exception ID="57" Label="Get Issues Exception" ReferenceName="GetIssuesException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getIssuesException"/>
+        <Exception ID="58" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights13"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getIssues(correlatedXynaOrder, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get RTA Details" Name="getRTADetails" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="60" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication"/>
+      </Input>
+      <Output>
+        <Data ID="61" Label="Runtime Application Details" ReferenceName="RuntimeApplicationDetails" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplicationDetails"/>
+      </Output>
+      <Throws>
+        <Exception ID="62" Label="Get RTA Details Exception" ReferenceName="GetRTADetailsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getRTADetailsException"/>
+        <Exception ID="63" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights14"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getRTADetails(correlatedXynaOrder, runtimeApplication);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get RTCs" Name="getRTCs" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="65" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+        <Data ID="128" Label="Node Filter" ReferenceName="FactoryNode" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="factoryNode128"/>
+      </Input>
+      <Output>
+        <Data ID="66" IsList="true" Label="Runtime Context Table Entry" ReferenceName="RuntimeContextTableEntry" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContextTableEntry"/>
+      </Output>
+      <Throws>
+        <Exception ID="67" Label="Get RTCs Exception" ReferenceName="GetRTCsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getRTCsException1"/>
+        <Exception ID="68" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getRTCs(correlatedXynaOrder, tableInfo, factoryNode128);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Runtime Application List" Name="getRuntimeApplicationList" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data ID="70" IsList="true" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication"/>
+      </Output>
+      <Throws>
+        <Exception ID="71" Label="Get Runtime Applications Exception" ReferenceName="GetRuntimeApplicationsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getRuntimeApplicationsException"/>
+        <Exception ID="72" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights15"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getRuntimeApplicationList(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Runtime Applications" Name="getRuntimeApplications" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="74" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data ID="75" IsList="true" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication"/>
+      </Output>
+      <Throws>
+        <Exception ID="76" Label="Get Runtime Applications Exception" ReferenceName="GetRuntimeApplicationsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getRuntimeApplicationsException"/>
+        <Exception ID="77" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights16"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getRuntimeApplications(correlatedXynaOrder, tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Workspace Details" Name="getWorkspaceDetails" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="79" Label="Workspace" ReferenceName="Workspace" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspace"/>
+      </Input>
+      <Output>
+        <Data ID="80" Label="Workspace Details" ReferenceName="WorkspaceDetails" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspaceDetails"/>
+      </Output>
+      <Throws>
+        <Exception ID="81" Label="Get Workspace Details Exception" ReferenceName="GetWorkspaceDetailsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getWorkspaceDetailsException"/>
+        <Exception ID="82" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights17"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getWorkspaceDetails(correlatedXynaOrder, workspace);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Workspaces" Name="getWorkspaces" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data ID="84" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspace1"/>
+      </Output>
+      <Throws>
+        <Exception ID="85" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights18"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getWorkspaces(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Import RTA" Name="importRTA" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="87" Label="Import RTA Request" ReferenceName="ImportRTARequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="importRTARequest"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="88" Label="Import RTA Exception" ReferenceName="ImportRTAException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="importRTAException"/>
+        <Exception ID="89" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights19"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.importRTA(correlatedXynaOrder, importRTARequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load RTA into Workspace" Name="loadRTAIntoWorkspace" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="91" Label="Load RTA Request" ReferenceName="LoadRTARequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="loadRTARequest"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="92" Label="Load RTA into Workspace Exception" ReferenceName="LoadRTAIntoWorkspaceException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="loadRTAIntoWorkspaceException"/>
+        <Exception ID="93" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights20"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.loadRTAIntoWorkspace(correlatedXynaOrder, loadRTARequest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Migrate RTC" Name="migrateRTC" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="95" Label="RTC Migration" ReferenceName="RTCMigration" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigration129"/>
+        <Data ID="96" Label="Abort Orders" ReferenceName="AbortOrders" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="abortOrders130"/>
+      </Input>
+      <Output>
+        <Data ID="97" Label="RTC Migration Result" ReferenceName="RTCMigrationResult" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigrationResult128"/>
+      </Output>
+      <Throws>
+        <Exception ID="98" Label="Migrate RTC Exception" ReferenceName="MigrateRTCException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="migrateRTCException126"/>
+        <Exception ID="99" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights127"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.migrateRTC(correlatedXynaOrder, rTCMigration129, abortOrders130);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set AD Content" Name="setADContent" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="101" Label="Application Definition" ReferenceName="ApplicationDefinition" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="applicationDefinition"/>
+        <Data ID="102" IsList="true" Label="Application Element" ReferenceName="ApplicationElement" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="aDElement"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="103" Label="Set AD Content Exception" ReferenceName="SetADContentException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="setADContentException"/>
+        <Exception ID="104" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights21"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.setADContent(correlatedXynaOrder, applicationDefinition, aDElement);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set AD Documentation" Name="setADDocumentation" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="106" Label="Application Definition" ReferenceName="ApplicationDefinition" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="applicationDefinition"/>
+        <Data ID="107" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="documentation"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="108" Label="Set AD Documentation Exception" ReferenceName="SetADDocumentationException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="setADDocumentationException"/>
+        <Exception ID="109" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights22"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.setADDocumentation(correlatedXynaOrder, applicationDefinition, documentation);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set Dependent RTCs" Name="setDependentRTCs" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="111" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext"/>
+        <Data ID="112" IsList="true" Label="Dependency" ReferenceName="Dependency" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="dependency"/>
+        <Data ID="129" Label="Force" ReferenceName="Force" ReferencePath="xmcp.yggdrasil" VariableName="force129"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="113" Label="Set Dependent RTCs Exception" ReferenceName="SetDependentRTCsException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="setDependentRTCsException"/>
+        <Exception ID="114" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights23"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.setDependentRTCs(correlatedXynaOrder, runtimeContext, dependency, force129);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set RTA Order Entry" Name="setRTAOrderEntry" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="116" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication"/>
+        <Data ID="117" Label="Order Entry" ReferenceName="OrderEntry" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="orderEntry"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="118" Label="Set RTA Order Entry Exception" ReferenceName="SetRTAOrderEntryException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="setRTAOrderEntryException"/>
+        <Exception ID="119" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights24"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.setRTAOrderEntry(correlatedXynaOrder, runtimeApplication, orderEntry);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Start Runtime Application" Name="startRuntimeApplication" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="121" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="122" Label="Start Runtime Application Exception" ReferenceName="StartRuntimeApplicationException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="startRuntimeApplicationException"/>
+        <Exception ID="123" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights25"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.startRuntimeApplication(correlatedXynaOrder, runtimeApplication);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Stop Runtime Application" Name="stopRuntimeApplication" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="125" Label="Runtime Application" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeApplication"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="126" Label="Stop Runtime Application Exception" ReferenceName="StopRuntimeApplicationException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="stopRuntimeApplicationException"/>
+        <Exception ID="127" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights26"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.RtcManagerServicesImpl.stopRuntimeApplication(correlatedXynaOrder, runtimeApplication);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Duplicates" Name="deleteDuplicates" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="130" Label="Workspace" ReferenceName="Workspace" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspace130"/>
+      </Input>
+      <Output>
+        <Data ID="472" Label="Delete Duplicates Response" ReferenceName="DeleteDuplicatesResponse" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="deleteDuplicatesResponse472"/>
+      </Output>
+      <Throws>
+        <Exception ID="131" Label="Delete Duplicates Exception" ReferenceName="DeleteDuplicatesException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="deleteDuplicatesException131"/>
+        <Exception ID="132" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights132"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.deleteDuplicates(correlatedXynaOrder, workspace130);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Workspace Content" Name="getWorkspaceContent" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="473" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo473"/>
+        <Data ID="474" Label="Get Workspace Content Request " ReferenceName="GetWorkspaceContentRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="getWorkspaceContentRequest474"/>
+      </Input>
+      <Output>
+        <Data ID="475" IsList="true" Label="Workspace Element" ReferenceName="WorkspaceElement" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspaceElement475"/>
+      </Output>
+      <Throws>
+        <Exception ID="476" Label="Get Workspace Content Exception" ReferenceName="GetWorkspaceContentException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getWorkspaceContentException476"/>
+        <Exception ID="477" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights477"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.RtcManagerServicesImpl.getWorkspaceContent(correlatedXynaOrder, tableInfo473, getWorkspaceContentRequest474);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

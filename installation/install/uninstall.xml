@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project default="help" basedir="." xmlns:oracle="antlib:oracle">
+  
+  <import file="ant-xyna.xml" />
+
+  <!-- =================================
+	       target: help
+	      ================================= -->
+  <target name="help">
+    <echo message="Choose one of the following targets:" />
+    <echo message="uninstall: Uninstall the whole application" />
+    <echo message="  +-- uninstall-db" />
+    <echo message="  +-- uninstall-resource" />
+    <echo message="  +-- uninstall-ear" />
+    <echo message="  +-- uninstall-workflow" />
+  </target>
+
+  <!-- =================================
+	       target: uninstall
+	      ================================= -->
+  <target name="uninstall"
+          depends="uninstall-workflow, uninstall-ear, uninstall-routing, uninstall-resource, uninstall-db"
+          description="Uninstall the whole application.">
+    <echo message="Uninstall complete." />
+  </target>
+
+  <!-- =================================
+	       target: uninstall-db
+	      ================================= -->
+  <target name="uninstall-db" description="uninstall part 'database'">
+    <!--<dropDBUser sqldir="${sql.dir}" userid="${db.userid}" />-->
+    <echo message="Uninstall part 'database' complete." />
+  </target>
+
+  <!-- =================================
+	       target: uninstall-resource
+	      ================================= -->
+  <target name="uninstall-resource" description="uninstall part 'resource'">
+    <!-- ADJUSTMENT: uninstall component resources -->
+    <!-- TODO: ask if log4.properties should be removed -->
+    <!--<delete file="${oracle.home}/j2ee/${as.oc4j}/config/log4j.properties" />
+    <delete file="${oracle.home}/j2ee/${as.oc4j}/${delivery.name}Exceptions.xml" />-->
+    <echo message="Uninstall part 'resource' complete." />
+  </target>
+
+  <!-- =================================
+	       target: uninstall-ear
+	      ================================= -->
+  <target name="uninstall-ear" description="uninstall part 'ear'">
+    <!-- ADJUSTMENT: uninstall component ears -->
+    <echo message="Uninstall part 'ear' complete." />
+  </target>
+
+  <!-- =================================
+	       target: uninstall-workflow
+	      ================================= -->
+  <target name="uninstall-workflow" description="uninstall part 'workflow'">
+    <!-- ADJUSTMENT: uninstall component workflows -->
+    <echo message="Uninstall part 'workflow' complete." />
+  </target>
+
+  <!-- ================================= 
+          target: uninstall-routing              
+         ================================= -->
+  <target name="uninstall-routing" description="uninstall part 'routing'">
+    <!-- ADJUSTMENT: uninstall routing -->
+    <echo message="Uninstall part 'routing' complete." />
+  </target>
+
+</project>

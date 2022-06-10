@@ -1,0 +1,98 @@
+[
+  {
+    "type": "function",
+    "functionName": "createNewWorkflow",
+    "input": [],
+    "output": 
+    [ 
+      "!newPath!",
+	  "!newWorkflowName!",
+	  "!url!",
+	  "!openResponse!"
+    ],
+    "operations":
+    [
+	  {
+	    "operation": "set",
+		"variable": "!url!",
+		"value": "/runtimeContext/default%20workspace/xmom/workflows"
+	  },
+      {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!url!",
+	    "payload": {"label":"New Workflow"}
+	  },
+  	  {
+        "operation": "read",
+	    "targetVariable": "!newPath!",
+	    "pathInResponse": "xmomItem/fqn"
+      },
+	  {
+	    "operation": "read",
+		"targetVariable": "!openResponse!",
+		"pathInResponse": ""
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!newPath!",
+		"modification":
+		{
+		  "operation": "substring",
+		  "divider": "\"",
+		  "keep": "after"
+		}
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!newPath!",
+		"modification":
+		{
+		  "operation": "substring",
+		  "divider": "\"",
+		  "keep": "before",
+		  "direction": "inversed"
+		}
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!newWorkflowName!",
+		"value": "!newPath!"
+	  },
+      {
+        "operation": "modification",
+	    "variable": "!newPath!",
+	    "modification" : 
+	    {
+	      "operation": "substring",
+		  "divider": ".",
+		  "keep": "before"
+  	    }
+      },
+      {
+        "operation": "modification",
+	    "variable": "!newWorkflowName!",
+	    "modification" : 
+	    {
+	      "operation": "substring",
+		  "divider": ".",
+		  "keep": "after"
+  	    }
+      },
+	  {
+	    "operation": "modification",
+		"variable": "!url!",
+		"modification" :
+		{
+		  "operation": "concat",
+		  "value": "/!newPath!/!newWorkflowName!"
+		}
+	  },
+      {
+        "operation": "call",
+	    "requestType": "GET",
+	    "url": "!url!/dataflow"
+      }
+    ]
+  }
+]

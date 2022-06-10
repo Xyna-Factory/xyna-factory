@@ -1,0 +1,31 @@
+{
+  "tests":
+  [
+    "PMOD2810_1_prototypeStep.json",
+    "PMOD2810_2_prototypeStepInForeach.json",
+    "PMOD2810_3_1_notOnTarget_subWFInOut.json",
+    "PMOD2810_3_1_onTarget_subWFInOut.json",
+    "PMOD2810_3_2_notOnTarget_subWFCatchContent.json",
+    "PMOD2810_3_2_onTarget_subWFCatchContent.json",
+    "PMOD2810_3_3_notOnTarget_subWFCatchEmpty.json",
+    "PMOD2810_3_3_onTarget_subWFCatchEmpty.json",
+    "PMOD2810_3_4_notOnTarget_subWFCompensation.json",
+    "PMOD2810_3_4_onTarget_subWFCompensation.json",
+    "PMOD2810_4_notOnTarget_ServiceGroup.json",
+    "PMOD2810_4_onTarget_ServiceGroup.json",
+    "PMOD2810_5_1_dtService.json",
+    "PMOD2810_6_mapping.json",
+    "PMOD2810_7_template.json",
+    "PMOD2810_8_query.json",
+    "PMOD2810_9_throw.json",
+    "PMOD2810_10_notify.json",
+    "PMOD2810_11_await.json",
+    "PMOD2810_targets_1_wf.json",
+    "PMOD2810_targets_2_StepId.json",
+    "PMOD2810_targets_3_ConditionalChoiceCase.json",
+    "PMOD2810_targets_4_ConditionalBranchingBranchId.json",
+    "PMOD2810_targets_5_TypeChoiceCase.json",
+    "PMOD2810_targets_6_ConditionalChoiceBranch.json",
+    "PMOD2810_targets_7_TypeChoiceBranch.json"
+  ]
+}

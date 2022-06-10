@@ -1,0 +1,18 @@
+{
+    "testseries": [
+        "order_types_001/testseries.json",
+        "order_types_002/testseries.json",
+        "order_types_003/testseries.json",
+        "order_types_005/testseries.json",
+        "order_types_006/testseries.json",
+        "order_types_007/testseries.json",
+        "order_types_009/testseries.json",
+        "order_types_010/testseries.json",
+        "order_types_011/testseries.json",
+        "order_types_013/testseries.json",
+        "order_types_014/testseries.json",
+        "order_types_015/testseries.json",
+        "order_types_016/testseries.json",
+        "order_types_017/testseries.json"
+    ]
+}

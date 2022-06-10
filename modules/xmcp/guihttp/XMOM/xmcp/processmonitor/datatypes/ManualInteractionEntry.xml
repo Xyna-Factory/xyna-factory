@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Manual Interaction Entry" TypeName="ManualInteractionEntry" TypePath="xmcp.processmonitor.datatypes" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Id" ReferenceName="ManualInteractionId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="id"/>
+  <Data Label="Reason" VariableName="reason">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Type" VariableName="type">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="User group" VariableName="userGroup">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Todo" VariableName="todo">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Priority" VariableName="priority">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="MonitoringCode" VariableName="monitoringCode">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="Order type" VariableName="orderType">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Session Id" VariableName="sessionId">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Parent Id" VariableName="parentId">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Application" VariableName="application">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Version" VariableName="version">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Workspace" VariableName="workspace">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Allow continue" VariableName="allowContinue">
+    <Meta>
+      <Type>Boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Allow retry" VariableName="allowRetry">
+    <Meta>
+      <Type>Boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Allow abort" VariableName="allowAbort">
+    <Meta>
+      <Type>Boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Start time" VariableName="startTime">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Last update" VariableName="lastUpdate">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+</DataType>

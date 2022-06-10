@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+	Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="EN">
+  <Description>
+  CodeRange 08000 - 08199 (siehe BlackExceptionCodeManagement)
+  </Description>
+
+<!-- Components (do not modify this line. it is used by the buildscripts to include dynamic components) -->
+	<Include File="exceptions/xact.xml" />
+	<Include File="exceptions/xdev.xml" />
+	<Include File="exceptions/xfmg.xml" />
+	<Include File="exceptions/xmcp.xml" />
+	<Include File="exceptions/xnwh.xml" />
+	<Include File="exceptions/xprc.xml" />
+	
+  <ExceptionType Code="XYNA-08000" TypeName="Ex_FileWriteException" TypePath="com.gip.xyna.exceptions" BaseTypeName="Ex_FileAccessException" BaseTypePath="com.gip.xyna.exceptions">
+    <MessageText Language="EN">File %0% could not be written to</MessageText>
+    <MessageText Language="DE">Die Datei %0% konnte nicht geschrieben werden.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-08001" TypeName="Ex_InaccessableSocketException" TypePath="com.gip.xyna.exceptions" >
+    <Data Label="port" VariableName="port">
+    	<Meta>
+    		<Type>int</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">Couldn't open socket on port %0%.</MessageText>
+    <MessageText Language="DE">Socket auf Port %0% konnte nicht geöffnet werden.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-08002" TypeName="Ex_FileAccessException" TypePath="com.gip.xyna.exceptions" >
+    <Data Label="file" VariableName="fileName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">File %0% could not be accessed.</MessageText>
+    <MessageText Language="DE">Auf Datei %0% konnte nicht zugegriffen werden.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-08003" TypeName="Ex_InvalidPolicyFileException" TypePath="com.gip.xyna.exceptions" >
+    <Data Label="file" VariableName="fileName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <Data Label="permission" VariableName="permission">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">The policy file '%0%' seems to be invalid. The permission '%1%' could not be found.</MessageText>
+    <MessageText Language="DE">In der Policy Datei '%0%' wurde die Permission '%1%' nicht gefunden. Mögliche Gründe: Permission ist nicht vorhanden oder Datei hat ungültigen Syntax.</MessageText>
+  </ExceptionType>
+  
+</ExceptionStore>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Application applicationName="SSHServer" comment="SSH Trigger und Filter" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Connection</ApplicationName>
+        <VersionName>1.0.11</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Filters>
+    <Filter implicitDependency="false">
+      <Name>SSHFilter</Name>
+      <JarFiles>SSHFilter/SSHFilter.jar:</JarFiles>
+      <FqFilterClassname>com.gip.xyna.xact.filter.SSHFilter</FqFilterClassname>
+      <TriggerName>SSHTrigger</TriggerName>
+      <SharedLibs/>
+    </Filter>
+  </Filters>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>sshServer</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <Triggers>
+    <Trigger implicitDependency="false">
+      <Name>SSHTrigger</Name>
+      <JarFiles>SSHTrigger/SSHTrigger.jar:</JarFiles>
+      <FqTriggerClassname>com.gip.xyna.xact.trigger.SSHTrigger</FqTriggerClassname>
+      <SharedLibs>sshServer:</SharedLibs>
+    </Trigger>
+  </Triggers>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.SSHHostKey</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.SSHServerConnection</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+     <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.SSHSession</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.SSHSessionCustomization</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.enums.Newline</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.enums.NewlineAuto</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.enums.NewlineCRLF</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.enums.NewlineLF</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.server.enums.NewlineNone</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>

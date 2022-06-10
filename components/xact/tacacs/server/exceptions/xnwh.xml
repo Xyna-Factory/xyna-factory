@@ -1,0 +1,415 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="EN">
+   <Description Language="">Exceptions Xyna. Codes finden sich in auch in Klasse
+               com.gip.xyna.xnwh.Codes. Diese Datei dient
+               gleichzeitig als Dokumentation der Fehlermeldungen.
+               CodeRange von 02200 bis 02499</Description>
+   <ExceptionType Code="XYNA-02220" TypeName="XNWH_MULTIPLE_NODE_FOR_PATH" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="name des knotens" VariableName="nodeName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Knoten mehrfach in XML gefunden. Ungültige Pfadangabe in Where-Element: %0%</MessageText>
+      <MessageText Language="EN">Multiple node found for path in where element: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02221" TypeName="XNWH_PERSISTENCE_ERROR" TypePath="com.gip.xyna.xnwh.exceptions">
+      <MessageText Language="DE">Persistierung nicht möglich</MessageText>
+      <MessageText Language="EN">Unable to persist</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02222" TypeName="XNWH_XMLSERIALIZATION_UNSUPPORTED" TypePath="com.gip.xyna.xnwh.exceptions">
+      <MessageText Language="DE">XML Parser Implementierung unterstützt nicht Serialisierung</MessageText>
+      <MessageText Language="EN">Wrong version of xml parser implementation</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02223" TypeName="XNWH_PERSISTENCE_READ_UNKNOWN_OBJECT" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="name of found object" VariableName="unparsableObjectName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das gespeicherte Objekt %0% nicht als Klasse geladen werden</MessageText>
+      <MessageText Language="EN">Stored object %0% could not be loaded as a class</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02224" TypeName="XNWH_PERSISTENCE_MISSING_EXPECTED_OBJECT" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="name of found object" VariableName="unparsableObjectName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Erwartetes Objekt %0% konnte nicht deserialisiert werden.</MessageText>
+      <MessageText Language="EN">Missing expected object %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02225" TypeName="XNWH_PERSISTENCE_MISSING_FUNCTION_GROUP" TypePath="com.gip.xyna.xnwh.exceptions">
+      <MessageText Language="DE">FunctionGroup-Objekt zur Persistierung benoetigt, es darf nicht null sein.</MessageText>
+      <MessageText Language="EN">FunctionGroup object is required for persistence, it may not be null.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02226" TypeName="XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="Requested primary key" VariableName="requestedPrimaryKey">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Table name" VariableName="tableName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Kein Objekt mit Primary Key '%0%' in Tabelle '%1%' gefunden.</MessageText>
+      <MessageText Language="EN">No object found with primarykey '%0%' in table '%1%'</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02230" TypeName="XNWH_PERSISTENCE_LAYER_CLASS_NOT_FOUND" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="Requested persistence layer class" VariableName="requestedPersistenceLayerClass">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Jar files taken into account" VariableName="jarFilesTakenIntoAccount">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Konnte die PersistenceLayer-Klasse '%0%' nicht laden. Beruecksichtige Jar-File(s): %1%.</MessageText>
+      <MessageText Language="EN">Could not load persistence layer class '%0%'. Looked at the following jar files: %1%.)</MessageText>
+   </ExceptionType>
+   
+   <ExceptionType Code="XYNA-02231" TypeName="XNWH_NoPersistenceLayerConfiguredForTableException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="table name" VariableName="tableName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="connection type" VariableName="connectionType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Für Tabelle %0% ist kein Persistence Layer mit ODSConnectionType=%1% definiert.</MessageText>
+      <MessageText Language="EN">There is no persistence layer defined for table %0% and ods connection type=%1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02232" TypeName="XNWH_PersistenceLayerIdUnknownException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es ist kein Persistence Layer mit ID %0% registriert.</MessageText>
+      <MessageText Language="EN">No persistence layer defined with id %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02233" TypeName="XNWH_PersistenceLayerNotRegisteredException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="name" VariableName="name">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Persistence Layer %0% ist nicht registriert.</MessageText>
+      <MessageText Language="EN">Persistence layer %0% not registered.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-02234" TypeName="XNWH_PersistenceLayerInstanceIdUnknownException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es ist keine Persistence Layer Instanz mit ID %0% registriert.</MessageText>
+      <MessageText Language="EN">No persistence layer instance defined with id %0%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02235" TypeName="XNWH_PersistenceLayerInstanceMayNotBeDeletedInUseException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Persistence Layer Instanz mit ID %0% kann nicht gelöscht werden, solange sie noch benutzt wird.</MessageText>
+      <MessageText Language="EN">Persistence layer instance %0% may not be deleted while in use.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02236" TypeName="XNWH_PersistenceLayerClassIncompatibleException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="persistence layer class" VariableName="persistenceLayerClass">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Konnte die PersistenceLayer-Klasse '%0%' nicht instanziieren.</MessageText>
+      <MessageText Language="EN">Could not instantiate persistence layer class '%0%'.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-02237" TypeName="XNWH_WarehouseJobRunnableParameterInvalidException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="parameter name" VariableName="parameterName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="invalid Value" VariableName="invalidValue">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Parameter %0% mit dem Wert '%1%' für den anzulegenden Warehouse Job ist ungültig.</MessageText>
+      <MessageText Language="EN">Warehouse job parameter %0% with value '%1%' is invalid.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-02238" TypeName="XNWH_WarehouseJobScheduleParameterInvalidException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="parameter name" VariableName="parameterName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="invalid Value" VariableName="invalidValue">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Parameter %0% mit dem Wert '%1%' für das anzulegenden Warehouse Job Schedule ist ungültig.</MessageText>
+      <MessageText Language="EN">Warehouse job schedule parameter %0% with value '%1%' is invalid.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-02239" TypeName="XNWH_EncryptionException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <MessageText Language="DE">Fehler während dem Verschlüsseln.</MessageText>
+      <MessageText Language="EN">Error during encryption.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02240" TypeName="XNWH_PersistenceLayerMayNotBeUndeployedInUseException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="idToBeDeleted" VariableName="idToBeDeleted">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <Data Label="usingId" VariableName="usingId">
+         <Meta>
+            <Type>long</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Der Persistence Layer mit ID %0% kann nicht gelöscht werden, solange die Instanz mit ID '%1%' davon existiert.</MessageText>
+      <MessageText Language="EN">Persistence layer %0% may not be undeployed while still being use by persistence layer instance with id '%1%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02241" TypeName="XNWH_InvalidObjectForTableException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="Table name" VariableName="tableName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Storable class" VariableName="storableClass">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Table class" VariableName="tableClass">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Objekte vom Typ %1% dürfen nicht in Tabelle '%0%' (Klasse %2%) eingefügt werden. Die Ursache kann ein Konfigurations-/Annotations-Problem sein.</MessageText>
+      <MessageText Language="EN">Objects of type %1% may not be inserted into table '%0%' (class %2%). This is probably due to configuration/annotation problems.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02242" TypeName="PersistenceLayerException" TypePath="com.gip.xyna.xnwh.persistence" IsAbstract="true">
+      <MessageText Language="DE">Persistencelayer-Fehler.</MessageText>
+      <MessageText Language="EN">Persistencelayer error.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02243" TypeName="XNWH_ConnectionClosedException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <MessageText Language="DE">Die Verbindung wurde bereits geschlossen.</MessageText>
+      <MessageText Language="EN">Connection has been closed.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02244" TypeName="XNWH_MissingAnnotationsException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="Table class" VariableName="tableClass">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Klasse %0% definiert keine @Persistable-Annotationen und kann nicht als Storable verwendet werden.</MessageText>
+      <MessageText Language="EN">The class %0% does not define any @Persistable annotations and cannot be used as Storable.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02245" TypeName="XNWH_PersistenceLayerInstanceIdUnknownForRegisteredTableException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="XNWH_PersistenceLayerInstanceIdUnknownException" BaseTypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="tableName" VariableName="tableName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es ist keine Persistence Layer Instanz mit ID %0% für die Tabelle '%1%' registriert. Ursache ist wahrscheinlich ein Konfigurations-Problem.</MessageText>
+      <MessageText Language="EN">No persistence layer instance defined with id %0% for table '%1%'. This is probably due to configuration problems.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02246" TypeName="XNWH_UnsupportedPersistenceLayerFeatureException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="Feature" VariableName="feature">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das Feature '%0%' ist bei der gegenwärtigen Persistencelayer-Konfiguration nicht verfügbar.</MessageText>
+      <MessageText Language="EN">The feature '%0%' is not supported for the current persistencelayer configuration.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02247" TypeName="XNWH_GeneralPersistenceLayerException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="Message" VariableName="message">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Fehler im Factory Warehouse: %0%</MessageText>
+      <MessageText Language="EN">Error within Factory Warehouse: %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02248" TypeName="XNWH_IncompatiblePreparedObjectException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="Object type" VariableName="objectType">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Inkompatibles prepared object vom Typ %0%.</MessageText>
+      <MessageText Language="EN">Incompatible prepared object of type %0%</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02249" TypeName="XNWH_InvalidPersistenceLayerParameterException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="Parameter" VariableName="parameter">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Value" VariableName="value">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Unerwarteter Wert '%1%' für Persistence Layer-Parameter '%0%'.</MessageText>
+      <MessageText Language="EN">Unexpected value '%1%' for persistence layer parameter '%0%'</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02250" TypeName="XNWH_UnknownTableException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="Table" VariableName="table">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Unbekannte Tabelle: '%0%'.</MessageText>
+      <MessageText Language="EN">Unknown table: '%0%'</MessageText>
+   </ExceptionType>
+    <ExceptionType Code="XYNA-02251" TypeName="XNWH_UniqueConstraintViolationException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <Data Label="PK" VariableName="pk">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Table" VariableName="table">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Objekt mit Primary Key %0% ist in Tabelle %1% bereits vorhanden.</MessageText>
+      <MessageText Language="EN">Primary Key %0% already exists in table %1%.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02252" TypeName="XNWH_RetryTransactionException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+      <MessageText Language="DE">Transaktion muss moeglicherweise erneut durchgefuehrt werden</MessageText>
+      <MessageText Language="EN">Transaction possibly needs to be reexecuted</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02253" TypeName="XNWH_TooManyDedicatedConnections" TypePath="com.gip.xyna.xnwh.exceptions" >
+         <Data Label="ConnectionLimit" VariableName="connectionLimit">
+         <Meta>
+            <Type>Integer</Type>
+         </Meta>
+      </Data>
+      <Data Label="PersistenceLayerInformation" VariableName="persistenceLayerInformation">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Menge an dedizierten Verbindungen erschöpft das ConnectionLimit %0% des PersistenceLayers (%1%)</MessageText>
+      <MessageText Language="EN">The amount of dedicated connections exhausts the connection limit %0% of the persistence layer (%1%)</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02254" TypeName="XNWH_InvalidXMOMStorablePathException" TypePath="com.gip.xyna.xnwh.exceptions" >
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Path" VariableName="path">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Das XMOM Storable %0% wurde nicht gefunden oder der Pfad %1% darin ist ungültig.</MessageText>
+      <MessageText Language="EN">The XMOM Storable %0% has not been found or path %1% is invalid.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02255" TypeName="XNWH_StorableNotFoundException" TypePath="com.gip.xyna.xnwh.exceptions" >
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="Path" VariableName="path">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="application name" VariableName="applicationName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="version name" VariableName="versionName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">XMOM Storable %0% (path=%1%) existiert nicht in Application/Version '%2%'/'%3%'.</MessageText>
+      <MessageText Language="EN">XMOM Storable %0% (path=%1%) doesn't exist in application/version '%2%'/'%3%'.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02256" TypeName="XNWH_ODSNameMustBeUniqueException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="odsName" VariableName="odsName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Name des ODS Storables (%0%) existiert bereits.</MessageText>
+      <MessageText Language="EN">Name of ODS Storable (%0%) must be unique.</MessageText>
+   </ExceptionType>   
+   <ExceptionType Code="XYNA-02257" TypeName="XNWH_ODSNameChangedButNotDeployedException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="fqXmlName" VariableName="fqXmlName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">ODSName wurde geändert, aber das Deployment des zugehörigen XMOM Storables '%0%' ist fehlgeschlagen.</MessageText>
+      <MessageText Language="EN">ODS name has been changed but corresponding XMOM Storable '%0%' could not be deployed.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-02258" TypeName="XNWH_PersistenceLayerInstanceNotRegisteredException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="name" VariableName="name">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Persistence Layer Instanz '%0%' ist nicht registriert.</MessageText>
+      <MessageText Language="EN">Persistence layer instance '%0%' not registered.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-02259" TypeName="XNWH_SelectParserException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="name" VariableName="name">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Parsen des Selects für '%0%' ist fehlgeschlagen.</MessageText>
+      <MessageText Language="EN">Parsing select for '%0%' failed.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-02260" TypeName="XNWH_InvalidSelectStatementException" TypePath="com.gip.xyna.xnwh.exceptions">
+      <MessageText Language="DE">Select-Fehler.</MessageText>
+      <MessageText Language="EN">Select error.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-02261" TypeName="XNWH_NoSelectGivenException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="XNWH_InvalidSelectStatementException" BaseTypePath="com.gip.xyna.xnwh.exceptions" >
+      <MessageText Language="DE">Kein Select-String angegeben.</MessageText>
+      <MessageText Language="EN">No select string given.</MessageText>
+   </ExceptionType>  
+   <ExceptionType Code="XYNA-02262" TypeName="XNWH_WhereClauseBuildException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="XNWH_InvalidSelectStatementException" BaseTypePath="com.gip.xyna.xnwh.exceptions">
+      <Data Label="name" VariableName="name">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Kann nicht %0% auf fertiggestellten WhereClause anwenden.</MessageText>
+      <MessageText Language="EN">Can't call %0% on already completed WhereClause.</MessageText>
+   </ExceptionType>  
+</ExceptionStore>

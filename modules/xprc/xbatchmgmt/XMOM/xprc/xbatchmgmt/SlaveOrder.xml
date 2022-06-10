@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Slave Order" TypeName="SlaveOrder" TypePath="xprc.xbatchmgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Order Type" ReferenceName="OrderType" ReferencePath="xprc.xpce" VariableName="orderType"/>
+  <Data Label="Execution Timeout" ReferenceName="Date" ReferencePath="base.date" VariableName="executionTimeout">
+    <Meta>
+      <Documentation>Absolute execution timeout for the slave order. In comparison to "workflow execution timeout" this includes waiting in the scheduler.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Workflow Execution Timeout" ReferenceName="Date" ReferencePath="base.date" VariableName="workflowExecutionTimeout">
+    <Meta>
+      <Documentation>Timeout for the execution of the slave order's workflow.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Max Parallelism" VariableName="maxParallelism">
+    <Meta>
+      <Type>int</Type>
+      <Documentation>Maximum number of slaves to be started each scheduling cycle (does not limit the total number of concurrently running slaves - use a capacity on the slave order type for that).</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Time Constraint" ReferenceName="TimeConstraint" ReferencePath="xprc.xpce.timeconstraint" VariableName="timeConstraint">
+    <Meta>
+      <Documentation>
+        <![CDATA[Typically not used. Use Master Order Time Constraint instead, if you want the slave orders to only run in a certain time window or similar.
+
+Specifiies the start time behaviour of slave orders. This configuration is used AFTER the slaves were started by the master. First the master starts the slave orders ignoring this parameter (and reserves the used capacity) , then the slave order waits in the scheduler until this time constraint is met.
+]]>
+      </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Execution Period" ReferenceName="SlaveExecutionPeriod" ReferencePath="xprc.xbatchmgmt" VariableName="executionPeriod">
+    <Meta>
+      <Documentation>see documentation in SlaveExecutionPeriod type</Documentation>
+    </Meta>
+  </Data>
+</DataType>

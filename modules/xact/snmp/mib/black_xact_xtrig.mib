@@ -1,0 +1,216 @@
+GIP-BLACK-XACT-XTRIG-MIB DEFINITIONS ::= BEGIN
+IMPORTS
+	xact FROM GIP-BLACK-MIB;
+
+------------------------------------------------------
+-- Copyright 2022 GIP SmartMercial GmbH, Germany
+--
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+--
+--  http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+------------------------------------------------------
+--
+xTrig MODULE-IDENTITY
+        LAST-UPDATED "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        ORGANIZATION "GIP AG"
+        CONTACT-INFO "GIP AG"
+        DESCRIPTION  ""
+        REVISION     "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
+        DESCRIPTION  ""
+	::= { xact 1 }
+
+
+impls OBJECT IDENTIFIER
+	::= { xTrig 1 }
+
+
+-- ##########################################################################
+
+
+dhcpTable OBJECT-TYPE
+    SYNTAX  SEQUENCE OF DHCPEntry
+    MAX-ACCESS not-accessible
+    STATUS  current
+    DESCRIPTION
+        "Table of DHCP trigger instances."
+    ::= { impls 1 }
+
+
+dhcpEntry OBJECT-TYPE
+        SYNTAX  DHCPEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION
+                "Entry for a DHCP trigger instance."
+        INDEX {
+                orderType
+        }
+        ::= { dhcpTable 1 }
+
+
+DHCPEntry ::= SEQUENCE {
+		instanceName				OCTET STRING,
+        protocol      				OCTET STRING,
+        configuredMaxTriggerEvents  INTEGER,
+		currentTriggerEvents		Gauge,
+        packetsReceived          	Gauge,
+		packetsRejected				Gauge,
+		packetsProcessed			Gauge }
+
+
+instanceName OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Name of the DHCP trigger instance."
+        ::= { dhcpEntry 1 }
+
+
+protocol OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Protocol of the trigger instance (DHCPv4/DHCPv6)."
+        ::= { dhcpEntry 2 }
+
+
+configuredMaxTriggerEvents OBJECT-TYPE
+        SYNTAX  INTEGER
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Maximum count of trigger events allowed to be processed simultanously."
+        ::= { dhcpEntry 3 }
+
+
+currentTriggerEvents OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Count of trigger events being currently processed."
+        ::= { dhcpEntry 4 }
+
+
+packetsReceived OBJECT-TYPE
+	SYNTAX  Gauge
+	MAX-ACCESS read-only
+	STATUS  current
+	DESCRIPTION
+		"Count of received DHCP packets."
+	::= { dhcpEntry 5 }
+	
+
+packetsRejected OBJECT-TYPE
+	SYNTAX  Gauge
+	MAX-ACCESS read-only
+	STATUS  current
+	DESCRIPTION
+		"Count of rejected DHCP packets."
+	::= { dhcpEntry 6 }
+
+packetsProcessed OBJECT-TYPE
+	SYNTAX  Gauge
+	MAX-ACCESS read-only
+	STATUS  current
+	DESCRIPTION
+		"Count of processed DHCP packets."
+	::= { dhcpEntry 7 }
+
+
+-- ##########################################################################
+
+
+httpTable OBJECT-TYPE
+    SYNTAX  SEQUENCE OF HTTPEntry
+    MAX-ACCESS not-accessible
+    STATUS  current
+    DESCRIPTION
+        "Table of HTTP trigger instances."
+    ::= { impls 2 }
+
+
+httpEntry OBJECT-TYPE
+        SYNTAX  HTTPEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION
+                "Entry for a HTTP trigger instance."
+        INDEX {
+                orderType
+        }
+        ::= { httpTable 1 }
+
+
+HTTPEntry ::= SEQUENCE {
+		instanceName				OCTET STRING,
+        configuredMaxTriggerEvents  INTEGER,
+		currentTriggerEvents		Gauge,
+        requestsReceived          	Gauge,
+		requestsRejected			Gauge,
+		requestsProcessed			Gauge }
+
+
+instanceName OBJECT-TYPE
+        SYNTAX  OCTET STRING
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Name of the HTTP trigger instance."
+        ::= { httpEntry 1 }
+
+
+configuredMaxTriggerEvents OBJECT-TYPE
+        SYNTAX  INTEGER
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Maximum count of trigger events allowed to be processed simultanously."
+        ::= { httpEntry 2 }
+
+
+currentTriggerEvents OBJECT-TYPE
+        SYNTAX  Gauge
+        MAX-ACCESS read-only
+        STATUS  current
+        DESCRIPTION
+                "Count of trigger events being currently processed."
+        ::= { httpEntry 3 }
+
+
+requestsReceived OBJECT-TYPE
+	SYNTAX  Gauge
+	MAX-ACCESS read-only
+	STATUS  current
+	DESCRIPTION
+		"Count of received HTTP requests."
+	::= { httpEntry 4 }
+	
+
+requestsRejected OBJECT-TYPE
+	SYNTAX  Gauge
+	MAX-ACCESS read-only
+	STATUS  current
+	DESCRIPTION
+		"Count of rejected HTTP requests."
+	::= { httpEntry 5 }
+
+requestsProcessed OBJECT-TYPE
+	SYNTAX  Gauge
+	MAX-ACCESS read-only
+	STATUS  current
+	DESCRIPTION
+		"Count of processed HTTP requests."
+	::= { httpEntry 6 }
+
+END

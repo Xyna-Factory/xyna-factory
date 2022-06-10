@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="40" Label="LeaseAssignment_v6" TypeName="LeaseAssignment_v6" TypePath="xdnc.dhcpv6" Version="1.8">
+  <Meta>
+    <Documentation>LeaseAssignment_v6 wird aufgerufen, wenn der Server eine DHCPv6 Nachricht als Relay Nachricht empfängt. Der Workflow verarbeitet Nachrichten vom Typ SOLICIT, REQUEST, RENEW, REBIND und  DECLINE. Leases können vergeben, verlängert oder ungültig gemacht werden. Die Daten werden in Form von Nodes durch den Filter eingegeben und ebenfalls in Form von Nodes an den Filter weitergegeben, welcher die Antwort in Byteform als DHCPv6 Nachricht verschickt.</Documentation>
+  </Meta>
+  <Operation ID="39" Label="LeaseAssignment_v6" Name="LeaseAssignment_v6">
+    <Meta>
+      <Abstract.UID>322CCCDC-4E31-2D4F-0FE1-68C68584C6AC</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="52" IsList="true" Label="Input-Options from Request" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node">
+        <Target RefID="413"/>
+        <Target RefID="758"/>
+        <Target RefID="1042"/>
+        <Target RefID="1054"/>
+        <Target RefID="1068"/>
+        <Target RefID="1281"/>
+        <Target RefID="1404"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="55" IsList="true" Label="Output-Options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node55">
+        <Source RefID="56"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="DHCPv6AttributeNotFoundForClassException" ReferenceName="DHCPv6AttributeNotFoundForClassException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6AttributeNotFoundForClassException"/>
+      <Exception Label="DHCPv6InconsistentDataException" ReferenceName="DHCPv6InconsistentDataException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InconsistentDataException"/>
+      <Exception Label="DHCPv6InvalidDBEntriesException" ReferenceName="DHCPv6InvalidDBEntriesException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidDBEntriesException"/>
+      <Exception Label="DHCPv6InvalidOptionException" ReferenceName="DHCPv6InvalidOptionException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6InvalidOptionException"/>
+      <Exception Label="DHCPv6NoOutputOptionsSetException" ReferenceName="DHCPv6NoOutputOptionsSetException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6NoOutputOptionsSetException"/>
+      <Exception Label="DHCPv6NoPoolTypeForClassException" ReferenceName="DHCPv6NoPoolTypeForClassException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6NoPoolTypeForClassException"/>
+      <Exception Label="DHCPv6PooltypeException" ReferenceName="DHCPv6PooltypeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6PooltypeException"/>
+      <Exception Label="DHCPv6_InvalidMessageTypeException" ReferenceName="DHCPv6_InvalidMessageTypeException" ReferencePath="xdnc.dhcpv6.exceptions" VariableName="dHCPv6_InvalidMessageTypeException"/>
+    </Throws>
+    <Function ID="413" Label="Determine DHCPv6 Message Type">
+      <Source RefID="392"/>
+      <Source RefID="52"/>
+      <Target RefID="392"/>
+      <Target RefID="414"/>
+      <Meta>
+        <Documentation>Bestimmt den Typ der eingehenden Nachricht. Dazu wird in der RelayNachricht der Wert der Untertoption "InnerType" abgerufen. Die erhaltene Zahl ergibt den Typ der Nachricht, also SOLICIT, REQUEST, RENEW, REBIND oder DECLINE. Das Ergebnis ist dann ein entsprechendes MOM Objekt, welches den Nachrichtentyp repräsentiert. Folgende Methoden können dann die Nachricht entsprechend dem Nachrichtentyp behandeln.</Documentation>
+      </Meta>
+      <Invoke Operation="determineDHCPv6MessageType" ServiceID="392">
+        <Source RefID="52"/>
+      </Invoke>
+      <Receive ServiceID="392">
+        <Target RefID="414"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="392" Label="DHCPv6Services" ReferenceName="DHCPv6Services.DHCPv6Services" ReferencePath="xdnc.dhcpv6">
+      <Source RefID="413"/>
+      <Source RefID="758"/>
+      <Source RefID="1054"/>
+      <Source RefID="1068"/>
+      <Target RefID="413"/>
+      <Target RefID="758"/>
+      <Target RefID="1054"/>
+      <Target RefID="1068"/>
+    </ServiceReference>
+    <Data ID="414" Label="messagetype" ReferenceName="DHCPv6MessageType" ReferencePath="xdnc.dhcpv6" VariableName="messagetype">
+      <Source RefID="413"/>
+      <Target RefID="1026"/>
+    </Data>
+    <Data ID="759" IsList="true" Label="outputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="data759">
+      <Source RefID="758"/>
+      <Target RefID="1557"/>
+    </Data>
+    <ServiceReference ID="967" Label="DHCPv6SolicitWf" ReferenceName="DHCPv6SolicitWf" ReferencePath="xdnc.dhcpv6">
+      <Source RefID="1042"/>
+      <Target RefID="1042"/>
+    </ServiceReference>
+    <Choice ID="1026" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="414"/>
+      <Target RefID="1406"/>
+      <Input>
+        <Data ID="1149" Label="DHCPv6 Message Type" ReferenceName="DHCPv6MessageType" ReferencePath="xdnc.dhcpv6" VariableName="dHCPv6MessageType"/>
+        <Source RefID="414"/>
+      </Input>
+      <Case ID="1150" Label="DHCPv6Release" Premise="xdnc.dhcpv6.DHCPv6Release">
+        <Function ID="1054" Label="Process Release">
+          <Source RefID="392"/>
+          <Source RefID="52"/>
+          <Target RefID="392"/>
+          <Target RefID="1055"/>
+          <Target RefID="1056"/>
+          <Invoke Operation="processRelease" ServiceID="392">
+            <Source RefID="52"/>
+          </Invoke>
+          <Receive ServiceID="392">
+            <Target RefID="1055"/>
+            <Target RefID="1056"/>
+          </Receive>
+        </Function>
+        <Function ID="1068" Label="Send Data to DHCPAdapter">
+          <Source RefID="392"/>
+          <Source RefID="1056"/>
+          <Source RefID="1079"/>
+          <Source RefID="1090"/>
+          <Source RefID="1055"/>
+          <Source RefID="52"/>
+          <Target RefID="392"/>
+          <Invoke Operation="start_DHCPAdapter" ServiceID="392">
+            <Source RefID="52">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="1055">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="1090">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="1056"/>
+            <Source RefID="1079">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="392"/>
+        </Function>
+        <Assign ID="1558">
+          <Source RefID="1055"/>
+          <Target RefID="1406"/>
+          <Copy>
+            <Source RefID="1055"/>
+            <Target RefID="1406"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="1151" Label="DHCPv6Solicit" Premise="xdnc.dhcpv6.DHCPv6Solicit">
+        <Function ID="1042" Label="DHCPv 6 Solicit Wf">
+          <Source RefID="967"/>
+          <Source RefID="52"/>
+          <Target RefID="967"/>
+          <Target RefID="1046"/>
+          <Invoke Operation="DHCPv6SolicitWf" ServiceID="967">
+            <Source RefID="52"/>
+          </Invoke>
+          <Receive ServiceID="967">
+            <Target RefID="1046"/>
+          </Receive>
+        </Function>
+        <Assign ID="1560">
+          <Source RefID="1046"/>
+          <Target RefID="1406"/>
+          <Copy>
+            <Source RefID="1046"/>
+            <Target RefID="1406"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="1152" Label="DHCPv6Rebind" Premise="xdnc.dhcpv6.DHCPv6Rebind">
+        <Function ID="1404" Label="DHCPv 6 Renew Wf">
+          <Source RefID="1403"/>
+          <Source RefID="52"/>
+          <Target RefID="1403"/>
+          <Target RefID="1405"/>
+          <Invoke Operation="DHCPv6RenewWf" ServiceID="1403">
+            <Source RefID="52"/>
+          </Invoke>
+          <Receive ServiceID="1403">
+            <Target RefID="1405"/>
+          </Receive>
+        </Function>
+        <Assign ID="1561">
+          <Source RefID="1405"/>
+          <Target RefID="1406"/>
+          <Copy>
+            <Source RefID="1405"/>
+            <Target RefID="1406"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case Alias="xdnc.dhcpv6.DHCPv6Rebind" ID="1153" Label="DHCPv6Renew" Premise="xdnc.dhcpv6.DHCPv6Renew"/>
+      <Case ID="1154" Label="DHCPv6Decline" Premise="xdnc.dhcpv6.DHCPv6Decline">
+        <Function ID="758" Label="Process Decline">
+          <Source RefID="52"/>
+          <Source RefID="392"/>
+          <Target RefID="759"/>
+          <Target RefID="392"/>
+          <Invoke Operation="processDecline" ServiceID="392">
+            <Source RefID="52"/>
+          </Invoke>
+          <Receive ServiceID="392">
+            <Target RefID="759"/>
+          </Receive>
+        </Function>
+        <Assign ID="1557">
+          <Source RefID="759"/>
+          <Target RefID="1406"/>
+          <Copy>
+            <Source RefID="759"/>
+            <Target RefID="1406"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="1155" Label="DHCPv6Request" Premise="xdnc.dhcpv6.DHCPv6Request">
+        <Function ID="1281" Label="DHCPv 6 Request Wf">
+          <Source RefID="1280"/>
+          <Source RefID="52"/>
+          <Target RefID="1280"/>
+          <Target RefID="1282"/>
+          <Invoke Operation="DHCPv6RequestWf" ServiceID="1280">
+            <Source RefID="52"/>
+          </Invoke>
+          <Receive ServiceID="1280">
+            <Target RefID="1282"/>
+          </Receive>
+        </Function>
+        <Assign ID="1559">
+          <Source RefID="1282"/>
+          <Target RefID="1406"/>
+          <Copy>
+            <Source RefID="1282"/>
+            <Target RefID="1406"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="1046" IsList="true" Label="reply options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node1361046">
+      <Source RefID="1042"/>
+      <Target RefID="1560"/>
+    </Data>
+    <Data ID="1055" IsList="true" Label="outputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="outputoptions">
+      <Source RefID="1054"/>
+      <Target RefID="1068"/>
+      <Target RefID="1558"/>
+    </Data>
+    <Data ID="1056" Label="leaseTime" ReferenceName="LeaseTime" ReferencePath="xdnc.dhcp" VariableName="leaseTime1056">
+      <Source RefID="1054"/>
+      <Target RefID="1068"/>
+    </Data>
+    <Data ID="1079" Label="dnsFlag" ReferenceName="DNSFlag" ReferencePath="xdnc.dhcp" VariableName="dnsFlag1079">
+      <Target RefID="1068"/>
+      <Data ID="1156" Label="doDNS" VariableName="doDNS">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="1090" Label="Reserved Host" ReferenceName="ReservedHost" ReferencePath="xdnc.dhcp" VariableName="reservedhost1090">
+      <Target RefID="1068"/>
+      <Data ID="1157" IsList="true" Label="hostExists" VariableName="hostExists">
+        <Meta>
+          <Type>Integer</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <ServiceReference ID="1280" Label="DHCPv6RequestWf" ReferenceName="DHCPv6RequestWf" ReferencePath="xdnc.dhcpv6">
+      <Source RefID="1281"/>
+      <Target RefID="1281"/>
+    </ServiceReference>
+    <Data ID="1282" IsList="true" Label="reply options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node136">
+      <Source RefID="1281"/>
+      <Target RefID="1559"/>
+    </Data>
+    <ServiceReference ID="1403" Label="DHCPv6RenewWf" ReferenceName="DHCPv6RenewWf" ReferencePath="xdnc.dhcpv6">
+      <Source RefID="1404"/>
+      <Target RefID="1404"/>
+    </ServiceReference>
+    <Data ID="1405" IsList="true" Label="reply options" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="node1361405">
+      <Source RefID="1404"/>
+      <Target RefID="1561"/>
+    </Data>
+    <Data ID="1406" IsList="true" Label="outputoptions" ReferenceName="Node" ReferencePath="xdnc.dhcp" VariableName="outputoptions1406">
+      <Source RefID="1026"/>
+      <Source RefID="1557"/>
+      <Source RefID="1558"/>
+      <Source RefID="1559"/>
+      <Source RefID="1560"/>
+      <Source RefID="1561"/>
+      <Target RefID="56"/>
+    </Data>
+    <Assign ID="56">
+      <Source RefID="1406"/>
+      <Target RefID="55"/>
+      <Copy>
+        <Source RefID="1406">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="55"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

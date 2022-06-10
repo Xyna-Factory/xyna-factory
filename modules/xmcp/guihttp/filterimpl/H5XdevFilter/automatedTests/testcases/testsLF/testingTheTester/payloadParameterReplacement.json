@@ -1,0 +1,30 @@
+{
+  "meta":
+  {
+    "name": "payloadParameterReplacemnent",
+	"description": "Testet die Funktion variablen im payload von 'call' Operationen angeben zu können"
+  },
+  "operations":
+  [
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	{
+	  "operation": "set",
+	  "variable": "!revision!",
+	  "value": "0"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"service","label":"Bitwise NOT","fqn":"base.math.IntegerNumber","service":"IntegerNumber","operation":"bitwiseNOT"},"relativePosition":"inside","revision":"!revision!"}
+	}
+  ]
+}

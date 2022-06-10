@@ -1,0 +1,188 @@
+{
+  "meta":
+  {
+	"created": "15.01.2020",
+	"updated": "15.01.2020",
+	"Test Reference": "PMOD-788"
+  },
+  "operations":
+  [
+   {
+	  "operation": "setRandom",
+	  "variable": "!rndLabel1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rndLabel2!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!path!" : "autoTest.generated.PMOD694"},
+		{"!dtLabel!": "GeneratedDatatype_!rndLabel1!"},
+		{"!wfLabel!": "GeneratedWorkflow_!rndLabel2!"},
+		{"!workspaceName!": "default workspace"}
+	  ]
+	},
+	{
+	  "operation": "set",
+	  "variable": "!escapedWorkspace!",
+	  "value": "!workspaceName!"
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!escapedWorkspace!",
+	  "modification":{ "operation": "urlencode" }
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!" : "!workspaceName!",
+		"!path!": "!path!",
+		"!label!": "!dtLabel!"
+	  },
+	  "mapOutput": {"!name!" : "!nameDT!"}
+	},
+	{
+	  "operation": "set",
+	  "variable": "!dtfqn!",
+	  "value": "!path!.!nameDT!"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": { },
+	  "mapOutput": 
+	  {
+	    "!newPath!" : "!wfNewPath!",
+	    "!newWorkflowName!" : "!wfNewName!",
+		"!url!": "!newWFUrl!"
+	  }
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "saveAndDeploy",
+	  "mapInput": { 
+	    "!wfUrl!" : "!newWFUrl!", 
+		"!path!" : "!path!", 
+		"!label!" : "!wfLabel!", 
+		"!revision!" : 0},
+	  "mapOutput": 
+	  {
+	    "!wfName!" : "!wfName!", 
+	    "!wfUrl!" : "!wfUrl!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/wf_input/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!dtLabel!","fqn":"!dtfqn!","isList":false},"revision":0}
+	},	
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/objects/wf_output/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!dtLabel!","fqn":"!dtfqn!","isList":false},"revision":0}
+	},		
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/save",
+	  "payload": {"revision":1,"path":"!path!","label":"!wfLabel!","force":false}
+	},	
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/close",
+	  "payload": {"force":false,"revision":1}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT!/close",
+	  "payload": {"force":false}
+	},	
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "/runtimeContext/default%20workspace/xmom/datatypes/!path!/!nameDT!/delete",
+	  "payload": {"force":false}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!",
+	  "acceptError": true
+	},
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "repairs/$list",
+      "expectedValue": 2
+    },
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!?repair=true"
+	},
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "repairResult/$list",
+      "expectedValue": 2
+    },
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!/dataflow"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/save",
+	  "payload": {"revision":1,"path":"!path!","label":"!wfLabel!","force":false}
+	},	
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!wfUrl!/close",
+	  "payload": {"force":false,"revision":1}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!inputIsAbstract!",
+	  "pathInResponse": "xmomItem/areas/$list[id=wf_input]/items/$list[0]/isAbstract"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!outputIsAbstract!",
+	  "pathInResponse": "xmomItem/areas/$list[id=wf_output]/items/$list[0]/isAbstract"
+	},
+	{
+	  "operation" : "assert",
+	  "constraint": "equals",
+	  "variable": "!inputIsAbstract!",
+	  "value": "true"
+	},
+	{
+	  "operation" : "assert",
+	  "constraint": "equals",
+	  "variable": "!outputIsAbstract!",
+	  "value": "true"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "!wfUrl!/dataflow"
+	}
+  ]
+}

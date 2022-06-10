@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Start Frequency Controlled Task" TypeName="StartFrequencyControlledTask" TypePath="xmcp.factorymanager.orderinputsources" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Start Frequency Controlled Task" Name="StartFrequencyControlledTask">
+    <Input>
+      <Data ID="7" Label="Start Frequency Controlled Task Parameter" ReferenceName="StartFrequencyControlledTaskParameter" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="startFrequencyControlledTaskParameter">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="8" Label="Frequency controlled task id" ReferenceName="FrequencyControlledTaskId" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="frequencyControlledTaskId8">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="Start Frequency controlled task exception" ReferenceName="StartFrequencyControlledTaskException" ReferencePath="xmcp.factorymanager.orderinputsources.exceptions" VariableName="startFrequencyControlledTaskException"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Order input sources Services" ReferenceName="OrderInputSourcesServices.OrderInputSourcesServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="14" Label="Check Rights for Current User">
+      <Source RefID="13"/>
+      <Source RefID="16"/>
+      <Target RefID="13"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="13">
+        <Source RefID="16">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="13"/>
+    </Function>
+    <Function ID="5" Label="Start Frequency Controlled Task">
+      <Source RefID="4"/>
+      <Source RefID="7"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="startFrequencyControlledTask" ServiceID="4">
+        <Source RefID="7"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" Label="Frequency controlled task id" ReferenceName="FrequencyControlledTaskId" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="frequencyControlledTaskId">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <ServiceReference ID="13" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="14"/>
+      <Target RefID="14"/>
+    </ServiceReference>
+    <Data ID="16" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="14"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>FREQUENCY_CONTROL_MANAGEMENT</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="6"/>
+      <Target RefID="8"/>
+      <Copy>
+        <Source RefID="6"/>
+        <Target RefID="8"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

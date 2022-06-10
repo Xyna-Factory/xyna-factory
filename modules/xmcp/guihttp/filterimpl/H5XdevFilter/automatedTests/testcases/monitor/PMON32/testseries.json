@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "emptyForeach.json",
+	"foreachTest.json",
+    "twoForeachStepsTest.json"
+  ]
+}

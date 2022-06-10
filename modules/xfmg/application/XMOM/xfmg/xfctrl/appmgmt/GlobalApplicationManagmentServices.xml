@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Global Application Managment Services" TypeName="GlobalApplicationManagmentServices" TypePath="xfmg.xfctrl.appmgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>GlobalApplicationManagmentServicesImpl.jar</Libraries>
+  <Service Label="Global Application Managment Services" TypeName="GlobalApplicationManagmentServices">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xfmg.xfctrl.appmgmt.ExcludeXynaProperties</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.ImportSettings</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.IncludeXynaProperties</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.Workingcopy</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.AuditMode</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.Running</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.Error</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.Warning</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.ExcludeCapacities</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.CLI</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.RMI</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.ImportCapacitiesOnly</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.IncludeCapacities</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.ImportXynaPropertiesOnly</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.Stopped</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.RemoteApplicationDetails</Datatype>
+        <Datatype>xfmg.xfctrl.appmgmt.TriggerInstance</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation IsStatic="true" Label="Copy application into workspace" Name="copyApplicationIntoWorkspace" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application"/>
+        <Data Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.copyApplicationIntoWorkspace(correlatedXynaOrder, factoryNode, application, workspace);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create runtime dependency context" Name="createRuntimeDependencyContext" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.createRuntimeDependencyContext(correlatedXynaOrder, factoryNode, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete runtime dependency context" Name="deleteRuntimeDependencyContext" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.deleteRuntimeDependencyContext(correlatedXynaOrder, factoryNode, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Export application" Name="exportApplication" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application38"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+      </Output>
+      <Throws>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.exportApplication(correlatedXynaOrder, factoryNode, application38);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Import application" Name="importApplication" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+        <Data Label="Import settings" ReferenceName="ImportSettings" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="importSettings"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.importApplication(correlatedXynaOrder, factoryNode, managedFileId, importSettings);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List applications" Name="listApplications" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="List application parameter" ReferenceName="ListApplicationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="listApplicationParameter"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Application Details" ReferenceName="ApplicationDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="applicationDetails"/>
+      </Output>
+      <Throws>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.listApplications(correlatedXynaOrder, factoryNode, listApplicationParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List runtime dependency contexts" Name="listRuntimeDependencyContexts" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="List Runtime Dependency Contexts Parameter" ReferenceName="ListRuntimeDependencyContextsParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="listRuntimeDepdendencyContextsParameter"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Runtime Dependency Context Details" ReferenceName="RuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="runtimeDependencyContextDetails"/>
+      </Output>
+      <Throws>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.listRuntimeDependencyContexts(correlatedXynaOrder, factoryNode, listRuntimeDepdendencyContextsParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Migrate runtime context dependencies" Name="migrateRuntimeContextDependencies" RequiresXynaOrder="true">
+      <Meta>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="From" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext"/>
+        <Data Label="To" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext98"/>
+        <Data Label="Migrate Runtime Context Dependency Parameter" ReferenceName="MigrateRuntimeContextDependencyParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="migrateRuntimeContextDependencyParameter"/>
+      </Input>
+      <Output>
+        <Data Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.migrateRuntimeContextDependencies(correlatedXynaOrder, factoryNode, runtimeContext, runtimeContext98, migrateRuntimeContextDependencyParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Modify runtime dependency context" Name="modifyRuntimeDependencyContext" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Runtime Dependency Context Details" ReferenceName="RuntimeDependencyContextDetails" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="runtimeDependencyContextDetails"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.modifyRuntimeDependencyContext(correlatedXynaOrder, factoryNode, runtimeDependencyContextDetails);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Remove application" Name="removeApplication" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application43"/>
+        <Data Label="Remove application parameter" ReferenceName="RemoveApplicationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="removeApplicationParameter"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.removeApplication(correlatedXynaOrder, factoryNode, application43, removeApplicationParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Start application" Name="startApplication" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application49"/>
+        <Data Label="Start application parameter" ReferenceName="StartApplicationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="startApplicationParameter"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.startApplication(correlatedXynaOrder, factoryNode, application49, startApplicationParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Stop application" Name="stopApplication" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode"/>
+        <Data Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application55"/>
+        <Data Label="Stop application parameter" ReferenceName="StopApplicationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="stopApplicationParameter"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+        <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.appmgmt.GlobalApplicationManagmentServicesImpl.stopApplication(correlatedXynaOrder, factoryNode, application55, stopApplicationParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

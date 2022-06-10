@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Fetch Subnets for DHCP-Relays" TypeName="FetchSubnetsForDHCPRelays" TypePath="xmcp.dhcp.v4.netconfigurator" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,hScroll(124),vScroll(46)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Fetch Subnets for DHCP-Relays" Name="FetchSubnetsForDHCPRelays">
+    <Input>
+      <Data ID="12" Label="Row ctype SharedNetwork" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype">
+        <Target RefID="9"/>
+      </Data>
+      <Data ID="6" Label="Subnet Filter" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype6">
+        <Target RefID="9"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="31" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype">
+        <Source RefID="32"/>
+      </Data>
+      <Data ID="47" IsList="true" Label="Subnets" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype47">
+        <Source RefID="32"/>
+      </Data>
+    </Output>
+    <Mappings ID="9" Label="Prepare search Subnets">
+      <Source RefID="6"/>
+      <Source RefID="12"/>
+      <Target RefID="7"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="11" Label="Row ctype SharedNetwork" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype11"/>
+        <Source RefID="12"/>
+      </Input>
+      <Input>
+        <Data ID="8" Label="Subnet Filter" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype8"/>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="10" Label="Search Rows Request ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="searchRowsRequest_ctype10"/>
+        <Target RefID="7"/>
+      </Output>
+      <Mapping>%2%.searchRowsInput=%1%</Mapping>
+      <Mapping>%2%.searchRowsInput.sharedNetworkID=%0%.sharedNetworkID</Mapping>
+    </Mappings>
+    <Data ID="7" Label="Search Rows Request ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="searchRowsRequest_ctype">
+      <Source RefID="9"/>
+      <Target RefID="22"/>
+    </Data>
+    <ServiceReference ID="21" Label="Subnet" ReferenceName="Subnet.Subnet" ReferencePath="xmcp.dhcp.v4.netconfigurator">
+      <Source RefID="22"/>
+      <Target RefID="22"/>
+    </ServiceReference>
+    <Function ID="22" Label="Search Rows">
+      <Source RefID="21"/>
+      <Source RefID="7"/>
+      <Target RefID="21"/>
+      <Target RefID="23"/>
+      <Invoke Operation="searchRows" ServiceID="21">
+        <Source RefID="7"/>
+      </Invoke>
+      <Receive ServiceID="21">
+        <Target RefID="23"/>
+      </Receive>
+    </Function>
+    <Data ID="23" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="response_ctype">
+      <Source RefID="22"/>
+      <Target RefID="46"/>
+    </Data>
+    <Mappings ID="46" Label="Response Frame">
+      <Source RefID="23"/>
+      <Target RefID="41"/>
+      <Target RefID="64"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,FlatMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="53" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="response_ctype53"/>
+        <Source RefID="23"/>
+      </Input>
+      <Output>
+        <Data ID="45" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype45"/>
+        <Target RefID="41"/>
+      </Output>
+      <Output>
+        <Data ID="62" IsList="true" Label="Subnets" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype62"/>
+        <Target RefID="64"/>
+      </Output>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%2%=%0%.payload.searchRowsOutput.row</Mapping>
+    </Mappings>
+    <Data ID="41" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype41">
+      <Source RefID="46"/>
+      <Target RefID="32"/>
+    </Data>
+    <Data ID="64" IsList="true" Label="Subnets" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Subnet.www.gip.com.juno.DHCP.WS.Subnet.Messages" VariableName="row_ctype64">
+      <Source RefID="46"/>
+      <Target RefID="32"/>
+    </Data>
+    <Assign ID="32">
+      <Source RefID="41"/>
+      <Source RefID="64"/>
+      <Target RefID="31"/>
+      <Target RefID="47"/>
+      <Copy>
+        <Source RefID="41"/>
+        <Target RefID="31"/>
+      </Copy>
+      <Copy>
+        <Source RefID="64"/>
+        <Target RefID="47"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

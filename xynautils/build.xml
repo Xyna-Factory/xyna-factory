@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+
+<project name="masterbuild" default="build" basedir=".">
+
+	<property name="java14.path" value="/opt/j2sdk1.4.2" />
+	<property name="java15.path" value="/opt/jdk1.5.0" />
+
+	<!--Name for the generate archive (jar or tar.gz) file-->
+	<property name="archive.name" value="xynautils-${utils.name}" />
+	<!--Name of the jar vendor-->
+	<property name="vendor.name" value="GIP Mainz" />
+	<!--Description of the generated jar file (only needed in the manifest of the jar file)-->
+	<property name="jar.desc" value="XynaUtils for ${utils.name}" />
+	<!--Package name for the classes included into the jar-->
+	<property name="package.name" value="com.gip.xyna.utils" />
+
+	<!--Java source folder-->
+	<property name="src.dir" value="src" />
+	<!--Source folder for tests-->
+	<property name="src.test.dir" value="test" />
+	<!--Java class folder-->
+	<property name="classes.dir" value="classes" />
+	<!--Class folder for tests-->
+	<property name="classes.test.dir" value="classes.test" />
+	<!--Libary folder (for external jars)-->
+	<property name="lib.dir" value="lib" />
+	<!--Library folder for test libraries-->
+	<property name="lib.test.dir" value="lib.test" />
+	<!--Target folder for generated jar files-->
+	<property name="jars.dir" value="${basedir}" />
+	<!--Target folder for generated tar files-->
+	<property name="tar.dir" value="../jars" />
+	<!--Temporal Java Documentation folder-->
+	<property name="doc.dir" value="javadoc" />
+	<!--Target folder for Java Documentation archives-->
+	<property name="tar.doc.dir" value="${tar.dir}/docs" />
+	<!--Folder for the java documentation of all projects-->
+	<property name="alldoc.dir" value="${user.home}/public_html/XynaUtils" />
+	<!--Target folder for source jars-->
+	<property name="src-jar.dir" value="${tar.dir}/src" />
+
+
+	<available file="${lib.test.dir}/junit.jar" property="testable" />
+
+	<available file="${src.dir}/META-INF" property="metadata.run.available" />
+
+	<available file="${src.test.dir}/META-INF"
+	           property="metadata.test.available" />
+
+	<path id="classpath.run">
+		<pathelement location="${classes.dir}" />
+		<fileset dir="${basedir}">
+			<include name="${lib.dir}/*.jar" />
+		</fileset>
+	</path>
+
+	<path id="classpath.test">
+		<fileset dir="${basedir}">
+			<include name="${lib.test.dir}/*.jar" />
+		</fileset>
+		<pathelement location="${classes.test.dir}" />
+		<path refid="classpath.run" />
+	</path>
+
+	<target name="build" depends="build.dev" />
+
+	<target name="build.dev"
+	        depends="init_dev, jar"
+	        description="Builds a developers version (only jar file) from the current project">
+	</target>
+
+	<!--Creates a tar.gz file from the current project and moves it to the archive project.
+	The file will only be moved if in the archive project is not a file with the same name.-->
+	<!--The name of the archive is prefixed by xynautils- followed by the project name (eg. jms),
+	followed by a release number (eg. xynautils-jms-2.3.jar).-->
+	<target name="build.release"
+	        depends="init_release, tar, tarDoc"
+	        description="Builds a release version (tar file) from
+the current project and copies it to the archive directory.">
+		<delete file="${jars.dir}/${archive.name}-${build.version}.jar" />
+		<available file="${tar.dir}/${archive.name}-${build.version}.tar.gz"
+		           property="existsTar" />
+		<fail if="existsTar"
+		      message="The file ${archive.name}-${build.version}.tar.gz already exists." />
+		<move file="${archive.name}-${build.version}.tar.gz"
+		      todir="${tar.dir}" />
+		<available file="${src-jar.dir}/${archive.name}-${build.version}-src.jar.zip"
+		           property="existsSrcZip" />
+		<fail if="existsSrcZip"
+		      message="The file ${archive.name}-${build.version}-src.jar.zip already exists." />
+		<move file="${archive.name}-${build.version}-src.jar.zip"
+		      todir="${src-jar.dir}"
+		      failonerror="false" />
+	</target>
+
+	<!--Creates a tar.gz file including the jar file generated from the sources and all jar files from the lib folder-->
+	<target name="tar" if="build.version" depends="jar">
+		<available file="${lib.dir}" property="existsLibraries" />
+		<antcall target="tarWithLibraries" />
+		<antcall target="tarWithoutLibraries" />
+	</target>
+
+	<target name="tarWithoutLibraries" unless="existsLibraries">
+		<tar destfile="${archive.name}-${build.version}.tar.gz"
+		     compression="gzip">
+			<tarfileset dir="${basedir}">
+				<include name="${archive.name}-${build.version}.jar" />
+			</tarfileset>
+		</tar>
+	</target>
+
+	<target name="tarWithLibraries" if="existsLibraries">
+		<tar destfile="${archive.name}-${build.version}.tar.gz"
+		     compression="gzip">
+			<tarfileset dir="${basedir}">
+				<include name="${archive.name}-${build.version}.jar" />
+			</tarfileset>
+			<tarfileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</tarfileset>
+		</tar>
+	</target>
+
+	<!--Creates a jar file excluding all test files-->
+	<target name="jar"
+	        if="build.version"
+	        depends="compile, runTests, zipSources">
+		<tstamp>
+			<format property="timestamp"
+			        pattern="d-MMMM-yyyy hh:mm"
+			        locale="en,UK" />
+		</tstamp>
+		<jar destfile="${jars.dir}/${archive.name}-${build.version}.jar"
+		     basedir="${classes.dir}"
+		     excludes="**/*Test.class **/*Tests.class **/test">
+			<manifest>
+				<section name="${package.name}.${utils.name}">
+					<attribute name="Vendor" value="${vendor.name}" />
+					<attribute name="Build-By" value="${user.name}" />
+					<attribute name="Version" value="${build.version}" />
+					<attribute name="Build-Date" value="${timestamp}" />
+					<attribute name="Description" value="${jar.desc}" />
+				</section>
+			</manifest>
+		</jar>
+	</target>
+
+	<!--Creates a source jar file (and zips it) excluding all test files-->
+	<target name="zipSources" if="build.version" depends="compile, runTests">
+		<tstamp>
+			<format property="timestamp"
+			        pattern="d-MMMM-yyyy hh:mm"
+			        locale="en,UK" />
+		</tstamp>
+		<jar destfile="${jars.dir}/${archive.name}-${build.version}-src.jar"
+		     basedir="${src.dir}"
+		     excludes="**/*Test.java **/*Tests.java **/test"
+		     includes="**/*.java">
+			<manifest>
+				<section name="${package.name}.${utils.name}">
+					<attribute name="Vendor" value="${vendor.name}" />
+					<attribute name="Build-By" value="${user.name}" />
+					<attribute name="Version" value="${build.version}" />
+					<attribute name="Build-Date" value="${timestamp}" />
+					<attribute name="Description" value="${jar.desc}" />
+				</section>
+			</manifest>
+		</jar>
+		<zip destfile="${jars.dir}/${archive.name}-${build.version}-src.jar.zip"
+		     basedir="${jars.dir}"
+		     includes="${archive.name}-${build.version}-src.jar" />
+		<delete file="${jars.dir}/${archive.name}-${build.version}-src.jar" />
+	</target>
+
+	<!--Creates a new build number-->
+	<target name="init_dev">
+		<buildnumber />
+		<property name="build.version"
+		          value="${release.number}-b${build.number}" />
+	</target>
+
+	<target name="init_release">
+		<property name="build.version" value="${release.number}" />
+	</target>
+
+	<!--Compiles all source files (excluding test sources)-->
+	<target name="compile"
+	        depends="clear"
+	        description="Compiles the current project.">
+		<condition property="compiler.path" value="${java14.path}">
+			<equals arg1="${compile.level}" arg2="1.4" />
+		</condition>
+		<condition property="compiler.path" value="${java15.path}">
+			<equals arg1="${compile.level}" arg2="1.5" />
+		</condition>
+		<echo message="Compiler path: ${compiler.path}">
+		</echo>
+		<mkdir dir="${classes.dir}" />
+		<antcall target="copyMetaDataRun" />
+		<javac destdir="${classes.dir}"
+		       source="${compile.level}"
+		       target="${compile.level}"
+		       compiler="javac${compile.level}"
+		       fork="yes"
+		       executable="${compiler.path}/bin/javac"
+		       debug="on">
+			<src path="${src.dir}" />
+			<classpath refid="classpath.run" />
+		</javac>
+	</target>
+
+	<target name="copyMetaDataRun" if="metdata.run.available">
+		<mkdir dir="${classes.dir}/META-INF" />
+		<copy todir="${classes.dir}/META-INF">
+			<fileset dir="${src.dir}/META-INF" />
+		</copy>
+	</target>
+
+	<!--Deletes all existing class-files in the classes folder-->
+	<target name="clear">
+		<delete dir="${classes.dir}"
+		        includeemptydirs="true"
+		        failonerror="false" />
+		<delete dir="${classes.test.dir}"
+		        includeemptydirs="true"
+		        failonerror="false" />
+	</target>
+
+	<!--Runs all unit tests of the project-->
+	<target name="runTests"
+	        depends="compile-test"
+	        if="testable"
+	        description="Runs all Unit tests of the current project.">
+		<java fork="true"
+		      classname="junit.textui.TestRunner"
+		      classpathref="classpath.test"
+		      taskname="junit"
+		      failonerror="true">
+			<arg value="${package.name}.${utils.name}.AllTests" />
+		</java>
+		<delete dir="${classes.test.dir}"
+		        includeemptydirs="true"
+		        failonerror="false" />
+	</target>
+
+	<!--Compiles all source files (including test sources)-->
+	<target name="compile-test" depends="compile" if="testable">
+		<mkdir dir="${classes.test.dir}" />
+		<antcall target="copyMetaDataTest" />
+		<javac destdir="${classes.test.dir}" compiler="javac${compile.level}">
+			<src path="${src.test.dir}" />
+			<classpath refid="classpath.test" />
+		</javac>
+	</target>
+
+	<target name="copyMetaDataTest" if="metadata.test.available">
+		<mkdir dir="${classes.test.dir}/META-INF" />
+		<copy todir="${classes.test.dir}/META-INF">
+			<fileset dir="${src.test.dir}/META-INF" />
+		</copy>
+	</target>
+
+	<!--Generates the Java Documentation for the project and archives it in a tar.gz file-->
+	<target name="doc"
+	        description="Generates the Java Documentation of the current project.">
+		<delete dir="${doc.dir}" failonerror="false" />
+		<javadoc destdir="${doc.dir}" version="true" author="true">
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
+			<link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
+			<classpath>
+				<fileset dir="${basedir}">
+					<include name="${lib.dir}/*.jar" />
+				</fileset>
+			</classpath>
+			<packageset dir="${src.dir}">
+				<exclude name="**/test" />
+			</packageset>
+		</javadoc>
+	</target>
+
+	<target name="tarDoc" if="build.version" depends="doc">
+		<available file="${tar.doc.dir}/${archive.name}-${build.version}-doc.tar.gz"
+		           property="existsDoc" />
+		<fail if="existsDoc"
+		      message="The file ${archive.name}-${build.version}-doc.tar.gz already exists." />
+		<tar basedir="${doc.dir}"
+		     destfile="${tar.doc.dir}/${archive.name}-${build.version}-doc.tar.gz"
+		     compression="gzip" />
+	</target>
+
+	<!--Generates the Java Documentation for all projects in the workspace and moves it to the users public_html folder-->
+	<target name="docAll"
+	        description="Generates the Java Documentation for all projects in the workspace and
+moves it to the users public_html folder">
+		<delete dir="${alldoc.dir}" failonerror="false" />
+		<javadoc destdir="${alldoc.dir}"
+		         packagenames="com.gip.xyna.utils.*"
+		         version="true"
+		         author="true"
+		         windowtitle="Xyna Utils Documentation">
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
+			<link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
+			<classpath>
+				<fileset dir="${basedir}">
+					<include name="**/${lib.dir}/*.jar" />
+				</fileset>
+			</classpath>
+			<fileset dir="${basedir}">
+				<exclude name="**/test/**/*.java" />
+				<include name="**/*.java" />
+			</fileset>
+			<group title="BPEL" packages="com.gip.xyna.utils.bpel*" />
+			<group title="Database" packages="com.gip.xyna.utils.db*" />
+			<group title="Exceptions">
+				<package name="com.gip.xyna.utils.exceptions*" />
+				<package name="com.gip.xyna._1_5_5.faults._1" />
+			</group>
+			<group title="JMS" packages="com.gip.xyna.utils.jms*" />
+			<group title="Logging" packages="com.gip.xyna.utils.logging*" />
+			<group title="Mail" packages="com.gip.xyna.utils.mail*" />
+			<group title="Security">
+				<package name="com.gip.xyna.utils" />
+				<package name="com.gip.xyna.utils.encryption" />
+				<package name="com.gip.xyna.utils.io" />
+			</group>
+			<group title="SOAP" packages="com.gip.xyna.utils.soap*" />
+			<group title="XML" packages="com.gip.xyna.utils.xml*" />
+			<group title="XynaTree" packages="com.gip.xyna.utils.xynatree*" />
+		</javadoc>
+	</target>
+
+</project>

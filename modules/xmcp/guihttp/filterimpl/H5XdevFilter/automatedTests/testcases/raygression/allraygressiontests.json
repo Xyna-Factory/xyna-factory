@@ -1,0 +1,22 @@
+{
+  "testseries":
+  [
+    "basicoperations/basicoperationsseries.json",
+    "labels/labels.json",
+    "conditionals/conditionals.json",
+    "exceptions/exceptions.json",
+    "storables/storables.json",
+    "data_flow/data_flow.json",
+    "expressions/expressions.json",
+    "foreach/foreach.json",
+    "workflow_launcher/workflow_launcher.json",
+    "data_type_creation/data_type_creation.json",
+    "exception_type_creation/exception_type_creation.json",
+    "coded_services/coded_services.json",
+    "workspaces_and_applications/workspaces_and_applications.json",
+    "catch_and_compensation/catch_and_compensation.json",
+    "timing/timing.json",
+    "dynamic_typing/dynamic_typing.json",
+    "undo_redo/undo_redo.json"
+  ]
+}

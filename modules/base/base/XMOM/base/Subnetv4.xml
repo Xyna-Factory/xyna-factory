@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Subnet" BaseTypePath="base" Label="IPv4 Subnet" TypeName="Subnetv4" TypePath="base" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Subnetv4 Service" TypeName="Subnetv4">
+    <Operation IsStatic="false" Label="toNetmask" Name="toNetmask">
+      <Output> 
+       <Data ID="1" Label="netmask" VariableName="netmask">
+         <Meta>
+           <Type>String</Type>
+         </Meta>
+       </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java"><![CDATA[
+    int pl = Integer.valueOf(toPrefixlength());
+    StringBuilder nm = new StringBuilder();
+    
+    int sum = 0;
+    for (int i = 0; i<32; i++) {
+      if (i<pl) {
+        sum += 128 >> (i % 8);
+      }
+      
+      //string anhängen
+      if (i % 8 == 7) {
+        nm.append(sum);
+        if (i != 31) {
+          nm.append(".");
+        }
+        sum = 0;
+      }
+    }
+    
+    return nm.toString();
+]]>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="toWildcard" Name="toWildcard">
+      <Output>
+       <Data ID="2" Label="wildcard" VariableName="wildcard">
+         <Meta>
+           <Type>String</Type>
+         </Meta>
+       </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java"><![CDATA[
+    int pl = Integer.valueOf(toPrefixlength());
+    StringBuilder wc = new StringBuilder();
+    int sum = 0;
+    for (int i = 0; i<32; i++) {
+      if (i>=pl) {
+        sum += 1 << (7 - (i % 8));
+      }
+      
+      //string anhängen
+      if (i % 8 == 7) {
+        wc.append(sum);
+        if (i != 31) {
+          wc.append(".");
+        }
+        sum = 0;
+      }
+    }
+
+    return wc.toString();
+]]>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="toPrefixlength" Name="toPrefixlength">
+      <Output>
+       <Data ID="3" Label="prefixlength" VariableName="prefixlength">
+         <Meta>
+           <Type>String</Type>
+         </Meta>
+       </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java"><![CDATA[
+    int pl;
+    try {
+      pl = Integer.valueOf(getPrefixLength());
+    } catch (NumberFormatException e) {
+      //ok keine zahl -> prefixlength in ip-schreibweise. entweder vorne 0en und hinten 1er, oder andersherum
+
+      String[] parts = getPrefixLength().split("\\.");
+      if (parts.length != 4) {
+        throw new RuntimeException("invalid prefixlength: " + getPrefixLength());
+      }
+      int[] bytes = new int[4];
+      for (int i = 0; i < 4; i++) {
+        try {
+          bytes[i] = Integer.valueOf(parts[i]);
+        } catch (NumberFormatException e1) {
+          throw new RuntimeException("invalid prefixlength: " + getPrefixLength());
+        }
+      }
+      boolean netmask = true;
+      if (bytes[0] > bytes[3]) {
+        //netmask
+      } else {
+        //wildcard
+        netmask = false;
+        //byte array umdrehen
+        //http://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
+        int t = bytes[0];
+        bytes[0] = (int) ((bytes[3] * 0x0202020202l & 0x010884422010l) % 1023);
+        bytes[3] = (int) ((t * 0x0202020202l & 0x010884422010l) % 1023);
+        t = bytes[1];
+        bytes[1] = (int) ((bytes[2] * 0x0202020202l & 0x010884422010l) % 1023);
+        bytes[2] = (int) ((t * 0x0202020202l & 0x010884422010l) % 1023);
+      }
+      java.util.BitSet bs = new java.util.BitSet(32);
+      for (int i = 0; i < 32; i++) {
+        int mask = 128 >> (i % 8);
+        //schauen, dass beim passenden bytearray das i-te bit gesetzt ist
+        bs.set(i, (bytes[i / 8] & mask) == mask);
+      }
+      if (netmask) {
+        pl = bs.length();
+      } else {
+        pl = 32 - bs.length();
+      }  
+    }
+
+    return String.valueOf(pl);
+]]>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

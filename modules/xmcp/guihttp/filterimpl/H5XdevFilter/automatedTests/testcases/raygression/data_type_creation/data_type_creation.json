@@ -1,0 +1,16 @@
+{
+  "testseries":
+  [
+    "data_type_creation_001/testseries.json",
+    "data_type_creation_002/testseries.json",
+    "data_type_creation_003/testseries.json",
+    "data_type_creation_005/testseries.json",
+    "data_type_creation_006/testseries.json",
+    "data_type_creation_007/testseries.json",
+    "data_type_creation_008/testseries.json",
+    "data_type_creation_009/testseries.json",
+    "data_type_creation_010/testseries.json",
+    "data_type_creation_011/testseries.json",
+    "data_type_creation_012/testseries.json"
+  ]
+}

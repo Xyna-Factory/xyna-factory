@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "1.3.2021", 
+    "updated": "1.3.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!RegressionTestApp%252F34!": "default%20workspace"
+        }, 
+        {
+          "!xmcp.h5x.modeller.PMOD2687!": "xmcp.h5x.modeller.PMOD2687"
+        }, 
+        {
+          "!ListOfAnyType!": "ListOfAnyType"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!RegressionTestApp%252F34!/xmom/workflows/!xmcp.h5x.modeller.PMOD2687!/!ListOfAnyType!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!RegressionTestApp%252F34!/xmom/workflows/!xmcp.h5x.modeller.PMOD2687!/!ListOfAnyType!/dataflow"
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<antlib>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: zipDeliveryItems
+         = = = = = = = = = = = = = = = = =
+-->
+  <macrodef name="zipDeliveryItems" description="Zips">
+    <attribute name="name" description="Name of the delivery item" />
+    <attribute name="srcdir"
+               default="${build.dir}"
+               description="All files from this directory are zipped into an archive" />
+    <attribute name="destdir"
+               default="${delivery.dir}"
+               description="Directory where the delivery item will be stored" />
+    <sequential>
+      <mkdir dir="@{destdir}" />
+      <zip destfile="@{destdir}/@{name}.zip">
+        <zipfileset dir="@{srcdir}" prefix="@{name}" excludes="**/*.sh" />
+        <zipfileset dir="@{srcdir}"
+                    prefix="@{name}"
+                    includes="**/*.sh"
+                    filemode="755" />
+      </zip>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+             macrodef: zipEnvironmentFiles
+            = = = = = = = = = = = = = = = = =
+   -->
+  <macrodef name="zipEnvironmentFiles">
+    <attribute name="dir"
+               description="Directory to zip the environment files from" />
+    <attribute name="destdir"
+               default="${delivery.dir}"
+               description="Directory where the delivery item will be stored" />
+    <attribute name="name" description="Name of the delivery item" />
+    <sequential>
+      <zip destfile="@{destdir}/@{name}.zip">
+        <zipfileset dir="@{dir}" prefix="@{name}" includes="**/*" />
+      </zip>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+           macrodef: buildVersion          
+       = = = = = = = = = = = = = = = = =
+  -->
+  <macrodef name="buildVersion">
+    <attribute name="srcdir" description="Directory containing source files." />
+    <attribute name="destdir"
+               default="${delivery.dir}"
+               description="Directory where the delivery item will be stored" />
+    <attribute name="version" description="Version of the delivery item." />
+    <attribute name="env"
+               default="true"
+               description="If true also builds delivery item for environment files. Default is true." />
+    <attribute name="name"
+               default="${delivery.name}_@{version}_${timestamp}"
+               description="Name of the delivery item." />
+    <attribute name="test"
+               default="true"
+               description="If true, run junit tests. Defaults to true." />
+    <attribute name="cobertura"
+               default="true"
+               description="If true, run cobertura. Defaults to true." />
+    <attribute name="findbugs"
+               default="true"
+               description="If true, run findBugs. Defaults to true." />
+    <sequential>
+      <ant dir="@{srcdir}/installation/build" target="build" inheritall="true">
+        <property name="release.number" value="@{version}" />
+      </ant>
+      <if>
+        <equals arg1="@{test}" arg2="true" />
+        <then>
+          <runTestsAll srcdir="@{srcdir}" destdir="@{srcdir}/testresults" cobertura="@{cobertura}" />
+        </then>
+      </if>
+      <if>
+        <equals arg1="@{findbugs}" arg2="true" />
+        <then>
+          <findBugsAll srcdir="@{srcdir}" destdir="@{srcdir}/testresults" />
+        </then>
+      </if>
+      <zipDeliveryItems name="@{name}" destdir="@{destdir}" />
+      <if>
+        <equals arg1="@{env}" arg2="true" />
+        <then>
+          <zipEnvironmentFiles dir="@{srcdir}/installation/environment"
+                               destdir="@{destdir}"
+                               name="@{name}_Environment" />
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildUpdate          
+         = = = = = = = = = = = = = = = = =
+    -->
+  <macrodef name="buildUpdate">
+    <attribute name="basedir" description="Directory containing source files" />
+    <attribute name="version" description="Version of the delivery item" />
+    <sequential>
+      <propertyfile file="@{basedir}/installation/install/update/version.properties">
+        <entry key="version.end" value="@version}" />
+      </propertyfile>
+      <property file="@{basedir}/installation/install/update/version.properties" />
+      <copy todir="@{basedir}/installation/install/update/release/${version.start}_to_${version.end}">
+        <fileset dir="@{basedir}/installation/install/update">
+          <exclude name="release/**" />
+        </fileset>
+      </copy>
+      <property file="@{basedir}/installation/install/update/release/order.properties" />
+      <propertyfile file="@{basedir}/installation/install/update/release/order.properties">
+        <entry key="release.order"
+               value="${release.order};${version.start}_to_${version.end}" />
+      </propertyfile>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: runTestsAll          
+         = = = = = = = = = = = = = = = = =
+    -->
+  <macrodef name="runTestsAll" description="Run junit tests on all components">
+    <attribute name="srcdir"
+               default="${root.dir}"
+               description="Root directory of the project" />
+    <attribute name="destdir"
+               default="${build.dir}/testresults"
+               description="Directory to store the result files" />
+    <attribute name="cobertura"
+               default="true"
+               description="If true, run cobertura. Defaults to true." />
+    <sequential>
+      <mkdir dir="@{destdir}" />
+      <!-- remove old results -->
+      <delete verbose="true">
+        <fileset dir="@{destdir}">
+          <include name="**/TEST*.xml" />
+        </fileset>
+      </delete>
+      <!-- runTests -->
+      <for param="dir">
+        <dirset dir="@{srcdir}">
+          <include name="**/test" />
+          <exclude name="**/build_*_*/**" />
+          <exclude name="**/classes*/**" />
+          <exclude name="**/bin/**" />
+        </dirset>
+        <sequential>
+          <var name="projectdir" unset="true" />
+          <dirname file="@{dir}" property="projectdir" />
+          <if>
+            <available file="${projectdir}/src" type="dir" />
+            <then>
+		      <runTests srcdir="${projectdir}" destdir="@{destdir}" cobertura="@{cobertura}" />
+            </then>
+          </if>
+        </sequential>
+      </for>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: findBugsAll          
+         = = = = = = = = = = = = = = = = =
+    -->
+  <macrodef name="findBugsAll" description="Run findbugs on all components">
+    <attribute name="srcdir"
+               default="${root.dir}"
+               description="Root directory of the project" />
+    <attribute name="destdir"
+               default="${build.dir}/testresults"
+               description="Directory to store the result files" />
+    <sequential>
+      <mkdir dir="@{destdir}" />
+      <!-- remove old results -->
+      <delete verbose="true">
+        <fileset dir="@{destdir}">
+          <include name="**/findbugs*.xml" />
+        </fileset>
+      </delete>
+      <!-- findBugs -->
+      <for param="dir">
+        <dirset dir="@{srcdir}">
+          <include name="**/src" />
+          <exclude name="**/src/html-template" />
+        </dirset>
+        <sequential>
+          <var name="projectdir" unset="true" />
+          <dirname file="@{dir}" property="projectdir" />
+          <var name="projectname" unset="true" />
+          <basename file="${projectdir}"
+                    property="projectname" />
+          <findBugs srcdir="${projectdir}"
+                    destfile="@{destdir}/findbugs-${projectname}.xml" />
+        </sequential>
+      </for>
+    </sequential>
+  </macrodef>
+
+</antlib>

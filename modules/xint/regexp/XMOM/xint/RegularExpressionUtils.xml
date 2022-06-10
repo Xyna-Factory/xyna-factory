@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Regular Expression Utils" TypeName="RegularExpressionUtils" TypePath="xint" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Regular Expression Utils" TypeName="RegularExpressionUtils">
+    <Operation IsStatic="true" Label="Match Regular Expression" Name="matchRegularExpression">
+      <Meta>
+        <Documentation>Matches the regular expression with the input text and returns all the captured groups.
+
+Ignores line breaks. To handle these, use something like "&lt;regexp&gt;(?:\n|$)", meaning "end with line break or with eof".</Documentation>
+        <Abstract.UID>EB3B5F82-5E62-CE52-916F-8059D1EF2A6B</Abstract.UID>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data Label="Regular Expression" ReferenceName="RegularExpression" ReferencePath="xint" VariableName="regularExpression"/>
+        <Data Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Matched Groups" ReferenceName="Text" ReferencePath="base" VariableName="text0"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">String inputString = text.getText();
+String regex = regularExpression.getExpression();
+
+java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex, java.util.regex.Pattern.DOTALL);
+java.util.regex.Matcher matcher = pattern.matcher(inputString);
+java.util.List&lt;Text&gt; output = new java.util.ArrayList&lt;Text&gt;();
+while (matcher.find()) {
+  for (int i = 1; i &lt;= matcher.groupCount(); i++) {
+    output.add(new Text(matcher.group(i)));
+  }
+}
+
+return output;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Validate Regular Expression" Name="validateRegularExpression">
+      <Input>
+        <Data Label="Regular Expression" ReferenceName="RegularExpression" ReferencePath="xint" VariableName="regularExpression"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Invalid Regular Expression" ReferenceName="InvalidRegularExpression" ReferencePath="xint" VariableName="invalidRegularExpression"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+  java.util.regex.Pattern.compile(regularExpression.getExpression(), java.util.regex.Pattern.DOTALL);
+} catch (Exception e) {
+  throw new InvalidRegularExpression(e);
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+        <Operation ID="3" Label="Split" IsStatic="true" Name="split">
+      <Input>
+        <Data ID="0" Label="Regular Expression" ReferenceName="RegularExpression" ReferencePath="xint" VariableName="regularExpression"/>
+        <Data ID="1" Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="Parts" ReferenceName="Text" ReferencePath="base" VariableName="text0" IsList="true"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">String inputString = text.getText();
+String regex = regularExpression.getExpression();
+
+java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex, java.util.regex.Pattern.DOTALL);
+
+java.util.List&lt;Text&gt; output = new java.util.ArrayList&lt;Text&gt;();
+for( String s : pattern.split(inputString, 0) ) {
+  output.add(new Text(s) );
+}
+
+return output;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    
+  </Service>
+</DataType>

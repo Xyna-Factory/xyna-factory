@@ -1,0 +1,10 @@
+{
+  "tests":
+  [
+    "deletedTypeInMapping.json",
+	"deletedTypeInConditionalChoice.json",
+	"deletedTypeInConditionalBranching.json",
+	"deletedTypeChoice.json",
+	"deletedStepFunctionInAndOutput.json"
+  ]
+}

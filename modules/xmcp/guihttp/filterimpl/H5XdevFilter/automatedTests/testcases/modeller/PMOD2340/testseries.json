@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "refactorDT.json",
+    "refactorSG.json"
+  ]
+}

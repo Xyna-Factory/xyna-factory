@@ -1,0 +1,17 @@
+{
+    "testseries": [
+        "deployment_items_000/testseries.json",
+        "deployment_items_001/testseries.json",
+        "deployment_items_002/testseries.json",
+        "deployment_items_003/testseries.json",
+        "deployment_items_004/testseries.json",
+        "deployment_items_005/testseries.json",
+        "deployment_items_008/testseries.json",
+        "deployment_items_009/testseries.json",
+        "deployment_items_012/testseries.json",
+        "deployment_items_014/testseries.json",
+        "deployment_items_016/testseries.json",
+        "deployment_items_017/testseries.json",
+        "deployment_items_018/testseries.json"
+    ]
+}

@@ -1,0 +1,197 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "16.3.2021", 
+    "updated": "16.3.2021"
+  }, 
+  "operations": [
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput":
+      {
+      },
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!": "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "dataType": true, 
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "service": true, 
+        "serviceGroup": true, 
+        "workflow": true
+      }, 
+      "requestType": "POST", 
+      "url": "!url!/xmom/objects?q=text"
+    }, 
+    {
+      "operation": "read",
+      "targetVariable": "!label!",
+      "pathInResponse": "objects[0]/label",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!label!",
+      "value": "Text"
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "dataType": true, 
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "service": true, 
+        "serviceGroup": true
+      }, 
+      "requestType": "POST", 
+      "url": "!url!/xmom/objects?q=text"
+    }, 
+    {
+      "operation": "read",
+      "targetVariable": "!label!",
+      "pathInResponse": "objects[0]/label",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!label!",
+      "value": "Text"
+    },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "pathToList": "objects",
+      "entries": [
+        {
+          "type": "dataType"
+        },
+        {
+          "type": "serviceGroup"
+        },
+        {
+          "type": "instanceService"
+        },
+        {
+          "type": "codedService"
+        }
+      ]
+    },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "objects",
+      "entries": [
+        {
+          "type": "workflow"
+        }
+      ]
+    },
+
+    {
+      "operation": "call", 
+      "payload": {
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "service": true, 
+        "serviceGroup": true
+      }, 
+      "requestType": "POST", 
+      "url": "!url!/xmom/objects?q=text"
+    }, 
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "objects",
+      "entries": [
+        {
+          "type": "dataType"
+        },
+        {
+          "type": "workflow"
+        }
+      ]
+    },
+
+    {
+      "operation": "call", 
+      "payload": {
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "serviceGroup": true
+      }, 
+      "requestType": "POST", 
+      "url": "!url!/xmom/objects?q=text"
+    }, 
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "objects",
+      "entries": [
+        {
+          "type": "dataType"
+        },
+        {
+          "type": "workflow"
+        },
+        {
+          "type": "instanceService"
+        },
+        {
+          "type": "codedService"
+        }
+      ]
+    },
+
+    {
+      "operation": "call", 
+      "payload": {
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "serviceGroup": true, 
+        "workflow": true
+      }, 
+      "requestType": "POST", 
+      "url": "!url!/xmom/objects?q=text"
+    },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "pathToList": "objects",
+      "entries": [
+        {
+          "type": "workflow"
+        }
+      ]
+    },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "objects",
+      "entries": [
+        {
+          "type": "dataType"
+        },
+        {
+          "type": "instanceService"
+        },
+        {
+          "type": "codedService"
+        }
+      ]
+    }
+  ]
+}

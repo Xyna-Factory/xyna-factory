@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 8.2 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2021
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision$
+ * $Date$
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="VelocityService" TypeName="VelocityService" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>VelocityServiceImpl.jar</Libraries>
+  <Libraries>commons-collections-3.2.1.jar</Libraries>
+  <Libraries>commons-lang-2.4.jar</Libraries>
+  <Libraries>velocity-1.6.2.jar</Libraries>
+  <Service Label="VelocityService" TypeName="VelocityService">
+    <Operation IsStatic="true" Label="evaluate Template" Name="evaluateTemplate">
+      <Input>
+        <Data Label="Velocity Template" ReferenceName="VelocityTemplate" ReferencePath="xact.templates" VariableName="velocityTemplate"/>
+        <Data Label="Template Input Data" ReferenceName="TemplateInputData" ReferencePath="xact.templates" VariableName="templateInputData"/>
+      </Input>
+      <Output>
+        <Data Label="Config File" ReferenceName="ConfigFile" ReferencePath="xact.templates" VariableName="configFile"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException">
+          <Meta>
+            <Type>XynaException</Type>
+          </Meta>
+        </Exception>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.templates.VelocityServiceImpl.evaluateTemplate(velocityTemplate, templateInputData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

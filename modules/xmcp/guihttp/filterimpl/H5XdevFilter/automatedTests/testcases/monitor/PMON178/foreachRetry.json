@@ -1,0 +1,486 @@
+{
+  "meta":
+  {
+    "name": "twoRetriesSuccessTest",
+    "description": "Execute a workflow containing a Foreach with two successful retries in 1st iteration and one successful retry in 2nd iteration (loaded from app) and open audit",
+    "created": "24.04.2020",
+    "updated": "15.12.2020"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!customFieldValues!",
+      "value": ["test", "", "", ""]
+    },
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+      {
+        "!workflowFQN!": "xmcp.h5x.regression.PMON103.ForeachRetry",
+        "!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"$list":[{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters"},"necessaryReductions":4,"reducetionRetryLimit":4},{"$meta":{"fqn":"xmcp.h5x.regression.PMON30.RetryTestParameters"},"necessaryReductions":4,"reducetionRetryLimit":3}]}],
+        "!customStringContainer!": "!customFieldValues!"
+      },
+      "mapOutput": 
+      { 
+        "!orderId!": "!orderId!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "assertGeneralFields",
+      "mapInput":
+      {
+        "!orderId!": "!orderId!",
+        "!dataflowLength!": 10,
+        "!retryLength!": 0,
+        "!errorsLength!": 1,
+        "!rollbackLength!": 0,
+        "!customFieldValues!": "!customFieldValues!",
+        "!applicationName!": "!applicationName!",
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+
+    { "comment": "check caught step - foreach 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!caughtStepId!",
+      "pathInResponse": "info/$list[4]/id",
+      "unquoteResult": "true"
+    },
+
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list[id=!caughtStepId!]/iterations/$list",
+      "expectedValue": "2"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    },
+
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list[id=!caughtStepId!]/iterations/$list[0]/runtimeInfo/iterations/$list",
+      "expectedValue": "5"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[0]/runtimeInfo/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[0]/runtimeInfo/iterations/$list[1]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "1"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[0]/runtimeInfo/iterations/$list[2]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "2"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[0]/runtimeInfo/iterations/$list[3]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "3"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[0]/runtimeInfo/iterations/$list[4]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "4"
+    }, 
+
+    { "comment": "check caught step - foreach 1", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[1]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "1"
+    },
+
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list[id=!caughtStepId!]/iterations/$list[1]/runtimeInfo/iterations/$list",
+      "expectedValue": "4"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[1]/runtimeInfo/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[1]/runtimeInfo/iterations/$list[1]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "1"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[1]/runtimeInfo/iterations/$list[2]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "2"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!caughtStepId!]/iterations/$list[1]/runtimeInfo/iterations/$list[3]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "3"
+    },
+
+    { "comment": "check executed catch - foreach 0", "operation": "comment" },
+
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[1]/areas/$list[1]/items/$list[0]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[0]/id",
+      "targetVariable": "!branchU1093657837-0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list[id=!branchU1093657837-0!]/iterations/$list",
+      "expectedValue": "2"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!branchU1093657837-0!]/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    },
+
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list[id=!branchU1093657837-0!]/iterations/$list[0]/runtimeInfo/iterations/$list",
+      "expectedValue": "4"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!branchU1093657837-0!]/iterations/$list[0]/runtimeInfo/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!branchU1093657837-0!]/iterations/$list[0]/runtimeInfo/iterations/$list[1]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "1"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!branchU1093657837-0!]/iterations/$list[0]/runtimeInfo/iterations/$list[2]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "2"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!branchU1093657837-0!]/iterations/$list[0]/runtimeInfo/iterations/$list[3]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "3"
+    },
+
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[1]/areas/$list[1]/items/$list[0]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[0]/items/$list[1]/id",
+      "targetVariable": "!branchU1093657837-1!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list[id=!branchU1093657837-1!]/iterations/$list[0]/runtimeInfo/iterations/$list",
+      "expectedValue": "1"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!branchU1093657837-1!]/iterations/$list[0]/runtimeInfo/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "4"
+    },
+
+    { "comment": "check executed catch - iteration 1", "operation": "comment" },
+
+    {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list[id=!branchU1093657837-1!]/iterations/$list",
+        "expectedValue": "1"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!branchU1093657837-1!]/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    },
+
+	{
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list[id=!branchU1093657837-1!]/iterations/$list[0]/runtimeInfo/iterations/$list",
+        "expectedValue": "1"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=!branchU1093657837-1!]/iterations/$list[0]/runtimeInfo/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "4"
+    },
+
+    { "comment": "check retry - foreach 0", "operation": "comment" },
+	
+	{
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list[id=step118]/iterations/$list",
+        "expectedValue": "2"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=step118]/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    },
+
+	{
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list[id=step118]/iterations/$list[0]/runtimeInfo/iterations/$list",
+        "expectedValue": "4"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=step118]/iterations/$list[0]/runtimeInfo/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=step118]/iterations/$list[0]/runtimeInfo/iterations/$list[1]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "1"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=step118]/iterations/$list[0]/runtimeInfo/iterations/$list[2]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "2"
+    }, 
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=step118]/iterations/$list[0]/runtimeInfo/iterations/$list[3]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "3"
+    },
+	
+	{ "comment": "check retry - foreach 1", "operation": "comment" },
+
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list[id=step111]/iterations/$list",
+      "expectedValue": "1"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=step111]/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "0"
+    },
+
+	{
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "info/$list[id=step111]/iterations/$list[0]/runtimeInfo/iterations/$list",
+      "expectedValue": "1"
+    },
+
+    {
+      "operation": "read",
+      "targetVariable": "!index!",
+      "pathInResponse": "info/$list[id=step111]/iterations/$list[0]/runtimeInfo/iterations/$list[0]/index"
+    },
+    {
+      "operation": "index",
+      "constraint": "equals",
+      "variable": "!index!",
+      "value": "4"
+    }
+  ]
+}

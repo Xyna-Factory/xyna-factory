@@ -1,0 +1,65 @@
+[
+  {
+    "comment": "assumes the datatype is closed. Repairs the datatype and closes it",
+    "type" : "function",
+	"functionName": "repairDatatype",
+	"input": ["!dtUrl!", "!path!", "!label!", "!expectedNumberOfRepairEntries!"],
+	"output": [],
+    "operations":
+	[
+	  {
+	    "operation": "call",
+	    "requestType": "GET",
+	    "url": "!dtUrl!",
+	    "acceptError": true
+	  },
+      {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "repairs/$list",
+        "expectedValue": "!expectedNumberOfRepairEntries!"
+      },
+	  {
+	    "operation": "call",
+	    "requestType": "GET",
+	    "url": "!dtUrl!?repair=true"
+	  },
+      {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "repairResult/$list",
+        "expectedValue": "!expectedNumberOfRepairEntries!"
+      },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!dtUrl!/save",
+	    "payload": {"revision":1,"path":"!path!","label":"!label!","force":false}
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!dtUrl!/deploy",
+	    "payload": {"revision":1},
+		"acceptError": true
+	  },	
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!dtUrl!/close",
+	    "payload": {"force":false,"revision":1}
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "GET",
+	    "url": "!dtUrl!"
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!dtUrl!/close",
+	    "payload": {"force":false,"revision":0}
+	  }
+	]
+  }
+]

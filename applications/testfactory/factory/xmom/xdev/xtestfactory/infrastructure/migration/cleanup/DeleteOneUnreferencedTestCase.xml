@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="3" Label="Delete One Unreferenced Test Case" TypeName="DeleteOneUnreferencedTestCase" TypePath="xdev.xtestfactory.infrastructure.migration.cleanup" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="2" Label="Delete One Unreferenced Test Case" Name="DeleteOneUnreferencedTestCase">
+    <Meta>
+      <Abstract.UID>DEFD950D-7BA2-D7DC-D737-1F1D0387042D</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="0" IsList="true" Label="Test Case - Referenced" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase67">
+        <Target RefID="8"/>
+        <Target RefID="12"/>
+      </Data>
+      <Data ID="1" Label="Test Case - To Be Checked" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+        <Target RefID="8"/>
+        <Target RefID="14"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="7" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <Function ID="8" Label="Filter List Of Test Cases">
+      <Source RefID="7"/>
+      <Source RefID="0"/>
+      <Source RefID="1"/>
+      <Target RefID="7"/>
+      <Target RefID="9"/>
+      <Meta>
+        <Documentation>If the resulting filtered list is as long as the input list, the test case is not referenced in any test project and can be deleted.</Documentation>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+        <FixedHeight>32</FixedHeight>
+        <FixedWidth>272</FixedWidth>
+      </Meta>
+      <Invoke Operation="filterListOfTestCases" ServiceID="7">
+        <Source RefID="0"/>
+        <Source RefID="1">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="7">
+        <Target RefID="9"/>
+      </Receive>
+    </Function>
+    <Data ID="9" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase89">
+      <Source RefID="8"/>
+      <Target RefID="12"/>
+    </Data>
+    <Choice ID="12" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="0"/>
+      <Source RefID="9"/>
+      <Input>
+        <Data IsList="true" Label="Test Case - Referenced" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables"/>
+        <Source RefID="0">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables"/>
+        <Source RefID="9">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="10" Label="true" Premise="length(%0%)==length(%1%)">
+        <Function ID="14" Label="Delete">
+          <Source RefID="13"/>
+          <Source RefID="1"/>
+          <Source RefID="15"/>
+          <Target RefID="13"/>
+          <Meta>
+            <FixedHeight>32</FixedHeight>
+            <FixedWidth>149</FixedWidth>
+          </Meta>
+          <Invoke Operation="delete" ServiceID="13">
+            <Source RefID="1">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="15">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="13"/>
+        </Function>
+        <Assign/>
+      </Case>
+      <Case ID="11" Label="false">
+        <Assign/>
+      </Case>
+    </Choice>
+    <ServiceReference ID="13" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="14"/>
+      <Target RefID="14"/>
+    </ServiceReference>
+    <Data ID="15" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter">
+      <Target RefID="14"/>
+      <Data Label="Including history" VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data Label="Backward" VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Forward" VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+    </Data>
+    <Assign ID="4"/>
+  </Operation>
+</Service>

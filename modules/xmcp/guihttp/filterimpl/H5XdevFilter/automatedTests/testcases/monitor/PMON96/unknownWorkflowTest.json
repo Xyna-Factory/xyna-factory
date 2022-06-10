@@ -1,0 +1,62 @@
+{
+  "meta":
+  {
+    "name": "unknownWorkflowTest",
+    "description": "Execute an not existing workflow and try to open the audit.",
+    "created": "07.05.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customStringContainer!",
+	  "value": ["test", "", "", ""]
+	},
+  	{
+	    "operation": "invoke",
+	    "functionName": "getRegressionApplication",
+	    "mapInput": {},
+	    "mapOutput": 
+	    { 
+	      "!url!": "!url!", 
+	      "!applicationName!" : "!applicationName!", 
+	      "!applicationVersion!": "!applicationVersion!"
+	    }
+	},
+	{
+    	"operation": "set",
+		"variable": "!payload!",
+		"value": {"orderType":"xmcp.h5x.regression.NotExistingWorkflow","async":false,"monitoringLevel":20,"priority":7}
+  	},
+  	{
+    	"operation": "set",
+		"variable": "!payload!",
+		"value": "!customStringContainer!",
+		"path": "customStringContainer"
+  	},
+  	{
+	    "operation": "call",
+    	"requestType": "POST",
+    	"url": "!url!/startorder",
+    	"payload": "!payload!",
+    	"acceptError": true
+  	},
+  	{
+    	"operation": "read",
+    	"pathInResponse": "orderID",
+    	"targetVariable": "!orderId!",
+    	"unquoteResult": true
+  	},
+	{
+        "operation": "call",
+        "requestType": "GET",
+        "url": "/audits/!orderId!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "listLength",
+      "path": "errors/$list",
+      "expectedValue": "2"
+    }
+  ]
+}

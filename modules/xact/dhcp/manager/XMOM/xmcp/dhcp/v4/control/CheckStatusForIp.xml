@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="CheckStatusForIp" TypeName="CheckStatusForIp" TypePath="xmcp.dhcp.v4.control" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(170)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="CheckStatusForIp" Name="CheckStatusForIp">
+    <Input>
+      <Data ID="27" Label="Check Status For Ip Input ctype" ReferenceName="CheckStatusForIpInput_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="checkStatusForIpInput_ctype">
+        <Target RefID="24"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="28" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype">
+        <Source RefID="2"/>
+      </Data>
+      <Data ID="31" Label="Check Status For Ip Response ctype" ReferenceName="CheckStatusForIpResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="checkStatusForIpResponse_ctype">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="10" Label="CheckStatus" ReferenceName="CheckStatus.CheckStatus" ReferencePath="xmcp.dhcp.v4.control">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <Mappings ID="24" Label="Build Input">
+      <Source RefID="27"/>
+      <Target RefID="23"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="26" Label="Check Status For Ip Input ctype" ReferenceName="CheckStatusForIpInput_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="checkStatusForIpInput_ctype26"/>
+        <Source RefID="27"/>
+      </Input>
+      <Output>
+        <Data ID="13" Label="Check Status For Ip Request ctype" ReferenceName="CheckStatusForIpRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="checkStatusForIpRequest_ctype"/>
+        <Target RefID="23"/>
+      </Output>
+      <Mapping>%1%.checkStatusForIpInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="11" Label="Check Status For Ip">
+      <Source RefID="10"/>
+      <Source RefID="23"/>
+      <Target RefID="10"/>
+      <Target RefID="12"/>
+      <Invoke Operation="checkStatusForIp" ServiceID="10">
+        <Source RefID="23"/>
+      </Invoke>
+      <Receive ServiceID="10">
+        <Target RefID="12"/>
+      </Receive>
+    </Function>
+    <Data ID="12" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype">
+      <Source RefID="11"/>
+      <Target RefID="25"/>
+    </Data>
+    <Mappings ID="25" Label="Extract Output">
+      <Source RefID="12"/>
+      <Target RefID="30"/>
+      <Target RefID="33"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="14" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype14"/>
+        <Source RefID="12"/>
+      </Input>
+      <Output>
+        <Data ID="32" Label="Check Status For Ip Response ctype" ReferenceName="CheckStatusForIpResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="checkStatusForIpResponse_ctype32"/>
+        <Target RefID="33"/>
+      </Output>
+      <Output>
+        <Data ID="29" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype29"/>
+        <Target RefID="30"/>
+      </Output>
+      <Mapping>%1%=%0%.payload.checkStatusForIpResponseOutput</Mapping>
+      <Mapping>%2%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%2%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%2%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%2%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%2%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%2%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="23" Label="Check Status For Ip Request ctype" ReferenceName="CheckStatusForIpRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="checkStatusForIpRequest_ctype23">
+      <Source RefID="24"/>
+      <Target RefID="11"/>
+    </Data>
+    <Data ID="30" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype30">
+      <Source RefID="25"/>
+      <Target RefID="2"/>
+    </Data>
+    <Data ID="33" Label="Check Status For Ip Response ctype" ReferenceName="CheckStatusForIpResponse_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="checkStatusForIpResponse_ctype33">
+      <Source RefID="25"/>
+      <Target RefID="2"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="30"/>
+      <Source RefID="33"/>
+      <Target RefID="28"/>
+      <Target RefID="31"/>
+      <Copy>
+        <Source RefID="30"/>
+        <Target RefID="28"/>
+      </Copy>
+      <Copy>
+        <Source RefID="33"/>
+        <Target RefID="31"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

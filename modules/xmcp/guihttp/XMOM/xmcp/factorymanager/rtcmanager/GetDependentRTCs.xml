@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="143" Label="Get Dependent RTCs " TypeName="GetDependentRTCs" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(785)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Dependent RTCs " Name="GetDependentRTCs">
+    <Input>
+      <Data ID="11" Label="Search Criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="157"/>
+        <Target RefID="160"/>
+        <Target RefID="162"/>
+      </Data>
+      <Data ID="80" Label="Get Dependent RTCs Request" ReferenceName="GetDependentRTCsRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="getDependetRTCsRequest80">
+        <Target RefID="17"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="208" IsList="true" Label="Dependency" ReferenceName="Dependency" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="dependency">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Get Dependent RTC Exception" ReferenceName="GetDependentRTCException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="getDependentRTCException"/>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="18" Label="RtcManagerServices" ReferenceName="RtcManagerServices.RtcManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="17"/>
+      <Target RefID="17"/>
+    </ServiceReference>
+    <Function ID="231" Label="Check Rights for Current User">
+      <Source RefID="230"/>
+      <Source RefID="238"/>
+      <Target RefID="230"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="230">
+        <Source RefID="238">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="230"/>
+    </Function>
+    <Choice ID="157" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="11"/>
+      <Target RefID="166"/>
+      <Target RefID="169"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="156" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo156"/>
+        <Source RefID="11"/>
+      </Input>
+      <Case ID="147" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="159" Label="Generate Table Columns">
+          <Target RefID="158"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="177" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="158"/>
+          </Output>
+          <Mapping>%0%["0"].name="State"</Mapping>
+          <Mapping>%0%["0"].path="runtimeContext.state"</Mapping>
+          <Mapping>%0%["1"].name="Name"</Mapping>
+          <Mapping>%0%["1"].path="runtimeContext.name"</Mapping>
+          <Mapping>%0%["1"].sort="asc"</Mapping>
+          <Mapping>%0%["2"].name="Type"</Mapping>
+          <Mapping>%0%["2"].path="rtcType"</Mapping>
+        </Mappings>
+        <Mappings ID="160" Label="Set bootstrap &amp; columns">
+          <Source RefID="11"/>
+          <Source RefID="158"/>
+          <Target RefID="161"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="149" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo149"/>
+            <Source RefID="11"/>
+          </Input>
+          <Input>
+            <Data ID="150" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn150"/>
+            <Source RefID="158"/>
+          </Input>
+          <Output>
+            <Data ID="151" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo151"/>
+            <Target RefID="161"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="167">
+          <Source RefID="158"/>
+          <Source RefID="161"/>
+          <Target RefID="166"/>
+          <Target RefID="169"/>
+          <Copy>
+            <Source RefID="158"/>
+            <Target RefID="166"/>
+          </Copy>
+          <Copy>
+            <Source RefID="161"/>
+            <Target RefID="169"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="148" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="162" Label="1:1">
+          <Source RefID="11"/>
+          <Target RefID="163"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="152" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo152"/>
+            <Source RefID="11"/>
+          </Input>
+          <Output>
+            <Data ID="153" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo153"/>
+            <Target RefID="163"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="165" Label="Get columns from Table Info">
+          <Source RefID="163"/>
+          <Target RefID="164"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="154" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo154"/>
+            <Source RefID="163">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="155" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn155"/>
+            <Target RefID="164"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="168">
+          <Source RefID="164"/>
+          <Source RefID="163"/>
+          <Target RefID="166"/>
+          <Target RefID="169"/>
+          <Copy>
+            <Source RefID="164"/>
+            <Target RefID="166"/>
+          </Copy>
+          <Copy>
+            <Source RefID="163"/>
+            <Target RefID="169"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="173" Label="Build TableInfo and Select Columns">
+      <Source RefID="172"/>
+      <Source RefID="166"/>
+      <Source RefID="169"/>
+      <Source RefID="246"/>
+      <Target RefID="172"/>
+      <Target RefID="175"/>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="172">
+        <Source RefID="169">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="246">
+          <Meta>
+            <ExpectedType>xmcp.factorymanager.rtcmanager.Dependency</ExpectedType>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="166"/>
+      </Invoke>
+      <Receive ServiceID="172">
+        <Target RefID="175"/>
+      </Receive>
+    </Function>
+    <Function ID="17" Label="Get Dependent RTCs">
+      <Source RefID="18"/>
+      <Source RefID="80"/>
+      <Source RefID="175"/>
+      <Target RefID="18"/>
+      <Target RefID="20"/>
+      <Invoke Operation="getDependentRTCs" ServiceID="18">
+        <Source RefID="175">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="80"/>
+      </Invoke>
+      <Receive ServiceID="18">
+        <Target RefID="20"/>
+      </Receive>
+    </Function>
+    <Data ID="20" IsList="true" Label="Dependency" ReferenceName="Dependency" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="dependency20">
+      <Source RefID="17"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="158" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn158">
+      <Source RefID="159"/>
+      <Target RefID="160"/>
+      <Target RefID="167"/>
+    </Data>
+    <Data ID="161" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo161">
+      <Source RefID="160"/>
+      <Target RefID="167"/>
+    </Data>
+    <Data ID="163" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo163">
+      <Source RefID="162"/>
+      <Target RefID="165"/>
+      <Target RefID="168"/>
+    </Data>
+    <Data ID="164" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn164">
+      <Source RefID="165"/>
+      <Target RefID="168"/>
+    </Data>
+    <Data ID="166" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn166">
+      <Source RefID="157"/>
+      <Source RefID="167"/>
+      <Source RefID="168"/>
+      <Target RefID="173"/>
+    </Data>
+    <Data ID="169" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo169">
+      <Source RefID="157"/>
+      <Source RefID="167"/>
+      <Source RefID="168"/>
+      <Target RefID="173"/>
+    </Data>
+    <ServiceReference ID="172" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="173"/>
+      <Target RefID="173"/>
+    </ServiceReference>
+    <Data ID="175" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="173"/>
+      <Target RefID="17"/>
+      <Target RefID="3"/>
+    </Data>
+    <ServiceReference ID="230" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="231"/>
+      <Target RefID="231"/>
+    </ServiceReference>
+    <Data ID="238" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="231"/>
+      <Value>
+        <Data ID="243" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data ID="242" Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.WorkspaceManagement:*:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Data ID="246" Label="Dependency" ReferenceName="Dependency" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="const_Dependency">
+      <Target RefID="173"/>
+      <Data Label="Runtime Context" ReferenceName="RuntimeApplication" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext">
+        <Data Label="Version" VariableName="version">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Factory Node" VariableName="factoryNode">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Documentation" VariableName="documentation">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="isLocal" VariableName="isLocal">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+        <Data Label="State" VariableName="state">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Data Label="hierarchyLevel" VariableName="hierarchyLevel">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+      </Data>
+      <Data Label="dependencyType" VariableName="dependencyType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data Label="rtcType" VariableName="rtcType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="175"/>
+      <Source RefID="20"/>
+      <Target RefID="2"/>
+      <Target RefID="208"/>
+      <Copy>
+        <Source RefID="175">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+      <Copy>
+        <Source RefID="20"/>
+        <Target RefID="208"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Frequency Controlled Task Graph" TypeName="GetFrequencyControlledTaskGraph" TypePath="xmcp.processmonitor" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Frequency Controlled Task Graph" Name="GetFrequencyControlledTaskGraph">
+    <Input>
+      <Data ID="4" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo">
+        <Target RefID="8"/>
+        <Target RefID="14"/>
+        <Target RefID="22"/>
+      </Data>
+      <Data ID="29" Label="Graph Datasource" ReferenceName="GraphDatasource" ReferencePath="xmcp.processmonitor.datatypes" VariableName="graphDatasource">
+        <Target RefID="33"/>
+      </Data>
+      <Data ID="35" Label="Task id" ReferenceName="TaskId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="taskId">
+        <Target RefID="33"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo2">
+        <Source RefID="3"/>
+      </Data>
+      <Data ID="5" IsList="true" Label="Graph Data" ReferenceName="GraphData" ReferencePath="xmcp.graphs.datatypes" VariableName="graphData">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Load Graph Data Exception" ReferenceName="LoadGraphDataException" ReferencePath="xmcp.processmonitor.datatypes" VariableName="loadGraphDataException"/>
+    </Throws>
+    <Choice ID="8" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Target RefID="25"/>
+      <Input>
+        <Data ID="28" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo28"/>
+        <Source RefID="4">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="6" Label="true" Premise="%0%.bootstrap">
+        <Mappings ID="14" Label="Mapping">
+          <Source RefID="4"/>
+          <Target RefID="16"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="13" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo13"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data ID="15" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo15"/>
+            <Target RefID="16"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%1%.bootstrap="false"</Mapping>
+        </Mappings>
+        <Assign ID="26">
+          <Source RefID="16"/>
+          <Target RefID="25"/>
+          <Copy>
+            <Source RefID="16"/>
+            <Target RefID="25"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="7" Label="false">
+        <Mappings ID="22" Label="Mapping">
+          <Source RefID="4"/>
+          <Target RefID="24"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="21" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo21"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data ID="23" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo23"/>
+            <Target RefID="24"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="27">
+          <Source RefID="24"/>
+          <Target RefID="25"/>
+          <Copy>
+            <Source RefID="24"/>
+            <Target RefID="25"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="16" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo16">
+      <Source RefID="14"/>
+      <Target RefID="26"/>
+    </Data>
+    <Data ID="24" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo24">
+      <Source RefID="22"/>
+      <Target RefID="27"/>
+    </Data>
+    <Data ID="25" Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo25">
+      <Source RefID="8"/>
+      <Source RefID="26"/>
+      <Source RefID="27"/>
+      <Target RefID="33"/>
+      <Target RefID="3"/>
+    </Data>
+    <ServiceReference ID="32" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="33"/>
+      <Target RefID="33"/>
+    </ServiceReference>
+    <Function ID="33" Label="Get Frequency Controlled Task Graph Data" Operation="getFrequencyControlledTaskGraphData">
+      <Source RefID="32"/>
+      <Source RefID="29"/>
+      <Source RefID="25"/>
+      <Source RefID="35"/>
+      <Target RefID="32"/>
+      <Target RefID="34"/>
+      <Invoke Operation="getFrequencyControlledTaskGraphData" ServiceID="32">
+        <Source RefID="25">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="29"/>
+        <Source RefID="35"/>
+      </Invoke>
+      <Receive ServiceID="32">
+        <Target RefID="34"/>
+      </Receive>
+    </Function>
+    <Data ID="34" IsList="true" Label="Graph Data" ReferenceName="GraphData" ReferencePath="xmcp.graphs.datatypes" VariableName="graphData34">
+      <Source RefID="33"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="25"/>
+      <Source RefID="34"/>
+      <Target RefID="2"/>
+      <Target RefID="5"/>
+      <Copy>
+        <Source RefID="25">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+      <Copy>
+        <Source RefID="34"/>
+        <Target RefID="5"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

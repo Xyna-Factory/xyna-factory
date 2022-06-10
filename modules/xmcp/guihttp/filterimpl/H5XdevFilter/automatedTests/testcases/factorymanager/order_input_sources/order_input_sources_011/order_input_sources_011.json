@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "16.7.2020",
+    "updated": "16.7.2020"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.GetOrderIn!": "xmcp.factorymanager.orderinputsources.GetOrderInputSource"
+        },
+        {
+          "!autotest.generated!": "autotest.generated"
+        },
+        {
+          "!xmcp.factorymanager.orderinputsources.GetOrderIn0!": "xmcp.factorymanager.orderinputsources.GetOrderInputSourceRequest"
+        },
+        {
+          "!xmcp.factorymanager.shared.GetOrderTypes!": "xmcp.factorymanager.shared.GetOrderTypes"
+        },
+        {
+          "!Workspace!": "Workspace"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.orderinputsources.GetOrderIn0!"
+            },
+            "inputSourceName": "!autotest.generated!",
+            "revision": -1
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.orderinputsources.GetOrderIn!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!"
+            },
+            "name": "!default_workspace!",
+            "revision": -1,
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.shared.GetOrderTypes!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!ois11!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "print",
+      "variable": "!ois11!"
+    },
+    {
+      "operation": "read",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

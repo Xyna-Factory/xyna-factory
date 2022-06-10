@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Determine Current Test Case Chain" TypeName="DetermineCurrentTestCaseChain" TypePath="xdev.xtestfactory.infrastructure.util" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth,openCatches</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Determine Current Test Case Chain" Name="DetermineCurrentTestCaseChain">
+    <Target RefID="92"/>
+    <Input/>
+    <Output>
+      <Data ID="89" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain89">
+        <Source RefID="49"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception ID="100" Label="Failed To Determine Test Case Chain" ReferenceName="FailedToDetermineTestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestCaseChain100"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="73" Label="Get Test Case ID">
+      <Source RefID="72"/>
+      <Target RefID="72"/>
+      <Target RefID="74"/>
+      <Invoke Operation="getTestCaseID" ServiceID="72"/>
+      <Receive ServiceID="72">
+        <Target RefID="74"/>
+      </Receive>
+    </Function>
+    <Mappings ID="7">
+      <Source RefID="74"/>
+      <Target RefID="6"/>
+      <Meta>
+        <IsCondition>true</IsCondition>
+      </Meta>
+      <Input>
+        <Data ID="77" Label="Test Case ID" ReferenceName="TestCaseID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseID77"/>
+        <Source RefID="74">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="8" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition8"/>
+        <Target RefID="6"/>
+      </Output>
+      <Mapping>%1%.formula=concat("(%0%.testCaseInstance.testCase.iD==\"",replaceall(replaceall(%0%.iD,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Query">
+      <Source RefID="6"/>
+      <Source RefID="4"/>
+      <Source RefID="75"/>
+      <Source RefID="76"/>
+      <Target RefID="12"/>
+      <Target RefID="4"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+        <QueryFilter>
+          <Condition>%0%.testCaseInstance.testCase.iD==%1%.iD</Condition>
+        </QueryFilter>
+      </Meta>
+      <Invoke Operation="query" ServiceID="4">
+        <Source RefID="75">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="6">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="76">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="12"/>
+      </Receive>
+    </Function>
+    <Choice ID="34" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="12"/>
+      <Target RefID="52"/>
+      <Input>
+        <Data ID="59" IsList="true" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain59"/>
+        <Source RefID="12"/>
+      </Input>
+      <Case ID="32" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Mappings ID="43" Label="get first element">
+          <Source RefID="12"/>
+          <Target RefID="41"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,openDocumentation,TreeMode</FixedDetailOptions>
+            <Documentation>throw if excess matches?</Documentation>
+          </Meta>
+          <Input>
+            <Data ID="42" IsList="true" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain42"/>
+            <Source RefID="12"/>
+          </Input>
+          <Output>
+            <Data ID="60" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain39"/>
+            <Target RefID="41"/>
+          </Output>
+          <Mapping>%1%=%0%["0"]</Mapping>
+        </Mappings>
+        <Assign ID="53">
+          <Source RefID="41"/>
+          <Target RefID="52"/>
+          <Copy>
+            <Source RefID="41"/>
+            <Target RefID="52"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="33" Label="false">
+        <Throw ExceptionID="66" ID="65" Label="Throw Failed To Determine Test Case Chain">
+          <Source RefID="66">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="54"/>
+      </Case>
+    </Choice>
+    <Data ID="6" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition">
+      <Source RefID="7"/>
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="12" IsList="true" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain">
+      <Source RefID="5"/>
+      <Target RefID="34"/>
+      <Target RefID="43"/>
+    </Data>
+    <Data ID="41" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain41">
+      <Source RefID="43"/>
+      <Target RefID="53"/>
+    </Data>
+    <Data ID="52" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain52">
+      <Source RefID="34"/>
+      <Source RefID="53"/>
+      <Target RefID="49"/>
+    </Data>
+    <Exception ID="66" Label="Failed To Determine Test Case Chain" ReferenceName="FailedToDetermineTestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="const_FailedToDetermineTestCaseChain">
+      <Target RefID="65"/>
+    </Exception>
+    <ServiceReference ID="72" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="73"/>
+      <Target RefID="73"/>
+    </ServiceReference>
+    <Data ID="74" Label="Test Case ID" ReferenceName="TestCaseID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseID">
+      <Source RefID="73"/>
+      <Target RefID="7"/>
+    </Data>
+    <Data ID="75" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="5"/>
+      <Data ID="80" Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.TestCaseChain</Value>
+      </Data>
+    </Data>
+    <Data ID="76" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="5"/>
+      <Data ID="81" Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data ID="82" Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="83" IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Exception ID="92" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception">
+      <Source RefID="0"/>
+    </Exception>
+    <Exception ID="96" Label="Failed To Determine Test Case Chain" ReferenceName="FailedToDetermineTestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestCaseChain">
+      <Target RefID="95"/>
+    </Exception>
+    <Assign ID="49">
+      <Source RefID="52"/>
+      <Target RefID="89"/>
+      <Copy>
+        <Source RefID="52"/>
+        <Target RefID="89"/>
+      </Copy>
+    </Assign>
+    <Catch ExceptionID="92" ID="94">
+      <Throw ExceptionID="96" ID="95" Label="Throw Failed To Determine Test Case Chain">
+        <Source RefID="96">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Throw>
+      <Assign ID="93"/>
+    </Catch>
+  </Operation>
+</Service>

@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "Copy.json",
+	"Move.json"
+  ]
+}

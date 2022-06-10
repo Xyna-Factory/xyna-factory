@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+
+
+<project name="BuildDhcpdConf" default="build" basedir=".">
+
+  <import file="buildMacros.xml" />
+  <property file="../delivery/components.properties" />
+
+  <property name="root.dir" value="${basedir}/../.."/>
+ <!-- <property name="delivery.build.dir" value="${delivery.dir}/build_${timestamp}" />
+  <property name="build_environment.dir" value="${delivery.dir}/build_environment_${timestamp}" /> --> 
+
+  <property name="installation.string" value="installation"/>
+
+
+  <!-- - - - - - - - - - - - - - - - - -
+       target: buildDhcpdConf
+       - - - - - - - - - - - - - - - - - -->
+
+  <target name="build">
+    <mkdir dir="${delivery.build.dir}/install/lib" />
+    <!-- Jar-Files -->
+    <buildJar basedir="${root.dir}/application/dhcpdConf"
+              lib.dir="${root.dir}/${installation.string}/lib"
+              destfile="${root.dir}/${installation.string}/lib/dhcpdConf.jar" />
+  </target>
+  
+</project> 

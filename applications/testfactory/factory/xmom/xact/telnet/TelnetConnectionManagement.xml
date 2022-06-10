@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Telnet Connection Management" TypeName="TelnetConnectionManagement" TypePath="xact.telnet" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Libraries>TelnetConnectionManagementImpl.jar</Libraries>
+  <Service Label="Telnet Connection Management" TypeName="TelnetConnectionManagement">
+    <Operation IsStatic="true" Label="get connection" Name="getConnection">
+      <Meta>
+        <Abstract.UID>E65CC645-9350-720B-8A54-32F3299F0AF2</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Telnet connection parameter" ReferenceName="TelnetConnectionParameter" ReferencePath="xact.telnet" VariableName="telnetConnectionParameter99"/>
+        <Data Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType112"/>
+      </Input>
+      <Output>
+        <Data Label="Managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection113"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.telnet.TelnetConnectionManagementImpl.getConnection(telnetConnectionParameter99, documentType112);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="return connection" Name="returnConnection">
+      <Meta>
+        <Abstract.UID>34D4CFCA-5263-6216-5A45-32F87807281A</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.telnet.TelnetConnectionManagementImpl.returnConnection(managedConnection);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

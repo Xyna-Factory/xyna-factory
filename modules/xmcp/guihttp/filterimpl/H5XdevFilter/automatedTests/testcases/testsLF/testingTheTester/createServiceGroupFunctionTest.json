@@ -1,0 +1,58 @@
+{
+  "meta":
+  {
+    "name": "createServiceGroupFunctionTest",
+	"description": "Testet die Funktion createServiceGroup.",
+	"created": "06.11.2019",
+	"update": "06.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!workspaceName!",
+	  "value": "default workspace"
+	},
+    {
+	  "operation": "setRandom",
+	  "variable": "!label!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!path!"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!path!",
+	  "value": "autoTest.generated.!path!"
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createServiceGroup",
+	  "mapInput":
+	  {
+	    "!workspaceName!" : "!workspaceName!",
+		"!label!": "!label!",
+		"!path!": "!path!"
+	  },
+	  "mapOutput":
+	  {
+	    "!sgName!": "!sgName!",
+		"!url!": "!url!",
+		"!revision!": "!revision!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/close",
+	  "payload": {"force":false,"revision":"!revision!"}
+	},
+	{
+	  "operation": "call",
+      "requestType": "POST",
+      "url": "!url!/delete",
+      "payload": {"force":false}
+	}
+  ]
+}

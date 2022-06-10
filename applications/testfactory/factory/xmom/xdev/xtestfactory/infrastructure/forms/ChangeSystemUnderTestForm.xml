@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Form xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsList="true" Label="System under Test" TypeName="ChangeSystemUnderTestForm" TypePath="xdev.xtestfactory.infrastructure.forms" Version="1.8">
+        <Label Language="EN">System Under Test</Label>
+        <Label Language="DE">Zielsystem</Label>
+        <Input>
+                <Data ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest"/>
+        </Input>
+ 
+
+        <FormItem Label="Name">
+                <Label Language="EN">Name</Label>
+                <Label Language="DE">Name</Label>
+                <DataLink>%0%.name</DataLink>
+        </FormItem>
+
+        <FormItem Label="Description">
+                <Label Language="EN">Description</Label>
+                <Label Language="DE">Beschreibung</Label>
+                <DataLink>%0%.description</DataLink>
+        </FormItem>
+
+
+                <FormItem Label="Name" Secondary="true">
+                        <Label Language="EN">Name</Label>
+                        <Label Language="DE">Name</Label>
+                        <DataLink>%0%.name</DataLink>
+                </FormItem>
+                                
+                <FormItem Label="Description" Secondary="true">
+                        <Label Language="EN">Description</Label>
+                        <Label Language="DE">Beschreibung</Label>
+                        <DataLink>%0%.description</DataLink>
+                </FormItem>
+
+               <FormItem Label="Version" Secondary="true">
+                        <Label Language="EN">Version</Label>
+                        <Label Language="DE">Version</Label>
+                        <DataLink>%0%.version</DataLink>
+                </FormItem>
+
+		<Form Secondary="true">
+                        <Label Language="EN">Warning</Label>
+                        <Label Language="DE">Achtung</Label>
+                  <FormItem Label="All unsaved changes will be lost">
+                        <Label Language="EN">All unsaved changes will be lost</Label>
+                        <Label Language="DE">Alle ungespeicherten Änderungen gehen verloren</Label>
+                  </FormItem>
+                  <FormItem Label="All mappings between Test Cases and Features will be lost">
+                        <Label Language="EN">All mappings between Test Cases and Features will be lost</Label>
+                        <Label Language="DE">Alle Zuordnungen zwischen Testfällen und Leistungsmerkmalen gehen verloren</Label>
+                  </FormItem>
+                </Form>
+
+              <Box Secondary="true" Type="Footer">
+                     <Button>
+                       <Label Language="EN">Apply</Label>
+                       <Label Language="DE">Anwenden</Label>
+                         <Action Sequential="true">
+                           <CallService ReferenceName="ChangeSystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.actions" Synchronously="true">
+                             <DataLink>%0%</DataLink>
+                           </CallService>
+                           <Dispatch EventType="SystemUnderTestChanged"/>
+                         </Action>
+                     </Button>
+               </Box>
+
+</Form>

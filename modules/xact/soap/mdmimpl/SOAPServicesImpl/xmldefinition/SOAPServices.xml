@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SOAP Services" TypeName="SOAPServices" TypePath="xact.soap" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SOAPServicesImpl.jar</Libraries>
+  <Service Label="SOAP Services" TypeName="SOAPServices">
+    <Operation ID="8" IsStatic="true" Label="Add Element To Header" Name="addElementToHeader">
+      <Input>
+        <Data ID="7" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.soap" VariableName="headerField"/>
+        <Data ID="6" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.soap" VariableName="headerField6"/>
+      </Input>
+      <Output>
+        <Data ID="5" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.soap" VariableName="headerField5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPServicesImpl.addElementToHeader(headerField, headerField6);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="3" IsStatic="true" Label="Send Request" Name="sendRequest">
+      <Input>
+        <Data ID="0" Label="Webservice Connect Information" ReferenceName="WebserviceConnectInformation" ReferencePath="xact.soap" VariableName="webserviceConnectInformation"/>
+        <Data ID="1" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.soap" VariableName="headerField"/>
+        <Data ID="2" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data ID="9" Label="Webservice Response Body" ReferenceName="WebserviceResponseBody" ReferencePath="xact.soap" VariableName="webserviceResponseBody"/>
+        <Data ID="4" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.soap" VariableName="headerField4"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPServicesImpl.sendRequest(webserviceConnectInformation, headerField, document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

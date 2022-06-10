@@ -1,0 +1,27 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="setxmomodsname" Groups="Persistence" Description="Redefine the ODS storable name corresponding to a XMOM storable or its extensions."/>
+  <Argument Name="fqDatatypeName" Description="The fullqualified name of the datatype"/>
+  <Argument Name="path" Description="The path to the column or table. Format of path is a dot-seperated list of variable names" Optional="true" />
+  <Argument Name="fqPath" Description="The fullqualified path to the column or table. Format of path is a dot-seperated list of variable names followed by their type in curly braces, e.g.: baseTypeVar{bg.odsmap.extensionType}.myVar" Optional="true"/>
+  <Argument Name="applicationName" Description="Name of the application" Optional="true" />
+  <Argument Name="versionName" Description="Version of the application" Optional="true" />
+  <Argument Name="odsName" Description="Unique database name for the specified datatype or variable" Optional="true"/>
+  <Argument Name="workspaceName" Description="Name of the workspace" Optional="true" />
+</XynaCommandLineCommand>

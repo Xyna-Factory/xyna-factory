@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="SSH Mock Exec" TypeName="SSHMockExec" TypePath="xact.ssh.mock.wfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(3476)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="SSH Mock Exec" Name="SSHMockExec">
+    <Input>
+      <Data ID="42" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession42">
+        <Target RefID="213"/>
+        <Target RefID="233"/>
+        <Target RefID="142"/>
+        <Target RefID="343"/>
+        <Target RefID="350"/>
+        <Target RefID="357"/>
+        <Target RefID="362"/>
+      </Data>
+      <Data ID="43" Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command">
+        <Target RefID="69"/>
+        <Target RefID="213"/>
+        <Target RefID="343"/>
+        <Target RefID="357"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="45" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="No Session Found Exception" ReferenceName="NoSessionFoundException" ReferencePath="xact.ssh.mock" VariableName="noSessionFoundException"/>
+    </Throws>
+    <Function ID="343" Label="Execute Command">
+      <Source RefID="44"/>
+      <Source RefID="42"/>
+      <Source RefID="43"/>
+      <Target RefID="44"/>
+      <Target RefID="344"/>
+      <Invoke Operation="executeCommand" ServiceID="44">
+        <Source RefID="42"/>
+        <Source RefID="43"/>
+      </Invoke>
+      <Receive ServiceID="44">
+        <Target RefID="344"/>
+      </Receive>
+    </Function>
+    <Choice ID="299" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="344"/>
+      <Target RefID="305"/>
+      <Meta>
+        <OuterConditionPart>typeof(%0%,?)</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="320" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result"/>
+        <Source RefID="344"/>
+      </Input>
+      <Case ID="300" Premise="typeof(%0%,&quot;xact.ssh.mock.result.ExecutionResult&quot;)">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="303" Label="Cast">
+          <Source RefID="344"/>
+          <Target RefID="304"/>
+          <Input>
+            <Data ID="301" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result301"/>
+            <Source RefID="344"/>
+          </Input>
+          <Output>
+            <Data ID="302" Label="Execution Result" ReferenceName="ExecutionResult" ReferencePath="xact.ssh.mock.result" VariableName="executionResult302"/>
+            <Target RefID="304"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Function ID="233" Label="Get Mocked Device">
+          <Source RefID="42"/>
+          <Source RefID="44"/>
+          <Target RefID="234"/>
+          <Target RefID="44"/>
+          <Invoke Operation="getMockedDevice" ServiceID="44">
+            <Source RefID="42"/>
+          </Invoke>
+          <Receive ServiceID="44">
+            <Target RefID="234"/>
+          </Receive>
+        </Function>
+        <Function ID="213" Label="Special Request">
+          <Source RefID="197"/>
+          <Source RefID="42"/>
+          <Source RefID="43"/>
+          <Source RefID="234"/>
+          <Source RefID="304"/>
+          <Target RefID="197"/>
+          <Target RefID="214"/>
+          <Invoke Operation="specialRequest" ServiceID="197">
+            <Source RefID="234"/>
+            <Source RefID="42"/>
+            <Source RefID="43"/>
+            <Source RefID="304"/>
+          </Invoke>
+          <Receive ServiceID="197">
+            <Target RefID="214"/>
+          </Receive>
+        </Function>
+        <Assign ID="306">
+          <Source RefID="214"/>
+          <Target RefID="305"/>
+          <Copy>
+            <Source RefID="214">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Target RefID="305"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="298" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="224" Label="Identity">
+          <Source RefID="344"/>
+          <Target RefID="209"/>
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="223" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result223"/>
+            <Source RefID="344"/>
+          </Input>
+          <Output>
+            <Data ID="225" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result225"/>
+            <Target RefID="209"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="307">
+          <Source RefID="209"/>
+          <Target RefID="305"/>
+          <Copy>
+            <Source RefID="209"/>
+            <Target RefID="305"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Choice ID="312" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="305"/>
+      <Target RefID="315"/>
+      <Meta>
+        <OuterConditionPart>typeof(%0%,?)</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="321" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result321"/>
+        <Source RefID="305">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case Alias="314" ID="313" Premise="typeof(%0%,&quot;xact.ssh.mock.result.ResponseResult&quot;)">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+      </Case>
+      <Case ID="314" Premise="typeof(%0%,&quot;xact.ssh.mock.result.ExitResult&quot;)">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="287" Label="Identity">
+          <Source RefID="305"/>
+          <Target RefID="285"/>
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="286" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result286"/>
+            <Source RefID="305">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="288" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result288"/>
+            <Target RefID="285"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="317">
+          <Source RefID="285"/>
+          <Target RefID="315"/>
+          <Copy>
+            <Source RefID="285"/>
+            <Target RefID="315"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="311" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Function ID="350" Label="Get Mocked Device">
+          <Source RefID="44"/>
+          <Source RefID="42"/>
+          <Target RefID="44"/>
+          <Target RefID="351"/>
+          <Invoke Operation="getMockedDevice" ServiceID="44">
+            <Source RefID="42"/>
+          </Invoke>
+          <Receive ServiceID="44">
+            <Target RefID="351"/>
+          </Receive>
+        </Function>
+        <Function ID="357" Label="Unknown Command">
+          <Source RefID="197"/>
+          <Source RefID="351"/>
+          <Source RefID="42"/>
+          <Source RefID="43"/>
+          <Target RefID="197"/>
+          <Target RefID="358"/>
+          <Invoke Operation="unknownCommand" ServiceID="197">
+            <Source RefID="351"/>
+            <Source RefID="42"/>
+            <Source RefID="43"/>
+          </Invoke>
+          <Receive ServiceID="197">
+            <Target RefID="358"/>
+          </Receive>
+        </Function>
+        <Assign ID="318">
+          <Source RefID="358"/>
+          <Target RefID="315"/>
+          <Copy>
+            <Source RefID="358"/>
+            <Target RefID="315"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Choice ID="99" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="315"/>
+      <Target RefID="229"/>
+      <Meta>
+        <OuterConditionPart>typeof(%0%,?)</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="192" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result192"/>
+        <Source RefID="315">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="101" Premise="typeof(%0%,&quot;xact.ssh.mock.result.ResponseResult&quot;)">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="145" Label="Cast">
+          <Source RefID="315"/>
+          <Target RefID="138"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="144" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result144"/>
+            <Source RefID="315">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="146" Label="Response Result" ReferenceName="ResponseResult" ReferencePath="xact.ssh.mock.result" VariableName="responseResult146"/>
+            <Target RefID="138"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Function ID="142" Label="Combine to Response">
+          <Source RefID="44"/>
+          <Source RefID="42"/>
+          <Source RefID="138"/>
+          <Target RefID="143"/>
+          <Target RefID="44"/>
+          <Meta>
+            <FixedWidth>139</FixedWidth>
+            <FixedHeight>32</FixedHeight>
+          </Meta>
+          <Invoke Operation="combineToResponse" ServiceID="44">
+            <Source RefID="42"/>
+            <Source RefID="138"/>
+          </Invoke>
+          <Receive ServiceID="44">
+            <Target RefID="143"/>
+          </Receive>
+        </Function>
+        <Assign ID="121">
+          <Source RefID="143"/>
+          <Target RefID="229"/>
+          <Copy>
+            <Source RefID="143"/>
+            <Target RefID="229"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="103" Premise="typeof(%0%,&quot;xact.ssh.mock.result.ExitResult&quot;)">
+        <Mappings ID="114" Label="Empty Response">
+          <Target RefID="113"/>
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="112" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response112"/>
+            <Target RefID="113"/>
+          </Output>
+        </Mappings>
+        <Assign ID="123">
+          <Source RefID="113"/>
+          <Target RefID="229"/>
+          <Copy>
+            <Source RefID="113"/>
+            <Target RefID="229"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="98" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Function ID="362" Label="Retrieve Session Customization">
+          <Source RefID="44"/>
+          <Source RefID="42"/>
+          <Target RefID="44"/>
+          <Target RefID="363"/>
+          <Invoke Operation="retrieveSessionCustomization" ServiceID="44">
+            <Source RefID="42"/>
+          </Invoke>
+          <Receive ServiceID="44">
+            <Target RefID="363"/>
+          </Receive>
+        </Function>
+        <Function ID="59" Label="Begin document">
+          <Source RefID="55"/>
+          <Source RefID="292"/>
+          <Target RefID="55"/>
+          <Target RefID="68"/>
+          <Invoke Operation="start" ServiceID="55">
+            <Source RefID="292">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="55">
+            <Target RefID="68"/>
+          </Receive>
+        </Function>
+        <Mappings ID="69">
+          <Source RefID="43"/>
+          <Source RefID="363"/>
+          <Target RefID="70"/>
+          <Meta>
+            <IsTemplate>true</IsTemplate>
+          </Meta>
+          <Input>
+            <Data ID="60" Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command60"/>
+            <Source RefID="43"/>
+          </Input>
+          <Input>
+            <Data ID="364" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization364"/>
+            <Source RefID="363">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="81" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart"/>
+            <Target RefID="70"/>
+          </Output>
+          <Mapping>%2%.text=concat("",%1%.errorPrefix," Unknown command \" ",%0%.content,"\"")</Mapping>
+        </Mappings>
+        <Function ID="61" Label="End document">
+          <Source RefID="55"/>
+          <Source RefID="68"/>
+          <Target RefID="55"/>
+          <Target RefID="71"/>
+          <Invoke Operation="stop" ServiceID="55">
+            <Source RefID="68"/>
+          </Invoke>
+          <Receive ServiceID="55">
+            <Target RefID="71"/>
+          </Receive>
+        </Function>
+        <Mappings ID="72" Label="Mapping">
+          <Source RefID="71"/>
+          <Target RefID="73"/>
+          <Input>
+            <Data ID="82" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+            <Source RefID="71"/>
+          </Input>
+          <Output>
+            <Data ID="62" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response62"/>
+            <Target RefID="73"/>
+          </Output>
+          <Mapping>%1%.content=%0%.text</Mapping>
+        </Mappings>
+        <Assign ID="124">
+          <Source RefID="73"/>
+          <Target RefID="229"/>
+          <Copy>
+            <Source RefID="73"/>
+            <Target RefID="229"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <ServiceReference ID="44" Label="SSHMock" ReferenceName="SSHMock.SSHMock" ReferencePath="xact.ssh.mock">
+      <Source RefID="142"/>
+      <Source RefID="233"/>
+      <Source RefID="343"/>
+      <Source RefID="350"/>
+      <Source RefID="362"/>
+      <Target RefID="142"/>
+      <Target RefID="233"/>
+      <Target RefID="343"/>
+      <Target RefID="350"/>
+      <Target RefID="362"/>
+    </ServiceReference>
+    <ServiceReference ID="55" Label="Template Management" ReferenceName="TemplateManagement.TemplateManagement" ReferencePath="xact.templates">
+      <Source RefID="59"/>
+      <Source RefID="61"/>
+      <Target RefID="59"/>
+      <Target RefID="61"/>
+    </ServiceReference>
+    <Data ID="68" Label="Document Context" ReferenceName="DocumentContext" ReferencePath="xact.templates" VariableName="documentContext">
+      <Source RefID="59"/>
+      <Target RefID="61"/>
+    </Data>
+    <Data ID="70" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart70">
+      <Source RefID="69"/>
+    </Data>
+    <Data ID="71" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document71">
+      <Source RefID="61"/>
+      <Target RefID="72"/>
+    </Data>
+    <Data ID="73" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response73">
+      <Source RefID="72"/>
+      <Target RefID="124"/>
+    </Data>
+    <Data ID="113" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response113">
+      <Source RefID="114"/>
+      <Target RefID="123"/>
+    </Data>
+    <Data ID="138" Label="Response Result" ReferenceName="ResponseResult" ReferencePath="xact.ssh.mock.result" VariableName="responseResult">
+      <Source RefID="145"/>
+      <Target RefID="142"/>
+    </Data>
+    <Data ID="143" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response143">
+      <Source RefID="142"/>
+      <Target RefID="121"/>
+    </Data>
+    <ServiceReference ID="197" Label="Mocked Device" ReferenceName="MockedDevice.MockedDevice" ReferencePath="xact.ssh.mock">
+      <Source RefID="213"/>
+      <Source RefID="357"/>
+      <Target RefID="213"/>
+      <Target RefID="357"/>
+    </ServiceReference>
+    <Data ID="209" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result208">
+      <Source RefID="224"/>
+      <Target RefID="307"/>
+    </Data>
+    <Data ID="214" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result214">
+      <Source RefID="213"/>
+      <Target RefID="306"/>
+    </Data>
+    <Data ID="229" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response229">
+      <Source RefID="99"/>
+      <Source RefID="121"/>
+      <Source RefID="123"/>
+      <Source RefID="124"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="234" Label="Mocked Device" ReferenceName="MockedDevice" ReferencePath="xact.ssh.mock" VariableName="mockedDevice">
+      <Source RefID="233"/>
+      <Target RefID="213"/>
+    </Data>
+    <Data ID="285" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result284">
+      <Source RefID="287"/>
+      <Target RefID="317"/>
+    </Data>
+    <Data ID="292" Label="Document type" ReferenceName="PlainText" ReferencePath="xact.templates" VariableName="const_PlainText">
+      <Target RefID="59"/>
+    </Data>
+    <Data ID="304" Label="Execution Result" ReferenceName="ExecutionResult" ReferencePath="xact.ssh.mock.result" VariableName="executionResult304">
+      <Source RefID="303"/>
+      <Target RefID="213"/>
+    </Data>
+    <Data ID="305" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result305">
+      <Source RefID="299"/>
+      <Source RefID="306"/>
+      <Source RefID="307"/>
+      <Target RefID="312"/>
+      <Target RefID="287"/>
+    </Data>
+    <Data ID="315" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result315">
+      <Source RefID="312"/>
+      <Source RefID="317"/>
+      <Source RefID="318"/>
+      <Target RefID="99"/>
+      <Target RefID="145"/>
+    </Data>
+    <Data ID="344" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result344">
+      <Source RefID="343"/>
+      <Target RefID="299"/>
+      <Target RefID="303"/>
+      <Target RefID="224"/>
+    </Data>
+    <Data ID="351" Label="Mocked Device" ReferenceName="MockedDevice" ReferencePath="xact.ssh.mock" VariableName="mockedDevice351">
+      <Source RefID="350"/>
+      <Target RefID="357"/>
+    </Data>
+    <Data ID="358" Label="Result" ReferenceName="Result" ReferencePath="xact.ssh.mock.result" VariableName="result358">
+      <Source RefID="357"/>
+      <Target RefID="318"/>
+    </Data>
+    <Data ID="363" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization">
+      <Source RefID="362"/>
+      <Target RefID="69"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="229"/>
+      <Target RefID="45"/>
+      <Copy>
+        <Source RefID="229"/>
+        <Target RefID="45"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

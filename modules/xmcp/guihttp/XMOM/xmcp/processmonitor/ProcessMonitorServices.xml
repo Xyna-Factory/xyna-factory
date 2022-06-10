@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Process Monitor Services" TypeName="ProcessMonitorServices" TypePath="xmcp.processmonitor" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>ProcessMonitorServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <SharedLibraries>XynaObjectJsonBuilder</SharedLibraries>
+  <Service Label="Process Monitor Services" TypeName="ProcessMonitorServices">
+    <Operation IsStatic="true" Label="Cancel Frequency Controlled Task" Name="cancelFrequencyControlledTask">
+      <Input>
+        <Data Label="Task id" ReferenceName="TaskId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="taskId"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Cancel Frequency Controlled Task Exception" ReferenceName="CancelFrequencyControlledTaskException" ReferencePath="xmcp.processmonitor.datatypes" VariableName="cancelFrequencyControlledTaskException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.processmonitor.ProcessMonitorServicesImpl.cancelFrequencyControlledTask(taskId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Audit" Name="getAudit">
+      <Input>
+        <Data Label="Order Overview entry" ReferenceName="OrderOverviewEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="orderOverviewEntry"/>
+      </Input>
+      <Output>
+        <Data Label="Audit" ReferenceName="Audit" ReferencePath="xmcp.processmonitor.datatypes" VariableName="audit"/>
+      </Output>
+      <Throws>
+        <Exception Label="No Audit Data" ReferenceName="NoAuditData" ReferencePath="xmcp.processmonitor.datatypes" VariableName="noAuditData"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getAudit(orderOverviewEntry);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Capacities" Name="getCapacities">
+      <Input>
+        <Data Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.processmonitor.resources" VariableName="filter44"/>
+        <Data IsList="true" Label="Search Flag" ReferenceName="SearchFlag" ReferencePath="xmcp.processmonitor.datatypes" VariableName="searchFlag55"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Capacity" ReferenceName="Capacity" ReferencePath="xmcp.processmonitor.resources" VariableName="capacity45"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getCapacities(filter44, searchFlag55);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Custom Field Labels" Name="getCustomFieldLabels">
+      <Input/>
+      <Output>
+        <Data Label="Custom Field Labels" ReferenceName="CustomFields" ReferencePath="xprc.xpce" VariableName="customFields"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getCustomFieldLabels();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Frequency Controlled Task Details" Name="getFrequencyControlledTaskDetails">
+      <Input>
+        <Data Label="Task id" ReferenceName="TaskId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="taskId"/>
+      </Input>
+      <Output>
+        <Data Label="Frequency controlled task details" ReferenceName="FrequencyControlledTaskDetails" ReferencePath="xmcp.processmonitor.datatypes" VariableName="frequencyControlledTaskDetails"/>
+      </Output>
+      <Throws>
+        <Exception Label="No Frequency Controlled Task Details" ReferenceName="NoFrequencyControlledTaskDetails" ReferencePath="xmcp.processmonitor.datatypes" VariableName="noFrequencyControlledTaskDetails"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getFrequencyControlledTaskDetails(taskId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Frequency Controlled Task Graph Data" Name="getFrequencyControlledTaskGraphData">
+      <Input>
+        <Data Label="Graph Info" ReferenceName="GraphInfo" ReferencePath="xmcp.graphs.datatypes" VariableName="graphInfo"/>
+        <Data Label="Graph Datasource" ReferenceName="GraphDatasource" ReferencePath="xmcp.processmonitor.datatypes" VariableName="graphDatasource"/>
+        <Data Label="Task id" ReferenceName="TaskId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="taskId"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Graph Data" ReferenceName="GraphData" ReferencePath="xmcp.graphs.datatypes" VariableName="graphData"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load Graph Data Exception" ReferenceName="LoadGraphDataException" ReferencePath="xmcp.processmonitor.datatypes" VariableName="loadGraphDataException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getFrequencyControlledTaskGraphData(graphInfo, graphDatasource, taskId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Frequency Controlled Tasks" Name="getFrequencyControlledTasks">
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Frequency controlled task details" ReferenceName="FrequencyControlledTaskDetails" ReferencePath="xmcp.processmonitor.datatypes" VariableName="frequencyControlledTaskDetails"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load Frequency Controlled Tasks Exception" ReferenceName="LoadFrequencyControlledTasksException" ReferencePath="xmcp.processmonitor.datatypes" VariableName="loadFrequencyControlledTasksException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getFrequencyControlledTasks(tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get MI Entries" Name="getMIEntries">
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Manual Interaction Entry" ReferenceName="ManualInteractionEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionEntry"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load Manual Interaction Exception" ReferenceName="LoadManualInteractionException" ReferencePath="xmcp.processmonitor.datatypes" VariableName="loadManualInteractionException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getMIEntries(tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Order Overview entries" Name="getOrderOverviewEntries" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+        <Data IsList="true" Label="Search flags" ReferenceName="SearchFlag" ReferencePath="xmcp.processmonitor.datatypes" VariableName="searchFlag"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Order Overview entry" ReferenceName="OrderOverviewEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="orderOverviewEntry"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getOrderOverviewEntries(correlatedXynaOrder, tableInfo, searchFlag);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Orders" Name="getOrders">
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo46"/>
+        <Data Label="Resource" ReferenceName="Resource" ReferencePath="xmcp.processmonitor.resources" VariableName="resource48"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Order" ReferenceName="Order" ReferencePath="xmcp.processmonitor.resources" VariableName="order49"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getOrders(tableInfo46, resource48);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Vetoes" Name="getVetoes">
+      <Input>
+        <Data Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.processmonitor.resources" VariableName="filter53"/>
+        <Data ID="1" Label="Sort Criterion" ReferenceName="SortCriterion" ReferencePath="xmcp.processmonitor.resources" VariableName="sortCriterion1"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Veto" ReferenceName="Veto" ReferencePath="xmcp.processmonitor.resources" VariableName="veto54"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getVetoes(filter53, sortCriterion1);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Process MI" Name="processMI">
+      <Input>
+        <Data IsList="true" Label="Manual Interaction Id" ReferenceName="ManualInteractionId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionId"/>
+        <Data Label="Manual Interaction Response" ReferenceName="ManualInteractionResponse" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionResponse"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Manual Interaction Process Response" ReferenceName="ManualInteractionProcessResponse" ReferencePath="xmcp.processmonitor.datatypes" VariableName="manualInteractionProcessResponse"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.processMI(manualInteractionId, manualInteractionResponse);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Remove RootId if ShowOnlyRootOrders" Name="removeRootIdIfShowOnlyRootOrders">
+      <Input>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo809"/>
+        <Data IsList="true" Label="Search Flags" ReferenceName="SearchFlag" ReferencePath="xmcp.processmonitor.datatypes" VariableName="searchFlag"/>
+      </Input>
+      <Output>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo832"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.removeRootIdIfShowOnlyRootOrders(tableInfo809, searchFlag);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Kill Orders" Name="killOrders" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="2" IsList="true" Label="Order Ids" ReferenceName="OrderId" ReferencePath="xprc.xpce" VariableName="orderId2"/>
+      </Input>
+      <Output>
+        <Data ID="3" Label="Kill Orders Response" ReferenceName="KillOrdersResponse" ReferencePath="xmcp.xact.modeller" VariableName="killOrdersResponse3"/>
+      </Output>
+      <Throws>
+        <Exception ID="45" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights45"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.killOrders(correlatedXynaOrder, orderId2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Veto Sort Criteria" Name="getVetoSortCriteria">
+      <Input/>
+      <Output>
+        <Data ID="46" IsList="true" Label="Sort Criterion" ReferenceName="SortCriterion" ReferencePath="xmcp.processmonitor.resources" VariableName="sortCriterion46"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getVetoSortCriteria();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Map Column Path" Name="mapColumnPath">
+      <Input>
+        <Data ID="47" IsList="true" Label="Table Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn47"/>
+        <Data ID="49" Label="From" ReferenceName="ColumnPath" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="columnPath49"/>
+        <Data ID="50" Label="To" ReferenceName="ColumnPath" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="columnPath50"/>
+      </Input>
+      <Output>
+        <Data ID="48" IsList="true" Label="Table Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn48"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">for (var column : tableColumn47) {
+    if (column.getPath().equals(columnPath49.getValue())) {
+        column.setPath(columnPath50.getValue());
+    }
+}
+
+return tableColumn47;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

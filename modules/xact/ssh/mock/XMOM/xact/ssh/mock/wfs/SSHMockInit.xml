@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="SSH Mock Init" TypeName="SSHMockInit" TypePath="xact.ssh.mock.wfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="SSH Mock Init" Name="SSHMockInit">
+    <Input>
+      <Data ID="66" Label="SSHSession" ReferenceName="SSHSession" ReferencePath="xact.ssh.server" VariableName="sSHSession66">
+        <Target RefID="51"/>
+        <Target RefID="109"/>
+        <Target RefID="103"/>
+        <Target RefID="136"/>
+        <Target RefID="97"/>
+      </Data>
+      <Data ID="90" Label="Mocked Device" ReferenceName="MockedDevice" ReferencePath="xact.ssh.mock" VariableName="mockedDevice89">
+        <Target RefID="109"/>
+        <Target RefID="136"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="67" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response">
+        <Source RefID="20"/>
+      </Data>
+      <Data ID="68" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization">
+        <Source RefID="20"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="No Session Found Exception" ReferenceName="NoSessionFoundException" ReferencePath="xact.ssh.mock" VariableName="noSessionFoundException"/>
+    </Throws>
+    <Function ID="103" Label="Retrieve Session Customization">
+      <Source RefID="66"/>
+      <Source RefID="73"/>
+      <Target RefID="116"/>
+      <Target RefID="73"/>
+      <Invoke Operation="retrieveSessionCustomization" ServiceID="73">
+        <Source RefID="66"/>
+      </Invoke>
+      <Receive ServiceID="73">
+        <Target RefID="116"/>
+      </Receive>
+    </Function>
+    <Choice ID="123" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="116"/>
+      <Target RefID="122"/>
+      <Input>
+        <Data ID="130" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization130"/>
+        <Source RefID="116">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="104" Label="true" Premise="%0%==null">
+        <Function ID="109" Label="Create Behavior">
+          <Source RefID="85"/>
+          <Source RefID="90"/>
+          <Source RefID="66"/>
+          <Target RefID="85"/>
+          <Target RefID="110"/>
+          <Target RefID="111"/>
+          <Invoke Operation="createBehavior" ServiceID="85">
+            <Source RefID="90"/>
+            <Source RefID="66"/>
+          </Invoke>
+          <Receive ServiceID="85">
+            <Target RefID="110"/>
+            <Target RefID="111"/>
+          </Receive>
+        </Function>
+        <Function ID="136" Label="Create Session Data">
+          <Source RefID="66"/>
+          <Source RefID="110"/>
+          <Source RefID="90"/>
+          <Source RefID="111"/>
+          <Source RefID="73"/>
+          <Target RefID="73"/>
+          <Invoke Operation="createSessionData" ServiceID="73">
+            <Source RefID="66"/>
+            <Source RefID="110"/>
+            <Source RefID="90"/>
+            <Source RefID="111">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="73"/>
+        </Function>
+        <Assign ID="124">
+          <Source RefID="111"/>
+          <Target RefID="122"/>
+          <Copy>
+            <Source RefID="111"/>
+            <Target RefID="122"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="105" Label="false">
+        <Mappings ID="127" Label="Identity">
+          <Source RefID="116"/>
+          <Target RefID="121"/>
+          <Meta>
+            <FixedDetailOptions>FillMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="131" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization126"/>
+            <Source RefID="116"/>
+          </Input>
+          <Output>
+            <Data ID="128" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization128"/>
+            <Target RefID="121"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="125">
+          <Source RefID="121"/>
+          <Target RefID="122"/>
+          <Copy>
+            <Source RefID="121"/>
+            <Target RefID="122"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="51" Label="Get MOTD">
+      <Source RefID="66"/>
+      <Source RefID="73"/>
+      <Target RefID="73"/>
+      <Target RefID="92"/>
+      <Invoke Operation="getMOTD" ServiceID="73">
+        <Source RefID="66"/>
+      </Invoke>
+      <Receive ServiceID="73">
+        <Target RefID="92"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="73" Label="SSHMock" ReferenceName="SSHMock.SSHMock" ReferencePath="xact.ssh.mock">
+      <Source RefID="51"/>
+      <Source RefID="97"/>
+      <Source RefID="103"/>
+      <Source RefID="136"/>
+      <Target RefID="51"/>
+      <Target RefID="97"/>
+      <Target RefID="103"/>
+      <Target RefID="136"/>
+    </ServiceReference>
+    <ServiceReference ID="85" Label="Mocked Device" ReferenceName="MockedDevice.MockedDevice" ReferencePath="xact.ssh.mock">
+      <Source RefID="109"/>
+      <Target RefID="109"/>
+    </ServiceReference>
+    <Data ID="92" Label="Response Result" ReferenceName="ResponseResult" ReferencePath="xact.ssh.mock.result" VariableName="responseResult">
+      <Source RefID="51"/>
+      <Target RefID="97"/>
+    </Data>
+    <Function ID="97" Label="Combine to Response">
+      <Source RefID="73"/>
+      <Source RefID="66"/>
+      <Source RefID="92"/>
+      <Target RefID="73"/>
+      <Target RefID="98"/>
+      <Invoke Operation="combineToResponse" ServiceID="73">
+        <Source RefID="66"/>
+        <Source RefID="92"/>
+      </Invoke>
+      <Receive ServiceID="73">
+        <Target RefID="98"/>
+      </Receive>
+    </Function>
+    <Data ID="98" Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response98">
+      <Source RefID="97"/>
+      <Target RefID="20"/>
+    </Data>
+    <Data ID="110" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document">
+      <Source RefID="109"/>
+      <Target RefID="136"/>
+    </Data>
+    <Data ID="111" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization111">
+      <Source RefID="109"/>
+      <Target RefID="136"/>
+      <Target RefID="124"/>
+    </Data>
+    <Data ID="116" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization116">
+      <Source RefID="103"/>
+      <Target RefID="127"/>
+      <Target RefID="123"/>
+    </Data>
+    <Data ID="121" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization121">
+      <Source RefID="127"/>
+      <Target RefID="125"/>
+    </Data>
+    <Data ID="122" Label="SSH Session Customization" ReferenceName="SSHSessionCustomization" ReferencePath="xact.ssh.server" VariableName="sSHSessionCustomization122">
+      <Source RefID="123"/>
+      <Source RefID="124"/>
+      <Source RefID="125"/>
+      <Target RefID="20"/>
+    </Data>
+    <Assign ID="20">
+      <Source RefID="122"/>
+      <Source RefID="98"/>
+      <Target RefID="68"/>
+      <Target RefID="67"/>
+      <Copy>
+        <Source RefID="98"/>
+        <Target RefID="67"/>
+      </Copy>
+      <Copy>
+        <Source RefID="122">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="68"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

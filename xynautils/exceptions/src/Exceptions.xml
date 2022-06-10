@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+              Name="ExceptionStore" Version="1.0" Type="ExceptionMasterFile"
+              DefaultLanguage="EN">
+  <Description>Internally used Exceptions</Description>
+  
+  <!--  ExceptionHandler  -->
+  
+  <ExceptionType Code="XYNA-00001" TypeName="DuplicateExceptionCodeException" TypePath="com.gip.xyna.utils.exceptions" >
+    <Data Label="Duplicate Code" VariableName="duplicateCode">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <Data Label="Language" VariableName="language">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">There is already an errormessage defined for errorcode %0% and language %1%.</MessageText>
+    <MessageText Language="DE">Es wurde bereits eine Fehlernachricht zum Fehlercode %0% in der Sprache %1% registriert.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-00003" TypeName="UnknownExceptionCodeException" TypePath="com.gip.xyna.utils.exceptions" >
+    <Data Label="Unknown Code" VariableName="unknownCode">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <Data Label="Parameters provided with unknown Exception Code" VariableName="providedParameters">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">Didn't find errormessage corresponding to code %0%. Parameters were: [%1%].</MessageText>
+    <MessageText Language="DE">Es wurde keine Fehlernachricht zum Fehlercode %0% registriert. Als Parameter wurden angegeben: [%1%].</MessageText>
+  </ExceptionType>
+  
+  <!--  CodeGroupManagement -->
+  
+  <ExceptionType Code="XYNA-00010" TypeName="CodeGroupUnknownException" TypePath="com.gip.xyna.utils.exceptions.exceptioncode" >
+    <Data Label="Name of Code Group" VariableName="codeGroupName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">Code group "%0%" is not registered.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-00011" TypeName="NoCodeAvailableException" TypePath="com.gip.xyna.utils.exceptions.exceptioncode" >
+    <Data Label="Name of Code Group" VariableName="codeGroupName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">There are no more exception codes for code group "%0%" available.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-00012" TypeName="DuplicateCodeGroupException" TypePath="com.gip.xyna.utils.exceptions.exceptioncode" >
+    <Data Label="Name of Code Group" VariableName="codeGroupName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">Code group "%0%" has already been registered.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-00013" TypeName="InvalidPatternException" TypePath="com.gip.xyna.utils.exceptions.exceptioncode" >
+    <Data VariableName="requestedPattern">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <Data Label="pattern for pattern" VariableName="regexpForPattern">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">Exception code pattern "%0%" is invalid. Pattern must match regular expression "%1%".</MessageText>
+  </ExceptionType>
+    <ExceptionType Code="XYNA-00014" TypeName="OverlappingCodePatternException" TypePath="com.gip.xyna.utils.exceptions.exceptioncode" >
+    <Data VariableName="codeGroupNew">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <Data Label="the code group with which the provided indices overlap" VariableName="codeGroupOld">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">The code pattern for code group "%0%" is invalid, because the provided start- and end indices are overlapping with the existing code pattern for code group "%1%".</MessageText>
+  </ExceptionType>
+  
+  <!--  ExceptionStorage Parsing/JavaGeneration -->
+    
+  <ExceptionType Code="XYNA-00020" TypeName="XSDNotFoundException" TypePath="com.gip.xyna.utils.exceptions.xmlstorage" >
+    <Data VariableName="xsdFileName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">Could not find XSD "%0%".</MessageText>
+  </ExceptionType> 
+  <ExceptionType Code="XYNA-00021" TypeName="RootElementNotFoundException" TypePath="com.gip.xyna.utils.exceptions.xmlstorage" BaseTypeName="InvalidXMLException" BaseTypePath="com.gip.xyna.utils.exceptions.utils">
+    <Data VariableName="xmlTagName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <Data VariableName="namespace">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">The root element of file "%0%" was expected to be {%2%}%1%.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-00022" TypeName="InvalidXMLException" TypePath="com.gip.xyna.utils.exceptions.utils" >
+    <Data VariableName="fileName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">The xml file "%0%" has invalid format.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-00023" TypeName="InvalidValuesInXMLException" TypePath="com.gip.xyna.utils.exceptions.xmlstorage" >
+    <Data VariableName="fileName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <Data VariableName="descriptionOfInvalidContent">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">The xml file "%0%" has invalid content: %1%</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-00024" TypeName="InvalidClassNameException" TypePath="com.gip.xyna.utils.exceptions.utils.codegen" >
+    <Data VariableName="fqClassName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">The name "%0%" is not valid for java class names.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-00025" TypeName="InvalidParameterNameException" TypePath="com.gip.xyna.utils.exceptions.utils.codegen" >
+    <Data VariableName="invalidParameter">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">The reserved name "%0%" is not allowed as exception parameter name.</MessageText>
+  </ExceptionType>
+
+</ExceptionStore>

@@ -1,0 +1,13 @@
+{
+  "operations":
+  [
+    {
+	  "operation": "getTime",
+	  "targetVariable": "!currentTime!"
+	},
+	{
+	  "operation": "print",
+	  "variable": "!currentTime!"
+	}
+  ]
+}

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="2" Label="Process Series" TypeName="ProcessSeries" TypePath="xdev.xtestfactory.infrastructure.migration.testseries" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(278)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="1" Label="Process Series" Name="ProcessSeries">
+    <Meta>
+      <Abstract.UID>464CE478-0599-4229-32CB-0B01034F09F7</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="0" Label="Test Series And List Of Test Case OIS Combination" ReferenceName="TestSeriesAndListOfTestCaseOISCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testSeriesAndListOfTestCaseOISCombination">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Store Test Series WF And Build Test Case" ReferenceName="StoreTestSeriesWFAndBuildTestCase" ReferencePath="xdev.xtestfactory.infrastructure.migration.testseries">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Store Test Series WF And Build Test Case">
+      <Source RefID="4"/>
+      <Source RefID="0"/>
+      <Target RefID="4"/>
+      <Target RefID="41"/>
+      <Invoke Operation="StoreTestSeriesWFAndBuildTestCase" ServiceID="4">
+        <Source RefID="0"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="41"/>
+      </Receive>
+    </Function>
+    <Parallel ID="37">
+      <Serial ID="36">
+        <Mappings ID="12" Label="Get Test Case">
+          <Source RefID="41"/>
+          <Target RefID="8"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="44" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination"/>
+            <Source RefID="41"/>
+          </Input>
+          <Output>
+            <Data ID="13" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase13"/>
+            <Target RefID="8"/>
+          </Output>
+          <Mapping>%1%=%0%.testCase</Mapping>
+        </Mappings>
+        <Function ID="10" Label="Store Test Case">
+          <Source RefID="9"/>
+          <Source RefID="8"/>
+          <Source RefID="25"/>
+          <Target RefID="9"/>
+          <Invoke Operation="StoreTestCase" ServiceID="9">
+            <Source RefID="8"/>
+            <Source RefID="25">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="9"/>
+        </Function>
+      </Serial>
+      <Function ID="23" Label="Determine Workspace">
+        <Source RefID="22"/>
+        <Target RefID="24"/>
+        <Target RefID="22"/>
+        <Invoke Operation="determineWorkspace" ServiceID="22"/>
+        <Receive ServiceID="22">
+          <Target RefID="24"/>
+        </Receive>
+      </Function>
+    </Parallel>
+    <Data ID="8" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+      <Source RefID="12"/>
+      <Target RefID="10"/>
+    </Data>
+    <ServiceReference ID="9" Label="Store Test Case" ReferenceName="StoreTestCase" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="10"/>
+      <Target RefID="10"/>
+    </ServiceReference>
+    <ServiceReference ID="22" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="23"/>
+      <Target RefID="23"/>
+    </ServiceReference>
+    <Data ID="24" Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename">
+      <Source RefID="23"/>
+      <Target RefID="29"/>
+    </Data>
+    <Data ID="25" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="10"/>
+      <Data ID="38" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="39" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="40" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <ServiceReference ID="28" Label="Migration Services" ReferenceName="MigrationServices.MigrationServices" ReferencePath="xdev.xtestfactory.infrastructure.migration">
+      <Source RefID="29"/>
+      <Source RefID="55"/>
+      <Target RefID="29"/>
+      <Target RefID="55"/>
+    </ServiceReference>
+    <Function ID="58" Label="Determine Current Test Project">
+      <Source RefID="57"/>
+      <Target RefID="57"/>
+      <Target RefID="59"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="57"/>
+      <Receive ServiceID="57">
+        <Target RefID="59"/>
+      </Receive>
+    </Function>
+    <Function ID="55" Label="Determine Test Case By Name From Given Test Project">
+      <Source RefID="28"/>
+      <Source RefID="41"/>
+      <Source RefID="59"/>
+      <Target RefID="28"/>
+      <Target RefID="56"/>
+      <Invoke Operation="determineTestCaseByNameFromGivenTestProject" ServiceID="28">
+        <Source RefID="59"/>
+        <Source RefID="41"/>
+      </Invoke>
+      <Receive ServiceID="28">
+        <Target RefID="56"/>
+      </Receive>
+    </Function>
+    <Mappings ID="64" Label="Set Updated TC">
+      <Source RefID="41"/>
+      <Source RefID="56"/>
+      <Target RefID="62"/>
+      <Meta>
+        <FixedHeight>32</FixedHeight>
+        <FixedDetailOptions>FlatMode,FillMode,openConfiguration,openDocumentation</FixedDetailOptions>
+        <Documentation>Required to make sure that the test case contains the up to date ID that is only generated during the store step above.</Documentation>
+        <FixedWidth>508</FixedWidth>
+      </Meta>
+      <Input>
+        <Data Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination63"/>
+        <Source RefID="41"/>
+      </Input>
+      <Input>
+        <Data ID="65" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase65"/>
+        <Source RefID="56">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="66" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination_0"/>
+        <Target RefID="62"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.testCase=%1%</Mapping>
+    </Mappings>
+    <Function ID="29" Label="Build And Store Order Input Source">
+      <Source RefID="28"/>
+      <Source RefID="24"/>
+      <Source RefID="62"/>
+      <Target RefID="28"/>
+      <Target RefID="30"/>
+      <Invoke Operation="buildAndStoreOrderInputSource" ServiceID="28">
+        <Source RefID="62">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="24"/>
+      </Invoke>
+      <Receive ServiceID="28">
+        <Target RefID="30"/>
+      </Receive>
+    </Function>
+    <Data ID="30" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination8">
+      <Source RefID="29"/>
+    </Data>
+    <Data ID="41" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination66">
+      <Source RefID="5"/>
+      <Target RefID="12"/>
+      <Target RefID="55"/>
+      <Target RefID="64"/>
+    </Data>
+    <Data ID="56" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase56">
+      <Source RefID="55"/>
+      <Target RefID="64"/>
+    </Data>
+    <ServiceReference ID="57" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="58"/>
+      <Target RefID="58"/>
+    </ServiceReference>
+    <Data ID="59" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="58"/>
+      <Target RefID="55"/>
+    </Data>
+    <Data ID="62" Label="Test Case And Order Input Source Combination" ReferenceName="TestCaseAndOrderInputSourceCombination" ReferencePath="xdev.xtestfactory.infrastructure.migration" VariableName="testCaseAndOrderInputSourceCombination62">
+      <Source RefID="64"/>
+      <Target RefID="29"/>
+    </Data>
+    <Assign ID="3"/>
+  </Operation>
+</Service>

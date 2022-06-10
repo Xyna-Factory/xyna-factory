@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "PMOD2509_choice.json",
+    "PMOD2509_foreach.json"
+  ]
+}

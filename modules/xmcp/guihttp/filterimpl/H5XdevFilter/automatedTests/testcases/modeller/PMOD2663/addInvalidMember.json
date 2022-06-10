@@ -1,0 +1,172 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "17.2.2021",
+    "updated": "17.2.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Data_Type!": "New Data Type"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1613590556928.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1613590556928!",
+      "variable": "!new_1613590556928.NewDataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/id",
+      "targetVariable": "!memberVarArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/itemTypes[0]",
+      "targetVariable": "!xmcp.processmodeller.datatypes.Data!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Data!",
+      "variable": "!xmcp.processmodeller.datatypes.Data!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewDataType!",
+      "variable": "!new_1613590556928.NewDataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "!Data!",
+          "type": "memberVar"
+        },
+        "index": -1,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1613590556928!/!NewDataType!/objects/!memberVarArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberVars]/items/$list[name=data]/id",
+      "targetVariable": "!memberVar0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "fqn": "core.exception.XynaExceptionBase",
+        "primitiveType": "",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1613590556928!/!NewDataType!/objects/!memberVar0!/change",
+	  "acceptError": true
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "params/$list[0]/value",
+      "targetVariable": "!error!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!error!",
+      "value": "UnsupportedOperationException"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "fqn": "core.exception.XynaException",
+        "primitiveType": "",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1613590556928!/!NewDataType!/objects/!memberVar0!/change",
+	  "acceptError": true
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "params/$list[0]/value",
+      "targetVariable": "!error!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!error!",
+      "value": "UnsupportedOperationException"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "fqn": "core.exception.Exception",
+        "primitiveType": "",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1613590556928!/!NewDataType!/objects/!memberVar0!/change",
+	  "acceptError": true
+    },
+	{
+      "operation": "read",
+      "pathInResponse": "params/$list[0]/value",
+      "targetVariable": "!error!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "assert",
+      "constraint": "startsWith",
+      "variable": "!error!",
+      "value": "UnsupportedOperationException"
+    }
+  ]
+}

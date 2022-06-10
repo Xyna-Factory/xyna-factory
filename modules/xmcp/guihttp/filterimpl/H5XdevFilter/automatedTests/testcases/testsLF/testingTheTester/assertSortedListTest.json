@@ -1,0 +1,32 @@
+{
+  "meta":
+  {
+    "name": "selectLastListIndexTest",
+	"description": "Testet das lesen einer Variablen durch ListIndex 'last'"
+  },
+  
+   "operations":
+  [
+    {
+      "operation": "set",
+	  "variable": "!list_sorted!",
+	  "value": ["a_first", "b_second", "c_third"]
+    },
+    {
+      "operation": "set",
+	  "variable": "!list_unsorted!",
+	  "value": ["c_first", "b_second", "b_third"]
+    },
+	{
+	  "operation": "assert",
+	  "constraint": "sortedList",
+	  "variable": "!list_sorted!"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "sortedList",
+	  "variable": "!list_unsorted!",
+	  "invertLogic": true
+	}
+  ]
+}

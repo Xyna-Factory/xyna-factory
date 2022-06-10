@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Form xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Constant" TypePath="xmcp.factorymanager.orderinputsourcetype" TypeName="ConstantForm">
+  <Label Language="EN">Constant</Label>          
+  <Label Language="DE">Konstante Vorbelegung</Label>
+  <Documentation Language="EN">Define constant input data</Documentation>
+  <Input>
+    <Data Label="Constant" ReferenceName="Constant" ReferencePath="xmcp.factorymanager.orderinputsourcetype" VariableName="constant"/>
+  </Input>
+
+  <Form Label="Input Parameter">
+    <Label Language="EN">Input Parameter</Label>          
+    <Label Language="DE">Input Parameter</Label>
+    <DataLink>%0%.inputData</DataLink>
+    <ItemRenderer ClassName="xfmg.factorymanager.orderinputsourcemanager.ConstantInput"/>
+  </Form>
+  
+  <Form Label="Custom Labels">
+    <Label Language="EN">Custom Fields</Label>
+    <Label Language="DE">Benutzerbeschriftungen</Label>
+    <Documentation Language="EN">Userdefined value to be used to recognize orders.</Documentation>
+    <Documentation Language="DE">Benutzerdefinierte Werte, die dazu verwendet werden können Aufträge wieder zu erkennen.</Documentation>
+    <FormItem Label="Custom Fields 1">
+      <Label Language="EN">Custom Fields 1</Label>
+      <Label Language="DE">Benutzerdefiniert 1</Label>
+      <DataLink>%0%.customField0</DataLink>
+    </FormItem>
+    <FormItem Label="Custom Fields 2">
+      <Label Language="EN">Custom Fields 2</Label>
+      <Label Language="DE">Benutzerdefiniert 2</Label>
+      <DataLink>%0%.customField1</DataLink>
+    </FormItem>
+    <FormItem Label="Custom Fields 3">
+      <Label Language="EN">Custom Fields 3</Label>
+      <Label Language="DE">Benutzerdefiniert 3</Label>
+      <DataLink>%0%.customField2</DataLink>
+    </FormItem>
+    <FormItem Label="Custom Fields 4">
+      <Label Language="EN">Custom Fields 4</Label>
+      <Label Language="DE">Benutzerdefiniert 4</Label>
+      <DataLink>%0%.customField3</DataLink>
+    </FormItem>
+  </Form>
+  
+  <FormItem Label="Priority">
+    <Label Language="EN">Priority</Label>
+    <Label Language="DE">Priorität</Label>
+    <Documentation Language="EN">Priority of order (highest = 10, lowest = 1); maps to the systems thread priorities</Documentation>
+    <Documentation Language="DE">Priorität des Auftrags (höchste 10, kleinste 1); verwendet die Thread-Prioritäten des Systems</Documentation>
+    <DataLink>%0%.priority</DataLink>
+  </FormItem>
+
+  <FormItem Label="Monitoring Level">
+    <Label Language="EN">Monitoring Level</Label>
+    <Documentation Language="EN">Monitoring Level of order:
+0 = No audit data will be created at all.
+5 = Audit data will only be created if an error occurs.
+10 = Audit data will be created. After creation, the only update to the captured data is performed after finishing the Cleanup stage.
+15 = Audit data will be created. Every Master Workflow state change results in an update to the captured data, especially to the "last update" timestamp.
+17 = Runtime monitoring = 20. If order succeeds, Monitoring Level will be downgraded to 0.
+18 = Runtime monitoring = 20. If order succeeds, Monitoring Level will be downgraded to 10.
+20 = Audit data will be created. Input, Output and Error information for every workflow step will be captured and will be added to the audit data.</Documentation>
+    <Documentation Language="DE">Monitoring Level des Auftrags:
+0 = Es werden keinerlei Auditdaten angelegt.
+5 = Auditdaten werden nur angelegt, wenn ein Fehler angefallen ist.
+10 = Auditdaten werden angelegt. Nach der Erzeugung wird die nächste Aktualisierung erst wieder nach Beendigung der Cleanup-Phase durchgeführt.
+15 = Auditdaten werden angelegt. Jede Änderung im Status des Master Workflow sorgt für eine Aktualisierung der Auditdaten. Insbesondere wird dabei dar "Letzte Aktualisierung"-Zeitstempel aktualisiert.
+17 = Zur Laufzeit Monitoring Level 20. Falls Auftrag erfolgreich beendet wird, wird das Monitoring Level auf 0 geändert.
+18 = Zur Laufzeit Monitoring Level 20. Falls Auftrag erfolgreich beendet wird, wird das Monitoring Level auf 10 geändert.
+20 = Auditdaten werden angelegt. Eingabe-, Ausgabe- und Fehlerwerte werden für jeden Workflowschritt aufgezeichnet.</Documentation>
+    <DataLink>%0%.monitoringLevel</DataLink>
+  </FormItem>
+
+</Form>

@@ -1,0 +1,1413 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "5.10.2021",
+    "updated": "5.10.2021"
+  },
+  "factoryCount": 2,
+  "factoryConstraints": [
+    {
+      "constraintType": "sameIP",
+      "factoryIndices": [0, 1]
+    }
+  ],
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Workflow!": "New Workflow"
+        },
+        {
+          "!autoTest.generated.YG2!": "autoTest.generated.YG2.!rnd!"
+        },
+        {
+          "!DocumentUpdateTest!": "DocumentUpdateTest"
+        },
+        {
+          "!eventsRetryCount!": 10
+        },
+		{
+		  "!xmcp.yggdrasil.XMOMSave!": "xmcp.yggdrasil.XMOMSave"
+		},
+		{
+		  "!xmcp.yggdrasil.DocumentLock!": "xmcp.yggdrasil.DocumentLock"
+		},
+		{
+		  "!xmcp.yggdrasil.DocumentUnlock!": "xmcp.yggdrasil.DocumentUnlock"
+		},
+		{
+		  "!xmcp.yggdrasil.DocumentChange!": "xmcp.yggdrasil.DocumentChange"
+		}
+      ],
+      "operation": "multiSet"
+    },
+	{
+      "operation": "getUsername",
+      "targetVariable": "!userA!",
+      "factoryIndex": 0
+    },
+	{
+      "operation": "getUsername",
+      "targetVariable": "!userB!",
+      "factoryIndex": 1
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/a24c-4aa2-fa20-5f2d",
+	  "async": true,
+	  "callId": "callA1",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!updates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updates!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.XMOMSave!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  }
+			]
+		  }
+        ]
+      }
+	},
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Workflow!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1633441653198.NewWorkflow!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1633441653198!",
+      "variable": "!new_1633441653198.NewWorkflow!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewWorkflow!",
+      "variable": "!new_1633441653198.NewWorkflow!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!wf!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id",
+      "targetVariable": "!step0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1633441653198!/!NewWorkflow!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1633441653198!/!NewWorkflow!/warnings"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1633441653198!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!DocumentUpdateTest!",
+        "path": "!autoTest.generated.YG2!",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1633441653198!/!NewWorkflow!/save"
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callA1",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+      "operation": "setFromVariable",
+	  "targetVariable": "!updates!",
+	  "sourceVariable": "!eventsResult!",
+	  "path": "updates/$list",
+	  "convertToObject": "true"
+    },
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updates!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.XMOMSave!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    }
+	  ]
+    },
+
+	{
+      "operation": "set",
+      "variable": "!updatesCallA!",
+      "value": []
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/a24c-4aa2-fa20-5f2d",
+	  "async": true,
+	  "callId": "callA2",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!newUpdates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+          {
+            "operation": "mergeLists",
+            "baseList": "!updatesCallA!",
+            "listToAdd": "!newUpdates!"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updatesCallA!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentLock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  },
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentChange!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  }
+			]
+		  }
+        ]
+      }
+	},
+	{
+      "operation": "set",
+      "variable": "!updatesCallB!",
+      "value": []
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/bd1c-39d1-500f-4fb2",
+	  "async": true,
+	  "callId": "callB1",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!newUpdates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+          {
+            "operation": "mergeLists",
+            "baseList": "!updatesCallB!",
+            "listToAdd": "!newUpdates!"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updatesCallB!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentLock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  },
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentChange!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  }
+			]
+		  }
+        ]
+      },
+	  "factoryIndex": 1
+	},
+	{
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings"
+    },
+
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/id",
+      "targetVariable": "!step0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "isAbstract": true,
+          "label": "Service",
+          "type": "service"
+        },
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/objects/!step0!/insert",
+	  "factoryIndex": 1
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callA2",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updatesCallA!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentLock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    },
+		{
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentChange!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    }
+	  ]
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callB1",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updatesCallB!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentLock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    },
+		{
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentChange!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    }
+	  ]
+    },
+
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/a24c-4aa2-fa20-5f2d",
+	  "async": true,
+	  "callId": "callA3",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!updates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updates!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  }
+			]
+		  }
+        ]
+      }
+	},
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/bd1c-39d1-500f-4fb2",
+	  "async": true,
+	  "callId": "callB2",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!updates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updates!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  }
+			]
+		  }
+        ]
+      },
+	  "factoryIndex": 1
+	},
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/undo",
+	  "factoryIndex": 1
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callA3",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+      "operation": "setFromVariable",
+	  "targetVariable": "!updates!",
+	  "sourceVariable": "!eventsResult!",
+	  "path": "updates/$list",
+	  "convertToObject": "true"
+    },
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updates!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    }
+	  ]
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callB2",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+      "operation": "setFromVariable",
+	  "targetVariable": "!updates!",
+	  "sourceVariable": "!eventsResult!",
+	  "path": "updates/$list",
+	  "convertToObject": "true"
+    },
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updates!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    }
+	  ]
+    },
+
+
+	{
+      "operation": "set",
+      "variable": "!updatesCallA!",
+      "value": []
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/a24c-4aa2-fa20-5f2d",
+	  "async": true,
+	  "callId": "callA4",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!newUpdates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+          {
+            "operation": "mergeLists",
+            "baseList": "!updatesCallA!",
+            "listToAdd": "!newUpdates!"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updatesCallA!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentLock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  },
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentChange!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  }
+			]
+		  }
+        ]
+      }
+	},
+	{
+      "operation": "set",
+      "variable": "!updatesCallB!",
+      "value": []
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/bd1c-39d1-500f-4fb2",
+	  "async": true,
+	  "callId": "callB3",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!newUpdates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+          {
+            "operation": "mergeLists",
+            "baseList": "!updatesCallB!",
+            "listToAdd": "!newUpdates!"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updatesCallB!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentLock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  },
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentChange!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  }
+			]
+		  }
+        ]
+      },
+	  "factoryIndex": 1
+	},
+	{
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/redo",
+	  "factoryIndex": 1
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callA4",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updatesCallA!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentLock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    },
+		{
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentChange!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    }
+	  ]
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callB3",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updatesCallB!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentLock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    },
+		{
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentChange!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    }
+	  ]
+    },
+
+	{
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/a24c-4aa2-fa20-5f2d",
+	  "async": true,
+	  "callId": "callA5",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!updates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updates!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userB!"
+			  }
+			]
+		  }
+        ]
+      }
+	},
+	{
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings",
+	  "factoryIndex": 1
+    },
+    {
+      "acceptError": true,
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/close",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": true,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/close",
+	  "factoryIndex": 1
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callA5",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+      "operation": "setFromVariable",
+	  "targetVariable": "!updates!",
+	  "sourceVariable": "!eventsResult!",
+	  "path": "updates/$list",
+	  "convertToObject": "true"
+    },
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updates!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userB!"
+	    }
+	  ]
+    },
+
+	{
+      "operation": "set",
+      "variable": "!updatesCallA!",
+      "value": []
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/a24c-4aa2-fa20-5f2d",
+	  "async": true,
+	  "callId": "callA6",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!newUpdates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+          {
+            "operation": "mergeLists",
+            "baseList": "!updatesCallA!",
+            "listToAdd": "!newUpdates!"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updatesCallA!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentLock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  },
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentChange!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  }
+			]
+		  }
+        ]
+      }
+	},
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "isAbstract": true,
+          "label": "Service",
+          "type": "service"
+        },
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/objects/!step0!/insert"
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callA6",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updatesCallA!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentLock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    },
+		{
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentChange!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    }
+	  ]
+    },
+
+	{
+      "operation": "set",
+      "variable": "!updatesCallB!",
+      "value": []
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/bd1c-39d1-500f-4fb2",
+	  "async": true,
+	  "callId": "callB4",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!newUpdates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+          {
+            "operation": "mergeLists",
+            "baseList": "!updatesCallB!",
+            "listToAdd": "!newUpdates!"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updatesCallB!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentLock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  },
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentChange!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  }
+			]
+		  }
+        ]
+      },
+	  "factoryIndex": 1
+	},
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings"
+    },
+
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow",
+	  "factoryIndex": 1
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callB4",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updatesCallB!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentLock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    },
+		{
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentChange!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    }
+	  ]
+    },
+
+	{
+      "operation": "set",
+      "variable": "!updatesCallA!",
+      "value": []
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/a24c-4aa2-fa20-5f2d",
+	  "async": true,
+	  "callId": "callA7",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!newUpdates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+          {
+            "operation": "mergeLists",
+            "baseList": "!updatesCallA!",
+            "listToAdd": "!newUpdates!"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updatesCallA!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  },
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.XMOMSave!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  }
+			]
+		  }
+        ]
+      },
+	  "factoryIndex": 0
+	},
+	{
+      "operation": "set",
+      "variable": "!updatesCallB!",
+      "value": []
+    },
+    {
+	  "operation": "call",
+	  "requestType": "GET",
+	  "url": "/runtimeContext/GuiHttp%252F/events/bd1c-39d1-500f-4fb2",
+	  "async": true,
+	  "callId": "callB5",
+	  "retries": {
+        "maxRetries": "!eventsRetryCount!",
+        "variable": "!eventsResult!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!newUpdates!",
+            "sourceVariable": "!eventsResult!",
+            "path": "updates/$list",
+			"convertToObject": "true"
+          },
+          {
+            "operation": "mergeLists",
+            "baseList": "!updatesCallB!",
+            "listToAdd": "!newUpdates!"
+          },
+		  {
+		    "operation": "assert",
+			"constraint": "isInList",
+			"variable": "!updatesCallB!",
+			"entries": [
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  },
+			  {
+				"$meta": {
+				  "fqn": "!xmcp.yggdrasil.XMOMSave!"
+				},
+			    "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+				"creator": "!userA!"
+			  }
+			]
+		  }
+        ]
+      },
+	  "factoryIndex": 1
+	},
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 2
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/save"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/dataflow"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/issues"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!autoTest.generated.YG2!/!DocumentUpdateTest!/warnings"
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callA7",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updatesCallA!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    },
+		{
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.XMOMSave!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    }
+	  ]
+    },
+	{
+	  "operation": "joinAsyncCall",
+	  "threads": [
+	    {
+		  "callId": "callB5",
+		  "variable": "!eventsResult!"
+		}
+	  ]
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "isInList",
+	  "variable": "!updatesCallB!",
+	  "entries": [
+	    {
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.DocumentUnlock!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    },
+		{
+		  "$meta": {
+		    "fqn": "!xmcp.yggdrasil.XMOMSave!"
+		  },
+		  "fqn": "!autoTest.generated.YG2!.!DocumentUpdateTest!",
+		  "creator": "!userA!"
+	    }
+	  ]
+    }
+  ]
+}

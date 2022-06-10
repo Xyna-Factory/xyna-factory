@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Fill Description in Role" TypeName="FillDescriptionInRole" TypePath="xmcp.xacm.rolemanagement.subwfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Fill Description in Role" Name="FillDescriptionInRole">
+    <Input>
+      <Data ID="4" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role">
+        <Target RefID="17"/>
+        <Target RefID="28"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role2">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="7" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <Mappings ID="17" Label="Mapping">
+      <Source RefID="4"/>
+      <Target RefID="15"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="16" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role16"/>
+        <Source RefID="4"/>
+      </Input>
+      <Output>
+        <Data ID="18" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole18"/>
+        <Target RefID="15"/>
+      </Output>
+      <Mapping>%1%.role=%0%.roleName</Mapping>
+    </Mappings>
+    <Function ID="8" Label="Get Description of Role">
+      <Source RefID="7"/>
+      <Source RefID="9"/>
+      <Source RefID="15"/>
+      <Target RefID="7"/>
+      <Target RefID="10"/>
+      <Invoke Operation="getDescriptionOfRole" ServiceID="7">
+        <Source RefID="15"/>
+        <Source RefID="9">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="7">
+        <Target RefID="10"/>
+      </Receive>
+    </Function>
+    <Data ID="9" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="const_DomainName">
+      <Target RefID="8"/>
+      <Data Label="name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>XYNA</Value>
+      </Data>
+    </Data>
+    <Data ID="10" Label="User Authentication Role Description" ReferenceName="UserAuthenticationRoleDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRoleDescription">
+      <Source RefID="8"/>
+      <Target RefID="28"/>
+    </Data>
+    <Data ID="15" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole">
+      <Source RefID="17"/>
+      <Target RefID="8"/>
+    </Data>
+    <Mappings ID="28" Label="Mapping">
+      <Source RefID="4"/>
+      <Source RefID="10"/>
+      <Target RefID="26"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role27"/>
+        <Source RefID="4"/>
+      </Input>
+      <Input>
+        <Data ID="29" Label="User Authentication Role Description" ReferenceName="UserAuthenticationRoleDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRoleDescription29"/>
+        <Source RefID="10"/>
+      </Input>
+      <Output>
+        <Data ID="30" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role30"/>
+        <Target RefID="26"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.description=%1%.description</Mapping>
+    </Mappings>
+    <Data ID="26" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role26">
+      <Source RefID="28"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="26"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="26">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

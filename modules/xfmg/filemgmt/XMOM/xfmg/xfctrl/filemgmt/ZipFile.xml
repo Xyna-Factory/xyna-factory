@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ManagedFile" BaseTypePath="xfmg.xfctrl.filemgmt" IsAbstract="false" Label="Zip File" TypeName="ZipFile" TypePath="xfmg.xfctrl.filemgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Zip File" TypeName="ZipFile">
+    <Operation IsStatic="true" Label="Create Zip File" Name="createZipFile">
+      <Input>
+        <Data ID="68" IsList="true" Label="Sources" ReferenceName="File" ReferencePath="base" VariableName="sources"/>
+        <Data ID="73" Label="Target Zip File" ReferenceName="File" ReferencePath="base" VariableName="target"/>
+      </Input>
+      <Output>
+        <Data ID="63" Label="Zip File" ReferenceName="ZipFile" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="zipFile63"/>
+      </Output>
+      <Meta>
+        <Documentation>Creates target zip file containing all the sources including subdirectories and all the files in them.
+The target zip file will be overwritten if it exists already.
+The sources may not include duplicate file names if they would collide in the resulting directory structure.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">checkRight(new java.io.File(target.getPath()), com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action.insert);
+List&lt;java.io.File&gt; sourceFiles = new ArrayList&lt;&gt;(sources.size());
+for (File source : sources) {
+  checkRight(new java.io.File(source.getPath()), com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action.read);
+  sourceFiles.add(new java.io.File(source.getPath()));
+}
+java.io.File zip = new java.io.File(target.getPath());
+try {
+  com.gip.xyna.FileUtils.createZip(sourceFiles, zip);
+  return new ZipFile(target.getPath());
+} catch (Exception e) {
+  throw new RuntimeException(e);
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="list Zip Entries" Name="listZipEntries">
+      <Input/>
+      <Output>
+        <Data ID="3" IsList="true" Label="Zip Entry" ReferenceName="ZipEntry" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="zipEntry3"/>
+      </Output>
+      <Meta>
+        <Documentation>Returns list of content of zip file (filename, uncompressed file size, last modification date). Entries may be files or directories.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">checkRight(new java.io.File(getPath()), com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action.read);
+List&lt;ZipEntry&gt; result = new ArrayList&lt;&gt;();
+try (java.util.zip.ZipFile zf = new java.util.zip.ZipFile(getPath())) {
+  java.util.Enumeration&lt;? extends java.util.zip.ZipEntry&gt; entries = zf.entries();
+  while (entries.hasMoreElements()) {
+    java.util.zip.ZipEntry ze = entries.nextElement();
+    ZipEntry xze = new ZipEntry();
+    xze.setName(ze.getName());
+    long t;
+    java.nio.file.attribute.FileTime ft = ze.getLastModifiedTime();
+    if (ft == null) {
+      t = 0;
+    } else {
+      t = ft.toMillis();
+    }
+    xze.setLastModified(t);
+    xze.setIsDirectory(ze.isDirectory());
+    if (!ze.isDirectory()) {
+      xze.setUncompressedSize(ze.getSize());
+    }
+    result.add(xze);
+  }
+} catch (Exception e) {
+   throw new RuntimeException(e);
+}
+return result;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="unzip" Name="unzip">
+      <Input>
+        <Data ID="6" Label="Target Directory" ReferenceName="File" ReferencePath="base" VariableName="targetDir"/>
+      </Input>
+      <Output/>
+      <Meta>
+        <Documentation>Unpacks the zip file into the target directory entirely. If target directory is empty, the directory of the zip file will be used instead. Overwrites existing files.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">checkRight(new java.io.File(getPath()), com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action.read);
+checkRight(new java.io.File(targetDir.getPath()), com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action.write);
+try {
+  com.gip.xyna.FileUtils.unzip(getPath(), targetDir.getPath(), pathname -&gt; true);
+} catch (Exception e) {
+  throw new RuntimeException(e);
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="add To Zip" Name="addToZip">
+      <Input>
+        <Data ID="35" Label="File To Add" ReferenceName="File" ReferencePath="base" VariableName="file35"/>
+        <Data ID="39" Label="Target Directory" ReferenceName="File" ReferencePath="base" VariableName="targetDir39"/>
+      </Input>
+      <Output/>
+      <Meta>
+        <Documentation>Adds the file to this zip under targetDir (inside of the zip). Substitutes existing file. Also adds zip entries for all parent directories if they didn't exist before.
+
+It is advised to not execute this operation repeatedly to add many files, because each invocation uncompresses and compresses the whole zip file. Instead unzip the file, modify the directory directly and zip the directory again at the end.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">checkRight(new java.io.File(getPath()), com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action.write);
+    checkRight(new java.io.File(file35.getPath()), com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action.read);
+    java.io.File temp;
+    try {
+      temp = com.gip.xyna.FileUtils.makeTemporaryDirectory();
+    } catch (Exception e) {
+      throw new RuntimeException("Could not create temporary directory", e);
+    }
+    try {
+      com.gip.xyna.FileUtils.unzip(getPath(), temp.getAbsolutePath(), fileName -&gt; true);
+      com.gip.xyna.FileUtils.copyFile(new java.io.File(file35.getPath()),
+                                      new java.io.File(temp.getAbsolutePath() + com.gip.xyna.xfmg.Constants.FILE_SEPARATOR + targetDir39.getPath(),
+                                                       new java.io.File(file35.getPath()).getName()),
+                                      true);
+      com.gip.xyna.FileUtils.zipDirectory(new java.io.File(getPath()), temp);
+    } catch (Exception e) {
+      throw new RuntimeException("Could not modify zip file " + getPath() + " in temp directory " + temp.getAbsolutePath() + ".", e);
+    } finally {
+      com.gip.xyna.FileUtils.deleteDirectoryRecursively(temp);
+    }
+}
+
+  private static void checkRight(java.io.File file, com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action action) {
+com.gip.xyna.xfmg.xopctrl.usermanagement.Role role = com.gip.xyna.xprc.xfractwfe.base.ChildOrderStorage.childOrderStorageStack.get().getCorrelatedXynaOrder().getCreationRole();
+    if (role == null) {
+      return;
+    }
+    try {
+      com.gip.xyna.xfmg.xopctrl.usermanagement.ScopedRightCache rightCache = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getUserManagement().getRoleRightScope(role);
+      if (!rightCache.hasRight(com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.ScopedRight.FILE_ACCESS.getKey(), action.toString(), file.getAbsolutePath())) {
+        throw new RuntimeException("FileAccess " + action.toString() + "@" + file.getAbsolutePath() + " not allowed for role '" + role.getName() + "'.");
+      }
+    } catch (com.gip.xyna.xnwh.persistence.PersistenceLayerException e) {
+      throw new RuntimeException("Failed to check right", e);
+    }
+  }
+
+static {</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="delete Zip Entries" Name="deleteZipEntries">
+      <Input>
+        <Data ID="58" IsList="true" Label="Zip Entry" ReferenceName="ZipEntry" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="zipEntry58"/>
+      </Input>
+      <Output/>
+      <Meta>
+        <Documentation>Deletes matching entries from zip file. Entries may be files or directories. Does not remove empty parent directories automatically.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">checkRight(new java.io.File(getPath()), com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action.write);
+try {
+      com.gip.xyna.FileUtils.removeFromZipFile(new java.io.File(getPath()), fileName -&gt; zipEntry58.stream().anyMatch(ze -&gt; 
+     fileName.getPath().equals(ze.getName()) || 
+     (
+       ze.getIsDirectory() &amp;&amp; 
+       (fileName.getPath() + "/").equals(ze.getName())
+     )
+                            ), true);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

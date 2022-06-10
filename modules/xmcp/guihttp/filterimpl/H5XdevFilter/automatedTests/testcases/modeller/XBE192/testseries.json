@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "xbe192_mandatory.json",
+    "xbe192_defaultType.json",
+	"xbe192_maxLength.json"
+  ]
+}

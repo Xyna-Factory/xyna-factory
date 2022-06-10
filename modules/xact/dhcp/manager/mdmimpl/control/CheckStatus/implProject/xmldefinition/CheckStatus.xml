@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Check Status" TypeName="CheckStatus" TypePath="xmcp.dhcp.v4.control" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>CheckStatusImpl.jar</Libraries>
+  <Libraries>CheckStatus.jar</Libraries>
+  <SharedLibraries>tools</SharedLibraries>
+  <Service Label="CheckStatus" TypeName="CheckStatus">
+    <Operation IsStatic="true" Label="checkStatusForIp" Name="checkStatusForIp" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Check Status For Ip Request ctype" ReferenceName="CheckStatusForIpRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="checkStatusForIpRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return CheckStatusImpl.checkStatusForIp(correlatedXynaOrder, checkStatusForIpRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getInstanceInfoList" Name="getInstanceInfoList" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Get Instance Info List Request ctype" ReferenceName="GetInstanceInfoListRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="getInstanceInfoListRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CheckStatus.www.gip.com.juno.Gui.WS.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return CheckStatusImpl.getInstanceInfoList(correlatedXynaOrder, getInstanceInfoListRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

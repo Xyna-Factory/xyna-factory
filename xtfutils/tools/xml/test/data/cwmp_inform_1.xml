@@ -1,0 +1,84 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:cwmp="urn:dslforum-org:cwmp-1-2">
+	<soap:Header>
+		<cwmp:ID soap:mustUnderstand="1">2571</cwmp:ID>
+	</soap:Header>
+	<soap:Body>
+		<Inform xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:dslforum-org:cwmp-1-2">
+			<DeviceId>
+				<Manufacturer>AVM</Manufacturer>
+				<OUI>00040E</OUI>
+				<ProductClass>FRITZ!Box</ProductClass>
+				<SerialNumber>0024FECD910F</SerialNumber>
+			</DeviceId>
+			<Event soap-enc:arrayType="cwmp:EventStruct[1]">
+				<EventStruct>
+					<EventCode>6 CONNECTION REQUEST</EventCode>
+					<CommandKey></CommandKey>
+				</EventStruct>
+			</Event>
+			<MaxEnvelopes>1</MaxEnvelopes>
+			<CurrentTime>0001-01-11T00:08:36</CurrentTime>
+			<RetryCount>0</RetryCount>
+			<ParameterList soap-enc:arrayType="cwmp:ParameterValueStruct[8]">
+				<ParameterValueStruct>
+					<Name>InternetGatewayDevice.DeviceSummary</Name>
+					<Value xsi:type="xsd:string">InternetGatewayDevice:1.4[](Baseline:2,
+						EthernetLAN:1, ADSLWAN:1,ADSL2WAN:1, Time:2, IPPing:1, WiFiLAN:2,
+						DeviceAssociation:1), VoiceService:1.0[2](SIPEndpoint:1,
+						Endpoint:1, TAEndpoint:1), StorageService:1.0[1](Baseline:1,
+						FTPServer:1, NetServer:1, HTTPServer:1, UserAccess:1,
+						VolumeConfig:1)</Value>
+				</ParameterValueStruct>
+				<ParameterValueStruct>
+					<Name>InternetGatewayDevice.DeviceInfo.HardwareVersion</Name>
+					<Value xsi:type="xsd:string">FRITZ!Box Fon WLAN 7270 v3</Value>
+				</ParameterValueStruct>
+				<ParameterValueStruct>
+					<Name>InternetGatewayDevice.DeviceInfo.SoftwareVersion</Name>
+					<Value xsi:type="xsd:string">74.05.05</Value>
+				</ParameterValueStruct>
+				<ParameterValueStruct>
+					<Name>InternetGatewayDevice.DeviceInfo.SpecVersion</Name>
+					<Value xsi:type="xsd:string">1.0</Value>
+				</ParameterValueStruct>
+				<ParameterValueStruct>
+					<Name>InternetGatewayDevice.DeviceInfo.ProvisioningCode</Name>
+					<Value xsi:type="xsd:string"></Value>
+				</ParameterValueStruct>
+				<ParameterValueStruct>
+					<Name>InternetGatewayDevice.ManagementServer.ParameterKey</Name>
+					<Value xsi:type="xsd:string"></Value>
+				</ParameterValueStruct>
+				<ParameterValueStruct>
+					<Name>InternetGatewayDevice.ManagementServer.ConnectionRequestURL
+					</Name>
+					<Value xsi:type="xsd:string">http://172.26.7.10:8089/8286bfeb</Value>
+				</ParameterValueStruct>
+				<ParameterValueStruct>
+					<Name>InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANIPConnection.1.ExternalIPAddress
+					</Name>
+					<Value xsi:type="xsd:string">172.26.7.10</Value>
+				</ParameterValueStruct>
+			</ParameterList>
+		</Inform>
+	</soap:Body>
+</soap:Envelope>

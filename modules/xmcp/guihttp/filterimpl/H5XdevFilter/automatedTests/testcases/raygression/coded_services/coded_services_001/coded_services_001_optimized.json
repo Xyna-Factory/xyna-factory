@@ -1,0 +1,153 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "10.7.2020", 
+    "updated": "10.7.2020"
+  }, 
+  "operations": [
+    {
+      "operation": "setRandom", 
+      "variable": "!rnd!"
+    }, 
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!servicegroups!": "servicegroups"
+        }, 
+        {
+          "!New_Service_Group!": "New Service Group"
+        }, 
+        {
+          "!coded_services_001_ARANDOM!": "coded_services_001_!rnd!"
+        }, 
+        {
+          "!memberService!": "memberService"
+        }, 
+        {
+          "!autotest.generated.ARANDOM!": "autotest.generated.!rnd!"
+        }, 
+        {
+          "!xact!": "xact"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!New_Service_Group!"
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/fqn", 
+      "targetVariable": "!new_1594373642252.NewServiceGroup!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "before", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!new_1594373642252!", 
+      "variable": "!new_1594373642252.NewServiceGroup!"
+    }, 
+    {
+      "modification": {
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!NewServiceGroup!", 
+      "variable": "!new_1594373642252.NewServiceGroup!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/areas/$list[name=methodsArea]/id", 
+      "targetVariable": "!memberMethodsArea!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "xmomItem/id", 
+      "targetVariable": "!sg!", 
+      "unquoteResult": true
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!coded_services_001_ARANDOM!", 
+        "revision": 0
+      }, 
+      "requestType": "PUT", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594373642252!/!NewServiceGroup!/objects/typeInfoArea/change"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "label": "Service", 
+          "type": "!memberService!"
+        }, 
+        "index": -1, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594373642252!/!NewServiceGroup!/objects/!memberMethodsArea!/insert"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "label": "!coded_services_001_ARANDOM!", 
+        "path": "!autotest.generated.ARANDOM!", 
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!new_1594373642252!/!NewServiceGroup!/save"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "updates/$list[id=!sg!]/areas/$list[name=typeInfo]/fqn", 
+      "targetVariable": "!autotest.generated.ARANDOM.Coded_services_001_AR!", 
+      "unquoteResult": true
+    }, 
+    {
+      "modification": {
+        "direction": "inversed", 
+        "divider": ".", 
+        "keep": "after", 
+        "operation": "substring"
+      }, 
+      "operation": "modification", 
+      "targetVariable": "!Coded_services_001_ARANDOM!", 
+      "variable": "!autotest.generated.ARANDOM.Coded_services_001_AR!"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/!servicegroups!/!autotest.generated.ARANDOM!/!Coded_services_001_ARANDOM!/deploy"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects/!xact!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!default%20workspace!/xmom/objects/!xact!"
+    }
+  ]
+}

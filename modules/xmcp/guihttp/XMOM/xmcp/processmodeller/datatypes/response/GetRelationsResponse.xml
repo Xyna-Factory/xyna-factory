@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Response" BaseTypePath="xmcp.processmodeller.datatypes.response" IsAbstract="false" Label="Get Relations Response" TypeName="GetRelationsResponse" TypePath="xmcp.processmodeller.datatypes.response" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Calls" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="calls"/>
+  <Data IsList="true" Label="Called by" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="calledBy"/>
+  <Data IsList="true" Label="Exceptions" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="exceptions"/>
+  <Data IsList="true" Label="Extends" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="extends0"/>
+  <Data IsList="true" Label="Extended by" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="extendedBy0"/>
+  <Data IsList="true" Label="Input of" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="inputOf0"/>
+  <Data IsList="true" Label="Instance Service Reference of" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="instanceServiceReferenceOf"/>
+  <Data IsList="true" Label="Needs" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="needs"/>
+  <Data IsList="true" Label="Output of" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="outputOf0"/>
+  <Data IsList="true" Label="Has Member of" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="hasMemberOf"/>
+  <Data IsList="true" Label="Is Member of" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="isMemberOf"/>
+  <Data IsList="true" Label="Produces" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="produces"/>
+  <Data IsList="true" Label="Thrown by" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="thrownBy0"/>
+  <Data IsList="true" Label="Used in" ReferenceName="FactoryItem" ReferencePath="xmcp.processmodeller.datatypes.response" VariableName="usedIn0"/>
+</DataType>

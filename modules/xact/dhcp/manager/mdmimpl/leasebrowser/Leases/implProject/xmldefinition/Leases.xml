@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Leases" TypeName="Leases" TypePath="xmcp.dhcp.v4.leasebrowser" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>LeasesImpl.jar</Libraries>
+  <Libraries>Leases.jar</Libraries>
+  <SharedLibraries>tools</SharedLibraries>
+  <Service Label="Leases" TypeName="Leases">
+    <Operation IsStatic="true" Label="CountRowsWithCondition" Name="countRowsWithCondition" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Count Rows With Condition Request ctype" ReferenceName="CountRowsWithConditionRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="countRowsWithConditionRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return LeasesImpl.countRowsWithCondition(correlatedXynaOrder, countRowsWithConditionRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getMetaInfo" Name="getMetaInfo" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Get Meta Info Request ctype" ReferenceName="GetMetaInfoRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Gui.WS.Messages" VariableName="getMetaInfoRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return LeasesImpl.getMetaInfo(correlatedXynaOrder, getMetaInfoRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="insertRow" Name="insertRow" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Insert Row Request ctype" ReferenceName="InsertRowRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="insertRowRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return LeasesImpl.insertRow(correlatedXynaOrder, insertRowRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="searchRows" Name="searchRows" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Search Rows Request ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="searchRowsRequest_ctype"/>
+      </Input>
+      <Output>
+        <Data Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="response_ctype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return LeasesImpl.searchRows(correlatedXynaOrder, searchRowsRequest_ctype);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

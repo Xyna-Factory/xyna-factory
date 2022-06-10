@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetRuntimeApplica!": "xmcp.factorymanager.rtcmanager.GetRuntimeApplications"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetRuntimeApplica!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/default%20workspace/!startorder!"
+    }
+  ]
+}

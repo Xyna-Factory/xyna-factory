@@ -1,0 +1,284 @@
+{
+  "meta":
+  {
+    "name": "String equals String",
+	"description": "Modelliert einen Workflow bei dem in einem Choice eine String-Variable mit einer anderen verglichen wird.",
+	"created": "13.11.2019",
+	"updated": "13.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd2!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd3!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd4!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd5!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!workspaceName!": "default workspace"},
+		{"!workspaceEscaped!": "!workspaceName!"},
+		{"!datatypePath!": "autoTest.generated.ray07.stringEqString"},
+		{"!datatype1Label!": "datatype1_!rnd1!"},
+		{"!datatype2Label!": "datatype2_!rnd2!"},
+		{"!workflowPath!": "autoTest.generated.ray07"},
+		{"!workflowLabel!": "StringEqString_!rnd3!"},
+		{"!datatype1MemberLabel!": "member_!rnd4!"},
+		{"!datatype2MemberLabel!": "member_!rnd5!"}
+	  ]
+	},
+	{
+	  "operation": "modification",
+	  "variable": "!workspaceEscaped!",
+	  "modification": {"operation": "urlencode"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!": "!workspaceName!",
+		"!path!": "!datatypePath!",
+		"!label!": "!datatype1Label!"
+	  },
+	  "mapOutput": {"!name!": "!datatype1Name!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "addSimpleTypeMemberToDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!": "!workspaceName!",
+		"!datatypePath!": "!datatypePath!",
+		"!datatypeName!": "!datatype1Name!",
+		"!insertType!": "String",
+		"!insertLabel!": "!datatype1MemberLabel!"
+	  },
+	  "mapOutput": {"!insertName!": "!datatype1MemberName!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!": "!workspaceName!",
+        "!path!": "!datatypePath!",
+		"!label!": "!datatype2Label!"
+	  },
+	  "mapOutput": {"!name!": "!datatype2Name!" }
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "addSimpleTypeMemberToDatatype",
+	  "mapInput": 
+	  {
+	    "!workspace!": "!workspaceName!",
+		"!datatypePath!": "!datatypePath!",
+		"!datatypeName!": "!datatype2Name!",
+		"!insertType!": "String",
+		"!insertLabel!": "!datatype2MemberLabel!"
+	  },
+	  "mapOutput": {"!insertName!": "!datatype2MemberName!"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!",
+		"!newPath!": "!newWorkflowPath!",
+		"!newWorkflowName!": "!newWorkflowName!"
+	  }
+	},
+	
+	
+	{
+	  "meta": "insert mapping -- start to modify workflow",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"mapping","label":"Mapping"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!mappingOutput!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/areas/$list[name=output]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "insert choice",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"conditionalChoice"},"relativePosition":"inside","revision":"!revision!"}
+	},
+	{
+	  "meta": "sowas wie formula11-0_input",
+	  "operation": "read",
+	  "targetVariable": "!formulaInput!",
+	  "pathInResponse": "updates/$list[fqn=!newWorkflowPath!.!newWorkflowName!]/areas/$list[id=step0]/items/$list[1]/areas/$list[name=input]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "insert first Datatype to mapping output",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!mappingOutput!/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!datatype1Label!","fqn":"!datatypePath!.!datatype1Name!","isList":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "insert second Datatype to mapping output",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!mappingOutput!/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!datatype2Label!","fqn":"!datatypePath!.!datatype2Name!","isList":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "insert first datatype in choice expression, part 1",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!formulaInput!/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!datatype1Label!","fqn":"!datatypePath!.!datatype1Name!","isList":false,"isAbstract":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "insert first datatype in choice expression, part 2",
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!formulaInput!/change",
+	  "payload": {"content":{"expression":"%0%"},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "update Choice expression",
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!formulaInput!/change",
+	  "payload": {"content":{"expression":"%0%.!datatype1MemberName!=="},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "insert second datatype in choice expression, part 1",
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!formulaInput!/insert",
+	  "payload": {"index":-1,"content":{"type":"variable","label":"!datatype2Label!","fqn":"!datatypePath!.!datatype2Name!","isList":false,"isAbstract":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "insert second datatype in choice expression, part 2",
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!formulaInput!/change",
+	  "payload": {"content":{"expression":"%0%.!datatype1MemberName!==%1%"},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "meta": "update Choice expression",
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!formulaInput!/change",
+	  "payload": {"content":{"expression":"%0%.!datatype1MemberName!==%1%.!datatype2MemberName!"},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/save",
+	  "payload": {"revision":"!revision!","path":"!workflowPath!","label":"!workflowLabel!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!quotedWorkflowFqn!",
+	  "pathInResponse": "updates/$list[0]/fqn"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "splitFQNtoPathAndName",
+	  "mapInput": {"!fqn!": "!quotedWorkflowFqn!"},
+	  "mapOutput": {"!path!": "!workflowPath!", "!name!": "!workflowName!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "set",
+	  "variable": "!url!",
+	  "value": "/runtimeContext/!workspaceEscaped!/xmom/workflows/!workflowPath!/!workflowName!"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/deploy",
+	  "payload": {"revision": "!revision!"}
+	}
+  ]
+}

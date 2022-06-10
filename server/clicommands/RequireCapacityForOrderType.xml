@@ -1,0 +1,27 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="requirecapacityforordertype" Groups="Capacities" Description="Require the specified capacity for the given order type."/>
+  <Argument Name="orderType" Description="The name of the order type for which the capacity will be required"/>
+  <Argument Name="capacityName" Description="The name of the capacity that will be required"/>
+  <Argument Name="cardinality" Description="The amount of cardinality that will be required"/>
+  <Argument Name="applicationName" Description="The name of the application." Optional="true"/>
+  <Argument Name="versionName" Description="The name of the version of the application." Optional="true"/>
+  <BoolOption Name="u" LongName="updateschedulingorders" Description="Update the capacity requirements for orders that are currently waiting within the scheduler." Optional="true"/>
+  <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
+</XynaCommandLineCommand>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<!-- CAUTION: Do not attempt to launch any target from here. Launch them from build.xml instead. -->
+<project name="buildCommonLib" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+    <import file="./macros.xml" />
+    <import file="./ant-xyna.xml" />
+
+    <property name="base.lib.dir" value="${basedir}/lib" />
+    <!--<property name="additional.lib.dir" /> (nur zum Kompilieren nötig) kann gesetzt werden, muss aber nicht -->
+    <!--<property name="unfree.lib.dir" /> (unfreie Libs, die zum Kompilieren und Ausführen nötig sind) kann gesetzt werden, muss aber nicht -->
+    <property name="target.dir" value="${basedir}/deploy" />
+
+    <property file="${basedir}/server.properties" />
+    <property file="${root.dir}/server.properties" />
+
+    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+
+    <checkJavaVersion />
+    <checkServerProperties />
+
+    <condition property="src.dir.available">
+        <available file="${basedir}/src" />
+    </condition>
+
+    <condition property="exception.xml.available">
+        <available file="${basedir}/Exceptions.xml" />
+    </condition>
+    
+    <!-- ================================= 
+         target: prepareLibs             
+         ================================= -->
+    <target name="prepareLibs" description="Prepare libs">
+        <!-- leer, überschreibbar im build.xml -->
+    </target>
+
+    <!-- =================================
+                   target: genExceptionClass
+         ================================= -->
+    <target name="genExceptionClass" description="Generate code class for exceptions." if="exception.xml.available" >
+        <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
+            <sysproperty key="BLACK_SERVER_HOME" value="${root.dir}/server" />
+            <classpath refid="libraries" />
+            <classpath>
+                <fileset dir="${basedir}/lib">
+                    <include name="**/*.jar" />
+                </fileset>
+            </classpath>
+            <arg value="Exceptions.xml" />
+            <arg value="${basedir}/src" />
+            <arg value="y" />
+        </java>
+    </target>
+
+
+
+    <!-- ================================= 
+         target: build-src             
+         ================================= -->
+    <target name="build-src" if="src.dir.available" depends="resolve, prepareLibs, genExceptionClass">
+        <!-- <delete dir="${basedir}/classes" /> -->
+        <mkdir dir="${basedir}/classes" />
+        <javaCompile>
+            <classpath path="${basedir}/classes" />
+            <classpath>
+                <fileset dir="${base.lib.dir}" erroronmissingdir="false">
+                    <include name="**/*.jar" />
+                </fileset>
+            </classpath>
+            <classpath>
+                <fileset dir="${additional.lib.dir}" erroronmissingdir="false">
+                    <include name="**/*.jar" />
+                </fileset>
+            </classpath>
+            <classpath>
+                <fileset dir="${unfree.lib.dir}" erroronmissingdir="false">
+                    <include name="**/*.jar" />
+                </fileset>
+            </classpath>
+        </javaCompile> 
+        <jar destfile="${target.dir}/${commonLib.name}.jar">
+            <manifest>
+                <attribute name="Vendor" value="${vendor.name}" />
+                <attribute name="Version" value="${release.number}" />
+                <attribute name="Build-Date" value="${timestamp}" />
+            </manifest>
+            <fileset dir="${basedir}/classes">
+                <include name="**/*.class" />
+            </fileset>
+        </jar>
+    </target>
+
+
+    <!-- ================================= 
+         target: build             
+         ================================= -->
+    <target name="build" depends="cleanup, build-src">
+        <!-- copy libraries to target.dir -->
+        <copyJar from="${base.lib.dir}" to="${target.dir}" />
+        <copyLicense from="${base.lib.dir}" to="${target.dir}" />
+        <touchUnfreeJar from="${unfree.lib.dir}" to="${target.dir}" />
+    </target>
+	
+    <!-- ================================= 
+       target: cleanup
+       ================================= -->
+    <target name="cleanup">
+        <delete dir="${basedir}/classes" />
+    </target>
+	
+    <!-- ================================= 
+         target: copyLibs             
+         ================================= -->
+    <target name="copyLibs" depends="build-src">
+        <!-- copy libraries to target.dir -->
+        <copyJar from="${base.lib.dir}" to="${target.dir}" />
+        <copyJar from="${unfree.lib.dir}" to="${target.dir}" />
+    </target>
+
+    <!-- ================================= 
+               target: resolve             
+          =================================  -->
+      <target name="resolve">
+        <resolver:resolve>
+          <resolver:dependencies pomRef="pom"/>
+          <resolver:remoterepos refid="xyna.repository"/>
+          <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
+          <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
+        </resolver:resolve>
+        <loadLicenses targetDir="${base.lib.dir}" />
+        <!-- delete generated-resources ? -->
+      </target>
+
+</project>

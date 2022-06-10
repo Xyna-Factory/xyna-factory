@@ -1,0 +1,88 @@
+{
+  "meta":
+  {
+    "name": "throwSimpleExceptionTest",
+	"description": "Execute a workflow containing a service (loaded from app) and open audit",
+	"created": "13.03.2020",
+	"updated": "13.03.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON47.Finished",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 2,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!parallelId!",
+	  "pathInResponse": "workflow/areas/$list[id=step0]/items/$list[0]/id",
+      "unquoteResult": true
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=!parallelId!]/status",
+      "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!start!",
+	  "pathInResponse": "info/$list[id=!parallelId!]/runningTime/start"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "bigger",
+	  "variable": "!start!",
+	  "value": "0"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!lastUpdate!",
+	  "pathInResponse": "info/$list[id=!parallelId!]/runningTime/lastUpdate"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "bigger",
+	  "variable": "!lastUpdate!",
+	  "value": "0"
+	}
+  ]
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "docu" : "Turns an FQN with \" into path and name. Removes \".",
+    "type" : "function",
+	"functionName": "splitFQNtoPathAndName",
+	"input": [ "!fqn!" ],
+	"output": [ "!path!", "!name!" ],
+	"operations":
+	[
+	  {
+	    "operation": "set",
+	    "variable": "!path!",
+	    "value": "!fqn!"
+	  },
+	  {
+        "operation": "modification",
+		"variable": "!path!",
+		"modification":
+		{
+		  "operation": "substring",
+		  "divider": ".",
+		  "keep": "before",
+		  "direction": "inversed"
+		}
+	  },
+	  {
+	    "operation": "modification",
+	    "variable": "!path!",
+	    "modification":
+	    {
+	      "operation": "substring",
+	  	  "divider": "\"",
+		  "keep": "after"
+		}
+	  },
+	  {
+	    "operation": "set",
+	    "variable": "!name!",
+	    "value": "!fqn!"
+	  },
+	  {
+	    "operation": "modification",
+	    "variable": "!name!",
+	    "modification":
+	    {
+	      "operation": "substring",
+	  	  "divider": ".",
+		  "keep": "after",
+		  "direction": "inversed"
+		}
+	  },
+	  {
+	    "operation": "modification",
+	    "variable": "!name!",
+	    "modification":
+	    {
+	      "operation": "substring",
+	  	  "divider": "\"",
+		  "keep": "before"
+		}
+      }
+	]
+  }
+]

@@ -1,0 +1,16 @@
+{
+    "testseries": [
+        "xyna_properties/xyna_properties.json",
+        "capacities/capacities.json",
+        "order_input_sources/order_input_sources.json",
+        "order_types/order_types.json",
+        "deployment_items/deployment_items.json",
+        "workspaces_and_applications.json",
+        "storable_instances/storable_instances.json",
+		"FMAN61/testseries.json",
+		"FMAN392/testseries.json",
+		"FMAN400/testseries.json",
+		"FMAN512/testseries.json",
+		"XBE392/testseries.json"
+    ]
+}

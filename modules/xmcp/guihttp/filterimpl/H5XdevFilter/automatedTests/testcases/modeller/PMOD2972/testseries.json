@@ -1,0 +1,9 @@
+{
+  "tests":
+  [
+    "stepFunctionOutput.json",
+    "stepCatch.json",
+    "wfCatch.json",
+    "userOutputs.json"
+  ]
+}

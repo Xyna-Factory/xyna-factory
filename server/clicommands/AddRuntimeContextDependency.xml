@@ -1,0 +1,27 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="addruntimecontextdependency" Groups="Runtime Context Dependency Management" Description="Defines a new runtime context dependency."/>
+  <Argument Name="ownerApplicationName" Description="The name of the owner application." Optional="true"/>
+  <Argument Name="ownerVersionName" Description="The name of the owner application version." Optional="true"/>
+  <Argument Name="ownerWorkspaceName" Description="The name of the owner workspace." Optional="true"/>
+  <Argument Name="requirementApplicationName" Description="The name of the required application." Optional="true"/>
+  <Argument Name="requirementVersionName" Description="The name of the required application version." Optional="true"/>
+  <Argument Name="requirementWorkspaceName" Description="The name of the required workspace." Optional="true"/>
+  <BoolOption Name="f" LongName="force" Description="Ignore nonfatal validation errors" Optional="true"/>
+</XynaCommandLineCommand>

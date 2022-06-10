@@ -1,0 +1,107 @@
+{
+  "meta":
+  {
+    "name": "ChoiceOutput",
+	"description": "Execute a workflow containing choices, open audit and check the outputs",
+	"created": "07.04.2020",
+	"updated": "07.04.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON131.PMON131",
+		"!input!": [{"$meta":{"fqn":"xmcp.h5x.regression.PMON131.PMON131DataType","rtc":{"application":"!applicationName!","version":"!applicationVersion!"}},"name":"Test"}],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 12,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=wf]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!fqnOutputStep19!",
+	  "pathInResponse": "workflow/areas/$list[id=step0]/items/$list[id=step19]/areas/$list[id=step19_output]/items/$list[0]/fqn",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!fqnOutputStep19!",
+	  "value": "xmcp.h5x.regression.PMON131.PMON131DataTypeResult"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!fqnOutputStep46!",
+	  "pathInResponse": "workflow/areas/$list[id=step0]/items/$list[id=step46]/areas/$list[id=step46_output]/items/$list[0]/fqn",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!fqnOutputStep46!",
+	  "value": "xmcp.h5x.regression.PMON131.PMON131DataTypeResult"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!fqnOutputStep156!",
+	  "pathInResponse": "workflow/areas/$list[id=step0]/items/$list[id=step156]/areas/$list[id=step156_output]/items/$list[0]/fqn",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!fqnOutputStep156!",
+	  "value": "xmcp.h5x.regression.PMON131.PMON131DataTypeResult"
+	}
+  ]
+}

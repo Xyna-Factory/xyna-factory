@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Datatype Inspector" TypeName="DatatypeInspector" TypePath="xprc.xpce.datatype" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>DatatypeInspectorImpl.jar</Libraries>
+  <Service Label="DOMInspector" TypeName="DatatypeInspector">
+    <Operation IsStatic="false" Label="Get Documentation" Name="getDocumentation">
+      <Input/>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getDocumentation();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Label" Name="getLabel">
+      <Input/>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getLabel();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Type Name" Name="getTypeName">
+      <Input/>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getTypeName();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Inspect" Name="inspect">
+      <Input>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output>
+        <Data Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().inspect(anyType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Inspect by Name" Name="inspectByName" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="fqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().inspectByName(correlatedXynaOrder, text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="24" IsStatic="true" Label="Inspect Datatype" Name="inspectDatatype">
+      <Input>
+        <Data ID="22" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output>
+        <Data ID="23" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return DatatypeInspectorImpl.inspectDatatype(anyType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="27" IsStatic="true" Label="Inspect Datatype by Name" Name="inspectDatatypeByName">
+      <Input>
+        <Data ID="25" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data ID="26" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return DatatypeInspectorImpl.inspectDatatypeByName(text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is reserved object" Name="isReservedObject">
+      <Input>
+        <Data Label="fqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data Label="is reserved" VariableName="isReserved">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().isReservedObject(text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="List All Variable Members" Name="listAllVariableMembers">
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().listAllVariableMembers();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="List All Variable Members With Params" Name="listAllVariableMembersWithParams">
+      <Input>
+        <Data Label="Inspection Parameter" ReferenceName="InspectionParameter" ReferencePath="xprc.xpce.datatype" VariableName="inspectionParameter"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().listAllVariableMembersWithParams(inspectionParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="List All Xyna Object Members" Name="listAllXynaObjectMembers">
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="Named XMOM Member" ReferenceName="NamedXMOMMember" ReferencePath="xprc.xpce.datatype" VariableName="namedXMOMMember"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().listAllXynaObjectMembers();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

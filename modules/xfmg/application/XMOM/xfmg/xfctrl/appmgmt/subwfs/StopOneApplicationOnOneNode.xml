@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="3" Label="Stop one application on one node" TypeName="StopOneApplicationOnOneNode" TypePath="xfmg.xfctrl.appmgmt.subwfs" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,openCatches,vScroll(286)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="2" Label="Stop one application on one node" Name="StopOneApplicationOnOneNode">
+    <Target RefID="21"/>
+    <Meta>
+      <Abstract.UID>895C7220-44FD-ED98-3CBC-324C624301DE</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="47" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext">
+        <Target RefID="12"/>
+        <Target RefID="32"/>
+      </Data>
+      <Data ID="41" Label="Stop application parameter" ReferenceName="StopApplicationParameter" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="stopApplicationParameter">
+        <Target RefID="6"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="0" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult">
+        <Source RefID="4"/>
+        <Source RefID="22"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="5" Label="Global Application Managment Services" ReferenceName="GlobalApplicationManagmentServices.GlobalApplicationManagmentServices" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="6"/>
+      <Target RefID="6"/>
+    </ServiceReference>
+    <Mappings ID="12" Label="Extract factory node and application">
+      <Source RefID="47"/>
+      <Target RefID="9"/>
+      <Target RefID="43"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="46" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext46"/>
+        <Source RefID="47"/>
+      </Input>
+      <Output>
+        <Data ID="13" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode13"/>
+        <Target RefID="9"/>
+      </Output>
+      <Output>
+        <Data ID="42" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application42"/>
+        <Target RefID="43"/>
+      </Output>
+      <Mapping>%1%~=%0%.factoryNode</Mapping>
+      <Mapping>%2%~=%0%.runtimeContext</Mapping>
+    </Mappings>
+    <Function ID="6" Label="Stop application">
+      <Source RefID="5"/>
+      <Source RefID="9"/>
+      <Source RefID="41"/>
+      <Source RefID="43"/>
+      <Target RefID="5"/>
+      <Invoke Operation="stopApplication" ServiceID="5">
+        <Source RefID="9"/>
+        <Source RefID="43"/>
+        <Source RefID="41"/>
+      </Invoke>
+      <Receive ServiceID="5"/>
+    </Function>
+    <Data ID="9" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode">
+      <Source RefID="12"/>
+      <Target RefID="6"/>
+      <Target RefID="19"/>
+    </Data>
+    <Mappings ID="19" Label="Build operation result: success">
+      <Source RefID="9"/>
+      <Target RefID="17"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="20" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode20"/>
+        <Source RefID="9"/>
+      </Input>
+      <Local>
+        <Data ID="36" Label="value" VariableName="value">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+          <Value>true</Value>
+        </Data>
+      </Local>
+      <Output>
+        <Data ID="18" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult18"/>
+        <Target RefID="17"/>
+      </Output>
+      <Mapping>%2%.factoryNode~=%0%</Mapping>
+      <Mapping>%2%.success~=%1%</Mapping>
+    </Mappings>
+    <Data ID="17" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult17">
+      <Source RefID="19"/>
+      <Target RefID="4"/>
+    </Data>
+    <Exception ID="21" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception">
+      <Source RefID="2"/>
+      <Target RefID="38"/>
+    </Exception>
+    <Data ID="27" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult27">
+      <Source RefID="28"/>
+      <Target RefID="22"/>
+    </Data>
+    <Data ID="33" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode33">
+      <Source RefID="32"/>
+      <Target RefID="28"/>
+    </Data>
+    <ServiceReference ID="37" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="38"/>
+      <Target RefID="38"/>
+    </ServiceReference>
+    <Data ID="39" Label="Exception Message" ReferenceName="ExceptionMessage" ReferencePath="core.exception" VariableName="exceptionMessage">
+      <Source RefID="38"/>
+      <Target RefID="28"/>
+    </Data>
+    <Data ID="43" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application43">
+      <Source RefID="12"/>
+      <Target RefID="6"/>
+    </Data>
+    <Data ID="44" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application44">
+      <Source RefID="32"/>
+    </Data>
+    <Assign ID="4">
+      <Source RefID="17"/>
+      <Target RefID="0"/>
+      <Copy>
+        <Source RefID="17"/>
+        <Target RefID="0"/>
+      </Copy>
+    </Assign>
+    <Catch ExceptionID="21" ID="23">
+      <Mappings ID="32" Label="Extract factory node and application">
+        <Source RefID="47"/>
+        <Target RefID="33"/>
+        <Target RefID="44"/>
+        <Meta>
+          <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="48" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext48"/>
+          <Source RefID="47"/>
+        </Input>
+        <Output>
+          <Data ID="30" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode30"/>
+          <Target RefID="33"/>
+        </Output>
+        <Output>
+          <Data ID="45" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application"/>
+          <Target RefID="44"/>
+        </Output>
+        <Mapping>%1%~=%0%.factoryNode</Mapping>
+        <Mapping>%2%~=%0%.runtimeContext</Mapping>
+      </Mappings>
+      <Function ID="38" Label="Get Exception Message">
+        <Source RefID="37"/>
+        <Source RefID="21"/>
+        <Target RefID="37"/>
+        <Target RefID="39"/>
+        <Invoke Operation="getExceptionMessage" ServiceID="37">
+          <Source RefID="21"/>
+        </Invoke>
+        <Receive ServiceID="37">
+          <Target RefID="39"/>
+        </Receive>
+      </Function>
+      <Mappings ID="28" Label="Build operation result: failed">
+        <Source RefID="33"/>
+        <Source RefID="39"/>
+        <Target RefID="27"/>
+        <Meta>
+          <FixedDetailOptions>FlatMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="24" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode24"/>
+          <Source RefID="33"/>
+        </Input>
+        <Input>
+          <Data ID="40" Label="Exception Message" ReferenceName="ExceptionMessage" ReferencePath="core.exception" VariableName="exceptionMessage40"/>
+          <Source RefID="39"/>
+        </Input>
+        <Local>
+          <Data ID="25" Label="value" VariableName="value25">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Local>
+        <Output>
+          <Data ID="26" Label="Remote Operation Result" ReferenceName="RemoteOperationResult" ReferencePath="xfmg.xfctrl" VariableName="remoteOperationResult26"/>
+          <Target RefID="27"/>
+        </Output>
+        <Mapping>%3%.errorMessage~=%1%.message</Mapping>
+        <Mapping>%3%.factoryNode~=%0%</Mapping>
+        <Mapping>%3%.success~=%2%</Mapping>
+      </Mappings>
+      <Assign ID="22">
+        <Source RefID="27"/>
+        <Target RefID="0"/>
+        <Copy>
+          <Source RefID="27"/>
+          <Target RefID="0"/>
+        </Copy>
+      </Assign>
+    </Catch>
+  </Operation>
+</Service>

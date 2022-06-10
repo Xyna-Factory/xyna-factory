@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete User" TypeName="DeleteUser" TypePath="xmcp.vpn.user" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Delete User" Name="DeleteUser">
+    <Input>
+      <Data ID="4" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser">
+        <Target RefID="215"/>
+        <Target RefID="234"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      <Exception ID="263" Label="Delete User Exception" ReferenceName="DeleteUserException" ReferencePath="xmcp.vpn.user" VariableName="deleteUserException263"/>
+      <Exception Label="Predefined Xyna Object" ReferenceName="PredefinedXynaObject" ReferencePath="xfmg.xopctrl" VariableName="predefinedXynaObject"/>
+      <Exception Label="Role Is Assigned" ReferenceName="RoleIsAssigned" ReferencePath="xfmg.xopctrl" VariableName="roleIsAssigned"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="19" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="207"/>
+      <Source RefID="244"/>
+      <Source RefID="239"/>
+      <Target RefID="207"/>
+      <Target RefID="244"/>
+      <Target RefID="239"/>
+    </ServiceReference>
+    <Mappings ID="215" Label="Extract User Name">
+      <Source RefID="4"/>
+      <Target RefID="213"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="214" Label="Advanced User" ReferenceName="AdvancedUser" ReferencePath="xmcp.vpn.user" VariableName="advancedUser214"/>
+        <Source RefID="4"/>
+      </Input>
+      <Output>
+        <Data ID="216" Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName216"/>
+        <Target RefID="213"/>
+      </Output>
+      <Mapping>%1%.name=%0%.userName</Mapping>
+    </Mappings>
+    <Function ID="239" Label="Get role from user (ACHTUNG! Muss VOR dem Löschen des Users aufgerufen werden!)">
+      <Source RefID="213"/>
+      <Source RefID="19"/>
+      <Target RefID="240"/>
+      <Target RefID="19"/>
+      <Meta>
+        <FixedWidth>325</FixedWidth>
+        <FixedHeight>46</FixedHeight>
+      </Meta>
+      <Invoke Operation="getRoleFromUser" ServiceID="19">
+        <Source RefID="213"/>
+      </Invoke>
+      <Receive ServiceID="19">
+        <Target RefID="240"/>
+      </Receive>
+    </Function>
+    <Function ID="207" Label="STEP (1): Delete user">
+      <Source RefID="19"/>
+      <Source RefID="213"/>
+      <Target RefID="19"/>
+      <Target RefID="208"/>
+      <Invoke Operation="deleteUser" ServiceID="19">
+        <Source RefID="213"/>
+      </Invoke>
+      <Receive ServiceID="19">
+        <Target RefID="208"/>
+      </Receive>
+    </Function>
+    <Choice ID="132" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="208"/>
+      <Input>
+        <Data ID="152" Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult152"/>
+        <Source RefID="208"/>
+      </Input>
+      <Case ID="130" Label="true" Premise="%0%.success">
+        <Assign ID="153"/>
+      </Case>
+      <Case ID="131" Label="false">
+        <Mappings ID="142" Label="Build Exception">
+          <Source RefID="213"/>
+          <Target RefID="246"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="225" Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName225"/>
+            <Source RefID="213"/>
+          </Input>
+          <Output>
+            <Exception Label="Delete User Exception" ReferenceName="DeleteUserException" ReferencePath="xmcp.vpn.user" VariableName="deleteUserException"/>
+            <Target RefID="246"/>
+          </Output>
+          <Mapping>%1%.exceptionDetails=concat("Der Benutzer \"",%0%.name,"\" konnte nicht gelöscht werden. Möglicherweise existiert der Benutzer nicht (mehr).")</Mapping>
+        </Mappings>
+        <Throw ExceptionID="246" ID="247" Label="Throw Delete User Exception">
+          <Source RefID="246"/>
+        </Throw>
+        <Assign ID="154"/>
+      </Case>
+    </Choice>
+    <Data ID="208" Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult208">
+      <Source RefID="207"/>
+      <Target RefID="132"/>
+    </Data>
+    <Data ID="213" Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName">
+      <Source RefID="215"/>
+      <Target RefID="207"/>
+      <Target RefID="142"/>
+      <Target RefID="239"/>
+    </Data>
+    <ServiceReference ID="233" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="234"/>
+      <Target RefID="234"/>
+    </ServiceReference>
+    <Function ID="244" Label="STEP (2): Delete role (user has to be deleted first)">
+      <Source RefID="19"/>
+      <Source RefID="240"/>
+      <Source RefID="245"/>
+      <Target RefID="19"/>
+      <Meta>
+        <FixedWidth>326.6999999999998</FixedWidth>
+        <FixedHeight>32</FixedHeight>
+      </Meta>
+      <Invoke Operation="deleteRole" ServiceID="19">
+        <Source RefID="240"/>
+        <Source RefID="245">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="19"/>
+    </Function>
+    <Function ID="234" Label="STEP (3): Delete Advanced User">
+      <Source RefID="233"/>
+      <Source RefID="4"/>
+      <Source RefID="235"/>
+      <Target RefID="233"/>
+      <Invoke Operation="delete" ServiceID="233">
+        <Source RefID="4"/>
+        <Source RefID="235">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="233"/>
+    </Function>
+    <Data ID="235" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter">
+      <Target RefID="234"/>
+      <Data Label="Including history" VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data Label="Backward" VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>keep</Value>
+        </Data>
+        <Data Label="Forward" VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>delete</Value>
+        </Data>
+      </Data>
+    </Data>
+    <Data ID="240" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole">
+      <Source RefID="239"/>
+      <Target RefID="244"/>
+    </Data>
+    <Data ID="245" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="const_DomainName">
+      <Target RefID="244"/>
+      <Data Label="name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>XYNA</Value>
+      </Data>
+    </Data>
+    <Exception ID="246" Label="Delete User Exception" ReferenceName="DeleteUserException" ReferencePath="xmcp.vpn.user" VariableName="deleteUserException246">
+      <Source RefID="142"/>
+      <Target RefID="247"/>
+    </Exception>
+    <Assign ID="3"/>
+  </Operation>
+</Service>

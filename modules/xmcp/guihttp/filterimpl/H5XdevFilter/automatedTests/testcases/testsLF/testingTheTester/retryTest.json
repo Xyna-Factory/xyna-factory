@@ -1,0 +1,44 @@
+{
+  "comment": "open up to 50 workflows. Select the first one with an fqn containing 99",
+  "operations": [
+    {
+      "operation": "call",
+      "requestType": "POST",
+      "url": "/runtimeContext/default%20workspace/xmom/workflows",
+      "payload": {"label":"New Workflow"},
+      "retries": {
+        "maxRetries": 50,
+        "variable": "!fqn_try!",
+        "retryCondition": [
+          {
+            "operation": "setFromVariable",
+            "targetVariable": "!fqn_cut!",
+            "sourceVariable": "!fqn_try!",
+            "path": "xmomItem/fqn",
+            "unquoteResult": true
+          },
+          {
+            "operation": "print",
+            "variable": "!fqn_cut!"
+          },
+          {
+            "operation": "assert",
+            "constraint": "contains",
+            "variable": "!fqn_try!",
+            "value": "99"
+          }
+        ]
+      }
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!fqn!",
+      "pathInResponse": "xmomItem/fqn",
+      "unquoteResult": true
+    },
+    {
+      "operation": "print",
+      "variable": "!fqn!"
+    }
+  ]
+}

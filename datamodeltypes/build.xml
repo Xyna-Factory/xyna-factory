@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build_datamodeltypes" default="build" basedir=".">
+
+    <property name="xyna.dataModelType.MIB" value="true" />
+    <property name="xyna.dataModelType.TR069" value="true" />
+    <property name="xyna.dataModelType.XSD" value="true" />
+
+    <import file="../installation/build/ant-xyna.xml" />
+
+    <property name="target.dir" value="${basedir}/deploy" />
+
+    <!-- ================================= 
+          target: build              
+         ================================= -->
+    <target name="build">
+
+        <xynaTarget name="buildMIB" if="xyna.dataModelType.MIB">
+            <ant antfile="build.xml" target="build" inheritAll="false" dir="MIB">
+                <property name="target.dir" value="${target.dir}/MIB" />
+                <property name="third_parties.dir" value="${third_parties.dir}" />
+            </ant>
+        </xynaTarget>
+
+        <xynaTarget name="buildTR069" if="xyna.dataModelType.TR069">
+            <ant antfile="build.xml" target="build" inheritAll="false" dir="TR069">
+                <property name="target.dir" value="${target.dir}/TR069" />
+                <property name="third_parties.dir" value="${third_parties.dir}" />
+            </ant>
+        </xynaTarget>
+
+        <xynaTarget name="buildXSD" if="xyna.dataModelType.XSD">
+            <ant antfile="build.xml" target="build" inheritAll="false" dir="XSD">
+                <property name="target.dir" value="${target.dir}/XSD" />
+                <property name="third_parties.dir" value="${third_parties.dir}" />
+            </ant>
+        </xynaTarget>
+
+    </target>
+
+
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: cleanup                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="cleanup">
+        <delete dir="${basedir}/classes" />
+    </target>
+
+
+</project>

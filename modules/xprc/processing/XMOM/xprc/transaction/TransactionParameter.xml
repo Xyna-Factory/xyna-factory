@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Transaction Parameter" TypeName="TransactionParameter" TypePath="xprc.transaction" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Transaction Safeguard Parameter" ReferenceName="TransactionSafeguardParameter" ReferencePath="xprc.transaction" VariableName="transactionSafeguardParameter">
+    <Meta>
+      <Documentation>Parameters protecting against misuse of transactions</Documentation>
+    </Meta>
+  </Data>
+  <Service Label="Transaction Parameter" TypeName="TransactionParameter">
+    <Operation IsStatic="false" Label="open" Name="open" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Transaction" ReferenceName="Transaction" ReferencePath="xprc.transaction" VariableName="transaction"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">throw new RuntimeException();
+}
+
+protected Transaction openTx(String txType, java.util.Map&lt;String, String&gt; specifics, XynaOrderServerExtension correlatedXynaOrder) throws XynaException {
+  Transaction tx = new Transaction();
+  TransactionSafeguardParameter tsp = getTransactionSafeguardParameter();
+  if (tsp == null) {
+    tsp = new TransactionSafeguardParameter();
+  }
+  DisposalStrategy ds = tsp.getDisposalStrategy();
+  if (ds == null) {
+    ds = new OnRootOrderTermination();
+  }
+  com.gip.xyna.xprc.xpce.transaction.parameter.DisposalStrategyParameter disposal = null;
+  if (ds instanceof OnGarbageCollection) {
+    disposal = new com.gip.xyna.xprc.xpce.transaction.parameter.OnGarbageCollection(tx);
+  } else if (ds instanceof OnOrderTermination) {
+    disposal = new com.gip.xyna.xprc.xpce.transaction.parameter.OnOrderTermination(correlatedXynaOrder);
+    //wichtig, ansonsten ist gecached, dass das nicht passieren muss
+    correlatedXynaOrder.setInformStateTransitionListeners(true);
+  } else if (ds instanceof OnRootOrderTermination) {
+    disposal = new com.gip.xyna.xprc.xpce.transaction.parameter.OnOrderTermination(correlatedXynaOrder.getRootOrder());
+    //wichtig, ansonsten ist gecached, dass das nicht passieren muss
+    correlatedXynaOrder.getRootOrder().setInformStateTransitionListeners(true);
+  } else if (ds instanceof TimeToLive) {
+    TimeToLive ttl =  (TimeToLive)ds;
+    disposal = new com.gip.xyna.xprc.xpce.transaction.parameter.TTL(ttl.getTimeout_ms(), ttl.getRefreshOnInteraction());
+  }
+  OperationPrevention op = tsp.getOperationPrevention();
+  if (op == null) {
+    op = new OperationPrevention();
+  }
+  Set&lt;com.gip.xyna.xprc.xpce.transaction.parameter.TransactionOperation&gt; operations = new HashSet&lt;&gt;();
+  if (op.getOperations() != null) {
+    for (TransactionOperation txOp : op.getOperations()) {
+      if (txOp instanceof Commit) {
+        operations.add(com.gip.xyna.xprc.xpce.transaction.parameter.TransactionOperation.COMMIT);
+      } else if (txOp instanceof Rollback) {
+        operations.add(com.gip.xyna.xprc.xpce.transaction.parameter.TransactionOperation.ROLLBACK);
+      } else if (txOp instanceof End) {
+        operations.add(com.gip.xyna.xprc.xpce.transaction.parameter.TransactionOperation.END);
+      }
+    }
+  }
+  com.gip.xyna.xprc.xpce.transaction.parameter.OperationPrevention prevention = new com.gip.xyna.xprc.xpce.transaction.parameter.OperationPrevention(operations, op.getThrowOnViolation());
+  com.gip.xyna.xprc.xpce.transaction.parameter.SafeguardParameter sp = new com.gip.xyna.xprc.xpce.transaction.parameter.SafeguardParameter(disposal, prevention);
+  com.gip.xyna.xprc.xpce.transaction.parameter.TransactionParameter tp = new com.gip.xyna.xprc.xpce.transaction.parameter.TransactionParameter(txType, sp ,specifics);
+
+  com.gip.xyna.xprc.xpce.transaction.TransactionManagement txMgmt = com.gip.xyna.XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getTransactionManagement();
+  Long txId = txMgmt.openTransaction(tp);
+
+  tx.setTransactionId(txId);
+  return tx;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

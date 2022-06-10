@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "20.7.2020",
+    "updated": "20.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "deployment_items"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.GetDeploymen!": "xmcp.factorymanager.deploymentitems.GetDeploymentItem"
+        },
+        {
+          "!WORKFLOW!": "WORKFLOW"
+        },
+        {
+          "!autotest.generated.ARANDOM.Deployment_items_ARAN!": "autotest.generated.!rnd!.Deployment_items_!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.DeploymentIt!": "xmcp.factorymanager.deploymentitems.DeploymentItemId"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!Workspace!": "Workspace"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "name": "!autotest.generated.ARANDOM.Deployment_items_ARAN!",
+            "type": "!WORKFLOW!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "name": "!default_workspace!",
+            "revision": -1,
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.GetDeploymen!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]",
+      "targetVariable": "!readName1!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "fieldNotInResult",
+      "fieldName": "errorMessage",
+      "basePath": ""
+    }
+  ]
+}

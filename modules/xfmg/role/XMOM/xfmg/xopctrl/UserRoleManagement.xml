@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="User Role Management" TypeName="UserRoleManagement" TypePath="xfmg.xopctrl" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>UserRoleManagementImpl.jar</Libraries>
+  <Service Label="User Role Management" TypeName="UserRoleManagement">
+    <Operation IsStatic="true" Label="Change password" Name="changePassword">
+      <Input>
+        <Data Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName"/>
+        <Data Label="Old Password" ReferenceName="Password" ReferencePath="base" VariableName="password"/>
+        <Data Label="New Password" ReferenceName="Password" ReferencePath="base" VariableName="password47"/>
+      </Input>
+      <Output>
+        <Data Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+        <Exception Label="Password Restriction Violation" ReferenceName="PasswordRestrictionViolation" ReferencePath="xfmg.xopctrl" VariableName="passwordRestrictionViolation"/>
+        <Exception Label="User Is Locked" ReferenceName="UserIsLocked" ReferencePath="xfmg.xopctrl" VariableName="userIsLocked"/>
+        <Exception Label="User Authentication Failed" ReferenceName="UserAuthenticationFailed" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationFailed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.changePassword(userName, password, password47);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create right" Name="createRight">
+      <Input>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+        <Data Label="Documentation EN" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+        <Data Label="Documentation DE" ReferenceName="Text" ReferencePath="base" VariableName="text68"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Naming Convention Violated" ReferenceName="NamingConventionViolated" ReferencePath="xfmg.xopctrl" VariableName="namingConventionViolated"/>
+        <Exception Label="Name Contains Invalid Character" ReferenceName="NameContainsInvalidCharacter" ReferencePath="xfmg.xopctrl" VariableName="nameContainsInvalidCharacter"/>
+        <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">UserRoleManagementImpl.createRight(userAuthenticationRight, text, text68);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create role" Name="createRole">
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Data Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName"/>
+        <Data Label="Description" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Domain Does Not Exist" ReferenceName="DomainDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="domainDoesNotExist"/>
+        <Exception Label="Name Contains Invalid Character" ReferenceName="NameContainsInvalidCharacter" ReferencePath="xfmg.xopctrl" VariableName="nameContainsInvalidCharacter"/>
+        <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">UserRoleManagementImpl.createRole(userAuthenticationRole, domainName, text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create user" Name="createUser">
+      <Input>
+        <Data Label="Credentials" ReferenceName="Credentials" ReferencePath="base" VariableName="credentials"/>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+      </Input>
+      <Output>
+        <Data Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+        <Exception Label="Password Restriction Violation" ReferenceName="PasswordRestrictionViolation" ReferencePath="xfmg.xopctrl" VariableName="passwordRestrictionViolation"/>
+        <Exception Label="Name Contains Invalid Character" ReferenceName="NameContainsInvalidCharacter" ReferencePath="xfmg.xopctrl" VariableName="nameContainsInvalidCharacter"/>
+        <Exception Label="User Already Exists" VariableName="userAlreadyExists1" ReferenceName="UserAlreadyExists" ReferencePath="xfmg.xopctrl.exceptions"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.createUser(credentials, userAuthenticationRole);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete right" Name="deleteRight">
+      <Input>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+        <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">UserRoleManagementImpl.deleteRight(userAuthenticationRight);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete role" Name="deleteRole">
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Data Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Predefined Xyna Object" ReferenceName="PredefinedXynaObject" ReferencePath="xfmg.xopctrl" VariableName="predefinedXynaObject"/>
+        <Exception Label="Role Is Assigned" ReferenceName="RoleIsAssigned" ReferencePath="xfmg.xopctrl" VariableName="roleIsAssigned"/>
+        <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">UserRoleManagementImpl.deleteRole(userAuthenticationRole, domainName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete user" Name="deleteUser">
+      <Input>
+        <Data Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName"/>
+      </Input>
+      <Output>
+        <Data Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="Predefined User" ReferenceName="PredefinedXynaObject" ReferencePath="xfmg.xopctrl" VariableName="predefinedUser"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.deleteUser(userName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get All Rights" Name="getAllRights">
+      <Input>
+        <Data Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getAllRights(locale);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get All Rights From Role" Name="getAllRightsFromRole">
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Data Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+      </Output>
+      <Throws>
+        <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getAllRightsFromRole(userAuthenticationRole, domainName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get All Roles" Name="getAllRoles">
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getAllRoles();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get current role" Name="getCurrentRole" RequiresXynaOrder="true">
+      <Meta>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+        <Documentation>Returns:
+- the current role when it can be determined (usually the case when the Order has been startet by a user)
+- an instance of UserAuthenticationRole with the field "role" set to null when the role can't be determined (e. g. when started via a Trigger, Cron or Batch Process)</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getCurrentRole(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get current user" Name="getCurrentUser" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getCurrentUser(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Description of Right" Name="getDescriptionOfRight">
+      <Input>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+        <Data Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale"/>
+      </Input>
+      <Output>
+        <Data Label="User Authentication Right Description" ReferenceName="UserAuthenticationRightDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRightDescription"/>
+      </Output>
+      <Throws>
+        <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getDescriptionOfRight(userAuthenticationRight, locale);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Description of Role" Name="getDescriptionOfRole">
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Data Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName"/>
+      </Input>
+      <Output>
+        <Data Label="User Authentication Role Description" ReferenceName="UserAuthenticationRoleDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRoleDescription"/>
+      </Output>
+      <Throws>
+        <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getDescriptionOfRole(userAuthenticationRole, domainName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get lock state" Name="getLockState">
+      <Meta>
+        <Abstract.UID>8547E67A-CE6C-AE25-DE1D-BD5B8767618E</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName"/>
+      </Input>
+      <Output>
+        <Data Label="Lock State" ReferenceName="LockState" ReferencePath="base" VariableName="lockState"/>
+      </Output>
+      <Throws>
+        <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getLockState(userName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get role from user" Name="getRoleFromUser">
+      <Input>
+        <Data Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName"/>
+      </Input>
+      <Output>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+      </Output>
+      <Throws>
+        <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.getRoleFromUser(userName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Grant right to role" Name="grantRightToRole">
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+        <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+        <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">UserRoleManagementImpl.grantRightToRole(userAuthenticationRole, userAuthenticationRight);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Revoke right from role" Name="revokeRightFromRole">
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+        <Exception Label="Right Does Not Exist" ReferenceName="RightDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="rightDoesNotExist"/>
+        <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">UserRoleManagementImpl.revokeRightFromRole(userAuthenticationRole, userAuthenticationRight);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set Description of Role" Name="setDescriptionOfRole">
+      <Input>
+        <Data Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Data Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName"/>
+        <Data Label="User Authentication Role Description" ReferenceName="UserAuthenticationRoleDescription" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRoleDescription"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xopctrl.UserRoleManagementImpl.setDescriptionOfRole(userAuthenticationRole, domainName, userAuthenticationRoleDescription);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set lock state" Name="setLockState">
+      <Meta>
+        <Abstract.UID>ED306AAC-A4A4-634D-A69F-BD88AEEBC141</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName"/>
+        <Data Label="Lock State" ReferenceName="LockState" ReferencePath="base" VariableName="lockState53"/>
+      </Input>
+      <Output>
+        <Data Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+        <Exception Label="Predefined User" ReferenceName="PredefinedXynaObject" ReferencePath="xfmg.xopctrl" VariableName="predefinedUser"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.setLockState(userName, lockState53);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set  password" Name="setPassword">
+      <Meta>
+        <Abstract.UID>0F2E6427-4456-2A16-0140-48432F961C4E</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="User Name" ReferenceName="UserName" ReferencePath="xfmg.xopctrl" VariableName="userName"/>
+        <Data Label="Password" ReferenceName="Password" ReferencePath="base" VariableName="password"/>
+      </Input>
+      <Output>
+        <Data Label="User Change Result" ReferenceName="UserChangeResult" ReferencePath="xfmg.xopctrl" VariableName="userChangeResult"/>
+      </Output>
+      <Throws>
+        <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+        <Exception Label="Password Restriction Violation" ReferenceName="PasswordRestrictionViolation" ReferencePath="xfmg.xopctrl" VariableName="passwordRestrictionViolation"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UserRoleManagementImpl.setPassword(userName, password);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "PMOD812CatchInStepFunction.json",
+	"PMOD812CatchInGlobal.json"
+  ]
+}

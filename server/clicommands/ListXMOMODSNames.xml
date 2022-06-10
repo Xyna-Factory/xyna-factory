@@ -1,0 +1,26 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="listxmomodsnames" Groups="Persistence" Description="Show the mapping of XMOM Storables to corresponding ODS storables including extensions."/>
+  <Argument Name="applicationName" Description="Show only entries for this application" Optional="true" />
+  <Argument Name="versionName" Description="Show only entries for this version (requires applicationName parameter)" Optional="true" />
+  <Argument Name="fqDatatypeName" Description="Show only entries for this XMOM storable" Optional="true" />
+    <Argument Name="workspaceName" Description="Show only entries for this workspace" Optional="true" />
+  <BoolOption Name="c" LongName="showcolumns" Description="Shows column names" Optional="true" />
+  <BoolOption Name="v" LongName="verbose" Description="Shows additional information" Optional="true" />
+</XynaCommandLineCommand>

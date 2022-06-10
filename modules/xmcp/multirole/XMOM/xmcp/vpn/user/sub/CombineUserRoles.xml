@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Combine User Roles" TypeName="CombineUserRoles" TypePath="xmcp.vpn.user.sub" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Combine User Roles" Name="CombineUserRoles">
+    <Input>
+      <Data ID="9" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole">
+        <Target RefID="10"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="6" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Foreach ID="10">
+      <Source RefID="9"/>
+      <Target RefID="12"/>
+      <InputList RefID="9">
+        <Data ID="8" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole8">
+          <Target RefID="7"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="12">
+        <Data ID="11" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight11">
+          <Source RefID="7"/>
+        </Data>
+      </OutputList>
+      <Function ID="7" Label="Get All Rights From Role">
+        <Source RefID="6"/>
+        <Source RefID="8"/>
+        <Source RefID="13"/>
+        <Target RefID="6"/>
+        <Target RefID="11"/>
+        <Invoke Operation="getAllRightsFromRole" ServiceID="6">
+          <Source RefID="8"/>
+          <Source RefID="13">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="6">
+          <Target RefID="11"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Data ID="12" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight12">
+      <Source RefID="10"/>
+      <Target RefID="18"/>
+    </Data>
+    <Data ID="13" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="const_DomainName">
+      <Target RefID="7"/>
+      <Data ID="14" Label="name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>XYNA</Value>
+      </Data>
+    </Data>
+    <ServiceReference ID="17" Label="Permission Service Group" ReferenceName="PermissionServiceGroup.PermissionServiceGroup" ReferencePath="xmcp.vpn.user">
+      <Source RefID="18"/>
+      <Target RefID="18"/>
+    </ServiceReference>
+    <Function ID="18" Label="Remove Duplicate Rights">
+      <Source RefID="17"/>
+      <Source RefID="12"/>
+      <Target RefID="17"/>
+      <Target RefID="19"/>
+      <Invoke Operation="removeDuplicateRights" ServiceID="17">
+        <Source RefID="12"/>
+      </Invoke>
+      <Receive ServiceID="17">
+        <Target RefID="19"/>
+      </Receive>
+    </Function>
+    <Data ID="19" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight10">
+      <Source RefID="18"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="19"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="19">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,12 @@
+{
+    "testseries": [
+        "applications_001/testseries.json",
+        "applications_004/testseries.json",
+        "applications_005/testseries.json",
+        "applications_006/testseries.json",
+        "applications_008/testseries.json",
+        "applications_009/testseries.json",
+        "applications_010/testseries.json",
+        "applications_012/testseries.json"
+    ]
+}

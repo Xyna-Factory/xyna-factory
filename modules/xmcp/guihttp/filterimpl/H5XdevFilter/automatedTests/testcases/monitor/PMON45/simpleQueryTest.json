@@ -1,0 +1,140 @@
+{
+  "meta":
+  {
+    "name": "simpleQueryTest",
+	"description": "Execute a workflow containing a service (loaded from app) and open audit",
+	"created": "18.03.2020",
+	"updated": "18.03.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON45.SimpleQuery",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 3,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+    {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list",
+        "expectedValue": "2"
+    },
+	{
+		"operation": "set",
+		"variable": "!stepId!",
+		"value": "step5"
+	},
+    {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "info/$list[id=!stepId!]/inputs",
+        "expectedValue": "3"
+    },
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=!stepId!]/status",
+      "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	},
+	{
+		"operation": "invoke",
+		"functionName": "assertQuery",
+		"mapInput": {
+			"!stepId!": "!stepId!",
+			"!rootTypeFqn!": "xmcp.h5x.regression.PMON45.Storable1",
+			"!filterConditionFormula!": "(%0%.name==\"Test\")",
+			"!maxObjects!": -1,
+			"!queryHistory!": "false",
+			"!firstSortCriterion!": "%0%.name",
+			"!firstSortCriterionReverse!": "false"
+		}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!limit!",
+	  "pathInResponse": "workflow/areas/$list[id=step0]/items/$list[id=!stepId!]/limit"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!limit!",
+	  "value": "-1"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!queryHistory!",
+	  "pathInResponse": "workflow/areas/$list[id=step0]/items/$list[id=!stepId!]/queryHistory"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!queryHistory!",
+	  "value": "false"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!queryFilterExpression!",
+	  "pathInResponse": "workflow/areas/$list[id=step0]/items/$list[id=!stepId!]/areas/$list[id=queryFilterArea5]/items/$list[0]/expression",
+      "unquoteResult": true
+	},
+	{
+		"operation": "convertToJson",
+		"variable": "!queryFilterExpression!"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!queryFilterExpression!",
+	  "value": "%0%.name==\"Test\""
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!queryFilterInputFqn!",
+	  "pathInResponse": "workflow/areas/$list[id=step0]/items/$list[id=!stepId!]/areas/$list[id=queryFilterArea5]/items/$list[0]/input/$list[0]/fqn",
+      "unquoteResult": true
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!queryFilterInputFqn!",
+	  "value": "xmcp.h5x.regression.PMON45.Storable1"
+	}
+  ]
+}

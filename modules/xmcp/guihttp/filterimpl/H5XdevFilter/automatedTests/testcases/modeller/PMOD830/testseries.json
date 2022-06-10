@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "datatypeWithQuotes.json",
+	"exceptionWithQuotes.json",
+	"servicegroupWithQuotes.json"
+  ]
+}

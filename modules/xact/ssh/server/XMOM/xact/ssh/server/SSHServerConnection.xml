@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SSH Server Connection" TypeName="SSHServerConnection" TypePath="xact.ssh.server" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SSHServerConnectionImpl.jar</Libraries>
+  <SharedLibraries>sshServer</SharedLibraries>
+  <Data Label="Session Id" VariableName="sessionId">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="SSHServer Connection" TypeName="SSHServerConnection">
+    <Operation IsStatic="false" Label="Read All Until Timeout" Name="readAllUntilTimeout">
+      <Input>
+        <Data Label="Timeout" ReferenceName="RelativeDate" ReferencePath="base.date" VariableName="relativeDate"/>
+      </Input>
+      <Output>
+        <Data Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().readAllUntilTimeout(relativeDate);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Read Line" Name="readLine">
+      <Input>
+        <Data Label="Timeout" ReferenceName="RelativeDate" ReferencePath="base.date" VariableName="relativeDate"/>
+      </Input>
+      <Output>
+        <Data Label="Response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().readLine(relativeDate);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Send" Name="send">
+      <Input>
+        <Data Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().send(command);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Send Document" Name="sendDocument">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().sendDocument(document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Send Line" Name="sendLine">
+      <Input>
+        <Data Label="Command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().sendLine(command);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

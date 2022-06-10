@@ -1,0 +1,25 @@
+{
+  "operations":
+  [
+    {
+      "operation": "set",
+      "variable": "!test!",
+      "value": "val"
+    },
+    {
+      "ignore": true,
+      "operation": "set",
+      "variable": "!test!",
+      "value": "val2"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!test!",
+      "value": "val"
+    },
+    {
+      "ignore": true
+    }
+  ]
+}

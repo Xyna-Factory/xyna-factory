@@ -1,0 +1,26 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="addfactorynode" Groups="Node Management" Description="Add a new factory node."/>
+  <Argument Name="name" Description="The unique name of the factory node to be added"/>
+  <Argument Name="comment" Description="Description of the factory node" Optional="true"/>
+  <Argument Name="instanceId" Description="The id of the factory instance (e.g. 5, if installed in xyna_005)"/>
+  <Argument Name="linkchanneltype" Description="The type of the remote access implementation (RMI)"/>
+  <Argument Name="linkchannelparameter" MultipleValues="true" Description="Initialization parameters specific to the linkchanneltype (RMI->hostname, port, keystorefile, keystoretype, keystorepass, truststorefile, truststoretype, truststorepass)"/>
+  <Argument Name="linkprofiles" MultipleValues="true" Description="Link profiles to activate (Infrastructure, OrderExecution, RuntimeContextManagement, FileManagement, Monitoring)"/>
+</XynaCommandLineCommand>

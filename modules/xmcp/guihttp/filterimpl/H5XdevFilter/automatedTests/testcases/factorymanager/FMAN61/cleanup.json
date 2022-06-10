@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "25.3.2021",
+    "updated": "25.3.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.Workspace!": "xmcp.factorymanager.rtcmanager.Workspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.DeleteApplication!": "xmcp.factorymanager.rtcmanager.DeleteApplicationDefinition"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.SetDependentRTCs!": "xmcp.factorymanager.rtcmanager.SetDependentRTCs"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.DeleteRTA!": "xmcp.factorymanager.rtcmanager.DeleteRTA"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.DeleteRTARequest!": "xmcp.factorymanager.rtcmanager.DeleteRTARequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.DeleteWorkspace!": "xmcp.factorymanager.rtcmanager.DeleteWorkspace"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.DeleteWorkspaceRe!": "xmcp.factorymanager.rtcmanager.DeleteWorkspaceRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!": "xmcp.factorymanager.rtcmanager.ApplicationDefinitionDetails"
+        },
+        {
+          "!FMAN61_-_App_with_Dependencies!": "FMAN61 - App with Dependencies"
+        },
+        {
+          "!FMAN61_-_Workspace_with_Dependencies!": "FMAN61 - Workspace with Dependencies"
+        },
+        {
+          "!1!": "1"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!": "xmcp.factorymanager.rtcmanager.WorkspaceDetails"
+        },
+        {
+          "!independent!": "independent"
+        },
+        {
+          "!Workspace!": "Workspace"
+        },
+        {
+          "!FMAN61_-_Dependent_Workspace_A!": "FMAN61 - Dependent Workspace A"
+        },
+        {
+          "!FMAN61_-_Dependent_Workspace_B!": "FMAN61 - Dependent Workspace B"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.Dependency!": "xmcp.factorymanager.rtcmanager.Dependency"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.RuntimeApplicatio0!": "xmcp.factorymanager.rtcmanager.RuntimeApplicationDetails"
+        }
+      ],
+      "operation": "multiSet"
+    },
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!"
+            },
+            "name": "!FMAN61_-_App_with_Dependencies!",
+            "workspaceName": "!default_workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.DeleteApplication!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+	{
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!"
+            },
+            "name": "!default_workspace!"
+          },
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.rtcmanager.Dependency!"
+                },
+                "dependencyType": "!independent!",
+                "hierarchyLevel": 0,
+                "rtcType": "!Workspace!",
+                "runtimeContext": {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!"
+                  },
+                  "isActive": false,
+                  "name": "!FMAN61_-_Dependent_Workspace_B!",
+                  "state": "!OK!"
+                }
+              }
+            ],
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.Dependency!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.SetDependentRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.DeleteRTARequest!"
+            },
+            "runtimeApplication": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.RuntimeApplicatio0!"
+              },
+              "factoryNode": "!local!",
+              "isLocal": true,
+              "name": "!FMAN61_-_App_with_Dependencies!",
+              "version": "!1!"
+            },
+            "stopRunningOrders": false
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.DeleteRTA!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.DeleteWorkspaceRe!"
+            },
+            "stopRunningOrders": true,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!"
+              },
+              "name": "!FMAN61_-_Workspace_with_Dependencies!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.DeleteWorkspace!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.DeleteWorkspaceRe!"
+            },
+            "stopRunningOrders": true,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!"
+              },
+              "name": "!FMAN61_-_Dependent_Workspace_A!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.DeleteWorkspace!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.DeleteWorkspaceRe!"
+            },
+            "stopRunningOrders": true,
+            "workspace": {
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!"
+              },
+              "name": "!FMAN61_-_Dependent_Workspace_B!"
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.DeleteWorkspace!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    }
+  ]
+}

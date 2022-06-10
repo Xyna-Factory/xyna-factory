@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "1.7.2020", 
+    "updated": "1.7.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!xmcp.h5x.regression.xbe192!": "xmcp.h5x.regression.xbe192"
+        }, 
+        {
+          "!DT!": "MaxLengthRestrictionDT"
+        }, 
+        {
+          "!xml!": "xml"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "set",
+	  "variable": "!regressionApp!",
+	  "value": "!applicationName!%252F!applicationVersion!"
+	},
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!regressionApp!/xmom/datatypes/!xmcp.h5x.regression.xbe192!/!DT!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!regressionApp!/xmom/datatypes/!xmcp.h5x.regression.xbe192!/!DT!/!xml!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "current",
+      "targetVariable": "!readXml!",
+	  "unquoteResult": false
+    },
+    {
+	  "operation": "selectFromXml",
+	  "inputVariable": "!readXml!",
+	  "outputVariable": "!readAtt!",
+	  "xpath": ".//{http://www.gip.com/xyna/xdev/xfractmod}MaxLength",
+	  "attribute": "UtilizationPolicy",
+	  "jsonDecode": true
+	},
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!readAtt!",
+      "value": "xmomPersistence.onStore"
+    }
+  ]
+}

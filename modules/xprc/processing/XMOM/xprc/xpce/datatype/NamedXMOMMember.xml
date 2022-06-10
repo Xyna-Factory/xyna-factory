@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Named XMOM Member" TypeName="NamedXMOMMember" TypePath="xprc.xpce.datatype" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Label" VariableName="label">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Var Name" VariableName="varName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Documentation" VariableName="documentation">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="FQ XML Name" VariableName="fQXMLName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Named XMOMMember" TypeName="NamedXMOMMember">
+    <Operation IsStatic="false" Label="Get Documentation as Text" Name="getDocumentationAsText">
+      <Input/>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Text(documentation);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Label as Text" Name="getLabelAsText">
+      <Input/>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Text(label);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Member Object" Name="getMemberObject">
+      <Input/>
+      <Output>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return anyType;
+} 
+
+private GeneralXynaObject anyType;
+private com.gip.xyna.xprc.xfractwfe.generation.DOM dom;
+
+public void setAnyType(GeneralXynaObject anyType) {
+  this.anyType = anyType;
+}
+
+public void setDOM(com.gip.xyna.xprc.xfractwfe.generation.DOM dom) {
+  this.dom = dom;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Is Instance Of" Name="isInstanceOf">
+      <Input>
+        <Data Label="FQ XML Name" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data Label="Result" VariableName="result">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+        System.out.println("isInstanceOf: " + text.getText());
+  if (this.dom != null) {
+    com.gip.xyna.xprc.xfractwfe.generation.DOM currentDOM = dom;
+    while (currentDOM != null) {
+      System.out.println("currentDOM: " + currentDOM.getOriginalFqName());
+System.out.println("is equal: " + currentDOM.getOriginalFqName().equals(text.getText()));
+      if (currentDOM.getOriginalFqName().equals(text.getText())) {
+        System.out.println("returning true");
+        return true;
+      }
+      currentDOM = currentDOM.getSuperClassGenerationObject();
+    }
+  }
+  return false;
+  
+} catch (Exception e) {
+  throw new RuntimeException(e);
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is reserved object" Name="isReservedObject">
+      <Input/>
+      <Output>
+        <Data Label="is reserved" VariableName="isReserved">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.isReservedServerObjectByFqOriginalName(this.fQXMLName);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Set Member Object" Name="setMemberObject">
+      <Input>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">this.anyType = anyType;
+  try {
+    parentObject.set(varName, anyType);
+  } catch( Exception e ) {
+    throw new RuntimeException(e);
+  } 
+}
+
+private GeneralXynaObject parentObject;
+
+public void setParentObject(GeneralXynaObject parentObject) {
+  this.parentObject = parentObject;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

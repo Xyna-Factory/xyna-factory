@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.CreateWorkspace!": "xmcp.factorymanager.rtcmanager.CreateWorkspace"
+        },
+        {
+          "!emptystring!": ""
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.CreateWorkspaceRe!": "xmcp.factorymanager.rtcmanager.CreateWorkspaceRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetWorkspaces!": "xmcp.factorymanager.rtcmanager.GetWorkspaces"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.CreateWorkspaceRe!"
+            },
+            "name": "!emptystring!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.CreateWorkspace!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!readName1!",
+      "unquoteResult": true
+    }
+  ]
+}

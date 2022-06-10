@@ -1,0 +1,31 @@
+[
+  {
+    "docu": "Does not work for Workflow input. Does not work for steps that are inside foreach/were retried. Result is unquoted. Expects lastResponse to be a GetAuditResponse.",
+    "type": "function",
+	"functionName": "readStepVariableValueByIndex",
+	"input": ["!infoListIndex!", "!variableAreaName!", "!indexInArea!" ,"!pathInVariable!"],
+    "output": ["!result!"],
+	"operations":
+	[
+	  {
+	    "operation": "read",
+		"targetVariable": "!variableComplete!",
+		"pathInResponse": "info/$list[!infoListIndex!]/!variableAreaName![!indexInArea!]"
+	  },
+	  {
+	    "operation": "invoke",
+		"functionName": "stringToJson",
+		"mapInput": {"!stringToConvert!" : "!variableComplete!" },
+		"mapOutput": { "!jsonResult!" : "!variableAsJson!" }
+	  },
+	  {
+	    "operation" : "setFromVariable",
+		"targetVariable": "!result!",
+		"sourceVariable": "!variableComplete!",
+		"path": "!pathInVariable!",
+		"unquoteResult": true
+	  }
+	]
+  }
+  
+]

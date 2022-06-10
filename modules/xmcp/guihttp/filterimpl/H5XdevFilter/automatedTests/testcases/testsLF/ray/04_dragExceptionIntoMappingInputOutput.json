@@ -1,0 +1,107 @@
+{
+  "meta":
+  {
+    "name": "dragExceptionIntoMappingInputOutput",
+	"description": "Erstellt einen Exceptiontypen und fügt ihn einem Mapping als Input und Output hinzu",
+	"created": "12.11.2019",
+	"updated": "12.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd2!"
+	},
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd3!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd4!"
+	},
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!exceptionPath!": "autoTest.generated.!rnd1!"},
+		{"!exceptionLabel!": "generatedException_!rnd2!"},
+		{"!workflowPath!": "autoTest.generated.workflows.!rnd3!"},
+		{"!workflowLabel!": "generatedWorkflow_!rnd4!"},
+		{"!workspaceName!": "default workspace"},
+		{"!workspaceEscaped!": "!workspaceName!"}
+	  ]
+	},
+    {
+	  "operation": "modification",
+	  "variable": "!workspaceEscaped!",
+	  "modification":{"operation": "urlencode"}
+	},
+    {
+	  "operation": "invoke",
+	  "functionName": "createException",
+	  "mapInput": 
+	  {
+	  "!path!" : "!exceptionPath!", 
+	  "!label!" : "!exceptionLabel!", 
+	  "!workspace!" : "!workspaceName!"
+	  },
+	  "mapOutput": {"!name!" : "!exceptionName!"}
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": {"!url!": "!url!"}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"mapping","label":"Mapping"},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!mappingStep!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/id",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!mappingStep!_input/insert",
+	  "payload": {"index":-1,"content":{"type":"exception","label":"!exceptionLabel!","fqn":"!exceptionPath!.!exceptionName!","isList":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/!mappingStep!_output/insert",
+	  "payload": {"index":-1,"content":{"type":"exception","label":"!exceptionLabel!","fqn":"!exceptionPath!.!exceptionName!","isList":false},"revision":"!revision!"}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!revision!",
+	  "pathInResponse": "revision"
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/save",
+	  "payload": {"revision":"!revision!","path":"!workflowPath!","label":"!workflowLabel!"}
+	}
+  ]
+}

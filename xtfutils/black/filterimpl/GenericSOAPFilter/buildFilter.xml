@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+ <!-- CAUTION: Do not attempt to launch any target from here. Launch them from build.xml instead. -->
+<project name="buildScripts" default="deploy" basedir=".">
+
+	<!--import file="${root.dir}/installation/build/ant-xyna.xml" /-->
+
+
+	<fail message="Unsupported Java version: ${java.version}. Expected 1.5.0 or 1.6.0">
+		<condition>
+			<not>
+				<or>
+					<contains string="${java.version}" substring="1.5.0" />
+					<contains string="${java.version}" substring="1.6.0" />
+				</or>
+			</not>
+		</condition>
+	</fail>
+
+	<condition property="server.available">
+		<and>
+			<isset property="server.host" />
+			<isset property="server.userid" />
+			<isset property="server.password" />
+			<isset property="server.path" />
+		</and>
+	</condition>
+	
+	<condition property="service.definition.available">
+	   <available file="${base.lib.dir}/xyna/serviceDefinition.jar" />
+	</condition>
+
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${common.xyna.lib.dir}/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+
+	<!-- ================================= 
+                target: deploy             
+               ================================= -->
+	<!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
+	<target name="deploy" depends="build" description="Deploy jar file to xyna server.">
+		<fail message="No server properties specified. Unable to deploy." unless="server.available" />
+		<!-- clean directory on xyna server -->
+		<!--sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="rm -rf ${server.mdm.path}" trust="true" failonerror="false" /-->
+		<!-- create directory on xyna server -->
+		<sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="mkdir -p ${server.mdm.path}" trust="true" failonerror="false" />
+		<!-- copy xml file to server -->
+		<if>
+			<equals arg1="${server.transmitXml}" arg2="yes" />
+			<then>
+				<echo message="Copying XML file ${local.xml.dir}/${server.mdm.xml.filename} to server" />
+				<scp todir="${server.userid}:${server.password}@${server.host}:${server.mdm.xml.path}" trust="true" verbose="true">
+					<fileset dir="${local.xml.dir}">
+						<include name="${server.mdm.xml.filename}" />
+					</fileset>
+				</scp>
+			</then>
+		</if>
+		<!-- copy libraries to xyna server -->
+		<scp todir="${server.userid}:${server.password}@${server.host}:${server.mdm.path}" trust="true" verbose="true">
+			<fileset dir="${target.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</scp>
+		<!-- deploy datatype -->
+		<sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="cd ${server.path}; ./xynafactory.sh ${deploy.template}" trust="true" failonerror="true" />
+	</target>
+
+	<!-- ================================= 
+	         target: build             
+	        ================================= -->
+	<!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
+	<target name="build" depends="cleanup, genCodeClass" description="Build jar file with java implementation of services.">
+		<delete dir="${basedir}/classes" />
+		<mkdir dir="${basedir}/classes" />
+		<javac debug="on" encoding="iso8859-1" includeantruntime="false" fork="yes" srcdir="${basedir}/src" destdir="${basedir}/classes">
+			<classpath path="${basedir}/classes" />
+			<!-- custom libraries to be specified in template project -->
+			<classpath refid="libraries" />
+			<classpath>
+				<fileset dir="${base.lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<mkdir dir="${target.dir}" />
+		<if>
+			<equals arg1="${service.definition.available}" arg2="true" />
+			<then>
+				<unzip src="${base.lib.dir}/xyna/serviceDefinition.jar" dest="${basedir}/tmp"/>
+			  	<copy todir="${basedir}/classes">
+					<fileset dir="${basedir}/tmp">
+				    	<include name="**/*.class" />
+				  	</fileset>
+				</copy>
+				<delete dir="${basedir}/tmp" />
+			</then>
+		</if>
+		
+		<jar destfile="${target.dir}/${project.name}.jar">
+			<manifest>
+				<attribute name="Vendor" value="${vendor.name}" />
+				<attribute name="Version" value="${release.number}" />
+				<attribute name="Build-Date" value="${timestamp}" />
+			</manifest>
+			<fileset dir="${basedir}/classes">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="${basedir}">
+				<include name="Exceptions.xml" />
+			</fileset>
+			<fileset dir="${basedir}/src">
+				<include name="**/*.xml" />
+			</fileset>
+		</jar>
+
+		<!-- copy libraries to target.dir -->
+		<copy todir="${target.dir}">
+			<fileset dir="${base.lib.dir}">
+				<include name="*.*" />
+				<exclude name="xyna/*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${target.dir}">
+			<fileset dir="${local.xml.dir}">
+				<include name="${server.mdm.xml.filename}" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- ================================= 
+          target: updateMDMandXynaFactoryJar
+         ================================= -->
+	<!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
+	<target name="updateMDMandXynaFactoryJar" description="Receive new mdm.jar and xynafactory.jar from Xyna Factory">
+		<fail message="No server properties specified. Unable to deploy." unless="server.available" />
+		<!-- build mdm.jar -->
+		<sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="cd ${server.path}; ./xynafactory.sh buildmdmjar" trust="true" failonerror="true" />
+		<!-- copy mdm.jar from xyna server -->
+		<scp file="${server.userid}:${server.password}@${server.host}:${server.path}/mdm.jar" todir="${base.lib.dir}/xyna" trust="true" verbose="true" />
+		<!-- copy xynafactory.jar from xyna server -->
+		<scp file="${server.userid}:${server.password}@${server.host}:${server.path}/lib/xynafactory.jar" todir="${common.xyna.lib.dir}" trust="true" verbose="true" />
+	</target>
+	
+	<!-- ================================= 
+          target: updateServiceDefinition
+         ================================= -->
+	<!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
+	<target name="updateServiceDefinition" description="Receive new serviceDefinitionLibs.jar from Xyna Factory">
+		<fail message="No server properties specified. Unable to deploy." unless="server.available" />
+		<!-- build mdm.jar -->
+	    <tstamp>
+	       <format property="current.millis" pattern="ssSSS"/>
+	    </tstamp>
+		<sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="cd ${server.path}; ./xynafactory.sh buildservicedefinitionjar -fqDatatypeName ${fqclassname} -targetDirectory ${project.name}_${current.millis}" trust="true" failonerror="true" />
+		<!-- generate lib to temp folder -->
+		<scp file="${server.userid}:${server.password}@${server.host}:${server.path}/${project.name}_${current.millis}/serviceDefinition.jar" todir="${base.lib.dir}/xyna" trust="true" verbose="true" />
+		<!-- delete temp folder -->
+		<sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="rm -rf ${server.path}/${project.name}_${current.millis}" trust="true" failonerror="true" />
+	</target>	
+	
+	<!-- - - - - - - - - - - - - - - - - -
+	                   target: genCodeClass
+	                  - - - - - - - - - - - - - - - - - -->
+	<!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
+	<target name="genCodeClass" description="Generate code class for exceptions.">
+    <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
+			<sysproperty key="BLACK_SERVER_HOME" value="${exception.xml.dir}" />
+			<classpath refid="libraries" />
+			<classpath>
+				<fileset dir="${base.lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="Exceptions.xml" />
+			<arg value="${basedir}/src" />
+			<arg value="y" />
+		</java>
+	</target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: cleanup                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="cleanup">
+		<delete dir="${target.dir}" failonerror="false" />
+	</target>
+</project>

@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "1.7.2020", 
+    "updated": "1.7.2020"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!xmcp.h5x.regression.xbe192!": "xmcp.h5x.regression.xbe192"
+        }, 
+        {
+          "!MandatoryRestrictionDT!": "MandatoryRestrictionDT"
+        }, 
+        {
+          "!xml!": "xml"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "functionName": "getRegressionApplication", 
+      "mapInput": {}, 
+      "mapOutput": {
+        "!applicationName!": "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!", 
+        "!url!": "!url!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "set", 
+      "value": "!applicationName!%252F!applicationVersion!", 
+      "variable": "!regressionApp!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!regressionApp!/xmom/datatypes/!xmcp.h5x.regression.xbe192!/!MandatoryRestrictionDT!"
+    }, 
+    {
+      "operation": "call", 
+      "requestType": "GET", 
+      "url": "/runtimeContext/!regressionApp!/xmom/datatypes/!xmcp.h5x.regression.xbe192!/!MandatoryRestrictionDT!/!xml!"
+    }, 
+    {
+      "operation": "read", 
+      "pathInResponse": "current", 
+      "targetVariable": "!readXml!", 
+      "unquoteResult": false
+    }, 
+    {
+      "attribute": "UtilizationPolicy", 
+      "inputVariable": "!readXml!", 
+      "jsonDecode": true, 
+      "operation": "selectFromXml", 
+      "outputVariable": "!readAtt!", 
+      "xpath": ".//{http://www.gip.com/xyna/xdev/xfractmod}Mandatory"
+    }, 
+    {
+      "constraint": "equals", 
+      "operation": "assert", 
+      "value": "xmomPersistence.onStore", 
+      "variable": "!readAtt!"
+    }
+  ]
+}

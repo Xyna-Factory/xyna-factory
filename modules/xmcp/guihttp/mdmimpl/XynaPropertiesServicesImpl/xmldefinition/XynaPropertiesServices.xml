@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Xyna Properties Services" TypeName="XynaPropertiesServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>XynaPropertiesServicesImpl.jar</Libraries>
+  <Service Label="Xyna Properties Services" TypeName="XynaPropertiesServices">
+    <Operation IsStatic="true" Label="Add entry" Name="addEntry">
+      <Input>
+        <Data Label="Xyna Property details" ReferenceName="XynaPropertyDetails" ReferencePath="xmcp.factorymanager.xynaProperties" VariableName="xynaPropertyDetails"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">XynaPropertiesServicesImpl.addEntry(xynaPropertyDetails);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get entry details" Name="getEntryDetails">
+      <Input>
+        <Data Label="Xyna Properties list entry" ReferenceName="XynaPropertiesListEntry" ReferencePath="xmcp.factorymanager.xynaProperties" VariableName="xynaPropertiesListEntry"/>
+      </Input>
+      <Output>
+        <Data Label="Xyna Property details" ReferenceName="XynaPropertyDetails" ReferencePath="xmcp.factorymanager.xynaProperties" VariableName="xynaPropertyDetails"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return XynaPropertiesServicesImpl.getEntryDetails(xynaPropertiesListEntry);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get list entries" Name="getListEntries">
+      <Input>
+        <Data Label="Search criteria" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Xyna Properties list entry" ReferenceName="XynaPropertiesListEntry" ReferencePath="xmcp.factorymanager.xynaProperties" VariableName="xynaPropertiesListEntry"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return XynaPropertiesServicesImpl.getListEntries(tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

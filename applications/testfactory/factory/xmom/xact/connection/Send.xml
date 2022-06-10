@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Send" TypeName="Send" TypePath="xact.connection" Version="1.8">
+  <Meta>
+    <IsXynaComponent>true</IsXynaComponent>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,hScroll(50)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Send" Name="Send">
+    <Input>
+      <Data ID="5" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document">
+        <Target RefID="8"/>
+        <Target RefID="77"/>
+        <Target RefID="133"/>
+      </Data>
+      <Data ID="50" Label="Managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection">
+        <Target RefID="56"/>
+        <Target RefID="96"/>
+        <Target RefID="153"/>
+        <Target RefID="169"/>
+        <Target RefID="186"/>
+        <Target RefID="234"/>
+        <Target RefID="302"/>
+      </Data>
+      <Data ID="11" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter">
+        <Target RefID="10"/>
+        <Target RefID="16"/>
+      </Data>
+      <Data ID="83" Label="Device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType">
+        <Target RefID="96"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="109" IsList="true" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Connection closed unexpectedly" ReferenceName="ConnectionClosedUnexpectedly" ReferencePath="xact.connection" VariableName="connectionClosedUnexpectedly"/>
+      <Exception ID="323" Label="Send exception" ReferenceName="SendException" ReferencePath="xact.connection" VariableName="sendException323"/>
+    </Throws>
+    <Parallel ID="88">
+      <Mappings ID="8" Label="Extract document type">
+        <Source RefID="5"/>
+        <Target RefID="6"/>
+        <Meta>
+          <FixedDetailOptions>FlatMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="7" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document7"/>
+          <Source RefID="5"/>
+        </Input>
+        <Output>
+          <Data ID="9" Label="Document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType9"/>
+          <Target RefID="6"/>
+        </Output>
+        <Mapping>%1%=%0%.documentType</Mapping>
+      </Mappings>
+      <Choice ID="10" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="11"/>
+        <Target RefID="23"/>
+        <Input>
+          <Data ID="84" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter84"/>
+          <Source RefID="11">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Case ID="86" Label="true" Premise="%0%==null">
+          <Mappings ID="56" Label="Extract connection parameter">
+            <Source RefID="50"/>
+            <Target RefID="33"/>
+            <Meta>
+              <FixedDetailOptions>FlatMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="55" Label="Managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection55"/>
+              <Source RefID="50"/>
+            </Input>
+            <Output>
+              <Data ID="85" Label="Connection parameter" ReferenceName="ConnectionParameter" ReferencePath="xact.connection" VariableName="connectionParameter"/>
+              <Target RefID="33"/>
+            </Output>
+            <Mapping>%1%=%0%.connectionParameter</Mapping>
+          </Mappings>
+          <Mappings ID="66" Label="Extract default send parameter">
+            <Source RefID="33"/>
+            <Target RefID="22"/>
+            <Meta>
+              <FixedDetailOptions>FlatMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="65" Label="Connection parameter" ReferenceName="ConnectionParameter" ReferencePath="xact.connection" VariableName="connectionParameter65"/>
+              <Source RefID="33"/>
+            </Input>
+            <Output>
+              <Data ID="67" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter67"/>
+              <Target RefID="22"/>
+            </Output>
+            <Mapping>%1%=%0%.defaultSendParameter</Mapping>
+          </Mappings>
+          <Assign ID="191">
+            <Source RefID="22"/>
+            <Target RefID="23"/>
+            <Copy>
+              <Source RefID="22"/>
+              <Target RefID="23"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="87" Label="false">
+          <Mappings ID="16" Label="Identity mapping">
+            <Source RefID="11"/>
+            <Target RefID="14"/>
+            <Meta>
+              <FixedDetailOptions>FlatMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="15" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter15"/>
+              <Source RefID="11"/>
+            </Input>
+            <Output>
+              <Data ID="17" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter017"/>
+              <Target RefID="14"/>
+            </Output>
+            <Mapping>%1%=%0%</Mapping>
+          </Mappings>
+          <Assign ID="192">
+            <Source RefID="14"/>
+            <Target RefID="23"/>
+            <Copy>
+              <Source RefID="14"/>
+              <Target RefID="23"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+    </Parallel>
+    <Data ID="6" Label="Document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType">
+      <Source RefID="8"/>
+      <Target RefID="77"/>
+      <Target RefID="96"/>
+    </Data>
+    <Data ID="14" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter0">
+      <Source RefID="16"/>
+      <Target RefID="192"/>
+    </Data>
+    <Data ID="22" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter22">
+      <Source RefID="66"/>
+      <Target RefID="191"/>
+    </Data>
+    <Data ID="23" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter2223">
+      <Source RefID="10"/>
+      <Source RefID="191"/>
+      <Source RefID="192"/>
+      <Target RefID="96"/>
+    </Data>
+    <Data ID="33" Label="Connection parameter" ReferenceName="ConnectionParameter" ReferencePath="xact.connection" VariableName="connectionParameter33">
+      <Source RefID="56"/>
+      <Target RefID="66"/>
+    </Data>
+    <ServiceReference ID="76" Label="document type" ReferenceName="DocumentType.DocumentType" ReferencePath="xact.templates">
+      <Source RefID="77"/>
+      <Target RefID="77"/>
+    </ServiceReference>
+    <Function ID="77" Label="partition commands">
+      <Source RefID="76"/>
+      <Source RefID="6"/>
+      <Source RefID="5"/>
+      <Target RefID="76"/>
+      <Target RefID="80"/>
+      <Invoke Operation="partitionCommands" ServiceID="76">
+        <Source RefID="6"/>
+        <Source RefID="5"/>
+      </Invoke>
+      <Receive ServiceID="76">
+        <Target RefID="80"/>
+      </Receive>
+    </Function>
+    <Data ID="80" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command">
+      <Source RefID="77"/>
+      <Target RefID="100"/>
+      <Target RefID="153"/>
+      <Target RefID="302"/>
+    </Data>
+    <ServiceReference ID="95" Label="single send" ReferenceName="SingleSend" ReferencePath="xact.connection">
+      <Source RefID="96"/>
+      <Target RefID="96"/>
+    </ServiceReference>
+    <Function ID="133" Label="mark buffer as read">
+      <Source RefID="132"/>
+      <Source RefID="5"/>
+      <Target RefID="132"/>
+      <Invoke Operation="markReadBufferAsSend" ServiceID="132">
+        <Source RefID="5"/>
+      </Invoke>
+      <Receive ServiceID="132"/>
+    </Function>
+    <Foreach ID="100">
+      <Source RefID="80"/>
+      <Target RefID="102"/>
+      <InputList RefID="80">
+        <Data ID="99" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command99">
+          <Target RefID="96"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="102">
+        <Data ID="101" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple63">
+          <Source RefID="96"/>
+          <Source RefID="200"/>
+          <Source RefID="146"/>
+        </Data>
+      </OutputList>
+      <Function ID="96" Label="single send">
+        <Source RefID="95"/>
+        <Source RefID="99"/>
+        <Source RefID="50"/>
+        <Source RefID="6"/>
+        <Source RefID="83"/>
+        <Source RefID="23"/>
+        <Target RefID="95"/>
+        <Target RefID="101"/>
+        <Target RefID="145"/>
+        <Target RefID="199"/>
+        <Meta>
+          <FixedDetailOptions>openCatches</FixedDetailOptions>
+        </Meta>
+        <Invoke Operation="SingleSend" ServiceID="95">
+          <Source RefID="99"/>
+          <Source RefID="50"/>
+          <Source RefID="6"/>
+          <Source RefID="83"/>
+          <Source RefID="23">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="95">
+          <Target RefID="101"/>
+        </Receive>
+        <Catch ExceptionID="199" ID="203">
+          <Function ID="302" Label="Build &quot;Connection closed unexpectedly&quot; exception">
+            <Source RefID="152"/>
+            <Source RefID="50"/>
+            <Source RefID="80"/>
+            <Source RefID="199"/>
+            <Target RefID="152"/>
+            <Target RefID="303"/>
+            <Invoke Operation="buildConnectionClosedUnexpectedlyException" ServiceID="152">
+              <Source RefID="50"/>
+              <Source RefID="80"/>
+              <Source RefID="199"/>
+            </Invoke>
+            <Receive ServiceID="152">
+              <Target RefID="303"/>
+            </Receive>
+          </Function>
+          <Function ID="234" Label="Clear responses">
+            <Source RefID="152"/>
+            <Source RefID="50"/>
+            <Target RefID="152"/>
+            <Invoke Operation="clearResponses" ServiceID="152">
+              <Source RefID="50"/>
+            </Invoke>
+            <Receive ServiceID="152"/>
+          </Function>
+          <Exception ID="281" Label="Connection closed unexpectedly" ReferenceName="ConnectionClosedUnexpectedly" ReferencePath="xact.connection" VariableName="connectionClosedUnexpectedly"/>
+          <Exception ID="282" Label="Connection closed unexpectedly" ReferenceName="ConnectionClosedUnexpectedly" ReferencePath="xact.connection"/>
+          <Exception ID="283" Label="Connection closed unexpectedly" ReferenceName="ConnectionClosedUnexpectedly" ReferencePath="xact.connection"/>
+          <Exception ID="284" Label="Connection closed unexpectedly" ReferenceName="ConnectionClosedUnexpectedly" ReferencePath="xact.connection"/>
+          <Throw ExceptionID="303" ID="272" Label="Throw Connection closed unexpectedly">
+            <Source RefID="303"/>
+          </Throw>
+          <Assign ID="200"/>
+        </Catch>
+        <Catch ExceptionID="145" ID="151">
+          <Function ID="153" Label="Build exception">
+            <Source RefID="152"/>
+            <Source RefID="50"/>
+            <Source RefID="80"/>
+            <Source RefID="145"/>
+            <Target RefID="152"/>
+            <Target RefID="156"/>
+            <Invoke Operation="buildException" ServiceID="152">
+              <Source RefID="50"/>
+              <Source RefID="80"/>
+              <Source RefID="145"/>
+            </Invoke>
+            <Receive ServiceID="152">
+              <Target RefID="156"/>
+            </Receive>
+          </Function>
+          <Function ID="169" Label="Clear responses">
+            <Source RefID="50"/>
+            <Source RefID="152"/>
+            <Target RefID="152"/>
+            <Invoke Operation="clearResponses" ServiceID="152">
+              <Source RefID="50"/>
+            </Invoke>
+            <Receive ServiceID="152"/>
+          </Function>
+          <Throw ExceptionID="156" ID="162" Label="Throw Send exception">
+            <Source RefID="156"/>
+          </Throw>
+          <Assign ID="146"/>
+        </Catch>
+      </Function>
+    </Foreach>
+    <Data ID="102" IsList="true" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple63102">
+      <Source RefID="100"/>
+      <Target RefID="2"/>
+    </Data>
+    <ServiceReference ID="132" Label="document" ReferenceName="Document.Document" ReferencePath="xact.templates">
+      <Source RefID="133"/>
+      <Target RefID="133"/>
+    </ServiceReference>
+    <Exception ID="145" Label="DetectedError" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError145">
+      <Source RefID="96"/>
+      <Target RefID="153"/>
+    </Exception>
+    <ServiceReference ID="152" Label="managed connection" ReferenceName="ManagedConnection.ManagedConnection" ReferencePath="xact.connection">
+      <Source RefID="153"/>
+      <Source RefID="169"/>
+      <Source RefID="186"/>
+      <Source RefID="234"/>
+      <Source RefID="302"/>
+      <Target RefID="153"/>
+      <Target RefID="169"/>
+      <Target RefID="186"/>
+      <Target RefID="234"/>
+      <Target RefID="302"/>
+    </ServiceReference>
+    <Exception ID="156" Label="send exception" ReferenceName="SendException" ReferencePath="xact.connection" VariableName="sendException">
+      <Source RefID="153"/>
+      <Target RefID="162"/>
+    </Exception>
+    <Function ID="186" Label="Clear responses">
+      <Source RefID="152"/>
+      <Source RefID="50"/>
+      <Target RefID="152"/>
+      <Invoke Operation="clearResponses" ServiceID="152">
+        <Source RefID="50"/>
+      </Invoke>
+      <Receive ServiceID="152"/>
+    </Function>
+    <Exception ID="199" Label="ConnectionAlreadyClosed" ReferenceName="ConnectionAlreadyClosed" ReferencePath="xact.connection" VariableName="connectionAlreadyClosed199">
+      <Source RefID="96"/>
+      <Target RefID="302"/>
+    </Exception>
+    <Exception ID="303" Label="Connection closed unexpectedly" ReferenceName="ConnectionClosedUnexpectedly" ReferencePath="xact.connection" VariableName="connectionClosedUnexpectedly303">
+      <Source RefID="302"/>
+      <Target RefID="272"/>
+    </Exception>
+    <Assign ID="2">
+      <Source RefID="102"/>
+      <Target RefID="109"/>
+      <Copy>
+        <Source RefID="102"/>
+        <Target RefID="109"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

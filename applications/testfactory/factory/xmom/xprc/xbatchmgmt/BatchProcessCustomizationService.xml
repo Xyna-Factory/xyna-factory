@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="BatchProcessCustomizationService" TypeName="BatchProcessCustomizationService" TypePath="xprc.xbatchmgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Libraries>BatchProcessCustomizationServiceImpl.jar</Libraries>
+  <Service Label="BatchProcessCustomizationService" TypeName="BatchProcessCustomizationService">
+    <Operation IsStatic="true" Label="Add Counter Fields" Name="addCounterFields" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Batch Process Counter Fields" ReferenceName="BatchProcessCounterFields" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessCounterFields"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="No Batch Order Exception" ReferenceName="NoBatchOrderException" ReferencePath="xprc.xbatchmgmt" VariableName="noBatchOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">BatchProcessCustomizationServiceImpl.addCounterFields(correlatedXynaOrder, batchProcessCounterFields);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Batch Process Id" Name="getBatchProcessId" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Batch Process Id" ReferenceName="BatchProcessId" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessId"/>
+      </Output>
+      <Throws>
+        <Exception Label="No Batch Order Exception" ReferenceName="NoBatchOrderException" ReferencePath="xprc.xbatchmgmt" VariableName="noBatchOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return BatchProcessCustomizationServiceImpl.getBatchProcessId(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Counter Fields" Name="getCounterFields" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Batch Process Counter Fields" ReferenceName="BatchProcessCounterFields" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessCounterFields"/>
+      </Output>
+      <Throws>
+        <Exception Label="No Batch Order Exception" ReferenceName="NoBatchOrderException" ReferencePath="xprc.xbatchmgmt" VariableName="noBatchOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return BatchProcessCustomizationServiceImpl.getCounterFields(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Custom Fields" Name="getCustomFields" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Batch Process Custom Fields" ReferenceName="BatchProcessCustomFields" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessCustomFields"/>
+      </Output>
+      <Throws>
+        <Exception Label="No Batch Order Exception" ReferenceName="NoBatchOrderException" ReferencePath="xprc.xbatchmgmt" VariableName="noBatchOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return BatchProcessCustomizationServiceImpl.getCustomFields(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Runtime Information" Name="getRuntimeInformation" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Batch Process Runtime Information" ReferenceName="BatchProcessRuntimeInformation" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessRuntimeInformation"/>
+      </Output>
+      <Throws>
+        <Exception Label="No Batch Order Exception" ReferenceName="NoBatchOrderException" ReferencePath="xprc.xbatchmgmt" VariableName="noBatchOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return BatchProcessCustomizationServiceImpl.getRuntimeInformation(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set Counter Fields" Name="setCounterFields" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Batch Process Counter Fields" ReferenceName="BatchProcessCounterFields" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessCounterFields"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="No Batch Order Exception" ReferenceName="NoBatchOrderException" ReferencePath="xprc.xbatchmgmt" VariableName="noBatchOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">BatchProcessCustomizationServiceImpl.setCounterFields(correlatedXynaOrder, batchProcessCounterFields);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set Custom Fields" Name="setCustomFields" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Batch Process Custom Fields" ReferenceName="BatchProcessCustomFields" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessCustomFields"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="No Batch Order Exception" ReferenceName="NoBatchOrderException" ReferencePath="xprc.xbatchmgmt" VariableName="noBatchOrderException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">BatchProcessCustomizationServiceImpl.setCustomFields(correlatedXynaOrder, batchProcessCustomFields);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Start Batch Process" Name="startBatchProcess">
+      <Input>
+        <Data Label="Batch Process Input" ReferenceName="BatchProcessInput" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessInput4"/>
+      </Input>
+      <Output>
+        <Data Label="Batch Process Id" ReferenceName="BatchProcessId" ReferencePath="xprc.xbatchmgmt" VariableName="batchProcessId"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xbatchmgmt.BatchProcessCustomizationServiceImpl.startBatchProcess(batchProcessInput4);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

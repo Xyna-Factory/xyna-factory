@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="NotifySender" TypeName="NotifySender" TypePath="xact.dhcp.client.wf" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="NotifySender" Name="NotifySender">
+    <Input>
+      <Data ID="6" Label="DHCP Packet" ReferenceName="DHCPPacket" ReferencePath="xact.dhcp" VariableName="dHCPPacket">
+        <Target RefID="10"/>
+        <Target RefID="13"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Duplicate Correlation ID" ReferenceName="DuplicateCorrelationID" ReferencePath="xprc.synchronization" VariableName="duplicateCorrelationID"/>
+    </Throws>
+    <Mappings ID="13" Label="Mapping">
+      <Source RefID="6"/>
+      <Target RefID="11"/>
+      <Meta>
+        <FixedDetailOptions>FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="12" Label="DHCP Packet" ReferenceName="DHCPPacket" ReferencePath="xact.dhcp" VariableName="dHCPPacket12"/>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="14" Label="Correlation ID" ReferenceName="CorrelationId" ReferencePath="xprc.synchronization" VariableName="correlationId14"/>
+        <Target RefID="11"/>
+      </Output>
+      <Mapping>%1%.id=%0%.xid</Mapping>
+    </Mappings>
+    <ServiceReference ID="9" Label="synchronizationService" ReferenceName="Synchronization.SynchronizationService" ReferencePath="xprc.synchronization">
+      <Source RefID="10"/>
+      <Target RefID="10"/>
+    </ServiceReference>
+    <Function ID="10" Label="Notify">
+      <Source RefID="9"/>
+      <Source RefID="6"/>
+      <Source RefID="11"/>
+      <Target RefID="9"/>
+      <Invoke Operation="notifyWaitingOrder" ServiceID="9">
+        <Source RefID="11"/>
+        <Source RefID="6">
+          <Meta>
+            <ExpectedType>xact.dhcp.DHCPPacket</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9"/>
+    </Function>
+    <Data ID="11" Label="Correlation ID" ReferenceName="CorrelationId" ReferencePath="xprc.synchronization" VariableName="correlationId">
+      <Source RefID="13"/>
+      <Target RefID="10"/>
+    </Data>
+    <Assign/>
+  </Operation>
+</Service>

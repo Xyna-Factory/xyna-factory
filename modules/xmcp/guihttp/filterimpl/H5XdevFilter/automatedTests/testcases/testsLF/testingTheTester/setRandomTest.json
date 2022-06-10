@@ -1,0 +1,35 @@
+{
+  "meta":
+  {
+    "name": "testSetRandom",
+	"description": "Testet die setRandom operation",
+	"created": "13.11.2019",
+	"updated": "13.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd!",
+	  "length": 4
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rndseed1!",
+	  "length": 24,
+	  "seed": "SomeSeed24"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rndseed2!",
+	  "length": 24,
+	  "seed": "SomeSeed24"
+	},
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!rndseed1!",
+      "value": "!rndseed2!"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir">
+        <path location="${basedir}/../../../../" />
+    </pathconvert>
+
+    <import file="${root.dir}/installation/build/ant-xyna.xml" />
+
+    <property name="project.name" value="common" />
+    <property name="src.dir" value="src" />
+    <property name="classes.dir" value="classes" />
+    <property name="build.dir" value="build" />
+    <property name="target.dir" value="${basedir}/build" />
+    <property name="workspacename" value="HTTP" />
+    <property name="revision.dir" value="../revisions/rev_25" />
+
+    <property name="target.dir" value="${classes.dir}" />
+        
+    <property name="lib.dir" value="lib" />
+    <property name="lib.mdm.dir" value="${lib.dir}" />
+    <property name="mdm.xml.path" value="../XMOM" />
+
+    <property file="${basedir}/server.properties" />
+    <property file="${root.dir}/server.properties" />
+
+    <condition property="server.available">
+        <and>
+            <isset property="server.host" />
+            <isset property="server.userid" />
+            <isset property="server.password" />
+            <isset property="server.path" />
+        </and>
+    </condition>
+
+    <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/XMOM" />
+
+    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+
+    <target name="build" description="Compiles" depends="resolve">
+        <delete dir="${classes.dir}" />
+        <mkdir dir="${target.dir}" />
+        <javac debug="on" includeantruntime="false" encoding="ISO-8859-1" fork="true" srcdir="${src.dir}" destdir="${target.dir}">
+            <classpath>
+                <fileset dir="${lib.dir}">
+                    <include name="**/*.jar" />
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="resolve">
+        <resolver:resolve>
+            <resolver:dependencies pomRef="pom"/>
+            <resolver:remoterepos refid="xyna.repository"/>
+            <resolver:files refid="files" dir="${lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
+        </resolver:resolve>
+        <loadLicenses targetDir="${lib.dir}" />
+        <!-- delete generated-resources ? -->
+    </target>
+
+    <target name="update-mdm" description="Receive new mdm.jar from Xyna Factory">
+        <fail message="No server properties specified. Unable to build-mdm-jar" unless="server.available" />
+        <!-- cp xml from XMOM -->
+        <scp file="${server.userid}:${server.password}@${server.host}:${server.mdm.xml.path}/xact/http/*" todir="${mdm.xml.path}/xact/http/" trust="true" verbose="true">
+        </scp>
+        <!-- build mdm.jar -->
+        <sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="cd ${server.path}; ./xynafactory.sh buildmdmjar -workspaceName '${workspacename}' -r" trust="true" failonerror="true" />
+        <!-- copy mdm.jar from xyna server -->
+        <scp file="${server.userid}:${server.password}@${server.host}:${server.path}/mdm.jar" todir="${lib.mdm.dir}" trust="true" verbose="true" />
+    </target>
+
+</project>

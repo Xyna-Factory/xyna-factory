@@ -1,0 +1,26 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="listtriggers" Groups="Monitoring" Description="Lists all triggers and triggerinstances, their deployment status and start parameters."/>
+  <BoolOption Name="v" LongName="verbose" Description="Print possible start parameter combinations." Optional="true"/>
+  <BoolOption Name="e" LongName="error" Description="Print stacktrace information in the case of errors." Optional="true"/>
+  <BoolOption Name="o" LongName="oldFormat" Description="Prints in old format, options v and e were recognized." Optional="true"/>
+  <BoolOption Name="i" LongName="instancesOnly" Description="Print informations for instances only." Optional="true"/>
+  <BoolOption Name="s" LongName="instanceStartParameter" Description="Print informations for instance startparameters." Optional="true"/>
+  <BoolOption Name="r" LongName="sortByRuntimeContext" Description="Orders by runtime context name instead of trigger name." Optional="true"/>
+</XynaCommandLineCommand>

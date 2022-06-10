@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetOrderType!": "xmcp.factorymanager.ordertypes.GetOrderType"
+        },
+        {
+          "!Workspace!": "Workspace"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!autotest.generated!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.OrderTypeName!": "xmcp.factorymanager.ordertypes.OrderTypeName"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetDestinations!": "xmcp.factorymanager.ordertypes.GetDestinations"
+        },
+        {
+          "!xmcp.factorymanager.ordertypes.GetOrdertypeCapac!": "xmcp.factorymanager.ordertypes.GetOrdertypeCapacities"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "name": "!default_workspace!",
+            "revision": -1,
+            "type": "!Workspace!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.ordertypes.OrderTypeName!"
+            },
+            "name": "!autotest.generated!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.ordertypes.GetOrderType!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "errorMessage",
+      "targetVariable": "!output!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "contains",
+      "variable": "!output!",
+      "value": "not found"
+    }
+  ]
+}

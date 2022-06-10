@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "throwSimpleExceptionTest.json",
+	"exceptionWithMember.json",
+	"exceptionWithManyMembers.json"
+  ]
+}

@@ -1,0 +1,1406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<antlib xmlns:oracle="antlib:oracle">
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: instance_level_security
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="instance_level_security" description="">
+    <attribute name="action" description="one out of 'create' or 'drop'" />
+    <attribute name="oc4j.userid" />
+    <attribute name="oc4j.password" />
+    <attribute name="oc4j.instance" default="${as.oc4j}" />
+    <attribute name="as.userid" default="${as.userid}" />
+    <attribute name="as.password" default="${as.password}" />
+    <sequential>
+      <exec executable="chmod" failonerror="yes">
+        <arg line="u+x ${basedir}/bin/instance_level_security.sh" />
+      </exec>
+      <exec executable="${basedir}/bin/instance_level_security.sh">
+        <arg line="@{action} @{oc4j.userid} @{oc4j.password} @{as.userid} @{as.password} @{oc4j.instance}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: sqlplus
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="sqlplus" description="Execute a sql script via sqlplus">
+    <attribute name="user" />
+    <attribute name="password" />
+    <attribute name="db.host" default="${db.host}" />
+    <attribute name="db.port" default="${db.port}" />
+    <attribute name="db.servicename"
+               default="${db.servicename}"
+               description="Service name of the database. Mostly equal to sid." />
+    <attribute name="connectstring"
+               default="@{db.host}:@{db.port}/@{db.servicename}"
+               description="In case that service name is not set on maschine use this string to connect" />
+    <attribute name="sysdba" default="" />
+    <attribute name="path" default="${basedir}" />
+    <attribute name="file" description="SQL file to execute" />
+    <attribute name="parameter"
+               default=""
+               description="Parameters for the sql script" />
+    <attribute name="nls.lang" default="${nls_lang}" />
+    <attribute name="output"
+               default=""
+               description="Filename, where the output is redirected to" />
+    <attribute name="executable" default="${oracle.home}/bin/sqlplus" description="Full path to sqlplus executable" />
+    <attribute name="quiet" default="true" description="Indicate of diagnostic messages should be shown" />
+    <sequential>
+      <fail message="File &quot;@{path}/@{file}&quot; doesn't exist">
+        <condition>
+          <not>
+            <available file="@{path}/@{file}" type="file" />
+          </not>
+        </condition>
+      </fail>
+      <if>
+        <not>
+          <equals arg1="@{quiet}" arg2="true" />
+        </not>
+        <then>
+          <echo message="@{executable} @{user}/***@@&quot;@{connectstring}&quot; @{sysdba} @@@{file} @{parameter}" />
+          <echo message="=============== &quot;@{path}/@{file}&quot; ===============" />
+        </then>
+      </if>
+      <var name="sqlplus.exec.result" unset="true" />
+      <var name="sqlplus.exec.out" unset="true" />
+      <exec executable="@{executable}"
+            dir="@{path}"
+            resultproperty="sqlplus.exec.result"
+            outputproperty="sqlplus.exec.out">
+        <env key="NLS_LANG" value="@{nls.lang}" />
+        <arg value="-S" />
+        <arg line="@{user}/@{password}@@&quot;@{connectstring}&quot; @{sysdba} @@@{file} @{parameter}" />
+      </exec>
+      <echo message="${sqlplus.exec.out}" />
+      <tempfile property="sqlplus.exec.out.file.tmp@{path}@{file}" />
+      <condition property="sqlplus.exec.out.file@{path}@{file}"
+                 value="${sqlplus.exec.out.file.tmp@{path}@{file}}"
+                 else="@{output}">
+        <equals arg1="@{output}" arg2="" />
+      </condition>
+      <delete file="${sqlplus.exec.out.file.tmp@{path}@{file}}" 
+              failonerror="false" quiet="true" />
+      <echo message="${sqlplus.exec.out}"
+            file="${sqlplus.exec.out.file@{path}@{file}}" />
+      <condition property="success@{path}@{file}">
+        <and>
+          <equals arg1="${sqlplus.exec.result}" arg2="0" />
+          <not>
+            <contains string="${sqlplus.exec.out}"
+                      substring="ERROR " />
+          </not>
+          <not>
+            <contains string="${sqlplus.exec.out}"
+                      substring="FEHLER " />
+          </not>
+          <not>
+            <contains string="${sqlplus.exec.out}"
+                      substring="SP2-" />
+          </not>
+          <not>
+            <contains string="${sqlplus.exec.out}"
+                      substring="Usage: SQLPLUS" />
+          </not>
+          <not>
+            <contains string="${sqlplus.exec.out}"
+                      substring="ORA-" />
+          </not>
+          <not>
+            <contains string="${sqlplus.exec.out}"
+                      substring="created with compilation errors" />
+          </not>
+        </and>
+      </condition>
+      <fail unless="success@{path}@{file}"
+            message="ERROR during executing sqlplus: ${sqlplus.exec.result}" />
+    </sequential>
+  </macrodef>
+  
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: deployEar
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="deployEar">
+    <attribute name="name" />
+    <attribute name="file" default="@{name}.ear" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container" default="${as.oc4j}" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <attribute name="parentApp" default="default" />
+    <sequential>
+      <oracle:deploy deployerUri="deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}"
+                     userid="${as.userid}"
+                     password="${as.password}"
+                     file="@{file}"
+                     deploymentName="@{name}"
+                     bindAllWebApps="default-web-site"
+                     parent="@{parentApp}" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: deployWar
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="deployWar">
+    <attribute name="name" />
+    <attribute name="file" default="@{name}.war" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container" default="${as.oc4j}" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <attribute name="contextRoot" default="@{name}" />
+    <attribute name="parentApp" default="default" />
+    <attribute name="if"
+               default="${xynaTarget.default}"
+               description="Only execute this task if value is 'true' or referenced property has value true or is not set." />
+    <sequential>
+      <xynaTarget name="deployWar_@{name}" if="@{if}">
+        <oracle:deploy deployerUri="deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}"
+                       userid="${as.userid}"
+                       password="${as.password}"
+                       file="@{file}"
+                       deploymentName="@{name}"
+                       contextRoot="@{contextRoot}"
+                       bindAllWebApps="default-web-site"
+                       parent="@{parentApp}" />
+      </xynaTarget>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: deployBPEL
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="deployBPEL">
+    <attribute name="dir"
+               description="Directory where BPEL workflow is stored." />
+    <attribute name="domain"
+               default="${bpel.domain}"
+               description="Domain to deploy BPEL." />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="revision" default="${release.number}" />
+    <sequential>
+      <!-- anpassung des http ports in allen wsdls-->
+      <replace dir="@{dir}/bpel"
+               includes="**/*.wsdl"
+               token="localhost:7777/"
+               value="localhost:${as.port.http}/" />
+      <java classname="org.apache.tools.ant.launch.Launcher"
+            fork="true"
+            taskname="deployWorkflow"
+            dir="@{dir}"
+            failonerror="true">
+        <classpath>
+          <path refid="classpath.oc4j" />
+        </classpath>
+        <arg value="-Dprocess.dir=@{dir}" />
+        <arg value="-Doracle.home=${oracle.home}" />
+        <arg value="-Dbpel.home=${bpel.home}" />
+        <arg value="-Ddomain=@{domain}" />
+        <arg value="-Dadmin.user=${as.userid}" />
+        <arg value="-Dadmin.password=${as.password}" />
+        <arg value="-Dhttp.hostname=@{host}" />
+        <arg value="-Dhttp.port=${as.port.http}" />
+        <arg value="-Drev=@{revision}" />
+      </java>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: deployAndCheckBPEL
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="deployAndCheckBPEL">
+    <attribute name="dir"
+               description="Directory where BPEL workflow is stored." />
+    <attribute name="domain"
+               default="${bpel.domain}"
+               description="Domain to deploy BPEL." />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="revision" default="${release.number}" />
+    <attribute name="db.sys.password"
+               default="${db.sys.password}"
+               description="Password for database user sys" />
+    <attribute name="sqlpath"
+               default="${basedir}/install/sql"
+               description="Path to the checkBPEL sql script" />
+    <attribute name="if"
+               default="${xynaTarget.default}"
+               description="Only execute this task if value is 'true' or referenced property has value true or is not set." />
+    <sequential>
+      <xynaTarget name="deployAndCheckBPEL_@{dir}" if="@{if}">
+        <sqlplus user="sys"
+                 password="@{db.sys.password}"
+                 sysdba="as sysdba"
+                 path="@{sqlpath}"
+                 file="checkBPEL.sql"
+                 parameter="@{dir} @{revision} @{domain}" />
+        <deployBPEL dir="@{dir}"
+                    domain="@{domain}"
+                    host="@{host}"
+                    revision="@{revision}" />
+      </xynaTarget>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: deployBPELJar          
+        = = = = = = = = = = = = = = = = = -->
+   <macrodef name="deployBPELJar">
+    <attribute name="jarfile" description="BPEL.jar" />
+    <attribute name="domain"
+               default="${bpel.domain}"
+               description="Domain to deploy BPEL." />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="revision" default="${release.number}" />
+    <attribute name="bpelContainer" default="${as.oc4j.bpel}" />
+    <attribute name="userid"
+               default="${as.userid}"
+               description="ID of the OC4J admin" />
+    <attribute name="password"
+               default="${as.password}"
+               description="Passwort of OC4J admin." />
+    <attribute name="checkRevision" default="true" />
+    <sequential>
+      <deployBPELasJar jarfile="@{jarfile}"
+                       revision="@{revision}"
+                       host="@{host}"
+                       bpelContainer="@{bpelContainer}"
+                       domain="@{domain}"
+                       userid="@{userid}"
+                       password="@{password}"
+                       opmnPort="${as.port.opmn}"
+                       checkRevision="@{checkRevision}" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: undeploy
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="undeploy">
+    <attribute name="name"
+               description="Name of the application which should be undeployed." />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container" default="${as.oc4j}" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <sequential>
+      <oracle:undeploy deployerUri="deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}"
+                       userid="${as.userid}"
+                       password="${as.password}"
+                       deploymentName="@{name}"
+                       continueonerror="yes" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: undeployBPEL
+        = = = = = = = = = = = = = = = = = -->
+   <macrodef name="undeployBPEL">
+    <attribute name="name" description="Name of the workflow to undeploy" />
+    <attribute name="revision"
+               default="${release.number}"
+               description="Revision of the workflow to undeploy" />
+    <attribute name="domain"
+               default="${bpel.domain}"
+               description="Domain to deploy BPEL." />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="userid"
+               default="${as.userid}"
+               description="ID of the OC4J admin" />
+    <attribute name="password"
+               default="${as.password}"
+               description="Passwort of OC4J admin." />
+    <sequential>
+      <undeployWorkflow name="@{name}"
+                        revision="@{revision}"
+                        host="@{host}"
+                        bpelContainer="${as.oc4j.bpel}"
+                        domain="@{domain}"
+                        userid="@{userid}"
+                        password="@{password}"
+                        opmnPort="${as.port.opmn}" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: addDatasource
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="addDatasource">
+    <attribute name="name" description="Name of the datasource" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container"
+               default="${as.oc4j}"
+               description="Name of the OC4J instance the connection pool lives in." />
+    <attribute name="connectionpool"
+               description="Connectionpool where the Datasource should rely on." />
+    <attribute name="jndi.prefix" default="jdbc" />
+    <attribute name="txlevel" default="global" />
+    <sequential>
+      <exec executable="java"
+            failonerror="false"
+            outputproperty="testAddDatasource@{name}@{container}.out">
+        <arg line="-jar ${admin_client.jar}
+                 deployer:oc4j:opmn://@{host}:${as.port.opmn}/@{container}
+                 ${as.userid} ${as.password}
+                 -testDataSource
+                 -datasourceName @{name}
+                 -sqlStatement &quot;SELECT * FROM DUAL&quot;" />
+      </exec>
+      <if>
+        <equals arg1="${testAddDatasource@{name}@{container}.out}"
+                arg2="Test was successful." />
+        <then>
+          <echo message="Datasource @{name} already exists in instance @{container}." />
+        </then>
+        <elseif>
+          <contains string="${testAddDatasource@{name}@{container}.out}"
+                    substring="Exception testing datasource connection:oc4j:j2eeType=JDBCDataSource,name=&quot;@{name}&quot;,JDBCResource=&quot;&quot;,J2EEApplication=default,J2EEServer=standalone" />
+          <then>
+            <exec executable="java" failonerror="true">
+              <arg line="-jar ${admin_client.jar}
+                          deployer:oc4j:opmn://@{host}:${as.port.opmn}/@{container}
+                          ${as.userid} ${as.password}
+                          -addManagedDataSource
+                          -applicationName default
+                          -name @{name}
+                          -jndiLocation @{jndi.prefix}/@{name}
+                          -connectionPoolName @{connectionpool}
+                          -txlevel @{txlevel}" />
+            </exec>
+            <echo message="Datasource @{name} created in instance @{container}." />
+          </then>
+        </elseif>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	        macrodef: removeDatasource
+	        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="removeDatasource">
+    <attribute name="name" description="Name of the datasource" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container"
+               default="${as.oc4j}"
+               description="Name of the OC4J instance the connection pool lives in." />
+    <sequential>
+      <exec executable="java"
+            failonerror="false"
+            outputproperty="testRemoveDatasource@{name}@{container}.out">
+        <arg line="-jar ${admin_client.jar}
+	                 deployer:oc4j:opmn://@{host}:${as.port.opmn}/@{container}
+	                 ${as.userid} ${as.password}
+	                 -testDataSource
+	                 -datasourceName @{name}
+	                 -sqlStatement &quot;SELECT * FROM DUAL&quot;" />
+      </exec>
+      <if>
+        <equals arg1="${testRemoveDatasource@{name}@{container}.out}"
+                arg2="Test was successful." />
+        <then>
+          <removeDatasourceNoTest container="@{container}"
+                                  host="@{host}"
+                                  name="@{name}" />
+        </then>
+        <elseif>
+          <contains string="${testRemoveDatasource@{name}@{container}.out}"
+                    substring="ORA-01017" />
+          <then>
+            <echo message="WARNING: Unable to test datasource @{name} in instance @{container}: ${testRemoveDatasource@{name}@{container}.out}" />
+            <xmltask source="${oracle.home}/j2ee/@{container}/config/data-sources.xml"
+                     dest="${oracle.home}/j2ee/@{container}/config/data-sources.xml">
+              <copy path="/data-sources/managed-data-source[@@name='@{name}']/@@name"
+                    attrValue="true"
+                    property="testRemoveDatasource@{name}@{container}.file" />
+            </xmltask>
+            <if>
+              <equals arg1="${testRemoveDatasource@{name}@{container}.file}"
+                      arg2="@{name}" />
+              <then>
+                <echo message="Found datasoure entry in ${oracle.home}/j2ee/@{container}/config/data-sources.xml" />
+                <removeDatasourceNoTest container="@{container}"
+                                        host="@{host}"
+                                        name="@{name}" />
+              </then>
+              <else>
+                <echo message="Datasource @{name} does not exist in instance @{container}." />
+              </else>
+            </if>
+          </then>
+        </elseif>
+        <elseif>
+          <contains string="${testRemoveDatasource@{name}@{container}.out}"
+                    substring="Exception occurred testing managed data source connection." />
+          <then>
+            <fail message="Unable to remove datasource @{name} from instance @{container}: ${testRemoveDatasource@{name}@{container}.out}" />
+          </then>
+        </elseif>
+        <else>
+          <echo message="WARNING: Unable to remove datasource @{name} from instance @{container}" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	          macrodef: removeDatasourceNoTest          
+	         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="removeDatasourceNoTest">
+    <attribute name="name" description="Name of the datasource" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container"
+               default="${as.oc4j}"
+               description="Name of the OC4J instance the connection pool lives in." />
+    <sequential>
+      <exec executable="java" failonerror="true">
+        <arg line="-jar ${admin_client.jar}
+	                                            deployer:oc4j:opmn://@{host}:${as.port.opmn}/@{container}
+	                                            ${as.userid} ${as.password}
+	                                            -removeManagedDataSource
+	                                            -name @{name}" />
+      </exec>
+      <echo message="Datasource @{name} deleted from instance @{container}." />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: addConnectionPool
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="addConnectionPool">
+    <attribute name="name" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <attribute name="userid" default="${as.userid}" />
+    <attribute name="password" default="${as.password}" />
+    <attribute name="container" default="${as.oc4j}" />
+    <attribute name="dbuser" default="${db.userid}" />
+    <attribute name="dbpassword" default="${db.password}" />
+    <attribute name="connectstring"
+               description="In case that service name is not set on maschine use this string to connect" />
+    <sequential>
+      <exec executable="java"
+            failonerror="false"
+            outputproperty="testAddConnectionPool@{name}@{container}.out">
+        <arg line="-jar ${admin_client.jar} 
+                 deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+                 @{userid} @{password}
+                 -testDataSourceConnectionPool
+                 -name @{name}
+                 -sqlStatement &quot;SELECT * FROM DUAL&quot;" />
+      </exec>
+      <if>
+        <equals arg1="${testAddConnectionPool@{name}@{container}.out}"
+                arg2="Test was successful." />
+        <then>
+          <echo message="ConnectionPool @{name} already exists in instance @{container}." />
+        </then>
+        <elseif>
+          <contains string="${testAddConnectionPool@{name}@{container}.out}"
+                    substring="Unable to find j2eeType=JDBCResource name=@{name} J2EEApplication=default Mbean" />
+          <then>
+            <exec executable="java" failonerror="true">
+              <arg line="-jar ${admin_client.jar} 
+                          deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+                          @{userid} @{password}
+                          -addDataSourceConnectionPool
+                          -applicationName default
+                          -name @{name}
+                          -factoryClass oracle.jdbc.pool.OracleDataSource
+                          -dbUser @{dbuser}
+                          -dbPassword @{dbpassword}
+                          -url &quot;${db.url}&quot;" />
+            </exec>
+            <echo message="ConnectionPool @{name} created in instance @{container}." />
+          </then>
+        </elseif>
+        <elseif>
+          <contains string="${testAddConnectionPool@{name}@{container}.out}"
+                    substring="ORA-01017" />
+          <then>
+            <echo message="WARNING: Unable to test connection pool @{name} in instance @{container}: ${testAddConnectionPool@{name}@{container}.out}" />
+          </then>
+        </elseif>
+        <else>
+          <fail message="Unable to add connection pool @{name} to instance @{container}: ${testAddConnectionPool@{name}@{container}.out}" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	           macrodef: configureConnectionPool
+	           = = = = = = = = = = = = = = = = = -->
+  <macrodef name="configureConnectionPool">
+    <attribute name="container"
+               default="${as.oc4j}"
+               description="Name of the OC4J instance the connection pool lives in." />
+    <attribute name="name" description="Name of the connection pool." />
+    <attribute name="max-connections" default="100" />
+    <sequential>
+      <backupFile file="${oracle.home}/j2ee/@{container}/config/data-sources.xml" />
+      <xmltask source="${oracle.home}/j2ee/@{container}/config/data-sources.xml"
+               dest="${oracle.home}/j2ee/@{container}/config/data-sources.xml">
+        <copy path="/data-sources/connection-pool[@@name='@{name}']/@@name"
+              attrValue="true"
+              property="testConfigurePool@{name}@{container}" />
+      </xmltask>
+      <if>
+        <equals arg1="${testConfigurePool@{name}@{container}}" arg2="@{name}" />
+        <then>
+          <xmltask source="${oracle.home}/j2ee/@{container}/config/data-sources.xml"
+                   dest="${oracle.home}/j2ee/@{container}/config/data-sources.xml">
+            <attr path="/data-sources/connection-pool[@@name='@{name}']"
+                  attr="validate-connection"
+                  value="true" />
+            <attr path="/data-sources/connection-pool[@@name='@{name}']"
+                  attr="validate-connection-statement"
+                  value="SELECT 1 from DUAL" />
+            <attr path="/data-sources/connection-pool[@@name='@{name}']"
+                  attr="max-connections"
+                  value="@{max-connections}" />
+            <remove path="/data-sources/connection-pool[@@name='@{name}']/connection-factory/property" />
+            <insert path="/data-sources/connection-pool[@@name='@{name}']/connection-factory"
+                    xml="&lt;property name=&quot;connectionCachingEnabled&quot; value=&quot;true&quot;/&gt;&lt;property name=&quot;fastConnectionFailoverEnabled&quot; value=&quot;true&quot;/&gt;" />
+          </xmltask>
+          <echo message="Configured connection pool @{name} in instance @{container}" />
+          <echo message="++++ ATTENTION: Restart container immediately after pool configuration! Otherwise changes will be lost. ++++" />
+        </then>
+        <else>
+          <echo message="WARNING: Unable to configure connection pool @{name} in instance @{container} (pool not exists)" />
+        </else>
+      </if>
+      <if>
+        <length file="${oracle.home}/j2ee/@{container}/config/data-sources.xml"
+                length="0" />
+        <then>
+          <restoreFile file="${oracle.home}/j2ee/@{container}/config/data-sources.xml" />
+          <fail message="Operation 'configureConnectionPool' corrupted file ${oracle.home}/j2ee/@{container}/config/data-sources.xml (it has length zero). Restored file from backup." />
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	        macrodef: removeConnectionPool
+	        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="removeConnectionPool">
+    <attribute name="container"
+               default="${as.oc4j}"
+               description="Name of the OC4J instance the connection pool lives in." />
+    <attribute name="name" description="Name of the connection pool." />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <attribute name="userid" default="${as.userid}" />
+    <attribute name="password" default="${as.password}" />
+    <sequential>
+      <exec executable="java"
+            failonerror="false"
+            outputproperty="testRemoveConnectionPool@{name}@{container}.out">
+        <arg line="-jar ${admin_client.jar} 
+	                 deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+	                 @{userid} @{password}
+	                 -testDataSourceConnectionPool
+	                 -name @{name}
+	                 -sqlStatement &quot;SELECT * FROM DUAL&quot;" />
+      </exec>
+      <if>
+        <equals arg1="${testRemoveConnectionPool@{name}@{container}.out}"
+                arg2="Test was successful." />
+        <then>
+          <removeConnectionPoolNoTest container="@{container}"
+                                      host="@{host}"
+                                      name="@{name}"
+                                      password="@{password}"
+                                      port.opmn="@{port.opmn}"
+                                      userid="@{userid}" />
+        </then>
+        <elseif>
+          <contains string="${testRemoveConnectionPool@{name}@{container}.out}"
+                    substring="ORA-01017" />
+          <then>
+            <echo message="WARNING: Unable to test connection pool @{name} in instance @{container}: ${testRemoveConnectionPool@{name}@{container}.out}" />
+            <xmltask source="${oracle.home}/j2ee/@{container}/config/data-sources.xml"
+                     dest="${oracle.home}/j2ee/@{container}/config/data-sources.xml">
+              <copy path="/data-sources/connection-pool[@@name='@{name}']/@@name"
+                    attrValue="true"
+                    property="testRemoveConnectionPool@{name}@{container}.file" />
+            </xmltask>
+            <if>
+              <equals arg1="${testRemoveConnectionPool@{name}@{container}.file}"
+                      arg2="@{name}" />
+              <then>
+                <echo message="Found connection pool entry in ${oracle.home}/j2ee/@{container}/config/data-sources.xml" />
+                <removeConnectionPoolNoTest container="@{container}"
+                                            host="@{host}"
+                                            name="@{name}"
+                                            password="@{password}"
+                                            port.opmn="@{port.opmn}"
+                                            userid="@{userid}" />
+              </then>
+              <else>
+                <echo message="Connection pool @{name} does not exist in instance @{container}." />
+              </else>
+            </if>
+          </then>
+        </elseif>
+        <elseif>
+          <contains string="${testRemoveConnectionPool@{name}@{container}.out}"
+                    substring="Exception occurred testing connection." />
+          <then>
+            <fail message="Unable to remove connection pool @{name} from instance @{container}: ${testRemoveConnectionPool@{name}@{container}.out}" />
+          </then>
+        </elseif>
+        <else>
+          <echo message="WARNING: Unable to remove connection pool @{name} from instance @{container}" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	           macrodef: removeConnectionPoolNoTest
+	           = = = = = = = = = = = = = = = = = -->
+  <macrodef name="removeConnectionPoolNoTest">
+    <attribute name="container"
+               default="${as.oc4j}"
+               description="Name of the OC4J instance the connection pool lives in." />
+    <attribute name="name" description="Name of the connection pool." />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <attribute name="userid" default="${as.userid}" />
+    <attribute name="password" default="${as.password}" />
+    <sequential>
+      <exec executable="java" failonerror="true">
+        <arg line="-jar ${admin_client.jar}
+	                                   deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+	                                   @{userid} @{password}
+	                                   -removeDataSourceConnectionPool
+	                                   -name @{name}" />
+      </exec>
+      <echo message="ConnectionPool @{name} deleted from instance @{container}." />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: addResourceProvider
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="addResourceProvider">
+    <attribute name="name" description="Name of the new resource provider." />
+    <attribute name="datasource"
+               description="Name of the datasource the resource provider will use." />
+    <attribute name="container"
+               default="${as.oc4j}"
+               description="Name of the container for which the resource provider is intended." />
+    <sequential>
+      <backupFile file="${oracle.home}/j2ee/@{container}/config/application.xml" />
+      <xmltask source="${oracle.home}/j2ee/@{container}/config/application.xml"
+               dest="${oracle.home}/j2ee/@{container}/config/application.xml">
+        <remove path="/orion-application/resource-provider[@@name='@{name}']" />
+        <insert path="/orion-application"
+                xml="&lt;resource-provider name=&quot;@{name}&quot;/&gt;" />
+        <attr path="/orion-application/resource-provider[@@name='@{name}']"
+              attr="class"
+              value="oracle.jms.OjmsContext" />
+        <insert path="/orion-application/resource-provider[@@name='@{name}']"
+                xml="&lt;description&gt;oc4j-jms @{name} resource provider&lt;/description&gt;&lt;property /&gt;" />
+        <attr path="/orion-application/resource-provider[@@name='@{name}']/property"
+              attr="name"
+              value="datasource" />
+        <attr path="/orion-application/resource-provider[@@name='@{name}']/property"
+              attr="value"
+              value="jdbc/@{datasource}" />
+      </xmltask>
+      <echo message="Added resource provide @{name} to instance @{container}" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: removeResourceProvider
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="removeResourceProvider">
+    <attribute name="name" description="Name of the new resource provider." />
+    <attribute name="container"
+               default="${as.oc4j}"
+               description="Name of the container for which the resource provider is intended." />
+    <sequential>
+      <backupFile file="${oracle.home}/j2ee/@{container}/config/application.xml" />
+      <xmltask source="${oracle.home}/j2ee/@{container}/config/application.xml"
+               dest="${oracle.home}/j2ee/@{container}/config/application.xml">
+        <copy path="/orion-application/resource-provider[@@name='@{name}']/@@name"
+              attrValue="true"
+              property="existRP@{name}" />
+      </xmltask>
+      <if>
+        <and>
+          <contains string="${existRP@{name}}" substring="@{name}" />
+          <not>
+            <contains string="${existRP@{name}}" substring="existRP@{name}" />
+          </not>
+        </and>
+        <then>
+          <xmltask source="${oracle.home}/j2ee/@{container}/config/application.xml"
+                   dest="${oracle.home}/j2ee/@{container}/config/application.xml">
+            <remove path="/orion-application/resource-provider[@@name='@{name}']" />
+          </xmltask>
+          <echo message="Removed resource provide @{name} from instance @{container}" />
+        </then>
+        <else>
+          <echo message="WARNING: Unable to remove resource provider @{name} in instance @{container} (resource provider not exists)" />
+        </else>
+      </if>
+      <if>
+        <length file="${oracle.home}/j2ee/@{container}/config/application.xml"
+                length="0" />
+        <then>
+          <restoreFile file="${oracle.home}/j2ee/@{container}/config/application.xml" />
+          <fail message="Operation 'removeResourceProvider' corrupted file ${oracle.home}/j2ee/@{container}/config/application.xml (it has length zero). Restored file from backup." />
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: backupFile
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="backupFile">
+    <attribute name="file" />
+    <sequential>
+      <copy file="@{file}" tofile="@{file}.${timestamp.long}" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: restoreFile          
+         = = = = = = = = = = = = = = = = = -->
+  <macrodef name="restoreFile">
+    <attribute name="file" />
+    <sequential>
+      <move tofile="@{file}"
+            file="@{file}.${timestamp.long}"
+            overwrite="true" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: createQueue
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="createQueue" description="Create an in-memory queue.">
+    <attribute name="name" description="Name of the queue" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container" default="${as.oc4j}" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <sequential>
+      <exec executable="java"
+            failonerror="false"
+            outputproperty="getDestinations@{name}.out">
+        <arg line="-jar ${admin_client.jar}
+                 deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+                 ${as.userid} ${as.password}
+                 -getDestinations" />
+      </exec>
+      <if>
+        <contains string="${getDestinations@{name}.out}"
+                  substring="name=@{name}" />
+        <then>
+          <echo message="Queue @{name} already exists in instance @{container}." />
+        </then>
+        <else>
+          <exec executable="java" failonerror="true">
+            <arg line="-jar ${admin_client.jar}
+                       deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+                       ${as.userid} ${as.password}
+                       -addDestination
+                       -domain QUEUE
+                       -name @{name}
+                       -jndiLocation jms/@{name}" />
+          </exec>
+          <echo message="Queue @{name} created in instance @{container}." />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: removeQueue
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="removeQueue">
+    <attribute name="name" description="Name of the queue" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container" default="${as.oc4j}" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <sequential>
+      <exec executable="java"
+            failonerror="false"
+            outputproperty="getDestinations@{name}.out">
+        <arg line="-jar ${admin_client.jar}
+                 deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+                 ${as.userid} ${as.password}
+                 -getDestinations" />
+      </exec>
+      <if>
+        <contains string="${getDestinations@{name}.out}"
+                  substring="name=@{name}" />
+        <then>
+          <exec executable="java" failonerror="true">
+            <arg line="-jar ${admin_client.jar}
+                       deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+                       ${as.userid} ${as.password}
+                       -removeDestination
+                       -name @{name}" />
+          </exec>
+          <echo message="Queue @{name} deleted from instance @{container}." />
+        </then>
+        <else>
+          <echo message="Queue @{name} does not exists in instance @{container}." />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: createOC4J
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="createOC4J">
+    <attribute name="name"
+               default="${as.oc4j}"
+               description="Name of the new OC4J container." />
+    <attribute name="password"
+               default="${as.password}"
+               description="Passwort of OC4J admin." />
+    <sequential>
+      <!-- Create OC4J instance -->
+      <exec executable="echo" outputproperty="echo.out">
+        <arg line="-e @{password}\n@{password}\n" />
+      </exec>
+      <exec executable="${env.ORACLE_HOME}/bin/createinstance"
+            failonerror="yes">
+        <arg line="-instanceName @{name}" />
+        <redirector inputstring="${echo.out}">
+          <inputfilterchain>
+            <replacestring from="-e " to="" />
+          </inputfilterchain>
+        </redirector>
+      </exec>
+      <!-- Modification and Starting of OC4J instance must be called seperately -->
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: startOC4J          
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="startOC4J">
+    <attribute name="name"
+               default="${as.oc4j}"
+               description="Name of the new OC4J container." />
+    <sequential>
+      <exec executable="${env.ORACLE_HOME}/opmn/bin/opmnctl" failonerror="yes">
+        <arg line="startproc process-type=@{name}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: stopOC4J          
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="stopOC4J">
+    <attribute name="name"
+               default="${as.oc4j}"
+               description="Name of the new OC4J container." />
+    <sequential>
+      <exec executable="${env.ORACLE_HOME}/opmn/bin/opmnctl">
+        <arg line="stopproc process-type=@{name}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: removeOC4J
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="removeOC4J">
+    <attribute name="name"
+               default="${as.oc4j}"
+               description="Name of the new OC4J container." />
+    <sequential>
+      <stopOC4J name="@{name}" />
+      <!-- Remove OC4J instance -->
+      <exec executable="${env.ORACLE_HOME}/bin/removeinstance"
+            failonerror="yes">
+        <arg line="-instanceName @{name}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+        macrodef: modifyOC4JParameter          
+        = = = = = = = = = = = = = = = = = -->
+  <!--<macrodef name="modifyOC4JParameter">
+		<attribute name="name" default="${as.oc4j}" />
+		<attribute name="value"
+		           description="Wert, der hinzugefuegt werden soll" />
+		<attribute name="action" default="appendToAttribute" />
+		<attribute name="opmn.xml.file"
+		           default="${env.ORACLE_HOME}/opmn/conf/opmn.xml" />
+		<sequential>
+			<copy file="@{opmn.xml.file}"
+			      tofile="@{opmn.xml.file}_${timestamp}" />
+			 <-EditOpmnXml liest Properties und keine Attribute, daher das ganze als Target aufrufen
+              Das Hinzufuegen von XML-Elementen geht im Moment nicht, es koennen nur vorhandene
+              Werte geaendert werden. Daher den e4xPath hier innen aufbauen und nicht als Attribut
+              reinreichen. >
+			<antcall target="-EditOpmnXml">
+				<param name="opmnFile" value="@{opmn.xml.file}" />
+				<param name="e4xPath"
+				       value="process-type.(@@id==&quot;@{name}&quot;).category.(@@id==&quot;start-parameters&quot;).data.(@@id==&quot;java-options&quot;)" />
+				<param name="editAction" value="@{action}" />
+				<param name="editTarget" value="@@value" />
+				<param name="editValue" value="@{value}" />
+			</antcall>
+		</sequential>
+	</macrodef>-->
+
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: -EditOpmnXml                      
+        - - - - - - - - - - - - - - - - - -->
+  <!--<target name="-EditOpmnXml">
+		<script language="javascript">
+			<![CDATA[
+             function editOpmn() {                                      // define a function, so we can return at any point
+             // create an echo task, so we can output something
+             var echo = project.createTask("echo");
+             try {
+             importPackage(java.io);
+             importPackage(org.mozilla.javascript);
+             importPackage(org.mozilla.javascript.tools.shell);
+             var context = Context.getCurrentContext();             // Context des gerade ausgefuehrten Scripts
+             var global = new Global(context);                      // Global: object with useful methods
+             
+             // get the properties
+             var opmnFile    = project.getProperty("opmnFile");        // path to ompn.xml
+             var e4xPath     = project.getProperty("e4xPath");         // XPath like (E4X-Version) to the node to edit
+             var editAction  = project.getProperty("editAction");      // what edit action should be performed
+             var editTarget  = project.getProperty("editTarget");      // target of the action i.e. an attribute name
+             var editValue   = project.getProperty("editValue");       // the value for the action (may be empty)
+             
+             echo.setMessage("opmnFile:   " + opmnFile); echo.perform();
+             echo.setMessage("e4xPath:    " + e4xPath); echo.perform();
+             echo.setMessage("editAction: " + editAction); echo.perform();
+             echo.setMessage("editTarget: " + editTarget); echo.perform();
+             echo.setMessage("editValue:  " + editValue); echo.perform();
+             
+             //
+             // read the file, check if ok
+             //
+             var opmn = global.readFile(opmnFile);
+             if (opmn.length < 1) {
+                     throw "File " + opmnFile + " invalid";
+                     }
+                     
+                     //
+                     // NOTE: to be able to use Rhino-E4X the XML-File must not start with
+                     //       processing-instruction <?xml ... ?> (this is a bug in E4X).
+                     //       Also: the XML should not start with whitespace,instead it
+                     //       must start with the < of the root tag.
+                              //
+                              reObject = opmn.match(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/);
+                              var pi = (reObject == null ? "" : reObject[0]);                             // get the processing instruction
+                              opmn = opmn.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, "");  // remove processing instruction
+                              opmn = opmn.replace(/^\s*\n/m, "");                                         // remove whitespace at start
+                              
+                              // Build XML object from opmn string
+                              var xml = new XML(opmn);
+                              default xml namespace = "http://www.oracle.com/ias-instance";               // This is the namespace used in opmn.xml
+                              
+                              //
+                              // Navigate the given path to the node we want to change
+                              //
+                              // EXAMPLE for e4xPath:
+                              // 'process-type.(@id == "ccsapps").category.(@id == "start-parameters").data.(@id == "java-options")'
+                              // NOTE: Node name like "process-type" cannot be used in a path expression because
+                              //       of the "-". In such cases the descendatns() method must be used.
+                              //       A shorter equivalent path expression would be:
+                              // var d = xml.descendants("process-type").(@id == "cssapps")..category.(@id == "start-parameters")..data.(@id == "java-options")
+                              
+                              echo.setMessage("navigating: " + e4xPath);                                  // be verbose
+                              echo.perform();
+                              
+                              var node = xml;                                                             // we start at the root node
+                              e4xPath = new String(e4xPath);                                              // build a javascript String object
+                              var a = e4xPath.split('.');                                                 // otherwise problems with split()
+                              for (i = 0; i < a.length; i++) {
+                              part = a[i];
+                              if (part[0] == "(" || part[0] == "@") {                                   // this is a selection
+                              node = eval("node." + part);                                            // use eval() to select something like (@id == "ccsapps")
+                              }
+                              else {                                                                    // find descendants
+                              node = node.descendants(part);                                          // use method since node names can include i.e. "-"
+                              }
+                              if (node.toXMLString().length < 1) {                                      // check if navigation succeeded
+                              throw 'applying path element "' + part + '" gives empty result. XPath: ' + e4xPath + " does not lead to a node";
+                              }
+                              }
+                              
+                              // What should be done to the node
+                              echo.setMessage("now operating on node: " + node.name()); echo.perform(); // be verbose
+                              var opmnUpdated = false;
+                              
+                              //
+                              // *** action: appendToAttribute ***
+                              // this is currently the only supported action
+                              //
+                              if (editAction == "appendToAttribute") {
+                              attribute = eval("node." + editTarget);
+                              echo.setMessage("attribut value: " + attribute); echo.perform();        // be verbose
+                              if (-1 == attribute.indexOf(editValue)) {                               // check if value is already there
+                              attribute += (" " + editValue);
+                              eval("node." + editTarget + " = attribute");
+                              opmnUpdated = true;                                                   // flag to note the file needs to be written
+                              echo.setMessage("value " + editValue + " appended to attribut " + editTarget); echo.perform();
+                              }
+                              else {
+                              echo.setMessage(editValue + " is already part of " + editTarget); echo.perform();
+                              }
+                              }
+                              //
+                              // other actions
+                              //
+                              else {
+                              echo.setMessage("editAction " + editAction + " is currently not suported"); echo.perform();
+                              }
+                              
+                              //
+                              // if opmn was changed, write the changed file
+                              //
+                              if (opmnUpdated) {
+                              result = xml.toXMLString();
+                              bw = new BufferedWriter(new FileWriter(opmnFile));
+                              // write the processing instruction we removed before
+                              if (pi.length > 0) {
+                              bw.write(pi); bw.newLine();
+                              }
+                              bw.write(result);
+                              bw.flush();
+                              bw.close();
+                              echo.setMessage("new content written to " + opmnFile);
+                              echo.perform();
+                              }
+                              }
+                              catch (error) {
+                              fail = project.createTask("fail");
+                              fail.setMessage("Error: " + error);
+                              fail.perform();
+                              }
+                              }
+                              editOpmn();
+                              ]]>
+                              </script>
+			</target>-->
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: modifyOC4JPort          
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="modifyOC4JPort">
+    <attribute name="name"
+               default="${as.oc4j}"
+               description="Name of the oc4j instance to modify." />
+    <attribute name="port" default="12401-12500" />
+    <attribute name="ias-component" default="default_group" />
+    <attribute name="portid" default="rmi" />
+    <sequential>
+      <exec executable="${env.ORACLE_HOME}/opmn/bin/opmnctl">
+        <arg value="config" />
+        <arg value="port" />
+        <arg value="update" />
+        <arg value="ias-component=@{ias-component}" />
+        <arg value="process-type=@{name}" />
+        <arg value="portid=@{portid}" />
+        <arg value="range=@{port}" />
+      </exec>
+
+      <!-- In 10.1.3.1 wird beim Updaten mit opmnctl ein leeres Tag
+                                protocol="" in den RMI-Port eingefuegt. In 10.1.3.4 passiert das
+                                nicht.
+                                Mit dem leeren Tag schlaegt die Validierung von opmn.xml fehl und
+                                der Container kann nicht gestartet werden.
+                                Deshalb hier ein fieser Hack um die Datei zu reparieren -->
+      <replaceregexp file="${env.ORACLE_HOME}/opmn/conf/opmn.xml"
+                     match="protocol=&quot;&quot;"
+                     replace="" />
+
+      <reloadOPMN />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+         macrodef: reloadOPMN          
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="reloadOPMN">
+    <sequential>
+      <echo message="opmnctl: validating opmn.xml ..." />
+      <exec executable="${env.ORACLE_HOME}/opmn/bin/opmnctl">
+        <arg value="validate" />
+        <arg value="${env.ORACLE_HOME}/opmn/conf/opmn.xml" />
+      </exec>
+      <echo message="opmnctl: reloading opmn.xml ..." />
+      <exec executable="${env.ORACLE_HOME}/opmn/bin/opmnctl">
+        <arg value="reload" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+         macrodef: restartOC4JInstance
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="restartOC4JInstance">
+    <attribute name="name"
+               default="${as.oc4j}"
+               description="Name of the oc4j instance to restart." />
+    <sequential>
+      <echo message="+++ THIS MACRO IS DEPRECATED +++ USE restartOCJ4 INSTEAD +++" />
+      <restartOC4J name="@{name}" />
+      <echo message="+++ THIS MACRO IS DEPRECATED +++ USE restartOCJ4 INSTEAD +++" />
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+           macrodef: restartOC4J
+       = = = = = = = = = = = = = = = = = -->
+  <macrodef name="restartOC4J">
+    <attribute name="name"
+               default="${as.oc4j}"
+               description="Name of the oc4j instance to restart." />
+    <sequential>
+      <!--
+          TODO: warum wird die Datei kopiert ??? DW: wird die Datei editiert,
+          waehrend die Instanz laeuft, so werden die Aenderungen beim
+          runterfahren ueberschrieben. Also vorher die Aenderungen sichern und
+          vor dem Neustart wieder hinspielen...
+      -->
+      <copy file="${oracle.home}/j2ee/@{name}/config/data-sources.xml"
+            tofile="${oracle.home}/j2ee/@{name}/config/data-sources_xmlsed.xml" />
+      <echo message="Stopping OC4J-Container '@{name}'" />
+      <exec executable="${env.ORACLE_HOME}/opmn/bin/opmnctl">
+        <arg line="stopproc process-type=@{name}" />
+      </exec>
+      <echo message="Wait 15 seconds for shutdown to complete..." />
+      <sleep seconds="15" />
+      <!-- TODO: same question -->
+      <move file="${oracle.home}/j2ee/@{name}/config/data-sources_xmlsed.xml"
+            tofile="${oracle.home}/j2ee/@{name}/config/data-sources.xml" />
+      <echo message="Starting OC4J-Container '@{name}'" />
+      <exec executable="${env.ORACLE_HOME}/opmn/bin/opmnctl">
+        <arg line="startproc process-type=@{name}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+         macrodef: createBPELDomain
+      = = = = = = = = = = = = = = = = = -->
+  <macrodef name="createBPELDomain" description="Create a new bpel domain">
+    <attribute name="domain"
+               default="${bpel.domain}"
+               description="Name of domain" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="userid"
+               default="${as.userid}"
+               description="ID of the OC4J admin" />
+    <attribute name="password"
+               default="${as.password}"
+               description="Passwort of OC4J admin." />
+    <attribute name="ask"
+               default="true"
+               description="If true ask user before creating domain. Defautl is true." />
+    <sequential>
+      <!-- <if>
+        <equals arg1="@{ask}" arg2="true" />
+        <then>
+          <input message="Create domain @{domain}?"
+                 addproperty="input.createDomain@{domain}"
+                 validargs="y,n"
+                 defaultvalue="n" />
+        </then>
+      </if>
+      <if>
+        <or>
+          <equals arg1="${input.createDomain@{domain}}" arg2="y" />
+          <not>
+            <equals arg1="@{ask}" arg2="true" />
+          </not>
+        </or>
+        <then>-->
+          <createDomain host="@{host}"
+                        bpelContainer="${as.oc4j.bpel}"
+                        domain="@{domain}"
+                        userid="@{userid}"
+                        password="@{password}"
+                        opmnPort="${as.port.opmn}"
+                        ask="@{ask}" />
+        <!-- </then>
+        <else>
+          <echo message="Skip creation of domain @{domain}." />
+        </else>
+      </if>-->
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+           macrodef: deleteBPELDomain
+        = = = = = = = = = = = = = = = = = -->
+  <macrodef name="deleteBPELDomain"
+            description="Delete an existing bpel domain">
+    <attribute name="domain"
+               default="${bpel.domain}"
+               description="Name of domain" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="userid"
+               default="${as.userid}"
+               description="ID of the OC4J admin" />
+    <attribute name="password"
+               default="${as.password}"
+               description="Passwort of OC4J admin." />
+    <attribute name="ask"
+               default="true"
+               description="If true ask user before deleting domain. Defautl is true." />
+    <sequential>
+      <!-- <if>
+        <equals arg1="@{ask}" arg2="true" />
+        <then>
+          <input message="Delete domain @{domain}?"
+                 addproperty="input.deleteDomain@{domain}"
+                 validargs="y,n"
+                 defaultvalue="n" />
+        </then>
+      </if>
+      <if>
+        <or>
+          <equals arg1="${input.deleteDomain@{domain}}" arg2="y" />
+          <not>
+            <equals arg1="@{ask}" arg2="true" />
+          </not>
+        </or>
+        <then>-->
+          <deleteDomain host="@{host}"
+                        bpelContainer="${as.oc4j.bpel}"
+                        domain="@{domain}"
+                        userid="@{userid}"
+                        password="@{password}"
+                        opmnPort="${as.port.opmn}"
+                        ask="@{ask}" />
+        <!-- </then>
+        <else>
+          <echo message="Skip deletion of domain @{domain}." />
+        </else>
+      </if>-->
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	           macrodef: startApplication
+	           = = = = = = = = = = = = = = = = = -->
+  <macrodef name="startApplication" description="Start an deployed application">
+    <attribute name="name" description="Name of the application" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container" default="${as.oc4j}" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <sequential>
+      <exec executable="java" errorproperty="startApp.err.@{name}">
+        <arg line="-jar ${admin_client.jar}
+                   deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+                   ${as.userid} ${as.password}
+                  -start @{name}" />
+      </exec>
+      <if>
+        <equals arg1="${startApp.err.@{name}}" arg2="" />
+        <then>
+          <echo message="Application @{name} in instance @{container} started." />
+        </then>
+        <else>
+          <if>
+            <contains string="${startApp.err.@{name}}" substring="does not exist" />
+            <then>
+              <echo message="WARNING: Unable to start application @{name} (Does not exists)!" />
+            </then>
+            <else>
+              <fail message="${startApp.err.@{name}}" />
+            </else>
+          </if>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+	              macrodef: stopApplication
+	              = = = = = = = = = = = = = = = = = -->
+  <macrodef name="stopApplication" description="Stop an deployed application">
+    <attribute name="name" description="Name of the application" />
+    <attribute name="host"
+               default="${as.host}"
+               description="IP address of the application server" />
+    <attribute name="container" default="${as.oc4j}" />
+    <attribute name="port.opmn" default="${as.port.opmn}" />
+    <sequential>
+      <exec executable="java" failonerror="true">
+        <arg line="-jar ${admin_client.jar}
+	                             deployer:oc4j:opmn://@{host}:@{port.opmn}/@{container}
+	                             ${as.userid} ${as.password}
+	                             -stop @{name}" />
+      </exec>
+      <echo message="Application @{name} in instance @{container} stopped." />
+    </sequential>
+  </macrodef>
+
+</antlib>

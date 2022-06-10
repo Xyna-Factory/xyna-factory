@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.12.2021",
+    "updated": "21.12.2021"
+  },
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Exception_Type!": "New Exception Type"
+        },
+        {
+          "!base.Text!": "base.Text"
+        },
+        {
+          "!clear!": "clear"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Exception_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1640099133358.NewExceptionType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1640099133358!",
+      "variable": "!new_1640099133358.NewExceptionType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/id",
+      "targetVariable": "!memberVarArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberVars]/itemTypes[0]",
+      "targetVariable": "!xmcp.processmodeller.datatypes.Data!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!Data!",
+      "variable": "!xmcp.processmodeller.datatypes.Data!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewExceptionType!",
+      "variable": "!new_1640099133358.NewExceptionType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "!Data!",
+          "type": "memberVar"
+        },
+        "index": -1,
+        "revision": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1640099133358!/!NewExceptionType!/objects/!memberVarArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberVars]/items/$list[name=data]/id",
+      "targetVariable": "!memberVar0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "fqn": "!base.Text!",
+        "primitiveType": "",
+        "revision": 1
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1640099133358!/!NewExceptionType!/objects/!memberVar0!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "isList": true,
+        "revision": 2
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1640099133358!/!NewExceptionType!/objects/!memberVar0!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {},
+      "requestType": "PUT",
+      "url": "/clipboard/!clear!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "index": 0
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1640099133358!/!NewExceptionType!/objects/!memberVar0!/copyToClipboard"
+    },
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/clipboard"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "entries/$list[0]/item/id",
+      "targetVariable": "!clipboard0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1640099133358!/!NewExceptionType!/objects/!memberVar0!/delete"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "index": -1,
+        "revision": 5,
+        "targetId": "!memberVarArea!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/exceptions/!new_1640099133358!/!NewExceptionType!/objects/!clipboard0!/move"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberVars]/items/$list[0]/fqn",
+      "targetVariable": "!fqn!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!fqn!",
+      "value": "!base.Text!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberVars]/items/$list[0]/label",
+      "targetVariable": "!label!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!label!",
+      "value": "!Data!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberVars]/items/$list[0]/isList",
+      "targetVariable": "!isList!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!isList!",
+      "value": "true"
+    },
+
+    {
+      "operation": "call",
+      "requestType": "GET",
+      "url": "/clipboard"
+    }
+  ]
+}

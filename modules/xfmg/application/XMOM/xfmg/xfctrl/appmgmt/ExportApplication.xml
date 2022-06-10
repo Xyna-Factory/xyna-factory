@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Export application" TypeName="ExportApplication" TypePath="xfmg.xfctrl.appmgmt" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Export application" Name="ExportApplication">
+    <Input>
+      <Data ID="50" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext">
+        <Target RefID="17"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="3" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="connectException"/>
+      <Exception Label="Remote Exception" ReferenceName="RemoteException" ReferencePath="xfmg.xfctrl.nodemgmt" VariableName="remoteException"/>
+    </Throws>
+    <ServiceReference ID="6" Label="Global Application Managment Services" ReferenceName="GlobalApplicationManagmentServices.GlobalApplicationManagmentServices" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Mappings ID="17" Label="extract">
+      <Source RefID="50"/>
+      <Target RefID="14"/>
+      <Target RefID="15"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="49" Label="Remote Runtime Context" ReferenceName="RemoteRuntimeContext" ReferencePath="xfmg.xfctrl.appmgmt" VariableName="remoteRuntimeContext49"/>
+        <Source RefID="50"/>
+      </Input>
+      <Output>
+        <Data ID="18" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode18"/>
+        <Target RefID="14"/>
+      </Output>
+      <Output>
+        <Data ID="19" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application19"/>
+        <Target RefID="15"/>
+      </Output>
+      <Mapping>%1%=%0%.factoryNode</Mapping>
+      <Mapping>%2%=%0%.runtimeContext</Mapping>
+    </Mappings>
+    <Function ID="7" Label="Export application">
+      <Source RefID="6"/>
+      <Source RefID="14"/>
+      <Source RefID="15"/>
+      <Target RefID="6"/>
+      <Target RefID="53"/>
+      <Invoke Operation="exportApplication" ServiceID="6">
+        <Source RefID="14"/>
+        <Source RefID="15"/>
+      </Invoke>
+      <Receive ServiceID="6">
+        <Target RefID="53"/>
+      </Receive>
+    </Function>
+    <Data ID="14" Label="Factory Node" ReferenceName="FactoryNode" ReferencePath="xfmg.xfctrl" VariableName="factoryNode">
+      <Source RefID="17"/>
+      <Target RefID="7"/>
+    </Data>
+    <Data ID="15" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application">
+      <Source RefID="17"/>
+      <Target RefID="7"/>
+    </Data>
+    <Data ID="53" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId53">
+      <Source RefID="7"/>
+      <Target RefID="2"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="53"/>
+      <Target RefID="3"/>
+      <Copy>
+        <Source RefID="53"/>
+        <Target RefID="3"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

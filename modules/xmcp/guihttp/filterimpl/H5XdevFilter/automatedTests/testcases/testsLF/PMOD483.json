@@ -1,0 +1,76 @@
+{
+  "meta":
+  {
+    "name": "PMOD483",
+	"description": "1. Workflow anlegen, 2. workflow with in and output hinzufügen (base.math.IntegerNumber Bitwise NOT), 3. base.math.IntegerNumber in Workflow input, 4. Input zur Liste, 5. Detached-Operator setzten, 6. Detached entfernen",
+	"created": "23.10.2019",
+	"updated": "23.10.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"service","label":"Bitwise NOT","fqn":"base.math.IntegerNumber","service":"IntegerNumber","operation":"bitwiseNOT"},"relativePosition":"inside","revision":0}
+	},
+	{
+      "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+    },
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/wf_input/insert",
+      "payload": {"index":-1,"content":{"type":"variable","label":"IntegerNumber","fqn":"base.math.IntegerNumber","isList":false},"revision":1}
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!stepId!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[operation=bitwiseNOT]/id"
+	},
+	{
+      "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+    },
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/var-in0/change",
+	  "payload": {"isList":true,"revision":2}
+	},
+	{
+      "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+    },
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!stepId!/change",
+	  "payload": {"detached":true,"revision":3}
+	},
+	{
+      "operation": "call",
+	  "requestType": "GET",
+	  "url": "!url!/dataflow"
+    },
+	{
+	  "operation": "call",
+	  "requestType": "PUT",
+	  "url": "!url!/objects/!stepId!/change",
+	  "payload": {"detached":false,"revision":4}
+	}
+  ]
+}

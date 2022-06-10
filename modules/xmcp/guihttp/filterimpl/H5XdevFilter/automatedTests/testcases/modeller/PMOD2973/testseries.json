@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "PMOD2973.json",
+    "PMOD2973_multibranches.json"
+  ]
+}

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="CountRowsWithCondition" TypeName="CountRowsWithCondition" TypePath="xmcp.dhcp.v4.leasebrowser" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="CountRowsWithCondition" Name="CountRowsWithCondition">
+    <Input>
+      <Data ID="74" Label="CountRowsWithConditionInput_ctype" ReferenceName="CountRowsWithConditionInput_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="countRowsWithConditionInput_ctype74"/>
+    </Input>
+    <Output>
+      <Data ID="211" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype211"/>
+      <Data ID="161" Label="CountRowsWithConditionOutput" ReferenceName="CountRowsWithConditionOutput" ReferencePath="xmcp.dhcp.v4.leasebrowser" VariableName="countRowsWithConditionOutput161"/>
+    </Output>
+    <ServiceReference ID="4" Label="Leases" ReferenceName="Leases.Leases" ReferencePath="xmcp.dhcp.v4.leasebrowser"/>
+    <Mappings ID="47" Label="Build Input">
+      <Input>
+        <Data ID="87" Label="CountRowsWithConditionInput_ctype" ReferenceName="CountRowsWithConditionInput_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="countRowsWithConditionInput_ctype87">
+          <Source RefID="47"/>
+        </Data>
+        <Source RefID="74"/>
+      </Input>
+      <Output>
+        <Data ID="56" Label="Count Rows With Condition Request ctype" ReferenceName="CountRowsWithConditionRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="countRowsWithConditionRequest_ctype56">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="57"/>
+      </Output>
+      <Mapping>%1%.countRowsWithConditionInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="5" Label="CountRowsWithCondition">
+      <Source RefID="4"/>
+      <Source RefID="57"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="countRowsWithCondition" ServiceID="4">
+        <Source RefID="57">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="38" Label="Extract Output">
+      <Input>
+        <Data ID="152" Label="Response_ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="response_ctype152">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="229" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype229">
+          <Source RefID="38"/>
+        </Data>
+        <Target RefID="230"/>
+      </Output>
+      <Output>
+        <Data ID="255" Label="CountRowsWithConditionOutput" ReferenceName="CountRowsWithConditionOutput" ReferencePath="xmcp.dhcp.v4.leasebrowser" VariableName="countRowsWithConditionOutput255">
+          <Source RefID="38"/>
+        </Data>
+        <Target RefID="256"/>
+      </Output>
+      <Mapping>%2%.countRowsWithConditionOutput=%0%.payload.countRowsWithConditionOutput</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="57" Label="Count Rows With Condition Request ctype" ReferenceName="CountRowsWithConditionRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Leases.www.gip.com.juno.Audit.WS.Leases.Messages" VariableName="countRowsWithConditionRequest_ctype57">
+      <Source RefID="47"/>
+    </Data>
+    <Data ID="230" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype230">
+      <Source RefID="38"/>
+    </Data>
+    <Data ID="256" Label="CountRowsWithConditionOutput" ReferenceName="CountRowsWithConditionOutput" ReferencePath="xmcp.dhcp.v4.leasebrowser" VariableName="countRowsWithConditionOutput256">
+      <Source RefID="38"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="230"/>
+      <Source RefID="256"/>
+      <Target RefID="211"/>
+      <Target RefID="161"/>
+      <Copy>
+        <Source RefID="230"/>
+        <Target RefID="211"/>
+      </Copy>
+      <Copy>
+        <Source RefID="256"/>
+        <Target RefID="161"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

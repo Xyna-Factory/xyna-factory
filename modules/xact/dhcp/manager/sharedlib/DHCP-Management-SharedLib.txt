@@ -1,0 +1,48 @@
+
+- svn://svn.gip.com/trunk/apollo11/installation/lib (build, der sie benötigt): 
+	- in sharedlib/Tools:
+		- dhcpdConf.jar
+		- DHCPTrigger.jar (evtl auf referenz!) 
+		- JunoConfigFileDecoder.jar
+		- JunoConfigFileDecoderUtil.jar
+		- JunoConfigFileGenerator.jar
+		- JunoWebserviceTools.jar (wird gebaut werden!) 
+		- SNMP4J.jar
+		- xynautils-snmp-3.0.1.1.jar
+		- VendorSpecificOptionSerializer
+	- in sharedlib/basics:
+		- DHCPv4DBStorablesSharedLib.jar
+		- xynautils-database-I20150331_1425.jar (all service Groups) 
+		- log4j-1.2-api-2.1.jar (all service Groups)
+		- jsch-0.1.48.jar (JunoWebserviceTools) 
+		- mysql-connector-java-5.1.38-bin.jar (JunoWebserviceTools)
+		- xynautils-logging-I20150824_1023.jar (JunoWebserviceTools) 
+
+- svn://svn.gip.com/trunk/apollo11/installation/lib/xyna: 
+	- in sharedlib/Tools:
+		- misc.jar (JunoWebserviceTools)
+		- xynautils-exceptions-3.0.0.0.jar (JunoWebserviceTools) 
+
+- svn://svn.gip.com/trunk/apollo11/installation/lib/web:
+	- in sharedlib/Tools:
+		- axis.jar
+		- commons-discovery-0.2.jar
+	- in sharedlib/basics:
+		- jaxrpc.jar
+	
+- svn://svn.gip.com/trunk/apollo11/webservices/ConfigFile/lib:
+	- in sharedlib/Tools:
+		- commons-collections-3.2.1.jar
+		- commons-lang-2.4.jar
+		- JunoConfigFileGeneratorServer.jar
+		- JunoConfigFileGeneratorServerV6.jar
+		- JunoConfigFileGeneratorV6.jar
+
+- svn://svn.gip.com/trunk/xyna/blackedition/components/xact/configserver/mdmimpl/VelocityTemplate/lib: 
+	- in sharedlib/basics:
+		- velocity-1.6.2.jar
+
+- svn://svn.gip.com/trunk/xyna/blackedition/components/xact/dhcpv6/triggerimpl:
+	- in sharedlib/basics:
+		- DHCPv6TCPTrigger (build project) 
+

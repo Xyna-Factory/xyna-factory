@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Mail Account Management" TypeName="MailAccountManagement" TypePath="xact.mail.account" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>MailAccountManagementImpl.jar</Libraries>
+  <SharedLibraries>maillibs</SharedLibraries>
+  <Service Label="Mail Account Management" TypeName="MailAccountManagement">
+    <Operation IsStatic="true" Label="Register Mail Account" Name="registerMailAccount">
+      <Meta>
+        <Abstract.UID>1977C3AB-4E14-3FEA-3E99-28D79F2F78C3</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Mail Account Parameter" ReferenceName="MailAccountParameter" ReferencePath="xact.mail.account" VariableName="unregisteredMailAccount"/>
+      </Input>
+      <Output>
+        <Data Label="Mail Account" ReferenceName="MailAccount" ReferencePath="xact.mail" VariableName="mailAccount"/>
+      </Output>
+      <Throws>
+        <Exception Label="Mail Account Already Registered Exception" ReferenceName="MailAccountAlreadyRegisteredException" ReferencePath="xact.mail.account" VariableName="mailAccountAlreadyRegistered"/>
+        <Exception Label="Mail Account Storage Failed Exception" ReferenceName="MailAccountStorageFailedException" ReferencePath="xact.mail.account" VariableName="mailAccountStorageFailedException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.mail.account.MailAccountManagementImpl.registerMailAccount(unregisteredMailAccount);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Show Mail Account" Name="showMailAccount">
+      <Input>
+        <Data Label="Mail Account" ReferenceName="MailAccount" ReferencePath="xact.mail" VariableName="mailAccount"/>
+      </Input>
+      <Output>
+        <Data Label="Mail Account Parameter" ReferenceName="MailAccountParameter" ReferencePath="xact.mail.account" VariableName="unregisteredMailAccount"/>
+      </Output>
+      <Throws>
+        <Exception Label="Mail Account Not Registered Exception" ReferenceName="MailAccountNotRegisteredException" ReferencePath="xact.mail.account" VariableName="mailAccountNotRegistered"/>
+        <Exception Label="Mail Account Storage Failed Exception" ReferenceName="MailAccountStorageFailedException" ReferencePath="xact.mail.account" VariableName="mailAccountStorageFailedException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.mail.account.MailAccountManagementImpl.showMailAccount(mailAccount);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Unregister Mail Account" Name="unregisterMailAccount">
+      <Meta>
+        <Abstract.UID>C867D1AF-D6F3-7486-37DB-28DBA5B5A169</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Mail Account" ReferenceName="MailAccount" ReferencePath="xact.mail" VariableName="mailAccount"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Mail Account Not Registered Exception" ReferenceName="MailAccountNotRegisteredException" ReferencePath="xact.mail.account" VariableName="mailAccountNotRegistered"/>
+        <Exception Label="Mail Account Storage Failed Exception" ReferenceName="MailAccountStorageFailedException" ReferencePath="xact.mail.account" VariableName="mailAccountStorageFailedException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.mail.account.MailAccountManagementImpl.unregisterMailAccount(mailAccount);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

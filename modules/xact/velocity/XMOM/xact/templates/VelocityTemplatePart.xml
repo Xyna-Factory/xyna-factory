@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 7.0 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2015
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 176564 $
+ * $Date: 2015-10-29 12:01:08 +0100 (Do, 29. Okt 2015) $
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Velocity Template Part" TypeName="VelocityTemplatePart" TypePath="xact.templates" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Data Label="Id" VariableName="id">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Scope" VariableName="scope">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Application" VariableName="application">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Constraint Set" VariableName="constraintSet">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Score" VariableName="score">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="Content" VariableName="content">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Part" VariableName="part">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Type" VariableName="type">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

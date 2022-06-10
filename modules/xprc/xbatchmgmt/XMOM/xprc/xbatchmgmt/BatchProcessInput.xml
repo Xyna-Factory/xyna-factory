@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Batch Process Input" TypeName="BatchProcessInput" TypePath="xprc.xbatchmgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Label" VariableName="label">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>for documentation usage</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Component" VariableName="component">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>for documentation usage</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Master Order" ReferenceName="XynaOrderCreationParameter" ReferencePath="xprc.xpce" VariableName="masterOrder">
+    <Meta>
+      <Documentation>The master order waits in the scheduler until the batch process finishes and only then executes its execution phase (running the workflow corresponding to the master order's order type)
+
+Set the master order's time constraint to define the time(s) when the slaves are being executed.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Slave Order " ReferenceName="SlaveOrder" ReferencePath="xprc.xbatchmgmt" VariableName="slaveOrder">
+    <Meta>
+      <Documentation>Specifies the slave order's configuration, i.e. what will be executed multiple times in this batch process.
+
+To restrict the number of parallel executions it is strongly recommended to either use a capacity for your slave order type or set a slave order execution period.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Input Generator Data" ReferenceName="InputGeneratorData" ReferencePath="xprc.xbatchmgmt" VariableName="inputGeneratorData">
+    <Meta>
+      <Documentation>what is the input for the slave orders and how many should be started?</Documentation>
+    </Meta>
+  </Data>
+</DataType>

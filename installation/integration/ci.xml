@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="ci" basedir=".">
+
+  <!--  
+     For each of the following targets an own hudson job can be created.
+     An integration build can be created by a single target (integration)
+     or by multible steps (delivery, test_delivery, update and test).
+     
+     nightbuild:
+        1. If previous nightbuild exists, target uninstall will be run on this installation
+           and the delivery folder will be removed from remote server.
+        2. Build a new delivery item
+        3. Run tests on delivery item
+        4. Install delivery item on remote server
+        5. Run system tests on installation
+     
+     integration:
+        1. Build new delivery item
+        2. Run tests on delivery item
+        3. If previous integration build exists, target uninstall-workflow will be run on 
+           this installation and the delivery folder will be removed from remote server.
+        4. Update existing installation on remote server
+        5. Run system tests on installation
+        
+     delivery:
+        * Build new delivery item
+        
+     test_delivery:
+        * Run tests on delivery item
+        
+     update:
+        1. If previous integration build exists, target uninstall-workflow will be run on 
+           this installation and the delivery folder will be removed from remote server.
+        2. Update existing installation on remote server
+        
+     test:
+        * Run system tests on installation
+  -->
+
+  <path id="missing.ci.libs">
+    <fileset id="fileset.ci.libs" dir="${basedir}/lib" includes="*.jar">
+      <present targetdir="${user.home}/.ant/lib" present="srconly" />
+    </fileset>
+  </path>
+
+  <pathconvert property="list.missing.ci.libs" pathsep=" ">
+    <mapper type="flatten" />
+    <path refid="missing.ci.libs" />
+  </pathconvert>
+
+  <copy todir="${user.home}/.ant/lib" flatten="true">
+    <fileset refid="fileset.ci.libs" />
+  </copy>
+
+  <fail message="Libraries needed for ant execution are missing. Libraries are copyied to ${user.home}/.ant/lib. Please restart script.">
+    <condition>
+      <not>
+        <equals arg1="${list.missing.ci.libs}" arg2="" />
+      </not>
+    </condition>
+  </fail>
+
+  <import file="${basedir}/../build/ant-xyna.xml" />
+
+  <loadproperties srcfile="ci.properties" />
+  <loadproperties srcfile="${basedir}/../delivery/delivery.properties" />
+
+  <!--<property name="build.dir"
+            value="${basedir}/${delivery.dir}/build_${timestamp}" />-->
+
+  <!-- ================================= 
+          target: nightbuild              
+         ================================= -->
+  <target name="nightbuild">
+    <ant antfile="delivery.xml" dir="../delivery" target="nightbuild" />
+    <storeConfig version="N${timestamp}" />
+    <uninstall target="uninstall" prefix="N" />
+    <install />
+    <antcall target="test" inheritall="true" inheritrefs="true" />
+  </target>
+
+  <!-- ================================= 
+            target: integration              
+           ================================= -->
+  <target name="integration"
+          depends="delivery, test"
+          description="Complete build (inculding test) and update" />
+
+  <!-- ================================= 
+            target: delivery              
+           ================================= -->
+  <target name="delivery" description="Build a new delivery item">
+    <ant antfile="delivery.xml" dir="../delivery" target="integrationbuild" />
+    <storeConfig version="I${timestamp}" />
+    <uninstall target="uninstall-workflow" prefix="I" />
+    <install target="update" />
+  </target>
+
+  <!-- ================================= 
+           target: test              
+          ================================= -->
+  <target name="test" description="Run system tests on installation">
+    <loadConfig />
+    <delete dir="../../testresults" failonerror="false" />
+    <sshexec host="${ci.host}"
+             username="${ci.user}"
+             password="${ci.password}"
+             command="${ci.path}/install.sh ${ci.path} ${delivery.name}_${integration.number} test" />
+    <mkdir dir="../../testresults" />
+    <scp file="${ci.user}:${ci.password}@${ci.host}:${ci.path}/${delivery.name}_${integration.number}/testresults/*"
+         todir="../../testresults"
+         failonerror="false" />
+  </target>
+
+</project>

@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "21.7.2020",
+    "updated": "21.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "xacm"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.xacm.rightmanagement.CreateRight!": "xmcp.xacm.rightmanagement.CreateRight"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.xacm.rightmanagement.datatypes.Right!": "xmcp.xacm.rightmanagement.datatypes.Right"
+        },
+        {
+          "!en-US!": "en-US"
+        },
+        {
+          "!base.locale.Locale!": "base.locale.Locale"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.xacm.rightmanagement.datatypes.Right!"
+            },
+            "rightName": "!autotest.generated.random!"
+          },
+          {
+            "$meta": {
+              "fqn": "!base.locale.Locale!"
+            },
+            "language": "!en-US!"
+          }
+        ],
+        "orderType": "!xmcp.xacm.rightmanagement.CreateRight!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

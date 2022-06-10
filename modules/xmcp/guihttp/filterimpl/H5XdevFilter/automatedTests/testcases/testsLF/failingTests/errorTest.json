@@ -1,0 +1,17 @@
+{
+  "meta":
+  {
+    "name": "errorTest",
+	"description": "tries to call a function that does not exist"
+  },
+  
+  "operations":
+  [
+    {
+	  "operation": "invoke",
+	  "functionName": "unregisteredFunction",
+	  "mappingInput": {},
+	  "mappingOutput": {}
+	}
+  ]
+}

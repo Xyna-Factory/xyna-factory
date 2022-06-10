@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Migrate RTCs" TypeName="MigrateRTCs" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="Migrate RTCs" Name="MigrateRTCs">
+    <Input>
+      <Data ID="3" Label="Migrate RTCs Request" ReferenceName="MigrateRTCsRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="migrateRTCsRequest3"/>
+    </Input>
+    <Output>
+      <Data ID="84" IsList="true" Label="RTC Migration Result" ReferenceName="RTCMigrationResult" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigrationResult84"/>
+    </Output>
+    <Throws>
+      <Exception ID="900" Label="Migrate RTC Exception" ReferenceName="MigrateRTCException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="migrateRTCException900"/>
+      <Exception ID="901" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights901"/>
+    </Throws>
+    <ServiceReference ID="167" Label="RtcManagerServices" ReferenceName="RtcManagerServices.RtcManagerServices" ReferencePath="xmcp.factorymanager"/>
+    <Mappings ID="347" Label="Mapping">
+      <Input>
+        <Data ID="348" Label="Migrate RTCs Request" ReferenceName="MigrateRTCsRequest" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="migrateRTCsRequest348">
+          <Source RefID="347"/>
+        </Data>
+        <Source RefID="3"/>
+      </Input>
+      <Output>
+        <Data ID="349" IsList="true" Label="RTC Migration" ReferenceName="RTCMigration" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigration349">
+          <Source RefID="347"/>
+        </Data>
+        <Target RefID="350"/>
+      </Output>
+      <Output>
+        <Data ID="351" Label="Abort Orders" ReferenceName="AbortOrders" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="abortOrders351">
+          <Source RefID="347"/>
+        </Data>
+        <Target RefID="352"/>
+      </Output>
+      <Mapping>%1%=%0%.rTCMigration</Mapping>
+      <Mapping>%2%.abortOrders=%0%.abortProblemeticOrders</Mapping>
+    </Mappings>
+    <Foreach ID="463">
+      <Source RefID="350"/>
+      <Target RefID="465"/>
+      <InputList RefID="350">
+        <Data ID="464" Label="RTC Migration" ReferenceName="RTCMigration" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigration464"/>
+      </InputList>
+      <OutputList RefID="465">
+        <Data ID="169" Label="RTC Migration Result" ReferenceName="RTCMigrationResult" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigrationResult169">
+          <Source RefID="166"/>
+        </Data>
+      </OutputList>
+      <Function ID="166" Label="Migrate RTC">
+        <Source RefID="167"/>
+        <Source RefID="464"/>
+        <Source RefID="352"/>
+        <Target RefID="167"/>
+        <Target RefID="169"/>
+        <Invoke Operation="migrateRTC" ServiceID="167">
+          <Source RefID="464"/>
+          <Source RefID="352"/>
+        </Invoke>
+        <Receive ServiceID="167">
+          <Target RefID="169"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Data ID="350" IsList="true" Label="RTC Migration" ReferenceName="RTCMigration" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigration350">
+      <Source RefID="347"/>
+    </Data>
+    <Data ID="352" Label="Abort Orders" ReferenceName="AbortOrders" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="abortOrders352">
+      <Source RefID="347"/>
+    </Data>
+    <Data ID="465" IsList="true" Label="RTC Migration Result" ReferenceName="RTCMigrationResult" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigrationResult465">
+      <Target RefID="465"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="465"/>
+      <Target RefID="84"/>
+      <Copy>
+        <Source RefID="465"/>
+        <Target RefID="84"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

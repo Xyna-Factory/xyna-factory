@@ -1,0 +1,74 @@
+[
+  {
+    "docu": "!workspace! should be unescaped like 'default workspace'. Opens, deploys und closes datatype. Checks if setting was successful.",
+	"type": "function",
+	"functionName": "changeDatatypeParent",
+	"input": ["!workspace!", "!dtToChangeParentPath!", "!dtToChangeParentName!", "!newParentFqn!"],
+	"output": [],
+	"operations":
+	[
+	  {
+	    "operation": "set",
+		"variable": "!escapedWorkspace!",
+		"value": "!workspace!"
+	  },
+	  {
+	    "operation": "modification",
+		"variable": "!escapedWorkspace!",
+		"modification":{ "operation": "urlencode" }
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!url!",
+		"value": "/runtimeContext/!escapedWorkspace!/xmom/datatypes/!dtToChangeParentPath!/!dtToChangeParentName!"
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "GET",
+	    "url": "!url!"
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!label!",
+		"pathInResponse": "xmomItem/label",
+		"unquoteResult": true
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "PUT",
+	    "url": "!url!/objects/typeInfoArea/change",
+		"payload": {"baseType":"!newParentFqn!","revision":0}
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!url!/save",
+	    "payload": {"revision":0,"path":"!dtToChangeParentPath!","label":"!label!"}
+	  },
+      {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!url!/deploy",
+	    "payload": {"revision":0}
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!readBaseTypeFqn!",
+		"pathInResponse": "updates/$list[id=dt]/areas/$list[id=typeInfoArea]/baseType",
+		"unquoteResult": true
+	  },
+	  {
+	    "operation": "assert",
+		"constraint": "equals",
+		"variable": "!readBaseTypeFqn!",
+		"value": "!newParentFqn!"
+	  },
+	  {
+	    "operation": "call",
+	    "requestType": "POST",
+	    "url": "!url!/close",
+	    "payload": {"force":false}
+	  }
+	]
+  }
+]

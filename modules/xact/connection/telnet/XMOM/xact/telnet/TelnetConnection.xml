@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ManagedConnection" BaseTypePath="xact.connection" Label="Telnet connection" TypeName="TelnetConnection" TypePath="xact.telnet" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>TelnetConnectionImpl.jar</Libraries>
+  <Service Label="Telnet Connection" TypeName="TelnetConnection">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xfmg.xfmon.protocolmsg.ProtocolMessage</Datatype>
+        <Datatype>xfmg.xfmon.protocolmsg.ProtocolMessageStore</Datatype>
+        <Datatype>xfmg.xfmon.protocolmsg.ProtocolPayload</Datatype>
+        <Datatype>xfmg.xfmon.protocolmsg.StoreParameter</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation ID="0" IsStatic="false" Label="Connect" Name="connect">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().connect();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="1" IsStatic="false" Label="Disconnect" Name="disconnect">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().disconnect();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="7" IsStatic="false" Label="Read login result" Name="readLoginResult">
+      <Input>
+        <Data ID="2" Label="Document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+        <Data ID="3" Label="Device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType"/>
+        <Data ID="4" Label="Send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter"/>
+      </Input>
+      <Output>
+        <Data ID="5" Label="Command response tuple" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple"/>
+      </Output>
+      <Throws>
+        <Exception ID="6" Label="Connection Already Closed" ReferenceName="ConnectionAlreadyClosed" ReferencePath="xact.connection" VariableName="connectionAlreadyClosed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().readLoginResult(documentType, deviceType, sendParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="14" IsStatic="false" Label="Send" Name="send">
+      <Input>
+        <Data Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
+        <Data Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType"/>
+        <Data Label="device type" ReferenceName="DeviceType" ReferencePath="xact.connection" VariableName="deviceType"/>
+        <Data Label="send parameter" ReferenceName="SendParameter" ReferencePath="xact.connection" VariableName="sendParameter"/>
+      </Input>
+      <Output>
+        <Data Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
+      </Output>
+      <Throws>
+        <Exception Label="Connection Already Closed" ReferenceName="ConnectionAlreadyClosed" ReferencePath="xact.connection" VariableName="connectionAlreadyClosed"/>
+        <Exception Label="Read Timeout" ReferenceName="ReadTimeout" ReferencePath="xact.connection" VariableName="readTimeout"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet IsCancelable="true" Type="Java">return getImplementationOfInstanceMethods().send(command, documentType, deviceType, sendParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

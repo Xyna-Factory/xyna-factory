@@ -1,0 +1,132 @@
+[
+  {
+    "docu": "assert query",
+	"type": "function",
+	"functionName": "assertQuery",
+	"input":
+	[
+	  "!stepId!",
+	  "!rootTypeFqn!",
+	  "!filterConditionFormula!",
+	  "!maxObjects!",
+	  "!queryHistory!",
+	  "!firstSortCriterion!",
+	  "!firstSortCriterionReverse!"
+	],
+	"output":[],
+	"operations": [
+		{
+		  "operation": "read",
+		  "targetVariable": "!selectionMask!",
+		  "pathInResponse": "info/$list[id=!stepId!]/inputs[0]",
+		  "unquoteResult": true
+		},
+		{
+			"operation": "convertToJson",
+			"variable": "!selectionMask!"
+		},
+		{
+			"operation": "setFromVariable",
+			"sourceVariable": "!selectionMask!",
+			"path": "rootType",
+			"targetVariable": "!rootType!",
+			"unquoteResult": true
+		},
+		{
+		  "operation": "assert",
+		  "constraint": "equals",
+		  "variable": "!rootType!",
+		  "value": "!rootTypeFqn!"
+		},
+		{
+		  "operation": "read",
+		  "targetVariable": "!filterCondition!",
+		  "pathInResponse": "info/$list[id=!stepId!]/inputs[1]",
+		  "unquoteResult": true
+		},
+		{
+			"operation": "convertToJson",
+			"variable": "!filterCondition!"
+		},
+		{
+			"operation": "setFromVariable",
+			"sourceVariable": "!filterCondition!",
+			"path": "formula",
+			"targetVariable": "!formula!",
+			"unquoteResult": true
+		},
+		{
+			"operation": "convertToJson",
+			"variable": "!formula!"
+		},
+		{
+		  "operation": "assert",
+		  "constraint": "equals",
+		  "variable": "!formula!",
+		  "value": "!filterConditionFormula!"
+		},
+		{
+		  "operation": "read",
+		  "targetVariable": "!queryParameter!",
+		  "pathInResponse": "info/$list[id=!stepId!]/inputs[2]",
+		  "unquoteResult": true
+		},
+		{
+			"operation": "convertToJson",
+			"variable": "!queryParameter!"
+		},
+		{
+			"operation": "setFromVariable",
+			"sourceVariable": "!queryParameter!",
+			"path": "maxObjects",
+			"targetVariable": "!q_maxObjects!",
+			"unquoteResult": true
+		},
+		{
+		  "operation": "assert",
+		  "constraint": "equals",
+		  "variable": "!q_maxObjects!",
+		  "value": "!maxObjects!"
+		},
+		{
+			"operation": "setFromVariable",
+			"sourceVariable": "!queryParameter!",
+			"path": "queryHistory",
+			"targetVariable": "!q_queryHistory!",
+			"unquoteResult": true
+		},
+		{
+		  "operation": "assert",
+		  "constraint": "equals",
+		  "variable": "!q_queryHistory!",
+		  "value": "!queryHistory!"
+		},
+		{
+			"operation": "setFromVariable",
+			"sourceVariable": "!queryParameter!",
+			"path": "sortCriterion/$list[0]/reverse",
+			"targetVariable": "!sortCriterionReverse!",
+			"unquoteResult": true
+		},
+		{
+		  "operation": "assert",
+		  "constraint": "equals",
+		  "variable": "!sortCriterionReverse!",
+		  "value": "!sortCriterionReverse!"
+		},
+		{
+			"operation": "setFromVariable",
+			"sourceVariable": "!queryParameter!",
+			"path": "sortCriterion/$list[0]/criterion",
+			"targetVariable": "!sortCriterion!",
+			"unquoteResult": true
+		},
+		{
+		  "operation": "assert",
+		  "constraint": "equals",
+		  "variable": "!sortCriterion!",
+		  "value": "!firstSortCriterion!"
+		}
+	]
+  }
+]

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Storable" BaseTypePath="xnwh.persistence" Label="Test Report Entry - Test Case Instance" TypeName="TestReportEntryTestCaseInstance" TypePath="xdev.xtestfactory.infrastructure.storables" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Persistence>
+      <Reference>firstTestReport</Reference>
+      <Reference>testCase</Reference>
+      <Reference>correspondingTestProject</Reference>
+    </Persistence>
+  </Meta>
+  <Data Label="ID" VariableName="iD">
+    <Meta>
+      <Persistence>
+        <Type>UniqueIdentifier</Type>
+      </Persistence>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Corresponding Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="correspondingTestProject"/>
+  <Data Label="First Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="firstTestReport"/>
+  <Data Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+    <Meta>
+      <Documentation>The Test Case on which the entry reports.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Start Time" ReferenceName="DateTime" ReferencePath="base" VariableName="startTime"/>
+  <Data Label="End Time" ReferenceName="DateTime" ReferencePath="base" VariableName="endTime"/>
+  <Data Label="Order ID" VariableName="orderID">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Evaluated" VariableName="evaluated">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Success" VariableName="success">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+</DataType>

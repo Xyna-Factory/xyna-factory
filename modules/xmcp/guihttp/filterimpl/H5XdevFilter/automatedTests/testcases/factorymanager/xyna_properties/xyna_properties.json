@@ -1,0 +1,12 @@
+{
+    "testseries": [
+        "xyna_properties_001/testseries.json",
+        "xyna_properties_002/testseries.json",
+        "xyna_properties_003/testseries.json",
+        "xyna_properties_004/testseries.json",
+        "xyna_properties_005/testseries.json",
+        "xyna_properties_006/testseries.json",
+        "xyna_properties_007/testseries.json",
+        "xyna_properties_008/testseries.json"
+    ]
+}

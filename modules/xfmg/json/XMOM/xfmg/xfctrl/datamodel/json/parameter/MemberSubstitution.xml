@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Member Substitution" TypeName="MemberSubstitution" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>The json key specified by "pathToMemberInDataType" will be substituted by "jsonName" (and vice versa when parsing).
+
+Example:
+- pathToMemberInDataType=info.a
+- jsonName=@a!
+
+=&gt; transforms
+
+"info" : {"a" : "1", "b" : 2}
+
+into
+
+"info" : {"@a!" : "1", "b" : 2}</Documentation>
+  </Meta>
+  <Data Label="Path to Member in Data Type" VariableName="pathToMemberInDataType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Path given by member var names (not labels!), separated by dots. If member var name is a list, then append "[]", except if path ends with the list.
+
+Example:
+router.interfaces vs router.interfaces[].supportedtypes</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Json Name" VariableName="jsonName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

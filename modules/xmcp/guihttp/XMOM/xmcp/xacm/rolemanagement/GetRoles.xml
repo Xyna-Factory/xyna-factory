@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Roles" TypeName="GetRoles" TypePath="xmcp.xacm.rolemanagement" Version="1.8">
+  <Meta>
+    <Documentation>https://wiki.gip.com/wiki/Zeta_Framework/Tabellen/Tabellen_(Backend)</Documentation>
+    <FixedDetailOptions>highDetailsMode,openDocumentation,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="Get Roles" Name="GetRoles">
+    <Input>
+      <Data ID="13" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo13"/>
+    </Input>
+    <Output>
+      <Data ID="14" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      <Data ID="2657" IsList="true" Label="Role Table Entry" ReferenceName="RoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleTableEntry2657"/>
+    </Output>
+    <Throws>
+      <Exception ID="2766" Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist2766"/>
+    </Throws>
+    <ServiceReference ID="2646" Label="Create RoleTableEntry" ReferenceName="CreateRoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.subwfs"/>
+    <ServiceReference ID="339" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables"/>
+    <ServiceReference ID="217" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl"/>
+    <Choice ID="312" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="13"/>
+      <Target RefID="329"/>
+      <Target RefID="336"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="345" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo345"/>
+        <Source RefID="13">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="313" Label="" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="319" Label="Generate Table Columns">
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="346" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+            <Target RefID="318"/>
+          </Output>
+          <Mapping>%0%["0"].name="Role"</Mapping>
+          <Mapping>%0%["0"].path="role"</Mapping>
+          <Mapping>%0%["0"].sort="asc"</Mapping>
+          <Mapping>%0%["1"].name="Domain"</Mapping>
+          <Mapping>%0%["1"].path="domain"</Mapping>
+          <Mapping>%0%["2"].name="Documentation"</Mapping>
+          <Mapping>%0%["2"].path="documentation"</Mapping>
+        </Mappings>
+        <Mappings ID="323" Label="Set bootstrap &amp; columns">
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="320" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo320"/>
+            <Source RefID="13"/>
+          </Input>
+          <Input>
+            <Data ID="321" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn321"/>
+            <Source RefID="318"/>
+          </Input>
+          <Output>
+            <Data ID="322" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo322"/>
+            <Target RefID="324"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="330">
+          <Source RefID="324"/>
+          <Source RefID="318"/>
+          <Target RefID="329"/>
+          <Target RefID="336"/>
+          <Copy>
+            <Source RefID="324"/>
+            <Target RefID="329"/>
+          </Copy>
+          <Copy>
+            <Source RefID="318"/>
+            <Target RefID="336"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="311" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="327" Label="1:1">
+          <Input>
+            <Data ID="325" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo325"/>
+            <Source RefID="13"/>
+          </Input>
+          <Output>
+            <Data ID="326" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo326"/>
+            <Target RefID="328"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="335" Label="Get columns from Table Info">
+          <Meta>
+            <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="332" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo332"/>
+            <Source RefID="328">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="333" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn333"/>
+            <Target RefID="334"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="331">
+          <Source RefID="328"/>
+          <Source RefID="334"/>
+          <Target RefID="329"/>
+          <Target RefID="336"/>
+          <Copy>
+            <Source RefID="328"/>
+            <Target RefID="329"/>
+          </Copy>
+          <Copy>
+            <Source RefID="334"/>
+            <Target RefID="336"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="340" Label="Build TableInfo and Select Columns">
+      <Source RefID="339"/>
+      <Source RefID="329"/>
+      <Source RefID="1342"/>
+      <Source RefID="336"/>
+      <Target RefID="339"/>
+      <Target RefID="342"/>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="339">
+        <Source RefID="329">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="1342">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xmcp.xacm.rolemanagement.datatypes.RoleTableEntry</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="336"/>
+      </Invoke>
+      <Receive ServiceID="339">
+        <Target RefID="342"/>
+      </Receive>
+    </Function>
+    <Function ID="229" Label="Get All Roles">
+      <Source RefID="217"/>
+      <Target RefID="217"/>
+      <Target RefID="230"/>
+      <Invoke Operation="getAllRoles" ServiceID="217"/>
+      <Receive ServiceID="217">
+        <Target RefID="230"/>
+      </Receive>
+    </Function>
+    <Foreach ID="2649">
+      <Source RefID="230"/>
+      <Target RefID="2651"/>
+      <InputList RefID="230">
+        <Data ID="2648" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole2648">
+          <Target RefID="2647"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="2651">
+        <Data ID="2650" Label="Role Table Entry" ReferenceName="RoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleTableEntry425">
+          <Source RefID="2647"/>
+        </Data>
+      </OutputList>
+      <Function ID="2647" Label="Create RoleTableEntry">
+        <Source RefID="2646"/>
+        <Source RefID="2652"/>
+        <Source RefID="2648"/>
+        <Target RefID="2646"/>
+        <Target RefID="2650"/>
+        <Invoke Operation="CreateRoleTableEntry" ServiceID="2646">
+          <Source RefID="2652">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+          <Source RefID="2648"/>
+        </Invoke>
+        <Receive ServiceID="2646">
+          <Target RefID="2650"/>
+        </Receive>
+      </Function>
+      <Data ID="2652" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName">
+        <Target RefID="2647"/>
+        <Data Label="name" VariableName="name">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>XYNA</Value>
+        </Data>
+      </Data>
+    </Foreach>
+    <Function ID="368" Label="TableHelper Sort Filter Limit">
+      <Source RefID="339"/>
+      <Source RefID="342"/>
+      <Source RefID="2651"/>
+      <Target RefID="339"/>
+      <Target RefID="2656"/>
+      <Invoke Operation="tableHelperSortFilterLimit" ServiceID="339">
+        <Source RefID="342">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="2651">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+            <ExpectedType>xmcp.xacm.rolemanagement.datatypes.RoleTableEntry</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="339">
+        <Target RefID="2656">
+          <Meta>
+            <ExpectedType>xmcp.xacm.rolemanagement.datatypes.RoleTableEntry</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="402" Label="Set Length">
+      <Source RefID="339"/>
+      <Source RefID="342"/>
+      <Source RefID="2656"/>
+      <Target RefID="339"/>
+      <Target RefID="403"/>
+      <Invoke Operation="setLength" ServiceID="339">
+        <Source RefID="342">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="2656">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="339">
+        <Target RefID="403"/>
+      </Receive>
+    </Function>
+    <Data ID="230" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole">
+      <Source RefID="229"/>
+      <Target RefID="2649"/>
+    </Data>
+    <Data ID="318" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn318">
+      <Source RefID="319"/>
+      <Target RefID="323"/>
+    </Data>
+    <Data ID="324" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo324">
+      <Source RefID="323"/>
+      <Target RefID="330"/>
+    </Data>
+    <Data ID="328" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo328">
+      <Source RefID="327"/>
+      <Target RefID="335"/>
+    </Data>
+    <Data ID="329" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo329">
+      <Source RefID="330"/>
+      <Source RefID="331"/>
+      <Source RefID="312"/>
+      <Target RefID="340"/>
+    </Data>
+    <Data ID="334" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn334">
+      <Source RefID="335"/>
+      <Target RefID="331"/>
+    </Data>
+    <Data ID="336" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn336">
+      <Source RefID="330"/>
+      <Source RefID="331"/>
+      <Source RefID="312"/>
+      <Target RefID="340"/>
+    </Data>
+    <Data ID="342" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="340"/>
+      <Target RefID="368"/>
+    </Data>
+    <Data ID="403" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo74">
+      <Source RefID="402"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="1342" Label="Role Table Entry" ReferenceName="RoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="const_RoleTableEntry1245">
+      <Target RefID="340"/>
+      <Data ID="2635" VariableName="role">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="2636" VariableName="domain">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="2637" VariableName="documentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="2651" IsList="true" Label="Role Table Entry" ReferenceName="RoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleTableEntry">
+      <Source RefID="2649"/>
+      <Target RefID="368"/>
+    </Data>
+    <Data ID="2656" IsList="true" Label="Role Table Entry" ReferenceName="RoleTableEntry" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="roleTableEntry2656">
+      <Source RefID="368"/>
+      <Target RefID="402"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="403"/>
+      <Source RefID="2656"/>
+      <Target RefID="14"/>
+      <Target RefID="2657"/>
+      <Copy>
+        <Source RefID="403">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="14"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2656">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2657"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

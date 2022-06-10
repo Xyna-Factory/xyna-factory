@@ -1,0 +1,67 @@
+{
+  "meta":
+  {
+    "name": "dragExceptionIntoWorkflow",
+	"description": "Öffnet einen neuen Workflow und fügt eine Exception ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type zu der Exception passt.",
+	"created": "08.11.2019",
+	"updated": "12.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "invoke",
+	  "functionName": "createNewWorkflow",
+	  "mapInput": {},
+	  "mapOutput": 
+	  {
+	    "!url!": "!url!"
+	  }
+	},
+    {
+	  "operation": "setRandom",
+	  "variable": "!rnd1!"
+	},
+	{
+	  "operation": "setRandom",
+	  "variable": "!rnd2!"
+	},
+	{
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!exceptionPath!": "autoTest.generated.!rnd1!"},
+		{"!exceptionLabel!": "generatedException_!rnd2!"}
+	  ]
+	},
+	{
+	  "operation": "invoke",
+	  "functionName": "createException",
+	  "mapInput": {"!path!": "!exceptionPath!", "!label!": "!exceptionLabel!", "!workspace!": "default workspace"},
+	  "mapOutput": {"!name!": "!exceptionName!"}
+	},
+	{
+	  "operation": "call",
+	  "requestType": "POST",
+	  "url": "!url!/objects/step0/insert",
+	  "payload": {"index":-1,"content":{"type":"exception","label":"!exceptionLabel!","fqn":"!exceptionPath!.!exceptionName!","isList":false},"relativePosition":"inside","revision":0}
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "listLength",
+	  "expectedValue": 1,
+	  "path": "updates/$list[0]/areas/$list[id=step0]/items/$list"
+	},
+	{
+	  "operation": "read",
+	  "targetVariable": "!stepType!",
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[0]/$meta/fqn",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!stepType!",
+	  "value": "xmcp.processmodeller.datatypes.exception.Throw"
+	}
+  ]
+}

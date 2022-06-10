@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+	Name="Xyna Exceptions" Version="3.0.0" DefaultLanguage="EN">
+  <Description>CodeRange von 02254 bis 02260 (beide Grenzen inklusive)</Description>
+  
+  <!-- BLACK_SERVER_HOME muss sowohl beim build als auch zur laufzeit korrekt gesetzt sein. -->
+  <Import File="${BLACK_SERVER_HOME}/Exceptions.xml" />
+  
+  <ExceptionType Code="XYNA-02254" TypeName="XSOR_Process_Exception" TypePath="com.gip.xyna.persistence.xsor.exceptions" 
+  				 BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+    <Data Label="methodName" VariableName="methodName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">XSOR invocation from method %0% was not successful.</MessageText>
+    <MessageText Language="DE">Der XSOR-Aufruf aus der Methode %0% war nicht erfolgreich.</MessageText>
+  </ExceptionType>
+  <ExceptionType Code="XYNA-02255" TypeName="XSOR_Severe_Process_Exception" TypePath="com.gip.xyna.persistence.xsor.exceptions" 
+  				 BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
+    <Data Label="methodName" VariableName="methodName">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">XSOR invocation from method %0% encountered a severe error.</MessageText>
+    <MessageText Language="DE">Der XSOR-Aufruf aus der Methode %0% stieß auf einen schwerwiegenden Fehler.</MessageText>
+  </ExceptionType>
+</ExceptionStore>

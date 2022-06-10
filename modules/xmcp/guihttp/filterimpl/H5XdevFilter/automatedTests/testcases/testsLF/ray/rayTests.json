@@ -1,0 +1,12 @@
+{
+  "testseries":
+  [
+    "02LabelsAndRenamingTestseries.json",
+	"03ConditionalsTestseries.json",
+	"04Exceptions.json",
+	"07Expressions.json"
+  ],
+  "tests":
+  [
+  ]
+}

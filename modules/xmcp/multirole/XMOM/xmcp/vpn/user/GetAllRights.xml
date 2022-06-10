@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get All Rights" TypeName="GetAllRights" TypePath="xmcp.vpn.user" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get All Rights" Name="GetAllRights">
+    <Input/>
+    <Output>
+      <Data ID="33" IsList="true" Label="GUI Wrapper Role" ReferenceName="GUIWrapperRole" ReferencePath="xmcp.vpn.user" VariableName="gUIWrapperRole33">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Role Does Not Exist" ReferenceName="RoleDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="roleDoesNotExist"/>
+    </Throws>
+    <ServiceReference ID="6" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Function ID="7" Label="Get All Roles">
+      <Source RefID="6"/>
+      <Target RefID="6"/>
+      <Target RefID="8"/>
+      <Invoke Operation="getAllRoles" ServiceID="6"/>
+      <Receive ServiceID="6">
+        <Target RefID="8"/>
+      </Receive>
+    </Function>
+    <Data ID="8" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole8">
+      <Source RefID="7"/>
+      <Target RefID="22"/>
+    </Data>
+    <Foreach ID="22">
+      <Source RefID="8"/>
+      <Target RefID="24"/>
+      <InputList RefID="8">
+        <Data ID="21" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole21">
+          <Target RefID="20"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="24">
+        <Data ID="23" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole23">
+          <Source RefID="20"/>
+        </Data>
+      </OutputList>
+      <Function ID="20" Label="Filter Roles: Select only ALIAS">
+        <Source RefID="19"/>
+        <Source RefID="21"/>
+        <Target RefID="19"/>
+        <Target RefID="23"/>
+        <Invoke Operation="FilterRolesSelectOnlyALIAS" ServiceID="19">
+          <Source RefID="21"/>
+        </Invoke>
+        <Receive ServiceID="19">
+          <Target RefID="23"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <ServiceReference ID="19" Label="Filter Roles: Select only ALIAS" ReferenceName="FilterRolesSelectOnlyALIAS" ReferencePath="xmcp.vpn.user.sub">
+      <Source RefID="20"/>
+      <Target RefID="20"/>
+    </ServiceReference>
+    <Data ID="24" IsList="true" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole24">
+      <Source RefID="22"/>
+      <Target RefID="31"/>
+    </Data>
+    <ServiceReference ID="27" Label="Build GUI Wrapper Role" ReferenceName="BuildGUIWrapperRole" ReferencePath="xmcp.vpn.user.sub">
+      <Source RefID="28"/>
+      <Target RefID="28"/>
+    </ServiceReference>
+    <Foreach ID="31">
+      <Source RefID="24"/>
+      <Target RefID="32"/>
+      <InputList RefID="24">
+        <Data ID="30" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole30">
+          <Target RefID="28"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="32">
+        <Data ID="29" Label="GUI Wrapper Role" ReferenceName="GUIWrapperRole" ReferencePath="xmcp.vpn.user" VariableName="gUIWrapperRole29">
+          <Source RefID="28"/>
+        </Data>
+      </OutputList>
+      <Function ID="28" Label="Build GUI Wrapper Role">
+        <Source RefID="27"/>
+        <Source RefID="30"/>
+        <Target RefID="29"/>
+        <Target RefID="27"/>
+        <Invoke Operation="BuildGUIWrapperRole" ServiceID="27">
+          <Source RefID="30">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="27">
+          <Target RefID="29"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Data ID="32" IsList="true" Label="GUI Wrapper Role" ReferenceName="GUIWrapperRole" ReferencePath="xmcp.vpn.user" VariableName="gUIWrapperRole">
+      <Source RefID="31"/>
+      <Target RefID="38"/>
+    </Data>
+    <ServiceReference ID="37" Label="Permission Service Group" ReferenceName="PermissionServiceGroup.PermissionServiceGroup" ReferencePath="xmcp.vpn.user">
+      <Source RefID="38"/>
+      <Target RefID="38"/>
+    </ServiceReference>
+    <Function ID="38" Label="Sort Role List">
+      <Source RefID="37"/>
+      <Source RefID="32"/>
+      <Target RefID="37"/>
+      <Target RefID="39"/>
+      <Invoke Operation="sortRoleList" ServiceID="37">
+        <Source RefID="32"/>
+      </Invoke>
+      <Receive ServiceID="37">
+        <Target RefID="39"/>
+      </Receive>
+    </Function>
+    <Data ID="39" IsList="true" Label="GUI Wrapper Role" ReferenceName="GUIWrapperRole" ReferencePath="xmcp.vpn.user" VariableName="gUIWrapperRole54">
+      <Source RefID="38"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="39"/>
+      <Target RefID="33"/>
+      <Copy>
+        <Source RefID="39">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="33"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

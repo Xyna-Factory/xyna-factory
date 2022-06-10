@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="FileManagement" TypeName="FileManagement" TypePath="xfmg.xfctrl.filemgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>FileManagementImpl.jar</Libraries>
+  <Service Label="File Management" TypeName="FileManagement">
+    <Operation IsStatic="true" Label="Get File Info" Name="getFileInfo">
+      <Input>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+      </Input>
+      <Output>
+        <Data Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.filemgmt.FileManagementImpl.getFileInfo(managedFileId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="retrieve" Name="retrieve">
+      <Input>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+        <Data Label="File" ReferenceName="File" ReferencePath="base" VariableName="file"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.filemgmt.FileManagementImpl.retrieve(managedFileId, file);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="retrieve as document" Name="retrieveAsDocument">
+      <Input>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.filemgmt.FileManagementImpl.retrieveAsDocument(managedFileId);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="store" Name="store">
+      <Input>
+        <Data Label="File" ReferenceName="File" ReferencePath="base" VariableName="file"/>
+        <Data Label="Scope" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.filemgmt.FileManagementImpl.store(file, text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="store document" Name="storeDocument">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="Filename" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+        <Data Label="Scope" ReferenceName="Text" ReferencePath="base" VariableName="text19"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.filemgmt.FileManagementImpl.storeDocument(document, text, text19);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

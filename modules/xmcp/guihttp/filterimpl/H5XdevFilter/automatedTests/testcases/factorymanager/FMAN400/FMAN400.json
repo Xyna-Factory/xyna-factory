@@ -1,0 +1,498 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "3.8.2021",
+    "updated": "3.8.2021"
+  },
+  "factoryCount": 2,
+  "factoryConstraints": [
+    {
+      "constraintType": "differentIP",
+      "factoryIndices": [0, 1]
+    }
+  ],
+  "operations": [
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "GuiHttp%252F"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ImportRTA!": "xmcp.factorymanager.rtcmanager.ImportRTA"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ImportRTARequest!": "xmcp.factorymanager.rtcmanager.ImportRTARequest"
+        },
+        {
+          "!local!": "local"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.FactoryNode!": "xmcp.factorymanager.rtcmanager.FactoryNode"
+        },
+        {
+          "!GuiHttp!": "GuiHttp"
+        },
+        {
+          "!1.1.315!": "1.1.315"
+        },
+        {
+          "!xfmg.xfctrl.filemgmt.ManagedFileId!": "xfmg.xfctrl.filemgmt.ManagedFileId"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetRuntimeApplica!": "xmcp.factorymanager.rtcmanager.GetRuntimeApplications"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetFactoryNodes!": "xmcp.factorymanager.rtcmanager.GetFactoryNodes"
+        },
+        {
+          "!18377991!": "18377991"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetRTADetails!": "xmcp.factorymanager.rtcmanager.GetRTADetails"
+        },
+        {
+          "!Node_A!": "Node A"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.RuntimeApplicatio!": "xmcp.factorymanager.rtcmanager.RuntimeApplication"
+        },
+        {
+          "!FMAN-400!": "FMAN-400"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCs!": "xmcp.factorymanager.rtcmanager.GetDependentRTCs"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionForward"
+        },
+        {
+          "!STOPPED!": "STOPPED"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetDependentRTCsR!": "xmcp.factorymanager.rtcmanager.GetDependentRTCsRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.ReferenceDirectio0!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionBackwards"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon!": "xmcp.factorymanager.rtcmanager.GetApplicationContent"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetApplicationCon0!": "xmcp.factorymanager.rtcmanager.GetApplicationContentRequest"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetIssues!": "xmcp.factorymanager.rtcmanager.GetIssues"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.GetRTCs!": "xmcp.factorymanager.rtcmanager.GetRTCs"
+        },
+        {
+          "!xmcp.factorymanager.rtcmanager.RTCName!": "xmcp.factorymanager.rtcmanager.RTCName"
+        },
+        {
+          "!Both_Nodes!": "Both Nodes"
+        },
+        {
+          "!State!": "State"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!runtimeContext.state!": "runtimeContext.state"
+        },
+        {
+          "!asc!": "asc"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!runtimeContext.name!": "runtimeContext.name"
+        },
+        {
+          "!Type!": "Type"
+        },
+        {
+          "!rtcType!": "rtcType"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.38!": "0.6.38"
+        },
+        {
+          "!elementType!": "elementType"
+        },
+        {
+          "!Node_B!": "Node B"
+        },
+        {
+          "!10.0.10.61!": "10.0.10.61"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "upload",
+      "file": "FMAN-400_Both_Nodes.app",
+      "relativeToThis": true,
+      "fileIdVar": "!fileId!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ImportRTARequest!"
+            },
+            "globalSettingsOnly": false,
+            "managedFileId": {
+              "$meta": {
+                "fqn": "!xfmg.xfctrl.filemgmt.ManagedFileId!"
+              },
+              "id": "!fileId!"
+            },
+            "onAllClusterNodes": true,
+            "overrideExisting": true,
+            "targetNodes": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+                  },
+                  "isLocal": true,
+                  "name": "!local!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.ImportRTA!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "upload",
+      "file": "FMAN-400_Both_Nodes.app",
+      "relativeToThis": true,
+      "fileIdVar": "!fileId!",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ImportRTARequest!"
+            },
+            "globalSettingsOnly": false,
+            "managedFileId": {
+              "$meta": {
+                "fqn": "!xfmg.xfctrl.filemgmt.ManagedFileId!"
+              },
+              "id": "!fileId!"
+            },
+            "onAllClusterNodes": true,
+            "overrideExisting": true,
+            "targetNodes": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+                  },
+                  "isLocal": true,
+                  "name": "!local!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.ImportRTA!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "upload",
+      "file": "FMAN-400_Node_A.app",
+      "relativeToThis": true,
+      "fileIdVar": "!fileId!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ImportRTARequest!"
+            },
+            "globalSettingsOnly": false,
+            "managedFileId": {
+              "$meta": {
+                "fqn": "!xfmg.xfctrl.filemgmt.ManagedFileId!"
+              },
+              "id": "!fileId!"
+            },
+            "onAllClusterNodes": true,
+            "overrideExisting": true,
+            "targetNodes": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+                  },
+                  "isLocal": true,
+                  "name": "!local!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.ImportRTA!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "upload",
+      "file": "FMAN-400_Node_B.app",
+      "relativeToThis": true,
+      "fileIdVar": "!fileId!",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.ImportRTARequest!"
+            },
+            "globalSettingsOnly": false,
+            "managedFileId": {
+              "$meta": {
+                "fqn": "!xfmg.xfctrl.filemgmt.ManagedFileId!"
+              },
+              "id": "!fileId!"
+            },
+            "onAllClusterNodes": true,
+            "overrideExisting": true,
+            "targetNodes": {
+              "$list": [
+                {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+                  },
+                  "isLocal": true,
+                  "name": "!local!"
+                }
+              ],
+              "$meta": {
+                "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+              }
+            }
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.ImportRTA!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder",
+	  "factoryIndex": 1
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetRuntimeApplica!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/$list[version=!Node_B!]/factoryNode",
+      "targetVariable": "!nodeBName!",
+      "unquoteResult": true
+    },
+	{
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "output[0]/$list",
+      "entries": [
+	    {
+	      "version": "!Node_A!",
+		  "factoryNode": "!local!"
+	    },
+	    {
+	      "version": "!Both_Nodes!",
+		  "factoryNode": "!local!"
+	    },
+	    {
+	      "version": "!Node_B!",
+		  "factoryNode": "!nodeBName!"
+	    },
+	    {
+	      "version": "!Both_Nodes!",
+		  "factoryNode": "!nodeBName!"
+	    }
+      ]
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.RTCName!"
+            },
+            "name": "!FMAN-400!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+            },
+            "isLocal": true,
+            "name": "!local!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+	{
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "output[1]/$list",
+      "entries": [
+	    {
+	      "runtimeContext": {
+			"isLocal": "!false!"
+		  }
+	    }
+      ]
+    },
+	{
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "output[1]/$list",
+      "entries": [
+	    {
+	      "runtimeContext": {
+			"isLocal": true,
+			"version": "!Both_Nodes!"
+		  }
+	    },
+		{
+	      "runtimeContext": {
+			"isLocal": true,
+			"version": "!Node_A!"
+		  }
+	    }
+      ]
+    },
+
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.tables.datatypes.TableInfo!"
+            },
+            "bootstrap": true,
+            "version": "!1.2!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.RTCName!"
+            },
+            "name": "!FMAN-400!"
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.rtcmanager.FactoryNode!"
+            },
+            "isLocal": false,
+            "name": "!nodeBName!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.rtcmanager.GetRTCs!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/startorder"
+    },
+	{
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": true,
+      "pathToList": "output[1]/$list",
+      "entries": [
+	    {
+	      "runtimeContext": {
+			"isLocal": "!false!"
+		  }
+	    }
+      ]
+    },
+	{
+      "operation": "assert",
+      "constraint": "isInList",
+      "invertLogic": false,
+      "pathToList": "output[1]/$list",
+      "entries": [
+	    {
+	      "runtimeContext": {
+			"isLocal": false,
+			"version": "!Both_Nodes!"
+		  }
+	    },
+		{
+	      "runtimeContext": {
+			"isLocal": false,
+			"version": "!Node_B!"
+		  }
+	    }
+      ]
+    }
+  ]
+}

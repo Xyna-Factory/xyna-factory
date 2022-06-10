@@ -1,0 +1,7 @@
+{
+  "tests":
+  [
+    "dataType.json",
+	"serviceGroup.json"
+  ]
+}

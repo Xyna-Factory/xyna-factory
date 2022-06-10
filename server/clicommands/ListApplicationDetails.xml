@@ -1,0 +1,29 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="listapplicationdetails" Groups="Application" Description="List all objects, which are linked to an application."/>
+  <Argument Name="applicationName" Description="The name of the application." Optional="true"/>
+  <Argument Name="versionName" Description="A version name. The application definition will be default." Optional="true"/>
+  <BoolOption Name="v" LongName="verbose" Description="Enables verbose output and shows also objects that the application depends on" Optional="true"/>
+  <Argument Name="excludeSubtypesOf" MultipleValues="true" Description="Base types whose subtypes will be taken into a new version only when they are directly needed (by default subtypes of service-outputs will be included automatically into a new version). Use '*' for all subtypes." Optional="true"/>
+  <Argument Name="parentWorkspace" Description="The name of the parent workspace." Optional="true"/>
+  <Argument Name="fileName" Description="The name of the application file." Optional="true"/>
+  <Argument Name="excludeEntryTypes" MultipleValues="true" Description="Excludes different entry-lists from output" Optional="true"/>
+  <BoolOption Name="r" LongName="onlyMissingRequirements" Description="Show only missing application requirements." Optional="true"/>
+  
+</XynaCommandLineCommand>

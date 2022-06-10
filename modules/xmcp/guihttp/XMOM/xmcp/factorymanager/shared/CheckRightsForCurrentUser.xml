@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Check Rights for Current User" TypeName="CheckRightsForCurrentUser" TypePath="xmcp.factorymanager.shared" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Check Rights for Current User" Name="CheckRightsForCurrentUser">
+    <Input>
+      <Data ID="19" IsList="true" Label="Required Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight19">
+        <Target RefID="80"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception ID="132" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights132"/>
+    </Throws>
+    <ServiceReference ID="5" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="119"/>
+      <Target RefID="119"/>
+    </ServiceReference>
+    <Function ID="119" Label="Get current role">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+      <Target RefID="120"/>
+      <Invoke Operation="getCurrentRole" ServiceID="5"/>
+      <Receive ServiceID="5">
+        <Target RefID="120"/>
+      </Receive>
+    </Function>
+    <Function ID="80" Label="Has Role All Rights">
+      <Source RefID="25"/>
+      <Source RefID="19"/>
+      <Source RefID="120"/>
+      <Target RefID="25"/>
+      <Target RefID="81"/>
+      <Invoke Operation="hasRoleAllRights" ServiceID="25">
+        <Source RefID="120"/>
+        <Source RefID="19"/>
+      </Invoke>
+      <Receive ServiceID="25">
+        <Target RefID="81"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="25" Label="Shared Services" ReferenceName="SharedServices.SharedServices" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="80"/>
+      <Target RefID="80"/>
+    </ServiceReference>
+    <Choice ID="40" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="81"/>
+      <Input>
+        <Data ID="49" IsList="true" Label="Missing Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight49"/>
+        <Source RefID="81">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="34" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Mappings ID="46" Label="Mapping">
+          <Source RefID="81"/>
+          <Target RefID="50"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="45" IsList="true" Label="Missing Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight45"/>
+            <Source RefID="81">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Exception ID="66" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+            <Target RefID="50"/>
+          </Output>
+          <Mapping>%1%.missingRights=%0%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="50" ID="51" Label="Throw Insufficient Rights">
+          <Source RefID="50"/>
+        </Throw>
+        <Assign ID="38"/>
+      </Case>
+      <Case ID="35" Label="false">
+        <Assign ID="39"/>
+      </Case>
+    </Choice>
+    <Exception ID="50" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights50">
+      <Source RefID="46"/>
+      <Target RefID="51"/>
+    </Exception>
+    <Data ID="81" IsList="true" Label="Missing Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight32">
+      <Source RefID="80"/>
+      <Target RefID="40"/>
+      <Target RefID="46"/>
+    </Data>
+    <Data ID="120" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole120">
+      <Source RefID="119"/>
+      <Target RefID="80"/>
+    </Data>
+    <Assign ID="2"/>
+  </Operation>
+</Service>

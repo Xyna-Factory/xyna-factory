@@ -1,0 +1,71 @@
+{
+  "meta":
+  {
+    "name": "foreachInsideParallel",
+	"description": "Execute a workflow containing a stepForeach inside a StepParallel",
+	"created": "06.01.2021",
+	"updated": "06.01.2021"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON283.WFForeachInParallel",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 5,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[1]/areas/$list[name=content]/items/$list[0]/id",
+      "targetVariable": "!branchId!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "isInList",
+	  "pathToList": "info/$list",
+	  "entries": [
+	    {
+	      "id": "!branchId!",
+		  "status": "FINISHED"
+	    }
+	  ]
+    },
+	{
+	  "operation": "assert",
+	  "constraint": "listLength",
+	  "path": "info/$list",
+	  "expectedValue": 9
+	}
+  ]
+}

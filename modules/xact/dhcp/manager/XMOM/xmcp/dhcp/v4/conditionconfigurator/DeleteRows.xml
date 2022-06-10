@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="201" Label="DeleteRows" TypeName="DeleteRows" TypePath="xmcp.dhcp.v4.conditionconfigurator" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(936)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="DeleteRows" Name="DeleteRows">
+    <Input>
+      <Data ID="18" Label="Delete Rows Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="row_ctype18">
+        <Target RefID="59"/>
+        <Target RefID="223"/>
+        <Target RefID="247"/>
+        <Target RefID="261"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="155" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype155">
+        <Source RefID="9"/>
+      </Data>
+      <Data ID="176" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput176">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="4" Label="Condition" ReferenceName="Condition.Condition" ReferencePath="xmcp.dhcp.v4.conditionconfigurator">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="205" Label="Class Get All Rows">
+      <Source RefID="204"/>
+      <Source RefID="208"/>
+      <Target RefID="204"/>
+      <Target RefID="206"/>
+      <Target RefID="207"/>
+      <Invoke Operation="GetAllRows" ServiceID="204">
+        <Source RefID="208">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="204">
+        <Target RefID="206"/>
+        <Target RefID="207"/>
+      </Receive>
+    </Function>
+    <Mappings ID="216" Label="Extract RowList Class">
+      <Source RefID="207"/>
+      <Target RefID="218"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data Label="Get All Rows Output" ReferenceName="RowList_ctype1" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages" VariableName="rowList_ctype1"/>
+        <Source RefID="207"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Row_ctype" ReferenceName="Row_ctype1" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages" VariableName="row_ctype1"/>
+        <Target RefID="218"/>
+      </Output>
+      <Mapping>%1%=%0%.row</Mapping>
+    </Mappings>
+    <Mappings ID="223" Label="Build search String">
+      <Source RefID="18"/>
+      <Target RefID="224"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data Label="Delete Rows Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="row_ctype"/>
+        <Source RefID="18"/>
+      </Input>
+      <Output>
+        <Data Label="searchstring" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+        <Target RefID="224"/>
+      </Output>
+      <Mapping>%1%.text=concat("&lt;",%0%.conditionID,"&gt;")</Mapping>
+    </Mappings>
+    <Mappings ID="232" Label="Init contained flag">
+      <Target RefID="231"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Output>
+        <Data Label="contained flag" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber"/>
+        <Target RefID="231"/>
+      </Output>
+      <Mapping>%0%.value="0"</Mapping>
+    </Mappings>
+    <Foreach ID="226">
+      <Source RefID="218"/>
+      <InputList RefID="218">
+        <Data ID="225" Label="Row_ctype" ReferenceName="Row_ctype1" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages" VariableName="row_ctype1225">
+          <Target RefID="211"/>
+        </Data>
+      </InputList>
+      <Choice ID="211" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="224"/>
+        <Source RefID="225"/>
+        <Input>
+          <Data Label="Row_ctype" ReferenceName="Row_ctype1" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages"/>
+          <Source RefID="225"/>
+        </Input>
+        <Input>
+          <Data Label="searchstring" ReferenceName="Text" ReferencePath="base"/>
+          <Source RefID="224">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Case ID="209" Label="true" Premise="contains(%0%.conditional,%1%.text)">
+          <Mappings ID="238" Label="Set contained &quot;true&quot;">
+            <Source RefID="231"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="237" Label="contained flag" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber237"/>
+              <Source RefID="231"/>
+            </Input>
+            <Mapping>%0%.value=%0%.value+"1"</Mapping>
+          </Mappings>
+          <Assign/>
+        </Case>
+        <Case ID="210" Label="false">
+          <Assign/>
+        </Case>
+      </Choice>
+    </Foreach>
+    <Choice ID="241" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="231"/>
+      <Target RefID="269"/>
+      <Target RefID="270"/>
+      <Input>
+        <Data Label="contained flag" ReferenceName="IntegerNumber" ReferencePath="base.math"/>
+        <Source RefID="231">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="239" Label="true" Premise="%0%.value&gt;&quot;0&quot;">
+        <Choice ID="265" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="231"/>
+          <Target RefID="264"/>
+          <Target RefID="268"/>
+          <Input>
+            <Data Label="contained flag" ReferenceName="IntegerNumber" ReferencePath="base.math"/>
+            <Source RefID="231"/>
+          </Input>
+          <Case ID="255" Label="true" Premise="%0%.value==&quot;1&quot;">
+            <Mappings ID="247" Label="Set Output (failed)">
+              <Source RefID="18"/>
+              <Source RefID="231"/>
+              <Target RefID="246"/>
+              <Target RefID="248"/>
+              <Meta>
+                <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+              </Meta>
+              <Input>
+                <Data ID="253" Label="Delete Rows Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="row_ctype253"/>
+                <Source RefID="18"/>
+              </Input>
+              <Input>
+                <Data ID="254" Label="contained flag" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber254"/>
+                <Source RefID="231"/>
+              </Input>
+              <Output>
+                <Data Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype"/>
+                <Target RefID="246"/>
+              </Output>
+              <Output>
+                <Data Label="Delete Rows Output" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput"/>
+                <Target RefID="248"/>
+              </Output>
+              <Mapping>%2%.description=concat("Error: Condition with ID \"",%0%.conditionID,"\" is used in 1 class.")</Mapping>
+            </Mappings>
+            <Assign ID="266">
+              <Source RefID="246"/>
+              <Source RefID="248"/>
+              <Target RefID="264"/>
+              <Target RefID="268"/>
+              <Copy>
+                <Source RefID="246"/>
+                <Target RefID="264"/>
+              </Copy>
+              <Copy>
+                <Source RefID="248"/>
+                <Target RefID="268"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="256" Label="false">
+            <Mappings ID="261" Label="Set Output (failed)">
+              <Source RefID="18"/>
+              <Source RefID="231"/>
+              <Target RefID="262"/>
+              <Target RefID="263"/>
+              <Input>
+                <Data ID="257" Label="Delete Rows Input" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="row_ctype257"/>
+                <Source RefID="18"/>
+              </Input>
+              <Input>
+                <Data ID="258" Label="contained flag" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber258"/>
+                <Source RefID="231"/>
+              </Input>
+              <Output>
+                <Data ID="259" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype259"/>
+                <Target RefID="262"/>
+              </Output>
+              <Output>
+                <Data ID="260" Label="Delete Rows Output" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput260"/>
+                <Target RefID="263"/>
+              </Output>
+              <Mapping>%2%.description=concat("Error: Condition with ID \"",%0%.conditionID,"\" is used in ",%1%.value," classes.")</Mapping>
+            </Mappings>
+            <Assign ID="267">
+              <Source RefID="262"/>
+              <Source RefID="263"/>
+              <Target RefID="264"/>
+              <Target RefID="268"/>
+              <Copy>
+                <Source RefID="262"/>
+                <Target RefID="264"/>
+              </Copy>
+              <Copy>
+                <Source RefID="263"/>
+                <Target RefID="268"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Assign ID="250">
+          <Source RefID="264"/>
+          <Source RefID="268"/>
+          <Target RefID="269"/>
+          <Target RefID="270"/>
+          <Copy>
+            <Source RefID="264"/>
+            <Target RefID="269"/>
+          </Copy>
+          <Copy>
+            <Source RefID="268"/>
+            <Target RefID="270"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="240" Label="false">
+        <Mappings ID="59" Label="Build Input">
+          <Source RefID="18"/>
+          <Target RefID="62"/>
+          <Input>
+            <Data ID="60" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="row_ctype60">
+              <Source RefID="59"/>
+            </Data>
+            <Source RefID="18"/>
+          </Input>
+          <Output>
+            <Data ID="61" Label="Delete Rows Request ctype" ReferenceName="DeleteRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="deleteRowsRequest_ctype61">
+              <Source RefID="59"/>
+            </Data>
+            <Target RefID="62"/>
+          </Output>
+          <Mapping>%1%.deleteRowsInput=%0%</Mapping>
+        </Mappings>
+        <Function ID="5" Label="Delete Rows">
+          <Source RefID="4"/>
+          <Source RefID="62"/>
+          <Target RefID="4"/>
+          <Target RefID="6"/>
+          <Invoke Operation="deleteRows" ServiceID="4">
+            <Source RefID="62"/>
+          </Invoke>
+          <Receive ServiceID="4">
+            <Target RefID="6"/>
+          </Receive>
+        </Function>
+        <Mappings ID="129" Label="Extract Output">
+          <Source RefID="6"/>
+          <Target RefID="190"/>
+          <Target RefID="200"/>
+          <Input>
+            <Data ID="146" Label="Response_ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="response_ctype146">
+              <Source RefID="129"/>
+            </Data>
+            <Source RefID="6"/>
+          </Input>
+          <Output>
+            <Data ID="189" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype189">
+              <Source RefID="129"/>
+            </Data>
+            <Target RefID="190"/>
+          </Output>
+          <Output>
+            <Data ID="199" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput199">
+              <Source RefID="129"/>
+            </Data>
+            <Target RefID="200"/>
+          </Output>
+          <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+          <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+          <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+          <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+          <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+          <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+          <Mapping>%2%.deleteRowsOutput=%0%.payload.deleteRowsOutput</Mapping>
+        </Mappings>
+        <Assign ID="251">
+          <Source RefID="190"/>
+          <Source RefID="200"/>
+          <Target RefID="269"/>
+          <Target RefID="270"/>
+          <Copy>
+            <Source RefID="190"/>
+            <Target RefID="269"/>
+          </Copy>
+          <Copy>
+            <Source RefID="200"/>
+            <Target RefID="270"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+      <Target RefID="129"/>
+    </Data>
+    <Data ID="62" Label="Delete Rows Request ctype" ReferenceName="DeleteRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Condition.www.gip.com.juno.DHCP.WS.Condition.Messages" VariableName="deleteRowsRequest_ctype62">
+      <Source RefID="59"/>
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="190" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype190">
+      <Source RefID="129"/>
+      <Target RefID="251"/>
+    </Data>
+    <Data ID="200" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput200">
+      <Source RefID="129"/>
+      <Target RefID="251"/>
+    </Data>
+    <ServiceReference ID="204" Label="GetAllRows" ReferenceName="GetAllRows" ReferencePath="xmcp.dhcp.v4.classconfigurator">
+      <Source RefID="205"/>
+      <Target RefID="205"/>
+    </ServiceReference>
+    <Data ID="206" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype91">
+      <Source RefID="205"/>
+    </Data>
+    <Data ID="207" Label="Get All Rows Output" ReferenceName="RowList_ctype1" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages" VariableName="rowList_ctype1204">
+      <Source RefID="205"/>
+      <Target RefID="216"/>
+    </Data>
+    <Data ID="208" Label="GetAllRowsInput" ReferenceName="GetAllRowsInput" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="const_GetAllRowsInput">
+      <Target RefID="205"/>
+      <Data Label="GetAllRowsInput" VariableName="getAllRowsInput">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="218" IsList="true" Label="Row_ctype" ReferenceName="Row_ctype1" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Class0.www.gip.com.juno.DHCP.WS.Class0.Messages" VariableName="row_ctype1218">
+      <Source RefID="216"/>
+      <Target RefID="226"/>
+    </Data>
+    <Data ID="224" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text224">
+      <Source RefID="223"/>
+      <Target RefID="211"/>
+    </Data>
+    <Data ID="231" Label="Integer Number" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber231">
+      <Source RefID="232"/>
+      <Target RefID="238"/>
+      <Target RefID="241"/>
+      <Target RefID="247"/>
+      <Target RefID="261"/>
+      <Target RefID="265"/>
+    </Data>
+    <Data ID="246" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype246">
+      <Source RefID="247"/>
+      <Target RefID="266"/>
+    </Data>
+    <Data ID="248" Label="Delete Rows Output" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput248">
+      <Source RefID="247"/>
+      <Target RefID="266"/>
+    </Data>
+    <Data ID="262" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype262">
+      <Source RefID="261"/>
+      <Target RefID="267"/>
+    </Data>
+    <Data ID="263" Label="Delete Rows Output" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput263">
+      <Source RefID="261"/>
+      <Target RefID="267"/>
+    </Data>
+    <Data ID="264" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype264">
+      <Source RefID="265"/>
+      <Source RefID="266"/>
+      <Source RefID="267"/>
+      <Target RefID="250"/>
+    </Data>
+    <Data ID="268" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput268">
+      <Source RefID="265"/>
+      <Source RefID="266"/>
+      <Source RefID="267"/>
+      <Target RefID="250"/>
+    </Data>
+    <Data ID="269" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype269">
+      <Source RefID="241"/>
+      <Source RefID="250"/>
+      <Source RefID="251"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="270" Label="DeleteRowsOutput" ReferenceName="DeleteRowsOutput" ReferencePath="xmcp.dhcp.v4.conditionconfigurator" VariableName="deleteRowsOutput270">
+      <Source RefID="241"/>
+      <Source RefID="250"/>
+      <Source RefID="251"/>
+      <Target RefID="9"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="269"/>
+      <Source RefID="270"/>
+      <Target RefID="155"/>
+      <Target RefID="176"/>
+      <Copy>
+        <Source RefID="269">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="155"/>
+      </Copy>
+      <Copy>
+        <Source RefID="270"/>
+        <Target RefID="176"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

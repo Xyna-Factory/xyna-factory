@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Role" TypeName="DeleteRole" TypePath="xmcp.xacm.rolemanagement" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation</FixedDetailOptions>
+    <Documentation>Der Workflow führt die folgenden Schritte durch:
+* Löschen der Rolle mit dem übergebeben Rollennamen</Documentation>
+  </Meta>
+  <Operation ID="0" Label="Delete Role" Name="DeleteRole">
+    <Input>
+      <Data ID="27" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role">
+        <Target RefID="19"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Action Failed" ReferenceName="ActionFailed" ReferencePath="xfmg.xopctrl" VariableName="actionFailed"/>
+      <Exception Label="Predefined Xyna Object" ReferenceName="PredefinedXynaObject" ReferencePath="xfmg.xopctrl" VariableName="predefinedXynaObject"/>
+      <Exception Label="Role Is Assigned" ReferenceName="RoleIsAssigned" ReferencePath="xfmg.xopctrl" VariableName="roleIsAssigned"/>
+    </Throws>
+    <ServiceReference ID="6" Label="User Role Management" ReferenceName="UserRoleManagement.UserRoleManagement" ReferencePath="xfmg.xopctrl">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Mappings ID="19" Label="Create Input Parameter For Delete Role">
+      <Source RefID="27"/>
+      <Target RefID="16"/>
+      <Target RefID="17"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,VisualMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="26" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role26"/>
+        <Source RefID="27"/>
+      </Input>
+      <Output>
+        <Data ID="21" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole21"/>
+        <Target RefID="16"/>
+      </Output>
+      <Output>
+        <Data ID="22" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName22"/>
+        <Target RefID="17"/>
+      </Output>
+      <Mapping>%1%.role=%0%.roleName</Mapping>
+      <Mapping>%2%.name=%0%.domainName0</Mapping>
+    </Mappings>
+    <Function ID="7" Label="Delete role">
+      <Source RefID="6"/>
+      <Source RefID="16"/>
+      <Source RefID="17"/>
+      <Target RefID="6"/>
+      <Invoke Operation="deleteRole" ServiceID="6">
+        <Source RefID="16"/>
+        <Source RefID="17"/>
+      </Invoke>
+      <Receive ServiceID="6"/>
+    </Function>
+    <Data ID="16" Label="User Authentication Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole">
+      <Source RefID="19"/>
+      <Target RefID="7"/>
+    </Data>
+    <Data ID="17" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName0">
+      <Source RefID="19"/>
+      <Target RefID="7"/>
+    </Data>
+    <Assign ID="2"/>
+  </Operation>
+</Service>

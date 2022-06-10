@@ -1,0 +1,52 @@
+{
+  "operations":
+  [
+    {
+	  "operation": "multiSet",
+	  "data":
+	  [
+	    {"!source!": 5},
+	    {"!result1!" : 10},
+		{"!result2!": 15},
+		{"!result3!": 20}
+	  ]
+	},
+	{
+	  "operation": "add",
+	  "targetVariable": "!call_result1!",
+	  "sourceVariable": "!source!",
+	  "additionVariable": "!source!"
+	},
+	{
+	  "operation": "add",
+	  "targetVariable": "!call_result2!",
+	  "sourceVariable": "!source!",
+	  "additionConstant": 10
+	},
+	{
+	  "operation": "add",
+	  "targetVariable": "!call_result3!",
+	  "sourceVariable": "!source!",
+	  "additionVariable": "!source!",
+	  "additionConstant": 10
+	},
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!call_result1!",
+      "value": "!result1!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!call_result2!",
+      "value": "!result2!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!call_result3!",
+      "value": "!result3!"
+    }
+  ]
+}

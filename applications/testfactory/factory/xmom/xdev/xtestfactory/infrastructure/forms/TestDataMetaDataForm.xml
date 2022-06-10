@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Form xmlns="http://www.gip.com/xyna/xdev/xfractmod" Editable="true" IsList="true" Label="Test Data Lists" TypeName="TestDataMetaDataForm" TypePath="xdev.xtestfactory.infrastructure.forms" Version="1.8">
+        <Label Language="EN">Test Data Lists</Label>
+        <Label Language="DE">Testdatenlisten</Label>
+        <Input>
+           <Data ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testdatametadata"/>
+        </Input>
+ 
+        <FormItem Label="Name">
+                <Label Language="EN">Name</Label>
+                <Label Language="DE">Name</Label>
+                <DataLink>%0%.name</DataLink>
+        </FormItem>
+
+        <FormItem Label="Description">
+                <Label Language="EN">Description</Label>
+                <Label Language="DE">Beschreibung</Label>
+                <DataLink>%0%.description</DataLink>
+        </FormItem>
+
+        <Button>
+           <Label Language="EN">Create Test Data List</Label>
+           <Label Language="DE">Testdatenliste erstellen</Label>
+              <Action>
+                 <OpenForm OperatingMode="Create" ReferenceName="TestDataMetaDataCreateForm" ReferencePath="xdev.xtestfactory.infrastructure.forms">
+                   <DataLink>%0%</DataLink>
+                 </OpenForm>
+              </Action>
+         </Button>
+
+        <Box Type="Top">
+            <FormItem>
+            <ItemRenderer ClassName="com.gip.xyna.blackedition.testfactory.itemrenderer.ImportFile" Parameter="xdev.xtestfactory.infrastructure.actions.ImportTestDataFromCSV"/>
+            </FormItem>
+        </Box>
+
+          <Box Secondary="true" Type="Footer">
+            <FormItem>
+              <ItemRenderer ClassName="com.gip.xyna.blackedition.testfactory.itemrenderer.ExportFile" Parameter="xdev.xtestfactory.infrastructure.actions.ExportTestDataToCSV;name;csv"/>
+              <DataLink>%0%</DataLink>
+            </FormItem>
+            <Button Label="Reset Test Data">
+                        <Label Language="EN">Reset Test Data</Label>
+                        <Label Language="DE">Testdaten zurücksetzen</Label>
+                        <Action>
+                           <CallService ReferenceName="ResetTestData" ReferencePath="xdev.xtestfactory.infrastructure.actions" Synchronously="true">
+                               <DataLink>%0%</DataLink>
+                           </CallService>
+                        </Action>
+            </Button>
+        </Box>
+
+
+        <Box Secondary="true" Type="Header">
+            <FormItem Label="Test Case ">
+              <Label Language="EN">Edit Test Data List </Label>
+              <Label Language="DE">Testdatenliste </Label>
+              <DataLink>%0%.name</DataLink>
+            </FormItem>
+            <FormItem Label="">
+              <Label Language="EN"/>
+              <Label Language="DE"><![CDATA[ bearbeiten]]></Label>
+            </FormItem>
+        </Box>
+
+                <FormItem Editable="true" HideIfUndefined="false" Label="Name" Secondary="true">
+                        <Label Language="EN">Name</Label>
+                        <Label Language="DE">Name</Label>
+                        <DataLink>%0%.name</DataLink>
+                </FormItem>
+                <FormItem Editable="true" HideIfUndefined="false" Label="Description" Secondary="true">
+                        <Label Language="EN">Description</Label>
+                        <Label Language="DE">Beschreibung</Label>
+                        <DataLink>%0%.description</DataLink>
+                </FormItem>
+
+                <FormItem Editable="true" HideIfUndefined="false" Label="Test Data Object" Secondary="true">
+                        <Label Language="EN">Test Data Definition</Label>
+                        <Label Language="DE">Testdaten-Definition</Label>
+                        <DataLink>%0%.testDataFullQualifiedStorableName</DataLink>
+                        <ItemRenderer ClassName="com.gip.xyna.blackedition.forms.view.util.AutocompletionInputRenderer" Parameter="DataType;EXTENDS=xdev.xtestfactory.infrastructure.storables.TestData"/>
+                </FormItem>
+
+                <FormItem Editable="true" HideIfUndefined="false" Label="One Time Test Data" Secondary="true">
+                        <Label Language="EN">One Time Test Data</Label>
+                        <Label Language="DE">Einmaltestdaten</Label>
+                        <DataLink>%0%.oneTimeTestData</DataLink>
+                </FormItem>
+
+        <FormItem Secondary="true">
+            <ItemRenderer ClassName="com.gip.xyna.blackedition.testfactory.itemrenderer.CorrespondingTestData"/>
+            <DataLink>%0%</DataLink>
+        </FormItem>
+</Form>

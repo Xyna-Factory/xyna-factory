@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Modify Role" TypeName="ModifyRole" TypePath="xmcp.xacm.rolemanagement" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,openDocumentation</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Modify Role" Name="ModifyRole">
+    <Input>
+      <Data ID="3" Label="Role" ReferenceName="Role" ReferencePath="xmcp.xacm.rolemanagement.datatypes" VariableName="role">
+        <Target RefID="7"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Change Role Exception" ReferenceName="ChangeRoleException" ReferencePath="xmcp.xacm.rolemanagement.exceptions" VariableName="changeRoleException"/>
+    </Throws>
+    <ServiceReference ID="6" Label="RoleManagement" ReferenceName="RoleManagement.RoleManagement" ReferencePath="xmcp.xacm">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Function ID="7" Label="Change Role">
+      <Source RefID="6"/>
+      <Source RefID="3"/>
+      <Target RefID="6"/>
+      <Invoke Operation="changeRole" ServiceID="6">
+        <Source RefID="3"/>
+      </Invoke>
+      <Receive ServiceID="6"/>
+    </Function>
+    <Assign ID="2"/>
+  </Operation>
+</Service>

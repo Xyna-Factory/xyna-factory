@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+
+<wsdl:definitions xmlns:mess="http://www.gip.com/juno/DHCP/WS/Optionsv4/Messages" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.gip.com/juno/DHCP/WS/Optionsv4" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Optionsv4" targetNamespace="http://www.gip.com/juno/DHCP/WS/Optionsv4">
+
+  <wsdl:types>
+    <xsd:schema>
+      <xsd:import namespace="http://www.gip.com/juno/DHCP/WS/Optionsv4/Messages" schemaLocation="Optionsv4Messages.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+
+
+  <wsdl:message name="GetMetaInfoRequestMessage">
+    <wsdl:part element="mess:GetMetaInfoRequest" name="GetMetaInfoRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetMetaInfoResponseMessage">
+    <wsdl:part element="mess:MetaInfoOutput" name="GetMetaInfoResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetAllRowsRequestMessage">
+  	<wsdl:part element="mess:GetAllRowsRequest" name="GetAllRowsRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetAllRowsResponseMessage">
+  	<wsdl:part element="mess:GetAllRowsOutput" name="GetAllRowsResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="SearchRowsRequestMessage">
+  	<wsdl:part element="mess:SearchRowsRequest" name="SearchRowsRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="SearchRowsResponseMessage">
+  	<wsdl:part element="mess:SearchRowsOutput" name="SearchRowsResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="UpdateRowRequestMessage">
+    <wsdl:part element="mess:UpdateRowRequest" name="UpdateRowRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="UpdateRowResponseMessage">
+    <wsdl:part element="mess:UpdateRowOutput" name="UpdateRowResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="InsertRowRequestMessage">
+    <wsdl:part element="mess:InsertRowRequest" name="InsertRowRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="InsertRowResponseMessage">
+    <wsdl:part element="mess:InsertRowOutput" name="InsertRowResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="DeleteRowsRequestMessage">
+    <wsdl:part element="mess:DeleteRowsRequest" name="DeleteRowsRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="DeleteRowsResponseMessage">
+    <wsdl:part element="mess:DeleteRowsOutput" name="DeleteRowsResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="CountRowsWithConditionResponseMessage">
+    <wsdl:part element="mess:CountRowsWithConditionOutput" name="CountRowsWithConditionResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="CountRowsWithConditionRequestMessage">
+    <wsdl:part element="mess:CountRowsWithConditionRequest" name="CountRowsWithConditionRequest"/>
+  </wsdl:message>
+  
+  <wsdl:message name="CountAllRowsResponseMessage">
+    <wsdl:part element="mess:CountAllRowsOutput" name="CountAllRowsResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="CountAllRowsRequestMessage">
+    <wsdl:part element="mess:CountAllRowsRequest" name="CountAllRowsRequest"/>
+  </wsdl:message>
+
+
+  <wsdl:message name="DeployOnDPPRequestMessage">
+    <wsdl:part element="mess:DeployOnDPPRequest" name="DeployOnDPPRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="DeployOnDPPResponseMessage">
+    <wsdl:part element="mess:DeployOnDPPResponse" name="DeployOnDPPResponse"/>
+  </wsdl:message>
+
+  
+    <wsdl:message name="GetColValuesDistinctRequestMessage">
+    <wsdl:part element="mess:GetColValuesDistinctRequest" name="GetColValuesDistinctRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetColValuesDistinctResponseMessage">
+    <wsdl:part element="mess:ColValuesDistinctOutput" name="GetColValuesDistinctResponse"/>
+  </wsdl:message>
+  
+
+
+  <wsdl:portType name="Optionsv4">
+
+    <wsdl:operation name="GetMetaInfo">
+      <wsdl:input message="tns:GetMetaInfoRequestMessage"/>
+      <wsdl:output message="tns:GetMetaInfoResponseMessage"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetAllRows">
+      <wsdl:input message="tns:GetAllRowsRequestMessage"/>
+      <wsdl:output message="tns:GetAllRowsResponseMessage"/>
+    </wsdl:operation>
+
+
+    <wsdl:operation name="SearchRows">
+  		<wsdl:input message="tns:SearchRowsRequestMessage"/>
+  		<wsdl:output message="tns:SearchRowsResponseMessage"/>
+  	</wsdl:operation>
+
+
+    <wsdl:operation name="UpdateRow">
+      <wsdl:input message="tns:UpdateRowRequestMessage"/>
+      <wsdl:output message="tns:UpdateRowResponseMessage"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="InsertRow">
+      <wsdl:input message="tns:InsertRowRequestMessage"/>
+      <wsdl:output message="tns:InsertRowResponseMessage"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeleteRows">
+      <wsdl:input message="tns:DeleteRowsRequestMessage"/>
+      <wsdl:output message="tns:DeleteRowsResponseMessage"/>
+    </wsdl:operation>
+    
+     <wsdl:operation name="CountRowsWithCondition">
+      <wsdl:input message="tns:CountRowsWithConditionRequestMessage"/>
+      <wsdl:output message="tns:CountRowsWithConditionResponseMessage"/>
+    </wsdl:operation>
+    
+     <wsdl:operation name="CountAllRows">
+      <wsdl:input message="tns:CountAllRowsRequestMessage"/>
+      <wsdl:output message="tns:CountAllRowsResponseMessage"/>
+    </wsdl:operation>
+
+
+     <wsdl:operation name="DeployOnDPP">
+      <wsdl:input message="tns:DeployOnDPPRequestMessage"/>
+      <wsdl:output message="tns:DeployOnDPPResponseMessage"/>
+    </wsdl:operation>
+
+
+     <!-- wsdl:operation name="GetColValuesDistinct">
+      <wsdl:input message="tns:GetColValuesDistinctRequestMessage" ></wsdl:input>
+      <wsdl:output message="tns:GetColValuesDistinctResponseMessage"></wsdl:output>
+    </wsdl:operation-->
+  </wsdl:portType>
+
+
+  <wsdl:binding name="Optionsv4Binding" type="tns:Optionsv4">
+  	<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="GetMetaInfo">
+      <soap:operation soapAction="GetMetaInfo"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+
+    <wsdl:operation name="GetAllRows">
+      <soap:operation soapAction="GetAllRows"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+
+    <wsdl:operation name="SearchRows">
+      <soap:operation soapAction="SearchRows"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+
+    <wsdl:operation name="UpdateRow">
+      <soap:operation soapAction="UpdateRow"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="InsertRow">
+      <soap:operation soapAction="InsertRow"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeleteRows">
+      <soap:operation soapAction="DeleteRows"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+       <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="CountRowsWithCondition">
+      <soap:operation soapAction="CountRowsWithCondition"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="CountAllRows">
+      <soap:operation soapAction="CountAllRows"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    
+    <wsdl:operation name="DeployOnDPP">
+      <soap:operation soapAction="DeployOnDPP"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+        
+  </wsdl:binding>
+
+  <wsdl:service name="Optionsv4">
+      <wsdl:port binding="tns:Optionsv4Binding" name="Optionsv4Port">
+         <soap:address location="http://localhost:8080/Optionsv4/services/Optionsv4Port"/>
+      </wsdl:port>
+   </wsdl:service>
+
+</wsdl:definitions>

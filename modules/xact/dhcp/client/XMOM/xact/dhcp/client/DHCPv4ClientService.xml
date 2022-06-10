@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DHCPv4 Client Service" TypeName="DHCPv4ClientService" TypePath="xact.dhcp.client" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>DHCPv4ClientServiceImpl.jar</Libraries>
+  <SharedLibraries>dhcpv4Client</SharedLibraries>
+  <Service Label="DHCPv4 Client Service" TypeName="DHCPv4ClientService">
+    <Operation ID="85" IsStatic="true" Label="Extract Lease" Name="extractLease">
+      <Meta>
+        <Abstract.UID>C1749495-36B8-0E95-9649-DAA58DD06617</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="82" Label="DHCP Packet" ReferenceName="DHCPPacket" ReferencePath="xact.dhcp" VariableName="dHCPPacket"/>
+      </Input>
+      <Output>
+        <Data ID="83" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType"/>
+        <Data ID="84" Label="Lease" ReferenceName="Lease" ReferencePath="xact.dhcp.client" VariableName="lease"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.dhcp.client.DHCPv4ClientServiceImpl.extractLease(dHCPPacket);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="81" IsStatic="true" Label="Extract Lease Options For Request" Name="extractLeaseOptionsForRequest">
+      <Meta>
+        <Abstract.UID>7A789BFF-21C0-0014-27D6-DAA2B09F89C3</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="78" Label="DHCP Packet" ReferenceName="DHCPPacket" ReferencePath="xact.dhcp" VariableName="dHCPPacket"/>
+      </Input>
+      <Output>
+        <Data ID="79" Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType"/>
+        <Data ID="80" IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.dhcp.client.DHCPv4ClientServiceImpl.extractLeaseOptionsForRequest(dHCPPacket);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Send Request" Name="sendRequest">
+      <Meta>
+        <Abstract.UID>A0847E8E-C4F8-BE79-D11E-D57E91A06749</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="DHCP Server" ReferenceName="DHCPServer" ReferencePath="xact.dhcp.client" VariableName="dHCPServer"/>
+        <Data Label="MAC Address" ReferenceName="MACAddress" ReferencePath="xact.dhcp.client" VariableName="mACAddress"/>
+        <Data Label="Link Address" ReferenceName="LinkAddress" ReferencePath="xact.dhcp.client" VariableName="linkAddress"/>
+        <Data Label="DHCP Message Type" ReferenceName="DHCPMessageType" ReferencePath="xact.dhcp.enums" VariableName="dHCPMessageType"/>
+        <Data IsList="true" Label="Options" ReferenceName="Option" ReferencePath="xact.dhcp.options" VariableName="option"/>
+      </Input>
+      <Output>
+        <Data Label="correlationId" ReferenceName="CorrelationId" ReferencePath="xprc.synchronization" VariableName="correlationId"/>
+      </Output>
+      <Throws>
+        <Exception Label="DHCP Send Exception" ReferenceName="DHCPSendException" ReferencePath="xact.dhcp.client" VariableName="dHCPSendException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.dhcp.client.DHCPv4ClientServiceImpl.sendRequest(dHCPServer, mACAddress, linkAddress, dHCPMessageType, option);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

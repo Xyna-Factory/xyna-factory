@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project default="regenerateFromWsdl" xmlns:oracle="antlib:oracle" basedir=".">
+	
+  <!-- FOLLOWING PROPERTIES MUST BE DEFINED INLINE OR IN A PROPERTIES-FILE -->
+  <!-- wsdl.file=      Path to wsdl file which should be regenerated (including name of the wsdl-file and its wsdl-ending)
+       ws.name=        Web service name
+       package.name=   Packagename for java implementation class and its interface
+       interface.name= Name of java interface (without java-ending)
+       class.name=     Name of java implementation class (without java-ending) -->
+       
+    <!-- SPECIAL PROPERTIES (ONLY FOR SPECIFIC TARGETS) -->
+    <!-- xsd.name=         Use with target genJavaBeans. Name of the xsd-file from which the Beans should be regenerated
+         endpoint.address= Use with target genProxy. URL of the web service which should be used -->
+       
+  <!-- EQUAL FOR ALL JDEVELOPER PROJECTS -->
+  <!-- Path to java source folder -->
+  <property name="build.dir" value="src"/>
+  <!-- Path to java class folger -->
+  <property name="classes.dir" value="classes"/>
+  <!-- Path to WEB-INF folder of current project -->
+  <property name="web-inf.dir" value="public_html/WEB-INF"/>
+  <!-- Path to WEB-INF/wsdl folder of current project -->
+  <property name="wsdl.dir" value="${web-inf.dir}/wsdl"/>
+  <!-- Path to proxy source folder -->
+  <property name="proxy.dir" value="proxysrc"/>
+  
+  <!--Regenerates an existing web service by using a specific WSDL file (property: wsdl.file).
+  The master regeneration file is intended to stay at a common location while a project specific
+  regeneration file is copied into the web service project.-->
+  <target name="regenerateFromWsdl" depends="fetchWsdl, genInterface, genDDs"/>
+  
+  <!-- Import wsdl and belonging xsd-files in the current porject -->
+  <target name="fetchWsdl">
+    <oracle:fetchWsdl wsdl="${wsdl.file}" output="${wsdl.dir}"/>
+  </target>
+  <!-- Analyze wsdl -->
+  <target name="analyze">
+    <oracle:analyze wsdl="${wsdl.file}"/>
+  </target>
+  
+  <!-- Regenerate all JavaBeans, *-java-wsdl-mapping.xml and the java interface of the web service -->
+  <target name="genInterface" depends="clear">
+    <oracle:genInterface output="${build.dir}"
+                         wsdl="${wsdl.dir}/${ws.name}.wsdl"
+                         overwritebeans="true" packagename="${package.name}"
+                         unwrapparameters="false"/>
+    <move file="${build.dir}/${ws.name}-java-wsdl-mapping.xml"
+          todir="${web-inf.dir}" overwrite="true"/>
+  </target>
+  
+  <!-- Clear class folder -->
+  <target name="clear">
+    <delete failonerror="false">
+      <fileset dir="${classes.dir}" includes="**/*.class"/>
+    </delete>
+    <!--  <delete>
+      <fileset dir="${build.dir}" includes="**/*.java" />
+    </delete>-->
+  </target>
+  
+  <!-- Regenerate web.xml, webservices.xml and oracle-webservices.xml -->
+  <target name="genDDs">
+    <oracle:genDDs wsdl="${wsdl.dir}/${ws.name}.wsdl" output="${web-inf.dir}">
+      <oracle:porttype interfacename="${package.name}.${interface.name}"
+                       classname="${package.name}.${class.name}"/>
+    </oracle:genDDs>
+  </target>
+    
+  <target name="genProxy">
+    <oracle:genProxy wsdl="${wsdl.file}" output="${proxy.dir}"
+                     packagename="${package.name}.proxy"
+                     valuetypepackageprefix="${package.name}.proxy.types"
+                     unwrapparameters="false"
+                     endpointaddress="${endpoint.address}"/>
+  </target>
+  
+  <!-- Regenerate JavaBeans from specified (without path) xsd (in wsdl-dir) -->
+  <target name="genJavaBeans">
+    <oracle:genValueTypes output="${build.dir}">
+      <oracle:schema value="${wsdl.dir}/${xsd.name}"/>
+    </oracle:genValueTypes>
+  </target>
+
+</project>

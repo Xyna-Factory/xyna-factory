@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+	"simpleQueryTest.json",
+    "multipleQueriesTest.json",
+	"queryWithDynamicInputTest.json"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "tests":
+  [
+    "04_dragExceptionIntoWorkflow.json",
+	"04_constantException.json",
+	"04_dragExceptionIntoMappingInputOutput.json",
+	"04_setExceptionInputUsingAMapping.json"
+  ]
+}

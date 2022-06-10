@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "20.7.2020",
+    "updated": "20.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "deployment_items"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.DeleteDeploy!": "xmcp.factorymanager.deploymentitems.DeleteDeploymentItem"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.DeleteDeploy0!": "xmcp.factorymanager.deploymentitems.DeleteDeploymentItemParam"
+        },
+        {
+          "!WORKFLOW!": "WORKFLOW"
+        },
+        {
+          "!autotest.generated.ARANDOM.Deployment_items_ARAN!": "autotest.generated.!rnd!.Deployment_items_!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.DeploymentIt!": "xmcp.factorymanager.deploymentitems.DeploymentItemId"
+        },
+        {
+          "!GuiHttp!": "default workspace"
+        },
+        {
+          "!1.1.99!": "1.1.99"
+        },
+        {
+          "!Workspace!": "Workspace"
+        },
+        {
+          "!default_workspace!": "default workspace"
+        },
+        {
+          "!xmcp.Workspace!": "xmcp.Workspace"
+        },
+        {
+          "!xmcp.factorymanager.deploymentitems.GetDeploymen!": "xmcp.factorymanager.deploymentitems.GetDeploymentItems"
+        },
+        {
+          "!1.2!": "1.2"
+        },
+        {
+          "!Type!": "Type"
+        },
+        {
+          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
+        },
+        {
+          "!typeNiceName!": "typeNiceName"
+        },
+        {
+          "!Name!": "Name"
+        },
+        {
+          "!deployment_items!": "deployment_items"
+        },
+        {
+          "!id.name!": "id.name"
+        },
+        {
+          "!State!": "State"
+        },
+        {
+          "!state!": "state"
+        },
+        {
+          "!Open_Task!": "Open Task"
+        },
+        {
+          "!openTaskCount!": "openTaskCount"
+        },
+        {
+          "!dsc!": "dsc"
+        },
+        {
+          "!Tags!": "Tags"
+        },
+        {
+          "!tagsNiceList!": "tagsNiceList"
+        },
+        {
+          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
+        },
+        {
+          "!ZetaFramework!": "ZetaFramework"
+        },
+        {
+          "!0.6.33!": "0.6.33"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$list": [
+              {
+                "$meta": {
+                  "fqn": "!xmcp.factorymanager.deploymentitems.DeleteDeploy0!"
+                },
+                "deleteDependencies": false,
+                "deploymentItemId": {
+                  "$meta": {
+                    "fqn": "!xmcp.factorymanager.deploymentitems.DeploymentIt!",
+                    "rtc": {
+  "workspace": "default workspace"
+}
+                  },
+                  "name": "!autotest.generated.ARANDOM.Deployment_items_ARAN!",
+                  "type": "!WORKFLOW!"
+                },
+                "recursivlyUndeployIfDeployedAndDependenciesExist": false
+              }
+            ],
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.deploymentitems.DeleteDeploy0!"
+            }
+          },
+          {
+            "$meta": {
+              "fqn": "!xmcp.Workspace!",
+              "rtc": {
+                "workspace": "default workspace"
+              }
+            },
+            "name": "!default_workspace!",
+            "revision": -1,
+            "type": "!Workspace!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.deploymentitems.DeleteDeploy!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "output[0]/$list[0]/success",
+      "targetVariable": "!output!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "equals",
+      "variable": "!output!",
+      "value": "true"
+    }
+  ]
+}

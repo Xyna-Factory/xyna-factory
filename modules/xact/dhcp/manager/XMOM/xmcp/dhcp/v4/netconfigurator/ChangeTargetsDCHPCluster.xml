@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="ChangeTargetsDCHP-Cluster" TypeName="ChangeTargetsDCHPCluster" TypePath="xmcp.dhcp.v4.netconfigurator" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="ChangeTargetsDCHP-Cluster" Name="ChangeTargetsDCHPCluster">
+    <Input>
+      <Data ID="32" Label="TargetWithStandortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages" VariableName="row_ctype">
+        <Target RefID="61"/>
+        <Target RefID="11"/>
+      </Data>
+      <Data ID="58" Label="NewStandortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="row_ctype58">
+        <Target RefID="61"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="71" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype">
+        <Source RefID="31"/>
+      </Data>
+      <Data ID="72" Label="Update Row Pk Ignore Empty Output" ReferenceName="UpdateRowPkIgnoreEmptyOutput" ReferencePath="xmcp.dhcp.v4.netconfigurator" VariableName="updateRowPkIgnoreEmptyOutput">
+        <Source RefID="31"/>
+      </Data>
+    </Output>
+    <ServiceReference ID="4" Label="TargetUpdateRowPkIgnoreEmpty" ReferenceName="TargetUpdateRowPkIgnoreEmpty" ReferencePath="xmcp.dhcp.v4.netconfigurator">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <Mappings ID="61" Label="Insert The New Standortgruppe">
+      <Source RefID="32"/>
+      <Source RefID="58"/>
+      <Target RefID="57"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="60" Label="TargetWithStandortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages" VariableName="row_ctype60"/>
+        <Source RefID="32"/>
+      </Input>
+      <Input>
+        <Data Label="NewStandortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Standortgruppe.www.gip.com.juno.DHCP.WS.Standortgruppe.Messages" VariableName="row_ctype59"/>
+        <Source RefID="58"/>
+      </Input>
+      <Output>
+        <Data ID="62" Label="TargetGetStandortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages" VariableName="row_ctype62"/>
+        <Target RefID="57"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.standortGruppe=%1%.name</Mapping>
+      <Mapping>%2%.standortGruppeID=%1%.standortGruppeID</Mapping>
+    </Mappings>
+    <Function ID="11" Label="Target Update Row Pk Ignore Empty">
+      <Source RefID="4"/>
+      <Source RefID="32"/>
+      <Source RefID="57"/>
+      <Target RefID="4"/>
+      <Target RefID="12"/>
+      <Target RefID="13"/>
+      <Invoke Operation="TargetUpdateRowPkIgnoreEmpty" ServiceID="4">
+        <Source RefID="32">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="57">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="12"/>
+        <Target RefID="13"/>
+      </Receive>
+    </Function>
+    <Data ID="12" Label="Response Header  GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype12">
+      <Source RefID="11"/>
+      <Target RefID="31"/>
+    </Data>
+    <Data ID="13" Label="Update Row Pk Ignore Empty Output" ReferenceName="UpdateRowPkIgnoreEmptyOutput" ReferencePath="xmcp.dhcp.v4.netconfigurator" VariableName="updateRowPkIgnoreEmptyOutput13">
+      <Source RefID="11"/>
+      <Target RefID="31"/>
+    </Data>
+    <Data ID="57" Label="TargetGetStandortgruppe" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Target.www.gip.com.juno.DHCP.WS.Target.Messages" VariableName="row_ctype47">
+      <Source RefID="61"/>
+      <Target RefID="11"/>
+    </Data>
+    <Assign ID="31">
+      <Source RefID="12"/>
+      <Source RefID="13"/>
+      <Target RefID="71"/>
+      <Target RefID="72"/>
+      <Copy>
+        <Source RefID="12"/>
+        <Target RefID="71"/>
+      </Copy>
+      <Copy>
+        <Source RefID="13"/>
+        <Target RefID="72"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

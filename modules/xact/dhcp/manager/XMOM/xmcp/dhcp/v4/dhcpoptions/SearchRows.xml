@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SearchRows" TypeName="SearchRows" TypePath="xmcp.dhcp.v4.dhcpoptions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="SearchRows" Name="SearchRows">
+    <Input>
+      <Data ID="18" Label="SearchRowInput" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="row_ctype18"/>
+    </Input>
+    <Output>
+      <Data ID="209" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype209"/>
+      <Data ID="626" Label="SearchRowOutput" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="rowList_ctype626"/>
+    </Output>
+    <ServiceReference ID="4" Label="DHCPOptions" ReferenceName="DHCPOptions.DHCPOptions" ReferencePath="xmcp.dhcp.v4.dhcpoptions"/>
+    <Mappings ID="49" Label="Build Input">
+      <Input>
+        <Data ID="58" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="row_ctype58">
+          <Source RefID="49"/>
+        </Data>
+        <Source RefID="18"/>
+      </Input>
+      <Output>
+        <Data ID="67" Label="Search Rows Request ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="searchRowsRequest_ctype67">
+          <Source RefID="49"/>
+        </Data>
+        <Target RefID="68"/>
+      </Output>
+      <Mapping>%1%.searchRowsInput=%0%</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Search Rows">
+      <Source RefID="4"/>
+      <Source RefID="68"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="searchRows" ServiceID="4">
+        <Source RefID="68"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="183" Label="Extract Output">
+      <Input>
+        <Data ID="200" Label="Response_ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="response_ctype200">
+          <Source RefID="183"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="222" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype222">
+          <Source RefID="183"/>
+        </Data>
+        <Target RefID="223"/>
+      </Output>
+      <Output>
+        <Data ID="240" Label="RowList_ctype" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="rowList_ctype240">
+          <Source RefID="183"/>
+        </Data>
+        <Target RefID="241"/>
+      </Output>
+      <Mapping>%2%=%0%.payload.searchRowsOutput</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="68" Label="Search Rows Request ctype" ReferenceName="SearchRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="searchRowsRequest_ctype68">
+      <Source RefID="49"/>
+    </Data>
+    <Data ID="223" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype223">
+      <Source RefID="183"/>
+    </Data>
+    <Data ID="241" Label="RowList_ctype" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.DHCPOptions.www.gip.com.juno.DHCP.WS.Optionsv4.Messages" VariableName="rowList_ctype241">
+      <Source RefID="183"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="223"/>
+      <Source RefID="241"/>
+      <Target RefID="209"/>
+      <Target RefID="626"/>
+      <Copy>
+        <Source RefID="223"/>
+        <Target RefID="209"/>
+      </Copy>
+      <Copy>
+        <Source RefID="241"/>
+        <Target RefID="626"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

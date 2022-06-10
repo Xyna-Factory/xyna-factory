@@ -1,0 +1,14 @@
+{
+    "testseries": [
+        "expressions_001/testseries.json",
+        "expressions_002/testseries.json",
+        "expressions_003/testseries.json",
+        "expressions_004/testseries.json",
+        "expressions_005/testseries.json",
+        "expressions_006/testseries.json",
+        "expressions_007/testseries.json",
+        "expressions_008/testseries.json",
+        "expressions_019/testseries.json",
+        "expressions_020/testseries.json"
+    ]
+}

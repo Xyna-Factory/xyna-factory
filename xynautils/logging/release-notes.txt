@@ -1,0 +1,3 @@
+0.2 : add syslogging (new package com.gip.xyna.utils.logging.syslog)
+0.3 : expand javadoc
+      small changes in syslog formating

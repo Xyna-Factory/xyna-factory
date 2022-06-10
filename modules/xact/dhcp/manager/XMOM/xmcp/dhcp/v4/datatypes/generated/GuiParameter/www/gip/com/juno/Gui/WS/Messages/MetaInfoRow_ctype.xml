@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XSDBaseModel" BaseTypePath="xdnc.model.xsd" IsAbstract="false" Label="MetaInfoRow_ctype" TypeName="MetaInfoRow_ctype" TypePath="xmcp.dhcp.v4.datatypes.generated.GuiParameter.www.gip.com.juno.Gui.WS.Messages" Version="1.8">
+  <Meta>
+    <DataModel>
+      <XSDInfo>&lt;XSD Namespace="http://www.gip.com/juno/Gui/WS/Messages" Name="MetaInfoRow_ctype"&gt;
+&lt;/XSD&gt;</XSDInfo>
+      <ModelName>xdnc.model.xsd.v0.GuiParameter</ModelName>
+    </DataModel>
+  </Meta>
+  <Data Label="visible" VariableName="visible">
+    <Meta>
+      <Type>Boolean</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="visible" Type="Attribute" Position="0"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="updates" VariableName="updates">
+    <Meta>
+      <Type>Boolean</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="updates" Type="Attribute" Position="1"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="guiname" VariableName="guiname">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="guiname" Type="Attribute" Position="2"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="colname" VariableName="colname">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="colname" Type="Attribute" Usage="required" Position="3"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="colnum" VariableName="colnum">
+    <Meta>
+      <Type>int</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="colnum" Type="Attribute" Usage="required" Position="4"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="childtable" VariableName="childtable">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="childtable" Type="Attribute" Position="5"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="parenttable" VariableName="parenttable">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="parenttable" Type="Attribute" Position="6"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="parentcol" VariableName="parentcol">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="parentcol" Type="Attribute" Position="7"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="inputType" VariableName="inputType">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="inputType" Type="Attribute" Position="8"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="optional" VariableName="optional">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="optional" Type="Attribute" Position="9"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+</DataType>

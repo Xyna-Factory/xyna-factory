@@ -1,0 +1,11 @@
+{
+  "tests":
+  [
+    "PMOD2945_1_protoService.json",
+    "PMOD2945_2_Foreach.json",
+    "PMOD2945_3_subWFProtoHybrid.json",
+    "PMOD2945_4_exception.json",
+    "PMOD2945_5_subWFNotExistend.json",
+	"PMOD2971_6_typeChoice.json"
+  ]
+}

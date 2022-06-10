@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "14.9.2021", 
+    "updated": "14.9.2021"
+  }, 
+  "operations": [
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        }, 
+        {
+          "!subtypes!": "subtypes"
+        }, 
+        {
+          "!base.date.Date!": "base.date.Date"
+        }, 
+        {
+          "!base.AnyType!": "base.AnyType"
+        }, 
+        {
+          "!core.exception.Exception!": "core.exception.Exception"
+        }
+      ], 
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call", 
+      "payload": {
+      "objects": [
+          {
+            "fqn": "!base.date.Date!", 
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          },
+          {
+            "fqn": "!base.AnyType!", 
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          },
+          {
+            "fqn": "!core.exception.Exception!", 
+            "rtc": {
+              "workspace": "!default_workspace!"
+            }
+          }
+        ]
+      }, 
+      "requestType": "POST", 
+      "url": "/runtimeContext/!default%20workspace!/!subtypes!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "!base.date.Date!",
+      "targetVariable": "!subtypes_Date!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "!base.AnyType!",
+      "targetVariable": "!subtypes_AnyType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "!core.exception.Exception!",
+      "targetVariable": "!subtypes_Exception!"
+    },
+    {
+      "operation": "assert",
+      "constraint": "sortedList",
+      "variable": "!subtypes_Date!",
+      "member": "fqn"
+    },
+    {
+      "operation": "assert",
+      "constraint": "sortedList",
+      "variable": "!subtypes_AnyType!",
+      "member": "fqn"
+    },
+    {
+      "operation": "assert",
+      "constraint": "sortedList",
+      "variable": "!subtypes_Exception!",
+      "member": "fqn"
+    }
+  ]
+}

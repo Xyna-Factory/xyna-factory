@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "PMOD2571.json",
+    "PMOD2571_2.json",
+	"PMOD2571_conditionalchoice.json"
+  ]
+}

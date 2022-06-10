@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="GuiAttributeGetAllRows" TypeName="GuiAttributeGetAllRows" TypePath="xmcp.dhcp.v4.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="GuiAttributeGetAllRows" Name="GuiAttributeGetAllRows">
+    <Input>
+      <Data ID="107" Label="GetAllRowsInput" ReferenceName="GetAllRowsInput" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="getAllRowsInput107"/>
+    </Input>
+    <Output>
+      <Data ID="177" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype177"/>
+      <Data ID="218" Label="Get All Rows Output" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages" VariableName="rowList_ctype218"/>
+    </Output>
+    <ServiceReference ID="4" Label="GuiAttribute" ReferenceName="GuiAttribute.GuiAttribute" ReferencePath="xmcp.dhcp.v4.gui"/>
+    <Mappings ID="46" Label="Build Input">
+      <Input>
+        <Data ID="128" Label="GetAllRowsInput" ReferenceName="GetAllRowsInput" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="getAllRowsInput128">
+          <Source RefID="46"/>
+        </Data>
+        <Source RefID="107"/>
+      </Input>
+      <Output>
+        <Data ID="89" Label="Get All Rows Request ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype89">
+          <Source RefID="46"/>
+        </Data>
+        <Target RefID="90"/>
+      </Output>
+      <Mapping>%1%.getAllRowsInput=%0%.getAllRowsInput</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Get All Rows">
+      <Source RefID="4"/>
+      <Source RefID="90"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="getAllRows" ServiceID="4">
+        <Source RefID="90">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="55" Label="Extract Output">
+      <Input>
+        <Data ID="80" Label="Response_ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages" VariableName="response_ctype80">
+          <Source RefID="55"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="198" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype198">
+          <Source RefID="55"/>
+        </Data>
+        <Target RefID="199"/>
+      </Output>
+      <Output>
+        <Data ID="208" Label="RowList_ctype" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages" VariableName="rowList_ctype208">
+          <Source RefID="55"/>
+        </Data>
+        <Target RefID="209"/>
+      </Output>
+      <Mapping>%2%=%0%.payload.getAllRowsOutput</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="90" Label="Get All Rows Request ctype" ReferenceName="GetAllRowsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.Gui.WS.Messages" VariableName="getAllRowsRequest_ctype90">
+      <Source RefID="46"/>
+    </Data>
+    <Data ID="199" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype199">
+      <Source RefID="55"/>
+    </Data>
+    <Data ID="209" Label="RowList_ctype" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.GuiAttribute.www.gip.com.juno.DHCP.WS.GuiAttribute.Messages" VariableName="rowList_ctype209">
+      <Source RefID="55"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="199"/>
+      <Source RefID="209"/>
+      <Target RefID="177"/>
+      <Target RefID="218"/>
+      <Copy>
+        <Source RefID="199"/>
+        <Target RefID="177"/>
+      </Copy>
+      <Copy>
+        <Source RefID="209"/>
+        <Target RefID="218"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

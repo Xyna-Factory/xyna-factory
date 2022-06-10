@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XSDBaseModel" BaseTypePath="xdnc.model.xsd" IsAbstract="false" Label="Payload_ctype" TypeName="Payload_ctype" TypePath="xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages" Version="1.8">
+  <Meta>
+    <DataModel>
+      <XSDInfo>&lt;XSD Namespace="http://www.gip.com/juno/DHCP/WS/Pool/Messages" Name="Payload_ctype"&gt;
+&lt;/XSD&gt;</XSDInfo>
+      <ModelName>xdnc.model.xsd.v0.Pool</ModelName>
+    </DataModel>
+  </Meta>
+  <Data Label="MetaInfoOutput" ReferenceName="MetaInfo_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.Gui.WS.Messages" VariableName="metaInfoOutput">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="MetaInfoOutput" Type="Element" Usage="optional" Position="0"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="GetAllRowsOutput" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages" VariableName="getAllRowsOutput">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="GetAllRowsOutput" Type="Element" Usage="optional" Position="1"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="SearchRowsOutput" ReferenceName="RowList_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages" VariableName="searchRowsOutput">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="SearchRowsOutput" Type="Element" Usage="optional" Position="2"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="UpdateRowOutput" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages" VariableName="updateRowOutput">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="UpdateRowOutput" Type="Element" Usage="optional" Position="3"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="InsertRowOutput" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.Pool.www.gip.com.juno.DHCP.WS.Pool.Messages" VariableName="insertRowOutput">
+    <Meta>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="InsertRowOutput" Type="Element" Usage="optional" Position="4"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="DeleteRowsOutput" VariableName="deleteRowsOutput">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="DeleteRowsOutput" Type="Element" Usage="optional" Position="5"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="CountAllRowsOutput" VariableName="countAllRowsOutput">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="CountAllRowsOutput" Type="Element" Usage="optional" Position="6"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+  <Data Label="CountRowsWithConditionOutput" VariableName="countRowsWithConditionOutput">
+    <Meta>
+      <Type>String</Type>
+      <DataModel>
+        <XSDInfo>&lt;XSD Name="CountRowsWithConditionOutput" Type="Element" Usage="optional" Position="7"/&gt;</XSDInfo>
+      </DataModel>
+    </Meta>
+  </Data>
+</DataType>

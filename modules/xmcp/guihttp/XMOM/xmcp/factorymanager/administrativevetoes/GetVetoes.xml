@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Vetoes" TypeName="GetVetoes" TypePath="xmcp.factorymanager.administrativevetoes" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Vetoes" Name="GetVetoes">
+    <Input>
+      <Data ID="16" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo">
+        <Target RefID="43"/>
+        <Target RefID="46"/>
+        <Target RefID="48"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="69" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo69">
+        <Source RefID="70"/>
+      </Data>
+      <Data ID="71" IsList="true" Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto">
+        <Source RefID="70"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights"/>
+      <Exception Label="Load administrative vetoes exception" ReferenceName="LoadAdministrativeVetoesException" ReferencePath="xmcp.factorymanager.administrativevetoes.exceptions" VariableName="loadAdministrativeVetoesException"/>
+      <Exception Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist"/>
+    </Throws>
+    <Function ID="79" Label="Check Rights for Current User">
+      <Source RefID="78"/>
+      <Source RefID="81"/>
+      <Target RefID="78"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="78">
+        <Source RefID="81">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="78"/>
+    </Function>
+    <Choice ID="43" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="16"/>
+      <Target RefID="52"/>
+      <Target RefID="55"/>
+      <Meta>
+        <OuterConditionPart>%0%.bootstrap?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="42" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo42"/>
+        <Source RefID="16"/>
+      </Input>
+      <Case ID="32" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="45" Label="Generate Table Columns">
+          <Target RefID="44"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Output>
+            <Data ID="34" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn34"/>
+            <Target RefID="44"/>
+          </Output>
+          <Mapping>%0%["0"].name="Name"</Mapping>
+          <Mapping>%0%["0"].path="name"</Mapping>
+          <Mapping>%0%["0"].sort="asc"</Mapping>
+          <Mapping>%0%["1"].name="Documentation"</Mapping>
+          <Mapping>%0%["1"].path="documentation"</Mapping>
+        </Mappings>
+        <Mappings ID="46" Label="Set bootstrap &amp; columns">
+          <Source RefID="16"/>
+          <Source RefID="44"/>
+          <Target RefID="47"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="35" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo35"/>
+            <Source RefID="16"/>
+          </Input>
+          <Input>
+            <Data ID="36" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn36"/>
+            <Source RefID="44"/>
+          </Input>
+          <Output>
+            <Data ID="37" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo37"/>
+            <Target RefID="47"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.bootstrap="false"</Mapping>
+          <Mapping>%2%.columns=%1%</Mapping>
+        </Mappings>
+        <Assign ID="53">
+          <Source RefID="44"/>
+          <Source RefID="47"/>
+          <Target RefID="52"/>
+          <Target RefID="55"/>
+          <Copy>
+            <Source RefID="44"/>
+            <Target RefID="52"/>
+          </Copy>
+          <Copy>
+            <Source RefID="47"/>
+            <Target RefID="55"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="33" IsDefault="true" Label="default">
+        <Meta>
+          <FixedDetailOptions>openCase</FixedDetailOptions>
+        </Meta>
+        <Mappings ID="48" Label="1:1">
+          <Source RefID="16"/>
+          <Target RefID="49"/>
+          <Input>
+            <Data ID="38" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo38"/>
+            <Source RefID="16"/>
+          </Input>
+          <Output>
+            <Data ID="39" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo39"/>
+            <Target RefID="49"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="51" Label="Get columns from Table Info">
+          <Source RefID="49"/>
+          <Target RefID="50"/>
+          <Input>
+            <Data ID="40" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo40"/>
+            <Source RefID="49">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="41" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn41"/>
+            <Target RefID="50"/>
+          </Output>
+          <Mapping>%1%=%0%.columns</Mapping>
+        </Mappings>
+        <Assign ID="54">
+          <Source RefID="50"/>
+          <Source RefID="49"/>
+          <Target RefID="52"/>
+          <Target RefID="55"/>
+          <Copy>
+            <Source RefID="50"/>
+            <Target RefID="52"/>
+          </Copy>
+          <Copy>
+            <Source RefID="49"/>
+            <Target RefID="55"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="44" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn44">
+      <Source RefID="45"/>
+      <Target RefID="46"/>
+      <Target RefID="53"/>
+    </Data>
+    <Data ID="47" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo47">
+      <Source RefID="46"/>
+      <Target RefID="53"/>
+    </Data>
+    <Data ID="49" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo49">
+      <Source RefID="48"/>
+      <Target RefID="51"/>
+      <Target RefID="54"/>
+    </Data>
+    <Data ID="50" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn50">
+      <Source RefID="51"/>
+      <Target RefID="54"/>
+    </Data>
+    <Data ID="52" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn52">
+      <Source RefID="43"/>
+      <Source RefID="53"/>
+      <Source RefID="54"/>
+      <Target RefID="59"/>
+    </Data>
+    <Data ID="55" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo55">
+      <Source RefID="43"/>
+      <Source RefID="53"/>
+      <Source RefID="54"/>
+      <Target RefID="59"/>
+    </Data>
+    <ServiceReference ID="58" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="59"/>
+      <Target RefID="59"/>
+    </ServiceReference>
+    <Function ID="59" Label="Build TableInfo and Select Columns">
+      <Source RefID="58"/>
+      <Source RefID="52"/>
+      <Source RefID="62"/>
+      <Source RefID="55"/>
+      <Target RefID="58"/>
+      <Target RefID="61"/>
+      <Meta>
+        <FixedWidth>372.5</FixedWidth>
+        <FixedHeight>32</FixedHeight>
+      </Meta>
+      <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="58">
+        <Source RefID="55">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="62">
+          <Meta>
+            <ExpectedType>xmcp.factorymanager.administrativevetoes.AdministrativeVeto</ExpectedType>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="52"/>
+      </Invoke>
+      <Receive ServiceID="58">
+        <Target RefID="61"/>
+      </Receive>
+    </Function>
+    <Data ID="61" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo45">
+      <Source RefID="59"/>
+      <Target RefID="66"/>
+      <Target RefID="70"/>
+    </Data>
+    <Data ID="62" Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="const_AdministrativeVeto">
+      <Target RefID="59"/>
+      <Data ID="72" Label="Name" VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data ID="73" Label="Documentation" VariableName="documentation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Function ID="66" Label="Get list entries">
+      <Source RefID="61"/>
+      <Source RefID="74"/>
+      <Target RefID="68"/>
+      <Target RefID="74"/>
+      <Invoke Operation="getListEntries" ServiceID="74">
+        <Source RefID="61">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="74">
+        <Target RefID="68"/>
+      </Receive>
+    </Function>
+    <Data ID="68" IsList="true" Label="Administrative Veto" ReferenceName="AdministrativeVeto" ReferencePath="xmcp.factorymanager.administrativevetoes" VariableName="administrativeVeto68">
+      <Source RefID="66"/>
+      <Target RefID="70"/>
+    </Data>
+    <ServiceReference ID="74" Label="Administrative Veto Services" ReferenceName="AdministrativeVetoServices.AdministrativeVetoServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="66"/>
+      <Target RefID="66"/>
+    </ServiceReference>
+    <ServiceReference ID="78" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="79"/>
+      <Target RefID="79"/>
+    </ServiceReference>
+    <Data ID="81" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="79"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.administrativeVetos:read:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="70">
+      <Source RefID="61"/>
+      <Source RefID="68"/>
+      <Target RefID="69"/>
+      <Target RefID="71"/>
+      <Copy>
+        <Source RefID="61">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="69"/>
+      </Copy>
+      <Copy>
+        <Source RefID="68"/>
+        <Target RefID="71"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

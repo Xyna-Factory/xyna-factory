@@ -1,0 +1,18 @@
+[
+  {
+    "type": "additionalFunctionFile",
+    "value": "createWorkflow.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "saveAndDeploy.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "repairWorkflow.json"
+  },
+  {
+    "type": "additionalFunctionFile",
+    "value": "startWorkflow.json"
+  }
+]

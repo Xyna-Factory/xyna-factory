@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Fetch DHCPRelay For ID PoolUsage_Type" TypeName="FetchDHCPRelayForIDPoolUsage_Type" TypePath="xmcp.dhcp.v4.control.poolusage" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Fetch DHCPRelay For ID PoolUsage_Type" Name="FetchDHCPRelayForIDPoolUsage_Type">
+    <Input>
+      <Data ID="8" IsList="true" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype">
+        <Target RefID="10"/>
+      </Data>
+      <Data ID="23" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type">
+        <Target RefID="7"/>
+        <Target RefID="16"/>
+        <Target RefID="2"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="22" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type22">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Foreach ID="10">
+      <Source RefID="8"/>
+      <InputList RefID="8">
+        <Data ID="9" Label="Row_ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype9">
+          <Target RefID="7"/>
+          <Target RefID="16"/>
+        </Data>
+      </InputList>
+      <Choice ID="7" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="9"/>
+        <Source RefID="23"/>
+        <Input>
+          <Data ID="18" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype18"/>
+          <Source RefID="9"/>
+        </Input>
+        <Input>
+          <Data Label="PoolUsage_Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage"/>
+          <Source RefID="23"/>
+        </Input>
+        <Case ID="5" Label="true" Premise="%0%.sharedNetworkID==%1%.sharedNetworkID">
+          <Mappings ID="16" Label="Set DHCP-Relay">
+            <Source RefID="9"/>
+            <Source RefID="23"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,FlatMode,openConfiguration</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="15" Label="Row ctype" ReferenceName="Row_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.SharedNetwork.www.gip.com.juno.DHCP.WS.SharedNetwork.Messages" VariableName="row_ctype15"/>
+              <Source RefID="9">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Input>
+              <Data ID="24" Label="Pool Usage  Type" ReferenceName="PoolUsage_Type" ReferencePath="xmcp.dhcp.v4.control.poolusage" VariableName="poolUsage_Type24"/>
+              <Source RefID="23"/>
+            </Input>
+            <Mapping>%1%=%1%</Mapping>
+            <Mapping>%1%.dHCPRelay=%0%.sharedNetwork</Mapping>
+          </Mappings>
+          <Assign ID="20"/>
+        </Case>
+        <Case ID="6" Label="false">
+          <Assign ID="21"/>
+        </Case>
+      </Choice>
+    </Foreach>
+    <Assign ID="2">
+      <Source RefID="23"/>
+      <Target RefID="22"/>
+      <Copy>
+        <Source RefID="23"/>
+        <Target RefID="22"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

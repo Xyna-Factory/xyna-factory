@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SNMPService" TypeName="SNMPService" TypePath="xact.snmp.commands" Version="1.8">
+  <Meta>
+    <IsXynaComponent>true</IsXynaComponent>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SNMPServiceImpl.jar</Libraries>
+  <SharedLibraries>snmplibs</SharedLibraries>
+  <Service Label="SNMPService" TypeName="SNMPService">
+    <Meta>
+      <AdditionalDependencies>
+        <XynaProperty>xact.snmp.exceptionmapping.file</XynaProperty>
+        <XynaProperty>xact.snmp.timeout.retries</XynaProperty>
+        <XynaProperty>xact.snmp.timeout.retryinterval</XynaProperty>
+        <XynaProperty>xact.snmp.sockettimeout</XynaProperty>
+        <Datatype>xact.snmp.SimpleRetryModel</Datatype>
+        <Datatype>xact.snmp.SNMPConnectionDataV3</Datatype>
+        <Datatype>xact.snmp.SNMPConnectionDataV2c</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation IsStatic="true" Label="Find OID By Value" Name="findOIDByValue">
+      <Input>
+        <Data Label="Var Bindings" ReferenceName="VarBindings" ReferencePath="xact.snmp" VariableName="varBindings"/>
+        <Data Label="Variable Content" ReferenceName="VariableContent" ReferencePath="xact.snmp" VariableName="variableContent"/>
+      </Input>
+      <Output>
+        <Data Label="OIDs" ReferenceName="OIDs" ReferencePath="xact.snmp" VariableName="oIDs"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SNMPServiceImpl.findOIDByValue(varBindings, variableContent);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="get" Name="get">
+      <Meta>
+        <Version>v1_0</Version>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Var Binding List" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding"/>
+        <Data Label="Connection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="connectionData"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Var Binding List" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding4"/>
+      </Output>
+      <Throws>
+        <Exception Label="ConnectionException" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="ResponseException" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SNMPServiceImpl.get(varBinding, connectionData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SNMP Get Request" Name="get_v2_0">
+      <Meta>
+        <CurrentVersion>true</CurrentVersion>
+        <Version>v2_0</Version>
+      </Meta>
+      <Input>
+        <Data Label="OIDs" ReferenceName="OIDs" ReferencePath="xact.snmp" VariableName="oIDs"/>
+        <Data Label="SNMPConnection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="sNMPConnectionData"/>
+        <Data Label="Retry Model" ReferenceName="RetryModel" ReferencePath="xact.snmp" VariableName="retryModel"/>
+      </Input>
+      <Output>
+        <Data Label="Var Bindings" ReferenceName="VarBindings" ReferencePath="xact.snmp" VariableName="varBindings0"/>
+      </Output>
+      <Throws>
+        <Exception Label="ConnectionException" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="ResponseException" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SNMPServiceImpl.get_v2_0(oIDs, sNMPConnectionData, retryModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="getNext" Name="getNext">
+      <Input>
+        <Data IsList="true" Label="Var Binding List" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding"/>
+        <Data Label="Connection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="sNMPConnectionData"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Var Binding List" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding24"/>
+      </Output>
+      <Throws>
+        <Exception Label="ConnectionException" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="ResponseException" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="sNMPResponseException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SNMPServiceImpl.getNext(varBinding, sNMPConnectionData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="set" Name="set">
+      <Meta>
+        <Version>v1_0</Version>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Var Binding List" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding"/>
+        <Data Label="Connection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="connectionData"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="ConnectionException" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="ResponseException" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">SNMPServiceImpl.set(varBinding, connectionData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SNMP Set Request" Name="set_v2_0">
+      <Meta>
+        <CurrentVersion>true</CurrentVersion>
+        <Version>v2_0</Version>
+      </Meta>
+      <Input>
+        <Data Label="Var Bindings" ReferenceName="VarBindings" ReferencePath="xact.snmp" VariableName="varBindings"/>
+        <Data Label="SNMPConnection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="sNMPConnectionData"/>
+        <Data Label="Retry Model" ReferenceName="RetryModel" ReferencePath="xact.snmp" VariableName="retryModel"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="SNMPConnection Exception" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="SNMPResponse Exception" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="sNMPResponseException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">SNMPServiceImpl.set_v2_0(varBindings, sNMPConnectionData, retryModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Set With Retry" Name="setWithRetry">
+      <Meta>
+        <Version>v1_0</Version>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Var Bind List" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBindList"/>
+        <Data Label="Connection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="connectionData"/>
+        <Data Label="Retry Model" ReferenceName="RetryModel" ReferencePath="xact.snmp" VariableName="retryModel"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="ConnectionException" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="ResponseException" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">SNMPServiceImpl.setWithRetry(varBindList, connectionData, retryModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="trap" Name="trap">
+      <Meta>
+        <Version>v1_0</Version>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Var Binding List" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding"/>
+        <Data Label="Connection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="connectionData"/>
+        <Data Label="Trap OID" ReferenceName="OID" ReferencePath="xact.snmp" VariableName="trapOID"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="ConnectionException" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="ResponseException" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="exception"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">SNMPServiceImpl.trap(varBinding, connectionData, trapOID);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SNMP Trap" Name="trap_v2_0">
+      <Meta>
+        <CurrentVersion>true</CurrentVersion>
+        <Version>v2_0</Version>
+      </Meta>
+      <Input>
+        <Data Label="Trap OID" ReferenceName="OID" ReferencePath="xact.snmp" VariableName="trapOID"/>
+        <Data Label="Var Bindings" ReferenceName="VarBindings" ReferencePath="xact.snmp" VariableName="varBindings"/>
+        <Data Label="SNMPConnection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="sNMPConnectionData"/>
+        <Data Label="Retry Model" ReferenceName="RetryModel" ReferencePath="xact.snmp" VariableName="retryModel"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="SNMPConnection Exception" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="SNMPResponse Exception" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="sNMPResponseException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">SNMPServiceImpl.trap_v2_0(trapOID, varBindings, sNMPConnectionData, retryModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="walk" Name="walk">
+      <Meta>
+        <Version>v1_0</Version>
+      </Meta>
+      <Input>
+        <Data Label="Var Binding" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding"/>
+        <Data Label="Connection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="sNMPConnectionData"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Var Binding List" ReferenceName="VarBinding" ReferencePath="xact.snmp" VariableName="varBinding25"/>
+      </Output>
+      <Throws>
+        <Exception Label="ConnectionException" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+        <Exception Label="ResponseException" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="sNMPResponseException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SNMPServiceImpl.walk(varBinding, sNMPConnectionData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="SNMP Walk" Name="walk_v2_0">
+      <Meta>
+        <CurrentVersion>true</CurrentVersion>
+        <Version>v2_0</Version>
+      </Meta>
+      <Input>
+        <Data Label="SNMPConnection Data" ReferenceName="SNMPConnectionData" ReferencePath="xact.snmp" VariableName="sNMPConnectionData"/>
+        <Data Label="OID" ReferenceName="OID" ReferencePath="xact.snmp" VariableName="oID"/>
+      </Input>
+      <Output>
+        <Data Label="Var Bindings" ReferenceName="VarBindings" ReferencePath="xact.snmp" VariableName="varBindings"/>
+      </Output>
+      <Throws>
+        <Exception Label="SNMPResponse Exception" ReferenceName="SNMPResponseException" ReferencePath="xact.snmp.exception" VariableName="sNMPResponseException"/>
+        <Exception Label="SNMPConnection Exception" ReferenceName="SNMPConnectionException" ReferencePath="xact.snmp.exception" VariableName="sNMPConnectionException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SNMPServiceImpl.walk_v2_0(sNMPConnectionData, oID);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

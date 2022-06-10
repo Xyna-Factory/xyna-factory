@@ -1,0 +1,36 @@
+[
+  {
+    "type": "function",
+	"functionName": "stringToJson",
+	"input": [ "!stringToConvert!" ],
+	"output": ["!jsonResult!"],
+	"operations":
+	[
+	  {
+		"operation": "modification",
+		"variable": "!stringToConvert!",
+		"modification":
+		{
+		  "operation": "replace",
+		  "toReplace": "\\n",
+		  "replacement": "\n"
+		}
+	  },
+	  {
+		"operation": "modification",
+		"variable": "!stringToConvert!",
+		"modification":
+		{
+		  "operation": "replace",
+		  "toReplace": "\\\"",
+		  "replacement": "\""
+		}
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!jsonResult!",
+		"value": "!stringToConvert!"
+	  }
+	]
+  }
+]

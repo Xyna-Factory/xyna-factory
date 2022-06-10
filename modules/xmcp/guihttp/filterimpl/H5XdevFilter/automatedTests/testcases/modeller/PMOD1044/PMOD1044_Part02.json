@@ -1,0 +1,264 @@
+{
+  "meta": {
+    "Test Reference": "Open", 
+    "created": "7.4.2021", 
+    "updated": "7.4.2021"
+  }, 
+  "operations": [
+    {
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput":
+      {
+      },
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!": "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "call", 
+      "payload": {
+        "dataType": true, 
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "service": true, 
+        "serviceGroup": true, 
+        "workflow": true
+      }, 
+      "requestType": "POST", 
+      "url": "!url!/xmom/objects?q=testtype1044"
+    }, 
+    {
+      "operation": "assert",
+	  "constraint": "listLength",
+      "expectedValue": "2",
+      "path": "objects"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!type0!",
+      "pathInResponse": "objects[0]/type",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!type0!",
+      "value": "dataType"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!fqn0!",
+      "pathInResponse": "objects[0]/fqn",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!fqn0!",
+      "value": "xmcp.h5x.regression.PMOD1044.datatypes.TestType1044"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!type1!",
+      "pathInResponse": "objects[1]/type",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!type1!",
+      "value": "dataType"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!fqn1!",
+      "pathInResponse": "objects[1]/fqn",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!fqn1!",
+      "value": "xmcp.h5x.regression.PMOD1044.Test.TestType1044"
+    },
+
+    {
+      "operation": "call", 
+      "payload": {
+        "dataType": true, 
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "service": true, 
+        "serviceGroup": true, 
+        "workflow": true
+      }, 
+      "requestType": "POST", 
+      "url": "!url!/xmom/objects?q=PMOD1044.datatypes.typewithservice"
+    }, 
+    {
+      "operation": "assert",
+	  "constraint": "listLength",
+      "expectedValue": "2",
+      "path": "objects"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!type0!",
+      "pathInResponse": "objects[0]/type",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!type0!",
+      "value": "dataType"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!fqn0!",
+      "pathInResponse": "objects[0]/fqn",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!fqn0!",
+      "value": "xmcp.h5x.regression.PMOD1044.datatypes.TypeWithService"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!type1!",
+      "pathInResponse": "objects[1]/type",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!type1!",
+      "value": "instanceService"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!fqn1!",
+      "pathInResponse": "objects[1]/fqn",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!fqn1!",
+      "value": "xmcp.h5x.regression.PMOD1044.datatypes.TypeWithService"
+    },
+
+    {
+      "operation": "call", 
+      "payload": {
+        "dataType": true, 
+        "exceptionType": true, 
+        "maxCount": 100, 
+        "service": true, 
+        "serviceGroup": true, 
+        "workflow": true
+      }, 
+      "requestType": "POST", 
+      "url": "!url!/xmom/objects?q=xmcp.h5x.regression.PMOD1044"
+    },
+    {
+      "operation": "assert",
+	  "constraint": "listLength",
+      "expectedValue": "8",
+      "path": "objects"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!type0!",
+      "pathInResponse": "objects[0]/type",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!type0!",
+      "value": "dataType"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!fqn0!",
+      "pathInResponse": "objects[0]/fqn",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!fqn0!",
+      "value": "xmcp.h5x.regression.PMOD1044.datatypes.HybridType"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!type1!",
+      "pathInResponse": "objects[1]/type",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!type1!",
+      "value": "serviceGroup"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!fqn1!",
+      "pathInResponse": "objects[1]/fqn",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!fqn1!",
+      "value": "xmcp.h5x.regression.PMOD1044.datatypes.HybridType"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!type7!",
+      "pathInResponse": "objects[7]/type",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!type7!",
+      "value": "dataType"
+    },
+    {
+      "operation": "read",
+      "targetVariable": "!fqn7!",
+      "pathInResponse": "objects[7]/fqn",
+      "unquoteResult": true
+    },
+    {
+      "operation": "assert",
+	  "constraint": "equals",
+      "variable": "!fqn7!",
+      "value": "xmcp.h5x.regression.PMOD1044.Test.TestType1044"
+    },
+    {
+      "operation": "assert",
+      "constraint": "isInList",
+      "pathToList": "objects",
+      "entries": [
+        {
+          "type": "instanceService",
+          "fqn": "xmcp.h5x.regression.PMOD1044.datatypes.HybridType"
+        },
+        {
+          "type": "codedService",
+          "fqn": "xmcp.h5x.regression.PMOD1044.datatypes.HybridType"
+        }
+      ]
+    }
+  ]
+}

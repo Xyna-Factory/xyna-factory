@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SOAP Adapter" TypeName="SOAPAdapter" TypePath="xact.http.soap" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>jdom-2.0.5.jar</Libraries>
+  <Libraries>XtfUtilsHttp.jar</Libraries>
+  <Libraries>XtfUtilsXml.jar</Libraries>
+  <Libraries>SOAPAdapterImpl.jar</Libraries>
+  <Service Label="SOAP Adapter" TypeName="SOAPAdapter">
+    <Operation IsStatic="true" Label="add SOAP Envelope" Name="addSOAPEnvelope">
+      <Input>
+        <Data Label="Request" ReferenceName="Request" ReferencePath="xact.http" VariableName="request"/>
+      </Input>
+      <Output>
+        <Data Label="SOAP Request" ReferenceName="SOAPRequest" ReferencePath="xact.http.soap" VariableName="sOAPRequest"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPAdapterImpl.addSOAPEnvelope(request);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="add SOAP Envelope to XML" Name="addSOAPEnvelopeToXML">
+      <Input>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML"/>
+      </Input>
+      <Output>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML13"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPAdapterImpl.addSOAPEnvelopeToXML(xML);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add SOAP Envelope to XML without default namespace" Name="addSOAPEnvelopeToXMLWithoutDefaultNamespace">
+      <Input>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML"/>
+      </Input>
+      <Output>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML17"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPAdapterImpl.addSOAPEnvelopeToXMLWithoutDefaultNamespace(xML);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add SOAP Envelope with WS Sec User Data" Name="addSOAPEnvelopeWithWSSecUserData">
+      <Input>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML"/>
+        <Data Label="WS Security User Data" ReferenceName="WSSecurityUserData" ReferencePath="xact.http.soap" VariableName="wSSecurityUserData"/>
+      </Input>
+      <Output>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML25"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPAdapterImpl.addSOAPEnvelopeWithWSSecUserData(xML, wSSecurityUserData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Read WS Security User Data" Name="readWSSecurityUserData">
+      <Input>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML"/>
+      </Input>
+      <Output>
+        <Data Label="WS Security User Data" ReferenceName="WSSecurityUserData" ReferencePath="xact.http.soap" VariableName="wSSecurityUserData"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPAdapterImpl.readWSSecurityUserData(xML);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="remove optional SOAP Envelope" Name="removeOptionalSOAPEnvelope">
+      <Input>
+        <Data Label="SOAP Response" ReferenceName="SOAPResponse" ReferencePath="xact.http.soap" VariableName="sOAPResponse"/>
+      </Input>
+      <Output>
+        <Data Label="Response" ReferenceName="Response" ReferencePath="xact.http" VariableName="response"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPAdapterImpl.removeOptionalSOAPEnvelope(sOAPResponse);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="remove optional SOAP Envelope from XML" Name="removeOptionalSOAPEnvelopeFromXML">
+      <Input>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML"/>
+      </Input>
+      <Output>
+        <Data Label="XML" ReferenceName="XML" ReferencePath="xdev.map" VariableName="xML14"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPAdapterImpl.removeOptionalSOAPEnvelopeFromXML(xML);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="send SOAP Request" Name="sendSOAPRequest">
+      <Input>
+        <Data Label="SOAP Request" ReferenceName="SOAPRequest" ReferencePath="xact.http.soap" VariableName="sOAPRequest"/>
+        <Data Label="SOAP Config" ReferenceName="SOAPConfig" ReferencePath="xact.http.soap" VariableName="sOAPConfig"/>
+      </Input>
+      <Output>
+        <Data Label="SOAP Response" ReferenceName="SOAPResponse" ReferencePath="xact.http.soap" VariableName="sOAPResponse"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return SOAPAdapterImpl.sendSOAPRequest(sOAPRequest, sOAPConfig);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

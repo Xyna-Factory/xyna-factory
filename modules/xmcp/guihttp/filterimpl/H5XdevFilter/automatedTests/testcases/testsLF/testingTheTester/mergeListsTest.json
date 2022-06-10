@@ -1,0 +1,24 @@
+{
+  "operations": [
+    {
+      "data": [
+        {
+          "!baseList!": ["el1", "el2"]
+        }, 
+        {
+          "!toAdd!": ["el3", "el4"]
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+	{
+	  "operation": "mergeLists",
+	  "baseList": "!baseList!",
+      "listToAdd": "!toAdd!"
+	},
+    {
+      "operation": "print",
+      "variable": "!baseList!"
+    }
+  ]
+}

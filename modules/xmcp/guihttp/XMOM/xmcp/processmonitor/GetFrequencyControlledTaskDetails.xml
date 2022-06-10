@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Frequency Controlled Task Details" TypeName="GetFrequencyControlledTaskDetails" TypePath="xmcp.processmonitor" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Frequency Controlled Task Details" Name="GetFrequencyControlledTaskDetails">
+    <Input>
+      <Data ID="4" Label="Task id" ReferenceName="TaskId" ReferencePath="xmcp.processmonitor.datatypes" VariableName="taskId">
+        <Target RefID="8"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="3" Label="Frequency controlled task details" ReferenceName="FrequencyControlledTaskDetails" ReferencePath="xmcp.processmonitor.datatypes" VariableName="frequencyControlledTaskDetails">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="No Frequency Controlled Task Details" ReferenceName="NoFrequencyControlledTaskDetails" ReferencePath="xmcp.processmonitor.datatypes" VariableName="noFrequencyControlledTaskDetails"/>
+    </Throws>
+    <ServiceReference ID="7" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <Function ID="8" Label="Get Frequency Controlled Task Details">
+      <Source RefID="7"/>
+      <Source RefID="4"/>
+      <Target RefID="7"/>
+      <Target RefID="9"/>
+      <Invoke Operation="getFrequencyControlledTaskDetails" ServiceID="7">
+        <Source RefID="4"/>
+      </Invoke>
+      <Receive ServiceID="7">
+        <Target RefID="9"/>
+      </Receive>
+    </Function>
+    <Data ID="9" Label="Frequency controlled task details" ReferenceName="FrequencyControlledTaskDetails" ReferencePath="xmcp.processmonitor.datatypes" VariableName="frequencyControlledTaskDetails9">
+      <Source RefID="8"/>
+      <Target RefID="2"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="9"/>
+      <Target RefID="3"/>
+      <Copy>
+        <Source RefID="9"/>
+        <Target RefID="3"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

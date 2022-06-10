@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.gip.com/juno/Gui/WS/Messages" elementFormDefault="qualified" targetNamespace="http://www.gip.com/juno/Gui/WS/Messages">
+
+  <xsd:include schemaLocation="JunoGuiCommon.xsd"/>
+
+  <xsd:simpleType name="InstanceType_type">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Dns"/>
+      <xsd:enumeration value="Dpp"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="CheckStatusForIpInput_ctype">
+    <xsd:sequence>
+      <xsd:element name="Ip" type="xsd:string"/>
+      <!-- <xsd:element name="InstanceType" type="InstanceType_type" /> -->
+      <xsd:element name="InstanceType" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CheckStatusForIpRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="CheckStatusForIpInput" type="CheckStatusForIpInput_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="StatusElement_ctype">
+    <xsd:sequence>
+      <!-- <xsd:element name="InstanceType" type="InstanceType_type" /> -->
+      <xsd:element name="InstanceType" type="xsd:string"/>
+      <xsd:element name="Status" type="xsd:string"/>
+      <xsd:element name="Service" type="xsd:string"/>
+      <xsd:element name="IP" type="xsd:string"/>
+      <xsd:element name="Exception" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="InstanceInfo_ctype">
+    <xsd:sequence>
+      <!-- <xsd:element name="InstanceType" type="InstanceType_type" /> -->
+      <xsd:element name="InstanceType" type="xsd:string"/>
+      <xsd:element name="IP" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GetInstanceInfoListRequest_ctype">
+    <xsd:sequence>
+      <xsd:element name="InputHeader" type="InputHeaderContent_ctype"/>
+      <xsd:element name="GetInstanceInfoListInput" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GetInstanceInfoListResponse_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1000" minOccurs="0" name="InstanceInfo" type="InstanceInfo_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CheckStatusForIpResponse_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1000" minOccurs="0" name="StatusElement" type="StatusElement_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="Response_ctype">
+    <xsd:sequence>
+      <xsd:element name="ResponseHeader" type="ResponseHeader_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="Payload" type="Payload_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="Payload_ctype">
+    <xsd:sequence>
+      <xsd:element maxOccurs="1" minOccurs="0" name="GetInstanceInfoListResponseOutput" type="GetInstanceInfoListResponse_ctype"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="CheckStatusForIpResponseOutput" type="CheckStatusForIpResponse_ctype"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="GetInstanceInfoListRequest" type="GetInstanceInfoListRequest_ctype"/>
+  <xsd:element name="GetInstanceInfoListResponse" type="Response_ctype"/>
+
+  <xsd:element name="CheckStatusForIpRequest" type="CheckStatusForIpRequest_ctype"/>
+  <xsd:element name="CheckStatusForIpResponse" type="Response_ctype"/>
+
+  <xsd:element name="CheckStatusForIpv6Request" type="CheckStatusForIpRequest_ctype"/>
+  <xsd:element name="CheckStatusForIpv6Response" type="Response_ctype"/>
+
+</xsd:schema>

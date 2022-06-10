@@ -1,0 +1,117 @@
+{
+  "meta":
+  {
+    "name": "catchExceptionTest",
+	"description": "Execute a workflow containing step, throwing an Exception and catch it (loaded from app) and open audit",
+	"created": "26.03.2020",
+	"updated": "09.12.2020"
+  },
+  "operations":
+  [
+    {
+	  "operation": "set",
+	  "variable": "!customFieldValues!",
+	  "value": ["test", "", "", ""]
+	},
+	{
+      "operation": "invoke",
+      "functionName": "getRegressionApplication",
+      "mapInput": {},
+      "mapOutput": 
+      { 
+        "!url!": "!url!", 
+        "!applicationName!" : "!applicationName!", 
+        "!applicationVersion!": "!applicationVersion!"
+      }
+    },
+    {
+      "operation": "invoke",
+      "functionName": "runWorkflow",
+      "mapInput": 
+	  {
+	    "!workflowFQN!": "xmcp.h5x.regression.PMON86.CatchException",
+		"!input!": [],
+		"!customStringContainer!": "!customFieldValues!"
+	  },
+      "mapOutput": 
+	  { 
+	    "!orderId!": "!orderId!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+      }
+    },
+	{
+	  "operation": "invoke",
+	  "functionName": "assertGeneralFields",
+	  "mapInput":
+	  {
+	    "!orderId!": "!orderId!",
+		"!dataflowLength!": 0,
+		"!retryLength!": 0,
+		"!errorsLength!": 0,
+		"!rollbackLength!": 0,
+		"!customFieldValues!": "!customFieldValues!",
+		"!applicationName!": "!applicationName!",
+		"!applicationVersion!": "!applicationVersion!"
+	  }
+	},
+
+    {
+      "operation": "read",
+      "pathInResponse": "workflow/areas/$list[name=content]/items/$list[0]/areas/$list[name=errorHandling]/items/$list[0]/areas/$list[name=content]/items/$list[0]/id",
+      "targetVariable": "!step7!",
+      "unquoteResult": true
+    },
+	{
+	  "operation": "read",
+	  "targetVariable": "!caughtExceptionException!",
+	  "pathInResponse": "info/$list[id=!step7!]/caughtException/exception",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!caughtExceptionException!",
+	  "value": "xmcp.h5x.regression.PMON86.ExceptionWithData"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!caughtExceptionStacktrace!",
+	  "pathInResponse": "info/$list[id=!step7!]/caughtException/stacktrace",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "contains",
+	  "variable": "!caughtExceptionStacktrace!",
+	  "value": "at xmcp.h5x.regression.PMON86.ExceptionWithData."
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!caughtExceptionMessage!",
+	  "pathInResponse": "info/$list[id=!step7!]/caughtException/message",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "contains",
+	  "variable": "!caughtExceptionMessage!",
+	  "value": "xmcp.h5x.regression.PMON86.ExceptionWithData:"
+	},
+
+	{
+	  "operation": "read",
+	  "targetVariable": "!status!",
+	  "pathInResponse": "info/$list[id=!step7!]/status",
+	  "unquoteResult": "true"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!status!",
+	  "value": "Finished"
+	}
+  ]
+}

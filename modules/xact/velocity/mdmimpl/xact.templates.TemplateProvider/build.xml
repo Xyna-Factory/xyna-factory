@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build" basedir=".">
+
+  <!-- this is the absolute path to the root -->
+  <pathconvert property="root.dir" >
+      <path location="${basedir}/../../../../../"/>
+  </pathconvert>
+  <property name="xmom.dir" value="${basedir}/../../XMOM" />
+  <property name="application.dir" value="${basedir}/../../" />
+
+  <property file="${application.dir}/workspace.properties" />
+
+  <property name="project.name" value="TemplateProviderImpl" />
+  <property name="project.name.standalone" value="XynaTemplateProviderStandalone"/>
+  <property name="fqclassname" value="xact.templates.TemplateProvider" />
+  <property name="mdm.xml.path" value="xact/templates" />
+  <property name="mdm.xml.filename" value="TemplateProvider.xml" />
+  <property name="mdm.service.path" value="xact.templates.TemplateProvider" />
+
+  <import file="${root.dir}/installation/build/buildService.xml" />
+  
+  <target name="prepareLibs" description="Prepare libs">
+      <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/TemplateStorables">
+          <property name="target.dir" value="${basedir}/lib/xyna" />
+      </ant>
+      <copy todir="${target.dir}">
+        <fileset dir="${basedir}">
+          <include name="sql/**" />
+        </fileset>
+      </copy>
+  </target>
+
+  <!-- ================================= 
+	         target: buildStandAlone             
+	        ================================= -->
+  <target name="buildStandalone">
+  	<ant>
+  		<property name="target.dir" value="${target.dir}Standalone" />
+    </ant>
+  </target>
+
+  <!-- ================================= 
+	         target: buildStandAlone             
+	        ================================= -->
+  <target name="buildStandaloneNoTargetModification" depends="build">
+  	<mkdir dir="${target.dir}"/>
+  	<delete>
+  		<fileset dir="${target.dir}">
+  			<include name="${project.name.standalone}.zip"/>
+  		</fileset>
+  	</delete>
+  	<!-- The standalone version also includes the xyna libs -->
+  	<copy todir="${target.dir}">
+  	  <fileset dir="${basedir}">
+  	  	<include name="lib/**/xyna/*" />
+      </fileset>
+  	</copy>
+  	<zip destfile="${target.dir}/${project.name.standalone}.zip">
+  	  <zipfileset dir="${target.dir}">
+  	  	<include name="**/*"/>
+  	  </zipfileset>
+  	</zip>
+  	<delete includeEmptyDirs="true">
+	  <fileset dir="${target.dir}">
+	    <exclude name="${project.name.standalone}.zip"/>
+	  </fileset>
+    </delete>
+  </target>
+
+</project>

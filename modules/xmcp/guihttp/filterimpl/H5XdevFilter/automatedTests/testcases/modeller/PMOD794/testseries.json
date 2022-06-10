@@ -1,0 +1,6 @@
+{
+  "tests":
+  [
+    "testExceptionInput.json"
+  ]
+}

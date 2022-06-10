@@ -1,0 +1,89 @@
+[
+  {
+    "docu": "Do common assertions on an Audit",
+    "type": "function",
+	"functionName": "assertGeneralFields",
+	"input": 
+	[
+	  "!orderId!", 
+	  "!dataflowLength!",
+	  "!rollbackLength!",
+	  "!errorsLength!",
+	  "!customFieldValues!",
+	  "!applicationName!",
+	  "!applicationVersion!"
+	],
+	"output": [],
+	"operations":
+	[
+	  {
+        "operation": "call",
+        "requestType": "GET",
+        "url": "/audits/!orderId!"
+      },
+      {
+        "operation": "read",
+        "pathInResponse": "parentOrderId",
+        "targetVariable": "!parentOrderId!"
+      },
+      {
+        "operation": "assert",
+        "constraint": "equals",
+        "variable": "!parentOrderId!",
+        "value": "\"0\""
+      },
+      {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "dataflow/$list",
+        "expectedValue": "!dataflowLength!"
+      },
+      {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "rollback/$list",
+        "expectedValue": "!rollbackLength!"
+      },
+      {
+        "operation": "assert",
+        "constraint": "listLength",
+        "path": "errors/$list",
+        "expectedValue": "!errorsLength!"
+      },
+      {
+        "operation": "read",
+        "pathInResponse": "rootRtc/name",
+        "targetVariable": "!readApplicationName!",
+        "unquoteResult": true
+      },
+      {
+        "operation": "read",
+        "pathInResponse": "rootRtc/version",
+        "targetVariable": "!readApplicationVersion!",
+        "unquoteResult": true
+      },
+      {
+        "operation": "assert",
+        "constraint": "equals",
+        "variable": "!readApplicationName!",
+        "value": "!applicationName!"
+      },
+      {
+        "operation": "assert",
+        "constraint": "equals",
+        "variable": "!readApplicationVersion!",
+        "value": "!applicationVersion!"
+      },
+	  {
+	    "operation": "invoke",
+		"functionName": "assertCustomFields",
+		"mapInput": 
+		{
+		  "!expectedCustomFieldValues!": "!customFieldValues!",
+		  "!orderId!": "!orderId!"
+		},
+		"mapOutput": {}
+	  }
+	]
+  }
+]

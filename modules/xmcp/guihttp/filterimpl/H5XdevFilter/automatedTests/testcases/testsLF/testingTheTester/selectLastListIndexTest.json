@@ -1,0 +1,28 @@
+{
+  "meta":
+  {
+    "name": "selectLastListIndexTest",
+	"description": "Testet das lesen einer Variablen durch ListIndex 'last'"
+  },
+  "operations":
+  [
+    {
+      "operation": "set",
+	  "variable": "!list!",
+	  "value": {"$someList" : ["first", "second", "third"]}
+    },
+	{
+      "operation": "setFromVariable",
+	  "targetVariable": "!result!",
+	  "sourceVariable": "!list!",
+	  "path": "$someList[last]",
+	  "unquoteResult": "True"
+	},
+	{
+	  "operation": "assert",
+	  "constraint": "equals",
+	  "variable": "!result!",
+	  "value": "third"
+	}
+  ]
+}

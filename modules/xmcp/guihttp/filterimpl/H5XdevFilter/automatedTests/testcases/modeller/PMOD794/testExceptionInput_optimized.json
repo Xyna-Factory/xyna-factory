@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "Test Reference": "PMOD-795", 
+    "created": "16.01.2020", 
+    "updated": "16.01.2020"
+  }, 
+  "operations": [
+    {
+      "operation": "setRandom", 
+      "variable": "!rndLabel1!"
+    }, 
+    {
+      "operation": "setRandom", 
+      "variable": "!rndLabel2!"
+    }, 
+    {
+      "data": [
+        {
+          "!path!": "autoTest.generated.PMOD794"
+        }, 
+        {
+          "!exLabel!": "GeneratedException_!rndLabel1!"
+        }, 
+        {
+          "!wfLabel!": "GeneratedWorkflow_!rndLabel2!"
+        }, 
+        {
+          "!workspaceName!": "default workspace"
+        }
+      ], 
+      "operation": "multiSet"
+    }, 
+    {
+      "operation": "set", 
+      "value": "!workspaceName!", 
+      "variable": "!escapedWorkspace!"
+    }, 
+    {
+      "modification": {
+        "operation": "urlencode"
+      }, 
+      "operation": "modification", 
+      "variable": "!escapedWorkspace!"
+    }, 
+    {
+      "functionName": "createException", 
+      "mapInput": {
+        "!label!": "!exLabel!", 
+        "!path!": "!path!", 
+        "!workspace!": "!workspaceName!"
+      }, 
+      "mapOutput": {
+        "!name!": "!nameEX!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "set", 
+      "value": "!path!.!nameEX!", 
+      "variable": "!exfqn!"
+    }, 
+    {
+      "functionName": "createNewWorkflow", 
+      "mapInput": {}, 
+      "mapOutput": {
+        "!newPath!": "!wfNewPath!", 
+        "!newWorkflowName!": "!wfNewName!", 
+        "!url!": "!newWFUrl!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "functionName": "saveAndDeploy", 
+      "mapInput": {
+        "!label!": "!wfLabel!", 
+        "!path!": "!path!", 
+        "!revision!": 0, 
+        "!wfUrl!": "!newWFUrl!"
+      }, 
+      "mapOutput": {
+        "!wfName!": "!wfName!", 
+        "!wfUrl!": "!wfUrl!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!exfqn!", 
+          "isList": false, 
+          "label": "!exLabel!", 
+          "type": "exception"
+        }, 
+        "index": -1, 
+        "relativePosition": "inside", 
+        "revision": 0
+      }, 
+      "requestType": "POST", 
+      "url": "!wfUrl!/objects/step0/insert"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "content": {
+          "fqn": "!exfqn!", 
+          "isList": false, 
+          "label": "!exLabel!", 
+          "type": "exception"
+        }, 
+        "index": -1, 
+        "revision": 1
+      }, 
+      "requestType": "POST", 
+      "url": "!wfUrl!/objects/wf_input/insert"
+    }, 
+    {
+      "functionName": "saveAndDeploy", 
+      "mapInput": {
+        "!label!": "!wfLabel!", 
+        "!path!": "!path!", 
+        "!revision!": 0, 
+        "!wfUrl!": "!wfUrl!"
+      }, 
+      "mapOutput": {
+        "!wfName!": "!wfName!", 
+        "!wfUrl!": "!wfUrl!"
+      }, 
+      "operation": "invoke"
+    }, 
+    {
+      "operation": "call", 
+      "payload": {
+        "force": false, 
+        "revision": 2
+      }, 
+      "requestType": "POST", 
+      "url": "!wfUrl!/objects/var-in0/delete"
+    }
+  ]
+}

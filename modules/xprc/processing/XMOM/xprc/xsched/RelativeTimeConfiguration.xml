@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TimeConfiguration" BaseTypePath="xprc.xsched" Label="RelativeTimeConfiguration" TypeName="RelativeTimeConfiguration" TypePath="xprc.xsched" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Data Label="MilliSeconds" VariableName="milliSeconds">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Seconds" VariableName="seconds">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Minutes" VariableName="minutes">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Hours" VariableName="hours">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Days" VariableName="days">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+</DataType>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TransactionParameter" BaseTypePath="xprc.transaction" Label="ODS Connection Based Transaction Parameter" TypeName="ODSConnectionBasedTransactionParameter" TypePath="xprc.transaction.odsconnection" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Connection Type" ReferenceName="ConnectionType" ReferencePath="xnwh.persistence" VariableName="connectionType">
+    <Meta>
+      <Documentation>Type of the connection to be opened</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Connectivity Parameter" ReferenceName="ConnectivityParameter" ReferencePath="xprc.transaction.odsconnection" VariableName="connectivityParameter">
+    <Meta>
+      <Documentation>Internal connections of an ODSConnection are usually opened only when needed, by providing ConnectivityParameters the connectivity to the configured PersistenceLayers can be ensured directly on opening the transaction.</Documentation>
+    </Meta>
+  </Data>
+  <Service Label="ODSConnection Based Transaction Parameter" TypeName="ODSConnectionBasedTransactionParameter">
+    <Operation IsStatic="false" Label="open" Name="open" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Transaction" ReferenceName="Transaction" ReferencePath="xprc.transaction" VariableName="transaction"/>
+      </Output>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">java.util.Map&lt;String, String&gt; specifics = new java.util.HashMap&lt;&gt;();
+if (getConnectionType() != null) {
+  specifics.put("connectionType", getConnectionType().getClass().getSimpleName());
+}
+
+if (getConnectivityParameter() != null) {
+  if (getConnectivityParameter().getFullQualifiedStorableNames() != null) {
+    final com.gip.xyna.utils.collections.lists.StringSerializableList&lt;String&gt; storables =
+      com.gip.xyna.utils.collections.lists.StringSerializableList.separator(String.class);
+    getConnectivityParameter().getFullQualifiedStorableNames().forEach(s -&gt; storables.add(s));
+    specifics.put("storables", storables.serializeToString());
+  }
+
+  if (getConnectivityParameter().getFullQualifiedXmomStorableNames() != null) {    
+    final com.gip.xyna.utils.collections.lists.StringSerializableList&lt;String&gt; xmomStorables =
+      com.gip.xyna.utils.collections.lists.StringSerializableList.separator(String.class);
+    getConnectivityParameter().getFullQualifiedXmomStorableNames().forEach(s -&gt; xmomStorables.add(s));
+    specifics.put("xmomStorables", xmomStorables.serializeToString());
+  }
+}
+
+specifics.put("rootRevision", Long.toString(correlatedXynaOrder.getRootOrder().getRevision()));
+
+//implemented in basetype
+return openTx("ODSConnectionTransactionType", specifics, correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

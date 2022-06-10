@@ -1,0 +1,40 @@
+{
+  "meta":
+  {
+    "description": "Testet die Operation success in Subtestcases",
+	"created": "07.11.2019",
+	"updated": "07.11.2019"
+  },
+  "operations":
+  [
+    {
+	  "operation": "subtestcase",
+	  "subtestcaseName": "subTestcase",
+	  "operations":
+	  [
+        {
+	      "operation": "set",
+	      "variable": "!printMe!",
+	      "value": "thisVariableShouldBePrinted"
+	    },
+        {
+	      "operation": "set",
+	      "variable": "!dontPrintMe!",
+	      "value": "thisVariableShouldNotBePrinted"
+	    },
+	    {
+	      "operation": "print",
+	      "variable": "!printMe!"
+	    },
+	    {
+	      "operation": "success"
+	    },
+	    {
+	      "operation": "print",
+	      "variable": "!dontPrintMe!"
+	    }	    
+	  ]
+	}
+
+  ]
+}

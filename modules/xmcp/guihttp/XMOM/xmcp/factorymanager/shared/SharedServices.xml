@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Shared Services" TypeName="SharedServices" TypePath="xmcp.factorymanager.shared" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SharedServicesImpl.jar</Libraries>
+  <Service Label="Shared Services" TypeName="SharedServices">
+    <Operation IsStatic="true" Label="Get default monitoring level" Name="getDefaultMonitoringLevel">
+      <Input>
+        <Data Label="Default Monitoring Level" ReferenceName="DefaultMonitoringLevel" ReferencePath="xmcp.factorymanager.shared" VariableName="defaultMonitoringLevel19"/>
+      </Input>
+      <Output>
+        <Data Label="Default Monitoring Level" ReferenceName="DefaultMonitoringLevel" ReferencePath="xmcp.factorymanager.shared" VariableName="defaultMonitoringLevel"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.shared.SharedServicesImpl.getDefaultMonitoringLevel(defaultMonitoringLevel19);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get order types" Name="getOrderTypes">
+      <Input>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Order type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.shared" VariableName="orderType9"/>
+      </Output>
+      <Throws>
+        <Exception Label="Load order types Exception" ReferenceName="LoadOrderTypesException" ReferencePath="xmcp.factorymanager.shared" VariableName="loadOrderTypesException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.shared.SharedServicesImpl.getOrderTypes(runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get runtime contexts" Name="getRuntimeContexts" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Output>
+      <Throws>
+        <Exception ID="1" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights1"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.shared.SharedServicesImpl.getRuntimeContexts(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get timezones" Name="getTimezones">
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="Timezone" ReferenceName="Timezone" ReferencePath="xmcp.factorymanager.shared" VariableName="timezone"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.shared.SharedServicesImpl.getTimezones();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Has Role All Rights" Name="hasRoleAllRights">
+      <Input>
+        <Data Label="User Role" ReferenceName="UserAuthenticationRole" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRole"/>
+        <Data IsList="true" Label="Required Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Missing Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight32"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.shared.SharedServicesImpl.hasRoleAllRights(userAuthenticationRole, userAuthenticationRight);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

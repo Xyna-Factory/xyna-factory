@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Delete Duplicates" TypeName="DeleteDuplicates" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Delete Duplicates" Name="DeleteDuplicates">
+    <Input>
+      <Data ID="65" Label="Workspace" ReferenceName="Workspace" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspace65"/>
+    </Input>
+    <Output>
+      <Data ID="111" Label="Delete Duplicates Response" ReferenceName="DeleteDuplicatesResponse" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="deleteDuplicatesResponse111"/>
+    </Output>
+    <Throws>
+      <Exception Label="Delete Duplicates Exception" ReferenceName="DeleteDuplicatesException" ReferencePath="xmcp.factorymanager.rtcmanager.exceptions" VariableName="deleteDuplicatesException400"/>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights401"/>
+    </Throws>
+    <ServiceReference ID="11" Label="RtcManagerServices" ReferenceName="RtcManagerServices.RtcManagerServices" ReferencePath="xmcp.factorymanager"/>
+    <Function ID="10" Label="Delete Duplicates">
+      <Source RefID="11"/>
+      <Source RefID="65"/>
+      <Target RefID="11"/>
+      <Target RefID="66"/>
+      <Invoke Operation="deleteDuplicates" ServiceID="11">
+        <Source RefID="65"/>
+      </Invoke>
+      <Receive ServiceID="11">
+        <Target RefID="66"/>
+      </Receive>
+    </Function>
+    <Data ID="66" Label="Delete Duplicates Response" ReferenceName="DeleteDuplicatesResponse" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="deleteDuplicatesResponse66"/>
+    <Assign ID="1">
+      <Source RefID="66"/>
+      <Target RefID="111"/>
+      <Copy>
+        <Source RefID="66"/>
+        <Target RefID="111"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

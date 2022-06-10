@@ -1,0 +1,6 @@
+{
+  "tests":
+  [
+    "startRunRegressionTestsWorkflowMonitor.json"
+  ]
+}

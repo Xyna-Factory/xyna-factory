@@ -1,0 +1,56 @@
+[
+  {
+    "descrption": "fügt der ServiceGroup einen hinzu, deployt und schließt sie",
+    "type":"function",
+    "functionName": "addServiceToServiceGroup",
+    "input": ["!workspaceName!", "!path!", "!sgName!", "!serviceLabel!", "!sgLabel!", "!revision!"],
+    "output": ["!serviceName!"],
+    "operations":
+    [
+      {
+	    "operation": "set",
+	    "variable": "!workspaceEscaped!",
+	    "value": "!workspaceName!"
+	  },
+	  {
+	    "operation": "modification",
+	    "variable": "!workspaceEscaped!",
+	    "modification": {"operation": "urlencode"}
+	  },
+	  {
+	    "operation": "set",
+		"variable": "!url!",
+		"value": "/runtimeContext/!workspaceEscaped!/xmom/servicegroups/!path!/!sgName!"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/objects/memberMethodsArea/insert",
+		"payload": {"index":-1,"content":{"type":"memberService","label":"!serviceLabel!"},"revision":"!revision!"}
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!serviceName!",
+		"pathInResponse": "updates/$list[0]/areas/$list[id=memberMethodsArea]/items/$list[0]/id",
+        "unquoteResult": "True"
+	  },
+	  {
+	    "operation": "read",
+		"targetVariable": "!revision!",
+		"pathInResponse": "revision"
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/deploy",
+		"payload": {"revision":"!revision!","label":"!sgLabel!","path":"!path!"}
+	  },
+	  {
+	    "operation": "call",
+		"requestType": "POST",
+		"url": "!url!/close",
+		"payload": {"force":false,"revision":"!revision!"}
+	  }
+    ]
+  }
+]

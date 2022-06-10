@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="ISO-8859-15" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+	targetNamespace="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+	elementFormDefault="qualified">
+	<xsd:element name="ExceptionStore">
+		<xsd:annotation>
+			<xsd:documentation>
+				Hält eine Liste von Nachrichten in
+				unterschiedlichen Sprachen.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Description" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:simpleContent>
+							<xsd:extension base="xsd:string">
+								<xsd:attribute name="Language" type="xsd:string" />
+							</xsd:extension>
+						</xsd:simpleContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Include" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							Angabe von anderen Xmls, die zusätzliche Fehlermeldungen definieren.
+							werden generiert.
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:attribute name="File" use="required" type="xsd:string" />
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Import" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							Referenz auf andere Xmls, die zusätzliche Fehlermeldungen definieren, von
+							denen z.B. abgeleitet werden kann.
+							werden nicht generiert, sondern werden als bereits existent
+							vorausgesetzt.
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:attribute name="File" use="required" type="xsd:string" />
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="ExceptionType" minOccurs="0"
+					maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="Meta" minOccurs="0">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:any maxOccurs="unbounded" minOccurs="0"
+											processContents="lax" />
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="Description" minOccurs="0">
+								<xsd:complexType>
+									<xsd:simpleContent>
+										<xsd:extension base="xsd:string">
+											<xsd:attribute name="Language" type="xsd:string" />
+										</xsd:extension>
+									</xsd:simpleContent>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:choice minOccurs="0" maxOccurs="unbounded">
+								<xsd:element name="Data">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="Meta" minOccurs="0">
+												<xsd:complexType>
+													<xsd:choice minOccurs="0" maxOccurs="unbounded">
+														<xsd:element name="Type" type="xsd:string" />
+														<xsd:element name="Documentation" type="xsd:string" />
+													</xsd:choice>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+										<xsd:attribute name="IsList" type="xsd:boolean" />
+										<xsd:attribute name="Label" type="xsd:string" />
+										<xsd:attribute name="ReferenceName" type="xsd:string" />
+										<xsd:attribute name="ReferencePath" type="xsd:string" />
+										<xsd:attribute name="VariableName" type="xsd:string"
+											use="required" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="Exception">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="Meta" minOccurs="0">
+												<xsd:complexType>
+													<xsd:choice minOccurs="0" maxOccurs="unbounded">
+														<xsd:element name="Type" type="xsd:string" />
+														<xsd:element name="Documentation" type="xsd:string" />
+													</xsd:choice>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+										<xsd:attribute name="IsList" type="xsd:boolean" />
+										<xsd:attribute name="Label" type="xsd:string" />
+										<xsd:attribute name="ReferenceName" type="xsd:string" />
+										<xsd:attribute name="ReferencePath" type="xsd:string" />
+										<xsd:attribute name="VariableName" type="xsd:string"
+											use="required" />
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:choice>
+							<xsd:element name="MessageText" minOccurs="0"
+								maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:simpleContent>
+										<xsd:extension base="xsd:string">
+											<xsd:attribute name="Language" type="xsd:string"
+												use="optional" />
+										</xsd:extension>
+									</xsd:simpleContent>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+						<!-- optional, weil abstracte exceptions keinen code haben -->
+						<xsd:attribute name="Code" use="optional" type="xsd:string" />
+						<xsd:attribute name="TypeName" use="required" type="xsd:string" />
+						<xsd:attribute name="TypePath" use="required" type="xsd:string" />
+						<xsd:attribute name="IsAbstract" default="false"
+							type="xsd:boolean" />
+						<xsd:attribute name="Label" type="xsd:string" />
+						<xsd:attribute name="BaseTypeName" type="xsd:string" />
+						<xsd:attribute name="BaseTypePath" type="xsd:string" />
+						<xsd:attribute name="NoOfParameters" type="xsd:int" />
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="Name" use="required" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						Name dieser Ansammlung von Nachrichten
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="Version" type="xsd:string" />
+			<xsd:attribute name="Type" type="xsd:string" />
+			<xsd:attribute name="DefaultLanguage" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

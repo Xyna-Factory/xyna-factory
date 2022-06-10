@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "Test Reference": "Open",
+    "created": "15.7.2020",
+    "updated": "15.7.2020"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!",
+      "seed": "capacities_autotest"
+    },
+    {
+      "data": [
+        {
+          "!GuiHttp%252F!": "default%20workspace"
+        },
+        {
+          "!startorder!": "startorder"
+        },
+        {
+          "!xmcp.factorymanager.capacities.CreateCapacity!": "xmcp.factorymanager.capacities.CreateCapacity"
+        },
+        {
+          "!DISABLED!": "DISABLED"
+        },
+        {
+          "!autotest.generated.random!": "autotest.generated.!rnd!"
+        },
+        {
+          "!xmcp.factorymanager.capacities.CapacityInformati!": "xmcp.factorymanager.capacities.CapacityInformation"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "async": false,
+        "input": [
+          {
+            "$meta": {
+              "fqn": "!xmcp.factorymanager.capacities.CapacityInformati!"
+            },
+            "cardinality": 0,
+            "name": "!autotest.generated.random!",
+            "state": "!DISABLED!"
+          }
+        ],
+        "orderType": "!xmcp.factorymanager.capacities.CreateCapacity!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!GuiHttp%252F!/!startorder!"
+    }
+  ]
+}

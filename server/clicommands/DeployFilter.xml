@@ -1,0 +1,30 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="deployfilter" Groups="Deployment" Description="Instantiate the filter with the given name and attach to specified trigger."/>
+  <Argument Name="filterName" Description="The name of the filter of which a new instance is supposed to be created"/>
+  <Argument Name="filterInstanceName" Description="The name of the new filter instance"/>
+  <Argument Name="triggerInstanceName" Description="The trigger instance that the filter instance is attached to"/>
+  <Argument Name="configurationParameter" Description="The configuration parameters for the filter as shown by '-configurationParameter help' or 'listfilters -v' " MultipleValues="true" Optional="true" />
+  <Argument Name="documentation" Description="Description of the filter instance" Optional="true" />
+  <Argument Name="applicationName" Description="The name of the application." Optional="true"/>
+  <Argument Name="versionName" Description="The name of the version of the application." Optional="true"/>
+  <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
+  <BoolOption Name="o" LongName="optional" Description="The trigger thread is allowed to run even if this filter instance is in error state."/>
+  <BoolOption Name="v" LongName="verbose" Description="Print verbose output of the state after the operation has finished." Optional="true" />
+</XynaCommandLineCommand>

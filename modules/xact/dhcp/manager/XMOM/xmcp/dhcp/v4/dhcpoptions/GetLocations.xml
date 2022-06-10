@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="GetLocations" TypeName="GetLocations" TypePath="xmcp.dhcp.v4.dhcpoptions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="GetLocations" Name="GetLocations">
+    <Input>
+      <Data ID="18" Label="GetLocationsInput" ReferenceName="GetLocationsInput" ReferencePath="xmcp.dhcp.v4.dhcpoptions" VariableName="getLocationsInput18"/>
+    </Input>
+    <Output>
+      <Data ID="138" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype138"/>
+      <Data ID="187" Label="LocationsList" ReferenceName="ColValuesDistinct_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages" VariableName="colValuesDistinct_ctype187"/>
+    </Output>
+    <ServiceReference ID="188" Label="Cm" ReferenceName="Cm.Cm" ReferencePath="xmcp.dhcp.v4.dhcpoptions"/>
+    <Mappings ID="59" Label="Build Input">
+      <Input>
+        <Data ID="70" Label="GetLocationsInput" ReferenceName="GetLocationsInput" ReferencePath="xmcp.dhcp.v4.dhcpoptions" VariableName="getLocationsInput70">
+          <Source RefID="59"/>
+        </Data>
+        <Source RefID="18"/>
+      </Input>
+      <Output>
+        <Data ID="60" Label="Get Locations Request ctype" ReferenceName="GetLocationsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages" VariableName="getLocationsRequest_ctype60">
+          <Source RefID="59"/>
+        </Data>
+        <Target RefID="61"/>
+      </Output>
+      <Mapping>%1%.getLocationsInput=%0%.getLocationsInput</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Get Locations">
+      <Source RefID="188"/>
+      <Source RefID="61"/>
+      <Target RefID="188"/>
+      <Target RefID="6"/>
+      <Invoke Operation="getLocations" ServiceID="188">
+        <Source RefID="61"/>
+      </Invoke>
+      <Receive ServiceID="188">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Mappings ID="129" Label="Extract Output">
+      <Input>
+        <Data ID="8" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages" VariableName="response_ctype8">
+          <Source RefID="9"/>
+        </Data>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="159" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype159">
+          <Source RefID="129"/>
+        </Data>
+        <Target RefID="160"/>
+      </Output>
+      <Output>
+        <Data ID="169" Label="LocationsList" ReferenceName="ColValuesDistinct_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages" VariableName="colValuesDistinct_ctype169">
+          <Source RefID="129"/>
+        </Data>
+        <Target RefID="170"/>
+      </Output>
+      <Mapping>%2%=%0%.payload.locationsList</Mapping>
+      <Mapping>%1%.errorDomain=%0%.responseHeader.errorDomain</Mapping>
+      <Mapping>%1%.errorNumber=%0%.responseHeader.errorNumber</Mapping>
+      <Mapping>%1%.severity=%0%.responseHeader.severity</Mapping>
+      <Mapping>%1%.description=%0%.responseHeader.description</Mapping>
+      <Mapping>%1%.stacktrace=%0%.responseHeader.stacktrace</Mapping>
+      <Mapping>%1%.status0=%0%.responseHeader.status</Mapping>
+    </Mappings>
+    <Data ID="6" Label="Response ctype" ReferenceName="Response_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Service.WS.CM.Messages" VariableName="response_ctype">
+      <Source RefID="5"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="61" Label="Get Locations Request ctype" ReferenceName="GetLocationsRequest_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages" VariableName="getLocationsRequest_ctype61">
+      <Source RefID="59"/>
+    </Data>
+    <Data ID="160" Label="ResponseHeader_GUItype" ReferenceName="ResponseHeader_GUItype" ReferencePath="xmcp.dhcp.v4.gui.datatypes" VariableName="responseHeader_GUItype160">
+      <Source RefID="129"/>
+    </Data>
+    <Data ID="170" Label="ColValuesDistinct_ctype" ReferenceName="ColValuesDistinct_ctype" ReferencePath="xmcp.dhcp.v4.datatypes.generated.CM.www.gip.com.juno.Gui.WS.Messages" VariableName="colValuesDistinct_ctype170">
+      <Source RefID="129"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="160"/>
+      <Source RefID="170"/>
+      <Target RefID="138"/>
+      <Target RefID="187"/>
+      <Copy>
+        <Source RefID="160"/>
+        <Target RefID="138"/>
+      </Copy>
+      <Copy>
+        <Source RefID="170"/>
+        <Target RefID="187"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

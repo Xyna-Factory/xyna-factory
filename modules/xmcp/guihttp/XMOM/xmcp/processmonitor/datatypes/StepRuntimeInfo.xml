@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="RuntimeInfo" BaseTypePath="xmcp.processmonitor.datatypes" Label="Step Runtime Info" TypeName="StepRuntimeInfo" TypePath="xmcp.processmonitor.datatypes" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Status" VariableName="status">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Inputs" VariableName="inputs">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Outputs" VariableName="outputs">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Error" ReferenceName="Error" ReferencePath="xmcp.processmonitor.datatypes" VariableName="error"/>
+  <Data Label="Running Time" ReferenceName="RunningTime" ReferencePath="xmcp.processmonitor.datatypes" VariableName="runningTime"/>
+  <Data Label="Original RTC" VariableName="originalRTC">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Execution RTC" VariableName="executionRTC">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
