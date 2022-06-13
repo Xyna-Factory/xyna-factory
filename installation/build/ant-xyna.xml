@@ -255,7 +255,7 @@
     <sequential>
       <exec osfamily="windows" executable="cmd" outputproperty="exec.output">
         <arg value="/c"/>
-      <!--  <arg value="C:/Users/bernhard.gelder/apache-maven-3.8.4/bin/mvn"/>-->
+        <arg value="mvn"/>
         <arg value="-s" />
         <arg value="${mavenSettingFile}" />
         <arg value="license:download-licenses" />
