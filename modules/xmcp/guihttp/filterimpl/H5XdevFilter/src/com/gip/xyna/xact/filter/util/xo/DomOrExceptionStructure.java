@@ -75,8 +75,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.DatatypeVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLInputSource;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLInputSourceFromStrings;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.StringXMLSource;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLSourceAbstraction;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -262,7 +262,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
             for (AuditImport curImport : orderItem.getImports()) {
               xmlsWfAndImports.putIfAbsent(curImport.getFqn(), curImport.getDocument());
             }
-            XMLInputSourceFromStrings inputSource = new XMLInputSourceFromStrings(xmlsWfAndImports);
+            StringXMLSource inputSource = new StringXMLSource(xmlsWfAndImports);
             
             List<AuditImport> imports = orderItem.getImports();
             for (AuditImport auditImport : imports) {
@@ -372,7 +372,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     return map;
   }
   
-  private DomOrExceptionGenerationBase getGenerationBaseFromXml(String fqName, String xml, XMLInputSource inputSource)
+  private DomOrExceptionGenerationBase getGenerationBaseFromXml(String fqName, String xml, XMLSourceAbstraction inputSource)
       throws XynaException {
     String rootTag;
     try {

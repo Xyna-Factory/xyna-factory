@@ -572,7 +572,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
     super(originalName, wfInputName, cache, revision, realType);
   }
   
-  WF(String originalName, String wfInputName, GenerationBaseCache cache, Long revision, String realType, XMLInputSource inputSource) {
+  WF(String originalName, String wfInputName, GenerationBaseCache cache, Long revision, String realType, XMLSourceAbstraction inputSource) {
     super(originalName, wfInputName, cache, revision, realType, inputSource);
   }
 
@@ -639,7 +639,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   public static WF getOrCreateInstanceForAudits(String originalWFInputName, Map<String, String> xmlsWfAndImports)
                   throws XPRC_InvalidPackageNameException {
     String fqClassName = GenerationBase.transformNameForJava(originalWFInputName);
-    XMLInputSourceFromStrings inputSource = new XMLInputSourceFromStrings(xmlsWfAndImports);
+    StringXMLSource inputSource = new StringXMLSource(xmlsWfAndImports);
     
     return new WF(originalWFInputName, fqClassName, new GenerationBaseCache(), -100L /*gibts nicht, wird nicht verwendet*/, null, inputSource);
   }

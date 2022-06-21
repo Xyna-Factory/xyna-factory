@@ -31,17 +31,25 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.Section;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xact.trigger.FilterInstanceStorable;
+import com.gip.xyna.xact.trigger.FilterStorable;
+import com.gip.xyna.xact.trigger.TriggerInstanceStorable;
+import com.gip.xyna.xact.trigger.TriggerStorable;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xprc.exceptions.XPRC_DeploymentHandlerException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidXMLForObjectCreationException;
 import com.gip.xyna.xprc.exceptions.XPRC_MDMObjectCreationException;
+import com.gip.xyna.xprc.exceptions.XPRC_UnDeploymentHandlerException;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling.DeploymentHandler;
+import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling.UndeploymentHandler;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
+import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
+import com.gip.xyna.xprc.xpce.planning.Capacity;
 
 
 
@@ -259,6 +267,33 @@ public class XynaXmomSerialization extends Section {
             objects.clear();
           }
         });
+    XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
+      .addUndeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new UndeploymentHandler() {
+        
+        private final Set<Long> objects = new HashSet<Long>();
+
+        public void exec(GenerationBase object) throws XPRC_UnDeploymentHandlerException {
+          objects.add(object.getRevision());
+        }
+
+        public void finish() throws XPRC_UnDeploymentHandlerException {
+          // invalidate changed revisions
+          Set<Long> revisionsToInvalidate = new HashSet<Long>();
+          for (Long object : objects) {
+            XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getParentRevisionsRecursivly(object, revisionsToInvalidate);
+          }
+          XynaFactory.getInstance().getProcessing().getXmomSerialization().invalidateRevisions(revisionsToInvalidate);
+        }
+        
+        public boolean executeForReservedServerObjects() { return false; }
+        public void exec(FilterInstanceStorable object) { }
+        public void exec(TriggerInstanceStorable object) { }
+        public void exec(FilterStorable object) { }
+        public void exec(TriggerStorable object) { }
+        public void exec(Capacity object) { }
+        public void exec(DestinationKey object) { }
+
+    });
 
   }
 

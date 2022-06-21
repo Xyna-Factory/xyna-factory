@@ -27,15 +27,15 @@ import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.XMOMLoader;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLInputSourceFromStrings;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.StringXMLSource;
 
 
 public class MonitorXMOMLoader extends XMOMLoader {
   
-  private XMLInputSourceFromStrings inputSource;
+  private StringXMLSource inputSource;
   
   public MonitorXMOMLoader(Map<String, String> xmlsWfAndImports) {
-    inputSource = new XMLInputSourceFromStrings(xmlsWfAndImports);
+    inputSource = new StringXMLSource(xmlsWfAndImports);
   }
   
   @Override

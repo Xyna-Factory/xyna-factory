@@ -67,7 +67,7 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
     super(originalClassName, fqClassName, revision);
   }
   
-  protected DomOrExceptionGenerationBase(String originalClassName, String fqClassName, GenerationBaseCache cache, Long revision, String realType, XMLInputSource inputSource) {
+  protected DomOrExceptionGenerationBase(String originalClassName, String fqClassName, GenerationBaseCache cache, Long revision, String realType, XMLSourceAbstraction inputSource) {
     super(originalClassName, fqClassName, cache, revision, realType, inputSource);
   }
   

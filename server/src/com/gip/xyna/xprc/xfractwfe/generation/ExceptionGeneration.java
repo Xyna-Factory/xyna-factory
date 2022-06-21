@@ -99,17 +99,15 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
   }
   
   
-  ExceptionGeneration(String originalName, String fqClassName, GenerationBaseCache cache, Long revision, String realType, XMLInputSource xmlInputSource) {
+  ExceptionGeneration(String originalName, String fqClassName, GenerationBaseCache cache, Long revision, String realType, XMLSourceAbstraction xmlInputSource) {
     super(originalName, fqClassName, cache, revision, realType, xmlInputSource);
   }
 
-  public static ExceptionGeneration getInstance(String originalFQExceptionName)
-                  throws XPRC_InvalidPackageNameException {
+  public static ExceptionGeneration getInstance(String originalFQExceptionName)throws XPRC_InvalidPackageNameException {
     return getInstance(originalFQExceptionName, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
   }
   
-  public static ExceptionGeneration getInstance(String originalFQExceptionName, Long revision)
-                  throws XPRC_InvalidPackageNameException {
+  public static ExceptionGeneration getInstance(String originalFQExceptionName, Long revision) throws XPRC_InvalidPackageNameException {
 
     String fqExceptionClassName = GenerationBase.transformNameForJava(originalFQExceptionName);
     
@@ -141,15 +139,11 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
 
   }
   
-  public static ExceptionGeneration getOrCreateInstance(String originalInputName,
-                                                        GenerationBaseCache cache, Long revision)
-      throws XPRC_InvalidPackageNameException {
-    return getOrCreateInstance(originalInputName, cache, revision, new XMLInputSourceFromFileSystem());
+  public static ExceptionGeneration getOrCreateInstance(String originalInputName, GenerationBaseCache cache, Long revision) throws XPRC_InvalidPackageNameException {
+    return getOrCreateInstance(originalInputName, cache, revision, new FactoryManagedRevisionXMLSource());
   }
   
-  public static ExceptionGeneration getOrCreateInstance(String originalInputName,
-                                                        GenerationBaseCache cache, Long revision, XMLInputSource inputSource)
-      throws XPRC_InvalidPackageNameException {
+  public static ExceptionGeneration getOrCreateInstance(String originalInputName, GenerationBaseCache cache, Long revision, XMLSourceAbstraction inputSource) throws XPRC_InvalidPackageNameException {
     revision =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
             .getRevisionDefiningXMOMObjectOrParent(originalInputName, revision);
