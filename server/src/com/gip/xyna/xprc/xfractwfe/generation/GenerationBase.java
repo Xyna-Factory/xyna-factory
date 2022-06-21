@@ -17,6 +17,7 @@
  */
 package com.gip.xyna.xprc.xfractwfe.generation;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -133,8 +134,10 @@ import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemStateManagement;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.InterfaceResolutionContext;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.TypeInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.UnresolvableInterface;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext.RuntimeContextType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
@@ -1291,10 +1294,12 @@ public abstract class GenerationBase {
             case codeChanged :            
               //für applications ist es ok, da muss nichts kopiert werden.
               try {
-                RuntimeContext rc = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRuntimeContext(revision);
-                if (rc instanceof Workspace) {
-                  //copy noch nicht begonnen
-                  return state.isNotFurtherThan(DeploymentState.initializeDeploymentMode);
+                if (XynaFactory.isFactoryServer()) {
+                  RuntimeContext rc = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRuntimeContext(revision);
+                  if (rc instanceof Workspace) {
+                    //copy noch nicht begonnen
+                    return state.isNotFurtherThan(DeploymentState.initializeDeploymentMode);
+                  }
                 }
                 //keine special dependencies ermittelt
                 return state.isNotFurtherThan(DeploymentState.completeDependencies);
@@ -1534,10 +1539,10 @@ public abstract class GenerationBase {
   };
 
   protected GenerationBase(String originalClassName, String fqClassName, Long revision) {
-    this(originalClassName, fqClassName, globalCache, revision, null, new XMLInputSourceFromFileSystem());
+    this(originalClassName, fqClassName, globalCache, revision, null, new FactoryManagedRevisionXMLSource());
   }
   
-  protected GenerationBase(String originalClassName, String fqClassName, Long revision, XMLInputSource inputSource) {
+  protected GenerationBase(String originalClassName, String fqClassName, Long revision, XMLSourceAbstraction inputSource) {
     this(originalClassName, fqClassName, globalCache, revision, null, inputSource);
   }
 
@@ -1547,11 +1552,11 @@ public abstract class GenerationBase {
 
   protected GenerationBase(String fqXmlName, String fqClassName, GenerationBaseCache cache, Long revision,
                            String realType) {
-    this(fqXmlName, fqClassName, cache, revision, realType, new XMLInputSourceFromFileSystem());
+    this(fqXmlName, fqClassName, cache, revision, realType, new FactoryManagedRevisionXMLSource());
   }
 
   protected GenerationBase(String fqXmlName, String fqClassName, GenerationBaseCache cache, Long revision,
-                           String realType, XMLInputSource inputSource) {
+                           String realType, XMLSourceAbstraction inputSource) {
     if (extendedDebugInfo.get()) {
       _debugCreationTime = System.currentTimeMillis();
       _debugCreationCause = Thread.currentThread().getStackTrace();
@@ -1587,13 +1592,11 @@ public abstract class GenerationBase {
   }
   
   public static GenerationBase getOrCreateInstance(String fqName, GenerationBaseCache cache, Long usedInRevision) throws XPRC_InvalidPackageNameException, Ex_FileAccessException, XPRC_XmlParsingException {
-    return getOrCreateInstance(fqName, cache, usedInRevision, new XMLInputSourceFromFileSystem());
+    return getOrCreateInstance(fqName, cache, usedInRevision, new FactoryManagedRevisionXMLSource());
   }
 
-  public static GenerationBase getOrCreateInstance(String fqName, GenerationBaseCache cache, Long usedInRevision, XMLInputSource inputSource) throws XPRC_InvalidPackageNameException, Ex_FileAccessException, XPRC_XmlParsingException {
-    Long originalRevision =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
-        getRuntimeContextDependencyManagement().getRevisionDefiningXMOMObjectOrParent(fqName, usedInRevision);
+  public static GenerationBase getOrCreateInstance(String fqName, GenerationBaseCache cache, Long usedInRevision, XMLSourceAbstraction inputSource) throws XPRC_InvalidPackageNameException, Ex_FileAccessException, XPRC_XmlParsingException {
+    Long originalRevision = inputSource.getRevisionDefiningXMOMObjectOrParent(fqName, usedInRevision);
     String fqClassName = GenerationBase.transformNameForJava(fqName);
     
     GenerationBase gb = cache.getFromCache( fqName, originalRevision);
@@ -1601,13 +1604,7 @@ public abstract class GenerationBase {
       return gb;
     }
     
-    String rootTag;
-    if (inputSource instanceof XMLInputSourceFromFileSystem) {
-      rootTag = retrieveRootTag(fqName, originalRevision, true, false);
-    } else {
-      rootTag = inputSource.getOrParseXML(new DOM(fqName, fqClassName, cache, originalRevision, null, inputSource), true).getDocumentElement().getTagName();
-    }
-    XMOMType type = XMOMType.getXMOMTypeByRootTag(rootTag);
+    XMOMType type = inputSource.determineXMOMTypeOf(fqName, originalRevision);
     switch (type) {
     case DATATYPE :
       gb = new DOM(fqName, fqClassName, cache, originalRevision, null, inputSource);
@@ -1872,7 +1869,7 @@ public abstract class GenerationBase {
             getDeploymentMode().shouldCopyXMLFromSavedToDeployed() ? DeploymentLocation.SAVED : DeploymentLocation.DEPLOYED;
         Set<DeploymentItemInterface> invalid_sd = dis.getInconsistencies(source, DeploymentLocation.DEPLOYED, false);
         Set<DeploymentItemInterface> invalid_ss;
-        if (XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().isApplicationRevision(generationBase.getRevision())) {
+        if (generationBase.xmlInputSource.isOfRuntimeContextType(generationBase.getRevision(), RuntimeContextType.Application)) {
           // es kann in Applications keine Inkonsistenzen zu Saved-Zuständen geben
           invalid_ss = Collections.emptySet();
         } else {
@@ -2533,12 +2530,6 @@ public abstract class GenerationBase {
     }
 
     undeployAndDelete(objects, disableChecksForRunningOrders, dependentObjectMode, event, checkDeploymentLock, finishUndeploymentHandler);
-    
-    //invalidate changed revisions
-    Set<Long> revisionsToInvalidate = new HashSet<Long>();
-    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getParentRevisionsRecursivly(revision, revisionsToInvalidate);
-    revisionsToInvalidate.add(revision);
-    XynaFactory.getInstance().getProcessing().getXmomSerialization().invalidateRevisions(revisionsToInvalidate);
   }
   
   
@@ -2814,7 +2805,9 @@ public abstract class GenerationBase {
   private void generateUncachedDeployedInstance(WorkflowProtectionMode remode) throws XPRC_InheritedConcurrentDeploymentException,
                   AssumedDeadlockException, XPRC_MDMDeploymentException {
     //FIXME cache oder deploymentitemstate management für schnittstellenvergleiche verwenden
-    if (this.mode == DeploymentMode.codeChanged && getRevisionManagement().isWorkspaceRevision(revision) && remode != WorkflowProtectionMode.BREAK_ON_USAGE ) {
+    if (this.mode == DeploymentMode.codeChanged &&
+        xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace) && 
+        remode != WorkflowProtectionMode.BREAK_ON_USAGE ) {
       try {
         if (this instanceof DOM) {
           oldInstance = DOM.generateUncachedInstance(this.originalFqName, true, revision);
@@ -2868,7 +2861,7 @@ public abstract class GenerationBase {
             if (mode == DeploymentMode.codeUnchanged || mode == DeploymentMode.codeChanged) {
               if (fileFromDeploymentLocation) {
                 // check, ob xml existiert
-                File f = new File(getFileLocationForDeployment() + ".xml");
+                File f = GenerationBase.this.xmlInputSource.getFileLocation(GenerationBase.this.getOriginalFqName(), GenerationBase.this.getRevision(), true);
                 if (!f.exists()) {
                   GenerationBase.this.mode = DeploymentMode.codeNew;
                   if (logger.isInfoEnabled()) {
@@ -3142,20 +3135,20 @@ public abstract class GenerationBase {
 
 
   private void parseCallUndeployHandlerAndRemoveFiles() {
-    String fileLocation = getFileLocationForDeployment() + ".xml";
-    if (!new File(fileLocation).exists()) {
+    File relevantFile = xmlInputSource.getFileLocation(getOriginalFqName(), getRevision(), true);
+    if (!relevantFile.exists()) {
       if (isReservedServerObject()) {
-        fileLocation = getFileLocationForSaving() + ".xml";
-        if (!new File(fileLocation).exists()) {
-          fileLocation = null;
+        relevantFile = xmlInputSource.getFileLocation(getOriginalFqName(), getRevision(), false);
+        if (!relevantFile.exists()) {
+          relevantFile = null;
         }
       } else {
-        fileLocation = null;
+        relevantFile = null;
       }
     }
-    if (fileLocation != null) {
+    if (relevantFile != null) {
       try {
-        Document doc = XMLUtils.parse(fileLocation);
+        Document doc = xmlInputSource.getOrParseXML(this, xmlInputSource.getFileLocation(getOriginalFqName(), getRevision(), true).exists());
         parseXmlInternally(doc.getDocumentElement());
       } catch (Throwable t) {
         logger.warn("Exception parsing xml of " + originalFqName + " during undeployment.", t);
@@ -3174,7 +3167,7 @@ public abstract class GenerationBase {
       }
     } finally {
       // put this into the functions?
-      if (isWorkspaceRevision()) {
+      if (xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) {
         // Dateien aus Revisionen/Applikationen lieber nicht löschen ... XML ist sonst verloren, weil XML aus SAVED
         // kann schon wieder verändert sein/nicht vorhanden sein
         deleteXMLAtDeploymentLocation();
@@ -3221,20 +3214,19 @@ public abstract class GenerationBase {
 
 
   private void deleteXMLAtDeploymentLocation() {
-    if (isWorkspaceRevision()) {
-      String fName = getFileLocationForDeployment() + ".xml";
-      File f = new File(fName);
+    if (xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) {
+      File f = xmlInputSource.getFileLocation(getOriginalFqName(), getRevision(), true);
       if (f.exists()) {
         if (logger.isDebugEnabled()) {
-          logger.debug("removing xml file " + fName);
+          logger.debug("removing xml file " + f.getAbsolutePath());
         }
         f.delete();
         //leere Verzeichnisse löschen
-        String deployedMdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, revision);
-        FileUtils.deleteEmptyDirectoryRecursively(f.getParentFile(), new File(deployedMdmDir));
+        //String deployedMdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, revision);
+        //FileUtils.deleteEmptyDirectoryRecursively(f.getParentFile(), new File(deployedMdmDir));
       } else {
         if (logger.isDebugEnabled()) {
-          logger.debug("didnt find xml file for deletion " + fName);
+          logger.debug("didnt find xml file for deletion " + f.getAbsolutePath());
         }
       }
     }
@@ -3595,7 +3587,7 @@ public abstract class GenerationBase {
           return;
         }
 
-        if (!isWorkspaceRevision()) {
+        if (!xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) {
           // wir verzichten auf ein Kopieren, da XML aus SAVED nicht korrekt sein muss
           return;
         }
@@ -3605,11 +3597,10 @@ public abstract class GenerationBase {
 
           //backup erstellen
           if (mode == DeploymentMode.codeChanged) {
-            String fName = getFileLocationForDeployment() + ".xml";
-            File f = new File(fName);
+            File f = xmlInputSource.getFileLocation(getOriginalFqName(), getRevision(), true);
 
             if (f.exists()) {
-              backupXml = new File(fName + ".old" + (backupCounter.incrementAndGet()));
+              backupXml = new File(f.getAbsolutePath() + ".old" + (backupCounter.incrementAndGet()));
               FileUtils.copyFile(f, backupXml);
 
               if (logger.isDebugEnabled()) {
@@ -3718,54 +3709,8 @@ public abstract class GenerationBase {
     return rootMetaElement;
   }
  
-  public static class XMLInputSourceFromFileSystem implements XMLInputSource {
-
-    @Override
-    public Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException {
-      String xmlFileLocation;
-      if (fileFromDeploymentLocation || generator.isApplicationRevision()) {
-        if (overrideReservedServerObjectsForCodeGenUpdates && mdmObjectMappingToJavaClasses.containsKey(generator.originalFqName)) {
-          xmlFileLocation = generator.getFileLocationForSaving();
-        } else {
-          xmlFileLocation = generator.getFileLocationForDeployment();
-        }
-       } else {
-        xmlFileLocation = generator.getFileLocationForSaving();
-      }
-      xmlFileLocation += ".xml";
-      generator.validateXMLExistenceAndXSD(xmlFileLocation);
-      
-      if (generator.doesntExist) {
-        return null;
-      }
-      
-      return XMLUtils.parse(xmlFileLocation, true);
-    }
-    
-  }
   
-  public static class XMLInputSourceFromStrings implements XMLInputSource {
-
-    public XMLInputSourceFromStrings(Map<String, String> xmlsWfAndImports) {
-      this.xmlsWfAndImports = xmlsWfAndImports;
-    }
-    
-    private final Map<String, String> xmlsWfAndImports; // maps from fqn to XML-string
-    
-    @Override
-    public Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException {
-      String xml = xmlsWfAndImports.get(generator.originalFqName);
-      return XMLUtils.parseString(xml, true);
-    }
-    
-  }
-  public interface XMLInputSource {
-
-    Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException;
-    
-  }
-  
-  private XMLInputSource xmlInputSource;
+  protected XMLSourceAbstraction xmlInputSource;
 
   // sollte nicht mit false aufgerufen werden wenn der globale cache verwendete wird
   private void parseXml(final boolean fileFromDeploymentLocation) throws AssumedDeadlockException {
@@ -3833,7 +3778,7 @@ public abstract class GenerationBase {
                 //deploymentlock freigeben, falls es bereits geholt wurde, weil der deploymentmode geändert wird
                 // und damit das cleanup nicht mehr das lock freigibt
                 if (mode.shouldCopyXMLFromSavedToDeployed()) {
-                  if (isWorkspaceRevision()) {
+                  if (xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) {
                     DeploymentLocks.writeUnlock(getOriginalFqName(), getDependencyType(), revision);
                   }
                 }
@@ -4486,7 +4431,9 @@ public abstract class GenerationBase {
         clearFromCache();
 
         //nicht im finally machen, damit bei fehlern onerror nicht schiefgeht.
-        if (mode.shouldCopyXMLFromSavedToDeployed && isWorkspaceRevision() && !isReservedServerObject()) {
+        if (mode.shouldCopyXMLFromSavedToDeployed && 
+            xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace) &&
+            !isReservedServerObject()) {
           DeploymentLocks.writeUnlock(getOriginalFqName(), getDependencyType(), revision);
         }
       }
@@ -4826,9 +4773,8 @@ public abstract class GenerationBase {
       deploy(backupDeploymentSet, DeploymentMode.deployBackup, false, WorkflowProtectionMode.FORCE_KILL_DEPLOYMENT);
     } catch (MDMParallelDeploymentException e) {
       for (GenerationBase failedObject : e.failedObjects) {
-        String fName = failedObject.getFileLocationForDeployment() + ".xml";
-        File fileWithinDeploymentDirectory = new File(fName);
-        File errorFile = new File(fName + ".error" + System.currentTimeMillis());
+        File fileWithinDeploymentDirectory = failedObject.xmlInputSource.getFileLocation(failedObject.getOriginalFqName(), failedObject.getRevision(), true);
+        File errorFile = new File(fileWithinDeploymentDirectory.getAbsolutePath() + ".error" + System.currentTimeMillis());
         try {
           FileUtils.moveFile(fileWithinDeploymentDirectory, errorFile);
         } catch (Ex_FileAccessException f) {
@@ -4930,8 +4876,7 @@ public abstract class GenerationBase {
           if (backupXml != null) {
             deployBackup = true;
             //backup restore
-            String fName = getFileLocationForDeployment() + ".xml";
-            File f = new File(fName);
+            File f = xmlInputSource.getFileLocation(getOriginalFqName(), getRevision(), true);
             try {
               if (logger.isDebugEnabled()) {
                 logger.debug("restoring backup for " + getOriginalFqName());
@@ -4969,8 +4914,11 @@ public abstract class GenerationBase {
             backupDeploymentSet.add(instanceForBackupDeployment);
           }
         } finally {
-          if (previousState.hasRun(DeploymentState.copyXml) && mode != null && mode.shouldCopyXMLFromSavedToDeployed()
-              && isWorkspaceRevision() && !isReservedServerObject()) {
+          if (previousState.hasRun(DeploymentState.copyXml) &&
+              mode != null && 
+              mode.shouldCopyXMLFromSavedToDeployed() && 
+              xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace) && 
+              !isReservedServerObject()) {
             DeploymentLocks.writeUnlock(getOriginalFqName(), getDependencyType(), revision);
           }
         }
@@ -5465,7 +5413,7 @@ public abstract class GenerationBase {
     try {
       o = cacheReference.getFromCache(originalDomInputName, rev);
       if (o == null) {
-        o = new DOM(originalDomInputName, fqClassName, cacheReference, rev, null, new XMLInputSourceFromFileSystem());
+        o = new DOM(originalDomInputName, fqClassName, cacheReference, rev, null, new FactoryManagedRevisionXMLSource());
         cacheReference.insertIntoCache(o);
       }
     } finally {
@@ -5520,7 +5468,7 @@ public abstract class GenerationBase {
     try {
       o = cacheReference.getFromCache(originalFQExceptionName, rev);
       if (o == null) {
-        o = new ExceptionGeneration(originalFQExceptionName, fqExceptionClassName, cacheReference, rev, null, new XMLInputSourceFromFileSystem());
+        o = new ExceptionGeneration(originalFQExceptionName, fqExceptionClassName, cacheReference, rev, null, new FactoryManagedRevisionXMLSource());
         cacheReference.insertIntoCache(o);
       }
     } finally {
@@ -5701,32 +5649,6 @@ public abstract class GenerationBase {
     return fqName.substring(0, fqName.lastIndexOf('.'));
   }
 
-  @Deprecated
-  public static String getFileLocationOfXmlNameForSaving(String originalName) {
-    return getFileLocationForSavingStaticHelper(originalName, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
-  }
-
-  public static String getFileLocationOfXmlNameForSaving(String originalName, Long revision) {
-    return getFileLocationForSavingStaticHelper(originalName, revision);
-  }
-
-  @Deprecated
-  public static String getFileLocationOfXmlNameForDeployment(String originalName) {
-    return getFileLocationForDeploymentStaticHelper(originalName, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
-  }
-
-  public static String getFileLocationOfXmlNameForDeployment(String originalName, Long revision) {
-    return getFileLocationForDeploymentStaticHelper(originalName, revision);
-  }
-
-  public static String getFileLocationOfXmlName(String originalName, Long revision) {
-    RevisionManagement revisionManagement = getRevisionManagement();
-    if (revisionManagement.isWorkspaceRevision(revision)) {
-      return getFileLocationForSavingStaticHelper(originalName, revision);
-    } else {
-      return getFileLocationForDeploymentStaticHelper(originalName, revision);
-    }
-  }
 
 
   public static String getFileLocationOfServiceLibsForSaving(String fqClassName, Long revision) {
@@ -5768,20 +5690,34 @@ public abstract class GenerationBase {
     return new StringBuilder(RevisionManagement.getPathForRevision(PathType.XMOM, revision)).append(Constants.fileSeparator)
                     .append(fqXMLName.replaceAll("\\.", Constants.fileSeparator)).toString();
   }
-
-
-  public String getFileLocationForDeployment() {
-    return getFileLocationForDeploymentStaticHelper(originalFqName, revision);
+  
+  @Deprecated
+  public static String getFileLocationOfXmlNameForSaving(String originalName) {
+    return getFileLocationForSavingStaticHelper(originalName, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
   }
 
-
-  public String getFileLocationForReservedServerObject() {
-    return getFileLocationForSavingStaticHelper(originalFqName, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
+  public static String getFileLocationOfXmlNameForSaving(String originalName, Long revision) {
+    return getFileLocationForSavingStaticHelper(originalName, revision);
   }
 
-  public String getFileLocationForSaving() {
-    return getFileLocationForSavingStaticHelper(originalFqName, revision);
+  @Deprecated
+  public static String getFileLocationOfXmlNameForDeployment(String originalName) {
+    return getFileLocationForDeploymentStaticHelper(originalName, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
   }
+
+  public static String getFileLocationOfXmlNameForDeployment(String originalName, Long revision) {
+    return getFileLocationForDeploymentStaticHelper(originalName, revision);
+  }
+
+  public static String getFileLocationOfXmlName(String originalName, Long revision) {
+    RevisionManagement revisionManagement = getRevisionManagement();
+    if (revisionManagement.isWorkspaceRevision(revision)) {
+      return getFileLocationForSavingStaticHelper(originalName, revision);
+    } else {
+      return getFileLocationForDeploymentStaticHelper(originalName, revision);
+    }
+  }
+
 
   public static String getRelativeJavaFileLocation(String fqClassName) {
     return getRelativeJavaFileLocation(fqClassName, true, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
@@ -6344,18 +6280,8 @@ public abstract class GenerationBase {
   }
 
 
-  public static void removeFromDeploymentFolder(String fqXmlName, Long revision) {
-    File f = new File(getFileLocationOfXmlNameForDeployment(fqXmlName, revision));
-    if (f.exists()) {
-      f.delete();
-    } else {
-      logger.warn("failed to cleanup deployment folder after deployment error");
-    }
-  }
-
-
   public void copyXmlToDeploymentFolder(String fqXmlName, Long revision) throws Ex_FileAccessException {
-    File f = new File(GenerationBase.getFileLocationOfXmlNameForSaving(fqXmlName, revision) + ".xml");
+    File f = xmlInputSource.getFileLocation(fqXmlName, revision, false);
     if (!f.exists()) {
       if (logger.isDebugEnabled()) {
         logger.debug(getOriginalFqName() + " does not exist (xml not found) in revision " + revision + ".");
@@ -6364,7 +6290,7 @@ public abstract class GenerationBase {
       return;
     }
 
-    File fDeploy = new File(GenerationBase.getFileLocationOfXmlNameForDeployment(fqXmlName, revision) + ".xml");
+    File fDeploy = xmlInputSource.getFileLocation(fqXmlName, revision, true);
     if (!fDeploy.exists()) {
       fDeploy.getParentFile().mkdirs();
       try {
@@ -6465,7 +6391,7 @@ public abstract class GenerationBase {
    * aus revisions/rev_workingset/saved/services löschen
    */
   public static void deleteMDMObjectFromSavedFolder(String originalFqName, Long revision) {
-    String fileLocation = getFileLocationOfXmlNameForSaving(originalFqName, revision) + ".xml";
+    String fileLocation = getFileLocationForSavingStaticHelper(originalFqName, revision) + ".xml";
     File object = new File(fileLocation);
 
     if (object.exists()) {
@@ -6563,7 +6489,7 @@ public abstract class GenerationBase {
   private FolderCopyWithBackup serviceLibsBackup;
 
   private void backupAndCopyServiceLibraries() throws Ex_FileAccessException {
-    if ((revision ==  null || isWorkspaceRevision()) &&
+    if ((revision ==  null || xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) &&
         (mode == DeploymentMode.codeChanged || mode == DeploymentMode.codeNew)) {
       if (serviceLibsBackup != null) {
         //TODO nur sinnvoll, wenn es ein deployment ist, bei dem unter server/services keine jars liegen, die alten jars aber erhalten bleiben sollen.
@@ -6688,15 +6614,6 @@ public abstract class GenerationBase {
     JAVA5, JAVA6, JAVA7;
   }
 
-  protected boolean isWorkspaceRevision() {
-    RevisionManagement revisionManagement = getRevisionManagement();
-    return revisionManagement.isWorkspaceRevision(revision);
-  }
-
-  private boolean isApplicationRevision() {
-    RevisionManagement revisionManagement = getRevisionManagement();
-    return revisionManagement.isApplicationRevision(revision);
-  }
 
   public static long calcSerialVersionUID(List<Pair<String, String>> types) {
     long ret = -1;
@@ -6830,7 +6747,7 @@ public abstract class GenerationBase {
     }
   }
   
-  public void setXMLInputSource(XMLInputSource input) {
+  public void setXMLInputSource(XMLSourceAbstraction input) {
     this.xmlInputSource = input;
   }
 
@@ -6867,6 +6784,273 @@ public abstract class GenerationBase {
 
   public boolean isAbstract() {
     return false;
+  }
+  
+  
+  public static interface XMLSourceAbstraction {
+    
+    Set<Long> getDependenciesRecursivly(Long revision);
+    
+    XMOMType determineXMOMTypeOf(String fqName, Long originalRevision) throws Ex_FileAccessException, XPRC_XmlParsingException;
+
+    Long getRevisionDefiningXMOMObjectOrParent(String fqName, Long revision);
+    
+    RuntimeContext getRuntimeContext(Long revision) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+    
+    boolean isOfRuntimeContextType(Long revision, RuntimeContextType type);
+    
+    Long getRevision(RuntimeContext rtc) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+    
+    File getFileLocation(String originalFqName, Long revision, boolean fileFromDeploymentLocation);
+    
+    Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException;
+    
+  }
+  
+  
+  public static class FactoryManagedRevisionXMLSource implements XMLSourceAbstraction {
+    
+    public FactoryManagedRevisionXMLSource() {
+    }
+
+    public Set<Long> getDependenciesRecursivly(Long revision) {
+      Set<Long> revisions = new HashSet<Long>();
+      revisions.add(revision);
+      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getDependenciesRecursivly(revision, revisions);
+      return revisions;
+    }
+
+    public Long getRevisionDefiningXMOMObjectOrParent(String fqName, Long revision) {
+      return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getRevisionDefiningXMOMObjectOrParent(fqName, revision);
+    }
+
+    public RuntimeContext getRuntimeContext(Long revision) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+      return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRuntimeContext(revision);
+    }
+
+    public Long getRevision(RuntimeContext rtc) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+      return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRevision(rtc);
+    }
+
+    public Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException {
+      File xmlFileLocation = getFileLocation(generator, fileFromDeploymentLocation);
+      generator.validateXMLExistenceAndXSD(xmlFileLocation.getAbsolutePath());
+      
+      if (generator.doesntExist) {
+        return null;
+      }
+      
+      return XMLUtils.parse(xmlFileLocation, true);
+    }
+
+    public XMOMType determineXMOMTypeOf(String fqName, Long originalRevision) throws Ex_FileAccessException, XPRC_XmlParsingException {
+      String rootTag = retrieveRootTag(fqName, originalRevision, true, false);
+      return XMOMType.getXMOMTypeByRootTag(rootTag);
+    }
+
+    public File getFileLocation(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException {
+      String xmlFileLocation;
+      if (fileFromDeploymentLocation || isOfRuntimeContextType(generator.getRevision(), RuntimeContextType.Application)) {
+        if (overrideReservedServerObjectsForCodeGenUpdates && mdmObjectMappingToJavaClasses.containsKey(generator.originalFqName)) {
+          xmlFileLocation = getFileLocationForSaving(generator.getOriginalFqName(), generator.getRevision());
+        } else {
+          xmlFileLocation = getFileLocationForDeployment(generator.getOriginalFqName(), generator.getRevision());
+        }
+       } else {
+        xmlFileLocation = getFileLocationForSaving(generator.getOriginalFqName(), generator.getRevision());
+      }
+      xmlFileLocation += ".xml";
+      return new File(xmlFileLocation);
+    }
+
+    public File getFileLocation(String originalFqName, Long revision, boolean fileFromDeploymentLocation) {
+      if (fileFromDeploymentLocation) {
+        return new File(getFileLocationForDeployment(originalFqName, revision));
+      } else {
+        return new File(getFileLocationForSaving(originalFqName, revision));
+      }
+    }
+    
+    private String getFileLocationForSaving(String fqXMLName, Long revision) {
+      return new StringBuilder(RevisionManagement.getPathForRevision(PathType.XMOM, revision, false)).append(Constants.fileSeparator)
+                      .append(fqXMLName.replaceAll("\\.", Constants.fileSeparator)).toString();
+    }
+    
+    private String getFileLocationForDeployment(String fqXMLName, Long revision) {
+      if (isReservedServerObjectByFqOriginalName(fqXMLName)) {
+        if (isOfRuntimeContextType(revision, RuntimeContextType.Workspace)) {
+          return getFileLocationForSaving(fqXMLName, revision);
+        }
+      }
+      return new StringBuilder(RevisionManagement.getPathForRevision(PathType.XMOM, revision))
+                    .append(Constants.fileSeparator)
+                    .append(fqXMLName.replaceAll("\\.", Constants.fileSeparator)).toString();
+    }
+
+    public boolean isOfRuntimeContextType(Long revision, RuntimeContextType type) {
+      try {
+        return type == getRuntimeContext(revision).getType();
+      } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+        logger.debug("Failed to resolve revision.",e);
+        return false;
+      }
+    }
+
+
+  }
+  
+  
+  public static class FileSystemXMLSource implements XMLSourceAbstraction {
+    
+    private final Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies;
+    private final Map<RuntimeContext, File> rtcXMOMPaths;
+    private final BijectiveMap<RuntimeContext, Long> revisions;
+    
+    public FileSystemXMLSource(Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies, Map<RuntimeContext, File> rtcXMOMPaths) {
+      this.rtcDependencies = rtcDependencies;
+      this.rtcXMOMPaths = rtcXMOMPaths;
+      revisions = new BijectiveMap<>();
+      long revision = 1;
+      for (RuntimeContext rtx : rtcXMOMPaths.keySet()) {
+        revisions.put(rtx, revision++);
+      }
+    }
+
+    public Set<Long> getDependenciesRecursivly(Long revision) {
+      Set<Long> dependencies = new HashSet<>();
+      getDependenciesRecursivlyInternally(revision, dependencies);
+      dependencies.add(revision);
+      return dependencies;
+    }
+    
+    
+    private void getDependenciesRecursivlyInternally(Long revision, Set<Long> depenedencies) {
+      RuntimeContext rtc = revisions.getInverse(revision);
+      Set<RuntimeContext> deps = rtcDependencies.get(rtc);
+      for (RuntimeContext dep : deps) {
+        Long depRev = revisions.get(dep);
+        if (depenedencies.add(depRev)) {
+          getDependenciesRecursivlyInternally(depRev, depenedencies);
+        }
+      }
+    }
+
+    public Long getRevisionDefiningXMOMObjectOrParent(String fqName, Long revision) {
+      String fqPath = fqName.replaceAll("\\.", Constants.fileSeparator) + ".xml";
+      Set<Long> allRevs = getDependenciesRecursivly(revision);
+      System.out.println("allRevs: " + allRevs);
+      for (Long aRev : allRevs) {
+        RuntimeContext rtc = revisions.getInverse(aRev);
+        File rtcRootPath = rtcXMOMPaths.get(rtc);
+        try {
+          if (Files.walk(java.nio.file.Path.of(rtcRootPath.getAbsolutePath()))
+                   .anyMatch(path -> path.endsWith(fqPath))) {
+            return aRev;
+          }
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
+      return revision;
+    }
+
+    public RuntimeContext getRuntimeContext(Long revision) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+      return revisions.getInverse(revision);
+    }
+
+    public Long getRevision(RuntimeContext rtc) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+      return revisions.get(rtc);
+    }
+
+    public Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException {
+      // TODO let's assume the generator revision is already determined by getRevisionDefiningXMOMObjectOrParent
+      File file = getFileLocation(generator, fileFromDeploymentLocation);
+      if (!file.exists()) {
+        throw new Ex_FileAccessException(file.getAbsolutePath());
+      }
+      return XMLUtils.parse(file, true);
+    }
+
+    public XMOMType determineXMOMTypeOf(String fqName, Long revision)
+        throws Ex_FileAccessException, XPRC_XmlParsingException {
+      File file = getFileLocation(fqName, revision, true);
+      try (FileInputStream fis =
+          new FileInputStream(file)) {
+        return XMOMType.getXMOMTypeByRootTag(XMLUtils.getRootElementName(fis));
+      } catch (FileNotFoundException e) {
+        throw new Ex_FileAccessException(file.getAbsolutePath(), e);
+      } catch (IOException e) {
+        throw new XPRC_XmlParsingException(file.getAbsolutePath(), e);
+      } catch (XMLStreamException e) {
+        throw new XPRC_XmlParsingException(file.getAbsolutePath(), e);
+      }
+    }
+
+    private File getFileLocation(GenerationBase generator, boolean fileFromDeploymentLocation) {
+      return getFileLocation(generator.getOriginalFqName(), generator.getRevision(), fileFromDeploymentLocation);
+    }
+    
+    public File getFileLocation(String fqName, Long revision, boolean fileFromDeploymentLocatio) {
+      String fqPath = fqName.replaceAll("\\.", Constants.fileSeparator) + ".xml";
+      return new File(rtcXMOMPaths.get(revisions.getInverse(revision)), fqPath);
+    }
+
+    public boolean isOfRuntimeContextType(Long revision, RuntimeContextType type) {
+      return type == revisions.getInverse(revision).getType();
+    }
+    
+  }
+  
+  public static class StringXMLSource implements XMLSourceAbstraction {
+    
+    private final Map<String, String> xmlsWfAndImports; // maps from fqn to XML-string
+    
+    public StringXMLSource(Map<String, String> xmlsWfAndImports) {
+      this.xmlsWfAndImports = xmlsWfAndImports;
+    }
+
+    public Set<Long> getDependenciesRecursivly(Long revision) {
+      throw new UnsupportedOperationException("StringXMLSource.getDependenciesRecursivly");
+    }
+
+    public Long getRevisionDefiningXMOMObjectOrParent(String fqName, Long revision) {
+      throw new UnsupportedOperationException("StringXMLSource.getRevisionDefiningXMOMObjectOrParent");
+    }
+
+    public RuntimeContext getRuntimeContext(Long revision) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+      throw new UnsupportedOperationException("StringXMLSource.getRuntimeContext");
+    }
+
+    public Long getRevision(RuntimeContext rtc) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+      throw new UnsupportedOperationException("StringXMLSource.getRevision");
+    }
+    
+    public Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException {
+      String xml = xmlsWfAndImports.get(generator.originalFqName);
+      return XMLUtils.parseString(xml, true);
+    }
+
+    public XMOMType determineXMOMTypeOf(String fqName, Long originalRevision) throws Ex_FileAccessException, XPRC_XmlParsingException {
+      String xml = xmlsWfAndImports.get(fqName);
+      try (ByteArrayInputStream bais =
+          new ByteArrayInputStream(xml.getBytes())) {
+        return XMOMType.getXMOMTypeByRootTag(XMLUtils.getRootElementName(bais));
+      } catch (XMLStreamException e) {
+        throw new XPRC_XmlParsingException(fqName, e);
+      } catch (IOException e) {
+        throw new XPRC_XmlParsingException(fqName, e);
+      }
+    }
+
+    public File getFileLocation(String originalFqName, Long revision, boolean fileFromDeploymentLocation) {
+      throw new UnsupportedOperationException("StringXMLSource.getFileLocation");
+    }
+
+    @Override
+    public boolean isOfRuntimeContextType(Long revision, RuntimeContextType type) {
+      throw new UnsupportedOperationException("StringXMLSource.isOfRuntimeContextType");
+    }
+    
   }
 
 }

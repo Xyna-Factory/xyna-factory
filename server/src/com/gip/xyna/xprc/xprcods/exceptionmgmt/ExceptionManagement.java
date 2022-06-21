@@ -190,7 +190,7 @@ public final class ExceptionManagement extends FunctionGroup {
 
     public void exec(GenerationBase object) throws XPRC_UnDeploymentHandlerException {
       if (object instanceof ExceptionGeneration) {
-        File file = new File(object.getFileLocationForDeployment() + ".xml");
+        File file = new File(GenerationBase.getFileLocationForDeploymentStaticHelper(object.getOriginalFqName(), object.getRevision()) + ".xml");
         Document doc;
         try {
           doc = XMLUtils.parse(file.getAbsolutePath());

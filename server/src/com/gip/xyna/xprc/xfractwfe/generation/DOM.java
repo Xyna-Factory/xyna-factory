@@ -81,6 +81,7 @@ import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyNode;
 import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyRegister.DependencySourceType;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext.RuntimeContextType;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
@@ -157,7 +158,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     super(originalName, domInputNameFQ, revision);
   }
   
-  DOM(String originalName, String domInputNameFQ, GenerationBaseCache cache, Long revision, String realType, XMLInputSource inputSource) {
+  DOM(String originalName, String domInputNameFQ, GenerationBaseCache cache, Long revision, String realType, XMLSourceAbstraction inputSource) {
     super(originalName, domInputNameFQ, cache, revision, realType, inputSource);
   }
 
@@ -194,13 +195,12 @@ public class DOM extends DomOrExceptionGenerationBase {
     return (DOM) o;
   }
   
-  public static DOM getOrCreateInstance(String fqXmlName,
-                                        GenerationBaseCache cache, Long revision) throws XPRC_InvalidPackageNameException {
-    return getOrCreateInstance(fqXmlName, cache, revision, new XMLInputSourceFromFileSystem());
+  public static DOM getOrCreateInstance(String fqXmlName, GenerationBaseCache cache, Long revision) throws XPRC_InvalidPackageNameException {
+    return getOrCreateInstance(fqXmlName, cache, revision, new FactoryManagedRevisionXMLSource());
   }
 
   public static DOM getOrCreateInstance(String fqXmlName,
-                                        GenerationBaseCache cache, Long revision, XMLInputSource inputSource)
+                                        GenerationBaseCache cache, Long revision, XMLSourceAbstraction inputSource)
       throws XPRC_InvalidPackageNameException {
     revision =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
@@ -938,7 +938,7 @@ public class DOM extends DomOrExceptionGenerationBase {
           //im xml verewigen. sowohl im saved als auch im deployed-ordner
           //TODO achtung! bei xsd änderungen sind die xml anpassungen evtl auch anzupassen
           try {
-            Document d = XMLUtils.parse(getFileLocationForDeployment() + ".xml", true);
+            Document d = XMLUtils.parse(getFileLocationForDeploymentStaticHelper(getOriginalFqName(), getRevision()) + ".xml", true);
             Element docEl = d.getDocumentElement();
             Element metaEl = XMLUtils.getChildElementByName(docEl, GenerationBase.EL.META);
             if (metaEl == null) {
@@ -974,9 +974,9 @@ public class DOM extends DomOrExceptionGenerationBase {
               flatEl.appendChild(flatTxt);
             }
             
-            XMLUtils.saveDom(new File(getFileLocationForDeployment() + ".xml"), d);
-            if (isWorkspaceRevision()) {
-              XMLUtils.saveDom(new File(getFileLocationForSaving() + ".xml"), d);
+            XMLUtils.saveDom(new File(getFileLocationForDeploymentStaticHelper(getOriginalFqName(), getRevision()) + ".xml"), d);
+            if (xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) {
+              XMLUtils.saveDom(new File(getFileLocationForSavingStaticHelper(getOriginalFqName(), getRevision()) + ".xml"), d);
             }
           } catch (Ex_FileAccessException e) {
             throw new RuntimeException(e);
