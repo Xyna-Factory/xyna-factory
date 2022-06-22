@@ -69,15 +69,14 @@ public class XMOMLoader {
      * 
      * => auf das bestehende gb objekt erneut parsexml aufrufen mit dem übergebenen xml
      */
-    GenerationBase.XMLInputSource inputSource = new GenerationBase.XMLInputSource() {
+    GenerationBase.XMLSourceAbstraction inputSource = new GenerationBase.FactoryManagedRevisionXMLSource() {
       
-      GenerationBase.XMLInputSource fromSaved = new GenerationBase.XMLInputSourceFromFileSystem();
-
+      @Override
       public Document getOrParseXML(GenerationBase obj, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException {
         if (obj.getOriginalFqName().equals(fqName.getFqName())) {
           return XMLUtils.parseString(xml, true);
         }
-        return fromSaved.getOrParseXML(obj, fileFromDeploymentLocation);
+        return super.getOrParseXML(obj, fileFromDeploymentLocation);
       }
       
     };
