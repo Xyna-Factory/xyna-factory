@@ -90,6 +90,8 @@ public class XynaFactoryCommandLineInterface extends Thread {
   public static final String XYNA_FACTORY = "Xyna Factory";
   
   public static final String MAIN_THREAD_NAME = XynaFactory.class.getSimpleName() + " MAIN";
+  
+  private static final String PID_FOLDER_PROPERTY = "pid.folder";
 
   private final ServerSocket serverSocket;
 
@@ -640,13 +642,14 @@ public class XynaFactoryCommandLineInterface extends Thread {
   
 
   private static void savePidToFile() {
-    final File f = new File("xynafactory.pid");
+    String pidFileFolder = System.getProperty(PID_FOLDER_PROPERTY);
+    final File f = pidFileFolder == null ? new File("xynafactory.pid") : new File(pidFileFolder, "xynafactory.pid");
     if (f.exists()) {
       //server wurde nicht korrekt runtergefahren => backup anlegen, evtl lebt prozess ja noch.
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
       sdf.setTimeZone(TimeZone.getTimeZone(Constants.DEFAULT_TIMEZONE));
       sdf.setLenient(false);
-      File fBackup = new File("xynafactory.pid." + sdf.format(new Date()));
+      File fBackup = new File(pidFileFolder, "xynafactory.pid." + sdf.format(new Date()));
       if (logger.isInfoEnabled()) {
         logger.info("file xynafactory.pid found. server was propably not shut down successfully. moving old file to "
             + fBackup.getAbsolutePath() + ".");
