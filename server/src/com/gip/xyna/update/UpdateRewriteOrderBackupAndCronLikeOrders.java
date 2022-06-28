@@ -110,6 +110,8 @@ public class UpdateRewriteOrderBackupAndCronLikeOrders {
         conHis.closeConnection();
         ods.unregisterStorable(CronLikeOrderIgnoringSerialVersionUID.class);
         ods.unregisterStorable(OrderInstanceBackupIgnoringSerialVersionUID.class);
+        ods.registerStorable(CronLikeOrder.class);
+        ods.registerStorable(OrderInstanceBackup.class);
         SerializableClassloadedObject.setIgnoreExceptionsWhileDeserializing(false);
       }
     } finally {
