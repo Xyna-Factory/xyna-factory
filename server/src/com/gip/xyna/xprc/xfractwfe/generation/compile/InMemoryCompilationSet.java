@@ -35,6 +35,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.JavaCompiler.CompilationTask;
 
 import com.gip.xyna.FileUtils;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
@@ -307,8 +308,13 @@ public class InMemoryCompilationSet implements CompilationSet {
   }
 
   public String getClassPath() {
-    String additionalLibsAsString = GenerationBase.flattenClassPathSet(additionalLibs);
-    return GenerationBase.getJarFiles() + Constants.PATH_SEPARATOR + additionalLibsAsString;
+    if (XynaFactory.isFactoryServer()) {
+      String additionalLibsAsString = GenerationBase.flattenClassPathSet(additionalLibs);
+      return GenerationBase.getJarFiles() + Constants.PATH_SEPARATOR + additionalLibsAsString;
+    } else {
+      String classpath = System.getProperty("java.class.path");
+      return classpath;
+    }
   }
 
 }

@@ -102,8 +102,8 @@ class CompilationFileManager extends ForwardingJavaFileManager<JavaFileManager> 
   public JavaFileObject getJavaFileForOutput(Location location, String className, Kind kind, FileObject sibling) throws IOException {
     if (kind == Kind.CLASS) {
       // some compilers have been seen to pass file instead of class names
-      if (className.contains(Constants.FILE_SEPARATOR)) {
-        className = className.replaceAll(Constants.FILE_SEPARATOR, ".");
+      if (className.contains("/")) {
+        className = className.replaceAll("/", ".");
       }
       int idx = className.indexOf('$');
       String classNameBase = className;

@@ -2410,7 +2410,9 @@ public abstract class GenerationBase {
 
       try {
         // we do need to wait until the parse so that dependendent gbs and their deployment mode are available
-        checkForDependentWorkflowsInUse(objects, remode);
+        if (XynaFactory.isFactoryServer()) {
+          checkForDependentWorkflowsInUse(objects, remode);
+        }
         try {
 
           fillVarsInCorrectOrder(objectsWithDependencies);
@@ -2420,6 +2422,9 @@ public abstract class GenerationBase {
           
           boolean proceedOnError = Compilation.proceedOnErrorPossible();
           InMemoryCompilationSet cs = new InMemoryCompilationSet(mode == DeploymentMode.generateMdmJar, true, proceedOnError);
+          if (!XynaFactory.isFactoryServer()) { // TODO encapsulate this better
+            cs.setClassDir(objects.get(0).xmlInputSource.getClassOutputFolder().getPath());
+          }
           
           compileInCorrectOrder(objectsWithDependencies, cs, true);
           DeploymentItemStateManagement dism = getDeploymentItemStateManagement();
@@ -2460,18 +2465,23 @@ public abstract class GenerationBase {
           for (int i = 0; i < priorities.length; i++) {
             boolean success = false;
             try {
-              XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling().notifyDeploymentHandlerBegin(priorities[i]);
-              onDeploymentHandlerInCorrectOrder(objectsWithDependencies, priorities[i]);
+              if (XynaFactory.isFactoryServer()) {
+                XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling().notifyDeploymentHandlerBegin(priorities[i]);
+                onDeploymentHandlerInCorrectOrder(objectsWithDependencies, priorities[i]);
+              }
               success = true;
             } finally {
-              XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
-                  .notifyDeploymentHandlerFinish(priorities[i], success);
+              if (XynaFactory.isFactoryServer()) {
+                XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling().notifyDeploymentHandlerFinish(priorities[i], success);
+              }
             }
           }
           cleanupInCorrectOrder(objectsWithDependencies);
 
         } finally {
-          cleanUpDeploymentProcess();
+          if (XynaFactory.isFactoryServer()) {
+            cleanUpDeploymentProcess();
+          }
         }
 
         //falls mind. ein Objekt nicht deployed werden konnte, muss eine Fehlerbehandlung
@@ -3791,7 +3801,9 @@ public abstract class GenerationBase {
 
           try {
             // validierung, dass xml in einer sprach-version vorliegt, die der server versteht
-            Updater.getInstance().validateMDMVersion(rootElement.getAttribute(ATT.MDM_VERSION));
+            if (XynaFactory.isFactoryServer()) {
+              Updater.getInstance().validateMDMVersion(rootElement.getAttribute(ATT.MDM_VERSION));
+            }
             parseXmlInternally(rootElement);
           } catch (XynaException e) {
             throw new XPRC_MDMDeploymentException(getOriginalFqName(), e);
@@ -4552,7 +4564,8 @@ public abstract class GenerationBase {
           }
 
           if (mode.shouldDoCompile()) {
-            String classFileName = RevisionManagement.getPathForRevision(PathType.XMOMCLASSES, revision) + Constants.fileSeparator + fqClassName.replace(".", "/") + ".class";
+            // won't work for scripting but is not needed
+            String classFileName = new File(RevisionManagement.getPathForRevision(PathType.XMOMCLASSES, revision) + Constants.fileSeparator + originalFqName.replace(".", "/") + ".class").getPath();
             boolean compileError = false;
             long timeStampBeforeCompile = determineLastModified(classFileName);
             try {
@@ -4566,16 +4579,18 @@ public abstract class GenerationBase {
                   dom = dom.getSuperClassGenerationObject();
                 }
               }
-              Set<Long> revisions = new HashSet<Long>();
-              revisions.add(revision);
-              XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getDependenciesRecursivly(revision, revisions);
               
-              for (Long rev : revisions) {
-                File mdmclasses = new File(RevisionManagement.getPathForRevision(PathType.XMOMCLASSES, rev));
-                if (!mdmclasses.exists()) {
-                  mdmclasses.mkdir();
+              Set<Long> revisions = xmlInputSource.getDependenciesRecursivly(revision);
+              revisions.add(revision);
+              
+              if (XynaFactory.isFactoryServer()) { // no XMOMCLASSES present on script access
+                for (Long rev : revisions) {
+                  File mdmclasses = new File(RevisionManagement.getPathForRevision(PathType.XMOMCLASSES, rev));
+                  if (!mdmclasses.exists()) {
+                    mdmclasses.mkdir();
+                  }
+                  jars.add(mdmclasses.getPath());
                 }
-                jars.add(mdmclasses.getPath());
               }
 
               for (String s : jars) {
@@ -5404,9 +5419,7 @@ public abstract class GenerationBase {
   DOM getCachedDOMInstanceOrCreate(String originalDomInputName, long useRevision) throws XPRC_InvalidPackageNameException {
     String fqClassName = GenerationBase.transformNameForJava(originalDomInputName);
 
-    long rev =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-            .getRevisionDefiningXMOMObjectOrParent(originalDomInputName, useRevision);
+    long rev = xmlInputSource.getRevisionDefiningXMOMObjectOrParent(originalDomInputName, useRevision);
     
     GenerationBase o;
     DOM.cacheLockDOM.lock();
@@ -5459,9 +5472,7 @@ public abstract class GenerationBase {
       throws XPRC_InvalidPackageNameException {
     String fqExceptionClassName = GenerationBase.transformNameForJava(originalFQExceptionName);
 
-    long rev =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-            .getRevisionDefiningXMOMObjectOrParent(originalFQExceptionName, useRevision);
+    long rev = xmlInputSource.getRevisionDefiningXMOMObjectOrParent(originalFQExceptionName, useRevision);
     
     GenerationBase o;
     ExceptionGeneration.cacheLockExceptionGeneration.lock();
@@ -6665,12 +6676,13 @@ public abstract class GenerationBase {
 
 
   static DeploymentItemStateManagement getDeploymentItemStateManagement() {
-    DeploymentItemStateManagement dism = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement();
-    if (dism != null && dism.isInitialized()) {
-      return dism;
-    } else {
-      return null;
+    if (XynaFactory.isFactoryServer()) {
+      DeploymentItemStateManagement dism = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement();
+      if (dism != null && dism.isInitialized()) {
+        return dism;
+      }
     }
+    return null;
   }
 
 
@@ -6805,6 +6817,10 @@ public abstract class GenerationBase {
     
     Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation) throws Ex_FileAccessException, XPRC_XmlParsingException;
     
+    default File getClassOutputFolder() {
+      return null;
+    }
+    
   }
   
   
@@ -6896,19 +6912,20 @@ public abstract class GenerationBase {
       }
     }
 
-
   }
   
   
   public static class FileSystemXMLSource implements XMLSourceAbstraction {
     
+    private final File targetClassFolder;
     private final Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies;
     private final Map<RuntimeContext, File> rtcXMOMPaths;
     private final BijectiveMap<RuntimeContext, Long> revisions;
     
-    public FileSystemXMLSource(Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies, Map<RuntimeContext, File> rtcXMOMPaths) {
+    public FileSystemXMLSource(Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies, Map<RuntimeContext, File> rtcXMOMPaths, File targetClassFolder) {
       this.rtcDependencies = rtcDependencies;
       this.rtcXMOMPaths = rtcXMOMPaths;
+      this.targetClassFolder = targetClassFolder;
       revisions = new BijectiveMap<>();
       long revision = 1;
       for (RuntimeContext rtx : rtcXMOMPaths.keySet()) {
@@ -6926,11 +6943,13 @@ public abstract class GenerationBase {
     
     private void getDependenciesRecursivlyInternally(Long revision, Set<Long> depenedencies) {
       RuntimeContext rtc = revisions.getInverse(revision);
-      Set<RuntimeContext> deps = rtcDependencies.get(rtc);
-      for (RuntimeContext dep : deps) {
-        Long depRev = revisions.get(dep);
-        if (depenedencies.add(depRev)) {
-          getDependenciesRecursivlyInternally(depRev, depenedencies);
+      if (rtcDependencies.containsKey(rtc)) {
+        Set<RuntimeContext> deps = rtcDependencies.get(rtc);
+        for (RuntimeContext dep : deps) {
+          Long depRev = revisions.get(dep);
+          if (depenedencies.add(depRev)) {
+            getDependenciesRecursivlyInternally(depRev, depenedencies);
+          }
         }
       }
     }
@@ -6938,7 +6957,6 @@ public abstract class GenerationBase {
     public Long getRevisionDefiningXMOMObjectOrParent(String fqName, Long revision) {
       String fqPath = fqName.replaceAll("\\.", Constants.fileSeparator) + ".xml";
       Set<Long> allRevs = getDependenciesRecursivly(revision);
-      System.out.println("allRevs: " + allRevs);
       for (Long aRev : allRevs) {
         RuntimeContext rtc = revisions.getInverse(aRev);
         File rtcRootPath = rtcXMOMPaths.get(rtc);
@@ -6999,6 +7017,15 @@ public abstract class GenerationBase {
       return type == revisions.getInverse(revision).getType();
     }
     
+    // used from BuildDatatypeJarFromSource
+    public File getXMOMPath(RuntimeContext rtc) {
+      return rtcXMOMPaths.get(rtc);
+    }
+
+    public File getClassOutputFolder() {
+      return targetClassFolder;
+    }
+    
   }
   
   public static class StringXMLSource implements XMLSourceAbstraction {
@@ -7046,11 +7073,10 @@ public abstract class GenerationBase {
       throw new UnsupportedOperationException("StringXMLSource.getFileLocation");
     }
 
-    @Override
     public boolean isOfRuntimeContextType(Long revision, RuntimeContextType type) {
       throw new UnsupportedOperationException("StringXMLSource.isOfRuntimeContextType");
     }
-    
+
   }
 
 }
