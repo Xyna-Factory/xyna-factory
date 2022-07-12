@@ -23,15 +23,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
 class JavaClass extends SimpleJavaFileObject {
 
   protected JavaClass(String basedir, String fqClassName) {
-    super(URI.create("file://" + new File(basedir + (!basedir.endsWith("/") ? "/" : "") + fqClassName.replace('.', '/') + ".class").getAbsolutePath()),
-          Kind.CLASS);
+    super(new File(basedir + (!basedir.endsWith("/") ? "/" : "") + fqClassName.replace('.', '/') + ".class").toURI(), Kind.CLASS);
   }
 
 

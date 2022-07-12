@@ -202,10 +202,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   public static DOM getOrCreateInstance(String fqXmlName,
                                         GenerationBaseCache cache, Long revision, XMLSourceAbstraction inputSource)
       throws XPRC_InvalidPackageNameException {
-    revision =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-            .getRevisionDefiningXMOMObjectOrParent(fqXmlName, revision);
-
+    revision = inputSource.getRevisionDefiningXMOMObjectOrParent(fqXmlName, revision);
     String fqClassName = GenerationBase.transformNameForJava(fqXmlName);
     DOM dom = (DOM) cache.getFromCache(fqXmlName, revision);
     if (dom == null) {
@@ -658,28 +655,9 @@ public class DOM extends DomOrExceptionGenerationBase {
     if (revision == null) {
       revision = RevisionManagement.REVISION_DEFAULT_WORKSPACE;
     }
-    return RevisionManagement.getPathForRevision(PathType.SERVICE, revision)
-                    + Constants.fileSeparator + fqClassName + Constants.fileSeparator;
+    return RevisionManagement.getPathForRevision(PathType.SERVICE, revision) + Constants.fileSeparator + fqClassName + Constants.fileSeparator;
   }
   
-  
-  public static String getJarFileFileForService(String fqClassName, Long revision, String jarName, boolean tryFromSaved) throws XPRC_JarFileForServiceImplNotFoundException {
-    File jarFile;
-    RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-    if (tryFromSaved && (revision == null || revisionManagement.isWorkspaceRevision(revision))) {
-      jarFile = new File(GenerationBase.getFileLocationOfServiceLibsForSaving(fqClassName, revision) + Constants.fileSeparator + jarName);
-      if (jarFile.exists()) {
-        return jarFile.getPath();
-      }
-    }
-    jarFile = new File(getDeployedJarFilePathInMDM(fqClassName, revision) + jarName);
-    if (!jarFile.exists()) {
-      throw new XPRC_JarFileForServiceImplNotFoundException(fqClassName, jarFile.getPath());
-    } else {
-      return jarFile.getPath();
-    }
-  }
-
 
   private void parseAdditionalDependencies(Element s, Set<String> parsedSharedLibs)
       throws XPRC_InvalidPackageNameException {
@@ -710,27 +688,44 @@ public class DOM extends DomOrExceptionGenerationBase {
   /**
    * fügt ohne rekursion abhängige jars dazu
    */
-  public void getDependentJarsWithoutRecursion(Set<String> jars, boolean withSharedLibs, boolean tryFromSaved)
-      throws XPRC_JarFileForServiceImplNotFoundException, XFMG_SHARED_LIB_NOT_FOUND {
-    RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-    Set<String> ret = new HashSet<String>();
-    for (String libName : additionalLibNames) {
-      ret.add(getJarFileFileForService(getFqClassName(), revision, libName, tryFromSaved));
-    }
-    if (withSharedLibs) {
-      for (String s : sharedLibs) {
-        // FIXME abhängigkeit von sharedlibclassloader entfernen.
-        Long rev = rcdm.getRevisionDefiningSharedLib(s, revision);
-        if (rev == null) {
-          throw new XFMG_SHARED_LIB_NOT_FOUND(s);
-        }
-        File[] files = SharedLibClassLoader.getJarsOfSharedLib(s, rev);
-        for (File f : files) {
-          ret.add(f.getPath());
+  public void getDependentJarsWithoutRecursion(Set<String> jars, boolean withSharedLibs, boolean tryFromSaved) throws XPRC_JarFileForServiceImplNotFoundException, XFMG_SHARED_LIB_NOT_FOUND {
+    if (XynaFactory.isFactoryServer()) {
+      Set<String> ret = new HashSet<String>();
+      for (String libName : additionalLibNames) {
+        ret.add(getJarFileForServiceLocation(getFqClassName(), revision, libName, tryFromSaved, xmlInputSource).getPath());
+      }
+      RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+      if (withSharedLibs) {
+        for (String s : sharedLibs) {
+          // FIXME abhängigkeit von sharedlibclassloader entfernen.
+          Long rev = rcdm.getRevisionDefiningSharedLib(s, revision);
+          if (rev == null) {
+            throw new XFMG_SHARED_LIB_NOT_FOUND(s);
+          }
+          File[] files = SharedLibClassLoader.getJarsOfSharedLib(s, rev);
+          for (File f : files) {
+            ret.add(f.getPath());
+          }
         }
       }
+      jars.addAll(ret);
     }
-    jars.addAll(ret);
+  }
+  
+  private File getJarFileForServiceLocation(String fqClassName, Long revision, String jarName, boolean tryFromSaved, XMLSourceAbstraction source) throws XPRC_JarFileForServiceImplNotFoundException {
+  File jarFile;
+    if (tryFromSaved && (revision == null || source.isOfRuntimeContextType(revision, RuntimeContextType.Workspace))) {
+      jarFile = new File(GenerationBase.getFileLocationOfServiceLibsForSaving(fqClassName, revision) + Constants.fileSeparator + jarName);
+      if (jarFile.exists()) {
+        return jarFile;
+      }
+    }
+    jarFile = new File(DOM.getDeployedJarFilePathInMDM(fqClassName, revision) + jarName);
+    if (!jarFile.exists()) {
+      throw new XPRC_JarFileForServiceImplNotFoundException(fqClassName, jarFile.getPath());
+    } else {
+      return jarFile;
+    }
   }
 
 
@@ -1447,7 +1442,8 @@ public class DOM extends DomOrExceptionGenerationBase {
    * impl lib wird verwendet
    */
   public boolean libraryExists() {
-    return getAdditionalLibraries().contains(getImplClassName() + ".jar");
+    return getAdditionalLibraries().contains(getImplClassName() + ".jar") && 
+           XynaFactory.isFactoryServer(); // ignore libraries for script access
   }
 
   public DOM getNextSuperTypeWithJavaImpl(boolean onlyCountInstanceMethods, InterfaceVersion versionFilter) {
@@ -1606,8 +1602,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     imports.remove(getFqClassName());
     imports.remove(null); //sollte eigtl nicht enthalten sein, aber dies ist nicht die richtige stelle, deshalb einen fehler zu werfen
 
-    TreeSet<String> sortedImports = new TreeSet<String>(imports);
-    
+    Set<String> sortedImports = new TreeSet<>(imports);
     return sortedImports;
 
   }

@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
@@ -194,7 +195,8 @@ public class JavaOperation extends Operation {
       }
     }
     
-    if (XynaProperty.INVALIDATE_WF_EXECUTION.get()) {
+    if (XynaFactory.isFactoryServer() &&
+        XynaProperty.INVALIDATE_WF_EXECUTION.get()) {
       DeploymentItemStateManagement dism = GenerationBase.getDeploymentItemStateManagement();
       if (dism != null) {
         DeploymentItemState dis = dism.get(getParent().getOriginalFqName(), getParent().getRevision());
@@ -209,10 +211,12 @@ public class JavaOperation extends Operation {
       }
     }
     
-    if (!isImplActive) {
+    if (!XynaFactory.isFactoryServer()) {
+      // code generation from script access
+      cb.addLine("throw new ", RuntimeException.class.getName(), "(\"Class was generated outside a running factory.\")");
+    } else if (!isImplActive) {
       // stub generation from code access uses this atm
-      cb.addLine("throw new ", RuntimeException.class.getName(),
-                      "(\"Class was generated as stub.\")");
+      cb.addLine("throw new ", RuntimeException.class.getName(), "(\"Class was generated as stub.\")");
     } else if (implementedInJavaLib() && !getParent().libraryExists()) {
       //zustand beim ersten speichern von der gui aus -> soll kompilieren. TODO über irgendein flag steuern, ob das
       //hier eine runtimeexception zur laufzeit oder zur deployzeit wirft.

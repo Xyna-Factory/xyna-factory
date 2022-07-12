@@ -144,9 +144,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
   }
   
   public static ExceptionGeneration getOrCreateInstance(String originalInputName, GenerationBaseCache cache, Long revision, XMLSourceAbstraction inputSource) throws XPRC_InvalidPackageNameException {
-    revision =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-            .getRevisionDefiningXMOMObjectOrParent(originalInputName, revision);
+    revision = inputSource.getRevisionDefiningXMOMObjectOrParent(originalInputName, revision);
     String fqClassName = GenerationBase.transformNameForJava(originalInputName);
     ExceptionGeneration exception = (ExceptionGeneration) cache.getFromCache(originalInputName, revision);
     if (exception == null) {
