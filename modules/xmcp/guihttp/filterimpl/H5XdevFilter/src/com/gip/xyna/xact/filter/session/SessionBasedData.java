@@ -154,6 +154,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_JarFileForServiceImplNotFoundException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.FactoryManagedRevisionXMLSource;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
@@ -725,10 +726,12 @@ public class SessionBasedData {
   }
   
   private XMOMGuiReply save(XMOMGuiRequest request) throws InvalidJSONException, UnexpectedJSONContentException, InvalidRevisionException, XynaException, LockUnlockException {
+    logger.debug("XMOMGuiReply.save");
     JsonParser jp = new JsonParser();
     PersistJson saveRequest = jp.parse(request.getJson(), PersistJson.getJsonVisitor());
     FQName oldFqn = request.getFQName();
     Modification mod = getOrCreateModification(oldFqn);
+    logger.debug("mod: " + mod);
 
     boolean saveAs = (saveRequest.getLabel() != null && saveRequest.getPath() != null) // path and label != null
         && (!saveRequest.getLabel().isEmpty() && !saveRequest.getPath().isEmpty()) // path and label not empty
@@ -819,7 +822,7 @@ public class SessionBasedData {
   private void copyLibs(GenerationBaseObject source, GenerationBaseObject destination) throws XPRC_JarFileForServiceImplNotFoundException {
     Set<String> libNames = source.getDOM().getAdditionalLibraries();
     for (String libName : libNames) {
-      String sourceFilePathAndName = DOM.getJarFileFileForService(source.getFQName().getFqName(), source.getFQName().getRevision(), libName, true);
+      String sourceFilePathAndName = DOM.getJarFileForServiceLocation(source.getFQName().getFqName(), source.getFQName().getRevision(), libName, true, new FactoryManagedRevisionXMLSource()).getPath();
       File sourceFile = new File(sourceFilePathAndName);
       if(!sourceFile.canRead()) {
         continue;

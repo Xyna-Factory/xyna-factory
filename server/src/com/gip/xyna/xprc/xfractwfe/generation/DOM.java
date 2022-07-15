@@ -712,7 +712,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
   }
   
-  private File getJarFileForServiceLocation(String fqClassName, Long revision, String jarName, boolean tryFromSaved, XMLSourceAbstraction source) throws XPRC_JarFileForServiceImplNotFoundException {
+  public static File getJarFileForServiceLocation(String fqClassName, Long revision, String jarName, boolean tryFromSaved, XMLSourceAbstraction source) throws XPRC_JarFileForServiceImplNotFoundException {
   File jarFile;
     if (tryFromSaved && (revision == null || source.isOfRuntimeContextType(revision, RuntimeContextType.Workspace))) {
       jarFile = new File(GenerationBase.getFileLocationOfServiceLibsForSaving(fqClassName, revision) + Constants.fileSeparator + jarName);
