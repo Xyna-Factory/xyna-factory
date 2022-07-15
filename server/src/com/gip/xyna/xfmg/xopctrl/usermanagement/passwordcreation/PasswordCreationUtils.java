@@ -70,18 +70,7 @@ public class PasswordCreationUtils {
 
       @Override
       public String getSalt() {
-        byte[] bytes = new byte[XynaProperty.PASSWORD_PERSISTENCE_SALT_LENGTH.get()];
-        new SecureRandom().nextBytes(bytes);
-        
-        String salt;
-        try {
-          salt = new String(bytes, Constants.DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-          salt = XynaProperty.PASSWORD_CREATION_STATIC_SALT.get();
-          logger.warn("Could not generate salt, use static salt '" + salt + "'", e);
-        }
-        
-        return salt;
+        return PasswordCreationUtils.createPersistenceSalt(XynaProperty.PASSWORD_PERSISTENCE_SALT_LENGTH.get(), XynaProperty.PASSWORD_CREATION_STATIC_SALT.get());
       }
     };
     
@@ -139,7 +128,7 @@ public class PasswordCreationUtils {
   }
   
   
-  private static String generateLegacyHash(String password) {
+  public static String generateLegacyHash(String password) {
     StringBuilder passwordBuilder = new StringBuilder();
     try {
       MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -170,6 +159,21 @@ public class PasswordCreationUtils {
     }
 
     return passwordBuilder.toString();
+  }
+  
+  public static String createPersistenceSalt(int saltLength, String staticSalt) {
+    byte[] bytes = new byte[saltLength];
+    new SecureRandom().nextBytes(bytes);
+    
+    String salt;
+    try {
+      salt = new String(bytes, Constants.DEFAULT_ENCODING);
+    } catch (UnsupportedEncodingException e) {
+      salt = staticSalt;
+      logger.warn("Could not generate salt, use static salt '" + salt + "'", e);
+    }
+    
+    return salt;
   }
   
 }
