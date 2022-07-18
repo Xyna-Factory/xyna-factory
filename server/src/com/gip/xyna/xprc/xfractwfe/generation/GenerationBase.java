@@ -2212,7 +2212,7 @@ public abstract class GenerationBase {
           }
           
           long timeStampAfterCompile = determineLastModified(classFileName);
-          if(generatedJava != null && timeStampAfterCompile == timeStampBeforeCompile && !compileError) {
+          if(XynaFactory.isFactoryServer() && generatedJava != null && timeStampAfterCompile == timeStampBeforeCompile && !compileError) {
             if(logger.isDebugEnabled()) {
               logger.debug("successful compilation did not update classfile '" + classFileName + "'.");
             }
@@ -4613,7 +4613,7 @@ public abstract class GenerationBase {
             }
             
             long timeStampAfterCompile = determineLastModified(classFileName);
-            if(!collectOnly && generatedJava != null && timeStampAfterCompile == timeStampBeforeCompile && !compileError) {
+            if(XynaFactory.isFactoryServer() && !collectOnly && generatedJava != null && timeStampAfterCompile == timeStampBeforeCompile && !compileError) {
               if(logger.isDebugEnabled()) {
                 logger.debug("successful compilation did not update classfile '" + classFileName + "'.");
               }
