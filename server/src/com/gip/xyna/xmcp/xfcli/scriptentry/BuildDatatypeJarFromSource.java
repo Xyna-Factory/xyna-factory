@@ -1,4 +1,23 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+
 package com.gip.xyna.xmcp.xfcli.scriptentry;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,6 +47,7 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlHandler;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
@@ -36,6 +56,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.FileSystemXMLSource;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
+import com.gip.xyna.xprc.xfractwfe.generation.compile.InMemoryCompilationSet;
 
 public class BuildDatatypeJarFromSource {
   
@@ -45,18 +66,36 @@ public class BuildDatatypeJarFromSource {
   
 
   public static void main(String[] args) throws IOException {
+    if (args.length > 3) {
+      System.out.println("Expected at least three parameters: \n\t1. ApplicationName/VersionName\n\t"
+          + "2. target folder for mdm.jar\n\t" + "3. ++ List of paths to be searched for applications\n\t" + "set '"
+          + InMemoryCompilationSet.JAVA_VERSION_ENV_NAME + "' environment variable to specify java version of mdm.jar");
+      System.exit(1);
+    }
+
+
     RuntimeContext toBuild = RuntimeContext.valueOf(args[0]);
-    // TODO non-recursive build is not possible, is there a use-case for it?
-    int startOfFoldersToScan = 1;
+    String targetFolder = args[1];
+    int startOfFoldersToScan = 2;
+    System.out.println("Rtc to build: " + toBuild);
+    System.out.println("Target folder: " + targetFolder + " (" + new File(targetFolder).getAbsolutePath() + ")");
+    System.out.println("Rtc paths (" + (args.length - startOfFoldersToScan) + "):");
+    for (int i = startOfFoldersToScan; i < args.length; i++) {
+      System.out.println("  [" + (i - startOfFoldersToScan) + "]: " + args[i]);
+    }
+    String javaVersion = System.getenv(InMemoryCompilationSet.JAVA_VERSION_ENV_NAME);
+    System.out.println("Java compile target version: "
+        + (javaVersion != null ? javaVersion : XynaProperty.BUILDMDJAR_JAVA_VERSION.getDefaultValue()));
+
     Collection<Path> applicationRoots = new ArrayList<>();
     Arrays.stream(args, startOfFoldersToScan, args.length).map(Path::of).forEach((p) -> BuildDatatypeJarFromSource.scanForApplicationFolders(p, applicationRoots));
+
+    //fill dependencies and xmomPaths
     Map<RuntimeContext, Set<RuntimeContext>> dependencies = new HashMap<>();
     Map<RuntimeContext, File> xmomPaths = new HashMap<>();
     for (Path applicationRoot : applicationRoots) {
       Pair<RuntimeContext, Set<RuntimeContext>> newApp = readAppMetaData(applicationRoot);
-      if (newApp.getFirst().equals(toBuild)) {
-        dependencies.put(newApp.getFirst(), newApp.getSecond());
-      }
+      dependencies.put(newApp.getFirst(), newApp.getSecond());
       xmomPaths.put(newApp.getFirst(), Path.of(applicationRoot.toAbsolutePath().toString(), XMOM_FOLDER).toFile());
     }
     Path classFolder = Files.createTempDirectory("mdm.jar_build");
@@ -64,14 +103,27 @@ public class BuildDatatypeJarFromSource {
       FileSystemXMLSource source = new FileSystemXMLSource(dependencies, xmomPaths, classFolder.toFile());
       // collect all objects to deploy
       Set<RuntimeContext> relevantRevisions = findRelevantRevisions(toBuild, source, true);
+
+      //validate: No missing runtime contexts
+      if (relevantRevisions.contains(null)) {
+        System.out.println("One or more Runtime Contexts could not be resolved.");
+        if (!xmomPaths.containsKey(toBuild)) {
+          System.out.println(toBuild + " was not found. Check VersionName");
+          System.out.println("Available RuntimeContexts: ");
+          for (RuntimeContext rtc : xmomPaths.keySet()) {
+            System.out.println("  " + rtc.toString());
+          }
+          throw new RuntimeException("One or more Runtime Contexts could not be resolved.");
+        }
+      }
+
       Set<GenerationBase> toDeploy = findAllDatatypes(relevantRevisions, source);
       // start mass deployment
-      // TODO generateMdmJar supports crossCompile, does this default too low because XynaProperties are not available?
-      //      should the crossCompile javaVersion be an input
+      // InMemoryCompilationSet.JAVA_VERSION_ENV_NAME environment variable can be set to choose cross compile java version
+      System.out.println("deploying " + toDeploy.size() + " Datatypes and Exceptions.");
       GenerationBase.deploy(new ArrayList<>(toDeploy), DeploymentMode.generateMdmJar, false, null);
       // zip classes to mdm.jar
-      // TODO this creates a local file. Should there be a targetDir input?
-      FileUtils.zipDirectory(new File("mdm.jar"), classFolder.toFile());
+      FileUtils.zipDirectory(new File(targetFolder, "mdm.jar"), classFolder.toFile());
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -107,7 +159,6 @@ public class BuildDatatypeJarFromSource {
   
   private static Pair<RuntimeContext, Set<RuntimeContext>> readAppMetaData(Path applicationRoot) {
     Path applicationFile = Path.of(applicationRoot.toAbsolutePath().toString(), APPLICATION_DESCRIPTION_FILE);
-    //Document appDoc = XMLUtils.parse(applicationFile.toFile());
     ApplicationXmlHandler handler = new ApplicationXmlHandler();
     try {
       SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -151,14 +202,16 @@ public class BuildDatatypeJarFromSource {
   private static Collection<? extends GenerationBase> instantiateDatatypes(RuntimeContext relevantRevision, FileSystemXMLSource source, GenerationBaseCache cache) {
     try {
       return Files.walk(source.getXMOMPath(relevantRevision).toPath()).filter(BuildDatatypeJarFromSource::isDatatypeOrException).map(p -> BuildDatatypeJarFromSource.instantiateDatytpeOrException(p, relevantRevision, source, cache)).collect(Collectors.toSet());
-    } catch (IOException e) {
+    } catch (Exception e) {
+      System.out.println(e);
+      System.out.println("source: " + source);
+      System.out.println("relevantRevision: " + relevantRevision);
       throw new RuntimeException(e);
     }
   }
   
   
   private static boolean isDatatypeOrException(Path path) {
-    System.out.println("isDatatypeOrException: " + path);
     if (path.toFile().isFile()) {
       try (FileInputStream fis = new FileInputStream(path.toFile())) {
         XMOMType type = XMOMType.getXMOMTypeByRootTag(XMLUtils.getRootElementName(fis));
@@ -169,7 +222,6 @@ public class BuildDatatypeJarFromSource {
         try {
           System.out.println(FileUtils.readFileAsString(path.toFile()));
         } catch (Ex_FileWriteException e1) {
-          // TODO Auto-generated catch block
           e1.printStackTrace();
         }
         throw new RuntimeException(e);

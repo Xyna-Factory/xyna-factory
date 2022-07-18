@@ -78,4 +78,24 @@
         <echo message="${errors}"/>
     </target>
 
+    <target name="create-mdm-jar" description="Create mdm.jar locally">
+    
+        <property name="java.compile.version" value="Java6" />
+        <property name="output.dir" value="." />
+        <property name="apps.paths" value="${root.dir}" />
+
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.BuildDatatypeJarFromSource" fork="true" failonerror="true">
+            <arg value="${Application.applicationName}/${Application.versionName}" />
+            <arg value="${output.dir}" />
+            <arg line="${apps.paths}" />
+            <env key="mdmjarjavaversion" value="${java.compile.version}" />
+            <classpath>
+                <fileset dir="${antUtils.dir}lib/factory">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+
+    </target>
+
 </project>

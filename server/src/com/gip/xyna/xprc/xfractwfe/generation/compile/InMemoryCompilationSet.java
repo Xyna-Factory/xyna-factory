@@ -45,6 +45,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 
 public class InMemoryCompilationSet implements CompilationSet {
   
+  public static final String JAVA_VERSION_ENV_NAME = "mdmjarjavaversion";
+  
   public static enum TargetKind {
     FILE, MEMORY;
   }
@@ -94,6 +96,20 @@ public class InMemoryCompilationSet implements CompilationSet {
     }
   }
 
+
+  private String determineJavaVersion() {
+    if (XynaFactory.isFactoryServer()) {
+      return XynaProperty.BUILDMDJAR_JAVA_VERSION.get();
+    }
+
+    String javaVersion = System.getenv(JAVA_VERSION_ENV_NAME);
+    if (javaVersion != null) {
+      return javaVersion;
+    }
+    return XynaProperty.BUILDMDJAR_JAVA_VERSION.get();
+  }
+
+
   public CompilationResult compile() throws XPRC_CompileError {
     if (compilationTargets.size() == 0) {
       return CompilationResult.empty();
@@ -102,7 +118,7 @@ public class InMemoryCompilationSet implements CompilationSet {
 
     String targetVersion = null;
     if (crossCompile) {
-      String javaVersion = XynaProperty.BUILDMDJAR_JAVA_VERSION.get();
+      String javaVersion = determineJavaVersion();
       //FIXME wieso ist die javaversion in der property nicht einfach gleich der targetversion?
       if (javaVersion.equals("Java6")) {
         targetVersion = "1.6";
@@ -191,7 +207,7 @@ public class InMemoryCompilationSet implements CompilationSet {
           sb.append(f.getName()).append(" ");
         }
         String javaFiles = sb.toString().trim();
-        Compilation.logger.debug("--------------- compiling " + javaFiles + " options=" + options.toString() + " ...");
+        Compilation.logger.debug("--------------- compiling "+ compilationTargetsOrdered.size()+" files: " + javaFiles + " options=" + options.toString() + " ...");
       }
       CompilationTask task = compiler.getTask(sw, stfm, stfm.getErrorCollector(), options, null, compilationTargetsOrdered);
 
