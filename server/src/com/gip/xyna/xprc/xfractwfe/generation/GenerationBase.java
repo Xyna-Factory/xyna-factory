@@ -6881,9 +6881,9 @@ public abstract class GenerationBase {
 
     public File getFileLocation(String originalFqName, Long revision, boolean fileFromDeploymentLocation) {
       if (fileFromDeploymentLocation) {
-        return new File(getFileLocationForDeployment(originalFqName, revision));
+        return new File(getFileLocationForDeployment(originalFqName, revision) + ".xml");
       } else {
-        return new File(getFileLocationForSaving(originalFqName, revision));
+        return new File(getFileLocationForSaving(originalFqName, revision) + ".xml");
       }
     }
     
