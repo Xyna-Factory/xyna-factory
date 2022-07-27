@@ -177,6 +177,7 @@ public class DhcpdConfBindingReal {
         releaseSQLUtils(utils);
         if (dhcpdConf != null) {
           dhcpdConf.close();
+          closeDhpcdConfVerwaltung(dhcpdConf);
         }
         DeploymentTools.insertRow(deployInfo);
       }
@@ -247,6 +248,7 @@ public class DhcpdConfBindingReal {
         releaseSQLUtils(utils);
         if (dhcpdConf != null) {
           dhcpdConf.close();
+          closeDhpcdConfVerwaltung(dhcpdConf);
         }
         DeploymentTools.insertRow(deployInfo);
       }
@@ -393,6 +395,7 @@ public class DhcpdConfBindingReal {
         releaseSQLUtils(utils);
         if (dhcpdConf != null) {
           dhcpdConf.close();
+          closeDhpcdConfVerwaltung(dhcpdConf);
         }
         DeploymentTools.insertRow(deployInfo);
       }
@@ -478,6 +481,7 @@ public class DhcpdConfBindingReal {
         releaseSQLUtils(utils);
         if (dhcpdConf != null) {
           dhcpdConf.close();
+          closeDhpcdConfVerwaltung(dhcpdConf);
         }
         DeploymentTools.insertRow(deployInfo);
       }
@@ -996,6 +1000,14 @@ public class DhcpdConfBindingReal {
     // Einrichten der Properties
     logger.info("Trying to read dhcpdconf property file...");
     DCProperties.readProperties(getProperties());
+  }
+
+  private void closeDhpcdConfVerwaltung(DhcpdConf dhcpdConf) {
+      if (dhcpdConf == null || dhcpdConf.getVerwaltung() == null)
+      return;
+
+      dhcpdConf.getVerwaltung().getSsh().close();
+
   }
 
 
