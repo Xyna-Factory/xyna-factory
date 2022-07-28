@@ -17,7 +17,10 @@
  */
 package com.gip.xyna.xact.filter.session;
 
+import java.io.ByteArrayInputStream;
 import java.util.Optional;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.w3c.dom.Document;
 
@@ -77,6 +80,19 @@ public class XMOMLoader {
           return XMLUtils.parseString(xml, true);
         }
         return super.getOrParseXML(obj, fileFromDeploymentLocation);
+      }
+
+
+      @Override
+      public XMOMType determineXMOMTypeOf(String fqNameIn, Long originalRevision) throws Ex_FileAccessException, XPRC_XmlParsingException {
+        if (fqNameIn.equals(fqName.getFqName())) {
+          try {
+            return XMOMType.getXMOMTypeByRootTag(XMLUtils.getRootElementName(new ByteArrayInputStream(xml.getBytes())));
+          } catch (XMLStreamException e) {
+            throw new XPRC_XmlParsingException("Could not determine XMOM Type", e);
+          }
+        }
+        return super.determineXMOMTypeOf(fqNameIn, originalRevision);
       }
       
     };
