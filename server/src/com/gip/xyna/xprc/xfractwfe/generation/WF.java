@@ -641,7 +641,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
     String fqClassName = GenerationBase.transformNameForJava(originalWFInputName);
     StringXMLSource inputSource = new StringXMLSource(xmlsWfAndImports);
     
-    return new WF(originalWFInputName, fqClassName, new GenerationBaseCache(), -100L /*gibts nicht, wird nicht verwendet*/, null, inputSource);
+    return new WF(originalWFInputName, fqClassName, new GenerationBaseCache(), StringXMLSource.REVISION, null, inputSource);
   }
 
   public static WF createNewWorkflow(String originalWFInputName, GenerationBaseCache cache, Long revision) throws XPRC_InvalidPackageNameException {

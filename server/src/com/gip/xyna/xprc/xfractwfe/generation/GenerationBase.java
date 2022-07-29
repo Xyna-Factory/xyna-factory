@@ -7030,6 +7030,7 @@ public abstract class GenerationBase {
   
   public static class StringXMLSource implements XMLSourceAbstraction {
     
+    public static final long REVISION = -100l;
     private final Map<String, String> xmlsWfAndImports; // maps from fqn to XML-string
     
     public StringXMLSource(Map<String, String> xmlsWfAndImports) {
@@ -7041,7 +7042,7 @@ public abstract class GenerationBase {
     }
 
     public Long getRevisionDefiningXMOMObjectOrParent(String fqName, Long revision) {
-      throw new UnsupportedOperationException("StringXMLSource.getRevisionDefiningXMOMObjectOrParent");
+      return REVISION;
     }
 
     public RuntimeContext getRuntimeContext(Long revision) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
