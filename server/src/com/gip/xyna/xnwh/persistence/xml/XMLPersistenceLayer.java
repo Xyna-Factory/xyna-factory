@@ -3447,7 +3447,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
    * @param bytes
    * @return
    */
-  private static String encodeBytes(byte[] bytes) {
+  public static String encodeBytes(byte[] bytes) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream(bytes.length);
     long t = System.currentTimeMillis();
         
