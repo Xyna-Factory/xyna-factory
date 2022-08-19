@@ -99,6 +99,11 @@ public class OrderControlServiceServiceOperationImpl implements ExtendedDeployme
   }
 
   @Override
+  public OrderType getRootOrderType(XynaOrderServerExtension correlatedXynaOrder) {
+    return new OrderType(correlatedXynaOrder.getRootOrder().getDestinationKey().getOrderType());
+  }
+
+  @Override
   public void setLoggingContext(XynaOrderServerExtension correlatedXynaOrder, LoggingContext loggingContext) {
     String logString = loggingContext.getLoggingContext();
     correlatedXynaOrder.getOrderContext().setLoggingDiagnosisContext(logString);
