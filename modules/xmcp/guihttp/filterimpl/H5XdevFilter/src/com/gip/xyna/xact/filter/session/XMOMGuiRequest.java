@@ -20,6 +20,7 @@ package com.gip.xyna.xact.filter.session;
 import java.util.HashMap;
 
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson.Type;
+import com.gip.xyna.xact.filter.session.FQName.XmomVersion;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 
 public class XMOMGuiRequest {
@@ -27,13 +28,15 @@ public class XMOMGuiRequest {
 
   public static enum Operation {
     
-    View, 
+    ViewSaved, 
+    ViewDeployed, 
     Save,
     Deploy,
     Create, 
     Delete(true), 
     DeleteDocument(true), 
-    Dataflow,
+    DataflowSaved,
+    DataflowDeployed,
     Relations,
     Insert(true), 
     TemplateCall(true), 
@@ -121,12 +124,15 @@ public class XMOMGuiRequest {
   }
 
   public FQName getFQName() {
-    if( fqName == null ) {
-      if( typePath != null && typeName != null ) {
-        fqName = new FQName(revision, runtimeContext, typePath, typeName);
-      }
+    if (fqName == null && typePath != null && typeName != null) {
+      fqName = new FQName(revision, runtimeContext, typePath, typeName, getXmomVersion());
     }
+
     return fqName;
+  }
+
+  public XmomVersion getXmomVersion() {
+    return (operation == Operation.ViewDeployed || operation == Operation.DataflowDeployed) ? XmomVersion.DEPLOYED : XmomVersion.SAVED;
   }
 
   public void setFQName(FQName fqName) {

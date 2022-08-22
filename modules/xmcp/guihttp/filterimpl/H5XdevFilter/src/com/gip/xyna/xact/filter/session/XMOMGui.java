@@ -31,6 +31,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
+import com.gip.xyna.xact.filter.session.FQName.XmomVersion;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.filter.session.XMOMGuiRequest.Operation;
 import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
@@ -77,7 +78,8 @@ public class XMOMGui {
                                  (request.getOperation() != Operation.ViewXml) &&
                                  (request.getOperation() != Operation.Session) &&
                                  (request.getOperation() != Operation.DeleteDocument) ) {
-      if( !responsibleSession.hasObject( request.getFQName() ) ) {
+      if ( request.getFQName().getXmomVersion() == XmomVersion.DEPLOYED ||
+           !responsibleSession.hasObject(request.getFQName()) ) {
         FQName fqName = request.getFQName();
         GenerationBaseObject gbo = null;
         try {

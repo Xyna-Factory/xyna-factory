@@ -34,7 +34,7 @@ public class ServiceGroupsPathNameObjectsIdAction extends XmomGuiAction {
   private static final String BASE_PATH = "/" + PathElements.XMOM + "/" + PathElements.SERVICES_GROUPS;
   
   public ServiceGroupsPathNameObjectsIdAction(XMOMGui xmomGui) {
-    super(xmomGui, 2, 3, 5, Operation.View, Type.serviceGroup, false);
+    super(xmomGui, 2, 3, 5, Operation.ViewSaved, Type.serviceGroup, false);
   }
 
   @Override

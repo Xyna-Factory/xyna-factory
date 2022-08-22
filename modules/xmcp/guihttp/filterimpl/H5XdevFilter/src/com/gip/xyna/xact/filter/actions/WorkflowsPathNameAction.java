@@ -34,7 +34,7 @@ public class WorkflowsPathNameAction extends XmomGuiAction {
   private static final String BASE_PATH = "/" + PathElements.XMOM + "/" + PathElements.WORKFLOWS;
   
   public WorkflowsPathNameAction(XMOMGui xmomGui) {
-    super(xmomGui, 2, 3, Operation.View, Type.workflow, false);
+    super(xmomGui, 2, 3, Operation.ViewSaved, Type.workflow, false);
   }
 
   @Override

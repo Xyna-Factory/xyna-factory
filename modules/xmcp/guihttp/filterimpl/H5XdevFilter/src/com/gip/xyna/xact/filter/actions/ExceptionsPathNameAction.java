@@ -34,7 +34,7 @@ public class ExceptionsPathNameAction extends XmomGuiAction {
   private static final String BASE_PATH = "/" + PathElements.XMOM + "/" + PathElements.EXCEPTION_TYPES;
   
   public ExceptionsPathNameAction(XMOMGui xmomGui) {
-    super(xmomGui, 2, 3, Operation.View, Type.exceptionType, false);
+    super(xmomGui, 2, 3, Operation.ViewSaved, Type.exceptionType, false);
   }
 
   @Override

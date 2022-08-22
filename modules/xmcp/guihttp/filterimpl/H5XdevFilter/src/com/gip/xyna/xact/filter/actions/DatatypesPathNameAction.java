@@ -34,7 +34,7 @@ public class DatatypesPathNameAction extends XmomGuiAction {
   private static final String BASE_PATH = "/" + PathElements.XMOM + "/" + PathElements.DATA_TYPES;
   
   public DatatypesPathNameAction(XMOMGui xmomGui) {
-    super(xmomGui, 2, 3, Operation.View, Type.dataType, false);
+    super(xmomGui, 2, 3, Operation.ViewSaved, Type.dataType, false);
   }
 
   @Override

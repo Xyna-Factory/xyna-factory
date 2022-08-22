@@ -33,7 +33,7 @@ public class ObjectsPathNameAction extends XmomGuiAction {
   private static final String BASE_PATH = "/" + PathElements.XMOM + "/" + PathElements.OBJECTS;
   
   public ObjectsPathNameAction(XMOMGui xmomGui) {
-    super(xmomGui, 2, 3, Operation.View, null, false);
+    super(xmomGui, 2, 3, Operation.ViewSaved, null, false);
   }
 
   @Override

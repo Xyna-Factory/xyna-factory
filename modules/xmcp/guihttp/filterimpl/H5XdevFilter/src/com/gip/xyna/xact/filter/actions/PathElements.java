@@ -23,6 +23,7 @@ public class PathElements {
   // base path elements
   public static final String RTCS                = "runtimeContext";
   public static final String XMOM                = "xmom";
+  public static final String DEPLOYED            = "deployed";
   public static final String CODED_SERVICES      = "codedservices";
   public static final String DATA_TYPES          = "datatypes";
   public static final String EXCEPTION_TYPES     = "exceptions";

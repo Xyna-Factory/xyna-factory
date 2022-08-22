@@ -319,7 +319,7 @@ public class Modification implements HasXoRepresentation {
       return new ChangeOperation();
     case Create:
       break;
-    case Dataflow:
+    case DataflowSaved:
       break;
     case Delete:
       return createDeleteOperation(objectId);
@@ -335,7 +335,7 @@ public class Modification implements HasXoRepresentation {
       break;
     case Session:
       break;
-    case View:
+    case ViewSaved:
       break;
     case Type:
       return new TypeOperation();

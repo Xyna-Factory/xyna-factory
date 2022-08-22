@@ -35,12 +35,16 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
  */
 public class FQName {
 
+  public enum XmomVersion { SAVED, DEPLOYED }
+
+
   private String location;
   private Long revision;
   private Long definingRevision;
   private String fqName;
   private RuntimeContext runtimeContext = null;
   private RuntimeContext definingRuntimeContext = null;
+  private XmomVersion xmomVersion = XmomVersion.SAVED;
 
   private static final RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
   
@@ -67,22 +71,35 @@ public class FQName {
   }
 
   public FQName(Long revision, RuntimeContext runtimeContext, String path, String name) {
+    this(revision, runtimeContext, path, name, XmomVersion.SAVED);
+  }
+
+  public FQName(Long revision, RuntimeContext runtimeContext, String path, String name, XmomVersion xmomVersion) {
     this.revision = revision;
     this.runtimeContext = runtimeContext;
     int idx = name.indexOf('.');
-    if( idx < 0  ) {
+    if( idx < 0 ) {
       this.fqName = path+"."+name;
     } else {
       this.fqName = path+"."+name.substring(0, idx);
     }
     this.location = GenerationBase.getStorageLocation(fqName, revision, true, true);
+    this.xmomVersion = xmomVersion;
   }
   
   public FQName() {}
 
   @Override
   public String toString() {
-    return "FQName("+revision+","+runtimeContext+","+fqName+")";
+    String fqNameStr = "FQName(" + revision + "," + runtimeContext + "," + fqName;
+
+    if (xmomVersion == XmomVersion.DEPLOYED) {
+      fqNameStr += "," + XmomVersion.DEPLOYED.name();
+    }
+
+    fqNameStr += ")";
+
+    return fqNameStr;
   }
   
   private static RevisionManagement revisionManagement;
@@ -130,11 +147,20 @@ public class FQName {
     return definingRuntimeContext;
   }
 
+  public XmomVersion getXmomVersion() {
+    return xmomVersion;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((location == null) ? 0 : location.hashCode());
+
+    if (xmomVersion == XmomVersion.DEPLOYED) {
+      result *= -1;
+    }
+
     return result;
   }
 
@@ -146,12 +172,20 @@ public class FQName {
       return false;
     if (getClass() != obj.getClass())
       return false;
+
     FQName other = (FQName) obj;
     if (location == null) {
-      if (other.location != null)
+      if (other.location != null) {
         return false;
-    } else if (!location.equals(other.location))
+      }
+    } else if (!location.equals(other.location)) {
       return false;
+    }
+
+    if (!xmomVersion.equals(other.xmomVersion)) {
+      return false;
+    }
+
     return true;
   }
   

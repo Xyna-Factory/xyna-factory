@@ -330,7 +330,8 @@ public class SessionBasedData {
       switch( request.getOperation() ) {
       case Create:
         return createNew(request);
-      case Dataflow:
+      case DataflowSaved:
+      case DataflowDeployed:
         return dataflow(request);
       case Relations:
         return getRelations(request);
@@ -348,7 +349,8 @@ public class SessionBasedData {
         return close(request);
       case Unlock:
         return unlock(request, true);
-      case View:
+      case ViewSaved:
+      case ViewDeployed:
         return view(request);
       case Session:
         return session(request);
@@ -726,12 +728,10 @@ public class SessionBasedData {
   }
   
   private XMOMGuiReply save(XMOMGuiRequest request) throws InvalidJSONException, UnexpectedJSONContentException, InvalidRevisionException, XynaException, LockUnlockException {
-    logger.debug("XMOMGuiReply.save");
     JsonParser jp = new JsonParser();
     PersistJson saveRequest = jp.parse(request.getJson(), PersistJson.getJsonVisitor());
     FQName oldFqn = request.getFQName();
     Modification mod = getOrCreateModification(oldFqn);
-    logger.debug("mod: " + mod);
 
     boolean saveAs = (saveRequest.getLabel() != null && saveRequest.getPath() != null) // path and label != null
         && (!saveRequest.getLabel().isEmpty() && !saveRequest.getPath().isEmpty()) // path and label not empty

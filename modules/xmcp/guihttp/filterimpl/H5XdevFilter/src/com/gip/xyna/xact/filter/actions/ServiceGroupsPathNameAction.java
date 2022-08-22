@@ -34,7 +34,7 @@ public class ServiceGroupsPathNameAction extends XmomGuiAction {
   private static final String BASE_PATH = "/" + PathElements.XMOM + "/" + PathElements.SERVICES_GROUPS;
   
   public ServiceGroupsPathNameAction(XMOMGui xmomGui) {
-    super(xmomGui, 2, 3, Operation.View, Type.serviceGroup, false);
+    super(xmomGui, 2, 3, Operation.ViewSaved, Type.serviceGroup, false);
   }
 
   @Override

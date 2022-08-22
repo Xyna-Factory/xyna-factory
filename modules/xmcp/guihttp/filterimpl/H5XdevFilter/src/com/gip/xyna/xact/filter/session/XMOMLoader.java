@@ -29,6 +29,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.H5XdevFilter;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson.Type;
+import com.gip.xyna.xact.filter.session.FQName.XmomVersion;
 import com.gip.xyna.xact.filter.session.cache.ClassIdentityGenerationBaseCache;
 import com.gip.xyna.xact.filter.util.WorkflowUtils;
 import com.gip.xyna.xfmg.exceptions.XFMG_NoSuchRevision;
@@ -150,11 +151,16 @@ public class XMOMLoader {
     return createGBO(fqName, gb);
   }
   
-  public static GenerationBase loadNewGB(FQName fqName) throws XynaException{
+  public static GenerationBase loadNewGB(FQName fqName) throws XynaException {
     GenerationBase gb;
     try {
       gb = GenerationBase.getOrCreateInstance(fqName.getFqName(), new GenerationBaseCache(), fqName.getRevision() );
-      gb.parseGeneration(false/*saved*/, false, false);
+      boolean fromDeploymentLocation = fqName.getXmomVersion() == XmomVersion.DEPLOYED;
+      gb.parseGeneration(fromDeploymentLocation, false, false);
+
+      if (!parsedSuccessfully(gb)) {
+        throw new Ex_FileAccessException(gb.getFqClassName());
+      }
   
       return gb;
     } catch (Ex_FileAccessException ex) {
@@ -166,6 +172,14 @@ public class XMOMLoader {
     } catch (XynaException ex) {
       throw ex;
     }
+  }
+
+  public static boolean parsedSuccessfully(GenerationBase gb) {
+    if (gb instanceof WF) {
+      return (((WF) gb).getWfAsStep() != null);
+    }
+
+    return true;
   }
 
   public GenerationBaseObject createNewObject(ObjectIdentifierJson object) throws XPRC_InvalidPackageNameException, XFMG_NoSuchRevision {

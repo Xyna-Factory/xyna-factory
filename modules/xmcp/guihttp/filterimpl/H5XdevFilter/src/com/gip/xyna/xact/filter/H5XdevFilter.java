@@ -281,7 +281,6 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new WorkflowsPathNameAction(xmomGui));
     allFilterActions.add(new WorkflowsPathNameDataflowAction(xmomGui));
     allFilterActions.add(new WorkflowsPathNameOrderInputSources(xmomGui));
-    //allFilterActions.add( new WorkflowsPathNameDetailsAction(xmomGui) );//TODO
     allFilterActions.add(new WorkflowsPathNameInsertAction(xmomGui));
     allFilterActions.add(new WorkflowsPathNameIssuesAction(xmomGui) );
     allFilterActions.add( new WorkflowsPathNameSaveAction(xmomGui) );
@@ -295,7 +294,9 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add( new WorkflowsPathNameXmlAction(xmomGui) );
     allFilterActions.add( new WorkflowsPathNameRelationsAction(xmomGui) );
     allFilterActions.add( new WorkflowsPathNameWarningsAction(xmomGui) );
-    
+
+    allFilterActions.add( new DeployedWorkflowsPathNameAction(xmomGui) );
+    allFilterActions.add( new DeployedWorkflowsPathNameDataflowAction(xmomGui) );
 
     //allFilterActions.add( new WorkflowsPathNameConstantsAction(xmomGui) ); //TODO
     //allFilterActions.add( new WorkflowsPathNameConstantsIdAction(xmomGui) ); //TODO

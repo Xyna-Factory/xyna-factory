@@ -34,7 +34,7 @@ public class CodedservicesPathNameAction extends XmomGuiAction {
   private static final String BASE_PATH = "/" + PathElements.XMOM + "/" + PathElements.CODED_SERVICES;
   
   public CodedservicesPathNameAction(XMOMGui xmomGui) {
-    super(xmomGui, 2, 3, Operation.View, Type.codedService, false);
+    super(xmomGui, 2, 3, Operation.ViewSaved, Type.codedService, false);
   }
 
   @Override
