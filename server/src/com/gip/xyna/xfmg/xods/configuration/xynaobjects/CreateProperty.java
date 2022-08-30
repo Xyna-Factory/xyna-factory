@@ -36,6 +36,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
@@ -47,6 +48,7 @@ public class CreateProperty extends BehaviourIfPropertyNotSet {
   private static final Logger logger = CentralFactoryLogging.getLogger(CreateProperty.class);
 
 
+  @LabelAnnotation(label="Documentation")
   private List<Documentation> documentation;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Documentation>> oldVersionsOfdocumentation;

@@ -27,6 +27,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.Redirection.Answers;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
@@ -35,6 +36,8 @@ import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 public class RedirectionAnswer extends XynaObject {
 
   private static final long serialVersionUID = 3514233590756540235L;
+
+  @LabelAnnotation(label="Answer")
   private Answers answer;
 
 

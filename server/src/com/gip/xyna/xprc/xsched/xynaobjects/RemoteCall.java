@@ -38,6 +38,7 @@ import com.gip.xyna.xfmg.xfctrl.nodemgmt.RemoteDestinationType.DispatchingTarget
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.remotecall.RemoteCallHelper;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.exceptions.XPRC_TTLExpirationBeforeHandlerRegistration;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
@@ -60,10 +61,19 @@ public class RemoteCall extends XynaObject implements ServiceStepEventHandler<Ab
   public static final String FQ_CLASS_NAME = "com.gip.xyna.xprc.xsched.xynaobjects.RemoteCall";
   public static final String ANY_INPUT_PAYLOAD_FQ_XML_NAME = "xprc.xpce.AnyInputPayload";
 
+  @LabelAnnotation(label="Remote Order Id")
   private Long remoteOrderId;
+
+  @LabelAnnotation(label="Start Time Stamp")
   private Long startTimeStamp;
+
+  @LabelAnnotation(label="Factory Node")
   private String factoryNode;
+
+  @LabelAnnotation(label="RCH")
   private transient RemoteCallHelper rch;
+
+  @LabelAnnotation(label="Is Canceled")
   private transient volatile boolean isCanceled; 
   
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Long> oldVersionsOfremoteOrderId;

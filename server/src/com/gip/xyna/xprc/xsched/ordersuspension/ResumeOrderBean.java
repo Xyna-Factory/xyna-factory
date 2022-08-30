@@ -28,6 +28,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xpce.ordersuspension.ResumeTarget;
 
@@ -36,12 +37,25 @@ public class ResumeOrderBean extends XynaObject {
 
   private static final long serialVersionUID = -5763635438773974343L;
 
+  @LabelAnnotation(label="Request Succeeded")
   private Boolean requestSucceeded = false;
+
+  @LabelAnnotation(label="Resumed")
   private Boolean resumed = false;
-  private Long targetId; //nur zum deserialisieren existierender ResumeOrderBeans 
-  private String targetLaneId; //nur zum deserialisieren existierender ResumeOrderBeans 
+
+  @LabelAnnotation(label="Target Id")
+  private Long targetId; //nur zum deserialisieren existierender ResumeOrderBeans
+
+  @LabelAnnotation(label="Target Labe Id")
+  private String targetLaneId; //nur zum deserialisieren existierender ResumeOrderBeans
+
+  @LabelAnnotation(label="Target")
   private ResumeTarget target;
+
+  @LabelAnnotation(label="Retry Count")
   private int retryCount;
+
+  @LabelAnnotation(label="May Not Delegate to Other Node if Order Is Not Found")
   private boolean mayNotDelegateToOtherNodeIfOrderIsNotFound; //Not ist zwar unschön, aber der default soll aus Abwärtskompatiblitätsgründen false sein.
 
   public ResumeOrderBean(ResumeTarget target) {

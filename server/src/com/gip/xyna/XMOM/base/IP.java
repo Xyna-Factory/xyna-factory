@@ -32,6 +32,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 
@@ -65,6 +66,7 @@ public abstract class IP extends XynaObject {
     return generateIPFromString(value);
   }
 
+  @LabelAnnotation(label="Value")
   private String value;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfvalue;

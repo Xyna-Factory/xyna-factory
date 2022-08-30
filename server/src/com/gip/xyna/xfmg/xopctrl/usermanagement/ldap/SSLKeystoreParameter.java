@@ -33,6 +33,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -43,6 +44,7 @@ public class SSLKeystoreParameter extends SSLParameter {
   private static final Logger logger = CentralFactoryLogging.getLogger(SSLKeystoreParameter.class);
 
 
+  @LabelAnnotation(label="Path")
   private String path;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfpath;
@@ -88,6 +90,7 @@ public class SSLKeystoreParameter extends SSLParameter {
     this.path = path;
   }
 
+  @LabelAnnotation(label="Type")
   private String type;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOftype;
@@ -133,6 +136,7 @@ public class SSLKeystoreParameter extends SSLParameter {
     this.type = type;
   }
 
+  @LabelAnnotation(label="Passphrase")
   private String passphrase;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfpassphrase;

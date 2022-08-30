@@ -35,6 +35,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xsched.SchedulerBean;
@@ -47,6 +48,7 @@ public class RemoteCallInput extends XynaObject {
   private static final Logger logger = CentralFactoryLogging.getLogger(RemoteCallInput.class);
 
 
+  @LabelAnnotation(label="Order Type")
   private String orderType;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOforderType;
@@ -97,6 +99,7 @@ public class RemoteCallInput extends XynaObject {
     this.orderType = orderType;
   }
 
+  @LabelAnnotation(label="Remote Destination Instance")
   private String remoteDestinationInstance;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfremoteDestinationInstance;

@@ -30,6 +30,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -43,6 +44,7 @@ public abstract class SSLParameter extends XynaObject {
 
   protected static class InternalBuilder<_GEN_DOM_TYPE extends SSLParameter, _GEN_BUILDER_TYPE extends InternalBuilder<_GEN_DOM_TYPE, _GEN_BUILDER_TYPE>>  {
 
+    @LabelAnnotation(label="Instance")
     protected _GEN_DOM_TYPE instance;
 
     protected InternalBuilder(SSLParameter instance) {

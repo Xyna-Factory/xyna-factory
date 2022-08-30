@@ -30,6 +30,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xsched.orderabortion.AbortionCause;
 
@@ -38,14 +39,29 @@ import com.gip.xyna.xprc.xsched.orderabortion.AbortionCause;
 public class KillStuckProcessBean extends XynaObject {
   private static final long serialVersionUID = 1L;
 
+  @LabelAnnotation(label="Order Id To Be Killed")
   private final long orderIdToBeKilled;
+
+  @LabelAnnotation(label="Force Kill")
   private final boolean forceKill;
+
+  @LabelAnnotation(label="Abort Reason")
   private final AbortionCause abortionReason;
+
+  @LabelAnnotation(label="Ignore Resources When Resuming")
   private final boolean ignoreResourcesWhenResuming;
 
+
+  @LabelAnnotation(label="Success Free Capacities")
   private boolean successFreeCapacities = false;
+
+  @LabelAnnotation(label="Success Remove Xyna Order")
   private boolean successRemoveXynaOrder = false;
+
+  @LabelAnnotation(label="Success Kill Active Thread")
   private boolean successKillActiveThread = false;
+
+  @LabelAnnotation(label="Result Message")
   private StringBuilder resultMessage = new StringBuilder();
 
 

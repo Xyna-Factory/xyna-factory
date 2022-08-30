@@ -38,6 +38,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
@@ -417,8 +418,10 @@ public class SchedulerBean extends XynaObject {
 
   /*------- not generated -------- */
 
+  @LabelAnnotation(label="Capacities")
   protected List<Capacity> capacities;
 
+  @LabelAnnotation(label="Vetos")
   protected List<Veto> vetos;
 
 

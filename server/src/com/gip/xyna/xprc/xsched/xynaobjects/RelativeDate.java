@@ -33,6 +33,7 @@ import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xsched.SchedulerBean;
@@ -44,6 +45,7 @@ public class RelativeDate extends com.gip.xyna.xprc.xsched.xynaobjects.Date {
   private static final long serialVersionUID = 13594591899L;
   private static final Logger logger = CentralFactoryLogging.getLogger(RelativeDate.class);
 
+  @LabelAnnotation(label="Duration")
   private String duration;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfduration;

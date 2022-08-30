@@ -37,6 +37,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -47,6 +48,7 @@ public class DataModel extends XynaObject {
   private static final Logger logger = CentralFactoryLogging.getLogger(DataModel.class);
 
 
+  @LabelAnnotation(label="Data Model Type")
   private String dataModelType;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfdataModelType;
@@ -92,6 +94,7 @@ public class DataModel extends XynaObject {
     this.dataModelType = dataModelType;
   }
 
+  @LabelAnnotation(label="Type")
   private XmomType type;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<XmomType> oldVersionsOftype;
@@ -137,6 +140,7 @@ public class DataModel extends XynaObject {
     this.type = type;
   }
 
+  @LabelAnnotation(label="Base Type")
   private XmomType baseType;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<XmomType> oldVersionsOfbaseType;
@@ -182,6 +186,7 @@ public class DataModel extends XynaObject {
     this.baseType = baseType;
   }
 
+  @LabelAnnotation(label="Version")
   private String version;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfversion;
@@ -227,6 +232,7 @@ public class DataModel extends XynaObject {
     this.version = version;
   }
 
+  @LabelAnnotation(label="Documentation")
   private String documentation;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfdocumentation;
@@ -272,6 +278,7 @@ public class DataModel extends XynaObject {
     this.documentation = documentation;
   }
 
+  @LabelAnnotation(label="Data Model Specifics")
   private List<DataModelSpecific> dataModelSpecifics;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<DataModelSpecific>> oldVersionsOfdataModelSpecifics;
@@ -380,6 +387,7 @@ public class DataModel extends XynaObject {
     this.dataModelSpecifics.remove(e);
   }
 
+  @LabelAnnotation(label="Node Name")
   private String nodeName;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfnodeName;
@@ -425,6 +433,7 @@ public class DataModel extends XynaObject {
     this.nodeName = nodeName;
   }
 
+  @LabelAnnotation(label="Local")
   private boolean local;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Boolean> oldVersionsOflocal;
@@ -470,6 +479,7 @@ public class DataModel extends XynaObject {
     this.local = local;
   }
 
+  @LabelAnnotation(label="XMOM Types")
   private List<XmomType> xmomTypes;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<XmomType>> oldVersionsOfxmomTypes;
@@ -579,6 +589,7 @@ public class DataModel extends XynaObject {
     this.xmomTypes.remove(e);
   }
 
+  @LabelAnnotation(label="XMOM Type Count")
   private Integer xmomTypeCount;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfxmomTypeCount;
@@ -624,6 +635,7 @@ public class DataModel extends XynaObject {
     this.xmomTypeCount = xmomTypeCount;
   }
 
+  @LabelAnnotation(label="Deployable")
   private Boolean deployable;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Boolean> oldVersionsOfdeployable;
