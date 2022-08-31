@@ -34,6 +34,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -44,6 +45,7 @@ public class XynaPropertyInteger extends XynaProperty {
   private static final Logger logger = CentralFactoryLogging.getLogger(XynaPropertyInteger.class);
 
 
+  @LabelAnnotation(label="Value")
   private Integer value;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfvalue;

@@ -34,6 +34,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xsched.SchedulerBean;
@@ -49,6 +50,7 @@ public class WindowTimeConstraint extends com.gip.xyna.xprc.xsched.xynaobjects.T
   private static final Logger logger = CentralFactoryLogging.getLogger(WindowTimeConstraint.class);
 
 
+  @LabelAnnotation(label="Start Time")
   private TimeConfiguration startTime;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<TimeConfiguration> oldVersionsOfstartTime;
@@ -94,6 +96,7 @@ public class WindowTimeConstraint extends com.gip.xyna.xprc.xsched.xynaobjects.T
     this.startTime = startTime;
   }
 
+  @LabelAnnotation(label="Scheduling Timeout")
   private TimeConfiguration schedulingTimeout;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<TimeConfiguration> oldVersionsOfschedulingTimeout;
@@ -139,6 +142,7 @@ public class WindowTimeConstraint extends com.gip.xyna.xprc.xsched.xynaobjects.T
     this.schedulingTimeout = schedulingTimeout;
   }
 
+  @LabelAnnotation(label="Window Name")
   private String windowName;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfwindowName;
@@ -184,6 +188,7 @@ public class WindowTimeConstraint extends com.gip.xyna.xprc.xsched.xynaobjects.T
     this.windowName = windowName;
   }
 
+  @LabelAnnotation(label="Start Time in Window")
   private RelativeTimeConfiguration startTimeInWindow;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<RelativeTimeConfiguration> oldVersionsOfstartTimeInWindow;
@@ -229,6 +234,7 @@ public class WindowTimeConstraint extends com.gip.xyna.xprc.xsched.xynaobjects.T
     this.startTimeInWindow = startTimeInWindow;
   }
 
+  @LabelAnnotation(label="Scheduling Timeout in Window")
   private RelativeTimeConfiguration schedulingTimeoutInWindow;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<RelativeTimeConfiguration> oldVersionsOfschedulingTimeoutInWindow;

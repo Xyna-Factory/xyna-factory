@@ -34,6 +34,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xsched.SchedulerBean;
@@ -48,6 +49,7 @@ public class SimpleTimeConstraint extends com.gip.xyna.xprc.xsched.xynaobjects.T
   private static final Logger logger = CentralFactoryLogging.getLogger(SimpleTimeConstraint.class);
 
 
+  @LabelAnnotation(label="Start Time")
   private TimeConfiguration startTime;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<TimeConfiguration> oldVersionsOfstartTime;
@@ -93,6 +95,7 @@ public class SimpleTimeConstraint extends com.gip.xyna.xprc.xsched.xynaobjects.T
     this.startTime = startTime;
   }
 
+  @LabelAnnotation(label="Scheduling Timeout")
   private TimeConfiguration schedulingTimeout;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<TimeConfiguration> oldVersionsOfschedulingTimeout;

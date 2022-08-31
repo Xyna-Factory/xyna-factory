@@ -31,6 +31,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 
@@ -40,10 +41,19 @@ public class XynaObjectList<I extends XynaObject> extends XynaObject implements 
 
   private static final long serialVersionUID = 1L;
 
+  @LabelAnnotation(label="List")
   private List<I> list;
+
+  @LabelAnnotation(label="Contained Class")
   private Class<XynaObject> containedClass;
+
+  @LabelAnnotation(label="Original XML Name")
   private String originalXmlName;
+
+  @LabelAnnotation(label="Original XML Path")
   private String originalXmlPath;
+
+  @LabelAnnotation(label="Java Type")
   private String javaType;
 
 

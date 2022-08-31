@@ -28,6 +28,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 
@@ -36,6 +37,7 @@ public class TimeoutSynchronizationInput extends XynaObject {
   private static final long serialVersionUID = -5122158513163996382L;
 
 
+  @LabelAnnotation(label="Target Correlation Id")
   private String targetCorrelationId;
 
 
