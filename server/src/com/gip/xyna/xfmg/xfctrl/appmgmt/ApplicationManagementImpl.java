@@ -3900,7 +3900,17 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       if (createStub) {
         dependentRuntimeContexts = new HashSet<RuntimeDependencyContext>();
         Set<Long> revisions = new HashSet<Long>();
-        implicitDependencies = findDependenciesForStub(statusOutputStream, appEntries, revision, revisions, verbose);
+        
+        RevisionManagement revisionManagement =
+            XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+        Application app;
+        try {
+          app = revisionManagement.getApplication(revision);
+        } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+          throw new RuntimeException(e);
+        }
+        
+        implicitDependencies = findDependenciesForStub(statusOutputStream, appEntries, revision, revisions, app, verbose);
         for (Long rev : revisions) {
           dependentRuntimeContexts.add(RuntimeContextDependencyManagement.asRuntimeDependencyContext(revisionManagement.getRuntimeContext(rev)));
         }
@@ -3969,11 +3979,12 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           }
         }
       }
+      StubFileCreator creator = new StubFileCreator();
       FileUtils.zipDir(new File(revisionDir), zos, new File(revisionDir), null, null, new FileInputStreamCreator() {
         
         public InputStream create(File f) throws FileNotFoundException {
           if (createStub) {
-            return createStubForFile(f, xmomEntries);
+            return creator.createStubForFile(f, xmomEntries);
           } else {
             return new FileInputStream(f);
           }
@@ -4019,12 +4030,21 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   private Collection<ApplicationEntryStorable> findDependenciesForStub(PrintStream statusOutputStream, List<? extends ApplicationEntryStorable> appEntries, Long revision,
-                                                                       Set<Long> revisionsToKeep, boolean verbose) {
+                                                                       Set<Long> revisionsToKeep, Application app, boolean verbose) {
     DeploymentItemStateManagement dism =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement();
     DeploymentItemRegistry registry = dism.getRegistry(revision);
     Map<String, ApplicationEntryStorable> dependencies = new HashMap<String, ApplicationEntryStorable>();
     boolean atLeastOneWorkflow = false;
+    
+
+    RuntimeContext rtc;
+    try{
+      rtc = revisionManagement.getRuntimeContext(revision);
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
+    }
+    
     for (ApplicationEntryStorable appEntry : appEntries) {
       Stack<String> stack = new Stack<String>();
       if (appEntry.getTypeAsEnum() == ApplicationEntryType.WORKFLOW) {
@@ -4036,7 +4056,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         OperationInterface wfOperation = interfaces.getAllOperations().iterator().next();
         stack.push("Workflow " + appEntry.getName());
         atLeastOneWorkflow = true;
-        findDependenciesOfOperation(statusOutputStream, wfOperation, dependencies, revisionsToKeep, revision, verbose, stack);
+        findDependenciesOfOperation(statusOutputStream, wfOperation, dependencies, revisionsToKeep, revision, app, verbose, stack);
         try {
           findDependenciesOfOperationOutput(wfOperation, dependencies, revision, appEntry.getApplication(), appEntry.getVersion());
         } catch (Exception e) {
@@ -4045,18 +4065,10 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           }
         }
       } else if (appEntry.getTypeAsEnum() == ApplicationEntryType.ORDERTYPE) {
-        RevisionManagement revisionManagement =
-            XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-        Application app;
-        try {
-          app = revisionManagement.getApplication(revision);
-        } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-          throw new RuntimeException(e);
-        }
         ExecutionDispatcher dispatcher =
             XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaExecution().getExecutionEngineDispatcher();
         try {
-          DestinationKey dk = new DestinationKey(appEntry.getName(), app.getName(), app.getVersionName());
+          DestinationKey dk = new DestinationKey(appEntry.getName(), rtc);
           DestinationValue value = dispatcher.getDestination(dk);
           if (value.getDestinationType() == ExecutionType.XYNA_FRACTAL_WORKFLOW && !dispatcher.isPredefined(value)) {
             Set<Long> allRevisions = value.resolveAllRevisions(dk);
@@ -4069,7 +4081,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
               stack.push("OrderType " + appEntry.getName());
               stack.push("Workflow " + value.getFQName());
               atLeastOneWorkflow = true;
-              findDependenciesOfOperation(statusOutputStream, wfOperation, dependencies, revisionsToKeep, revision, verbose, stack);
+              findDependenciesOfOperation(statusOutputStream, wfOperation, dependencies, revisionsToKeep, revision, app, verbose, stack);
               dependencies.put("OT" + appEntry.getName(), ApplicationEntryStorable
                   .create(app.getName(), app.getVersionName(), value.getFQName(), ApplicationEntryType.ORDERTYPE));
             } else {
@@ -4161,29 +4173,29 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   private void findDependenciesOfOperation(PrintStream statusOutputStream, OperationInterface operation, Map<String, ApplicationEntryStorable> dependencies,
-                                           Set<Long> revisionsToKeep, Long revision, boolean verbose, Stack<String> stack) {
+                                           Set<Long> revisionsToKeep, Long revision, Application app, boolean verbose, Stack<String> stack) {
     stack.push("Input");
-    findDependenciesOfTypes(statusOutputStream, operation.getInput(), dependencies, revisionsToKeep, revision, verbose, stack);
+    findDependenciesOfTypes(statusOutputStream, operation.getInput(), dependencies, revisionsToKeep, revision, app, verbose, stack);
     stack.pop();
     stack.push("Output");
-    findDependenciesOfTypes(statusOutputStream, operation.getOutput(), dependencies, revisionsToKeep, revision, verbose, stack);
+    findDependenciesOfTypes(statusOutputStream, operation.getOutput(), dependencies, revisionsToKeep, revision, app, verbose, stack);
     stack.pop();
     stack.push("Exception");
-    findDependenciesOfTypes(statusOutputStream, operation.getExceptions(), dependencies, revisionsToKeep, revision, verbose, stack);
+    findDependenciesOfTypes(statusOutputStream, operation.getExceptions(), dependencies, revisionsToKeep, revision, app, verbose, stack);
     stack.pop();
   }
 
 
   private void findDependenciesOfTypes(PrintStream statusOutputStream, Collection<TypeInterface> types, Map<String, ApplicationEntryStorable> dependencies,
-                                       Set<Long> revisionsToKeep, Long revision, boolean verbose, Stack<String> stack) {
+                                       Set<Long> revisionsToKeep, Long revision, Application app, boolean verbose, Stack<String> stack) {
     for (TypeInterface type : types) {
-      findDependenciesOfType(statusOutputStream, type, dependencies, revisionsToKeep, revision, verbose, stack);
+      findDependenciesOfType(statusOutputStream, type, dependencies, revisionsToKeep, revision, app, verbose, stack);
     }
   }
 
 
   private void findDependenciesOfType(PrintStream statusOutputStream, TypeInterface type, Map<String, ApplicationEntryStorable> dependencies, Set<Long> revisionsToKeep,
-                                      Long revision, boolean verbose, Stack<String> stack) {
+                                      Long revision, Application app, boolean verbose, Stack<String> stack) {
     if (type.isJavaBaseType()) {
       return;
     }
@@ -4215,8 +4227,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       if (dependency.getType() == null || !dependency.exists()) {
         logger.warn("Type of " + type.getName() + " could not be resolved (exists=" + dependency.exists() + "). Stub may be incomplete. (usage path=" + printStack(stack) + ")");
       } else {
-        dependencies.put(dependency.getName(), asApplicationEntryStorable(dependency, revision));
-        findDependenciesOfType(statusOutputStream, dependency, dependencies, revisionsToKeep, revision, verbose, stack);
+        dependencies.put(dependency.getName(), asApplicationEntryStorable(dependency, app));
+        findDependenciesOfType(statusOutputStream, dependency, dependencies, revisionsToKeep, revision, app, verbose, stack);
       }
     }
     stack.pop();
@@ -4239,294 +4251,285 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   private void findDependenciesOfType(PrintStream statusOutputStream, DeploymentItemStateImpl dependency, Map<String, ApplicationEntryStorable> dependencies,
-                                      Set<Long> revisionsToKeep, Long revision, boolean verbose, Stack<String> stack) {
+                                      Set<Long> revisionsToKeep, Long revision, Application app, boolean verbose, Stack<String> stack) {
     PublishedInterfaces published = dependency.getPublishedInterfaces(DeploymentLocation.DEPLOYED);
     if (published.getSupertype().isPresent()) {
       stack.push("BaseType");
-      findDependenciesOfType(statusOutputStream, published.getSupertype().get(), dependencies, revisionsToKeep, revision, verbose, stack);
+      findDependenciesOfType(statusOutputStream, published.getSupertype().get(), dependencies, revisionsToKeep, revision, app, verbose, stack);
       stack.pop();
     }
     Set<MemberVariableInterface> memVars = published.filterInterfaces(MemberVariableInterface.class);
     for (MemberVariableInterface memVar : memVars) {
       stack.push("Member");
-      findDependenciesOfType(statusOutputStream, memVar.getType(), dependencies, revisionsToKeep, revision, verbose, stack);
+      findDependenciesOfType(statusOutputStream, memVar.getType(), dependencies, revisionsToKeep, revision, app, verbose, stack);
       stack.pop();
     }
     // TODO rewrite this later if we try to exclude operations. Achtung, dann auch unten bei createStubForFile berücksichtigen
     for (OperationInterface operation : published.getAllOperations()) {
       stack.push("Operation " + operation.getName());
-      findDependenciesOfOperation(statusOutputStream, operation, dependencies, revisionsToKeep, revision, verbose, stack);
+      findDependenciesOfOperation(statusOutputStream, operation, dependencies, revisionsToKeep, revision, app, verbose, stack);
       stack.pop();
     }
   }
 
 
-  private ApplicationEntryStorable asApplicationEntryStorable(DeploymentItemStateImpl dependency, Long revision) {
-    RevisionManagement revisionManagement =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-    Application app;
-    try {
-      app = revisionManagement.getApplication(revision);
-    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      throw new RuntimeException(e);
-    }
+  private ApplicationEntryStorable asApplicationEntryStorable(DeploymentItemStateImpl dependency, Application app) {
     return ApplicationEntryStorable.create(app.getName(), app.getVersionName(), dependency.getName(),
                                            ApplicationEntryType.getByXMOMType(dependency.getType()));
   }
 
+  
+  public static class StubFileCreator {
+    private static final Pattern patternFileIgnoreForStub = Pattern.compile(".*/(trigger|filter|services|sharedLibs)/.*");
 
-  private static final Pattern patternFileIgnoreForStub = Pattern.compile(".*/(trigger|filter|services|sharedLibs)/.*");
-
-
-  private InputStream createStubForFile(File f, Set<String> xmomEntries) throws FileNotFoundException {
-    /*
-     * ist file eines, was im stub enthalten sein muss? wenn ja, ist es ein workflow? wenn ja, erzeuge entsprechenden stub. datentype+operations -> entferne alle operations.
-     * classfile? -> ignore
-     * jars -> ignore
-     * trigger/filter/sharedlibs -> ignore
-     * 
-     */
-    if (f.getName().endsWith(".class")) {
-      return null;
-    }
-    if (patternFileIgnoreForStub.matcher(f.getPath()).matches()) {
-      return null;
-    }
-    if (f.getName().endsWith(".xml")) {
-      try {
-        Document dom = XMLUtils.parse(f);
-        String rootElementName = dom.getDocumentElement().getNodeName();
-        String fqName = dom.getDocumentElement().getAttribute(GenerationBase.ATT.TYPEPATH) + "."
-            + dom.getDocumentElement().getAttribute(GenerationBase.ATT.TYPENAME);
-        if (rootElementName.equals(GenerationBase.EL.EXCEPTIONSTORAGE)) {
-          Element exel = XMLUtils.getChildElementByName(dom.getDocumentElement(), GenerationBase.EL.EXCEPTIONTYPE);
-          fqName = exel.getAttribute(GenerationBase.ATT.TYPEPATH) + "." + exel.getAttribute(GenerationBase.ATT.TYPENAME);
-        }
-        if (!xmomEntries.contains(fqName)) {
-          return null;
-        }
-        if (rootElementName.equals(GenerationBase.EL.EXCEPTIONSTORAGE)) {
-          return new FileInputStream(f);
-        }
-        if (rootElementName.equals(GenerationBase.EL.DATATYPE)) {
-          /*
-           *   <Libraries>HashServiceImpl.jar</Libraries>
-           */
-          for (Element el : XMLUtils.getChildElementsByName(dom.getDocumentElement(), GenerationBase.EL.LIBRARIES)) {
-            dom.getDocumentElement().removeChild(el);
-          }
-          for (Element el : XMLUtils.getChildElementsByName(dom.getDocumentElement(), GenerationBase.EL.SHAREDLIB)) {
-            dom.getDocumentElement().removeChild(el);
-          }
-          /*
-           * eigtl würde man gerne den gesamten Service entfernen. Das kann aber dazu führen, dass der typ eigtl abstrakt sein müsste, weil ein basetype
-           * abstrakte operations definiert und man selbst nicht abstrakt ist.
-           */
-          Element serviceEl = XMLUtils.getChildElementByName(dom.getDocumentElement(), GenerationBase.EL.SERVICE);
-          /*
-           * TODO
-           * für jede operation prüfen, ob sie entfernt werden kann:
-           * - nein, wenn der erste basistyp in der vererbungshierarchie der die operation definiert/überschreibt, der ausserhalb des stubs liegt die operation als abstrakt definiert.
-           * - ja, sonst
-           * 
-           * TODO
-           * instanzmethoden die als workflow implementiert sind
-           * 
-           */
-          if (serviceEl != null) {
-            for (Element el : XMLUtils.getChildElementsRecursively(serviceEl, GenerationBase.EL.CODESNIPPET)) {
-              XMLUtils
-                  .setTextContent(el,
-                                  "throw new java.lang.RuntimeException(\"This operation is part of a stub application and may not be called.\");");
-            }
-          }
-        }
-        if (rootElementName.equals(GenerationBase.EL.SERVICE)) {
-          //Workflow
-          Element operation = XMLUtils.getChildElementByName(dom.getDocumentElement(), GenerationBase.EL.OPERATION);
-          List<Element> outputDatas = new ArrayList<Element>();
-          for (Element child : XMLUtils.getChildElements(operation)) {
-            String name = child.getNodeName();
-            if (name.equals(GenerationBase.EL.OUTPUT)) {
-              outputDatas.addAll(XMLUtils.getChildElementsByName(child, GenerationBase.EL.DATA));
-            } else if (name.equals(GenerationBase.EL.INPUT) || name.equals(GenerationBase.EL.THROWS)) {
-              //ok
-            } else {
-              operation.removeChild(child);
-            }
-          }
-          for (Element sourceChild : XMLUtils.getChildElementsRecursively(operation, GenerationBase.EL.SOURCE)) {
-            sourceChild.getParentNode().removeChild(sourceChild);
-          }
-          for (Element targetChild : XMLUtils.getChildElementsRecursively(operation, GenerationBase.EL.TARGET)) {
-            targetChild.getParentNode().removeChild(targetChild);
-          }
-          //nun alle outputs constant vorbelegen
-          if (outputDatas.size() > 0) {
-            /*
-             * Beispiel XML:
-   <Operation ID="0" Label="WFTest" Name="WFTest">
-    <Input>
-      <Data ID="29" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
-      <Data IsList="true" Label="Password" ReferenceName="Password" ReferencePath="base" VariableName="password"/>
-    </Input>
-    <Output>
-      <Data ID="23" IsList="true" Label="DT 1a" ReferenceName="DT1a" ReferencePath="cl.bugz21754" VariableName="dT1a23">
-        <Source RefID="8"/>
-      </Data>
-      <Data ID="28" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text28">
-        <Source RefID="8"/>
-      </Data>
-    </Output>
-    <Data ID="35" IsList="true" Label="DT1a" ReferenceName="DT1a" ReferencePath="cl.bugz21754" VariableName="const_DT1a">
-      <Target RefID="8"/>
-    </Data>
-    <Data ID="36" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text">
-      <Target RefID="8"/>
-      <Data Label="text" VariableName="text">
-        <Meta>
-          <Type>String</Type>
-        </Meta>
-      </Data>
-    </Data>
-    <Assign ID="8">
-      <Source RefID="35"/>
-      <Source RefID="36"/>
-      <Target RefID="23"/>
-      <Target RefID="28"/>
-      <Copy>
-        <Source RefID="35">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-        <Target RefID="23"/>
-      </Copy>
-      <Copy>
-        <Source RefID="36">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-        <Target RefID="28"/>
-      </Copy>
-    </Assign>
-  </Operation>
-
-             */
-            //liste aller vorhandenen/referenzierten ids erzeugen
-            Set<Integer> ids = new HashSet<Integer>();
-            Set<String> varNames = new HashSet<String>();
-            collectAllIdsAndVarNames(ids, varNames, dom.getDocumentElement());
-            List<Integer> idssorted = new ArrayList<Integer>(ids);
-            int max = 0;
-            if (idssorted.size() > 0) {
-              max = Collections.max(idssorted);
-            }
-            int assignId = ++max;
-            
-            //assign element
-            Element assign = dom.createElement(GenerationBase.EL.ASSIGN);
-            assign.setAttribute(GenerationBase.ATT.ID, String.valueOf(assignId));
-            List<Element> targetDataInAssign = new ArrayList<Element>();
-            List<Element> sourceDataInAssign = new ArrayList<Element>();
-            
-            //  erst dataelemente auf operationebene anlegen, dann assign dafür erzeugen
-            for (Element output : outputDatas) {
-              Element outputCopy = (Element) output.cloneNode(true);
-              operation.appendChild(outputCopy);
-              int id = ++max;
-              idssorted.add(id);
-              outputCopy.setAttribute(GenerationBase.ATT.ID, String.valueOf(id));
-              String outputId = output.getAttribute(GenerationBase.ATT.ID);
-              if (outputId == null || outputId.length() == 0) {
-                outputId = String.valueOf(++max);
-                output.setAttribute(GenerationBase.ATT.ID, outputId);
-              }
-              
-              Element targetAssign = dom.createElement(GenerationBase.EL.TARGET);
-              targetAssign.setAttribute(GenerationBase.ATT.REFID, String.valueOf(assignId));
-              outputCopy.appendChild(targetAssign);
-              String varName = "v" + id;
-              while (varNames.contains(varName)) {
-                varName = "v" + varName;
-              }
-              varNames.add(varName);
-              outputCopy.setAttribute(GenerationBase.ATT.VARIABLENAME, varName); //muss unique sein
-              
-              Element sourceAssign = dom.createElement(GenerationBase.EL.SOURCE);
-              sourceAssign.setAttribute(GenerationBase.ATT.REFID, String.valueOf(assignId));
-              output.appendChild(sourceAssign);
-              
-              Element targetData = dom.createElement(GenerationBase.EL.TARGET);
-              targetData.setAttribute(GenerationBase.ATT.REFID, outputId);
-              targetDataInAssign.add(targetData);
-              Element sourceData = dom.createElement(GenerationBase.EL.SOURCE);
-              sourceData.setAttribute(GenerationBase.ATT.REFID, String.valueOf(id));
-              sourceDataInAssign.add(sourceData);
-            }
-            
-            operation.appendChild(assign);
-            
-            //assign objekt zusammenbauen
-            for (Element source : sourceDataInAssign) {
-              assign.appendChild(source);
-            }
-            for (Element target : targetDataInAssign) {
-              assign.appendChild(target);
-            }
-            for (int i = 0; i<outputDatas.size(); i++) {
-              Element copy = dom.createElement(GenerationBase.EL.COPY);
-              assign.appendChild(copy);
-              Element source = (Element) sourceDataInAssign.get(i).cloneNode(true);
-              Element meta = dom.createElement(GenerationBase.EL.META);
-              source.appendChild(meta);
-              Element linkType = dom.createElement(GenerationBase.EL.LINKTYPE);
-              meta.appendChild(linkType);
-              Text text = dom.createTextNode("Constant");
-              linkType.appendChild(text);
-              copy.appendChild(source);
-              copy.appendChild(targetDataInAssign.get(i).cloneNode(true));
-            }
-          }
-        }
-        //abgespecktes dom zurückgeben
-        StringWriter sw = new StringWriter();
-        XMLUtils.saveDomToWriter(sw, dom);
+    public InputStream createStubForFile(File f, Set<String> xmomEntries) throws FileNotFoundException {
+      /*
+       * ist file eines, was im stub enthalten sein muss? wenn ja, ist es ein workflow? wenn ja, erzeuge entsprechenden stub. datentype+operations -> entferne alle operations.
+       * classfile? -> ignore
+       * jars -> ignore
+       * trigger/filter/sharedlibs -> ignore
+       * 
+       */
+      if (f.getName().endsWith(".class")) {
+        return null;
+      }
+      if (patternFileIgnoreForStub.matcher(f.getPath()).matches()) {
+        return null;
+      }
+      if (f.getName().endsWith(".xml")) {
         try {
-          return new ByteArrayInputStream(sw.toString().getBytes(Constants.DEFAULT_ENCODING));
-        } catch (UnsupportedEncodingException e) {
+          Document dom = XMLUtils.parse(f);
+          String rootElementName = dom.getDocumentElement().getNodeName();
+          String fqName = dom.getDocumentElement().getAttribute(GenerationBase.ATT.TYPEPATH) + "."
+              + dom.getDocumentElement().getAttribute(GenerationBase.ATT.TYPENAME);
+          if (rootElementName.equals(GenerationBase.EL.EXCEPTIONSTORAGE)) {
+            Element exel = XMLUtils.getChildElementByName(dom.getDocumentElement(), GenerationBase.EL.EXCEPTIONTYPE);
+            fqName = exel.getAttribute(GenerationBase.ATT.TYPEPATH) + "." + exel.getAttribute(GenerationBase.ATT.TYPENAME);
+          }
+          if (!xmomEntries.contains(fqName)) {
+            return null;
+          }
+          if (rootElementName.equals(GenerationBase.EL.EXCEPTIONSTORAGE)) {
+            return new FileInputStream(f);
+          }
+          if (rootElementName.equals(GenerationBase.EL.DATATYPE)) {
+            /*
+             *   <Libraries>HashServiceImpl.jar</Libraries>
+             */
+            for (Element el : XMLUtils.getChildElementsByName(dom.getDocumentElement(), GenerationBase.EL.LIBRARIES)) {
+              dom.getDocumentElement().removeChild(el);
+            }
+            for (Element el : XMLUtils.getChildElementsByName(dom.getDocumentElement(), GenerationBase.EL.SHAREDLIB)) {
+              dom.getDocumentElement().removeChild(el);
+            }
+            /*
+             * eigtl würde man gerne den gesamten Service entfernen. Das kann aber dazu führen, dass der typ eigtl abstrakt sein müsste, weil ein basetype
+             * abstrakte operations definiert und man selbst nicht abstrakt ist.
+             */
+            Element serviceEl = XMLUtils.getChildElementByName(dom.getDocumentElement(), GenerationBase.EL.SERVICE);
+            /*
+             * TODO
+             * für jede operation prüfen, ob sie entfernt werden kann:
+             * - nein, wenn der erste basistyp in der vererbungshierarchie der die operation definiert/überschreibt, der ausserhalb des stubs liegt die operation als abstrakt definiert.
+             * - ja, sonst
+             * 
+             * TODO
+             * instanzmethoden die als workflow implementiert sind
+             * 
+             */
+            if (serviceEl != null) {
+              for (Element el : XMLUtils.getChildElementsRecursively(serviceEl, GenerationBase.EL.CODESNIPPET)) {
+                XMLUtils
+                    .setTextContent(el,
+                                    "throw new java.lang.RuntimeException(\"This operation is part of a stub application and may not be called.\");");
+              }
+            }
+          }
+          if (rootElementName.equals(GenerationBase.EL.SERVICE)) {
+            //Workflow
+            Element operation = XMLUtils.getChildElementByName(dom.getDocumentElement(), GenerationBase.EL.OPERATION);
+            List<Element> outputDatas = new ArrayList<Element>();
+            for (Element child : XMLUtils.getChildElements(operation)) {
+              String name = child.getNodeName();
+              if (name.equals(GenerationBase.EL.OUTPUT)) {
+                outputDatas.addAll(XMLUtils.getChildElementsByName(child, GenerationBase.EL.DATA));
+              } else if (name.equals(GenerationBase.EL.INPUT) || name.equals(GenerationBase.EL.THROWS)) {
+                //ok
+              } else {
+                operation.removeChild(child);
+              }
+            }
+            for (Element sourceChild : XMLUtils.getChildElementsRecursively(operation, GenerationBase.EL.SOURCE)) {
+              sourceChild.getParentNode().removeChild(sourceChild);
+            }
+            for (Element targetChild : XMLUtils.getChildElementsRecursively(operation, GenerationBase.EL.TARGET)) {
+              targetChild.getParentNode().removeChild(targetChild);
+            }
+            //nun alle outputs constant vorbelegen
+            if (outputDatas.size() > 0) {
+              /*
+               * Beispiel XML:
+     <Operation ID="0" Label="WFTest" Name="WFTest">
+      <Input>
+        <Data ID="29" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+        <Data IsList="true" Label="Password" ReferenceName="Password" ReferencePath="base" VariableName="password"/>
+      </Input>
+      <Output>
+        <Data ID="23" IsList="true" Label="DT 1a" ReferenceName="DT1a" ReferencePath="cl.bugz21754" VariableName="dT1a23">
+          <Source RefID="8"/>
+        </Data>
+        <Data ID="28" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text28">
+          <Source RefID="8"/>
+        </Data>
+      </Output>
+      <Data ID="35" IsList="true" Label="DT1a" ReferenceName="DT1a" ReferencePath="cl.bugz21754" VariableName="const_DT1a">
+        <Target RefID="8"/>
+      </Data>
+      <Data ID="36" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text">
+        <Target RefID="8"/>
+        <Data Label="text" VariableName="text">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+      <Assign ID="8">
+        <Source RefID="35"/>
+        <Source RefID="36"/>
+        <Target RefID="23"/>
+        <Target RefID="28"/>
+        <Copy>
+          <Source RefID="35">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+          <Target RefID="23"/>
+        </Copy>
+        <Copy>
+          <Source RefID="36">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+          <Target RefID="28"/>
+        </Copy>
+      </Assign>
+    </Operation>
+
+               */
+              //liste aller vorhandenen/referenzierten ids erzeugen
+              Set<Integer> ids = new HashSet<Integer>();
+              Set<String> varNames = new HashSet<String>();
+              collectAllIdsAndVarNames(ids, varNames, dom.getDocumentElement());
+              List<Integer> idssorted = new ArrayList<Integer>(ids);
+              int max = 0;
+              if (idssorted.size() > 0) {
+                max = Collections.max(idssorted);
+              }
+              int assignId = ++max;
+              
+              //assign element
+              Element assign = dom.createElement(GenerationBase.EL.ASSIGN);
+              assign.setAttribute(GenerationBase.ATT.ID, String.valueOf(assignId));
+              List<Element> targetDataInAssign = new ArrayList<Element>();
+              List<Element> sourceDataInAssign = new ArrayList<Element>();
+              
+              //  erst dataelemente auf operationebene anlegen, dann assign dafür erzeugen
+              for (Element output : outputDatas) {
+                Element outputCopy = (Element) output.cloneNode(true);
+                operation.appendChild(outputCopy);
+                int id = ++max;
+                idssorted.add(id);
+                outputCopy.setAttribute(GenerationBase.ATT.ID, String.valueOf(id));
+                String outputId = output.getAttribute(GenerationBase.ATT.ID);
+                if (outputId == null || outputId.length() == 0) {
+                  outputId = String.valueOf(++max);
+                  output.setAttribute(GenerationBase.ATT.ID, outputId);
+                }
+                
+                Element targetAssign = dom.createElement(GenerationBase.EL.TARGET);
+                targetAssign.setAttribute(GenerationBase.ATT.REFID, String.valueOf(assignId));
+                outputCopy.appendChild(targetAssign);
+                String varName = "v" + id;
+                while (varNames.contains(varName)) {
+                  varName = "v" + varName;
+                }
+                varNames.add(varName);
+                outputCopy.setAttribute(GenerationBase.ATT.VARIABLENAME, varName); //muss unique sein
+                
+                Element sourceAssign = dom.createElement(GenerationBase.EL.SOURCE);
+                sourceAssign.setAttribute(GenerationBase.ATT.REFID, String.valueOf(assignId));
+                output.appendChild(sourceAssign);
+                
+                Element targetData = dom.createElement(GenerationBase.EL.TARGET);
+                targetData.setAttribute(GenerationBase.ATT.REFID, outputId);
+                targetDataInAssign.add(targetData);
+                Element sourceData = dom.createElement(GenerationBase.EL.SOURCE);
+                sourceData.setAttribute(GenerationBase.ATT.REFID, String.valueOf(id));
+                sourceDataInAssign.add(sourceData);
+              }
+              
+              operation.appendChild(assign);
+              
+              //assign objekt zusammenbauen
+              for (Element source : sourceDataInAssign) {
+                assign.appendChild(source);
+              }
+              for (Element target : targetDataInAssign) {
+                assign.appendChild(target);
+              }
+              for (int i = 0; i<outputDatas.size(); i++) {
+                Element copy = dom.createElement(GenerationBase.EL.COPY);
+                assign.appendChild(copy);
+                Element source = (Element) sourceDataInAssign.get(i).cloneNode(true);
+                Element meta = dom.createElement(GenerationBase.EL.META);
+                source.appendChild(meta);
+                Element linkType = dom.createElement(GenerationBase.EL.LINKTYPE);
+                meta.appendChild(linkType);
+                Text text = dom.createTextNode("Constant");
+                linkType.appendChild(text);
+                copy.appendChild(source);
+                copy.appendChild(targetDataInAssign.get(i).cloneNode(true));
+              }
+            }
+          }
+          //abgespecktes dom zurückgeben
+          StringWriter sw = new StringWriter();
+          XMLUtils.saveDomToWriter(sw, dom);
+          try {
+            return new ByteArrayInputStream(sw.toString().getBytes(Constants.DEFAULT_ENCODING));
+          } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+          }
+        } catch (Ex_FileAccessException e) {
+          throw new FileNotFoundException(f.getName());
+        } catch (XPRC_XmlParsingException e) {
           throw new RuntimeException(e);
         }
-      } catch (Ex_FileAccessException e) {
-        throw new FileNotFoundException(f.getName());
-      } catch (XPRC_XmlParsingException e) {
-        throw new RuntimeException(e);
+      }
+      return null;
+    }
+  
+
+    private void collectAllIdsAndVarNames(Set<Integer> ids, Set<String> varNames, Element element) {
+      String id = element.getAttribute(GenerationBase.ATT.ID);
+      if (id != null && id.length() > 0) {
+        ids.add(Integer.valueOf(id));
+      }
+      id = element.getAttribute(GenerationBase.ATT.REFID);
+      if (id != null && id.length() > 0) {
+        ids.add(Integer.valueOf(id));
+      }
+      String varName = element.getAttribute(GenerationBase.ATT.VARIABLENAME);
+      if (varName != null && varName.length() > 0) {
+        varNames.add(varName);
+      }
+      for (Element e : XMLUtils.getChildElements(element)) {
+        collectAllIdsAndVarNames(ids, varNames, e);
       }
     }
-    return null;
   }
-
-
-  private void collectAllIdsAndVarNames(Set<Integer> ids, Set<String> varNames, Element element) {
-    String id = element.getAttribute(GenerationBase.ATT.ID);
-    if (id != null && id.length() > 0) {
-      ids.add(Integer.valueOf(id));
-    }
-    id = element.getAttribute(GenerationBase.ATT.REFID);
-    if (id != null && id.length() > 0) {
-      ids.add(Integer.valueOf(id));
-    }
-    String varName = element.getAttribute(GenerationBase.ATT.VARIABLENAME);
-    if (varName != null && varName.length() > 0) {
-      varNames.add(varName);
-    }
-    for (Element e : XMLUtils.getChildElements(element)) {
-      collectAllIdsAndVarNames(ids, varNames, e);
-    }
-  }
-
-
   private boolean hasApplicationConfigurationChanged(String applicationName, ApplicationXmlEntry actual, XMOMAccess xmomAccess) {
     File applicationXmlFile = new File(xmomAccess.getAbsoluteAppConfigFileName(applicationName));
     ApplicationXmlEntry old = parseApplicationXml(applicationXmlFile);
@@ -10178,6 +10181,60 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   
   public void unregisterEventHandler(String name, String version) {
     eventHandling.unregisterHandler(name, new Version(version));
+  }
+
+
+  public ApplicationXmlEntry createApplicationDefinitionXml(String applicationName, String versionName, String workspaceName,
+                                                            boolean createStub) throws XynaException {
+ 
+    ApplicationXmlEntry applicationXmlEntry = new ApplicationXmlEntry(applicationName, versionName, null);
+    applicationXmlEntry.setFactoryVersion();
+    applicationXmlEntry.getApplicationInfo().setIsRemoteStub(createStub);
+    Long parentRevision = revisionManagement.getRevision(null, null, workspaceName);
+    
+    if (createStub) {
+      ODSConnection con = ods.openConnection();
+      List<ApplicationEntryStorable> appEntries;
+      try {
+        appEntries = (List<ApplicationEntryStorable>) queryAllApplicationDefinitionStorables(applicationName, parentRevision, con);
+      } finally {
+        con.closeConnection();
+      }
+      Collection<RuntimeDependencyContext> dependentRuntimeContexts = new HashSet<RuntimeDependencyContext>();
+      Set<Long> revisions = new HashSet<Long>();
+      Application app = new Application(applicationName, versionName);
+      Collection<ApplicationEntryStorable> implicitDependencies = findDependenciesForStub(null, appEntries, parentRevision, revisions, app, false);
+      for (Long rev : revisions) {
+        dependentRuntimeContexts.add(RuntimeContextDependencyManagement.asRuntimeDependencyContext(revisionManagement.getRuntimeContext(rev)));
+      }
+      
+      createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, parentRevision, false, false, createStub);
+      addRuntimeContextRequirementXMLEntries(dependentRuntimeContexts, applicationXmlEntry, false, null);
+      
+    } else {
+      TreeSet<ApplicationEntryStorable> plainSet = new TreeSet<>(ApplicationEntryStorable.COMPARATOR);
+      List<ApplicationEntryStorable> plainEntries = listApplicationDetails(applicationName, null, false, null, parentRevision);
+      if (plainEntries != null) {
+        plainSet.addAll(plainEntries);
+      }
+      TreeSet<ApplicationEntryStorable> dependencySet = new TreeSet<>(ApplicationEntryStorable.COMPARATOR);
+      List<ApplicationEntryStorable> includingDeps = listApplicationDetails(applicationName, null, true, null, parentRevision);
+      if (includingDeps != null) {
+        dependencySet.addAll(includingDeps);
+      }
+      dependencySet.removeAll(plainSet);
+      
+      createXMLEntries(plainSet, false, null, applicationXmlEntry, parentRevision, false, false, createStub);
+      createXMLEntries(dependencySet, false, null, applicationXmlEntry, parentRevision, true, false, createStub);
+      Collection<RuntimeDependencyContext> dependentRuntimeContexts;
+      RuntimeContextDependencyManagement rcdMgmt =
+          XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+      dependentRuntimeContexts = rcdMgmt.getRequirements(new ApplicationDefinition(applicationName, new Workspace(workspaceName)));
+      addRuntimeContextRequirementXMLEntries(dependentRuntimeContexts, applicationXmlEntry, false, null);
+    }
+    
+    
+    return applicationXmlEntry;
   }
   
 }
