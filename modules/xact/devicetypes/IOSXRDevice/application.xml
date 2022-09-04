@@ -24,7 +24,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Connection</ApplicationName>
-        <VersionName>1.0.11</VersionName>
+        <VersionName>1.0.12</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>SSHTools</ApplicationName>
