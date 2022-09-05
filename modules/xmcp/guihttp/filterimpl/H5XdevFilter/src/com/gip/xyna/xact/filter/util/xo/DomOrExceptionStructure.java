@@ -18,11 +18,14 @@
 package com.gip.xyna.xact.filter.util.xo;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -63,6 +66,7 @@ import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.BasicApplicationName;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext.RuntimeContextType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -419,28 +423,46 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     } catch (XMLStreamException e) {
       throw new RuntimeException(e);
     }
-    XMLInputSource inputSource = new XMLInputSource() {
-
-      @Override
-      public Document getOrParseXML(GenerationBase obj, boolean fileFromDeploymentLocation)
-          throws Ex_FileAccessException, XPRC_XmlParsingException {
-        RuntimeContext rc = runtimeContextMap.get(obj.getOriginalFqName());
+    XMLSourceAbstraction inputSource = new StringXMLSource(null) {
+      
+      private String getXml(String fqName) {
+        RuntimeContext rc = runtimeContextMap.get(fqName);
         if (rc == null) {
           rc = rtc;
         }
         String xml = null;
         try {
-          xml = repo.getXMLFromRepository(rc, repRevision, obj.getOriginalFqName());
+          xml = repo.getXMLFromRepository(rc, repRevision, fqName);
         } catch (XynaException e) {
-          logger.warn("Not found in repository:" + obj.getOriginalFqName() + "@" + repRevision + "@"
+          logger.warn("Not found in repository:" + fqName + "@" + repRevision + "@"
               + rc.getGUIRepresentation());
         }
+        return xml;
+      }
+      
+      public Document getOrParseXML(GenerationBase obj, boolean fileFromDeploymentLocation)
+          throws Ex_FileAccessException, XPRC_XmlParsingException {
+        String xml = getXml(obj.getOriginalFqName());
         if (xml == null) {
           obj.setDoesntExist();
           return null;
         }
         return XMLUtils.parseString(xml, true);
       }
+
+      @Override
+      public XMOMType determineXMOMTypeOf(String fqName, Long rev) throws Ex_FileAccessException, XPRC_XmlParsingException {
+        String xml = getXml(fqName);
+        try (ByteArrayInputStream bais =
+            new ByteArrayInputStream(xml.getBytes())) {
+          return XMOMType.getXMOMTypeByRootTag(XMLUtils.getRootElementName(bais));
+        } catch (XMLStreamException e) {
+          throw new XPRC_XmlParsingException(fqName, e);
+        } catch (IOException e) {
+          throw new XPRC_XmlParsingException(fqName, e);
+        }
+      }
+
     };
     XMOMType type = XMOMType.getXMOMTypeByRootTag(rootTag);
     switch (type) {
