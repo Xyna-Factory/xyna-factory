@@ -172,12 +172,17 @@ public abstract class InheritanceRule implements Serializable {
   }
   
   
-  public static  Builder createSuspensionBackupRule(SuspensionBackupMode value) {
+  public static Builder createSuspensionBackupRule(SuspensionBackupMode value) {
     Builder builder = new Builder();
     builder.rule = new EnumInheritanceRule<SuspensionBackupMode>(value);
     return builder;
   }
   
+  public static Builder createBackupWhenRemoteCallRule(SuspensionBackupMode value) {
+    Builder builder = new Builder();
+    builder.rule = new EnumInheritanceRule<SuspensionBackupMode>(value);
+    return builder;
+  }
   
   public static class Builder {
     

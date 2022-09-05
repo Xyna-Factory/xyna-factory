@@ -57,8 +57,11 @@ import com.gip.xyna.xprc.exceptions.XPRC_OrderCouldNotBeStartedException;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import com.gip.xyna.xprc.xpce.ordersuspension.ProcessSuspendedException;
 import com.gip.xyna.xprc.xpce.ordersuspension.ResumeTarget;
+import com.gip.xyna.xprc.xpce.ordersuspension.SuspensionBackupMode;
 import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause_ShutDown;
 import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause_Standard;
+import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
+import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceBackup.BackupCause;
 
 public class RemoteCallHelper {
@@ -222,8 +225,13 @@ public class RemoteCallHelper {
       //wenn nicht gleich eine Suspendierung erfolgt ist nun ein Backup nötig, 
       //damit RemoteOrderId, StartTimeStamp und FactoryNode nicht verloren gehen können
       
-      XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive().
-      backup(correlatedXynaOrder.getRootOrder(), BackupCause.AFTER_SCHEDULING);
+      InheritanceRule r = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getParameterInheritanceManagement()
+          .getPreferredBackupWhenRemoteCallRule(correlatedXynaOrder);
+      SuspensionBackupMode sbm = SuspensionBackupMode.valueOf(r.getValueAsString());
+      if (sbm == SuspensionBackupMode.BACKUP) {
+        XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive().backup(correlatedXynaOrder.getRootOrder(),
+                                                                                                  BackupCause.AFTER_SCHEDULING);
+      }
     }
     synchronized (this) {
       checkCancelation();

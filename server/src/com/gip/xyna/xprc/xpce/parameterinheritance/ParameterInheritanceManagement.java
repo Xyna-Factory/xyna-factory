@@ -34,6 +34,9 @@ import com.gip.xyna.utils.collections.ObjectWithRemovalSupport;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.exceptions.XFMG_NoSuchRevision;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeManagement.OrderTypeUpdates;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
@@ -43,6 +46,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_DESTINATION_NOT_FOUND;
 import com.gip.xyna.xprc.exceptions.XPRC_INVALID_MONITORING_TYPE;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import com.gip.xyna.xprc.xpce.monitoring.MonitoringDispatcher;
+import com.gip.xyna.xprc.xpce.ordersuspension.SuspensionBackupMode;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule.Builder;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule.PrecedenceComparator;
@@ -102,6 +106,14 @@ public class ParameterInheritanceManagement extends FunctionGroup {
       @Override
       public Builder createInheritanceRuleBuilder(String value) {
         return InheritanceRule.createSuspensionBackupRule(com.gip.xyna.xprc.xpce.ordersuspension.SuspensionBackupMode.valueOf(value));
+      }
+      
+    },
+    BackupWhenRemoteCall {
+
+      @Override
+      public Builder createInheritanceRuleBuilder(String value) {
+        return InheritanceRule.createBackupWhenRemoteCallRule(com.gip.xyna.xprc.xpce.ordersuspension.SuspensionBackupMode.valueOf(value));
       }
       
     };
@@ -339,14 +351,40 @@ public class ParameterInheritanceManagement extends FunctionGroup {
   }
   
   
-  public InheritanceRule getPreferredSuspensionBackupRule(ParameterType parameterType, XynaOrderServerExtension xo) {
+  public InheritanceRule getPreferredSuspensionBackupRule(XynaOrderServerExtension xo) {
     InheritanceRule global = 
       ParameterType.SuspensionBackupMode.createInheritanceRuleBuilder(
                                          com.gip.xyna.xprc.xpce.ordersuspension.SuspensionBackupMode.DEFAULT_ORDERBACKUP_MODE.get().name()).precedence(0).build();
-    return getPreferredRuleRecursively(parameterType, global, xo, "");
+    return getPreferredRuleRecursively(ParameterType.SuspensionBackupMode, global, xo, "");
   }
   
-  
+
+  public final static XynaPropertyBuilds<SuspensionBackupMode> BACKUP_WHEN_REMOTECALL_DEFAULT =
+      new XynaPropertyBuilds<SuspensionBackupMode>("xfmg.xfctrl.nodemgmt.remotecall.defaultbackupmode",
+                                                   new XynaPropertyUtils.XynaPropertyBuilds.Builder<SuspensionBackupMode>() {
+
+                                                     public SuspensionBackupMode fromString(String string)
+                                                         throws com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds.Builder.ParsingException {
+                                                       return SuspensionBackupMode.valueOf(string);
+                                                     }
+
+
+                                                     public String toString(SuspensionBackupMode value) {
+                                                       return value.toString();
+                                                     }
+
+                                                   }, SuspensionBackupMode.BACKUP)
+                                                       .setDefaultDocumentation(DocumentationLanguage.EN,
+                                                                                "Possible values are \"BACKUP\" and \"NO_BACKUP\".");
+
+
+  public InheritanceRule getPreferredBackupWhenRemoteCallRule(XynaOrderServerExtension xo) {
+    String defaultVal = BACKUP_WHEN_REMOTECALL_DEFAULT.get().name();
+    InheritanceRule global = ParameterType.BackupWhenRemoteCall.createInheritanceRuleBuilder(defaultVal).precedence(0).build();
+    return getPreferredRuleRecursively(ParameterType.BackupWhenRemoteCall, global, xo, "");
+  }
+
+
   private InheritanceRule getPreferredRuleRecursively(ParameterType parameterType, InheritanceRule preferredRule, XynaOrderServerExtension xo, String childHierarchy) {
     DestinationKey dk = xo.getDestinationKey();
     

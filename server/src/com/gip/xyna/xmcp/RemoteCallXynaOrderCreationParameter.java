@@ -31,7 +31,7 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 public class RemoteCallXynaOrderCreationParameter extends XynaOrderCreationParameter {
 
   private static final long serialVersionUID = 7549429441296601965L;
-  private static final XynaXmomSerialization serialization = null;//XynaFactory.getInstance().getProcessing().getXmomSerialization();
+  private static final XynaXmomSerialization serialization = XynaFactory.getInstance().getProcessing().getXmomSerialization();
   
   private byte[] payloadBytes;
   private String fqn;
