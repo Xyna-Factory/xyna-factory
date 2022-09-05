@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="IOSXEDevice" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="IOSXEDevice" comment="" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Cisco IOS XE Devicetype</Description>
     <Description Lang="EN">Cisco IOS Devicetype</Description>

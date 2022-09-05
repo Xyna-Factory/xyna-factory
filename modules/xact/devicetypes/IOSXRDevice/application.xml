@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="IOSXRDevice" comment="" factoryVersion="" versionName="1.0" xmlVersion="1.1">
+<Application applicationName="IOSXRDevice" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Cisco IOS XR Devicetype</Description>
     <Description Lang="EN">Cisco IOS XR Devicetype</Description>
