@@ -978,28 +978,9 @@ public class XOUtils {
     return null;
   }
 
-  /**
-   * 
-   * @param xo
-   * @param fieldName
-   * @param parseXmlOnError when true, an error while determining label via annotation fails leads to fallback by determ
-   * @return
-   * @throws InvalidObjectPathException 
-   */
-  public static final String getLabelFor(XynaObject xo, String fieldName, boolean fallbackToXmlParsing) {
+  public static final String getLabelFor(XynaObject xo, String fieldName) {
     Field f = getDeclaredFieldFromAll(xo, fieldName);
-
-    try {
-      LabelAnnotation annotation = f.getAnnotation(LabelAnnotation.class);
-
-      return annotation.label();
-    } catch (Exception e) {
-      if (!fallbackToXmlParsing) {
-        throw new RuntimeException(e);
-      }
-
-      return null; // TODO: XML-Fallback
-    }
+    return f.getAnnotation(LabelAnnotation.class).label();
   }
 
 }
