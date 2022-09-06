@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+* Copyright 2022 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -48,6 +49,11 @@ public class IPv4 extends XynaObject {
 
 
   private IPv4Address _address;
+
+  // fake-variable that can be found by XOUtils.getLabelFor(...) when determining labels for fields in getVariableNames()
+  @LabelAnnotation(label="Address")
+  private transient IPv4Address address;
+
   /**
    * required for getField
    * when using IPv4 in a mapping and assigning a value to "address", the type adjustment mechanism
