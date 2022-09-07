@@ -86,6 +86,7 @@ import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceManagement;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -1635,6 +1636,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     imports.add(Logger.class.getName());
     imports.add(XDEV_PARAMETER_NAME_NOT_FOUND.class.getName());
     imports.add(XynaObjectAnnotation.class.getName());
+    imports.add(LabelAnnotation.class.getName());
     imports.add(ServiceStepEventSource.class.getName());
     imports.add(ServiceStepEventHandling.class.getName());
 

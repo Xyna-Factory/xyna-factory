@@ -34,6 +34,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 
@@ -43,10 +44,20 @@ public class RedirectionBean extends XynaObject {
   private static final Logger logger = CentralFactoryLogging.getLogger(RedirectionBean.class);
 
   private static final long serialVersionUID = -7270258773099785417L;
+
+  @LabelAnnotation(label="Failed Step")
   private int failedStep;
+
+  @LabelAnnotation(label="Failed Process")
   private String failedProcess;
+
+  @LabelAnnotation(label="Reason")
   private String reason;
+
+  @LabelAnnotation(label="Redirection Order")
   private XynaOrderServerExtension redirectionOrder; //umleitungsauftrag
+
+  @LabelAnnotation(label="Redirected Order")
   private XynaOrderServerExtension redirectedOrder; //auftrag, der umgeleitet wird
 
 

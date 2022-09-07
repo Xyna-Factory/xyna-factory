@@ -272,9 +272,11 @@ public class XynaObjectCodeGenerator {
           ((DatatypeVariable)v).getRestrictions() != null) {
         ((DatatypeVariable)v).getRestrictions().generateJava(cb);
       }
-      
+
+      cb.add("@LabelAnnotation(label=").addString(v.getLabel()).add(")" + System.getProperty("line.separator"));
+
       // definition
-      cb.add("private ");
+      cb.add("  private ");
       if (v instanceof ExceptionVariable) {
         cb.add("transient ");
         transientExceptionVariables.add((ExceptionVariable) v);
@@ -351,7 +353,6 @@ public class XynaObjectCodeGenerator {
 
     appendUseVersioningMethod(cb);
   }
-
 
   public static void appendGetter(CodeBuffer cb, AVariable v, Set<String> importedClassNames, boolean useListExtendedGenerics) {
     cb.addLine("public ", v.getEventuallyQualifiedClassNameWithGenerics(importedClassNames, useListExtendedGenerics), " ", GenerationBase.buildGetter(v.getVarName()), "() {");

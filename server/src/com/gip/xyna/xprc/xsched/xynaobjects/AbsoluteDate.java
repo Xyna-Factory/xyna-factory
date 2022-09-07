@@ -39,6 +39,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedVersionedObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedXynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xsched.SchedulerBean;
@@ -53,6 +54,7 @@ public class AbsoluteDate extends Date {
   private static final Logger logger = CentralFactoryLogging.getLogger(AbsoluteDate.class);
 
 
+  @LabelAnnotation(label="Date")
   private String date;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfdate;
@@ -76,6 +78,7 @@ public class AbsoluteDate extends Date {
   }
 
 
+  @LabelAnnotation(label="Format")
   private transient DateFormat format;
 
   private transient volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<DateFormat> oldVersionsOfformat;

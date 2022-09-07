@@ -1759,7 +1759,7 @@ public class Updater implements UpdaterInterface {
       
       // 9.0.0.0
       Version v465 = new Version(v464).increaseToMajorVersion(1, 1);
-      ud = new UpdateJustVersion(v464, v465);
+      ud = new UpdateJustVersion(v464, v465, true);
       ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //8.2.11.x darf hier drauf updaten
       updates.add(ud);
 

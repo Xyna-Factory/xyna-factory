@@ -18,13 +18,16 @@
 package com.gip.xyna.xdev.xfractmod.xmdm;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 
@@ -37,6 +40,7 @@ import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.utils.misc.DataRangeCollection.DataSource;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 /**
@@ -948,6 +952,52 @@ public class XOUtils {
       return new ArrayList<T>(list);
     }
     return list;
+  }
+
+
+  public static List<Field> getAllDeclaredFields(XynaObject xo) {
+    List<Field> allDeclaredFields = new ArrayList<>(Arrays.asList(xo.getClass().getDeclaredFields()));
+
+    Class<?> superClazz = xo.getClass().getSuperclass();
+    while (superClazz != null) {
+      allDeclaredFields.addAll(new ArrayList<>(Arrays.asList(superClazz.getDeclaredFields())));
+      superClazz = superClazz.getSuperclass();
+    }
+
+    return allDeclaredFields;
+  }
+
+  public static Field getDeclaredFieldFromAll(XynaObject xo, String fieldName) {
+    List<Field> allDeclaredFields = getAllDeclaredFields(xo);
+    for (Field field : allDeclaredFields) {
+      if (Objects.equals(field.getName(), fieldName)) {
+        return field;
+      }
+    }
+
+    return null;
+  }
+
+  public static final String getLabelFor(XynaObject xo, String fieldName) {
+    Field f = getDeclaredFieldFromAll(xo, fieldName);
+    return f.getAnnotation(LabelAnnotation.class).label();
+  }
+
+  public static final List<String> getVarNamesFor(XynaObject xo, String fieldLabel) {
+    List<String> varNames = new ArrayList<>();
+
+    List<Field> allDeclaredFields = getAllDeclaredFields(xo);
+    for (Field field : allDeclaredFields) {
+      if (!field.isAnnotationPresent(LabelAnnotation.class)) {
+        continue;
+      }
+
+      if (Objects.equals(field.getAnnotation(LabelAnnotation.class).label(), fieldLabel)) {
+        varNames.add(field.getName());
+      }
+    }
+
+    return varNames;
   }
 
 }

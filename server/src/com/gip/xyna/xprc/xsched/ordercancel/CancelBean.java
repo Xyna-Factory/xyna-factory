@@ -27,16 +27,23 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 public class CancelBean extends XynaObject {
 
   private static final long serialVersionUID = 1L;
 
+  @LabelAnnotation(label="Id To Be Canceled")
   private Long idToBeCanceled;
+
+  @LabelAnnotation(label="Relative Timeout")
   private Long relativeTimeout;
+
+  @LabelAnnotation(label="Wait for Timeout")
   private boolean waitForTimeout;
 
+  @LabelAnnotation(label="Result")
   private CANCEL_RESULT result;
 
   public enum CANCEL_RESULT {

@@ -40,6 +40,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -53,7 +54,13 @@ public class IPv4Subnet extends XynaObject {
   private IPv4 _network;
   private IPv4Netmask _mask;
 
-  
+  // fake-variables that can be found by XOUtils.getLabelFor(...) when determining labels for fields in getVariableNames()
+  @LabelAnnotation(label="Network")
+  private transient IPv6 network;
+  @LabelAnnotation(label="Mask")
+  private transient IPv6Netmask mask;
+
+
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<IPv4> oldVersionsOfnetwork;
 
 

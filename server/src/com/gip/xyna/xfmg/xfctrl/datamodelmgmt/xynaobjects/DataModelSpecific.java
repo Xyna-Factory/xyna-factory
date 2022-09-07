@@ -34,6 +34,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -44,6 +45,7 @@ public class DataModelSpecific extends XynaObject implements Comparable<DataMode
   private static final Logger logger = CentralFactoryLogging.getLogger(DataModelSpecific.class);
 
 
+  @LabelAnnotation(label="Key")
   private String key;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfkey;
@@ -89,6 +91,7 @@ public class DataModelSpecific extends XynaObject implements Comparable<DataMode
     this.key = key;
   }
 
+  @LabelAnnotation(label="Value")
   private String value;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfvalue;
@@ -134,6 +137,7 @@ public class DataModelSpecific extends XynaObject implements Comparable<DataMode
     this.value = value;
   }
 
+  @LabelAnnotation(label="Label")
   private String label;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOflabel;

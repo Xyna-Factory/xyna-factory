@@ -33,6 +33,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xsched.SchedulerBean;
@@ -45,6 +46,7 @@ public class RelativeTimeConfiguration extends com.gip.xyna.xprc.xsched.xynaobje
   private static final Logger logger = CentralFactoryLogging.getLogger(RelativeTimeConfiguration.class);
 
 
+  @LabelAnnotation(label="Milliseconds")
   private Long milliSeconds;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Long> oldVersionsOfmilliSeconds;
@@ -90,6 +92,7 @@ public class RelativeTimeConfiguration extends com.gip.xyna.xprc.xsched.xynaobje
     this.milliSeconds = milliSeconds;
   }
 
+  @LabelAnnotation(label="Seconds")
   private Long seconds;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Long> oldVersionsOfseconds;
@@ -135,6 +138,7 @@ public class RelativeTimeConfiguration extends com.gip.xyna.xprc.xsched.xynaobje
     this.seconds = seconds;
   }
 
+  @LabelAnnotation(label="Minutes")
   private Long minutes;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Long> oldVersionsOfminutes;
@@ -180,6 +184,7 @@ public class RelativeTimeConfiguration extends com.gip.xyna.xprc.xsched.xynaobje
     this.minutes = minutes;
   }
 
+  @LabelAnnotation(label="Hours")
   private Long hours;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Long> oldVersionsOfhours;
@@ -225,6 +230,7 @@ public class RelativeTimeConfiguration extends com.gip.xyna.xprc.xsched.xynaobje
     this.hours = hours;
   }
 
+  @LabelAnnotation(label="Days")
   private Long days;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Long> oldVersionsOfdays;

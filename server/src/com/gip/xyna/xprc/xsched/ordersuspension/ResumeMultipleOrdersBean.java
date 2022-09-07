@@ -30,6 +30,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xpce.ordersuspension.ResumeTarget;
 
@@ -39,7 +40,10 @@ public class ResumeMultipleOrdersBean extends XynaObject {
   private static final long serialVersionUID = -5763635438773974343L;
 
   private Boolean requestSucceeded = false;
+
+  @LabelAnnotation(label="Targets")
   private List<ResumeTarget> targets;
+
   //private List<Long> targetIds; Achtung: Inkompatible Änderung der ResumeMultipleOrdersBean:
   //targetIds kann nicht in targets konvertiert werden. ResumeMultipleOrdersBean sollte aber
   //nicht serialisiert vorkommen.

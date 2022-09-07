@@ -35,6 +35,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xsched.SchedulerBean;
@@ -47,6 +48,7 @@ public class SchedulerInformation extends SchedulerBean {
   private static final Logger logger = CentralFactoryLogging.getLogger(SchedulerInformation.class);
 
 
+  @LabelAnnotation(label="Time Constraint")
   private TimeConstraint timeConstraint;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<TimeConstraint> oldVersionsOftimeConstraint;
@@ -92,6 +94,7 @@ public class SchedulerInformation extends SchedulerBean {
     this.timeConstraint = timeConstraint;
   }
 
+  @LabelAnnotation(label="Priority")
   private Priority priority;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Priority> oldVersionsOfpriority;

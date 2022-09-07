@@ -35,6 +35,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xsched.SchedulerBean;
@@ -48,6 +49,7 @@ public class AbsoluteTimeConfiguration extends TimeConfiguration {
   private static final Logger logger = CentralFactoryLogging.getLogger(AbsoluteTimeConfiguration.class);
 
 
+  @LabelAnnotation(label="Year")
   private Integer year;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfyear;
@@ -93,6 +95,7 @@ public class AbsoluteTimeConfiguration extends TimeConfiguration {
     this.year = year;
   }
 
+  @LabelAnnotation(label="Month")
   private Integer month;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfmonth;
@@ -138,6 +141,7 @@ public class AbsoluteTimeConfiguration extends TimeConfiguration {
     this.month = month;
   }
 
+  @LabelAnnotation(label="Day")
   private Integer day;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfday;
@@ -183,6 +187,7 @@ public class AbsoluteTimeConfiguration extends TimeConfiguration {
     this.day = day;
   }
 
+  @LabelAnnotation(label="Hour")
   private Integer hour;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfhour;
@@ -228,6 +233,7 @@ public class AbsoluteTimeConfiguration extends TimeConfiguration {
     this.hour = hour;
   }
 
+  @LabelAnnotation(label="Minute")
   private Integer minute;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfminute;
@@ -273,6 +279,7 @@ public class AbsoluteTimeConfiguration extends TimeConfiguration {
     this.minute = minute;
   }
 
+  @LabelAnnotation(label="Second")
   private Integer second;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfsecond;
@@ -318,6 +325,7 @@ public class AbsoluteTimeConfiguration extends TimeConfiguration {
     this.second = second;
   }
 
+  @LabelAnnotation(label="Millisecond")
   private Integer milliSecond;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfmilliSecond;
@@ -363,6 +371,7 @@ public class AbsoluteTimeConfiguration extends TimeConfiguration {
     this.milliSecond = milliSecond;
   }
 
+  @LabelAnnotation(label="Timezone Offset")
   private Integer timezoneOffset;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOftimezoneOffset;

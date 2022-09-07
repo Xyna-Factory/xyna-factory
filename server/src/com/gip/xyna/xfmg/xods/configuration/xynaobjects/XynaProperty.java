@@ -40,6 +40,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xods.configuration.Configuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBase;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -50,6 +51,7 @@ public abstract class XynaProperty extends XynaObject {
   private static final Logger logger = CentralFactoryLogging.getLogger(XynaProperty.class);
 
 
+  @LabelAnnotation(label="Property Name")
   private String propertyName;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfpropertyName;
@@ -95,6 +97,7 @@ public abstract class XynaProperty extends XynaObject {
     this.propertyName = propertyName;
   }
 
+  @LabelAnnotation(label="Behaviour of Property Not Set")
   private BehaviourIfPropertyNotSet behaviourIfPropertyNotSet;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<BehaviourIfPropertyNotSet> oldVersionsOfbehaviourIfPropertyNotSet;

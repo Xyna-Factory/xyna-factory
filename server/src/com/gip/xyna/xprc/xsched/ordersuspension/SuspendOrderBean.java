@@ -28,6 +28,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 
@@ -36,7 +37,10 @@ public class SuspendOrderBean extends XynaObject {
 
   private static final long serialVersionUID = -5775838373374060396L;
 
+  @LabelAnnotation(label="Request Succeeded")
   private Boolean requestSucceeded = false;
+
+  @LabelAnnotation(label="Target Id")
   private Long targetId;
 
 

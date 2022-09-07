@@ -32,6 +32,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -43,6 +44,7 @@ public class XmomType extends XynaObject implements Comparable<XmomType> {
   private static final long serialVersionUID = -1507694381429171L;
 
 
+  @LabelAnnotation(label="Path")
   private String path;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfpath;
@@ -92,6 +94,7 @@ public class XmomType extends XynaObject implements Comparable<XmomType> {
   }
 
 
+  @LabelAnnotation(label="Name")
   private String name;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfname;
@@ -141,6 +144,7 @@ public class XmomType extends XynaObject implements Comparable<XmomType> {
   }
 
 
+  @LabelAnnotation(label="Label")
   private String label;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOflabel;

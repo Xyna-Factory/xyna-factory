@@ -30,6 +30,7 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xpce.ordersuspension.ResumeTarget;
 
@@ -37,13 +38,26 @@ import com.gip.xyna.xprc.xpce.ordersuspension.ResumeTarget;
 public class SuspendOrdertypeBean extends XynaObject {
 
   private static final long serialVersionUID = -5607726114948121958L;
-  
+
+  @LabelAnnotation(label="Ordertype To Suspend")
   private String ordertypeToSuspend;
+
+  @LabelAnnotation(label="Revision")
   private Long revision;
+
+  @LabelAnnotation(label="Interrupt Stuck Orders")
   private boolean interruptStuckOrders;
+
+  @LabelAnnotation(label="Resume Targets")
   private List<ResumeTarget> resumeTargets;
+
+  @LabelAnnotation(label="Success")
   private boolean success = true;
+
+  @LabelAnnotation(label="Keep Unresumeable")
   private boolean keepUnresumeable;
+
+  @LabelAnnotation(label="Suspended Root Order Ids")
   private List<Long> suspendedRootOrderIds;
 
   public SuspendOrdertypeBean(String ordertypeToSuspend, boolean interruptStuckOrders, Long revision) { //this could be renamed to something like interrupt orders headed for ...

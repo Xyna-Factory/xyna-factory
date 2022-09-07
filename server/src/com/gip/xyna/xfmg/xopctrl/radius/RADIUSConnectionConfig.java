@@ -35,6 +35,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -46,6 +47,7 @@ public class RADIUSConnectionConfig extends XynaObject {
   private static final Logger logger = CentralFactoryLogging.getLogger(RADIUSConnectionConfig.class);
 
 
+  @LabelAnnotation(label="IP")
   private IP ip;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<IP> oldVersionsOfip;
@@ -91,6 +93,7 @@ public class RADIUSConnectionConfig extends XynaObject {
     this.ip = ip;
   }
 
+  @LabelAnnotation(label="Port")
   private RADIUSServerPort port;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<RADIUSServerPort> oldVersionsOfport;
@@ -136,6 +139,7 @@ public class RADIUSConnectionConfig extends XynaObject {
     this.port = port;
   }
 
+  @LabelAnnotation(label="Preshared Key")
   private PresharedKey presharedKey;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<PresharedKey> oldVersionsOfpresharedKey;
@@ -181,6 +185,7 @@ public class RADIUSConnectionConfig extends XynaObject {
     this.presharedKey = presharedKey;
   }
 
+  @LabelAnnotation(label="Max Retries")
   private Integer maxRetries;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfmaxRetries;
@@ -226,6 +231,7 @@ public class RADIUSConnectionConfig extends XynaObject {
     this.maxRetries = maxRetries;
   }
 
+  @LabelAnnotation(label="Connection Timeout")
   private Integer connectionTimeout;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfconnectionTimeout;

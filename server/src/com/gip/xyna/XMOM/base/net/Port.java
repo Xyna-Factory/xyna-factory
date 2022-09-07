@@ -35,6 +35,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -45,6 +46,11 @@ public class Port extends XynaObject {
   private static final Logger logger = CentralFactoryLogging.getLogger(Port.class);
 
   private PortData _portData;
+
+  // fake-variable that can be found by XOUtils.getLabelFor(...) when determining labels for fields in getVariableNames()
+  @LabelAnnotation(label="Port Number")
+  private transient int portNumber;
+
   /**
    * required for getField
    * when using Port in a mapping and assigning a value to "portNumber", the type adjustment mechanism

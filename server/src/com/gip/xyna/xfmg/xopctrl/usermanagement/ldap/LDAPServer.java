@@ -34,6 +34,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
@@ -44,6 +45,7 @@ public class LDAPServer extends XynaObject {
   private static final Logger logger = CentralFactoryLogging.getLogger(LDAPServer.class);
 
 
+  @LabelAnnotation(label="Host")
   private String host;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<String> oldVersionsOfhost;
@@ -89,6 +91,7 @@ public class LDAPServer extends XynaObject {
     this.host = host;
   }
 
+  @LabelAnnotation(label="Port")
   private int port;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<Integer> oldVersionsOfport;
@@ -134,6 +137,7 @@ public class LDAPServer extends XynaObject {
     this.port = port;
   }
 
+  @LabelAnnotation(label="SSL Parameter")
   private SSLParameter sSLParameter;
 
   private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<SSLParameter> oldVersionsOfsSLParameter;
