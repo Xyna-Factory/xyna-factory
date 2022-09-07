@@ -983,4 +983,21 @@ public class XOUtils {
     return f.getAnnotation(LabelAnnotation.class).label();
   }
 
+  public static final List<String> getVarNamesFor(XynaObject xo, String fieldLabel) {
+    List<String> varNames = new ArrayList<>();
+
+    List<Field> allDeclaredFields = getAllDeclaredFields(xo);
+    for (Field field : allDeclaredFields) {
+      if (!field.isAnnotationPresent(LabelAnnotation.class)) {
+        continue;
+      }
+
+      if (Objects.equals(field.getAnnotation(LabelAnnotation.class).label(), fieldLabel)) {
+        varNames.add(field.getName());
+      }
+    }
+
+    return varNames;
+  }
+
 }
