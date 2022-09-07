@@ -16,12 +16,12 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSHMock" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+<Application applicationName="SSHMock" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SSHServer</ApplicationName>
-        <VersionName>1.0.3</VersionName>
+        <VersionName>1.0.4</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
