@@ -18,6 +18,7 @@
 package com.gip.xyna.xmcp.xfcli.impl;
 
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -42,7 +43,8 @@ public class AddinheritanceruleImpl extends XynaCommandImplementation<Addinherit
     try {
       parameterType = ParameterType.valueOf(payload.getParameterType());
     } catch (IllegalArgumentException e) {
-      writeLineToCommandLine(statusOutputStream, "Invalid parameter type '" + payload.getParameterType() + "'.");
+      writeLineToCommandLine(statusOutputStream, "Invalid parameter type '" + payload.getParameterType() + "'. Allowed values are "
+          + Arrays.toString(ParameterType.values()) + ".");
       return;
     }
     

@@ -627,7 +627,7 @@ public abstract class XynaProcess
 
     } catch (ProcessSuspendedException e) {
       ParameterInheritanceManagement parameterInheritanceMgmt = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getParameterInheritanceManagement();
-      InheritanceRule rule = parameterInheritanceMgmt.getPreferredSuspensionBackupRule(ParameterType.SuspensionBackupMode, xo);
+      InheritanceRule rule = parameterInheritanceMgmt.getPreferredSuspensionBackupRule(xo);
       if (rule == null) {
         e.getSuspensionCause().setSuspensionOrderBackupModeIfUnset(SuspensionBackupMode.DEFAULT_ORDERBACKUP_MODE.get());
       } else {
