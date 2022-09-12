@@ -162,7 +162,7 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xact.ssh.SSHException</FqName>
+      <FqName>xact.ssh.ConnectionException</FqName>
       <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
