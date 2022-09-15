@@ -955,7 +955,7 @@ public class XOUtils {
   }
 
 
-  public static List<Field> getAllDeclaredFields(XynaObject xo) {
+  public static List<Field> getAllDeclaredFields(GeneralXynaObject xo) {
     List<Field> allDeclaredFields = new ArrayList<>(Arrays.asList(xo.getClass().getDeclaredFields()));
 
     Class<?> superClazz = xo.getClass().getSuperclass();
@@ -967,7 +967,7 @@ public class XOUtils {
     return allDeclaredFields;
   }
 
-  public static Field getDeclaredFieldFromAll(XynaObject xo, String fieldName) {
+  public static Field getDeclaredFieldFromAll(GeneralXynaObject xo, String fieldName) {
     List<Field> allDeclaredFields = getAllDeclaredFields(xo);
     for (Field field : allDeclaredFields) {
       if (Objects.equals(field.getName(), fieldName)) {
@@ -978,7 +978,7 @@ public class XOUtils {
     return null;
   }
 
-  public static final String getLabelFor(XynaObject xo, String fieldName) {
+  public static final String getLabelFor(GeneralXynaObject xo, String fieldName) {
     Field f = getDeclaredFieldFromAll(xo, fieldName);
     return f.getAnnotation(LabelAnnotation.class).label();
   }
