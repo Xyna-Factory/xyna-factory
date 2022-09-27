@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidServiceIdException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.Service;
+import com.gip.xyna.xprc.xfractwfe.generation.StepFunction;
 import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -55,8 +57,8 @@ public class WorkflowOperation extends Operation {
     
     // collect service references of all steps, since they have to be added separately on the top-level
     try {
-      Set<Service> topLevelServiceReferences = topLevelStep.getProxyForCatch().getAllServiceReferences();
-      for (Service referencedService : topLevelServiceReferences) {
+      Set<Pair<Service, StepFunction>> topLevelServiceReferences = topLevelStep.getProxyForCatch().getAllServiceReferences();
+      for (Pair<Service, StepFunction> referencedService : topLevelServiceReferences) {
         XMLUtils.appendServiceReference(xml, referencedService, true);
       }
     } catch (XPRC_InvalidServiceIdException e) {

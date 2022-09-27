@@ -1297,8 +1297,8 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
   /**
    * Returns all service references from the step and all child steps.
    */
-  public Set<Service> getAllServiceReferences() throws XPRC_InvalidServiceIdException {
-    Set<Service> serviceReferences = new HashSet<Service>();
+  public Set<Pair<Service, StepFunction>> getAllServiceReferences() throws XPRC_InvalidServiceIdException {
+    Set<Pair<Service, StepFunction>> serviceReferences = new HashSet<>();
     collectServiceReferences(serviceReferences);
     
     return serviceReferences;
@@ -1310,7 +1310,7 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
    * The function must be overridden in sub-classes that have service references, adding them to the set.
    * @param serviceReferences the set the found references are added to
    */
-  protected void collectServiceReferences(Set<Service> serviceReferences) throws XPRC_InvalidServiceIdException {
+  protected void collectServiceReferences(Set<Pair<Service, StepFunction>> serviceReferences) throws XPRC_InvalidServiceIdException {
     List<Step> childSteps = getChildSteps();
     if (childSteps == null) {
       return;
