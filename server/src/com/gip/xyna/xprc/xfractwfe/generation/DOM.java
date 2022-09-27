@@ -86,7 +86,6 @@ import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
-import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceManagement;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache;
 import com.gip.xyna.xprc.XynaOrderServerExtension;

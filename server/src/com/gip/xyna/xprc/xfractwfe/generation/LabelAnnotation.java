@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.persistence;
+package com.gip.xyna.xprc.xfractwfe.generation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

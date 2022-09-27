@@ -40,8 +40,8 @@ import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.utils.misc.DataRangeCollection.DataSource;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
-import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.generation.LabelAnnotation;
 
 /**
  * hilfsmethoden und klassen, die vom generierten code aus verwendet werden
