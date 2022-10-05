@@ -40,8 +40,8 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xods.configuration.Configuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBase;
-import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.generation.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
 @XynaObjectAnnotation(fqXmlName = "xfmg.xods.configuration.XynaProperty")

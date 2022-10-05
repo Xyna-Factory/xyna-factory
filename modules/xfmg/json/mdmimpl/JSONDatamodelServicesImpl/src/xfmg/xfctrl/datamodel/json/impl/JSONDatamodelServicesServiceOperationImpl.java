@@ -39,18 +39,13 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
-import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
-import com.gip.xyna.xprc.xfractwfe.generation.DOM;
-import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
-import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
 import xact.templates.Document;
 import xact.templates.JSON;
@@ -509,24 +504,17 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     try {
       Method methodGetVarNames = xo.getClass().getMethod("getVariableNames");
       HashMap<String,String> ret = new HashMap<String,String>();
-      for( String v : (Set<String>)methodGetVarNames.invoke(xo) ) {
-        ret.put(v, v);
-      }
-      if( useLabels ) {
-        GenerationBaseCache cache = new GenerationBaseCache();
-        String fqXmlName = xo.getClass().getAnnotation(XynaObjectAnnotation.class).fqXmlName();
-        long revision = RevisionManagement.getRevisionByClass(xo.getClass());
-        DomOrExceptionGenerationBase dom = DOM.getOrCreateInstance(fqXmlName, cache, revision);
-        dom.parseGeneration(true, false, false);
-        for (AVariable v : dom.getAllMemberVarsIncludingInherited()) {
-          if( ret.containsKey(v.getVarName() ) ) {
-            ret.put(v.getVarName(), v.getLabel() );
-          }
+      for ( String v : (Set<String>)methodGetVarNames.invoke(xo) ) {
+        if (useLabels) {
+          ret.put(v, XOUtils.getLabelFor(xo, v));
+        } else {
+          ret.put(v, v);
         }
       }
+
       return ret;
     } catch (Exception ex) {
-      //not expected
+      // not expected
       throw new RuntimeException(ex);
     }
   }
