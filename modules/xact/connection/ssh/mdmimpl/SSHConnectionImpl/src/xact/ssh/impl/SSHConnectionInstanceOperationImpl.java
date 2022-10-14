@@ -24,19 +24,29 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.management.RuntimeErrorException;
+import javax.net.SocketFactory;
 
 import org.apache.log4j.Logger;
 
@@ -48,12 +58,12 @@ import xact.connection.ReadTimeout;
 import xact.connection.Response;
 import xact.connection.SendParameter;
 import xact.ssh.AuthenticationMethod;
+import xact.ssh.AuthenticationMode;
 import xact.ssh.EncryptionType;
 import xact.ssh.HostKeyCheckingMode;
+import xact.ssh.HostKeyStorable;
 import xact.ssh.HostKeyStorableRepository;
 import xact.ssh.IdentityStorableRepository;
-import xact.ssh.LogAdapter;
-import xact.ssh.PassphraseRetrievingUserInfo;
 import xact.ssh.ProxyParameter;
 import xact.ssh.SSHConnection;
 import xact.ssh.SSHConnectionInstanceOperation;
@@ -63,6 +73,7 @@ import xact.ssh.SSHProxyParameter;
 import xact.ssh.SSHSendParameter;
 import xact.ssh.SecureStorablePassphraseStore;
 import xact.ssh.SupportedHostNameFeature;
+import xact.ssh.Utils;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
 import xact.templates.DocumentType;
@@ -84,14 +95,22 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHand
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.events.AbortServiceStepEvent;
 import com.gip.xyna.xprc.xsched.orderabortion.AbortionCause;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.HostKey;
-import com.jcraft.jsch.HostKeyRepository;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Proxy;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SocketFactory;
+
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.SSHException;
+import net.schmizz.sshj.connection.channel.Channel;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.direct.Session.Shell;
+import net.schmizz.sshj.transport.TransportException;
+import net.schmizz.sshj.transport.kex.Curve25519SHA256;
+import net.schmizz.sshj.userauth.UserAuthException;
+import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
+import net.schmizz.sshj.userauth.method.AuthHostbased;
+import net.schmizz.sshj.userauth.method.AuthMethod;
+import net.schmizz.sshj.userauth.method.AuthPassword;
+import net.schmizz.sshj.userauth.method.AuthPublickey;
+import net.schmizz.sshj.userauth.password.PasswordFinder;
+import net.schmizz.sshj.userauth.password.Resource;
 
 
 public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSuperProxy implements SSHConnectionInstanceOperation, ServiceStepEventHandler<AbortServiceStepEvent> {
@@ -147,8 +166,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     pipedStreamHolder.start();
   }
   
-  protected transient JSch jsch;
-  protected transient LogAdapter adapter;
+  protected transient SSHClient client;
   private transient TransientConnectionData transientConnectionData;
   private transient boolean commandSend = false;
   
@@ -160,12 +178,14 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   private boolean reconnectAfterRestart = true;
   private ProtocolMessageHandler protocolMessageHandler; 
   private StringBuilder accumulatedResponse;
+  protected XynaIdentityRepository idRepo;
 
   public SSHConnectionInstanceOperationImpl(SSHConnection instanceVar) {
     super(instanceVar);
     transientDataId = -1;
     transientConnectionData = new TransientConnectionData();
-    protocolMessageHandler = ProtocolMessageHandler.newInstance(); 
+    protocolMessageHandler = ProtocolMessageHandler.newInstance();
+    
   }
   
   protected SSHConnection getInstanceVar() {
@@ -178,33 +198,36 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   
   public void connect()  {
     try {
-      jsch = initJSch();
+      initClient();
       transientConnectionData.setSession(createSession(getSSHConnectionParameter()));
       transientDataId = SSHConnectionServiceOperationImpl.registerOpenConnection(transientDataId,transientConnectionData);
-    } catch (JSchException e) {
+    } catch (SSHException e) {
       // TODO catch com.jcraft.jsch.JSchException: reject HostKey: x.x.x.x
       throw new RuntimeException(e);
     }
   }
   
-  private Session createSession(SSHConnectionParameter conParams) throws JSchException {
-    Proxy proxy = null;
+  private Session createSession(SSHConnectionParameter conParams) throws SSHException {
+    Optional<Proxy> proxy = Optional.empty();
     ProxyParameter proxyParam = conParams.getProxy();
     if( proxyParam != null ) {
       if( proxyParam instanceof SSHProxyParameter ) {
-        SSHProxyParameter sshProxyParam = (SSHProxyParameter)proxyParam;
-        Session proxySession = createSession(sshProxyParam.getSSHConnectionParameter());
-        proxy = new SSHProxy(proxySession);
+        // old implementation used nested sessions as proxy, with might be more akin to:
+        // client.getRemotePortForwarder()
+        // and not 
+        // new Socket(proxy)
+        // FIXME see example Jump
+        logger.warn("Proxy parameter currently ignored");
       } else {
-        logger.warn("Ignoring unexpected ProxyParameter "+ proxyParam );
+        logger.warn("Ignoring unexpected ProxyParameter "+ proxyParam);
       }
     }
-    Session session = createSession(conParams, proxy );
+    Session session = createSession(conParams, proxy);
     return session;
   }  
   
 
-  private Session createSession(SSHConnectionParameter conParams, Proxy proxy) throws JSchException {
+  protected Session createSession(SSHConnectionParameter conParams, Optional<Proxy> proxy) {
     int port = 22;
     if (conParams.getPort() != null) {
       port = conParams.getPort();
@@ -215,103 +238,148 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     } else {
       connectionTimeout = -1;
     }
+    client.getTransport().setTimeoutMs(connectionTimeout);
     
-    Session s = jsch.getSession(conParams.getUserName(), conParams.getHost(), port);
-    s.setSocketFactory(new SocketFactory() {
+    client.setSocketFactory(new SocketFactory() {
+      
+      @Override
+      public Socket createSocket() throws IOException {
+        Socket s;
+        if (proxy.isPresent()) {
+          s = new Socket(proxy.get());
+        } else {
+          s = new Socket();
+        }
+        return s;
+      }
 
       @Override
       public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
-        if (connectionTimeout <= 0) { //nicht gesetzt oder unendlich (0)
-          Socket s = new Socket(host, port);
-          s.setKeepAlive(true);
-          return s;
-        } else {
-          Socket s = new Socket();
-          try {
-            s.setKeepAlive(true);
-            s.connect(new InetSocketAddress(host, port), connectionTimeout);
-          } catch (SocketTimeoutException e) {
-            if (legacyErrorMessage.get()) {
-              //abwärtskompatiblere fehlermeldung erzeugen. jsch erzeugt die fehlermeldung mittels Util.createSocket und eigenem thread...
-              throw (SocketTimeoutException)(new SocketTimeoutException("timeout: socket is not established").initCause(e));
-            } else {
-              throw e;
-            }
+          Socket s;
+          if (proxy.isPresent()) {
+            s = new Socket(proxy.get());
+          } else {
+            s = new Socket();
           }
+          connectSocket(s, new InetSocketAddress(host, port));
           return s;
         }
-      }
 
-      @Override
-      public InputStream getInputStream(Socket arg0) throws IOException {
-        return arg0.getInputStream();
-      }
 
-      @Override
-      public OutputStream getOutputStream(Socket arg0) throws IOException {
-        return arg0.getOutputStream();
-      }
-      
-    });
-    if( proxy != null ) {
-      s.setProxy(proxy);
-    }
-    
-    PassphraseRetrievingUserInfo userInfo = new PassphraseRetrievingUserInfo(new SecureStorablePassphraseStore(), adapter);
-    s.setUserInfo(userInfo);
-    HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
-    s.setConfig("StrictHostKeyChecking", checkingMode.getStringRepresentation());
-    if (conParams.getPassword() != null && conParams.getPassword().length() > 0) {
-      s.setPassword(conParams.getPassword());
-      userInfo.setPassword(conParams.getPassword());
-    }
-    if (conParams.getAuthenticationModes() != null && conParams.getAuthenticationModes().size() > 0) { 
-      List<AuthenticationMethod> methods = AuthenticationMethod.getByXynaRepresentation(conParams.getAuthenticationModes());
-      StringBuilder builder = new StringBuilder();
-      for (AuthenticationMethod auth : methods) {
-        for (String identifier : auth.getIdentifiers()) {
-          builder.append(identifier)
-                 .append(",");
+        @Override
+        public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException, UnknownHostException {
+          Socket s;
+          if (proxy.isPresent()) {
+            s = new Socket(proxy.get());
+          } else {
+            s = new Socket();
+          }
+          // TODO there is no way to combine localParams & Proxy, are they mutual
+          connectSocket(s, new InetSocketAddress(host, port));
+          return s;
         }
-      }
-      String authMethods = builder.toString();
-      authMethods = authMethods.substring(0, authMethods.length() - 1);
-      s.setConfig("PreferredAuthentications", authMethods);
-    }
-    if (conParams.getHostKeyAlias() != null && conParams.getHostKeyAlias().length() > 0) {
-      s.setHostKeyAlias(conParams.getHostKeyAlias());
-    }
+  
+        @Override
+        public Socket createSocket(InetAddress host, int port) throws IOException {
+          Socket s;
+          if (proxy.isPresent()) {
+            s = new Socket(proxy.get());
+          } else {
+            s = new Socket();
+          }
+          connectSocket(s, new InetSocketAddress(host, port));
+          return s;
+        }
+  
+        @Override
+        public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort)
+            throws IOException {
+          Socket s;
+          if (proxy.isPresent()) {
+            s = new Socket(proxy.get());
+          } else {
+            s = new Socket();
+          }
+          // TODO there is no way to combine localParams & Proxy, are they mutual
+          connectSocket(s, new InetSocketAddress(address, port));
+          return s;
+        }
+        
+        
+        private void connectSocket(Socket s, InetSocketAddress host) throws IOException {
+          s.setKeepAlive(true);
+          // TODO via client.getConnection().getKeepAlive().setKeepAliveInterval(5); ?
+          if (connectionTimeout > 0) {
+            s.connect(host, connectionTimeout);
+          } else {
+            s.connect(host);
+          }
+        }
+        
+      });
     
+    // TODO Client uses only socketFactory.createSocket(), so the conTimeout we use in our SocketFactory will not have an effect...
     try {
-      EncryptionType type = evaluateHost(conParams);
-      if (type != null) {
-        String currentConfig = s.getConfig(CONFIG_KEY_SERVER_HOST_KEY);
-        logger.debug("currentConfig: " + currentConfig);
-        String filteredConfig = filterConfig(currentConfig, type);
-        logger.debug("filteredConfig: " + filteredConfig);
-        if (filteredConfig != null &&
-            filteredConfig.length() > 0) {
-          s.setConfig(CONFIG_KEY_SERVER_HOST_KEY, filteredConfig);
-        }
-        if (jsch.getIdentityRepository() instanceof XynaIdentityRepository) {
-          XynaIdentityRepository repo = (XynaIdentityRepository) jsch.getIdentityRepository();
-          ReorderingIdentityStorableRepository risr = new ReorderingIdentityStorableRepository(repo, type);
-          jsch.setIdentityRepository(risr);
-        }
+      client.getTransport().getConfig().setKeyExchangeFactories(Collections.singletonList(new Curve25519SHA256.FactoryLibSsh()));
+      client.connect(conParams.getHost(), port);
+      authenticate(conParams);
+      return client.startSession();
+    } catch (IOException e) {
+      if (e instanceof SSHException) {
+        xact.connection.SSHException sshE = Utils.toSshException((SSHException) e);
+        // TODO declare & rethrow
+        throw new RuntimeException(sshE);
+      } else {
+        throw new RuntimeException(e);
       }
-    } catch (RuntimeException e) {
-      logger.warn("Failed to adjust keyExchange for hostKey", e);
     }
     
-    if (connectionTimeout != -1) {
-      s.connect(connectionTimeout);
-    } else {
-      s.connect();
-    }
-    return s;
   }
   
   
+  private void authenticate(SSHConnectionParameter conParams) throws SSHException {
+    System.out.println("authenticate");
+    List<AuthenticationMethod> methods = AuthenticationMethod.getByXynaRepresentation(conParams.getAuthenticationModes());
+    Collection<AuthMethod> aMethod = methods.stream().flatMap(m -> convertMethod(m, conParams).stream()).collect(Collectors.toList());
+    System.out.println(aMethod);
+    client.auth(conParams.getUserName(), aMethod);
+  }
+
+
+  private Collection<AuthMethod> convertMethod(AuthenticationMethod method, SSHConnectionParameter conParams) {
+    System.out.println("convertMethod " + method);
+    switch (method) {
+      case PASSWORD:
+        return Collections.singleton(new AuthPassword(new PasswordFinder() {
+          
+          public boolean shouldRetry(Resource<?> resource) {
+            return false;
+          }
+          
+          public char[] reqPassword(Resource<?> resource) {
+            System.out.println("conParams.getPassword():" + conParams.getPassword());
+            return conParams.getPassword().toCharArray();
+          }
+        }));
+      case HOSTBASED:
+      case PUBLICKEY:
+        Collection<KeyProvider> keys = generateKeyProvider(conParams);
+        if (method == AuthenticationMethod.HOSTBASED) {
+          return keys.stream().map(k -> new AuthHostbased(k, conParams.getHost(), conParams.getUserName())).collect(Collectors.toList());
+        } else {
+          return keys.stream().map(AuthPublickey::new).collect(Collectors.toList());
+        }
+      default:
+        throw new IllegalArgumentException("Unknown AuthenticationMethod '" + method.toString() + "'.");
+    }
+  }
+
+
+  private Collection<KeyProvider> generateKeyProvider(SSHConnectionParameter conParams) {
+    return idRepo.getKey(conParams.getHostKeyAlias(), Optional.empty());
+  }
+
+
   private final Pattern DSA_FILTER = Pattern.compile("[dD][sS][aAsS]");
   private final Pattern RSA_FILTER = Pattern.compile("[rR][sS][aA]");
   
@@ -340,7 +408,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   }
   
   
-  private EncryptionType evaluateHost(SSHConnectionParameter conParams) {
+  /*private EncryptionType evaluateHost(SSHConnectionParameter conParams) {
     Set<EncryptionType> types = new HashSet<EncryptionType>();
     HostKeyRepository hkr = jsch.getHostKeyRepository();
     if (hkr instanceof HostKeyStorableRepository) {
@@ -365,7 +433,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     } else {
       return null;
     }
-  }
+  }*/
   
 
   private Collection<String> determinePossibleHostIdentifiers(SSHConnectionParameter conParams) {
@@ -420,7 +488,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
         } catch (Throwable t) {
           logger.debug("Error while trying to disconnect on failed init", t);
         } finally {
-          jsch = null;
+          client = null;
         }
         if (e.getCause() instanceof ReadTimeout) {
           throw (ReadTimeout) e.getCause();
@@ -431,10 +499,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       prepared = true;
     } else if ( transientConnectionData.isChannelNullOrClosed() ) {
       throw new ConnectionAlreadyClosed(command);
-    } else {
-      //Channel ist verwendbar: erste Verwendung direkt nach connect oder Suspend direkt nach connect vor send
     }
-   
   }
  
   protected boolean getThrowReadTimeoutException(Boolean parameter) {
@@ -550,7 +615,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   
   
   protected abstract void initChannelAndStreams(SendParameter sendParameter, DocumentType documentType, DeviceType deviceType, Command cmd);
-  
 
   
   
@@ -576,23 +640,19 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   
   
   protected void reconnectIfNecessary() {
-    if (jsch == null) {
-      jsch = initJSch();
+    if (client == null) {
+      initClient();
     }
     if (getSession() == null) {
       connect();
     }
   }
   
-  protected JSch initJSch() {
-    adapter = new LogAdapter(logger);
-    JSch.setLogger(adapter);
-    jsch  = new JSch();
+  protected void initClient() {
+    client  = new SSHClient();
     XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
-    jsch.setHostKeyRepository(hostRepo);
-    XynaIdentityRepository idRepo = new IdentityStorableRepository();
-    jsch.setIdentityRepository(idRepo);
-    return jsch;
+    client.addHostKeyVerifier(hostRepo);
+    idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
   }
   
   protected String readFromInputStream(InputStream input, Channel channel, DocumentType documentType, DeviceType deviceType, long timeoutInMillis, Command cmd) throws UnsupportedEncodingException, IOException, ReadTimeout {
@@ -640,7 +700,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
             break;
           }
         }
-        if (channel.isClosed()) {
+        if (!channel.isOpen()) {
           break;
         }
         if (isCanceled) {
@@ -692,6 +752,10 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     return transientConnectionData.getSession();
   }
   
+  protected Channel getChannel() {
+    return transientConnectionData.getChannel();
+  }
+  
   protected OutputStream getOutputStream() {
     return transientConnectionData.getOutputStream();
   }
@@ -704,9 +768,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     transientConnectionData.setChannelAndStreams(channel);
   }
 
-  protected Channel getChannel() {
-    return transientConnectionData.getChannel();
-  }  
   
   private static void updateStreamHolder(InputStream input) {
     // workaround for jsch bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=359184

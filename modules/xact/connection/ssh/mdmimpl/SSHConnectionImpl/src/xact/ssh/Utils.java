@@ -10,7 +10,7 @@ public final class Utils {
 
   private Utils() {} // static utils class
 
-  static SSHException toSshException(net.schmizz.sshj.common.SSHException sshjException) {
+  public static SSHException toSshException(net.schmizz.sshj.common.SSHException sshjException) {
     switch (sshjException.getDisconnectReason()) {
       case CONNECTION_LOST:
         return new ConnectionLostException(sshjException.getMessage());

@@ -21,8 +21,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.Session;
+import net.schmizz.sshj.connection.ConnectionException;
+import net.schmizz.sshj.connection.channel.Channel;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.direct.Session.Shell;
+import net.schmizz.sshj.transport.TransportException;
+
 
 
 public class TransientConnectionData {
@@ -61,19 +65,29 @@ public class TransientConnectionData {
   public void disconnect() {
     try {
       if (channel != null) {
-        channel.disconnect();
+        channel.close();
         channel = null;
       }
+    } catch (TransportException e) {
+      throw new RuntimeException(e);
+    } catch (ConnectionException e) {
+      throw new RuntimeException(e);
     } finally {
       if (session != null) {
-        session.disconnect();
+        try {
+          session.close();
+        } catch (TransportException e) {
+          throw new RuntimeException(e);
+        } catch (ConnectionException e) {
+          throw new RuntimeException(e);
+        }
         session = null;
       }
     }
   }
 
   public boolean isChannelNullOrClosed() {
-    return channel == null || channel.isClosed();
+    return channel == null || !channel.isOpen();
   }
   
 }
