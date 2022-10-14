@@ -17,34 +17,17 @@
  */
 package xact.ssh;
 
-import com.jcraft.jsch.HostKeyRepository;
 
 
 public enum CheckResult {
   
-  OK(HostKeyRepository.OK),
-  CHANGED(HostKeyRepository.CHANGED),
-  NOT_INCLUDED(HostKeyRepository.NOT_INCLUDED);
+  OK(),
+  CHANGED(),
+  NOT_INCLUDED();
 
-  private final int numericRepresentation;
   
-  private CheckResult(int numericRepresentation) {
-    this.numericRepresentation = numericRepresentation;
+  private CheckResult() {
   }
   
-  
-  public int getNumericRepresentation() {
-    return numericRepresentation;
-  }
-  
-  
-  public static CheckResult getByNumericRepresentation(int numericRepresentation) {
-    for (CheckResult checkResult : values()) {
-      if (checkResult.numericRepresentation == numericRepresentation) {
-        return checkResult;
-      }
-    }
-    throw new IllegalArgumentException("Invalid numericRepresentation: " + numericRepresentation);
-  }
   
 }

@@ -17,7 +17,18 @@
  */
 package xact.ssh;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +40,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xnwh.exceptions.XNWH_NoPersistenceLayerConfiguredForTableException;
 import com.gip.xyna.xnwh.persistence.FactoryWarehouseCursor;
 import com.gip.xyna.xnwh.persistence.ODS;
@@ -39,8 +51,14 @@ import com.gip.xyna.xnwh.persistence.Parameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.persistence.PreparedQueryCache;
-import com.jcraft.jsch.HostKey;
-import com.jcraft.jsch.UserInfo;
+
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.KeyType;
+import net.schmizz.sshj.transport.verification.HostKeyVerifier;
+import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts;
+import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts.EntryFactory;
+import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts.HostEntry;
+import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts.KnownHostEntry;
 
 
 
@@ -51,6 +69,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
   private final static PreparedQueryCache queryCache = new PreparedQueryCache();
   private final static ReadWriteLock hostLock = new ReentrantReadWriteLock();
   private final static ODS ods = ODSImpl.getInstance();
+  private final static int DEFAULT_PORT = 22;
   
   private final static String directHostKeyQueryString = "SELECT * FROM " + HostKeyStorable.TABLE_NAME + " WHERE " + HostKeyStorable.COL_NAME + " = ?" +
                                                                                                   " AND " + HostKeyStorable.COL_FUZZY + " = 'false'" + 
@@ -78,9 +97,9 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
     this.features = features;
     this.notSupported = SupportedHostNameFeature.inverse(features);
   }
-    
   
-  public void add(HostKey hostkey, UserInfo ui) {
+  
+  public void add(HostKeyStorable hostkey) {
     hostLock.writeLock().lock();
     try {
       for (SupportedHostNameFeature noSup : notSupported) {
@@ -89,64 +108,60 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
           return;
         }
       }
-      CheckResult check = CheckResult.getByNumericRepresentation(check(hostkey.getHost(), JSchUtil.base64StringToPublicKeyBlob(hostkey.getKey())));
-      switch (check) {
-        case CHANGED :
-          if (ui != null) {
-            ui.showMessage("Adding already contained host (" + hostkey.getHost() + ") with different key, adding anyway.");
-          }
-          //fall through
-        case NOT_INCLUDED :
-          HostKeyStorable storable = hostKeyToStorable(hostkey);
-          ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
+      PublicKey key;
+      try {
+        key = SSHUtil.extractPublicKey(hostkey);
+      } catch (Throwable t) {
+        throw new RuntimeException("Error adding hostKey", t);
+      }
+      // name might already contain a port but passing DEFAULT_PORT leads to no adjustment of the hostname, so there is no need to extract the port and pass a modified hostname & port
+      boolean verified = verify(hostkey.getName(), DEFAULT_PORT, key);
+      if (!verified) { // TODO here or during handling-hook?
+        ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
+        try {
           try {
-            try {
-              con.persistObject(storable);
-              con.commit();
-            } catch (PersistenceLayerException e) {
-              throw new RuntimeException("Error storing hostKey",e);
-            }
-          } finally {
-            try {
-              con.closeConnection();
-            } catch (PersistenceLayerException e) {
-              logger.debug("Error while trying to close connection",e);
-            }
+            con.persistObject(hostkey);
+            con.commit();
+          } catch (PersistenceLayerException e) {
+            throw new RuntimeException("Error storing hostKey",e);
           }
-          break;
-        case OK :
-          // ntbd
-          break;
+        } finally {
+          try {
+            con.closeConnection();
+          } catch (PersistenceLayerException e) {
+            logger.debug("Error while trying to close connection",e);
+          }
+        }
       }
     } finally {
       hostLock.writeLock().unlock();
     }
   }
 
-  public int check(String host, byte[] key) {
+  
+  public boolean verify(String hostname, int port, PublicKey key) {
     hostLock.readLock().lock();
     try {
       // direct lookup against !fuzzy & !hashed with [<host>]:<port> and without 
       ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
       try {
-        String publickey = JSchUtil.publicKeyBlobTobase64String(key);
-        EncryptionType type = JSchUtil.getKeyType(key);
+        EncryptionType type = EncryptionType.getByStringRepresentation(key.getAlgorithm());
         boolean atLeastOneChanged = false;
-        CheckResult result = findDirectMatch(host, publickey, type, con);
+        CheckResult result = findDirectMatch(hostname, SSHUtil.encodePublicKey(key), type, con);
         switch (result) {
           case OK :
-            return CheckResult.OK.getNumericRepresentation();
+            return true;
           case CHANGED :
             atLeastOneChanged = true;
           case NOT_INCLUDED :
             //ntbd
         }
-        if (host.startsWith("[") && host.contains("]:")) {
-          String hostWithoutSpecialPort = host.substring(1, host.indexOf("]:"));
-          result = findDirectMatch(hostWithoutSpecialPort, publickey, type, con);
+        if (hostname.startsWith("[") && hostname.contains("]:")) {
+          String hostWithoutSpecialPort = hostname.substring(1, hostname.indexOf("]:"));
+          result = findDirectMatch(hostWithoutSpecialPort, SSHUtil.encodePublicKey(key), type, con);
           switch (result) {
             case OK :
-              return CheckResult.OK.getNumericRepresentation();
+              return true;
             case CHANGED :
               atLeastOneChanged = true;
             case NOT_INCLUDED :
@@ -160,10 +175,10 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
           Collection<HostKeyStorable> keys = cursor.getRemainingCacheOrNextIfEmpty();
           while (keys != null && keys.size() > 0) {
             for (HostKeyStorable hostkey : keys) {
-              result = checkHostKey(hostkey, host, publickey, type);
+              result = checkHostKey(hostkey, hostname, SSHUtil.encodePublicKey(key), type);
               switch (result) {
                 case OK :
-                  return CheckResult.OK.getNumericRepresentation();
+                  return true;
                 case CHANGED :
                   atLeastOneChanged = true;
                   break;
@@ -175,9 +190,9 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
           }
         }
         if (atLeastOneChanged) {
-          return CheckResult.CHANGED.getNumericRepresentation();
+          return true;
         } else {
-          return CheckResult.NOT_INCLUDED.getNumericRepresentation();
+          return false;
         }
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("",e);
@@ -186,6 +201,39 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
           con.closeConnection();
         } catch (PersistenceLayerException e) {
           logger.debug("Error while trying to close connection",e);
+        }
+      }
+    } finally {
+      hostLock.readLock().unlock();
+    }
+  }
+  
+  
+  public List<String> findExistingAlgorithms(String hostname, int port) {
+    hostLock.readLock().lock();
+    try {
+      ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
+      try {
+        List<String> matches = new ArrayList<String>();
+        FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(loadAllQueryString, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 100, queryCache);
+        Collection<HostKeyStorable> keys = cursor.getRemainingCacheOrNextIfEmpty();
+        while (keys != null && keys.size() > 0) {
+          for (HostKeyStorable hostKeyStorable : keys) {
+            // TODO include port?
+            //        as fallback if the match did not work?
+            if (isMatched(hostKeyStorable, hostname)) {
+              matches.add(hostKeyStorable.getType()); // this ist the 'ssh-rsa'-type, should it be 'RSA' ?
+            }
+          }
+        }
+        return matches;
+      } catch (PersistenceLayerException e) {
+        throw new RuntimeException("TODO",e);
+      } finally {
+        try {
+          con.closeConnection();
+        } catch (PersistenceLayerException e) {
+          throw new RuntimeException("TODO",e);
         }
       }
     } finally {
@@ -233,40 +281,19 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
   }
   
 
-  public HostKey[] getHostKey() {
-    // not called from infrastructure, might fail for huge data
-    // could be load by cursor but does'nt prevent us from returning a huge HostKey[]
-    ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
-    try {
-      Collection<HostKeyStorable> keys = con.loadCollection(HostKeyStorable.class);
-      ArrayList<HostKey> hks = new ArrayList<HostKey>();
-      for (HostKeyStorable key : keys) {
-        hks.add(storableToHostKey(key));
-      }
-      return hks.toArray(new HostKey[hks.size()]);
-    } catch (PersistenceLayerException e) {
-      throw new RuntimeException("",e);
-    } finally {
-      try {
-        con.closeConnection();
-      } catch (PersistenceLayerException e) {
-        logger.debug("Error while trying to close connection",e);
-      }
-    }
-  }
 
-  public HostKey[] getHostKey(String host) {
+  public HostKeyStorable[] getHostKey(String host) {
     return getHostKey(host, null);
   }
   
-  public HostKey[] getHostKey(String host, String type) {
+  public HostKeyStorable[] getHostKey(String host, String type) {
     hostLock.readLock().lock();
     try {
       EncryptionType encryptionType = (type != null) ? EncryptionType.getBySshStringRepresentation(type) : null;
       ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
       try {
 
-        List<HostKey> result = getDirectMatches(con, host, encryptionType);
+        List<HostKeyStorable> result = getDirectMatches(con, host, encryptionType);
         if (host.startsWith("[") && host.contains("]:")) {
           String hostWithoutSpecialPort = host.substring(1, host.indexOf("]:"));
           result.addAll(getDirectMatches(con, hostWithoutSpecialPort, encryptionType));
@@ -283,7 +310,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
                 if (isMatched(hostkey, host)) {
                   if (encryptionType == null ||
                       hostkey.getType().equals(encryptionType.getStringRepresentation()))
-                    result.add(storableToHostKey(hostkey));
+                    result.add(hostkey);
                   }
               }
               keys = cursor.getRemainingCacheOrNextIfEmpty();
@@ -292,7 +319,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
             cursor.close();
           }
         }
-        return result.toArray(new HostKey[result.size()]);
+        return result.toArray(new HostKeyStorable[result.size()]);
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("", e);
       } finally {
@@ -308,13 +335,13 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
   }
 
 
-  private List<HostKey> getDirectMatches(ODSConnection con, String host, EncryptionType encryptionType) throws PersistenceLayerException {
-    List<HostKey> result = new ArrayList<HostKey>();
+  private List<HostKeyStorable> getDirectMatches(ODSConnection con, String host, EncryptionType encryptionType) throws PersistenceLayerException {
+    List<HostKeyStorable> result = new ArrayList<HostKeyStorable>();
     for (HostKeyStorable hostkey : queryDirectMatch(host, con)) {
       if (isMatched(hostkey, host)) {
         if (encryptionType == null || 
             hostkey.getType().equals(encryptionType.getStringRepresentation()))
-          result.add(storableToHostKey(hostkey));
+          result.add(hostkey);
         }
     }
     return result;
@@ -325,15 +352,8 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
     return "HostKeyStorableRepository@"+System.identityHashCode(this);
   }
 
-  public void remove(String host, String type) {
-    this.remove(host, type, null);
-  }
 
-  public void remove(String host, String type, byte[] key) {
-    String publickey = null;
-    if (key != null) {
-      publickey = JSchUtil.publicKeyBlobTobase64String(key);
-    }
+  public boolean remove(String host, String type) { // TODO Optional<EncryptionType> ?
     hostLock.writeLock().lock();
     try {
       ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
@@ -342,7 +362,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
         List<HostKeyStorable> toPersist = new ArrayList<HostKeyStorable>();
         
         for (HostKeyStorable hostkey : queryDirectMatch(host, con)) {
-          checkDeletion(hostkey, toPersist, toDelete, host, type, publickey);
+          checkDeletion(hostkey, toPersist, toDelete, host, type);
         }
         
         if (features.contains(SupportedHostNameFeature.FUZZY) ||
@@ -351,7 +371,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
           Collection<HostKeyStorable> keys = cursor.getRemainingCacheOrNextIfEmpty();
           while (keys != null && keys.size() > 0) {
             for (HostKeyStorable hostkey : keys) {
-              checkDeletion(hostkey, toPersist, toDelete, host, type, publickey);
+              checkDeletion(hostkey, toPersist, toDelete, host, type);
             }
             keys = cursor.getRemainingCacheOrNextIfEmpty();
           }
@@ -359,6 +379,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
         con.delete(toDelete);
         con.persistCollection(toPersist);
         con.commit();
+        return toDelete.size() > 0 || toPersist.size() > 0;
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("",e);
       } finally {
@@ -374,10 +395,9 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
   }
   
   
-  private void checkDeletion(HostKeyStorable hostkey, List<HostKeyStorable> toPersist, List<HostKeyStorable> toDelete, String host, String type, String publickey) {
-    if (isHostNameMatched(hostkey, host) &&
-        (type == null || type.equals(hostkey.getType())) &&
-        (publickey == null || publickey.equals(hostkey.getPublickey()))) {
+  private void checkDeletion(HostKeyStorable hostkey, List<HostKeyStorable> toPersist, List<HostKeyStorable> toDelete, String host, String type) {
+    if (isMatched(hostkey, host) &&
+        (type == null || type.equals(hostkey.getType()))) {
        if (hostkey.isHostNameList()) {
          hostkey.removeFromHostNameList(host);
          toPersist.add(hostkey);
@@ -396,20 +416,25 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
         FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(loadAllQueryString, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 100, queryCache);
         Collection<HostKeyStorable> keys = cursor.getRemainingCacheOrNextIfEmpty();
         while (keys != null && keys.size() > 0) {
-          Collection<HostKey> matches = new ArrayList<HostKey>();
+          Collection<HostKeyStorable> matches = new ArrayList<HostKeyStorable>();
           for (HostKeyStorable hostkey : keys) {
-            if (host == null || isHostNameMatched(hostkey, host) &&
+            if (host == null || isMatched(hostkey, host) &&
                (type == null || type.equals(hostkey.getType()))) {
-              matches.add(storableToHostKey(hostkey));
+              matches.add(hostkey);
             }
           }
           if (matches.size() > 0) {
-            JSchUtil.exportKnownHosts(matches.toArray(new HostKey[matches.size()]), filenameKnownHosts);
+            try (FileOutputStream fos = new FileOutputStream(new File(filenameKnownHosts))) {
+              for (HostKeyStorable hostKeyStorable : matches) {
+                fos.write(hostKeyToHostEntryLine(hostKeyStorable).getBytes(Charset.defaultCharset()));
+                fos.write(Constants.LINE_SEPARATOR.getBytes(Charset.defaultCharset()));
+              }
+            }
           }
           keys = cursor.getRemainingCacheOrNextIfEmpty();
         }
-      } catch (PersistenceLayerException e) {
-        throw new RuntimeException("",e);
+      } catch (Exception e) {
+        throw new RuntimeException("TODO",e);
       } finally {
         try {
           con.closeConnection();
@@ -424,24 +449,25 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
 
   
   public void importKnownHosts(String filenameKnownHosts) {
+    
     if (!new File(filenameKnownHosts).exists()) {
       throw new IllegalArgumentException("Hostfile '" + filenameKnownHosts + "' does not exist.");
     }
-    List<HostKey> keys = JSchUtil.importKnownHosts(filenameKnownHosts);
-    for (HostKey hostKey : keys) {
-      add(hostKey, null);
+
+    OpenSSHKnownHosts openSSHKnownHosts;
+    try {
+      openSSHKnownHosts = new OpenSSHKnownHosts(new File(filenameKnownHosts));
+    } catch (IOException e) {
+      throw new RuntimeException("File not parsable.", e);
+    }
+    for (KnownHostEntry host : openSSHKnownHosts.entries()) {
+      if (host instanceof HostEntry) {
+        add(SSHJReflection.createStorableFromHostEntry((HostEntry) host));
+      }
     }
   }
   
   
-  private final static HostKeyStorable hostKeyToStorable(HostKey key) {
-    return new HostKeyStorable(key.getHost(), EncryptionType.getBySshStringRepresentation(key.getType()).getStringRepresentation(), key.getKey(), JSchUtil.isHostKeyHashed(key), key.getComment());
-  }
-  
-  private final static HostKey storableToHostKey(HostKeyStorable key) {
-    return JSchUtil.instantiateHashedHostKey(key.getName(), EncryptionType.getByStringRepresentation(key.getType()), key.getPublickey(), null, false, key.getComment());
-  }
-
   
   public void init() {
     try {
@@ -474,7 +500,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
   
   
   private CheckResult checkHostKey(HostKeyStorable key, String hostname, String publickey, EncryptionType type) {
-    if (isHostNameMatched(key, hostname) &&
+    if (isMatched(key, hostname) &&
         key.getType().equals(type.getStringRepresentation())) {
       if (key.getPublickey().equals(publickey)) {
         return CheckResult.OK;
@@ -485,53 +511,52 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
       return CheckResult.NOT_INCLUDED;
     }
   }
-  
-    
-    
-    /*
-    Hostnames is a comma-separated list of patterns (`*' and `?' act as
-   wildcards); each pattern in turn is matched against the canonical host
-   name (when authenticating a client) or against the user-supplied name
-   (when authenticating a server).  A pattern may also be preceded by `!' to
-   indicate negation: if the host name matches a negated pattern, it is not
-   accepted (by that line) even if it matched another pattern on the line.
-   A hostname or address may optionally be enclosed within `[' and `]'
-   brackets then followed by `:' and a non-standard port number.
-   */
-    public boolean isHostNameMatched(HostKeyStorable knownHost, String hostname) {
-      List<String> hostNamesToCheck = new ArrayList<String>();
-      hostNamesToCheck.add(hostname);
-      if (hostname.startsWith("[") && hostname.contains("]:")) {
-        hostNamesToCheck.add(hostname.substring(1, hostname.indexOf("]:")));
+
+  public boolean isMatched(HostKeyStorable knownHost, String hostname) {
+    HostEntry hostkey = storableToHostEntry(knownHost);
+    for (SupportedHostNameFeature noSup : notSupported) {
+      if (noSup.accept(knownHost)) {
+        logger.debug("HostKey feature '" + noSup + "' is not supported, key will not be matched!");
+        return false;
       }
-      for (String hostnameToCheck : hostNamesToCheck) {
-        if (knownHost.isFuzzy() && 
-            features.contains(SupportedHostNameFeature.FUZZY)) {
-          for (Pattern pattern : knownHost.getFuzzyPatterns()) {
-            if (pattern.matcher(hostnameToCheck).matches()) {
-              return true;
-            }
+    }
+    try {
+      return hostkey.appliesTo(hostname);
+    } catch (IOException e) {
+      throw new RuntimeException("Host '" + knownHost.getName() + "' could not be converted to HostEntry.", e);
+    }
+  }
+    
+    
+    private static String hostKeyToHostEntryLine(HostKeyStorable knownHost) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(knownHost.getName())
+        .append(' ')
+        .append(knownHost.getType())
+        .append(' ')
+        .append(knownHost.getPublickey()); // TODO decode?
+      return sb.toString();
+    }
+
+    private static HostEntry storableToHostEntry(HostKeyStorable knownHost) {
+      InputStream entry = new ByteArrayInputStream(hostKeyToHostEntryLine(knownHost).getBytes(Charset.defaultCharset()));
+      try {
+        OpenSSHKnownHosts hosts = new OpenSSHKnownHosts(new InputStreamReader(entry, Charset.defaultCharset()));
+        assert hosts.entries().size() == 1;
+        for (KnownHostEntry hostEntry : hosts.entries()) {
+          if (hostEntry instanceof HostEntry) {
+            return (HostEntry) hostEntry;
           }
-        } else if (isMatched(knownHost, hostnameToCheck)) {
-          return true;
-        } else if (hostnameToCheck.equals(knownHost.getName())) {
-          return true;
         }
+      } catch (IOException e) {
+        // ntbd
       }
-      
-      return false;
+      throw new RuntimeException("Host '" + knownHost.getName() + "' could not be converted to HostEntry.");
     }
+
+
     
     
-    public boolean isMatched(HostKeyStorable knownHost, String hostname) {
-      HostKey hostkey = storableToHostKey(knownHost);
-      for (SupportedHostNameFeature noSup : notSupported) {
-        if (noSup.accept(hostkey)) {
-          logger.debug("HostKey feature '" + noSup + "' is not supported, key will not be matched!");
-          return false;
-        }
-      }
-      return JSchUtil.isHostNameMatched(hostkey, hostname);
-    }
+
 
 }

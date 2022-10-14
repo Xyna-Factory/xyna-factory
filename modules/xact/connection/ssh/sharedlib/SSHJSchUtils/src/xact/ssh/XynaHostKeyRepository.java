@@ -17,14 +17,17 @@
  */
 package xact.ssh;
 
-import com.jcraft.jsch.HostKeyRepository;
+import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
-
-public interface XynaHostKeyRepository extends HostKeyRepository {
+public interface XynaHostKeyRepository extends HostKeyVerifier {
 
   public void exportKnownHost(String hostname, String type, String filenameKnownHosts);
   
   public void importKnownHosts(String filenameKnownHosts);
+  
+  public void add(HostKeyStorable hostkey);
+  
+  public boolean remove(String host, String type);
   
   public void init();
   

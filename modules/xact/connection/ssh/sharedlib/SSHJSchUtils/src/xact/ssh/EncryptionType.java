@@ -17,32 +17,25 @@
  */
 package xact.ssh;
 
-import com.jcraft.jsch.KeyPair;
 
 
 public enum EncryptionType {
-  RSA("RSA", KeyPair.RSA, "ssh-rsa", "xact.ssh.RSA"), 
-  DSA("DSA", KeyPair.DSA, "ssh-dss", "xact.ssh.DSA"),
-  UNKNOWN("UNKNOWN", KeyPair.UNKNOWN, "unknown", "xact.ssh.EncryptionAlgorithmType");
+  RSA("RSA", "ssh-rsa", "xact.ssh.RSA"), 
+  DSA("DSA", "ssh-dss", "xact.ssh.DSA"),
+  UNKNOWN("UNKNOWN", "unknown", "xact.ssh.EncryptionAlgorithmType");
   
   private final String stringRepresentation;
-  private final int numericRepresentation;
   private final String sshStringRepresentation;
   private final String xynaFqClassName;
   
-  private EncryptionType(String stringRepresentation, int numericRepresentation, String sshStringRepresentation, String xynaFqClassName) {
+  private EncryptionType(String stringRepresentation, String sshStringRepresentation, String xynaFqClassName) {
     this.stringRepresentation = stringRepresentation;
-    this.numericRepresentation = numericRepresentation;
     this.sshStringRepresentation = sshStringRepresentation;
     this.xynaFqClassName = xynaFqClassName;
   }
   
   public String getStringRepresentation() {
     return stringRepresentation;
-  }
-  
-  public int getNumericRepresentation() {
-    return numericRepresentation;
   }
   
   public String getSshStringRepresentation() {
@@ -61,15 +54,6 @@ public enum EncryptionType {
   public static EncryptionType getBySshStringRepresentation(String representation) {
     for (EncryptionType mode : values()) {
       if (mode.sshStringRepresentation.equals(representation)) {
-        return mode;
-      }
-    }
-    return UNKNOWN;
-  }
-  
-  public static EncryptionType getByNumericRepresentation(int representation) {
-    for (EncryptionType mode : values()) {
-      if (mode.numericRepresentation == representation) {
         return mode;
       }
     }

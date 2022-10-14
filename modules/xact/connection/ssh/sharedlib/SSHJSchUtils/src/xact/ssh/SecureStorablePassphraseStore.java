@@ -22,19 +22,17 @@ import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
 import com.gip.xyna.xnwh.securestorage.SecuredStorable;
-import com.jcraft.jsch.Identity;
 
 
-// TODO offer remove and use it?
 public class SecureStorablePassphraseStore implements PassphraseStore {
 
   public void store(String identityName, String passphrase) {
     try {
       SecureStorage.getInstance().store("xact.ssh", identityName, passphrase == null ? "" : passphrase);
     } catch (PersistenceLayerException e) {
-      throw new RuntimeException("", e);
+      throw new RuntimeException(e);
     } catch (XynaException e) {
-      throw new RuntimeException("", e);
+      throw new RuntimeException(e);
     }
   }
 
@@ -42,7 +40,7 @@ public class SecureStorablePassphraseStore implements PassphraseStore {
     try {
       return (String) SecureStorage.getInstance().retrieve("xact.ssh", identityName);
     } catch (XynaException e) {
-      throw new RuntimeException("", e);
+      throw new RuntimeException(e);
     }
   }
 
@@ -50,7 +48,7 @@ public class SecureStorablePassphraseStore implements PassphraseStore {
     try {
       SecureStorage.getInstance().remove("xact.ssh", identityName);
     } catch (XynaException e) {
-      throw new RuntimeException("", e);
+      throw new RuntimeException(e);
     }
   }
   

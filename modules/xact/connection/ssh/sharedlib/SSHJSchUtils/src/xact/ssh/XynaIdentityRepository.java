@@ -17,17 +17,32 @@
  */
 package xact.ssh;
 
-import com.jcraft.jsch.Identity;
-import com.jcraft.jsch.IdentityRepository;
-import com.jcraft.jsch.KeyPair;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 
 
-public interface XynaIdentityRepository extends IdentityRepository {
+public interface XynaIdentityRepository {
   
-  public Identity tryAdd(byte[] identityBytes, byte publicBytes[]);
+  public Collection<IdentityStorable> getAllIdentities();
+  
+  public List<KeyProvider> getAllKeys();
+  
+  public List<KeyProvider> getKey(String name, Optional<String> type);
+  
+  public IdentityStorable add(Optional<String> name, EncryptionType keyType, byte[] privateKey, byte[] publicKey, Optional<String> passphrase);
+  
+  public Collection<IdentityStorable> removeKey(EncryptionType type, Optional<String> publickey);
+  
+  public void clearAll();
   
   public void init();
   
   public void shutdown();
+
+  
   
 }
