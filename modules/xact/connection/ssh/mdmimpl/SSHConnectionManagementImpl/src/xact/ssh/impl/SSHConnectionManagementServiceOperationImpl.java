@@ -36,10 +36,6 @@ import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHandling;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
-import com.jcraft.jsch.HostKey;
-import com.jcraft.jsch.Identity;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
