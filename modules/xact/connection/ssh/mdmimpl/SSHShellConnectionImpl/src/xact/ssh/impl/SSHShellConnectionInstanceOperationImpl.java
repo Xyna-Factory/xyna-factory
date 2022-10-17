@@ -20,6 +20,7 @@ package xact.ssh.impl;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.List;
 
 import xact.connection.Command;
@@ -42,8 +43,8 @@ import xact.templates.DocumentType;
 import xfmg.xfmon.protocolmsg.ProtocolMessage;
 
 import com.gip.xyna.xfmg.Constants;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSchException;
+
+import net.schmizz.sshj.connection.channel.direct.Session.Shell;
 
 
 public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionSuperProxy implements SSHShellConnectionInstanceOperation {
@@ -60,8 +61,6 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
 
   protected void initChannelAndStreams(SendParameter sendParameter, DocumentType documentType, DeviceType deviceType, Command cmd) {
     try {
-      ChannelShell shellChannel = (ChannelShell) getSession().openChannel("shell");
-      shellChannel.setPty(true);
       String terminalType = "gogrid";
       if (instanceVar.getConnectionParameter() instanceof SSHConnectionParameter) {
         SSHConnectionParameter sshConParams = (SSHConnectionParameter)instanceVar.getConnectionParameter();
@@ -70,26 +69,26 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           terminalType = sshConParams.getTerminalType().trim();
         }
       }
-      shellChannel.setPtyType(terminalType, 5000, 5000, 5000, 5000);
-
+      
+      getSession().allocatePTY(terminalType, 5000, 5000, 5000, 5000, Collections.emptyMap());
+      
+      Shell shell = getSession().startShell();
+      setChannelAndStreams(shell);
+      
       SSHSendParameter sp;
       if (sendParameter == null) {
         sp = new SSHSendParameter.Builder().connectionTimeoutInMilliseconds(5000).readTimeoutInMilliseconds(2000).reconnectAfterRestart(true).throwExceptionOnReadTimeout(true).instance();
       } else {
         sp = (SSHSendParameter) sendParameter;  
       }
-      
-      setChannelAndStreams(shellChannel);
-      shellChannel.connect((int) Math.min(sp.getConnectionTimeoutInMilliseconds(), Integer.MAX_VALUE));
 
       loginResult =
-          readFromInputStream(getInputStream(), shellChannel, documentType, deviceType, sp.getReadTimeoutInMilliseconds(), cmd,
+          readFromInputStream(getInputStream(), shell, documentType, deviceType, sp.getReadTimeoutInMilliseconds(), cmd,
                               getThrowReadTimeoutException(sp.getThrowExceptionOnReadTimeout()));
-    } catch (JSchException t) {
-      throw new RuntimeException(t);
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {
+      // TODO catch SSHException, declare and throw them
       throw new RuntimeException(e);
     } catch (ReadTimeout e) {
       throw new RuntimeException(e);
