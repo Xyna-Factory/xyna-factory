@@ -176,7 +176,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   private volatile boolean isCanceled = false;
   private volatile AbortionCause cause;
   private boolean reconnectAfterRestart = true;
-  private ProtocolMessageHandler protocolMessageHandler; 
+  protected ProtocolMessageHandler protocolMessageHandler; 
   private StringBuilder accumulatedResponse;
   protected XynaIdentityRepository idRepo;
 
@@ -338,16 +338,13 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   
   
   private void authenticate(SSHConnectionParameter conParams) throws SSHException {
-    System.out.println("authenticate");
     List<AuthenticationMethod> methods = AuthenticationMethod.getByXynaRepresentation(conParams.getAuthenticationModes());
     Collection<AuthMethod> aMethod = methods.stream().flatMap(m -> convertMethod(m, conParams).stream()).collect(Collectors.toList());
-    System.out.println(aMethod);
     client.auth(conParams.getUserName(), aMethod);
   }
 
 
   private Collection<AuthMethod> convertMethod(AuthenticationMethod method, SSHConnectionParameter conParams) {
-    System.out.println("convertMethod " + method);
     switch (method) {
       case PASSWORD:
         return Collections.singleton(new AuthPassword(new PasswordFinder() {
@@ -357,7 +354,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
           }
           
           public char[] reqPassword(Resource<?> resource) {
-            System.out.println("conParams.getPassword():" + conParams.getPassword());
             return conParams.getPassword().toCharArray();
           }
         }));
