@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 8.2 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2021
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision$
+ * $Date$
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Build Query Input" TypeName="BuildQueryInput" TypePath="xmcp.tables" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Build Query Input" Name="BuildQueryInput">
+    <Input>
+      <Data ID="22" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo22"/>
+    </Input>
+    <Output>
+      <Data ID="72" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask72"/>
+      <Data ID="101" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition101"/>
+      <Data ID="130" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="queryParameter130"/>
+    </Output>
+    <ServiceReference ID="43" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables"/>
+    <Function ID="42" Label="Build Query Parameters from TableInfo">
+      <Source RefID="43"/>
+      <Source RefID="22"/>
+      <Source RefID="184"/>
+      <Target RefID="43"/>
+      <Target RefID="45"/>
+      <Target RefID="46"/>
+      <Target RefID="47"/>
+      <Invoke Operation="buildQueryParametersFromTableInfo" ServiceID="43">
+        <Source RefID="22"/>
+        <Source RefID="184">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="43">
+        <Target RefID="45"/>
+        <Target RefID="46"/>
+        <Target RefID="47"/>
+      </Receive>
+    </Function>
+    <Data ID="45" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask45">
+      <Source RefID="42"/>
+    </Data>
+    <Data ID="46" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition46">
+      <Source RefID="42"/>
+    </Data>
+    <Data ID="47" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="queryParameter47">
+      <Source RefID="42"/>
+    </Data>
+    <Data ID="184" Label="Query Only Selected Columns" ReferenceName="QueryOnlySelectedColumns" ReferencePath="xmcp.tables.datatypes.query" VariableName="const_QueryOnlySelectedColumns184"/>
+    <Assign ID="1">
+      <Source RefID="45"/>
+      <Source RefID="46"/>
+      <Source RefID="47"/>
+      <Target RefID="72"/>
+      <Target RefID="101"/>
+      <Target RefID="130"/>
+      <Copy>
+        <Source RefID="45"/>
+        <Target RefID="72"/>
+      </Copy>
+      <Copy>
+        <Source RefID="46"/>
+        <Target RefID="101"/>
+      </Copy>
+      <Copy>
+        <Source RefID="47"/>
+        <Target RefID="130"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
