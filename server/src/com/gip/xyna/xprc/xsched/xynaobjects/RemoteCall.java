@@ -38,10 +38,10 @@ import com.gip.xyna.xfmg.xfctrl.nodemgmt.RemoteDestinationType.DispatchingTarget
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.remotecall.RemoteCallHelper;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
-import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.exceptions.XPRC_TTLExpirationBeforeHandlerRegistration;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.generation.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHandler;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHandling;

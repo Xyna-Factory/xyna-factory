@@ -34,8 +34,8 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
-import com.gip.xyna.xnwh.persistence.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.generation.LabelAnnotation;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
 @XynaObjectAnnotation(fqXmlName = "xfmg.xods.configuration.parameter.Documentation")

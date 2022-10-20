@@ -960,7 +960,7 @@ public class StepCatch extends Step implements Distinction {
   }
 
   @Override
-  protected void collectServiceReferences(Set<Service> serviceReferences) throws XPRC_InvalidServiceIdException {
+  protected void collectServiceReferences(Set<Pair<Service, StepFunction>> serviceReferences) throws XPRC_InvalidServiceIdException {
     for (String exceptionId : exceptionVariableIdsToCatch.keySet()) {
       exceptionVariableIdsToCatch.get(exceptionId).collectServiceReferences(serviceReferences);
     }
