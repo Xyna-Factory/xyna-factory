@@ -2492,15 +2492,21 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
     
     addLabelsToParameter(inputVars, outputVars);
   }
-  
+
+  public Integer getXmlIdCatchFallback() {
+    Integer xmlId = getXmlId();
+    if ( (xmlId == null) && (catchStep != null) ) {
+      xmlId = catchStep.getXmlId();
+    }
+
+    return xmlId;
+  }
+
   @Override
   public void appendXML(XmlBuilder xml) {
     // <Function>
     xml.startElementWithAttributes(EL.FUNCTION); {
-      Integer xmlId = getXmlId();
-      if ( (xmlId == null) && (catchStep != null) ) {
-        xmlId = catchStep.getXmlId();
-      }
+      Integer xmlId = getXmlIdCatchFallback();
       if (xmlId != null) {
         xml.addAttribute(ATT.ID, xmlId.toString());
       }
@@ -2623,13 +2629,13 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
   }
   
   @Override
-  protected void collectServiceReferences(Set<Service> serviceReferences) throws XPRC_InvalidServiceIdException {
+  protected void collectServiceReferences(Set<Pair<Service, StepFunction>> serviceReferences) throws XPRC_InvalidServiceIdException {
     if (!isPrototype()) {
       try {
         Service service = getParentScope().identifyService(serviceId).service;
-        serviceReferences.add(service);
+        serviceReferences.add(new Pair<Service, StepFunction>(service, this));
       } catch (XPRC_InvalidServiceIdException e) {
-        serviceReferences.add(serviceReference);
+        serviceReferences.add(new Pair<Service, StepFunction>(serviceReference, this));
       }
     }
     
@@ -2706,7 +2712,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       }
     }
     
-    XMLUtils.appendServiceReference(xml, service, false);
+    XMLUtils.appendServiceReference(xml, new Pair<Service, StepFunction>(service, this), false);
   }
   
   public InputConnections getInputConnections() {

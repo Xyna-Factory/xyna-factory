@@ -82,6 +82,7 @@ import org.xml.sax.SAXParseException;
 import com.gip.xyna.BijectiveMap;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.exceptions.Ex_FileWriteException;
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
@@ -1142,7 +1143,10 @@ public class XMLUtils {
   }
 
 
-  public static void appendServiceReference(XmlBuilder xml, Service service, boolean includeLabel) {
+  public static void appendServiceReference(XmlBuilder xml, Pair<Service, StepFunction> serviceWithFunction, boolean includeLabel) {
+    Service service = serviceWithFunction.getFirst();
+    StepFunction stepFunction = serviceWithFunction.getSecond();
+
     xml.startElementWithAttributes(EL.SERVICEREFERENCE); {
       xml.addAttribute(ATT.ID, service.getId());
       if (includeLabel) {
@@ -1155,23 +1159,19 @@ public class XMLUtils {
       if ( (servicePath != null) && (servicePath.length() > 0) ) {
         xml.addAttribute(ATT.REFERENCEPATH, servicePath);
       }
-    } xml.endAttributesAndElement();
-      
-      // TODO: necessary for old GUI?
-//      // <Source>
-//      for (String sourceId : sourceIds) {
-//        xml.startElementWithAttributes(EL.SOURCE); {
-//          xml.addAttribute(ATT.REFID, sourceId);
-//        } xml.endAttributesAndElement();
-//      }
-//      
-//      // <Target>
-//      for (String targetId : targetIds) {
-//        xml.startElementWithAttributes(EL.TARGET); {
-//          xml.addAttribute(ATT.REFID, targetId);
-//        } xml.endAttributesAndElement();
-//      }
-//    } xml.endElement(EL.SERVICEREFERENCE);
+
+      xml.endAttributes();
+
+      // <Source>
+      xml.startElementWithAttributes(EL.SOURCE); {
+        xml.addAttribute(ATT.REFID, stepFunction.getXmlIdCatchFallback().toString());
+      } xml.endAttributesAndElement();
+
+      // <Target>
+      xml.startElementWithAttributes(EL.TARGET); {
+        xml.addAttribute(ATT.REFID, stepFunction.getXmlIdCatchFallback().toString());
+      } xml.endAttributesAndElement();
+    } xml.endElement(EL.SERVICEREFERENCE);
   }
 
 
