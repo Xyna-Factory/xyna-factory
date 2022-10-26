@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSHServer" comment="SSH Trigger und Filter" factoryVersion="" versionName="1.0.4" xmlVersion="1.1">
+<Application applicationName="SSHServer" comment="SSH Trigger und Filter" factoryVersion="" versionName="1.0.5" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
