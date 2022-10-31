@@ -300,7 +300,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
           payload = "";
         } else {
           //TODO unterscheiden zwischen content-types: bei binärdaten ist das vielleicht nicht die beste methode...
-          StringBuffer postLine = new StringBuffer();
+          ByteArrayOutputStream postLine = new ByteArrayOutputStream();
           byte buf[] = new byte[(int) Math.min(512l, numberOfBytes)];
           int read = lineBufferedInputStream.read(buf);
 
@@ -311,7 +311,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
             previousAppend = append;
             append = new String(buf, 0, read, getCharSet());
             readBytes += read;
-            postLine.append(append);
+            postLine.write(buf, 0, read);
 
             if (readBytes >= numberOfBytes) {
               //falls size durch contentlength ermittelt wurde
@@ -327,7 +327,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
             read = lineBufferedInputStream.read(buf);
           }
 
-          payload = postLine.toString();
+          payload = new String(postLine.toByteArray(), getCharSet());
         }
     } catch (IOException e) {
       throw new HTTPTRIGGER_HTTP_STREAM_ERROR(e.getMessage(), e);
