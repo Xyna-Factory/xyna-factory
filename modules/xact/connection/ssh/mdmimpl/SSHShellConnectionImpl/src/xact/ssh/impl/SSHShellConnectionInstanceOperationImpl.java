@@ -33,6 +33,7 @@ import xact.ssh.SSHMessagePayload;
 import xact.ssh.SSHSendParameter;
 import xact.ssh.SSHShellConnection;
 import xact.ssh.SSHShellConnectionInstanceOperation;
+import xact.ssh.SSHShellConnectionParameter;
 import xact.ssh.SSHShellConnectionSuperProxy;
 import xact.ssh.SSHShellPromptExtractor;
 import xact.ssh.SSHShellResponse;
@@ -70,7 +71,26 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           terminalType = sshConParams.getTerminalType().trim();
         }
       }
-      shellChannel.setPtyType(terminalType, 5000, 5000, 5000, 5000);
+      int terminalWidthColumns = 5000;
+      int terminalHeightRows = 5000;
+      int terminalWidhtPixels = 5000;
+      int terminalHeightPixels = 5000;
+      if (instanceVar.getConnectionParameter() instanceof SSHShellConnectionParameter) {
+        SSHShellConnectionParameter sscp = (SSHShellConnectionParameter) instanceVar.getConnectionParameter();
+        if (sscp.getTerminalHeightPixels() != 0) {
+          terminalHeightPixels = sscp.getTerminalHeightPixels();
+        }
+        if (sscp.getTerminalHeightRows() != 0) {
+          terminalHeightRows = sscp.getTerminalHeightRows();
+        }
+        if (sscp.getTerminalWidthColumns() != 0) {
+          terminalWidthColumns = sscp.getTerminalWidthColumns();
+        }
+        if (sscp.getTerminalWidthPixels() != 0) {
+          terminalWidhtPixels = sscp.getTerminalWidthPixels();
+        }
+      }
+      shellChannel.setPtyType(terminalType, terminalWidthColumns, terminalHeightRows, terminalWidhtPixels, terminalHeightPixels);
 
       SSHSendParameter sp;
       if (sendParameter == null) {
