@@ -45,17 +45,17 @@ for app in ${APPLIST} ; do
   #echo $app
   awk -vreqapp=${REQUIRED_APP} -vnewver=${NEW_VERSION} '
    foundVersion == 0 { print $0 }  #Ausgeben aller Zeilen bis auf den Versionsstring
-   $1=="<RuntimeContextRequirements>" { rcr=1 } #Weitere Suche auf Block einschraenken
-   $1=="</RuntimeContextRequirements>" { rcr=0 }
-   rcr=1 && index($0,"<ApplicationName") >0 { #ApplicationName pruefen
+   index($0, "<RuntimeContextRequirements>")>0 { rcr=1 } #Weitere Suche auf Block einschraenken
+   index($0, "</RuntimeContextRequirements>")>0 { rcr=0 }
+   rcr==1 && index($0,"<ApplicationName") >0 { #ApplicationName pruefen
        line=$0; 
        gsub("ApplicationName", "", line); 
-       gsub("[<>/ ]", "", line);
+       gsub("[<>/ \r]", "", line);
        if( line==reqapp ) { 
          foundVersion = 1;
        }
      }
-   rcr=1 && foundVersion == 1 && index($0,"<VersionName") >0 { #Version ersetzen
+   rcr==1 && foundVersion == 1 && index($0,"<VersionName") >0 { #Version ersetzen
        print "        <VersionName>"newver"</VersionName>";
        foundVersion=0;
      }
