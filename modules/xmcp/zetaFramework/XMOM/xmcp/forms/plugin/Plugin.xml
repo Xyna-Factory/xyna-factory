@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Storable" BaseTypePath="xnwh.persistence" IsAbstract="false" Label="Plugin" TypeName="Plugin" TypePath="xmcp.forms.plugin" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Navigation Entry Label" VariableName="navigationEntryLabel">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Navigation Entry Name" VariableName="navigationEntryName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Navigation Icon Name" VariableName="navigationIconName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Definition Workflow FQN" VariableName="definitionWorkflowFQN">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Plugin RTC" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="pluginRTC"/>
+  <Data Label="Unique Identifier" VariableName="uniqueIdentifier">
+    <Meta>
+      <Persistence>
+        <Type>UniqueIdentifier</Type>
+      </Persistence>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+</DataType>
