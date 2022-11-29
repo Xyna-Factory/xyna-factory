@@ -16,7 +16,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>VelocityServiceImpl.jar</Libraries>
-  <Libraries>commons-collections-3.2.1.jar</Libraries>
+  <Libraries>commons-collections-3.2.2.jar</Libraries>
   <Libraries>commons-lang-2.4.jar</Libraries>
   <Libraries>velocity-1.6.2.jar</Libraries>
   <Service Label="VelocityService" TypeName="VelocityService">
