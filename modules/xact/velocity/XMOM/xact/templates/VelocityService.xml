@@ -17,7 +17,8 @@
   </Meta>
   <Libraries>VelocityServiceImpl.jar</Libraries>
   <Libraries>commons-collections-3.2.2.jar</Libraries>
-  <Libraries>commons-lang-2.4.jar</Libraries>
+  <Libraries>commons-lang3-3.11.jar</Libraries>
+  <Libraries>slf4j-api-1.7.30.jar</Libraries>
   <Libraries>velocity-engine-core-2.3.jar</Libraries>
   <Service Label="VelocityService" TypeName="VelocityService">
     <Operation IsStatic="true" Label="evaluate Template" Name="evaluateTemplate">
