@@ -21,7 +21,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   <IsXynaComponent>true</IsXynaComponent>
   </Meta>
-  <Libraries>commons-collections-3.2.1.jar</Libraries>
+  <Libraries>commons-collections-3.2.2.jar</Libraries>
   <Libraries>commons-lang-2.4.jar</Libraries>
   <Libraries>velocity-1.6.2.jar</Libraries>
   <Libraries>VelocityServiceImpl.jar</Libraries>
