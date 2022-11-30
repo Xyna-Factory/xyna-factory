@@ -1,14 +1,3 @@
-# Xyna specific stuff
-**/local.repository/*
-server/src/com/gip/xyna/xact/exceptions/*
-server/src/com/gip/xyna/xdev/exceptions/*
-server/src/com/gip/xyna/xfmg/exceptions/*
-server/src/com/gip/xyna/xnwh/exceptions/*
-server/src/com/gip/xyna/xmcp/exceptions/*
-server/src/com/gip/xyna/xprc/exceptions/*
-server/src/com/gip/xyna/exceptions/*
-**/xfcli/generated/*
-
 # Created by https://www.toptal.com/developers/gitignore/api/java,visualstudiocode,eclipse,windows,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,visualstudiocode,eclipse,windows,linux
 
@@ -160,3 +149,15 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/java,visualstudiocode,eclipse,windows,linux
+
+# Xyna specific stuff
+**/local.repository/*
+server/src/com/gip/xyna/xact/exceptions/*
+server/src/com/gip/xyna/xdev/exceptions/*
+server/src/com/gip/xyna/xfmg/exceptions/*
+server/src/com/gip/xyna/xnwh/exceptions/*
+server/src/com/gip/xyna/xmcp/exceptions/*
+server/src/com/gip/xyna/xprc/exceptions/*
+server/src/com/gip/xyna/exceptions/*
+**/xfcli/generated/*
+!installation/build/lib/*.jar
