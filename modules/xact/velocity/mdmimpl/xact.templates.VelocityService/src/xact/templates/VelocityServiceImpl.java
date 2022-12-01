@@ -65,7 +65,8 @@ public final class VelocityServiceImpl implements DeploymentTask, IPropertyChang
     new Codes(); //damit exceptions korrekt initialisiert werden
     try {
       this.velocityEngine = new VelocityEngine();
-      velocityEngine.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
+      // VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS has been removed in velocity-engine-core 2.0 but this is the value that was stored in there
+      velocityEngine.setProperty("runtime.log.logsystem.class",
                                  "org.apache.velocity.runtime.log.Log4JLogChute");
       velocityEngine.setProperty("runtime.log.logsystem.log4j.logger", logger.getName());
       velocityEngine.setProperty(VelocityEngine.VM_PERM_INLINE_LOCAL, true);
@@ -280,7 +281,7 @@ public final class VelocityServiceImpl implements DeploymentTask, IPropertyChang
           for(int i=0;i<aliasParts.length-1;i++){
             if(hm.containsKey(aliasParts[i])){
               HashMap hmNew=getHashMap(hm.get(aliasParts[i]));
-              hm.put(aliasParts[i],hmNew);//falls Konvertierung durchgeführt!
+              hm.put(aliasParts[i],hmNew);//falls Konvertierung durchgefÃ¼hrt!
               hm=hmNew;
             } else {
               HashMap hmNeu=new HashMap();

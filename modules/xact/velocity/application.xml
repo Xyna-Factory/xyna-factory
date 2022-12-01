@@ -11,7 +11,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - -
  * $Revision: 267163 $
  * $Date: 2019-10-21 17:35:06 +0200 (Mo, 21. Okt 2019) $
- --><Application applicationName="VelocityTemplateEngine" comment="" factoryVersion="" versionName="1.2.1" xmlVersion="1.1">
+ --><Application applicationName="VelocityTemplateEngine" comment="" factoryVersion="" versionName="1.2.2" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
