@@ -18,7 +18,7 @@
 -->
 <DataType Label="Stress Test Service" TypeName="StressTestService" TypePath="xact.jms.test" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
   <Libraries>geronimo-j2ee-management_1.0_spec-1.0.jar</Libraries>
-  <Libraries>activemq-core-5.3.1.jar</Libraries>
+  <Libraries>activemq-core-5.6.0.jar</Libraries>
   <Libraries>StressTestServiceImpl.jar</Libraries>
   <Libraries>geronimo-jms_1.1_spec-1.1.1.jar</Libraries>
   <Service Label="Stress Test Service" TypeName="StressTestService">

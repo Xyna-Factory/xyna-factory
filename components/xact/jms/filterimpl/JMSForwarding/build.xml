@@ -41,7 +41,7 @@
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xact/queue/activemq/triggerimpl/ActiveMQTrigger">
             <property name="target.dir" value="${activemq.lib.dir}" />
         </ant>
-        <move file="${basedir}/lib/xyna/activemq-core-5.3.1.jar" todir="${activemq.lib.dir}"/> 
+        <move file="${basedir}/lib/xyna/activemq-core-5.6.0.jar" todir="${activemq.lib.dir}"/> 
         <move file="${basedir}/lib/xyna/geronimo-j2ee-management_1.0_spec-1.0.jar" todir="${activemq.lib.dir}"/> 
         <move file="${basedir}/lib/xyna/geronimo-jms_1.1_spec-1.1.1.jar" todir="${activemq.lib.dir}"/> 
     </target>
