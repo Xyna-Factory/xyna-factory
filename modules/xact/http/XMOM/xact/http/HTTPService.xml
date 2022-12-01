@@ -21,7 +21,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>commons-codec-1.9.jar</Libraries>
-  <Libraries>httpclient-4.5.1.jar</Libraries>
+  <Libraries>httpclient-4.5.13.jar</Libraries>
   <Libraries>httpcore-4.4.3.jar</Libraries>
   <Libraries>HTTPServiceImpl.jar</Libraries>
   <Service Label="HTTP Service" TypeName="HTTPService">
