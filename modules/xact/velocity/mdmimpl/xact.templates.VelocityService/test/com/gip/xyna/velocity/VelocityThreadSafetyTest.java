@@ -47,7 +47,8 @@ public class VelocityThreadSafetyTest extends TestCase {
   @Before
   public void setUp() throws Exception {
     this.velocityEngine = new VelocityEngine();
-    velocityEngine.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
+    // VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS has been removed in velocity-engine-core 2.0 but this is the value that was stored in there
+    velocityEngine.setProperty("runtime.log.logsystem.class",
             "org.apache.velocity.runtime.log.Log4JLogChute");
     velocityEngine.setProperty("runtime.log.logsystem.log4j.logger", logger.getName());
     velocityEngine.setProperty(VelocityEngine.VM_PERM_INLINE_LOCAL, true);
@@ -77,7 +78,7 @@ public class VelocityThreadSafetyTest extends TestCase {
     String token = getVelocityToken();
     try {
       StringWriter writer = new StringWriter();
-      //bugz 8908: logtag muss für jeden thread unterschiedlich sein, ansonsten funktioniert der test nicht
+      //bugz 8908: logtag muss fï¿½r jeden thread unterschiedlich sein, ansonsten funktioniert der test nicht
       velocityEngine.evaluate(context, writer, token, new StringReader(template));
       return writer.toString();
     } finally {
