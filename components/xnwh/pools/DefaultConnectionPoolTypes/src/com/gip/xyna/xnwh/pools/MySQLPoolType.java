@@ -63,7 +63,7 @@ public class MySQLPoolType extends ConnectionPoolType {
                     en("timeout until connection must be established").
                     de("Timeout, bis zu dem Verbindung hergestellt sein muss").
                     build()).
-      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung für 0
+      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung fï¿½r 0
       optional().build();
 
   public static final StringParameter<Duration> SOCKET_TIMEOUT = 
@@ -224,8 +224,8 @@ public class MySQLPoolType extends ConnectionPoolType {
       final CountDownLatch latch = new CountDownLatch(1);
       ConnectionCreator cc = new ConnectionCreator(latch, dbdata);
 
-      //in eigenem thread ausführen, damit timeouts ordentlich behandelt werden können. 
-      //jdbc hat dafür zwar auch properties, aber wenn diese versagen, bleibt der thread nicht hängen.
+      //in eigenem thread ausfï¿½hren, damit timeouts ordentlich behandelt werden kï¿½nnen. 
+      //jdbc hat dafï¿½r zwar auch properties, aber wenn diese versagen, bleibt der thread nicht hï¿½ngen.
       boolean executed = false;
       int cnt = 0;
       while (!executed) {
@@ -281,7 +281,7 @@ public class MySQLPoolType extends ConnectionPoolType {
     }
   }
   
-  private static AtomicReference<Field> MYSQL_CONNECTION_IO_FIELD = new AtomicReference<Field>();
+  private static AtomicReference<Field> MYSQL_CONNECTION_SESSION_FIELD = new AtomicReference<Field>();
   private static AtomicReference<Field> MYSQL_IO_CONNECTION_FIELD = new AtomicReference<Field>();
   private static boolean loggedException = false;
   
@@ -301,25 +301,18 @@ public class MySQLPoolType extends ConnectionPoolType {
     
     
     try {
-      if (!ReflectionUtils.ensureField(MYSQL_CONNECTION_IO_FIELD, com.mysql.jdbc.ConnectionImpl.class, "io", logger)) {
-        throw new IllegalAccessException("Field " + MYSQL_CONNECTION_IO_FIELD + " not found.");
+      if (!ReflectionUtils.ensureField(MYSQL_CONNECTION_SESSION_FIELD, com.mysql.cj.jdbc.ConnectionImpl.class, "session", logger)) {
+        throw new IllegalAccessException("Field " + MYSQL_CONNECTION_SESSION_FIELD + " not found.");
       }
-      com.mysql.jdbc.MysqlIO mio = (com.mysql.jdbc.MysqlIO) ReflectionUtils.get(MYSQL_CONNECTION_IO_FIELD, con, logger);
-      if (mio == null) {
-        logger.debug("Failed to adjust socketTimeout for validation: no MysqlIO instance in connection");
+
+      com.mysql.cj.NativeSession session = (com.mysql.cj.NativeSession) ReflectionUtils.get(MYSQL_CONNECTION_SESSION_FIELD, con, logger);
+      if (session == null) {
+        logger.debug("Failed to adjust socketTimeout for validation: no NativeSession instance in connection");
         return false;
       }
 
-      if (!ReflectionUtils.ensureField(MYSQL_IO_CONNECTION_FIELD, com.mysql.jdbc.MysqlIO.class, "mysqlConnection", logger)) {
-        throw new IllegalAccessException("Field " + MYSQL_IO_CONNECTION_FIELD + " not found.");
-      }
-      Socket s = (Socket) ReflectionUtils.get(MYSQL_IO_CONNECTION_FIELD, mio, logger);
-      if (s == null) {
-        logger.debug("Failed to adjust socketTimeout for validation: no Socket instance in connection");
-        return false;
-      }
+      session.setSocketTimeout((int) socketTimeout);
       
-      s.setSoTimeout((int)socketTimeout);
       return true;
     } catch (Throwable e) {
       if (!loggedException) {
