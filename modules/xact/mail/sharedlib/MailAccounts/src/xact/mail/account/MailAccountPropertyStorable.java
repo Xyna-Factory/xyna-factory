@@ -57,7 +57,7 @@ public class MailAccountPropertyStorable extends Storable<MailAccountPropertySto
   private String key;
   @Column(name = COL_VALUE)
   private String value;
-  @Column(name = COL_VALUE, size = 2000)
+  @Column(name = COL_DOCUMENTATION, size = 2000)
   private String documentation;
   
   public MailAccountPropertyStorable() {
@@ -137,9 +137,23 @@ public class MailAccountPropertyStorable extends Storable<MailAccountPropertySto
       "select * from "+MailAccountPropertyStorable.TABLE_NAME
       +" where "+MailAccountPropertyStorable.COL_NAME+"=?";
 
+  public String getIndex() {
+    return namekeyIndex;
+  }
   public String getName() {
     return name;
   }
   
+  public String getKey() {
+    return key;
+  }
+
+  public String getValue() {
+    return value;
+  }
+  
+  public String getDocumentation() {
+    return documentation;
+  }
 
 }
