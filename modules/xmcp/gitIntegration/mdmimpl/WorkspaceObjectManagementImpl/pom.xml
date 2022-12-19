@@ -48,5 +48,10 @@
             <artifactId>xynautils-exceptions</artifactId>
             <version>I20210705_1332</version>
         </dependency>
+        <dependency>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>xynautils-database</artifactId>
+            <version>I20211207_0946</version>
+        </dependency>
     </dependencies>
 </project>
