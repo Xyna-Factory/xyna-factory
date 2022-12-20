@@ -1,0 +1,25 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="resolveworkspacexml" Description="resolve part of, or an entire workspace difference list." />
+  <Argument Name="id" Description="workspace difference list id. See listworkspacediffs" />
+  <Argument Name="entry" Description="Entry in the workspace difference list to resolve" Optional="true" />
+  <Argument Name="resolution" Description="How to resolve the difference: CREATE/MODIFY/DELETE. If not specified, the suggested resolution is chosen." Optional="true" />
+  <BoolOption Name="a" LongName="all" Description="apply to an entire workspace difference list, instead of a specific entry" Optional="true"/>
+  <BoolOption Name="c" LongName="close" Description="Do not apply any changes to the workspace, even if entry and/or resolution are specified. Closes the workspace difference list." />
+</XynaCommandLineCommand>

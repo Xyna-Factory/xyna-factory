@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Workspace Object Management" TypeName="WorkspaceObjectManagement" TypePath="xmcp.gitintegration" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>WorkspaceObjectManagementImpl.jar</Libraries>
+  <Service Label="Workspace Object Management" TypeName="WorkspaceObjectManagement">
+    <Operation IsStatic="true" Label="Create Workspace Content" Name="createWorkspaceContent">
+      <Input>
+        <Data ID="2" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace2"/>
+      </Input>
+      <Output>
+        <Data ID="1" Label="Workspace Content" ReferenceName="WorkspaceContent" ReferencePath="xmcp.gitintegration" VariableName="workspaceContent1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.createWorkspaceContent(workspace2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Compare Workspace Content" Name="compareWorkspaceContent">
+      <Input>
+        <Data ID="3" Label="Workspace Content" ReferenceName="WorkspaceContent" ReferencePath="xmcp.gitintegration" VariableName="workspaceContent3"/>
+        <Data ID="4" Label="Workspace Content" ReferenceName="WorkspaceContent" ReferencePath="xmcp.gitintegration" VariableName="workspaceContent4"/>
+      </Input>
+      <Output>
+        <Data ID="5" Label="Workspace Content Differences" ReferenceName="WorkspaceContentDifferences" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferences5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.compareWorkspaceContent(workspaceContent3, workspaceContent4);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Workspace Content From File" Name="createWorkspaceContentFromFile">
+      <Input>
+        <Data ID="8" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file8"/>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Workspace Content" ReferenceName="WorkspaceContent" ReferencePath="xmcp.gitintegration" VariableName="workspaceContent6"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.createWorkspaceContentFromFile(file8);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Workspace Content From Text" Name="createWorkspaceContentFromText">
+      <Input>
+        <Data ID="9" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
+      </Input>
+      <Output>
+        <Data ID="10" Label="Workspace Content" ReferenceName="WorkspaceContent" ReferencePath="xmcp.gitintegration" VariableName="workspaceContent10"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.createWorkspaceContentFromText(text9);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
