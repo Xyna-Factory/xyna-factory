@@ -542,7 +542,7 @@ public class SuspendResumeManagement {
         return orderId;
       }
       XynaOrderServerExtension xo = root.getOrderInFamilyById(orderId);
-      if (xo.getId() == orderId) {
+      if (xo != null && xo.getId() == orderId) {
         return root.getId();
       }
     }
