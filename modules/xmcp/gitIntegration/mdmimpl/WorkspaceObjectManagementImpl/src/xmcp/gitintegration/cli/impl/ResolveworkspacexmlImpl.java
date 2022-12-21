@@ -39,7 +39,7 @@ public class ResolveworkspacexmlImpl extends XynaCommandImplementation<Resolvewo
     param.setEntry(payload.getEntry() == null ? Optional.empty() : Optional.of(Long.valueOf(payload.getEntry())));
     param.setResolution(payload.getResolution() == null ? Optional.empty() : Optional.of(payload.getResolution()));
     param.setAll(payload.getAll());
-    param.setClose(param.getClose());
+    param.setClose(payload.getClose());
     String result = portal.resolve(param);
     writeToCommandLine(statusOutputStream, result);
   }
