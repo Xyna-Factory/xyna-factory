@@ -30,8 +30,8 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-core</artifactId>
-            <version>5.6.0</version>
+            <artifactId>activemq-client</artifactId>
+            <version>5.17.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
