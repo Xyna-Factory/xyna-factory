@@ -32,16 +32,32 @@ public class ReflectionUtils {
       try {
         f = clazz.getDeclaredField(name);
       } catch (SecurityException e) {
-        logger.debug("Failed to ensure field", e);
+        if (logger != null) {
+          logger.debug("Failed to ensure field", e);
+        }
         return false;
       } catch (NoSuchFieldException e) {
-        logger.debug("Failed to ensure field", e);
+        if (logger != null) {
+          logger.debug("Failed to ensure field", e);
+        }
         return false;
       }
       f.setAccessible(true);
       field.compareAndSet(null, f);
     }
     return true;
+  }
+
+  public static boolean ensureFieldRecursive(AtomicReference<Field> field, Class<?> clazz, String name, Logger logger) {
+    boolean res = ensureField(field, clazz, name, null);
+    if (!res && clazz.getSuperclass() != null) {
+      res = ensureFieldRecursive(field, clazz.getSuperclass(), name, null);
+    }
+    // only log once if we failed
+    if (!res && logger != null) {
+      logger.debug("Failed to ensure field " + name + " in class " + clazz.getName());
+    }
+    return res;
   }
   
   
