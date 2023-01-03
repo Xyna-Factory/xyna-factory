@@ -282,6 +282,7 @@ public class MySQLPoolType extends ConnectionPoolType {
   }
   
   private static AtomicReference<Field> MYSQL_CONNECTION_SESSION_FIELD = new AtomicReference<Field>();
+  private static AtomicReference<Field> MYSQL_CONNECTION_IO_FIELD = new AtomicReference<Field>();
   private static AtomicReference<Field> MYSQL_IO_CONNECTION_FIELD = new AtomicReference<Field>();
   private static boolean loggedException = false;
   
@@ -301,19 +302,46 @@ public class MySQLPoolType extends ConnectionPoolType {
     
     
     try {
-      if (!ReflectionUtils.ensureField(MYSQL_CONNECTION_SESSION_FIELD, com.mysql.cj.jdbc.ConnectionImpl.class, "session", logger)) {
-        throw new IllegalAccessException("Field " + MYSQL_CONNECTION_SESSION_FIELD + " not found.");
-      }
+      try { // try using mysql-connector-java 8.0.31
+        if (!ReflectionUtils.ensureFieldRecursive(MYSQL_CONNECTION_SESSION_FIELD, con.getClass(), "session", logger)) {
+          throw new IllegalAccessException("Field " + MYSQL_CONNECTION_SESSION_FIELD + " not found.");
+        }
+  
+        Object session = ReflectionUtils.get(MYSQL_CONNECTION_SESSION_FIELD, con, logger);
+        if (session == null) {
+          logger.debug("Failed to adjust socketTimeout for validation: no NativeSession instance in connection");
+          return false;
+        }
 
-      com.mysql.cj.NativeSession session = (com.mysql.cj.NativeSession) ReflectionUtils.get(MYSQL_CONNECTION_SESSION_FIELD, con, logger);
-      if (session == null) {
-        logger.debug("Failed to adjust socketTimeout for validation: no NativeSession instance in connection");
-        return false;
-      }
+        Method setSocketTimeout = session.getClass().getMethod("setSocketTimeout", int.class);
 
-      session.setSocketTimeout((int) socketTimeout);
-      
-      return true;
+        setSocketTimeout.invoke(session, (int) socketTimeout);
+
+        return true;
+        
+      } catch (Throwable e) { // try using mysql-connector-java 5.1.19 instead
+        if (!ReflectionUtils.ensureFieldRecursive(MYSQL_CONNECTION_IO_FIELD, con.getClass(), "io", logger)) {
+          throw new IllegalAccessException("Field " + MYSQL_CONNECTION_IO_FIELD + " not found.");
+        }
+        Object mio = ReflectionUtils.get(MYSQL_CONNECTION_IO_FIELD, con, logger);
+        if (mio == null) {
+          logger.debug("Failed to adjust socketTimeout for validation: no MysqlIO instance in connection");
+          return false;
+        }
+  
+        if (!ReflectionUtils.ensureField(MYSQL_IO_CONNECTION_FIELD, mio.getClass(), "mysqlConnection", logger)) {
+          throw new IllegalAccessException("Field " + MYSQL_IO_CONNECTION_FIELD + " not found.");
+        }
+
+        Socket s = (Socket) ReflectionUtils.get(MYSQL_IO_CONNECTION_FIELD, mio, logger);
+        if (s == null) {
+          logger.debug("Failed to adjust socketTimeout for validation: no Socket instance in connection");
+          return false;
+        }
+        
+        s.setSoTimeout((int)socketTimeout);
+        return true;
+      }
     } catch (Throwable e) {
       if (!loggedException) {
         logger.warn("Could not adjust socketTimeout for validation. It will not be tried again.", e);
