@@ -27,15 +27,15 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
-import xmcp.gitintegration.cli.generated.Listworkspacediffs;
+import xmcp.gitintegration.cli.generated.Listworkspacegitdiffs;
 import xmcp.gitintegration.impl.OutputCreator;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
 
-public class ListworkspacediffsImpl extends XynaCommandImplementation<Listworkspacediffs> {
+public class ListworkspacegitdiffsImpl extends XynaCommandImplementation<Listworkspacegitdiffs> {
 
-  public void execute(OutputStream statusOutputStream, Listworkspacediffs payload) throws XynaException {
+  public void execute(OutputStream statusOutputStream, Listworkspacegitdiffs payload) throws XynaException {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
     StringBuilder sb = new StringBuilder();
     if (payload.getId() != null && !payload.getId().isEmpty()) {
