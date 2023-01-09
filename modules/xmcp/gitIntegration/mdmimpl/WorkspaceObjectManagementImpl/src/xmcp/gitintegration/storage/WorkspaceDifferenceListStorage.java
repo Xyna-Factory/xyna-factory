@@ -135,7 +135,7 @@ public class WorkspaceDifferenceListStorage {
   }
 
 
-  public Collection<? extends WorkspaceContentDifferences> loadAllDifferencesLists() {
+  public List<? extends WorkspaceContentDifferences> loadAllDifferencesLists() {
     List<WorkspaceContentDifferences> result;
     try {
       result = WarehouseRetryExecutor.buildMinorExecutor().connection(ODSConnectionType.HISTORY)
@@ -194,7 +194,7 @@ public class WorkspaceDifferenceListStorage {
 
     @Override
     public WorkspaceContentDifferences executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      WorkspaceContentDifferences result = new WorkspaceContentDifferences();
+      xmcp.gitintegration.WorkspaceContentDifferences.Builder result = new WorkspaceContentDifferences.Builder();
       WorkspaceContentDifferencesStorable storable = new WorkspaceContentDifferencesStorable(id);
       List<WorkspaceContentDifferenceStorable> entries;
       try {
@@ -206,11 +206,11 @@ public class WorkspaceDifferenceListStorage {
         throw new RuntimeException(e);
       }
 
-      result.setListId(storable.getListid());
-      result.setWorkspaceName(storable.getWorkspacename());
-      result.setDifferences(convertEntryListToDatatype(entries));
+      result.listId(storable.getListid());
+      result.workspaceName(storable.getWorkspacename());
+      result.differences(convertEntryListToDatatype(entries));
 
-      return result;
+      return result.instance();
     }
   }
 
@@ -224,13 +224,14 @@ public class WorkspaceDifferenceListStorage {
       Collection<WorkspaceContentDifferenceStorable> entries = con.loadCollection(WorkspaceContentDifferenceStorable.class);
 
       for (WorkspaceContentDifferencesStorable singleList : collection) {
-        WorkspaceContentDifferences differences = new WorkspaceContentDifferences();
+        xmcp.gitintegration.WorkspaceContentDifferences.Builder differences = new WorkspaceContentDifferences.Builder();
         Collection<WorkspaceContentDifferenceStorable> filteredEntries =
             entries.stream().filter(y -> y.getListid() == singleList.getListid()).collect(Collectors.toList());
-        differences.setWorkspaceName(singleList.getWorkspacename());
-        differences.setDifferences(convertEntryListToDatatype(filteredEntries));
+        differences.listId(singleList.getListid());
+        differences.workspaceName(singleList.getWorkspacename());
+        differences.differences(convertEntryListToDatatype(filteredEntries));
 
-        result.add(differences);
+        result.add(differences.instance());
       }
 
       return result;
@@ -275,7 +276,7 @@ public class WorkspaceDifferenceListStorage {
       if (content.getListId() == -1) {
         long id = System.currentTimeMillis();
         storable.setListid(id);
-        content.setListId(storable.getListid());
+        content.unversionedSetListId(storable.getListid());
         storable.setListid(content.getListId());
         isUpdate = false;
       }
