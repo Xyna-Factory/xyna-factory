@@ -34,7 +34,6 @@
             <artifactId>log4j</artifactId>
             <version>1.2.15</version>
         </dependency>
-    </dependencies>
     <dependency>
         <groupId>com.oracle.database.xml</groupId>
         <artifactId>xmlparserv2</artifactId>
@@ -52,7 +51,8 @@
     </dependency>
     <dependency>
         <groupId>com.gip.xyna</groupId>
-        <artifactId>xynautils-exception</artifactId>
+            <artifactId>xynautils-exceptions</artifactId>
         <version>3.0.0.0</version>
     </dependency>
+    </dependencies>
 </project>
