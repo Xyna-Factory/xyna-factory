@@ -134,7 +134,8 @@
     <isset property="as.port.opmn" />
   </condition>
 
-  <property name="install.lib.dir" value="${ant.file.ant-xyna}/../lib" />
+  <property name="installation.build.dir" value="${ant.file.ant-xyna}/../../../../installation/build" />
+  <property name="install.lib.dir" value="${installation.build.dir}/lib" />
 
   <!-- remove filename/.. from path because sqlplus dont accepts it -->
   <pathconvert property="sql.dir">
@@ -219,7 +220,7 @@
     </classpath>
   </taskdef>
 
-  <condition property="mavenSettingFile" value="${user.home}/mavenSettings.xml" else="${ant.file.ant-xyna}/../defaultMavenSettings.xml">
+  <condition property="mavenSettingFile" value="${user.home}/mavenSettings.xml" else="${installation.build.dir}/defaultMavenSettings.xml">
     <available file="${user.home}/mavenSettings.xml" />
   </condition>
 
