@@ -51,8 +51,8 @@
         </dependency>
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc5</artifactId>
-            <version>11.2.0.4</version>
+            <artifactId>ojdbc10</artifactId>
+            <version>19.17.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.oracle.database.xml</groupId>
