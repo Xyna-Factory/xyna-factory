@@ -16,8 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="xynautils-database" basedir="."
-  xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="xynautils-database" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
   <!--Next release version for the archive file-->
   <property name="release.number" value="2.15.0.0"/>

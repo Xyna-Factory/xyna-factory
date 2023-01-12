@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="xynautils-logging" basedir=".">
+<project name="xynautils-logging" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
 	<!--Next release version for the archive file-->
 	<property name="release.number" value="3.0.0.0"/>
