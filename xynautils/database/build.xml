@@ -30,6 +30,8 @@
   <!--Import all targets from master build file-->
   <import file="${build.file}"/>
 
+  <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+
   <!-- ================================= 
                target: resolve             
           =================================  -->
