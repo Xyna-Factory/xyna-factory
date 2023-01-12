@@ -16,17 +16,32 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="xynautils-database" basedir=".">
-	
-	<!--Next release version for the archive file-->
-	<property name="release.number" value="2.15.0.0"/>
-	<!--Name of the utils project-->
-	<property name="utils.name" value="database"/>
-	
-	<!--Master build file-->
-	<property name="build.file" value="../install/xynautils/masterbuild.xml"/>
-		
-	<!--Import all targets from master build file-->
-	<import file="${build.file}"/>
- 
+<project name="xynautils-database" basedir="."
+  xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+  <!--Next release version for the archive file-->
+  <property name="release.number" value="2.15.0.0"/>
+  <!--Name of the utils project-->
+  <property name="utils.name" value="database"/>
+
+  <!--Master build file-->
+  <property name="build.file" value="../install/xynautils/masterbuild.xml"/>
+
+  <!--Import all targets from master build file-->
+  <import file="${build.file}"/>
+
+  <!-- ================================= 
+               target: resolve             
+          =================================  -->
+  <target name="resolve">
+    <resolver:resolve>
+      <resolver:dependencies pomRef="pom"/>
+      <resolver:remoterepos refid="xyna.repository"/>
+      <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
+      <resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
+    </resolver:resolve>
+    <loadLicenses targetDir="${base.lib.dir}" />
+    <!-- delete generated-resources ? -->
+  </target>
+
 </project>
