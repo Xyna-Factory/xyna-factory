@@ -29,4 +29,18 @@
 	<!--Import all targets from master build file-->
 	<import file="${build.file}"/>
 
+	<!-- ================================= 
+               target: resolve             
+          =================================  -->
+  <target name="resolve">
+    <resolver:resolve>
+      <resolver:dependencies pomRef="pom"/>
+      <resolver:remoterepos refid="xyna.repository"/>
+      <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
+      <resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
+    </resolver:resolve>
+    <loadLicenses targetDir="${base.lib.dir}" />
+    <!-- delete generated-resources ? -->
+  </target>
+
 </project>
