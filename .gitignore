@@ -161,3 +161,4 @@ server/src/com/gip/xyna/xprc/exceptions/*
 server/src/com/gip/xyna/exceptions/*
 **/xfcli/generated/*
 !installation/build/lib/*.jar
+!xynautils/install/build/lib/*.jar

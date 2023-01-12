@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="xynautils-logging" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="xynautils-logging" basedir=".">
 
 	<!--Next release version for the archive file-->
 	<property name="release.number" value="3.0.0.0"/>
@@ -25,21 +25,5 @@
 
 	<!--Import all targets from master build file-->
 	<import file="${basedir}/../install/xynautils/masterbuild.xml"/>
-
-	<resolver:pom file="${basedir}/pom.xml" id="pom"/>
-
-	<!-- ================================= 
-               target: resolve             
-          =================================  -->
-	<target name="resolve">
-		<resolver:resolve>
-			<resolver:dependencies pomRef="pom"/>
-			<resolver:remoterepos refid="xyna.repository"/>
-			<resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-			<resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-		</resolver:resolve>
-		<loadLicenses targetDir="${base.lib.dir}" />
-		<!-- delete generated-resources ? -->
-	</target>
 
 </project>
