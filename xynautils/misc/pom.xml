@@ -33,26 +33,40 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.15</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jmx</groupId>
+                    <artifactId>jmxri</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jdmk</groupId>
+                    <artifactId>jmxtools</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.jms</groupId>
+                    <artifactId>jms</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-    <dependency>
-        <groupId>com.oracle.database.xml</groupId>
-        <artifactId>xmlparserv2</artifactId>
-        <version>21.8.0.0</version>
-    </dependency>
-    <dependency>
-        <groupId>commons-net</groupId>
-        <artifactId>commons-net</artifactId>
-        <version>1.4.1</version>
-    </dependency>
-    <dependency>
-        <groupId>com.gip.xyna</groupId>
-        <artifactId>xynautils-database</artifactId>
-        <version>2.4.0.1</version>
-    </dependency>
-    <dependency>
-        <groupId>com.gip.xyna</groupId>
+        <dependency>
+            <groupId>com.oracle.database.xml</groupId>
+            <artifactId>xmlparserv2</artifactId>
+            <version>21.8.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>xynautils-database</artifactId>
+            <version>2.4.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-exceptions</artifactId>
-        <version>3.0.0.0</version>
-    </dependency>
+            <version>3.0.0.0</version>
+        </dependency>
     </dependencies>
 </project>
