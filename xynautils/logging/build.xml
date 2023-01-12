@@ -26,6 +26,8 @@
 	<!--Import all targets from master build file-->
 	<import file="${basedir}/../install/xynautils/masterbuild.xml"/>
 
+	<resolver:pom file="${basedir}/pom.xml" id="pom"/>
+
 	<!-- ================================= 
                target: resolve             
           =================================  -->
