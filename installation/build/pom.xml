@@ -1,0 +1,55 @@
+<!-- 
+    See https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms
+
+    This POM serves as a central "library" of artifacts containing each artifact used by any xyna-factory module / project.
+    Each projects POM should inherit this BOM POM and then only specify the <groupId> and <artifactId> (and <type> if it is not a jar).
+    The versions are maintained here in this file.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.gip.xyna</groupId>
+    <artifactId>bom</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
+                <artifactId>xynafactory</artifactId>
+                <version>9.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
+                <artifactId>xynautils-database</artifactId>
+                <version>I20211207_0946</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
+                <artifactId>xynautils-exceptions</artifactId>
+                <version>I20210705_1332</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>4.4.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-1.2-api</artifactId>
+                <version>2.17.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
