@@ -57,7 +57,7 @@ public class SavexmomobjectImpl extends XynaCommandImplementation<Savexmomobject
     XynaMultiChannelPortal mcp = ((XynaMultiChannelPortal) XynaFactory.getInstance().getXynaMultiChannelPortal());
 
     TemporarySessionAuthentication tsa = TemporarySessionAuthentication
-        .tempAuthWithUniqueUserAndOperationLock("addxmomobject", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE, revision,
+        .tempAuthWithUniqueUserAndOperationLock("savexmomobject", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE, revision,
                                                 CommandControl.Operation.XMOM_SAVE);
     tsa.initiate();
     try {
