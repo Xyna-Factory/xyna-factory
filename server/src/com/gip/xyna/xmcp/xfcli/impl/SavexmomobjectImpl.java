@@ -40,17 +40,17 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 import com.gip.xyna.xprc.xpce.WorkflowEngine;
 
-import com.gip.xyna.xmcp.xfcli.generated.Addxmomobject;
+import com.gip.xyna.xmcp.xfcli.generated.Savexmomobject;
 
 
 
-public class AddxmomobjectImpl extends XynaCommandImplementation<Addxmomobject> {
+public class SavexmomobjectImpl extends XynaCommandImplementation<Savexmomobject> {
 
   private static final RevisionManagement revisionManagement =
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
 
 
-  public void execute(OutputStream statusOutputStream, Addxmomobject payload) throws XynaException {
+  public void execute(OutputStream statusOutputStream, Savexmomobject payload) throws XynaException {
     Long revision = revisionManagement.getRevision(null, null, payload.getWorkspaceName());
     String pathXMOM = RevisionManagement.getPathForRevision(PathType.XMOM, revision, false);
     String pathObject = payload.getFqName().replace('.', Constants.fileSeparator.charAt(0));
