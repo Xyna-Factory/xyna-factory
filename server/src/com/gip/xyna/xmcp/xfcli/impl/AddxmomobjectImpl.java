@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xmcp.gitintegration.cli.impl;
+package com.gip.xyna.xmcp.xfcli.impl;
 
 
 
@@ -40,7 +40,7 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 import com.gip.xyna.xprc.xpce.WorkflowEngine;
 
-import xmcp.gitintegration.cli.generated.Addxmomobject;
+import com.gip.xyna.xmcp.xfcli.generated.Addxmomobject;
 
 
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xmcp.gitintegration.cli.impl;
+package com.gip.xyna.xmcp.xfcli.impl;
 
 
 
@@ -31,7 +31,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.TemporarySessionAuthentication;
 import com.gip.xyna.xmcp.XynaMultiChannelPortal;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 
-import xmcp.gitintegration.cli.generated.Removexmomobject;
+import com.gip.xyna.xmcp.xfcli.generated.Removexmomobject;
 
 
 
