@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *  Copyright GIP AG 2008
+ *  (http://www.gip.com)
+ *
+ *  Heinrich-von-Brentano-Str. 2
+ *  55130 Mainz
+ * ___________________________________________________
+ *
+ *  $Revision: 68991 $
+ *
+-->
+<project name="build" default="build_basics" basedir=".">
+
+  <import file="buildMacros.xml" />
+  <property file="../delivery/components.properties" />
+
+  <target name="build_basics"
+          depends="buildScripts" />
+
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildScripts
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildScripts">
+
+    <copy todir="${delivery.build.dir}">
+      <fileset dir="${checkout.dir}/installation/install">
+        <include name="**/*.sh" />
+        <include name="*.txt" />
+        <include name="README" />
+      </fileset>
+    </copy>
+  	<mkdir dir="${delivery.build.dir}/application/" />
+  	<copy todir="${delivery.build.dir}/application">
+  	  <fileset dir="${checkout.dir}/application" >
+  	    <include name="xynafactory/*" />
+  	    <include name="network_availability_demon/*" />
+  	  </fileset>	
+    </copy>
+    <copy todir="${delivery.build.dir}/scripts">
+      <fileset dir="${checkout.dir}/scripts"/>
+    </copy>
+  </target>
+
+ 
+
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildTomcat6
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildTomcat6">
+    <copy todir="${delivery.build.dir}/application/tomcat">
+      <fileset dir="${checkout.dir}/application/tomcat">
+        <include name="apache-tomcat-6*.gz" />
+        <include name="initd*" />
+         <include name="systemd*" />
+        <include name="*.txt" />
+        <include name="lib/**" />
+      </fileset>  
+    </copy>
+  </target>
+
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildTomcat7
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildTomcat7">
+    <copy todir="${delivery.build.dir}/application/tomcat">
+      <fileset dir="${checkout.dir}/application/tomcat">
+        <include name="apache-tomcat-7*.gz" />
+        <include name="initd*" />
+        <include name="systemd*" />
+        <include name="*.txt" />
+        <include name="lib/**" />
+      </fileset>  
+    </copy>
+  </target>
+
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildTomcat7_log4j2
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildTomcat7_log4j2">
+    <copy todir="${delivery.build.dir}/application/tomcat">
+      <fileset dir="${checkout.dir}/application/tomcat">
+        <include name="apache-tomcat-7*.gz" />
+        <include name="initd*" />
+        <include name="systemd*" />
+        <include name="*.txt" />
+      </fileset>  
+    </copy>
+    <copy todir="${delivery.build.dir}/application/tomcat/lib">
+      <fileset dir="${checkout.dir}/application/tomcat/lib_log4j2/"/>
+    </copy>
+  </target>
+	
+  <!--- - - - - - - - - - - - - - - - -
+	target: buildTomcat80_log4j2
+	- - - - - - - - - - - - - - - - - -->
+  <target name="buildTomcat80_log4j2">
+	 <copy todir="${delivery.build.dir}/application/tomcat">
+	    <fileset dir="${checkout.dir}/application/tomcat">
+	      <include name="apache-tomcat-8.0*.gz" />
+	      <include name="initd*" />
+	      <include name="systemd*" />
+	      <include name="*.txt" />
+	    </fileset>  
+	  </copy>
+	  <copy todir="${delivery.build.dir}/application/tomcat/lib">
+	    <fileset dir="${checkout.dir}/application/tomcat/lib_log4j2/">
+	    	<exclude name="**/tomcat-juli*.jar"/>  
+	    </fileset>
+	  </copy>
+  	  <copy todir="${delivery.build.dir}/application/tomcat/lib">
+  	    <fileset dir="${checkout.dir}/application/tomcat/lib_tomcat8"/>
+  	  </copy>
+          <ant dir="${checkout.dir}/application/tomcat/cachecontrolfilter">
+                <target name="build" />
+          </ant>
+          <copy todir="${delivery.build.dir}/application/tomcat/lib">
+            <fileset dir="${checkout.dir}/application/tomcat/cachecontrolfilter/deploy"/>
+          </copy>
+  </target>
+
+  <!--- - - - - - - - - - - - - - - - -
+        target: buildTomcat85_log4j2
+        - - - - - - - - - - - - - - - - - -->
+  <target name="buildTomcat85_log4j2">
+         <copy todir="${delivery.build.dir}/application/tomcat">
+            <fileset dir="${checkout.dir}/application/tomcat">
+              <include name="apache-tomcat-8.5*.gz" />
+              <include name="initd*" />
+              <include name="systemd*" />
+              <include name="*.txt" />
+            </fileset>
+          </copy>
+          <copy todir="${delivery.build.dir}/application/tomcat/lib">
+            <fileset dir="${checkout.dir}/application/tomcat/lib_log4j2/">
+                <exclude name="**/tomcat-juli*.jar"/>
+            </fileset>
+          </copy>
+          <copy todir="${delivery.build.dir}/application/tomcat/lib">
+            <fileset dir="${checkout.dir}/application/tomcat/lib_tomcat85"/>
+          </copy>
+          <ant dir="${checkout.dir}/application/tomcat/cachecontrolfilter">
+                <target name="build" />
+          </ant>
+          <copy todir="${delivery.build.dir}/application/tomcat/lib">
+            <fileset dir="${checkout.dir}/application/tomcat/cachecontrolfilter/deploy"/>
+          </copy>
+  </target>
+
+
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildGeronimo2
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildGeronimo2">
+    <copy todir="${delivery.build.dir}/application/geronimo">
+      <fileset dir="${checkout.dir}/application/geronimo">
+        <include name="geronimo-tomcat6*.gz" />
+        <include name="initd*" />
+        <include name="*.txt" />
+        <include name="lib/**" />
+      </fileset>  
+    </copy>
+  </target>
+
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildGeronimo3
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildGeronimo3">
+    <copy todir="${delivery.build.dir}/application/geronimo">
+      <fileset dir="${checkout.dir}/application/geronimo">
+        <include name="geronimo-tomcat7*.gz" />
+        <include name="initd*" />
+        <include name="*.txt" />
+        <include name="lib/**" />
+      </fileset>  
+    </copy>
+  </target>
+  
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildOracle12_Linux
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildOracle12_Linux_x86_64">
+    <copy todir="${delivery.build.dir}/application/oracle">
+      <fileset dir="${checkout.dir}/application/oracle/">
+        <include name="instantclient-*-linux.x64-12.1.0.2.0.zip"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildOracle12_2_Linux
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildOracle12_2_Linux_x86_64">
+    <copy todir="${delivery.build.dir}/application/oracle">
+      <fileset dir="${checkout.dir}/application/oracle/">
+        <include name="instantclient-*-linux.x64-12.2.0.1.0.zip"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildAnt
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildAnt1_7">
+    <copy todir="${delivery.build.dir}/application/ant">
+      <fileset dir="${checkout.dir}/application/ant">
+        <include name="apache-ant-1.7.*-bin.tar.gz" />
+        <include name="*.txt" />
+      </fileset>  
+    </copy>
+  </target>
+  
+  <target name="buildAnt1_9">
+    <copy todir="${delivery.build.dir}/application/ant">
+      <fileset dir="${checkout.dir}/application/ant">
+        <include name="apache-ant-1.9.*-bin.tar.gz" />
+        <include name="*.txt" />
+       </fileset>  
+    </copy>
+  </target>
+  
+</project>

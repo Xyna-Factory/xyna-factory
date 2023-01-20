@@ -1,0 +1,63 @@
+#!/bin/bash
+# ---------------------------------------------------
+#  Copyright GIP AG 2015
+#  (http://www.gip.com)
+#
+#  Hechtsheimer Str. 35-37
+#  55131 Mainz
+# ---------------------------------------------------
+#  $Revision: 56658 $
+#  $Date: 2009-11-26 11:39:17 +0100 (Do, 26 Nov 2009) $
+# ---------------------------------------------------
+
+# chkconfig: 35 99 01
+# description: Starts and stops TOKEN_PROVIDES_XYNA_FACTORY
+
+# Source function library.
+. /etc/init.d/functions
+
+XYNA_USER="TOKEN_XYNA_USER"
+FACTORY_DIR="TOKEN_INSTALL_PREFIX/server"
+
+test -x ${FACTORY_DIR} || { echo -n "${FACTORY_DIR} not installed"; warning; echo;
+  if [[ "$1" == "stop" ]]; then exit 0;
+  else exit 5; fi; }
+
+case "$1" in
+  start)
+    echo "Starting Xyna Factory as user '${XYNA_USER}'"
+    ${FACTORY_DIR}/xynafactory.sh -q start
+    ret_val=$?
+    [[ $ret_val -eq 0 ]] && success || failure; echo
+    ;;
+  stop)
+    echo "Shutting down Xyna Factory as user '${XYNA_USER}'"
+    ${FACTORY_DIR}/xynafactory.sh -q stop
+    ret_val=$?
+    [[ $ret_val -eq 0 ]] && success || failure; echo
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  status)
+    echo "Checking for service Xyna Factory as user '${XYNA_USER}'"
+    ${FACTORY_DIR}/xynafactory.sh status
+    ret_val=$?
+    [[ $ret_val -eq 0 ]] && success || failure; echo
+    ;;
+  version)
+    ${FACTORY_DIR}/xynafactory.sh version
+    ret_val=0
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status|version}"
+    echo
+    echo "Maybe you intended to run this command within the XynaFactory-CommandLine, like this?" 
+    echo "  ${FACTORY_DIR}/xynafactory.sh $@"
+    echo
+    exit 1
+    ;;
+esac
+
+exit ${ret_val}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *  Copyright GIP AG 2008
+ *  (http://www.gip.com)
+ *
+ *  Heinrich-von-Brentano-Str. 2
+ *  55130 Mainz
+ * ___________________________________________________
+ *
+ *  $Revision: 63620 $
+ *  $Date: 2010-03-09 09:22:35 +0100 (Di, 09. Maer 2010) $
+ *
+ -->
+<project name="deliveryMacros" basedir=".">
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: zipDeliveryItems
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="zipDeliveryItems">
+		<attribute name="name" />
+		<sequential>
+			<zip destfile="${delivery.dir}/@{name}.zip">
+				<zipfileset dir="${delivery.build.dir}"
+				            prefix="@{name}"
+				            excludes="**/*.sh" />
+				<zipfileset dir="${delivery.build.dir}"
+				            prefix="@{name}"
+				            includes="**/*.sh"
+				            filemode="755" />
+			</zip>
+		</sequential>
+	</macrodef>
+	
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: zipDeliveryItems
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="zipDeliveryItemsSrc">
+		<attribute name="nameZip" />
+		<attribute name="nameSrc" />
+		<sequential>
+			<zip destfile="${delivery.dir}/@{nameZip}.zip">
+				<zipfileset dir="${delivery.build.dir}"
+				            prefix="@{nameSrc}"
+				            includes="**/*"
+				            filemode="755" />
+			</zip>
+		</sequential>
+	</macrodef>
+	
+	<!-- = = = = = = = = = = = = = = = = =
+	          macrodef: zipEnvironmentFiles
+	         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="zipEnvironmentFiles">
+		<attribute name="dir"
+		           description="Directory to zip the environment files from" />
+		<attribute name="name" description="Name of the delivery item" />
+		<sequential>
+			<zip destfile="${delivery.dir}/@{name}.zip">
+				<zipfileset dir="@{dir}"
+				            prefix="@{name}"
+				            includes="*.properties" />
+			</zip>
+		</sequential>
+	</macrodef>
+
+</project>

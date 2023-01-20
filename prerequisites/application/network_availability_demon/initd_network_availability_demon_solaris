@@ -1,0 +1,56 @@
+#!/bin/bash
+# ---------------------------------------------------
+#  Copyright GIP AG 2015
+#  (http://www.gip.com)
+#
+#  Hechtsheimer Str. 35-37
+#  55131 Mainz
+# ---------------------------------------------------
+#  $Revision: 56658 $
+#  $Date: 2009-11-26 11:39:17 +0100 (Do, 26 Nov 2009) $
+# ---------------------------------------------------
+
+# description: Starts and stops TOKEN_PROVIDES_NAD
+
+NAD_USER="TOKEN_NAD_USER"
+NAD_DIR="TOKEN_INSTALL_PREFIX/NetworkAvailability"
+VOLATILE_LOGGER="TOKEN_LOGGER";
+LOG_FACILITY="TOKEN_LOG_FACILITY";
+
+
+case "$1" in
+  start)
+    if [[ -e ${NAD_DIR}/networkAvailabilityDemon.sh ]] ; then
+      echo -n "Starting Network-Availability-Demon as user '${NAD_USER}' "
+      su - ${NAD_USER} -c "${NAD_DIR}/networkAvailabilityDemon.sh &"
+    else 
+      echo "No networkAvailabilityDemon.sh accessible in path ${NAD_DIR}"
+      exit 5;
+    fi;
+    ;;
+  stop)
+    echo -n "Shutting down Network-Availability-Demon as user '${NAD_USER}' "
+    kill $(cat ${NAD_DIR}/networkAvailabilityDemon.pid)
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  demon)
+    while true; do
+      if [[ -e ${NAD_DIR}/networkAvailabilityDemon.sh ]] ; then
+        kill $(cat ${NAD_DIR}/networkAvailabilityDemon.pid)
+        su - ${NAD_USER} -c "${NAD_DIR}/networkAvailabilityDemon.sh"
+      else
+        echo "No networkAvailabilityDemon.sh accessible in path ${NAD_DIR}" | 
+          ${VOLATILE_LOGGER} -p "${LOG_FACILITY}.debug" &
+        sleep 60; 
+      fi
+    done
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|demon}"
+    echo
+    exit 1
+    ;;
+esac

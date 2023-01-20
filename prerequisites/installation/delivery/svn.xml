@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<!--
+ *
+ *  Copyright GIP AG 2008
+ *  (http://www.gip.com)
+ *
+ *  Heinrich-von-Brentano-Str. 2
+ *  55130 Mainz
+ * ___________________________________________________
+ *
+ *  $Revision: 63620 $
+ *
+-->
+<project name="svn" default="checkout" basedir=".">
+
+	<!--
+	  Description:
+	     Checks out a given tag from svn. If the tag not exists in the repository
+	     one will be created.
+	     To checkout from head set property svn.tag to HEAD.
+	     To checkout from trunk use property svn.project to specify svn module,
+	     eg. xyna/utils/_Interfaces.
+	     To checkout from branch use property svn.branch to specify svn module,
+	     eq. xyna/utils/_Interfaces.
+
+	  Needed properties:
+	     svn.tag:     Svn tag to checkout. If tag not exists one will be created.
+	                  To checkout from head set this property to HEAD.
+	     svn.project: Set this property to checkout/create tag/head from trunk.
+	     svn.branch:  Set this property to checkout/create tag/head from branch.
+
+	  Main Targets:
+	     checkout:  Checkout from svn repository.
+	-->
+
+	<!-- Root of the svn repository -->
+	<property name="svn.root" value="svn://svn.gip.com" />
+
+	<!-- =================================
+                 target: checkout
+                =================================
+    -->
+	<target name="checkout">
+		<input message="Enter SVN-Tag for checkout.
+			If tag not exists one will be created on head revision.
+			Enter HEAD to checkout head revision without creating a tag."
+		       defaultvalue="${svn.tag}"
+		       addproperty="checkout.value" />
+		<condition property="checkout.head">
+			<equals arg1="${checkout.value}" arg2="HEAD" />
+		</condition>
+		<antcall target="checkoutHEAD" />
+		<antcall target="checkoutTag" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+                 target: checkoutHEAD
+                - - - - - - - - - - - - - - - - -
+    -->
+	<target name="checkoutHEAD" if="checkout.head">
+		<antcall target="checkoutTrunkHEAD" />
+		<antcall target="checkoutBranchHEAD" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+                 target: checkoutTrunkHEAD
+                - - - - - - - - - - - - - - - - -
+    -->
+	<target name="checkoutTrunkHEAD" unless="svn.branch">
+		<exec executable="svn" failonerror="true">
+			<arg line="export ${svn.root}/trunk/${svn.project} ${checkout.dir}" />
+		</exec>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+                 target: checkoutBranchHEAD
+                - - - - - - - - - - - - - - - - -
+    -->
+	<target name="checkoutBranchHEAD" if="svn.branch">
+		<exec executable="svn" failonerror="true">
+			<arg line="export ${svn.root}/branches/${svn.branch}/${svn.project} ${checkout.dir}" />
+		</exec>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+                    target: checkoutTag
+                   - - - - - - - - - - - - - - - - -
+    -->
+	<target name="checkoutTag" unless="checkout.head" depends="checkTag">
+		<antcall target="createTag" />
+		<exec executable="svn" failonerror="true">
+			<arg line="export ${svn.root}/tags/${svn.tag}/${svn.project} ${checkout.dir}" />
+		</exec>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+                    target: checkTag
+                   - - - - - - - - - - - - - - - - -
+    -->
+	<target name="checkTag" unless="checkout.head">
+		<exec executable="svn" resultproperty="svnls.result">
+			<arg line="ls ${svn.root}/tags/${svn.tag}" />
+		</exec>
+		<condition property="exists.tag">
+			<equals arg1="${svnls.result}" arg2="0" />
+		</condition>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+                 target: createTag
+                - - - - - - - - - - - - - - - - -
+    -->
+	<target name="createTag" unless="exists.tag">
+		<antcall target="createTagOnTrunk" />
+		<antcall target="createTagOnBranch" />
+	</target>
+
+	<target name="createTagOnTrunk" unless="svn.branch">
+		<exec executable="svn" failonerror="true">
+			<arg line="copy -m &quot; create tag ${svn.tag} &quot; -r HEAD ${svn.root}/trunk ${svn.root}/tags/${svn.tag}" />
+		</exec>
+	</target>
+
+	<target name="createTagOnBranch" if="svn.branch">
+		<exec executable="svn" failonerror="true">
+			<arg line="copy -m &quot; create tag ${svn.tag} &quot; -r HEAD ${svn.root}/branches/${svn.branch} ${svn.root}/tags/${svn.tag}" />
+		</exec>
+	</target>
+
+	<!-- =================================
+          target: removeTag
+         ================================= -->
+	<target name="removeTag" depends="checkTag">
+		<fail unless="exists.tag" message="Tag ${svn.tag} not exists." />
+		<exec executable="svn" failonerror="true">
+			<arg line="rm -m &quot; remove tag ${svn.tag} &quot; ${svn.root}/tags/${svn.tag}" />
+		</exec>
+	</target>
+
+	<property name="svn.tag" value="xynautils-soap-1.5.0.1" />
+
+	<!-- =================================
+          target: releaseNotes
+         ================================= -->
+	<target name="releaseNotes">
+		<!--
+	  var=${svn.tag}
+	  var2=${var%[-_][1-9]}
+	  svn ls -v svn://gipafs2/tags | grep $var2
+	-->
+	</target>
+
+	<target name="svn-update" description="svn update">
+		<exec executable="svn">
+			<arg value="update" />
+		</exec>
+	</target>
+
+</project>

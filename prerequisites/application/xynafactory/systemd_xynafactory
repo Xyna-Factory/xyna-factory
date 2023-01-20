@@ -1,0 +1,19 @@
+# Xyna Factory service file
+
+[Unit]
+Description=Xyna Factory TOKEN_PROVIDES_XYNA_FACTORY
+After=network.target
+#TODO After mysql.service ?
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=forking
+User=TOKEN_XYNA_USER
+Group=TOKEN_XYNA_GROUP
+TimeoutSec=600
+LimitNOFILE=32767
+ExecStart=TOKEN_INSTALL_PREFIX/server/xynafactory.sh start
+ExecStop=TOKEN_INSTALL_PREFIX/server/xynafactory.sh stop
+PIDFile=TOKEN_INSTALL_PREFIX/server/xynafactory.pid

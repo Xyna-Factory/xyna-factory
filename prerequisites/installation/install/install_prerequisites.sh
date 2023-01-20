@@ -1,0 +1,153 @@
+#!/bin/bash
+
+# ---------------------------------------------------
+#  Copyright GIP AG 2013
+#  (http://www.gip.com)
+#
+#  Hechtsheimer Str. 35-37
+#  55131 Mainz
+# ---------------------------------------------------
+#  $Revision: 69292 $
+#  $Date: 2010-06-01 16:08:05 +0200 (Di, 01. Jun 2010) $
+# ---------------------------------------------------
+
+if [[ "x$(ps -o "user=" -p $$ | sed -e "s+ ++g")" != "xroot" ]]; then
+  echo "This script can only be run as root. Abort!"
+  exit 90
+fi
+
+#  Einige Funktionen sind in Bibliotheken ausgelagert.
+#+ Diese Bibliotheken importieren
+#
+#  Eingabeparameter:
+#o   Dateiname der zu importierenden Bibliothek
+load_functions () {
+  SOURCE_FILE="${1}"
+  if [[ ! -f ${SOURCE_FILE} ]]; then
+    echo "Unable to import functions from '${SOURCE_FILE}'. Abort!"; exit 99;
+  else
+    source ${SOURCE_FILE}
+  fi
+}
+
+#  Generische Funktionen importieren.
+load_functions "$(dirname "$0")/func_lib/func_lib.sh"
+
+#  Produktspezifische Funktionen importieren.
+load_functions "$(dirname "$0")/prerequisites_lib.sh"
+
+#  Aufruf mit vollem Pfad ermoeglichen
+cd "$(dirname "$0")"
+check_target_platform
+
+INSTANCE_NUMBER="1"
+parse_commandline_arguments "$@"
+f_set_environment_dir
+
+if [[ $# -lt 1 ]]; then DISPLAY_USAGE="true"; fi
+if [[ "x${DISPLAY_USAGE}" == "xtrue" ]]; then display_usage; exit; fi
+
+get_local_interfaces
+f_read_properties
+f_set_environment
+f_check_parameters 
+
+debug_variables
+if [[ "x${DRY_RUN}" == "xtrue" ]]; then exit; fi
+
+#  save the (possibly) new value at script start - skip updating the entry if 'dry-run' is specified
+f_check_or_create_property_file "host"
+set_property black_edition.instances "${BLACK_EDITION_INSTANCES}" $(get_properties_filename "host")
+
+check_component_status "black_edition_prerequisites"
+get_local_interfaces
+set_platform_dependent_properties
+
+#  start main logic
+
+if [[ "x${COMPONENT_LIMITS}"              == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_limits; fi
+if [[ "x${COMPONENT_SSH}"                 == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_ssh; fi
+if [[ "x${COMPONENT_TIME}"                == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_time; fi
+if [[ "x${COMPONENT_XYNAUSER}"            == "xtrue" ]]; then SOMETHING_CHANGED="true"; install_xyna_user; fi
+if [[ "x${COMPONENT_INSTALLATION_FOLDER}" == "xtrue" ]]; then SOMETHING_CHANGED="true"; create_folder_xynaserver; fi
+if [[ "x${COMPONENT_SCRIPTS}"             == "xtrue" ]]; then SOMETHING_CHANGED="true"; install_scripts; fi
+if [[ "x${COMPONENT_ANT}"                == "xtrue" ]]; then
+  SOMETHING_CHANGED="true"
+  install_ant
+  if [[ -f "${XYNA_CACHE_DIR}/xyna_func_lib_cache.sh" ]]; then
+    ${VOLATILE_RM} "${XYNA_CACHE_DIR}/xyna_func_lib_cache.sh"
+    load_settings_from_cache
+    set_platform_dependent_properties
+  fi
+fi
+if [[ "x${COMPONENT_SSL_CERTIFICATE}"     == "xtrue" ]]; then SOMETHING_CHANGED="true"; create_certificate; fi
+if [[ "x${COMPONENT_SYSLOG}"              == "xtrue" ]]; then 
+    SOMETHING_CHANGED="true"
+    f_add_syslog_facility "${XYNA_SYSLOG_FACILITY}"   "${XYNA_SYSLOG_FILE}"
+    if [[ "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
+      f_add_syslog_facility "${TOMCAT_SYSLOG_FACILITY}" "${TOMCAT_SYSLOG_FILE}"
+    fi 
+    if [[ "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
+      f_add_syslog_facility "${GERONIMO_SYSLOG_FACILITY}" ${GERONIMO_SYSLOG_FILE}")" 
+    fi   
+    install_syslog_and_logrotation
+fi
+if [[ "x${COMPONENT_FIREWALL}"            == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_firewall; fi
+if [[ "x${COMPONENT_ORACLE}"              == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_install_oracle; fi
+
+if [[ "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
+  SOMETHING_CHANGED="true";
+  if [[ "x${COMPONENT_UPDATE}" == "xinstall" ]]; then
+    install_tomcat
+  else
+    echo -e "\n* Stopping Tomcat"
+    stop_tomcat
+    update_tomcat
+  fi
+  etc_initd_files_tomcat
+  echo -e "\n* Starting Tomcat"
+  start_tomcat
+fi
+if [[ "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
+  SOMETHING_CHANGED="true";
+  if [[ "x${COMPONENT_UPDATE}" == "xinstall" ]]; then
+    install_geronimo
+  else
+    echo -e "\n* Stopping Geronimo"
+    stop_geronimo
+    update_geronimo
+  fi
+  echo -e "\n* Starting Geronimo"
+  start_geronimo
+  etc_initd_files_geronimo
+fi
+if [[ "x${COMPONENT_DEPLOYER}"            == "xtrue" ]]; then 
+    if [[ "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
+      SOMETHING_CHANGED="true"
+      f_install_tomcat_deployer
+    fi
+    if [[ "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
+      SOMETHING_CHANGED="true"
+      f_install_geronimo_deployer
+    fi
+fi
+if [[ "x${COMPONENT_SNMPD}"               == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_install_snmpd; fi
+
+if f_selected ${COMPONENT_INITD_XYNA} ; then SOMETHING_CHANGED="true"; f_install_initd_xyna; fi
+if f_selected ${COMPONENT_NETWORK_AVAILABILITY_DEMON} ; then SOMETHING_CHANGED="true"; f_install_network_availability_demon; fi
+
+
+
+#  Update version and installation date
+if [[ "x${SOMETHING_CHANGED}" == "xtrue" ]]; then
+  PRODUCT_INSTANCE=$(printf "%03g" ${INSTANCE_NUMBER:-1})
+  save_components_file "black_edition_prerequisites.${PRODUCT_INSTANCE}"
+  
+  # Berechtigungen in /etc/opt/xyna pruefen und ggf. korrigieren
+  f_set_etc_opt_xyna_permission
+fi
+
+if [[ -n "${STR_HINWEIS_AM_ENDE}" ]]; then
+  attention_msg "${STR_HINWEIS_AM_ENDE}"
+fi  
+#  EOF

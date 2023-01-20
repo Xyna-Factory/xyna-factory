@@ -1,0 +1,107 @@
+# ---------------------------------------------------
+#  Copyright GIP AG 2012
+#  (http://www.gip.com)
+#
+#  Hechtsheimer Str. 35-37
+#  55131 Mainz
+# ---------------------------------------------------
+#  $Revision: 116723 $
+#  $Date: 2012-07-12 11:43:13 +0200 (Do, 12. Jul 2012) $
+# ---------------------------------------------------
+#
+
+1. Unterstuetze Betriebssysteme:
+
+ - SLES 11 SP1 und SP2 (x86_64)
+ - RHEL 5.7 (x86_64)
+ - Debian (x86 und x86_64)
+ - Solaris 5.10 (i86pc_64)
+
+
+
+2. Installationsanleitung
+
+
+2.1 Liefergegenstaende
+
+Die Softwarelieferung besteht aus einem Basis-Paket:
+
+   "XynaBlackEditionPrerequisites_<Version>_<Datum>_<Betriebssystem>_<Architektur>.zip"
+   
+das entsprechend zum Betriebssystem und der Architektur des Zielsystem zu waehlen ist.
+
+
+Darueberhinaus existieren optionale AddOn-Pakete 
+
+ - zur Installation des Oracle Instant-Client 
+
+   "XynaBlackEditionPrerequisites_<Version>_<Datum>_AddOn_OracleInstantClient11.2_<Betriebssystem>_<Architektur>.zip"
+
+ - oder zur alternaticen Installation des Geronimo Applicationserver 
+
+   "XynaBlackEditionPrerequisites_<Version>_<Datum>_AddOn_Geronimo.zip"
+ 
+ 
+ 
+2.2	Zum Entpacken der Liefergegenstaende ist ein neues Verzeichnis im Homeverzeichnis des root-Benutzer anzulegen:
+ 
+   # mkdir -p ${HOME}/Lieferungen/Lieferung_YYYYMMDD 
+   # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
+   
+   Alle benoetigten Pakete werden dann in das neue Verzeichnis kopiert und dort entpackt.
+
+
+
+2.3. Porperties anlegen und anpassen
+
+   # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
+   # cd XynaBlackEditionPrerequisites*
+   # ./install_prerequisites.sh -n
+
+  Dieser Befehl erzeugt das Verzeichnis: /etc/xyna/environment und legt darin die Datei 
+  "black_edition001.properties" und eine rechnerspezifische Properties-Datei  "<hostname>.properties" 
+  jeweils mit Standardwerten an.  Diese Standarwerte sind anschliessend auf das jeweilige Zielsystem anzupassen
+  
+  
+  
+2.4. Installation 
+  Nach der Anpassung der Properties kann die  eigentliche Installation gestartet werden. Diese ist als 
+  root-Benutzer auszufuehren.
+
+    # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
+	# cd XynaBlackEditionPrerequisites*
+	# ./install_prerequisites.sh <optionen>
+ 
+  Welche <optionen> es gibt bekommt man angezeigt durch das Kommando:
+     # ./install_prerequisites.sh
+  
+  
+   Beispiele: 
+   
+   a) Standard-Installation (mit Tomcat)
+      # ./install_prerequisites.sh -a 
+      
+   b) Standard-Installation (mit Tomcat) inkl. dem Oracle InstantClient 
+      #./install_prerequisites.sh -a -o
+      
+     Hinweis: Hierfuer wird das AddOn-Paket    
+     "XynaBlackEditionPrerequisites_<Version>_<Datum>_AddOn_OracleInstantClient11.2_<Betriebssystem>_<Architektur>.zip"
+     benoetigt
+      
+      
+   c) Standard-Installation aber mit Geronimo statt Tomcat als Application-Server 
+      # ./install_prerequisites.sh -a -T -g
+     
+     Hinweis: Hierfuer wird das AddOn-Paket    
+     "XynaBlackEditionPrerequisites_<Version>_<Datum>_AddOn_Geronimo.zip"
+     benoetigt
+     
+     
+     
+     
+     
+     
+     
+     
+
+
