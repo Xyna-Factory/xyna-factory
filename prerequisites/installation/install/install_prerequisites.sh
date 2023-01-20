@@ -84,9 +84,6 @@ if [[ "x${COMPONENT_SSL_CERTIFICATE}"     == "xtrue" ]]; then SOMETHING_CHANGED=
 if [[ "x${COMPONENT_SYSLOG}"              == "xtrue" ]]; then 
     SOMETHING_CHANGED="true"
     f_add_syslog_facility "${XYNA_SYSLOG_FACILITY}"   "${XYNA_SYSLOG_FILE}"
-    if [[ "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
-      f_add_syslog_facility "${TOMCAT_SYSLOG_FACILITY}" "${TOMCAT_SYSLOG_FILE}"
-    fi 
     if [[ "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
       f_add_syslog_facility "${GERONIMO_SYSLOG_FACILITY}" ${GERONIMO_SYSLOG_FILE}")" 
     fi   
@@ -95,19 +92,6 @@ fi
 if [[ "x${COMPONENT_FIREWALL}"            == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_firewall; fi
 if [[ "x${COMPONENT_ORACLE}"              == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_install_oracle; fi
 
-if [[ "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
-  SOMETHING_CHANGED="true";
-  if [[ "x${COMPONENT_UPDATE}" == "xinstall" ]]; then
-    install_tomcat
-  else
-    echo -e "\n* Stopping Tomcat"
-    stop_tomcat
-    update_tomcat
-  fi
-  etc_initd_files_tomcat
-  echo -e "\n* Starting Tomcat"
-  start_tomcat
-fi
 if [[ "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
   SOMETHING_CHANGED="true";
   if [[ "x${COMPONENT_UPDATE}" == "xinstall" ]]; then
@@ -122,10 +106,6 @@ if [[ "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
   etc_initd_files_geronimo
 fi
 if [[ "x${COMPONENT_DEPLOYER}"            == "xtrue" ]]; then 
-    if [[ "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
-      SOMETHING_CHANGED="true"
-      f_install_tomcat_deployer
-    fi
     if [[ "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
       SOMETHING_CHANGED="true"
       f_install_geronimo_deployer

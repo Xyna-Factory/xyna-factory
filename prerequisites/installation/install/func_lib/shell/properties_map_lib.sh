@@ -23,7 +23,7 @@ HOST_PROPERTIES="\
                  ntp2.ipAddress\
 "
 #  Diese Properties werden in der produkt-spezifischen Properties-Datei abgelegt
-PRODUCT_GROUP_PROPERTIES="cluster geronimo sipadapter tomcat"
+PRODUCT_GROUP_PROPERTIES="cluster geronimo sipadapter"
 PRODUCT_PROPERTIES="\
                     as.userid\
                     as.password \
@@ -94,16 +94,6 @@ PRODUCT_PROPERTIES="\
                     sipadapter.notify.responsetimeout\
                     svn.hookmanager.port\
                     svn.server\
-                    tomcat.deployer.folder\
-                    tomcat.folder\
-                    tomcat.http.port\
-                    tomcat.ipAddress\
-                    tomcat.password\
-                    tomcat.ssl.port\
-                    tomcat.syslog.file\
-                    tomcat.syslog.facility\
-                    tomcat.user\
-                    tomcat.compression\
                     trigger.http.port\
                     trigger.nsnhix5600.port\
                     trigger.snmp.port\
@@ -209,17 +199,6 @@ case ${PROPERTY} in
   svn.server)                                   echo "";;
   system.vendor)                                echo "gip";;
   system.type)                                  echo "production";;
-  tomcat)                                       echo "true";;
-  tomcat.deployer.folder)                       echo "$(f_get_property_installation_folder)/tomcat-deployer";;
-  tomcat.folder)                                echo "$(f_get_property_installation_folder)/tomcat";;
-  tomcat.http.port)                             echo "$(( 8080 + ${PORT_OFFSET} ))";;
-  tomcat.password)                              f_make_password;;
-  tomcat.ssl.port)                              echo "$(( 8443 + ${PORT_OFFSET} ))";;
-  tomcat.ssl.port)                              echo "$(( 8443 + ${PORT_OFFSET} ))";;
-  tomcat.syslog.file)                           echo "/var/log/xyna/xyna_${PRODUCT_INSTANCE_STR}/tomcat.log";;
-  tomcat.syslog.facility)                       echo "$(f_get_tomcat_log_facility)";;
-  tomcat.user)                                  echo "tomcat";;
-  tomcat.compression)                           echo "on";;
   trigger.http.port)                            echo "$(( 4245 + ${PORT_OFFSET} ))";;
   trigger.nsnhix5600.port)                      echo "$(( 162 + ${PORT_OFFSET} ))";;
   trigger.snmp.port)                            echo "$(( 5999 + ${PORT_OFFSET} ))";;
@@ -264,7 +243,6 @@ f_read_product_group_properties() {
       cluster)                                          CLUSTER_SELECTED="${CURRENT_PROPERTY}";;
       geronimo)                                         GERONIMO_SELECTED="${CURRENT_PROPERTY}";;
       sipadapter)                                       SIPADAPTER_SELECTED="${CURRENT_PROPERTY}";;
-      tomcat)                                           TOMCAT_SELECTED="${CURRENT_PROPERTY}";;
     esac
   done
 }
@@ -396,21 +374,6 @@ f_map_current_property() {
     sipadapter.high.port)                             SIPADAPTER_HIGH_PORT="${CURRENT_PROPERTY}";;
     sipadapter.low.port)                              SIPADAPTER_LOW_PORT="${CURRENT_PROPERTY}";;
     sipadapter.notify.responsetimeout)                SIPADAPTER_NOTIFY_RESPONSETIMEOUT="${CURRENT_PROPERTY}";;
-  esac
-  fi
-    
-  if f_selected ${TOMCAT_SELECTED} ; then
-  case ${i} in
-    tomcat.deployer.folder)  f_check_is_path "${i}";          TOMCAT_DEPLOYER_HOME="${CURRENT_PROPERTY}";;
-    tomcat.folder)           f_check_is_path "${i}";          TOMCAT_HOME="${CURRENT_PROPERTY}";;
-    tomcat.http.port)        f_check_is_integer "${i}";       TOMCAT_HTTP_PORT="${CURRENT_PROPERTY}";;
-    tomcat.ipAddress)        f_check_is_ip_address "${i}";    TOMCAT_IP_ADDRESS="${CURRENT_PROPERTY}";;
-    tomcat.password)         f_check_is_password "${i}";      TOMCAT_PASSWORD="${CURRENT_PROPERTY}";;
-    tomcat.ssl.port)         f_check_is_integer "${i}";       TOMCAT_SSL_PORT="${CURRENT_PROPERTY}";;
-    tomcat.syslog.file)      f_check_is_path "${i}";          TOMCAT_SYSLOG_FILE="${CURRENT_PROPERTY}";;
-    tomcat.syslog.facility)                                   TOMCAT_SYSLOG_FACILITY="${CURRENT_PROPERTY}";;
-    tomcat.user)             f_check_is_alpha_numeric "${i}"; TOMCAT_USER="${CURRENT_PROPERTY}";;
-    tomcat.compression)                                       TOMCAT_COMPRESSION="${CURRENT_PROPERTY}";;
   esac
   fi
 }

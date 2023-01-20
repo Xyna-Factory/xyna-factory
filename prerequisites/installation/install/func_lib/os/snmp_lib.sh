@@ -148,7 +148,6 @@ A_HERE_DOCUMENT
     local PRODUCT_INSTANCE=$(printf "%03g" ${i})
     echo -e "\n### Xyna Factory ${PRODUCT_INSTANCE}" >> "${FILE_TO_EDIT}"
     echo "extend .1.3.6.1.4.1.28747.1.5.902 ${PRODUCT_INSTANCE} /bin/bash ${INSTALL_PREFIX}/bin/snmp_status.sh xynafactory ${PRODUCT_INSTANCE}" >> "${FILE_TO_EDIT}"
-    echo "extend .1.3.6.1.4.1.28747.1.5.903 ${PRODUCT_INSTANCE} /bin/bash ${INSTALL_PREFIX}/bin/snmp_status.sh tomcat ${PRODUCT_INSTANCE}" >> "${FILE_TO_EDIT}"
     echo "extend .1.3.6.1.4.1.28747.1.5.904 ${PRODUCT_INSTANCE} /bin/bash ${INSTALL_PREFIX}/bin/snmp_status.sh geronimo ${PRODUCT_INSTANCE}" >> "${FILE_TO_EDIT}"
     echo "proxy -Cn xyna_${PRODUCT_INSTANCE} -v 2c -c public ${SNMP_TRIGGER_IP[${i}]}:${SNMP_TRIGGER_PORT[${i}]} .1.3.6.1.4.1.28747.1.11" >> "${FILE_TO_EDIT}"
     echo "proxy -Cn xyna_${PRODUCT_INSTANCE} -v 2c -c public localhost .1.3.6.1.4.1.28747.1.5" >> "${FILE_TO_EDIT}"

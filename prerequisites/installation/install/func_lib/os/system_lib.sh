@@ -228,7 +228,7 @@ set_platform_dependent_properties () {
     *) f_exit_with_message ${EX_UNSUPPORTED} "set_platform_dependent_properties: Platform '${INSTALLATION_PLATFORM}' is not supported.";;
   esac
 
-  TOMCAT_MEMORY="$(echo "${ALL_MEM_IN_MB} 4 / p" | ${VOLATILE_DC})"
+  TOMCAT_MEMORY="$(echo "${ALL_MEM_IN_MB} 4 / p" | ${VOLATILE_DC})" # What has this to do with tomcat?
   if [[ ${TOMCAT_MEMORY} -lt 256  ]]; then TOMCAT_MEMORY="256" ; fi
   if [[ ${TOMCAT_MEMORY} -gt 2048 ]]; then TOMCAT_MEMORY="2048"; fi
 

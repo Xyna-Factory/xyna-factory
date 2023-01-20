@@ -21,16 +21,6 @@ f_get_xyna_log_facility() {
   esac 
 }
 
-# Log Facility for Tomcat
-f_get_tomcat_log_facility() {
-  case ${INSTANCE_NUMBER} in
-    1) echo "local2";;
-    2) echo "local4";;
-    3) echo "local6";;
-    *) echo "local2";;
-  esac 
-}
-
 #Erkennung der drei Syslog-Arten
 f_detect_syslog_type () {
   if [[ ${INSTALLATION_PLATFORM} == solaris ]] ; then
@@ -63,9 +53,6 @@ install_syslog_and_logrotation () {
   
   local TARGET_DIR="$(dirname "${XYNA_SYSLOG_FILE}")"
   local TARGET_DIR2=""
-  if [[  "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
-    TARGET_DIR2="$(dirname "${TOMCAT_SYSLOG_FILE}")"
-  fi 
   if [[  "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
     TARGET_DIR2="$(dirname "${GERONIMO_SYSLOG_FILE}")"
   fi
@@ -151,9 +138,6 @@ f_configure_syslog () {
      if [[ -f "${XYNA_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${XYNA_SYSLOG_FILE}" 
      fi
-     if [[ -f "${TOMCAT_SYSLOG_FILE}" ]]; then
-       ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${TOMCAT_SYSLOG_FILE}"
-     fi
      if [[ -f "${GERONIMO_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${GERONIMO_SYSLOG_FILE}"
      fi
@@ -191,9 +175,6 @@ ${VOLATILE_PATCH} --quiet -l -f -i "${TMP_FILE}" "${TARGET_FILE}"
      if [[ -f "${XYNA_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${XYNA_SYSLOG_FILE}" 
      fi
-     if [[ -f "${TOMCAT_SYSLOG_FILE}" ]]; then
-       ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${TOMCAT_SYSLOG_FILE}"
-     fi
      if [[ -f "${GERONIMO_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${GERONIMO_SYSLOG_FILE}"
      fi
@@ -215,9 +196,6 @@ f_configure_rsyslog () {
   if [[ $? -eq 1 ]]; then
     if [[ -f "${XYNA_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${XYNA_SYSLOG_FILE}" 
-    fi
-    if [[ -f "${TOMCAT_SYSLOG_FILE}" ]]; then
-      ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${TOMCAT_SYSLOG_FILE}"
     fi
     if [[ -f "${GERONIMO_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${GERONIMO_SYSLOG_FILE}"
@@ -249,9 +227,6 @@ f_configure_solaris_syslog () {
   if [[ $? -eq 1 ]]; then
     if [[ -f "${XYNA_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${XYNA_SYSLOG_FILE}" 
-    fi
-    if [[ -f "${TOMCAT_SYSLOG_FILE}" ]]; then
-      ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${TOMCAT_SYSLOG_FILE}"
     fi
     if [[ -f "${GERONIMO_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${GERONIMO_SYSLOG_FILE}"

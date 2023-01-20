@@ -47,13 +47,6 @@ case ${SERVICE} in
       state=$(echo "$?")
    fi
   ;;
-  tomcat)
-    TOMCAT_INIT_SCRIPT="/etc/init.d/tomcat_${PRODUCT_INSTANCE}"
-    if [[ -x ${TOMCAT_INIT_SCRIPT} ]]; then
-       ${TOMCAT_INIT_SCRIPT} status 1>/dev/null 2>/dev/null
-      state=$(echo "$?")
-   fi
-  ;;
   apache2)
     APACHE2_INIT_SCRIPT="/etc/init.d/apache2"
     if [[ -x ${APACHE2_INIT_SCRIPT} ]]; then

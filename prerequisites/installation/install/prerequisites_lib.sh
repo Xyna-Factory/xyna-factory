@@ -38,7 +38,7 @@ parse_commandline_arguments () {
   
   BLN_FORCE_INSTALLATION="false"
   #kmq
-  while getopts ":nhHabcdefgi:jloprstuvwxyzABCDFGIJLOPRSTUWXYZ" OPTION
+  while getopts ":nhHabcdefgi:jloprsuvwxyzABCDFGIJLOPRSUWXYZ" OPTION
   do
     if [[ "x${OPTARG:0:1}" == "x-" ]]; then DISPLAY_USAGE="true"; fi
     case ${OPTION} in
@@ -49,7 +49,6 @@ parse_commandline_arguments () {
 	   COMPONENT_ANT="true"
 	   COMPONENT_SYSLOG="true"
 	   COMPONENT_XYNAUSER="true" 
-	   COMPONENT_TOMCAT="true"
 	   COMPONENT_SCRIPTS="true"
 	   COMPONENT_FIREWALL="true"
 	   COMPONENT_SNMPD="true"
@@ -68,7 +67,6 @@ parse_commandline_arguments () {
 	j) COMPONENT_ANT="true";;
 	l) COMPONENT_LIMITS="true";;
 	s) COMPONENT_SYSLOG="true";;
-	t) COMPONENT_TOMCAT="true";;
 	o) COMPONENT_ORACLE="true";;
 	p) COMPONENT_SNMPD="true";;
 	r) COMPONENT_SSH="true";;
@@ -85,7 +83,6 @@ parse_commandline_arguments () {
 	   COMPONENT_ANT="false" 
 	   COMPONENT_SYSLOG="false"
 	   COMPONENT_XYNAUSER="false"
-	   COMPONENT_TOMCAT="false"
 	   COMPONENT_SCRIPTS="false"
 	   COMPONENT_FIREWALL="false"
 	   COMPONENT_SSH="false"
@@ -103,7 +100,6 @@ parse_commandline_arguments () {
 	J) COMPONENT_ANT="false";;
 	L) COMPONENT_LIMITS="false";;
 	S) COMPONENT_SYSLOG="false";;
-	T) COMPONENT_TOMCAT="false";;
 	O) COMPONENT_ORACLE="false";;
 	P) COMPONENT_SNMPD="false";;
 	R) COMPONENT_SSH="false";;
@@ -128,7 +124,6 @@ debug_variables () {
     echo " firewall              : ${COMPONENT_FIREWALL:-false}"
     echo " SSH                   : ${COMPONENT_SSH:-false}"
     echo " remote deployment tool: ${COMPONENT_DEPLOYER:-false}"
-    echo " tomcat                : ${COMPONENT_TOMCAT:-false}"
     echo " unprivileged user     : ${COMPONENT_XYNAUSER:-false}"
     echo " syslog and logrotation: ${COMPONENT_SYSLOG:-false}"
     echo " limits                : ${COMPONENT_LIMITS:-false}"
@@ -168,7 +163,6 @@ display_usage () {
 -pP   [don't] configure SNMP-Daemon
 -rR   [don't] configure SSH-Daemon und SSH-Client
 -sS   [don't] configure syslog and logrotation
--tT   [don't] install Tomcat
 -uU   [don't] create unprivileged user
 -wW   [don't] configure firewall settings
 -xX   [don't] create /etc/init.d-script for xynafactory
@@ -236,13 +230,6 @@ f_check_parameters () {
       COMPONENT_GERONIMO="false"
     fi  
   fi
-
-  if [[ "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
-    if [[ ! -d application/tomcat ]]; then
-      STR_WARNING="${STR_WARNING}AddOn 'Tomcat' is not available! Component 'Tomcat' will be deactivated\n" 
-      COMPONENT_TOMCAT="false"
-    fi  
-  fi
   
   if [[ "x${COMPONENT_ANT}" == "xtrue" ]]; then
     if [[ ! -d application/ant ]]; then
@@ -251,9 +238,9 @@ f_check_parameters () {
     fi  
   fi
   
-  if [[ "x${COMPONENT_GERONIMO}" == "xtrue" && "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
-    f_add_to_error_buffer "You can only install the package 'tomcat' OR 'geronimo, but not both application server together\n"
-  fi
+  # if [[ "x${COMPONENT_GERONIMO}" == "xtrue" && "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
+  #   f_add_to_error_buffer "You can only install the package 'tomcat' OR 'geronimo, but not both application server together\n"
+  # fi
      
    
   if [[ "x" != "x${STR_WARNING}" ]]; then
@@ -478,7 +465,7 @@ f_check_system_before_installation () {
 
 
 f_configure_firewall () {
-  f_configure_firewall_service "application_server" "TCP" "${GERONIMO_RMI_PORT}" "${GERONIMO_JMX_PORT}" "${GERONIMO_HTTP_PORT}" "${GERONIMO_SSL_PORT}" "${TOMCAT_HTTP_PORT}" "${TOMCAT_SSL_PORT}"
+  f_configure_firewall_service "application_server" "TCP" "${GERONIMO_RMI_PORT}" "${GERONIMO_JMX_PORT}" "${GERONIMO_HTTP_PORT}" "${GERONIMO_SSL_PORT}"
   f_configure_firewall_service "snmpd"              "UDP" "161" "162"
 
   #  Interfaces sind per default in der externen Zone

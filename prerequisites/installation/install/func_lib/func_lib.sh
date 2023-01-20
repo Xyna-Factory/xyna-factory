@@ -87,7 +87,6 @@ f_load_library  "processing/cluster_lib.sh"
 f_load_library  "processing/installation_lib.sh"
 
 f_load_library  "portal/portal_lib.sh"
-f_load_library  "portal/tomcat_lib.sh"
 f_load_library  "portal/geronimo_lib.sh"
 f_load_library  "portal/oc4j_lib.sh"
 f_load_library  "portal/weblogic_lib.sh"

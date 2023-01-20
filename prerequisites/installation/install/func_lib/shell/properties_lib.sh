@@ -273,7 +273,6 @@ f_check_property_creation () {
     case ${PROPERTY%%.*} in
       cluster)    echo ${CLUSTER_SELECTED} ;;
       geronimo)   echo ${GERONIMO_SELECTED} ;;
-      tomcat)     echo ${TOMCAT_SELECTED} ;;
       sipadapter) echo ${SIPADAPTER_SELECTED} ;;
       *)          echo "true";
      esac
@@ -286,7 +285,6 @@ f_fill_selectors () {
   case ${1} in
     cluster)    CLUSTER_SELECTED=${2} ;;
     geronimo)   GERONIMO_SELECTED=${2} ;;
-    tomcat)     TOMCAT_SELECTED=${2} ;;
     sipadapter) SIPADAPTER_SELECTED=${2} ;;
   esac
 }
@@ -337,7 +335,7 @@ f_confirm_property () {
     local DEFAULT_LOCALE=""
 
   case "${PROPERTY}" in
-    *.local.ipAddress|geronimo.ipAddress|tomcat.ipAddress)
+    *.local.ipAddress|geronimo.ipAddress)
       #  Gibts mehrere Interfaces, dann diese anzeigen
       if [[ ${local_interface_counter:-0} -ge 2 ]]; then
         echo "Following ip-addresses found:" >&2
