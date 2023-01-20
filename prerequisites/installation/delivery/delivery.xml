@@ -36,7 +36,8 @@
        target: delivery_os
        - - - - - - - - - - - - - - - - - -->
   <target name="delivery_os">
-    <exec failonerror="true" executable="${basedir}/check_trunk.sh" />
+    <!-- Since we can't use any SVN-stuff -->
+    <!-- <exec failonerror="true" executable="${basedir}/check_trunk.sh" /> -->
     <ant antfile="build.xml" dir="${checkout.dir}/installation/build" inheritall="true" inheritrefs="true">
       <target name="${buildTarget}" />
     </ant>
@@ -47,22 +48,6 @@
                          nameZip="${delivery.name}_${release.number}_${timestamp}${zipName}" />
     <delete dir="${delivery.build.dir}" />
   </target>
-
-
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_addon
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_addon">
-    <exec failonerror="true" executable="${basedir}/check_trunk.sh" />
-    <ant antfile="build.xml" dir="${checkout.dir}/installation/build" inheritall="true" inheritrefs="true">
-      <target name="${buildTarget}" />
-    </ant>
-    <zipDeliveryItemsSrc nameSrc="${delivery.name}_${release.number}_${timestamp}"
-                         nameZip="${delivery.name}_${release.number}_${timestamp}${zipName}" />
-    <delete dir="${delivery.build.dir}" />
-  </target>
-
-
 
   <!-- - - - - - - - - - - - - - - - - -
        target: localbuild_basics
@@ -83,221 +68,6 @@
     <property name="zipName" value="" />
     <ant antfile="delivery.xml" target="delivery_os" inheritall="true" inheritrefs="true"/>
   </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: localbuild_Tomcat6
-       - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Tomcat6" description="build a delivery for the AddOn Apache Tomcat6 from local repository">
-    <property name="checkout.dir" value="${basedir}/../.." />
-    <property name="buildTarget" value="buildTomcat6" />
-    <property name="zipName" value="_AddOn_Tomcat6_localbuild" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Tomcat6
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Tomcat6">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildTomcat6" />
-    <property name="zipName" value="_AddOn_Tomcat6" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: localbuild_Ant 1_7
-       - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Ant1_7" description="build a delivery for the AddOn Ant 1.7 from local repository">
-    <property name="checkout.dir" value="${basedir}/../.." />
-    <property name="buildTarget" value="buildAnt1_7" />
-    <property name="zipName" value="_AddOn_Ant1_7_localbuild" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Ant1_7
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Ant1_7">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildAnt1_7" />
-    <property name="zipName" value="_AddOn_Ant1_7" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: localbuild_Ant1_9
-       - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Ant1_9" description="build a delivery for the AddOn Ant 1.9 from local repository">
-    <property name="checkout.dir" value="${basedir}/../.." />
-    <property name="buildTarget" value="buildAnt1_9" />
-    <property name="zipName" value="_AddOn_Ant1_9_localbuild" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Ant1_9
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Ant1_9">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildAnt1_9" />
-    <property name="zipName" value="_AddOn_Ant1_9" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: localbuild_Tomcat7
-       - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Tomcat7" description="build a delivery for the AddOn Apache Tomcat7 from local repository">
-    <property name="checkout.dir" value="${basedir}/../.." />
-    <property name="buildTarget" value="buildTomcat7" />
-    <property name="zipName" value="_AddOn_Tomcat7_localbuild" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Tomcat6
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Tomcat7">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildTomcat7" />
-    <property name="zipName" value="_AddOn_Tomcat7" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-
-  <!-- - - - - - - - - - - - - - - - - -
-       target: localbuild_Tomcat7_log4j2
-       - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Tomcat7_log4j2" description="build a delivery for the AddOn Apache Tomcat7 with log4j2 from local repository">
-    <property name="checkout.dir" value="${basedir}/../.." />
-    <property name="buildTarget" value="buildTomcat7_log4j2" />
-    <property name="zipName" value="_AddOn_Tomcat7_log4j2_localbuild" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Tomcat7_log4j2
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Tomcat7_log4j2">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildTomcat7_log4j2" />
-    <property name="zipName" value="_AddOn_Tomcat7_log4j2" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-	
-  <!-- - - - - - - - - - - - - - - - - -
-	  target: localbuild_Tomcat8_log4j2
-	  - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Tomcat8_log4j2" description="build a delivery for the AddOn Apache Tomcat8 with log4j2 from local repository">
-	<property name="checkout.dir" value="${basedir}/../.." />
-	<property name="buildTarget" value="buildTomcat80_log4j2" />
-	<property name="zipName" value="_AddOn_Tomcat8_log4j2_localbuild" />
-	<ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-	  
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Tomcat8_log4j2
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Tomcat8_log4j2">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildTomcat80_log4j2" />
-    <property name="zipName" value="_AddOn_Tomcat8_log4j2" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-  
-  <!-- - - - - - - - - - - - - - - - - -
-          target: localbuild_Tomcat85_log4j2
-          - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Tomcat85_log4j2" description="build a delivery for the AddOn Apache Tomcat8.5 with log4j2 from local repository">
-        <property name="checkout.dir" value="${basedir}/../.." />
-        <property name="buildTarget" value="buildTomcat85_log4j2" />
-        <property name="zipName" value="_AddOn_Tomcat85_log4j2_localbuild" />
-        <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Tomcat85_log4j2
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Tomcat85_log4j2">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildTomcat85_log4j2" />
-    <property name="zipName" value="_AddOn_Tomcat85_log4j2" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-
-
-  <!-- - - - - - - - - - - - - - - - - -
-       target: localbuild_Geronimo2
-       - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Geronimo2" description="build a delivery for the AddOn Apache Geronimo 2 from local repository">
-    <property name="checkout.dir" value="${basedir}/../.." />
-    <property name="buildTarget" value="buildGeronimo2" />
-    <property name="zipName" value="_AddOn_Geronimo2_localbuild" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Geronimo2
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Geronimo2">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildGeronimo2" />
-    <property name="zipName" value="_AddOn_Geronimo2" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-
-    
-  <!-- - - - - - - - - - - - - - - - - -
-       target: localbuild_Geronimo3
-       - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_Geronimo3" description="build a delivery for the AddOn Apache Geronimo 3 from local repository">
-    <property name="checkout.dir" value="${basedir}/../.." />
-    <property name="buildTarget" value="buildGeronimo3" />
-    <property name="zipName" value="_AddOn_Geronimo3_localbuild" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_Geronimo3
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_Geronimo3">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <property name="buildTarget" value="buildGeronimo3" />
-    <property name="zipName" value="_AddOn_Geronimo3" />
-    <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-  </target>
-
-
-   <!-- - - - - - - - - - - - - - - - - -
-        target: localbuild_Oracle12_Linux_x86_64
-        - - - - - - - - - - - - - - - - - -->
-   <target name="localbuild_Oracle12_Linux_x86_64" description="build a delivery for the AddOn Oracle Instant Client 12 for Linux (x86_64) from local repository">
-     <property name="checkout.dir" value="${basedir}/../.." />
-     <property name="buildTarget" value="buildOracle12_Linux_x86_64" />
-     <property name="zipName" value="_AddOn_OracleInstantClient12.1_Linux_x86_64_localbuild" />
-     <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-   </target>
-
-
-   <!-- - - - - - - - - - - - - - - - - -
-        target: delivery_Oracle12_Linux_x86_64
-        - - - - - - - - - - - - - - - - - -->
-   <target name="delivery_Oracle12_Linux_x86_64">
-     <property name="checkout.dir" value="${basedir}/../../checkout" />
-     <property name="buildTarget" value="buildOracle12_Linux_x86_64" />
-     <property name="zipName" value="_AddOn_OracleInstantClient12.1_Linux_x86_64" />
-     <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-   </target>
-   
-   <!-- - - - - - - - - - - - - - - - - -
-        target: delivery_Oracle12_2_Linux_x86_64
-        - - - - - - - - - - - - - - - - - -->
-   <target name="delivery_Oracle12_2_Linux_x86_64">
-     <property name="checkout.dir" value="${basedir}/../../checkout" />
-     <property name="buildTarget" value="buildOracle12_2_Linux_x86_64" />
-     <property name="zipName" value="_AddOn_OracleInstantClient12.2_Linux_x86_64" />
-     <ant antfile="delivery.xml" target="delivery_addon" inheritall="true" inheritrefs="true"/>
-   </target>
 
   <!-- - - - - - - - - - - - - - - - - -
        target: localbuild
@@ -306,25 +76,11 @@
     <property name="checkout.dir" value="${basedir}/../.." />
     <exec failonerror="true" executable="${basedir}/check_trunk.sh" />
     <ant antfile="delivery.xml" target="localbuild_basics" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Ant1_7" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Ant1_9" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Tomcat6" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Tomcat7" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Tomcat7_log4j2" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Tomcat8_log4j2" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Tomcat85_log4j2" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Geronimo2" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="localbuild_Geronimo3" inheritall="true" inheritrefs="true"/>
-    <!--
-    <ant antfile="delivery.xml" target="localbuild_Oracle12_Linux_x86_64" inheritall="true" inheritrefs="true"/>
-    --> 
   </target>
 
-
-
-  <!-- =================================
+  <!-- - - - - - - - - - - - - - - - - -
        target: delivery
-       ================================= -->
+       - - - - - - - - - - - - - - - - - -->
   <target name="release" description="build a delivery for all systems from specified SVN-tag">
     <exec failonerror="true" executable="${basedir}/check_trunk.sh" />
     <exec failonerror="true" executable="svn">
@@ -339,16 +95,6 @@
     <property name="checkout.dir" value="${basedir}/../../checkout" />
     <ant antfile="svn.xml" target="checkout" inheritall="true" inheritrefs="true" />
     <ant antfile="delivery.xml" target="delivery_basics" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Ant1_7" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Ant1_9" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Tomcat6" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Tomcat7_log4j2" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Tomcat8_log4j2" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Tomcat85_log4j2" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Geronimo2" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Geronimo3" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Oracle12_Linux_x86_64" inheritall="true" inheritrefs="true"/>
-    <ant antfile="delivery.xml" target="delivery_Oracle12_2_Linux_x86_64" inheritall="true" inheritrefs="true"/>
     <delete dir="${checkout.dir}" />
   </target>
 
