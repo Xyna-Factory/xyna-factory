@@ -89,8 +89,8 @@ fi
 if [[ "x${COMPONENT_FIREWALL}"            == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_firewall; fi
 if [[ "x${COMPONENT_ORACLE}"              == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_install_oracle; fi
 # TODO: remove Deployer as well
-if [[ "x${COMPONENT_DEPLOYER}"            == "xtrue" ]]; then 
-fi
+# if [[ "x${COMPONENT_DEPLOYER}"            == "xtrue" ]]; then 
+# fi
 if [[ "x${COMPONENT_SNMPD}"               == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_install_snmpd; fi
 
 if f_selected ${COMPONENT_INITD_XYNA} ; then SOMETHING_CHANGED="true"; f_install_initd_xyna; fi
