@@ -17,12 +17,12 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <project name="xynautils-logging" basedir=".">
-	
+
 	<!--Next release version for the archive file-->
 	<property name="release.number" value="3.0.0.0"/>
 	<!--Name of the utils project-->
 	<property name="utils.name" value="logging"/>
-			
+
 	<!--Import all targets from master build file-->
 	<import file="${basedir}/../install/xynautils/masterbuild.xml"/>
 

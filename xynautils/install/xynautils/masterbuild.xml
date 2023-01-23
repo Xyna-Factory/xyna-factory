@@ -66,8 +66,6 @@
 			                      different version number (eg. xynautils-jms-N20081010-0100.jar)
 			     integration    : Same process a buildRelease but no copy to release folder and 
                                different version number (eg. xynautils-jms-I20081010-1200.jar)
-			
-			     All targets include run of unit tests and findBugs analysis.
 			</echo>
   </target>
 
@@ -191,8 +189,7 @@
          = = = = = = = = = = = = = = = = =
 -->
   <macrodef name="buildVersion"
-            description="Compile project, build jar and javadoc from it, run tests and findbugs on it.
-		Stores results in destdir. Do all of the java stuff.">
+            description="Compile project, build jar and javadoc from it. Do all of the java stuff.">
     <attribute name="version" description="Version number of the build." />
     <attribute name="basedir"
                default="${basedir}"
@@ -211,15 +208,7 @@
       <buildSourceJar basedir="@{basedir}"
                       destfile="@{destdir}/${project.name}-@{version}-src.jar" />
       <buildJavadoc basedir="@{basedir}" todir="@{destdir}/javadoc" />
-      <!-- TODO: generate jar of test classes -->
-      <!-- run JUnit tests -->
-      <mkdir dir="@{destdir}/testresults" />
-      <runTests srcdir="@{basedir}" destdir="@{destdir}/testresults" />
-      <!-- run FindBugs -->
-      <findBugs srcdir="@{basedir}"
-                destfile="@{destdir}/testresults/findbugs-${project.name}.xml" />
-      <!-- TODO: run Cobertura Coverage -->
-      <!-- TODO: create release notes from svn log -->
+
     </sequential>
   </macrodef>
 
