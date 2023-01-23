@@ -23,7 +23,7 @@ HOST_PROPERTIES="\
                  ntp2.ipAddress\
 "
 #  Diese Properties werden in der produkt-spezifischen Properties-Datei abgelegt
-PRODUCT_GROUP_PROPERTIES="cluster sipadapter"
+PRODUCT_GROUP_PROPERTIES="cluster sipadapter geronimo tomcat"
 PRODUCT_PROPERTIES="\
                     as.userid\
                     as.password \
@@ -111,6 +111,7 @@ default_value_for_property () {
   local PRODUCT_INSTANCE_STR=$(printf "%03g" ${INSTANCE_NUMBER:-1})
   local PORT_OFFSET=$(( ($((10#${INSTANCE_NUMBER:-1})) - 1) * 10 ))
 case ${PROPERTY} in
+  ant.folder)                                   echo "/opt/ant";;
   as.password)                                  f_make_password;;
   as.userid)                                    echo "oc4jadmin";;
   black_edition.instances)                      echo "1";;
@@ -148,6 +149,7 @@ case ${PROPERTY} in
   cluster.rmi.remote.ipAddress)                 echo "";;
   cluster.rmi.remote.port)                      echo "$(( 1099 + ${PORT_OFFSET} ))";;
   default.monitoringlevel)                      echo "5";;
+  geronimo)                                     echo "false";;
   installation.folder)                          echo "/opt/xyna/xyna_${PRODUCT_INSTANCE_STR}";;
   java.home)                                    echo "${JAVA_HOME}";;
   jvm.maxheap.size)                             echo "${TOMCAT_MEMORY}m";;
@@ -176,6 +178,7 @@ case ${PROPERTY} in
   svn.server)                                   echo "";;
   system.vendor)                                echo "gip";;
   system.type)                                  echo "production";;
+  tomcat)                                       echo "false";;
   trigger.http.port)                            echo "$(( 4245 + ${PORT_OFFSET} ))";;
   trigger.nsnhix5600.port)                      echo "$(( 162 + ${PORT_OFFSET} ))";;
   trigger.snmp.port)                            echo "$(( 5999 + ${PORT_OFFSET} ))";;
