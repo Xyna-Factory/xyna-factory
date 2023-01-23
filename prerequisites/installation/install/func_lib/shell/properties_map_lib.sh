@@ -15,7 +15,7 @@
 #  Diese Variablen muessen gesetzt sein.
 PRODUCT_NAME="black_edition"
 #  Diese Property wird in der host-spezifischen Properties-Datei abgelegt
-HOST_PROPERTIES="\
+HOST_PROPERTIES="ant.folder\
                  black_edition.instances\
                  system.vendor\
                  system.type\
