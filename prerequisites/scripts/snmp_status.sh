@@ -12,7 +12,7 @@ ME=$(basename $0)
 VERBOSE="false"
 
 usage () {
-echo "usage: ${ME} [xynafactory|geronimo|apache|netstat_num] <instance nummer>"
+echo "usage: ${ME} [xynafactory|apache|netstat_num] <instance nummer>"
         echo
         echo "  Returns the state of the specified service as a number for monitoring with Cacti."
   echo
@@ -39,13 +39,6 @@ case ${SERVICE} in
       ${XYNAFACTORY_INIT_SCRIPT} status 1>/dev/null 2>/dev/null
       state=$(echo "$?")
     fi
-  ;;
-  geronimo)
-    GERONIMO_INIT_SCRIPT="/etc/init.d/geronimo_${PRODUCT_INSTANCE}"
-    if [[ -x ${GERONIMO_INIT_SCRIPT} ]]; then
-       ${GERONIMO_INIT_SCRIPT} status 1>/dev/null 2>/dev/null
-      state=$(echo "$?")
-   fi
   ;;
   apache2)
     APACHE2_INIT_SCRIPT="/etc/init.d/apache2"

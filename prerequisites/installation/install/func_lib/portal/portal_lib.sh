@@ -94,11 +94,6 @@ f_setenv_sh () {
     fi; unset ret_val
 
     echo "    + configuring pid file: ${FILE_TO_EDIT}"
-    ${VOLATILE_GREP} "GERONIMO_PID" "${FILE_TO_EDIT}" > /dev/null && ret_val=1
-    if [[ ${ret_val-0} -eq 0 ]]; then
-      echo "GERONIMO_PID=\${GERONIMO_HOME}/var/log/geronimo.pid" >> "${FILE_TO_EDIT}"
-    fi; unset ret_val
-
     ${VOLATILE_GREP} "CATALINA_PID" "${FILE_TO_EDIT}" > /dev/null && ret_val=1
     if [[ ${ret_val-0} -eq 0 ]]; then
       echo "CATALINA_PID=\${CATALINA_HOME}/work/catalina.pid" >> "${FILE_TO_EDIT}"

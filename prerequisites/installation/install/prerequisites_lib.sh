@@ -38,7 +38,7 @@ parse_commandline_arguments () {
   
   BLN_FORCE_INSTALLATION="false"
   #kmq
-  while getopts ":nhHabcdefgi:jloprsuvwxyzABCDFGIJLOPRSUWXYZ" OPTION
+  while getopts ":nhHabcdefi:jloprsuvwxyzABCDFIJLOPRSUWXYZ" OPTION
   do
     if [[ "x${OPTARG:0:1}" == "x-" ]]; then DISPLAY_USAGE="true"; fi
     case ${OPTION} in
@@ -62,7 +62,6 @@ parse_commandline_arguments () {
 	d) COMPONENT_DEPLOYER="true";;
 	e) BLN_FORCE_INSTALLATION="true";;
 	f) COMPONENT_INSTALLATION_FOLDER="true";;
-	g) COMPONENT_GERONIMO="true";;
 	i) export INSTANCE_NUMBER="${OPTARG}";;
 	j) COMPONENT_ANT="true";;
 	l) COMPONENT_LIMITS="true";;
@@ -95,7 +94,6 @@ parse_commandline_arguments () {
 	C) COMPONENT_SSL_CERTIFICATE="false";;
 	D) COMPONENT_DEPLOYER="false";;
 	F) COMPONENT_INSTALLATION_FOLDER="false";;
-	G) COMPONENT_GERONIMO="false";;
 	I) COMPONENT_SCRIPTS="true";;
 	J) COMPONENT_ANT="false";;
 	L) COMPONENT_LIMITS="false";;
@@ -137,7 +135,6 @@ debug_variables () {
     echo " check SELinux/AppArmor: ${COMPONENT_CHECK_SELINUX:-false}"
     echo
     echo "-- Addons    --"
-    echo " geronimo              : ${COMPONENT_GERONIMO:-false}"
     echo " oracle instant client : ${COMPONENT_ORACLE:-false}"
   fi
 }
@@ -169,7 +166,6 @@ display_usage () {
 -zZ   [don't] configure NTP-Client and time zone
 
 Extra options (not included in -aA)
--gG   [don't] install Geronimo (Java EE, incl. Tomcat) instead of blank Tomcat
 -oO   [don't] install Oracle Instant Client
 -yY   [don't] create /etc/init.d-script and respawning for network-availability-demon
 
@@ -224,24 +220,12 @@ f_check_parameters () {
     fi  
   fi
   
-  if [[ "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
-    if [[ ! -d application/geronimo ]]; then
-      STR_WARNING="${STR_WARNING}AddOn 'Geronimo' is not available! Component 'Geronimo' will be deactivated\n" 
-      COMPONENT_GERONIMO="false"
-    fi  
-  fi
-  
   if [[ "x${COMPONENT_ANT}" == "xtrue" ]]; then
     if [[ ! -d application/ant ]]; then
       STR_WARNING="${STR_WARNING}AddOn 'Ant' is not available! Component 'Ant' will be deactivated\n" 
       COMPONENT_ANT="false"
     fi  
-  fi
-  
-  # if [[ "x${COMPONENT_GERONIMO}" == "xtrue" && "x${COMPONENT_TOMCAT}" == "xtrue" ]]; then
-  #   f_add_to_error_buffer "You can only install the package 'tomcat' OR 'geronimo, but not both application server together\n"
-  # fi
-     
+  fi 
    
   if [[ "x" != "x${STR_WARNING}" ]]; then
     echo  " ..... WARNING"
@@ -465,7 +449,8 @@ f_check_system_before_installation () {
 
 
 f_configure_firewall () {
-  f_configure_firewall_service "application_server" "TCP" "${GERONIMO_RMI_PORT}" "${GERONIMO_JMX_PORT}" "${GERONIMO_HTTP_PORT}" "${GERONIMO_SSL_PORT}"
+  # Removed cause all ports are just geronimo-specific
+  # f_configure_firewall_service "application_server" "TCP" "${GERONIMO_RMI_PORT}" "${GERONIMO_JMX_PORT}" "${GERONIMO_HTTP_PORT}" "${GERONIMO_SSL_PORT}"
   f_configure_firewall_service "snmpd"              "UDP" "161" "162"
 
   #  Interfaces sind per default in der externen Zone

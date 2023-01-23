@@ -23,7 +23,7 @@ HOST_PROPERTIES="\
                  ntp2.ipAddress\
 "
 #  Diese Properties werden in der produkt-spezifischen Properties-Datei abgelegt
-PRODUCT_GROUP_PROPERTIES="cluster geronimo sipadapter"
+PRODUCT_GROUP_PROPERTIES="cluster sipadapter"
 PRODUCT_PROPERTIES="\
                     as.userid\
                     as.password \
@@ -60,17 +60,6 @@ PRODUCT_PROPERTIES="\
                     cluster.rmi.remote.ipAddress\
                     cluster.rmi.remote.port\
                     default.monitoringlevel\
-                    geronimo.deployer.folder\
-                    geronimo.folder\
-                    geronimo.http.port\
-                    geronimo.ipAddress\
-                    geronimo.jmx.port\
-                    geronimo.password\
-                    geronimo.rmi.port\
-                    geronimo.ssl.port\
-                    geronimo.syslog.file\
-                    geronimo.syslog.facility\
-                    geronimo.user\
                     installation.folder\
                     java.home\
                     jvm.maxheap.size\
@@ -160,17 +149,6 @@ case ${PROPERTY} in
   cluster.rmi.remote.ipAddress)                 echo "";;
   cluster.rmi.remote.port)                      echo "$(( 1099 + ${PORT_OFFSET} ))";;
   default.monitoringlevel)                      echo "5";;
-  geronimo)                                     echo "false";;
-  geronimo.deployer.folder)                     echo "$(f_get_property_installation_folder)/geronimo-deployer";;
-  geronimo.folder)                              echo "$(f_get_property_installation_folder)/geronimo";;
-  geronimo.http.port)                           echo "$(( 8080 + ${PORT_OFFSET} ))";;
-  geronimo.jmx.port)                            echo "$(( 9999 + ${PORT_OFFSET} ))";;
-  geronimo.password)                            f_make_password;;
-  geronimo.rmi.port)                            echo "$(( 1098 + ${PORT_OFFSET} ))";;
-  geronimo.ssl.port)                            echo "$(( 8443 + ${PORT_OFFSET} ))";;
-  geronimo.syslog.file)                         echo "/var/log/xyna/xyna_${PRODUCT_INSTANCE_STR}/geronimo.log";;
-  geronimo.syslog.facility)                     echo "$(f_get_tomcat_log_facility)";;
-  geronimo.user)                                echo "geronimo";;
   installation.folder)                          echo "/opt/xyna/xyna_${PRODUCT_INSTANCE_STR}";;
   java.home)                                    echo "${JAVA_HOME}";;
   jvm.maxheap.size)                             echo "${TOMCAT_MEMORY}m";;
@@ -241,7 +219,6 @@ f_read_product_group_properties() {
     get_property ${i} "${PROP_FILE}"
     case ${i} in
       cluster)                                          CLUSTER_SELECTED="${CURRENT_PROPERTY}";;
-      geronimo)                                         GERONIMO_SELECTED="${CURRENT_PROPERTY}";;
       sipadapter)                                       SIPADAPTER_SELECTED="${CURRENT_PROPERTY}";;
     esac
   done
@@ -351,22 +328,6 @@ f_map_current_property() {
     cluster.rmi.remote.ipAddress)                     CLUSTER_REMOTE_IPADDRESS="${CURRENT_PROPERTY}";;
     cluster.rmi.remote.port)                          CLUSTER_REMOTE_RMI_PORT="${CURRENT_PROPERTY}";;
   esac
-  fi
-    
-  if f_selected ${GERONIMO_SELECTED} ; then
-  case ${i} in
-    geronimo.deployer.folder) f_check_is_path "${i}";          GERONIMO_DEPLOYER_HOME="${CURRENT_PROPERTY}";;
-    geronimo.folder)          f_check_is_path "${i}";          GERONIMO_HOME="${CURRENT_PROPERTY}";;
-    geronimo.http.port)       f_check_is_integer "${i}";       GERONIMO_HTTP_PORT="${CURRENT_PROPERTY}";;
-    geronimo.ipAddress)       f_check_is_ip_address "${i}";    GERONIMO_IP_ADDRESS="${CURRENT_PROPERTY}";;
-    geronimo.jmx.port)        f_check_is_integer "${i}";       GERONIMO_JMX_PORT="${CURRENT_PROPERTY}";;
-    geronimo.password)        f_check_is_password "${i}";      GERONIMO_PASSWORD="${CURRENT_PROPERTY}";;
-    geronimo.rmi.port)        f_check_is_integer "${i}";       GERONIMO_RMI_PORT="${CURRENT_PROPERTY}";;
-    geronimo.ssl.port)        f_check_is_integer "${i}";       GERONIMO_SSL_PORT="${CURRENT_PROPERTY}";;
-    geronimo.user)            f_check_is_alpha_numeric "${i}"; GERONIMO_USER="${CURRENT_PROPERTY}";;
-    geronimo.syslog.file)     f_check_is_path "${i}";          GERONIMO_SYSLOG_FILE="${CURRENT_PROPERTY}";;
-    geronimo.syslog.facility)                                  GERONIMO_SYSLOG_FACILITY="${CURRENT_PROPERTY}";;
-    esac
   fi
     
   if f_selected ${SIPADAPTER_SELECTED} ; then

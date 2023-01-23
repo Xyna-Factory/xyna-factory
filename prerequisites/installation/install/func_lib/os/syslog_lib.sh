@@ -53,9 +53,6 @@ install_syslog_and_logrotation () {
   
   local TARGET_DIR="$(dirname "${XYNA_SYSLOG_FILE}")"
   local TARGET_DIR2=""
-  if [[  "x${COMPONENT_GERONIMO}" == "xtrue" ]]; then
-    TARGET_DIR2="$(dirname "${GERONIMO_SYSLOG_FILE}")"
-  fi
   
   if [[ ${SYSLOG_TYPE} != "rsyslog_v8" ]] ; then
     #Unter rsyslog_v8 soll Log erst bei Bedarf durch rsyslog selbst angelegt werden
@@ -138,9 +135,6 @@ f_configure_syslog () {
      if [[ -f "${XYNA_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${XYNA_SYSLOG_FILE}" 
      fi
-     if [[ -f "${GERONIMO_SYSLOG_FILE}" ]]; then
-       ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${GERONIMO_SYSLOG_FILE}"
-     fi
   fi
   /etc/init.d/syslog restart
 }
@@ -175,9 +169,6 @@ ${VOLATILE_PATCH} --quiet -l -f -i "${TMP_FILE}" "${TARGET_FILE}"
      if [[ -f "${XYNA_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${XYNA_SYSLOG_FILE}" 
      fi
-     if [[ -f "${GERONIMO_SYSLOG_FILE}" ]]; then
-       ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${GERONIMO_SYSLOG_FILE}"
-     fi
   fi
   
   /etc/init.d/syslog restart
@@ -196,9 +187,6 @@ f_configure_rsyslog () {
   if [[ $? -eq 1 ]]; then
     if [[ -f "${XYNA_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${XYNA_SYSLOG_FILE}" 
-    fi
-    if [[ -f "${GERONIMO_SYSLOG_FILE}" ]]; then
-       ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${GERONIMO_SYSLOG_FILE}"
     fi
   fi
   f_restart_rsyslog
@@ -227,9 +215,6 @@ f_configure_solaris_syslog () {
   if [[ $? -eq 1 ]]; then
     if [[ -f "${XYNA_SYSLOG_FILE}" ]]; then
        ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${XYNA_SYSLOG_FILE}" 
-    fi
-    if [[ -f "${GERONIMO_SYSLOG_FILE}" ]]; then
-       ${VOLATILE_CHOWN} "$(f_generate_chown_parameter)" "${GERONIMO_SYSLOG_FILE}"
     fi
   fi
   /usr/sbin/svccfg -s svc:/system/system-log setprop config/log_from_remote=true
