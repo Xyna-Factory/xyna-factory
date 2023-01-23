@@ -38,7 +38,7 @@ parse_commandline_arguments () {
   
   BLN_FORCE_INSTALLATION="false"
   #kmq
-  while getopts ":nhHabcdefi:jloprsuvwxyzABCDFIJLOPRSUWXYZ" OPTION
+  while getopts ":nhHabcdefi:jlprsuvwxyzABCDFIJLPRSUWXYZ" OPTION
   do
     if [[ "x${OPTARG:0:1}" == "x-" ]]; then DISPLAY_USAGE="true"; fi
     case ${OPTION} in
@@ -66,7 +66,6 @@ parse_commandline_arguments () {
 	j) COMPONENT_ANT="true";;
 	l) COMPONENT_LIMITS="true";;
 	s) COMPONENT_SYSLOG="true";;
-	o) COMPONENT_ORACLE="true";;
 	p) COMPONENT_SNMPD="true";;
 	r) COMPONENT_SSH="true";;
 	u) COMPONENT_XYNAUSER="true";;
@@ -98,7 +97,6 @@ parse_commandline_arguments () {
 	J) COMPONENT_ANT="false";;
 	L) COMPONENT_LIMITS="false";;
 	S) COMPONENT_SYSLOG="false";;
-	O) COMPONENT_ORACLE="false";;
 	P) COMPONENT_SNMPD="false";;
 	R) COMPONENT_SSH="false";;
 	U) COMPONENT_XYNAUSER="false";;
@@ -135,7 +133,6 @@ debug_variables () {
     echo " check SELinux/AppArmor: ${COMPONENT_CHECK_SELINUX:-false}"
     echo
     echo "-- Addons    --"
-    echo " oracle instant client : ${COMPONENT_ORACLE:-false}"
   fi
 }
 
@@ -166,7 +163,6 @@ display_usage () {
 -zZ   [don't] configure NTP-Client and time zone
 
 Extra options (not included in -aA)
--oO   [don't] install Oracle Instant Client
 -yY   [don't] create /etc/init.d-script and respawning for network-availability-demon
 
 
@@ -211,13 +207,6 @@ f_check_parameters () {
   else
     #f_add_to_error_buffer "Instance number '-i' is not in the allowed range [1..${BLACK_EDITION_INSTANCES}].\n"
     BLACK_EDITION_INSTANCES=${INSTANCE_NUMBER}
-  fi
-
-  if [[ "x${COMPONENT_ORACLE}" == "xtrue" ]]; then
-    if [[ ! -d application/oracle ]]; then
-      STR_WARNING="${STR_WARNING}AddOn 'OracleClient' is not available! Component 'Oracle' will be deactivated\n" 
-      COMPONENT_ORACLE="false"
-    fi  
   fi
   
   if [[ "x${COMPONENT_ANT}" == "xtrue" ]]; then

@@ -87,7 +87,6 @@ if [[ "x${COMPONENT_SYSLOG}"              == "xtrue" ]]; then
     install_syslog_and_logrotation
 fi
 if [[ "x${COMPONENT_FIREWALL}"            == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_firewall; fi
-if [[ "x${COMPONENT_ORACLE}"              == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_install_oracle; fi
 # TODO: remove Deployer as well
 # if [[ "x${COMPONENT_DEPLOYER}"            == "xtrue" ]]; then 
 # fi
