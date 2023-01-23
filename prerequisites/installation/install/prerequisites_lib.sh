@@ -38,7 +38,7 @@ parse_commandline_arguments () {
   
   BLN_FORCE_INSTALLATION="false"
   #kmq
-  while getopts ":nhHabcdefi:jlprsuvwxyzABCDFIJLPRSUWXYZ" OPTION
+  while getopts ":nhHabcdefi:lprsuvwxyzABCDFILPRSUWXYZ" OPTION
   do
     if [[ "x${OPTARG:0:1}" == "x-" ]]; then DISPLAY_USAGE="true"; fi
     case ${OPTION} in
@@ -46,7 +46,6 @@ parse_commandline_arguments () {
 	a) COMPONENT_INSTALLATION_FOLDER="true"
 	   COMPONENT_SSL_CERTIFICATE="true"
 	   COMPONENT_DEPLOYER="true"
-	   COMPONENT_ANT="true"
 	   COMPONENT_SYSLOG="true"
 	   COMPONENT_XYNAUSER="true" 
 	   COMPONENT_SCRIPTS="true"
@@ -63,7 +62,6 @@ parse_commandline_arguments () {
 	e) BLN_FORCE_INSTALLATION="true";;
 	f) COMPONENT_INSTALLATION_FOLDER="true";;
 	i) export INSTANCE_NUMBER="${OPTARG}";;
-	j) COMPONENT_ANT="true";;
 	l) COMPONENT_LIMITS="true";;
 	s) COMPONENT_SYSLOG="true";;
 	p) COMPONENT_SNMPD="true";;
@@ -78,7 +76,6 @@ parse_commandline_arguments () {
 	A) COMPONENT_INSTALLATION_FOLDER="false"
 	   COMPONENT_SSL_CERTIFICATE="false"
 	   COMPONENT_DEPLOYER="false"
-	   COMPONENT_ANT="false" 
 	   COMPONENT_SYSLOG="false"
 	   COMPONENT_XYNAUSER="false"
 	   COMPONENT_SCRIPTS="false"
@@ -94,7 +91,6 @@ parse_commandline_arguments () {
 	D) COMPONENT_DEPLOYER="false";;
 	F) COMPONENT_INSTALLATION_FOLDER="false";;
 	I) COMPONENT_SCRIPTS="true";;
-	J) COMPONENT_ANT="false";;
 	L) COMPONENT_LIMITS="false";;
 	S) COMPONENT_SYSLOG="false";;
 	P) COMPONENT_SNMPD="false";;
@@ -123,7 +119,6 @@ debug_variables () {
     echo " unprivileged user     : ${COMPONENT_XYNAUSER:-false}"
     echo " syslog and logrotation: ${COMPONENT_SYSLOG:-false}"
     echo " limits                : ${COMPONENT_LIMITS:-false}"
-    echo " Ant                   : ${COMPONENT_ANT:-false}"
     echo " SSL certificate       : ${COMPONENT_SSL_CERTIFICATE:-false}"
     echo " scripts               : ${COMPONENT_SCRIPTS:-false}"
     echo " snmpd                 : ${COMPONENT_SNMPD:-false}"
@@ -152,7 +147,6 @@ display_usage () {
 -cC   [don't] install SSL certificate
 -dD   [don't] install remote deployment tools
 -fF   [don't] create installation folder
--jJ   [don't] install Ant
 -lL   [don't] set limits
 -pP   [don't] configure SNMP-Daemon
 -rR   [don't] configure SSH-Daemon und SSH-Client
@@ -178,10 +172,7 @@ Examples:
       This step is useful if you want to create a default properties
       file that you can edit to suit your needs.
 
-(2) "$(basename "$0")" -a -J
-      install everything, but skip Ant
-
-(3) "$(basename "$0")" -s
+(2) "$(basename "$0")" -s
       install only setup syslog and logrotation
 
 A_HERE_DOCUMENT
@@ -208,13 +199,6 @@ f_check_parameters () {
     #f_add_to_error_buffer "Instance number '-i' is not in the allowed range [1..${BLACK_EDITION_INSTANCES}].\n"
     BLACK_EDITION_INSTANCES=${INSTANCE_NUMBER}
   fi
-  
-  if [[ "x${COMPONENT_ANT}" == "xtrue" ]]; then
-    if [[ ! -d application/ant ]]; then
-      STR_WARNING="${STR_WARNING}AddOn 'Ant' is not available! Component 'Ant' will be deactivated\n" 
-      COMPONENT_ANT="false"
-    fi  
-  fi 
    
   if [[ "x" != "x${STR_WARNING}" ]]; then
     echo  " ..... WARNING"

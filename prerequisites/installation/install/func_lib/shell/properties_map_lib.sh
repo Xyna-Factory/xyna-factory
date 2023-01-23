@@ -16,7 +16,7 @@
 PRODUCT_NAME="black_edition"
 #  Diese Property wird in der host-spezifischen Properties-Datei abgelegt
 HOST_PROPERTIES="\
-                 ant.folder black_edition.instances\
+                 black_edition.instances\
                  system.vendor\
                  system.type\
                  ntp1.ipAddress\
@@ -111,7 +111,6 @@ default_value_for_property () {
   local PRODUCT_INSTANCE_STR=$(printf "%03g" ${INSTANCE_NUMBER:-1})
   local PORT_OFFSET=$(( ($((10#${INSTANCE_NUMBER:-1})) - 1) * 10 ))
 case ${PROPERTY} in
-  ant.folder)                                   echo "/opt/ant";;
   as.password)                                  f_make_password;;
   as.userid)                                    echo "oc4jadmin";;
   black_edition.instances)                      echo "1";;
@@ -205,7 +204,6 @@ f_read_host_properties () {
   for i in ${HOST_PROPERTIES}; do
     get_property ${i} "${PROP_FILE}"
     case ${i} in
-      ant.folder)              f_check_is_path "${i}";      ANT_HOME="${CURRENT_PROPERTY}";;
       black_edition.instances) f_check_is_integer "${i}";   BLACK_EDITION_INSTANCES="${CURRENT_PROPERTY}";;
       system.vendor)           f_check_is_not_empty "${i}"; PROP_SYSTEM_VENDOR=${CURRENT_PROPERTY};;
       system.type)                                          PROP_SYSTEM_TYPE=${CURRENT_PROPERTY};;
