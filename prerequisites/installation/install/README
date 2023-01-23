@@ -29,18 +29,6 @@ Die Softwarelieferung besteht aus einem Basis-Paket:
    "XynaBlackEditionPrerequisites_<Version>_<Datum>_<Betriebssystem>_<Architektur>.zip"
    
 das entsprechend zum Betriebssystem und der Architektur des Zielsystem zu waehlen ist.
-
-
-Darueberhinaus existieren optionale AddOn-Pakete 
-
- - zur Installation des Oracle Instant-Client 
-
-   "XynaBlackEditionPrerequisites_<Version>_<Datum>_AddOn_OracleInstantClient11.2_<Betriebssystem>_<Architektur>.zip"
-
- - oder zur alternaticen Installation des Geronimo Applicationserver 
-
-   "XynaBlackEditionPrerequisites_<Version>_<Datum>_AddOn_Geronimo.zip"
- 
  
  
 2.2	Zum Entpacken der Liefergegenstaende ist ein neues Verzeichnis im Homeverzeichnis des root-Benutzer anzulegen:
@@ -78,23 +66,8 @@ Darueberhinaus existieren optionale AddOn-Pakete
   
    Beispiele: 
    
-   a) Standard-Installation (mit Tomcat)
+   a) Standard-Installation
       # ./install_prerequisites.sh -a 
-      
-   b) Standard-Installation (mit Tomcat) inkl. dem Oracle InstantClient 
-      #./install_prerequisites.sh -a -o
-      
-     Hinweis: Hierfuer wird das AddOn-Paket    
-     "XynaBlackEditionPrerequisites_<Version>_<Datum>_AddOn_OracleInstantClient11.2_<Betriebssystem>_<Architektur>.zip"
-     benoetigt
-      
-      
-   c) Standard-Installation aber mit Geronimo statt Tomcat als Application-Server 
-      # ./install_prerequisites.sh -a -T -g
-     
-     Hinweis: Hierfuer wird das AddOn-Paket    
-     "XynaBlackEditionPrerequisites_<Version>_<Datum>_AddOn_Geronimo.zip"
-     benoetigt
      
      
      
