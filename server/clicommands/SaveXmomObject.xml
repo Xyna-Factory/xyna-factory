@@ -1,0 +1,23 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="savexmomobject" Description="Saves the XMOM object with xml at the specified path. If the object is new, it will be registered. If the deploy flag is set, it will then be deployed." />
+  <Argument Name="workspaceName" Description="Workspace in which the XMOM object is registered" />
+  <Argument Name="fqName" Description="fqName of the XMOM object" />
+  <BoolOption Name="d" LongName="deploy" Description="Deploy the XMOM object" Optional="true"/>
+</XynaCommandLineCommand>
