@@ -17,8 +17,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <project name="install" default="help" basedir="." xmlns:oracle="antlib:oracle">
-  
-  <import file="ant-xyna.xml" />
+  <property name="ant.xyna.dir" value="${basedir}/../build" />
+  <import file="${ant.xyna.dir}/ant-xyna.xml" />
 
   <start_logging name="${delivery.name}" />
 
