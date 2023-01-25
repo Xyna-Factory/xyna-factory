@@ -23,6 +23,8 @@
        Version: 2.3.2.0
    -->
 
+  <dirname property="ant.file.ant-xyna.dir" file="${ant.file.ant-xyna}" />
+
   <tstamp>
     <format property="timestamp" pattern="yyyyMMdd_HHmm" locale="de,DE" />
   </tstamp>
@@ -126,7 +128,7 @@
 
   <condition property="isInstall" value="true" else="false">
     <not>
-      <available file="${ant.file.ant-xyna}/../build.xml" />
+      <available file="${ant.file.ant-xyna.dir}/build.xml" />
     </not>
   </condition>
 
@@ -134,12 +136,12 @@
     <isset property="as.port.opmn" />
   </condition>
 
-  <property name="install.lib.dir" value="${ant.file.ant-xyna}/../lib" />
+  <property name="install.lib.dir" value="${ant.file.ant-xyna.dir}/lib" />
 
   <!-- remove filename/.. from path because sqlplus dont accepts it -->
   <pathconvert property="sql.dir">
     <path>
-      <dirset dir="${ant.file.ant-xyna}/..">
+      <dirset dir="${ant.file.ant-xyna.dir}">
         <include name="sql" />
       </dirset>
     </path>
@@ -205,10 +207,10 @@
   <if>
     <equals arg1="${isInstall}" arg2="true" />
     <then>
-      <property file="${ant.file.ant-xyna}/../patch.properties" />
+      <property file="${ant.file.ant-xyna.dir}/patch.properties" />
     </then>
     <else>
-      <property file="${ant.file.ant-xyna}/../../delivery/patch.properties" />
+      <property file="${ant.file.ant-xyna.dir}/../delivery/patch.properties" />
     </else>
   </if>
 
@@ -236,7 +238,7 @@
     </classpath>
   </taskdef>
 
-  <condition property="mavenSettingFile" value="${user.home}/mavenSettings.xml" else="${ant.file.ant-xyna}/../defaultMavenSettings.xml">
+  <condition property="mavenSettingFile" value="${user.home}/mavenSettings.xml" else="${ant.file.ant-xyna.dir}/defaultMavenSettings.xml">
     <available file="${user.home}/mavenSettings.xml" />
   </condition>
 
@@ -375,7 +377,7 @@
   <if>
     <equals arg1="${isInstall}" arg2="true" />
     <then>
-      <loadproperties srcfile="${ant.file.ant-xyna}/../install.properties" />
+      <loadproperties srcfile="${ant.file.ant-xyna.dir}/install.properties" />
 
       <exec executable="hostname" outputproperty="server.hostname" />
       <loadproperties srcfile="/etc/xyna/environment/${server.hostname}.properties" />
@@ -459,9 +461,9 @@
       </then>
       <else>
         <echo message="Start sequential update." />
-        <updateSequential update.dir="${ant.file.ant-xyna}/../update" />
+        <updateSequential update.dir="${ant.file.ant-xyna.dir}/update" />
         <echo message="Finished sequential update." />
-        <ant dir="${ant.file.ant-xyna}/../.."
+        <ant dir="${ant.file.ant-xyna.dir}/.."
              antfile="install.xml"
              target="install-ear" />
         <getVersion tag="db" result="db.version" />
@@ -472,12 +474,12 @@
                            already been updated to version ${db.version}." />
           </then>
           <else>
-            <ant dir="${ant.file.ant-xyna}/../.."
+            <ant dir="${ant.file.ant-xyna.dir}/.."
                  antfile="install.xml"
                  target="install-workflow" />
           </else>
         </if>
-        <ant dir="${ant.file.ant-xyna}/../.."
+        <ant dir="${ant.file.ant-xyna.dir}/.."
              antfile="install.xml"
              target="install-routing" />
       </else>
