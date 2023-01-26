@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.apache.logging.log4j.util.ReflectionUtil;
+import org.apache.logging.log4j.util.StackLocator;
 
 
 /**
@@ -455,11 +455,12 @@ public class SysLogger extends Logger {
 
    private String getCallerClassName() {
       int stackPosition = 2;
-      String caller = ReflectionUtil.getCallerClass(stackPosition).getName();
+      StackLocator locator = StackLocator.getInstance();
+      String caller = locator.getCallerClass(stackPosition).getName();
       // TODO: check against all subclasses of Logger
       while (caller.equals(this.getClass().getName())
             || caller.equals("java.util.logging.Logger")) {
-         caller = ReflectionUtil.getCallerClass(++stackPosition).getName();
+         caller = locator.getCallerClass(++stackPosition).getName();
       }
       return caller;
    }
