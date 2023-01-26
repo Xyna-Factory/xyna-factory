@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2022 GIP SmartMercial GmbH, Germany
@@ -16,9 +15,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project default="help" basedir="." xmlns:oracle="antlib:oracle">
-	<property name="ant.xyna.dir" value="${basedir}/build" />
-
-	<import file="install/install.xml" />
-	
-</project>
+<XynaCommandLineCommand>
+  <CommandDefinition Name="savexmomobject" Description="Saves the XMOM object with xml at the specified path. If the object is new, it will be registered. If the deploy flag is set, it will then be deployed." />
+  <Argument Name="workspaceName" Description="Workspace in which the XMOM object is registered" />
+  <Argument Name="fqName" Description="fqName of the XMOM object" />
+  <BoolOption Name="d" LongName="deploy" Description="Deploy the XMOM object" Optional="true"/>
+</XynaCommandLineCommand>

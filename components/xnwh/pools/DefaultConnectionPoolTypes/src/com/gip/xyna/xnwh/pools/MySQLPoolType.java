@@ -19,6 +19,7 @@ package com.gip.xyna.xnwh.pools;
 
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
