@@ -2605,6 +2605,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     private PrintStream statusOutputStream;
     private boolean upgradeRequirements;
     private XMOMODSNameImportSetting odsNames = XMOMODSNameImportSetting.ABORT_ON_COLLISION;
+    private boolean abortOnCodegeneration;
     
     public ImportApplicationCommandParameter() {
     }
@@ -2625,6 +2626,15 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     
     public boolean isForce() {
       return force;
+    }
+    
+    public ImportApplicationCommandParameter abortOnCodegeneration(boolean abortOnCodegeneration) {
+      this.abortOnCodegeneration = abortOnCodegeneration;
+      return this;
+    }
+    
+    public boolean isAbortOnCodegeneration() {
+      return abortOnCodegeneration;
     }
     
     public ImportApplicationCommandParameter stopIfExistingAndRunning(boolean stopIfExistingAndRunning) {
@@ -2840,6 +2850,11 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
     } else {
       regenerateCode = true;
+    }
+
+    if (regenerateCode && importParameter.isAbortOnCodegeneration()) {
+      output(importParameter.getStatusOutputStream(), "Code generation required, but forbidden. Abort.");
+      throw new XFMG_CouldNotImportApplication(importParameter.getFileName());
     }
 
     RuntimeContextDependencyManagement rcdMgmt =
