@@ -58,6 +58,7 @@ public class ImportapplicationImpl extends XynaCommandImplementation<Importappli
     try {
       ImportApplicationCommandParameter iap = new ImportApplicationCommandParameter();
       iap.fileName(payload.getFilename())
+         .abortOnCodegeneration(payload.getNoCodeGeneration())
          .force(payload.getForce())
          .stopIfExistingAndRunning(payload.getStop())
          .xynaPropertiesImportSettings(!eis.isIncludeXynaProperties(), payload.getImportOnlyXynaProperties())
