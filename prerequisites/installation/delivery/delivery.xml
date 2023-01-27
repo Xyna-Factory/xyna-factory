@@ -75,7 +75,6 @@
        - - - - - - - - - - - - - - - - - -->
   <target name="localbuild" description="build a delivery for all systems from local repository">
     <property name="checkout.dir" value="${basedir}/../.." />
-    <exec failonerror="true" executable="${basedir}/check_trunk.sh" />
     <ant antfile="delivery.xml" target="localbuild_basics" inheritall="true" inheritrefs="true"/>
   </target>
 
