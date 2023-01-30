@@ -1,8 +1,0 @@
-10.11.11 - DW
-
-* Umstellung der Zertifikate von Java Keystore auf PKCS12:
-  Es ist unbekannt, ob Ant mit PKCS12-Zertifikaten umgehen kann.
-  Daher könnte das Deployment in den Tomcat über https per Ant nicht funktionieren.
-
-
-#  EOF
