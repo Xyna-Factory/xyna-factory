@@ -54,7 +54,7 @@
     <jar jarfile="${build}/JavaScriptCheckStyle.jar" basedir="${classes}">
         <manifest>
           <attribute name="Implementation-Title" value="JavaScript check style task for Ant"/>
-          <attribute name="Implementation-Vendor" value="GIP Exyr GmbH"/>
+          <attribute name="Implementation-Vendor" value="GIP SmartMercial GmbH"/>
           <attribute name="Implementation-Version" value="build ${buildtime}"/> 
           <attribute name="Built-By" value="${user.name}"/>
         </manifest>
