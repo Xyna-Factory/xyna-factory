@@ -28,7 +28,7 @@
   <property name="svn.tag" value="${project.name}-${release.number}" />
   <property name="svn.project" value="xyna/utils/${utils.name}" />
 
-  <property name="vendor.name" value="GIP AG" />
+  <property name="vendor.name" value="GIP SmartMercial GmbH" />
 
   <import file="${ant.file.xynautils_masterbuild}/../../build/ant-xyna.xml" />
 

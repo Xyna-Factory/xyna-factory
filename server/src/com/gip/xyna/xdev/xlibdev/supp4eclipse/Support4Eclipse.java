@@ -240,7 +240,7 @@ public class Support4Eclipse extends FunctionGroup {
       // Manifest-Version: 1.0
       // Ant-Version: Apache Ant 1.7.0
       // Created-By: 1.5.0-b64 (Sun Microsystems Inc.)
-      // Vendor: GIP AG
+      // Vendor: GIP SmartMercial GmbH
       // Version: 2.3.0.0
       // Build-Date: 20090902_1515
 
@@ -263,7 +263,7 @@ public class Support4Eclipse extends FunctionGroup {
 
       // TODO make sure what fields have to be in here
       //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_TITLE.toString(), Constants.FACTORY_NAME);
-      //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_VENDOR.toString(), "GIP AG");
+      //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_VENDOR.toString(), "GIP SmartMercial GmbH");
 
       logger.debug("Adding files to Xyna jar file.");
 
