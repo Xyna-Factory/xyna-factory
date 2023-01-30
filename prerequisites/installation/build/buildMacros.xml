@@ -21,7 +21,7 @@
 	<!--
      Description:
    -->
-	<property name="vendor.name" value="GIP Exyr GmbH" />
+	<property name="vendor.name" value="GIP SmartMercial GmbH" />
 
 	<tstamp>
 		<format property="timestamp" pattern="yyyyMMdd_HHmm" locale="de,DE" />
