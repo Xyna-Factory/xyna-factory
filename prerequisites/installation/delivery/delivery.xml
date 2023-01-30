@@ -27,7 +27,6 @@
   <property name="delivery.build.dir"
             value="${basedir}/${delivery.dir}/build_${timestamp}" />
 
-  <import file="svn.xml" />
   <import file="../build/build.xml" />
   <import file="deliveryMacros.xml" />
 
@@ -77,26 +76,5 @@
     <property name="checkout.dir" value="${basedir}/../.." />
     <ant antfile="delivery.xml" target="localbuild_basics" inheritall="true" inheritrefs="true"/>
   </target>
-
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery
-       - - - - - - - - - - - - - - - - - -->
-  <target name="release" description="build a delivery for all systems from specified SVN-tag">
-    <exec failonerror="true" executable="${basedir}/check_trunk.sh" />
-    <exec failonerror="true" executable="svn">
-      <arg value="update" />
-    </exec>
-    <exec failonerror="true" executable="svn">
-      <arg value="commit" />
-      <arg value="-m" />
-      <arg value="delivery ${release.number}" />
-      <arg value="delivery.properties"/>
-    </exec>
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
-    <ant antfile="svn.xml" target="checkout" inheritall="true" inheritrefs="true" />
-    <ant antfile="delivery.xml" target="delivery_basics" inheritall="true" inheritrefs="true"/>
-    <delete dir="${checkout.dir}" />
-  </target>
-
 
 </project>
