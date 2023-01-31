@@ -213,10 +213,12 @@ if [[ -f "${TMP_FILE}" ]]; then ${VOLATILE_RM} -f "${TMP_FILE}"; fi
 
 
 
+if [[ ! -d $HOSTNAME ]] ; then
+  echo "creating folder ${HOSTNAME}"
+  mkdir $HOSTNAME
+fi
 
-
-
-LOG_FILE_NAME="installation_${INSTALL_PREFIX##*/}_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE_NAME="${HOSTNAME}/installation_${INSTALL_PREFIX##*/}_$(date +%Y%m%d_%H%M%S).log"
 if [[ -e ${LOG_FILE_NAME} ]] ; then
   attention_msg "Log file ${LOG_FILE_NAME} already exists; please try again..."
   exit 1

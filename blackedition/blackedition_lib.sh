@@ -28,7 +28,7 @@ ALL_SERVICES=("nsnhix5600" "templatemechanism" "sipuseragent" "jmsforwarding" "d
 ALL_DEPLOY_TARGETS=("geronimo" "tomcat" "oracle")
 ALL_WEBSERVICES=("blackedition" "topologymodeller")
 ALL_DATAMODELTYPES=("mib","tr069","xsd");
-#ACHTUNG: Version auch bei addRequirement zu default workspace ber�cksichtigen
+#ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
 GUIHTTPVERSION=1.1.362
@@ -465,11 +465,11 @@ f_do_xfracmod_branding () {
 	return
     fi
 
+    echo "    + copy war file from '${WAR_DELIVERY}' to '$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war'"
+    ${VOLATILE_CP} -p "${WAR_DELIVERY}" "$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
+    WAR_DELIVERY="$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
+
     echo "    + modifying war file '${WAR_DELIVERY}'"
-    if [[ -f "${WAR_DELIVERY}.org" ]]; then
-      ${VOLATILE_MV} "${WAR_DELIVERY}.org" "${WAR_DELIVERY}"
-    fi 
-    ${VOLATILE_CP} -p "${WAR_DELIVERY}" "${WAR_DELIVERY}.org"
     ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
     ${VOLATILE_MKDIR} -p "${STR_TMP_UNPACK_DIR}"
 
@@ -479,7 +479,6 @@ f_do_xfracmod_branding () {
     ${VOLATILE_UNZIP} "${WAR_DELIVERY}" "${FILE_TO_EDIT}" -d "${STR_TMP_UNPACK_DIR}"
     if [[ ! -f "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" ]]; then
       err_msg "f_do_xfracmod_branding: File '${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}' not found!"
-      ${VOLATILE_RM} -f "${WAR_DELIVERY}.org"
       return 17
     fi
     f_replace_in_file "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" \
@@ -496,9 +495,6 @@ f_do_xfracmod_branding () {
     ${VOLATILE_RM} -rf ${STR_TMP_UNPACK_DIR}
     if [[ ${ret_val} -gt 0 ]]; then
 	err_msg "Building of modified war-file failed"
-	if [[ -f "${WAR_DELIVERY}.org" ]]; then
-	    ${VOLATILE_MV} "${WAR_DELIVERY}.org" "${WAR_DELIVERY}"
-	fi   
     fi
     
     return  ${ret_val}
@@ -521,11 +517,11 @@ f_do_xynaws_branding () {
       return
     fi
 
+    echo "    + copy war file from '${WAR_DELIVERY}' to '$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war'"
+    ${VOLATILE_CP} -p "${WAR_DELIVERY}" "$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
+    WAR_DELIVERY="$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
+
     echo -e " \n    + modifying war file '${WAR_DELIVERY##*/}'"
-    if [[ -f "${WAR_DELIVERY}.org" ]]; then
-      ${VOLATILE_MV} "${WAR_DELIVERY}.org" "${WAR_DELIVERY}"
-    fi 
-    ${VOLATILE_CP} -p "${WAR_DELIVERY}" "${WAR_DELIVERY}.org"
     ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
     ${VOLATILE_MKDIR} -p "${STR_TMP_UNPACK_DIR}"
 
@@ -540,7 +536,6 @@ f_do_xynaws_branding () {
     
     if [[ ! -f "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" ]]; then
       err_msg "f_do_xynaws_branding: File '${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}' not found!"
-      ${VOLATILE_RM} -f "${WAR_DELIVERY}.org"
       return 17
     fi
     f_replace_in_file "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" \
@@ -559,9 +554,6 @@ f_do_xynaws_branding () {
     ${VOLATILE_RM} -rf ${STR_TMP_UNPACK_DIR}
     if [[ ${ret_val} -gt 0 ]]; then
       err_msg "Building of modified war-file failed"
-      if [[ -f "${WAR_DELIVERY}.org" ]]; then
-        ${VOLATILE_MV} "${WAR_DELIVERY}.org" "${WAR_DELIVERY}"
-      fi
       return 17
     fi
     
@@ -570,7 +562,6 @@ f_do_xynaws_branding () {
     f_indent "${INDENTATION}" "${OUTPUT}"
     if [[ ! -f "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" ]]; then
       err_msg "f_do_xynaws_branding: File '${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}' not found!"
-      ${VOLATILE_RM} -f "${WAR_DELIVERY}.org"
       return 17
     fi
     f_replace_in_file "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" \
@@ -589,9 +580,6 @@ f_do_xynaws_branding () {
     ${VOLATILE_RM} -rf ${STR_TMP_UNPACK_DIR}
     if [[ ${ret_val} -gt 0 ]]; then
       err_msg "Building of modified war-file failed"
-      if [[ -f "${WAR_DELIVERY}.org" ]]; then
-        ${VOLATILE_MV} "${WAR_DELIVERY}.org" "${WAR_DELIVERY}"
-      fi
       return 17
     fi
     return  ${ret_val}
@@ -641,6 +629,7 @@ deploy_webservice_blackedition () {
     #  call general function
     if f_selected ${DEPLOY_TARGET_TOMCAT} ${DEPLOY_TARGET_GERONIMO}; then
       f_do_xynaws_branding "${FILE_TO_DEPLOY}"
+      FILE_TO_DEPLOY="$(realpath $HOSTNAME)/XynaBlackEditionWebServices.war"
     fi;
    
     #f_deploy_war "${FILE_TO_DEPLOY}" "XynaBlackEditionWebServices"
@@ -652,10 +641,6 @@ deploy_webservice_blackedition () {
     
     if f_selected ${DEPLOY_TARGET_ORACLE} ; then
       f_webservice_blackedition_oracle_special
-    fi;
-    
-    if f_selected ${DEPLOY_TARGET_TOMCAT} ${DEPLOY_TARGET_GERONIMO}; then
-      ${VOLATILE_MV} "${FILE_TO_DEPLOY}.org" "${FILE_TO_DEPLOY}"
     fi;
     
     f_install_license "${FILE_TO_DEPLOY}"
@@ -1316,21 +1301,24 @@ update_xynafactory () {
   install_license ${INSTALL_PREFIX}/server/lib
   
   #Konfigurieren und Mergen von log4j2.xml, server.policy, xynafactory.sh
+  NEW_FILE_DIR="$(basename $HOSTNAME)"
   if f_selected ${LOG4J2_MERGE} ; then
-    configure_log4j2_xml server/log4j2.xml server/log4j2.xml_configured
-    merge_files ${INSTALL_PREFIX}/server log4j2.xml server log4j2.xml_configured
+    ${VOLATILE_CP} server/log4j2.xml "$NEW_FILE_DIR/log4j2.xml"
+    configure_log4j2_xml "$NEW_FILE_DIR/log4j2.xml" "$NEW_FILE_DIR/log4j2.xml_configured"
+    merge_files ${INSTALL_PREFIX}/server log4j2.xml "$NEW_FILE_DIR" log4j2.xml_configured
   fi;
   merge_files ${INSTALL_PREFIX}/server server.policy server server.policy
-  configure_xynafactory_sh   server/xynafactory.sh   server/xynafactory.sh_configured
-  merge_files ${INSTALL_PREFIX}/server xynafactory.sh server xynafactory.sh_configured
+  ${VOLATILE_CP} server/xynafactory.sh "$NEW_FILE_DIR/xynafactory.sh"
+  configure_xynafactory_sh   "$NEW_FILE_DIR/xynafactory.sh"   "$NEW_FILE_DIR/xynafactory.sh_configured"
+  merge_files ${INSTALL_PREFIX}/server xynafactory.sh "$NEW_FILE_DIR" xynafactory.sh_configured
 
   # Fall es networkAvailability.properties gibt, dann werden die jetzt konfiguriert und gemixt
   if [ -f ${INSTALL_PREFIX}/NetworkAvailability/config/networkAvailability.properties ]; then
-     configure_networkAvailability_properties components/xact/NetworkAvailability/config/networkAvailability.properties components/xact/NetworkAvailability/config/networkAvailability.properties_configured
-     merge_files ${INSTALL_PREFIX}/NetworkAvailability/config networkAvailability.properties components/xact/NetworkAvailability/config networkAvailability.properties_configured
+     ${VOLATILE_CP} components/xact/NetworkAvailability/config/networkAvailability.properties "$NEW_FILE_DIR/networkAvailability.properties"
+     configure_networkAvailability_properties "$NEW_FILE_DIR/networkAvailability.properties" "$NEW_FILE_DIR/networkAvailability.properties_configured"
+     merge_files ${INSTALL_PREFIX}/NetworkAvailability/config networkAvailability.properties "$NEW_FILE_DIR" networkAvailability.properties_configured
      # Da spaeter der ganze NA nochmal rekursiv kopiert wird, werden die bereits konfigurierten Werte wieder zurueckkopiert
-     ${VOLATILE_RM} -f components/xact/NetworkAvailability/config/networkAvailability.properties_configured
-     ${VOLATILE_CP} -rp ${INSTALL_PREFIX}/NetworkAvailability/config/networkAvailability.properties components/xact/NetworkAvailability/config/networkAvailability.properties
+     ${VOLATILE_CP} -rp ${INSTALL_PREFIX}/NetworkAvailability/config/networkAvailability.properties "$NEW_FILE_DIR/networkAvailability.properties"
   fi
 
   
@@ -1612,6 +1600,7 @@ install_xyna_cluster () {
     ${VOLATILE_RM} -f "${INSTALL_PREFIX}"/NetworkAvailability/lib/*.jar 
     # copy all stuff from delivery to the NetworkAvailability folder
     ${VOLATILE_CP} -rp components/xact/NetworkAvailability/* "${INSTALL_PREFIX}/NetworkAvailability/."
+    ${VOLATILE_CP} -rp "$HOSTNAME/networkAvailability.properties" "${INSTALL_PREFIX}/NetworkAvailability/networkAvailability.properties"
     
     FILE_TO_EDIT="${INSTALL_PREFIX}/NetworkAvailability/networkAvailabilityDemonWrapper.sh"
     exit_if_not_exists "${FILE_TO_EDIT}"
@@ -1783,13 +1772,16 @@ import_applications () {
     APP_LIST=$(f_remove_from_list APP_LIST ${APP_FILE})
     case ${APP_FILE} in
       */GuiHttp.*)
-        f_adjust_guihttp_app;;
+        f_adjust_guihttp_app
+        f_import_applications_internal "../$HOSTNAME/GuiHttp.${GUIHTTPVERSION}.app"
+        continue;;
       */SNMPStatistics.*)
         f_adjust_snmpstatistics_app
         add_to_server_policy \
           '//SocketPermission for SNMPTrigger '${SNMP_TRIGGER_PORT} \
           'permission java.net.SocketPermission "*:'${SNMP_TRIGGER_PORT}'", "accept, listen, connect, resolve";'
-        ;;
+        f_import_applications_internal "../$HOSTNAME/SNMPStatistics.${SNMPSTATVERSION}.app"
+        continue;;
       */Radius.*)
         configure_persistence_layer_for_radius_service;;
       */LDAP.*)
@@ -1923,6 +1915,7 @@ merge_files () {
   local FILENAME=${2}
   local SRCDIR=${3}
   local NEW_FILE=${SRCDIR}/${4}
+  local TMP_FILE_DIR="$(basename $HOSTNAME)"
   
   echo -e "\n  + Merging ${FILENAME}."
   
@@ -1930,10 +1923,10 @@ merge_files () {
   local CUSTOMIZED_FILE=${DIR}/${FILENAME}
   local COMMON_BASE_FILE=${DIR}/${BASE_DIR}/${FILENAME}
   
-  local TMP_CUSTOMIZED_FILE=${DIR}/${FILENAME}_customized
-  local TMP_COMMON_BASE_FILE=${DIR}/${FILENAME}_base
-  local TMP_NEW_FILE=${DIR}/${FILENAME}_new
-  local TMP_MERGE_FILE=${DIR}/${FILENAME}_merge
+  local TMP_CUSTOMIZED_FILE=${TMP_FILE_DIR}/${FILENAME}_customized
+  local TMP_COMMON_BASE_FILE=${TMP_FILE_DIR}/${FILENAME}_base
+  local TMP_NEW_FILE=${TMP_FILE_DIR}/${FILENAME}_new
+  local TMP_MERGE_FILE=${TMP_FILE_DIR}/${FILENAME}_merge
   
   if [[ ! -e ${CUSTOMIZED_FILE} ]] ; then
     attention_msg "Customized \"${CUSTOMIZED_FILE}\" does not exist, using new file from delivery"
@@ -2084,10 +2077,14 @@ add_to_server_policy () {
 f_update_appmgmt_mdm_in_xbe () {
   local ret_val=0
   local WAR_DELIVERY="${1}"
+  local STR_DELIVERY_NAME=$(basename ${WAR_DELIVERY} .war)
   local STR_TMP_DIR="/tmp"
   local STR_TMP_UNPACK_DIR="${STR_TMP_DIR}/adjustMdmLibrary"
   local STR_TMP_MDM_BUILD_DIR="${STR_TMP_UNPACK_DIR}/buildMdmLibrary"
   local FILE_TO_EDIT=""
+
+  ${VOLATILE_CP} -p "${WAR_DELIVERY}" "$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
+  WAR_DELIVERY="$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
 
   #TODO: check if XBE is already installed or/and was being installed this run
   ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
@@ -2122,6 +2119,9 @@ f_adjust_guihttp_app () {
   local STR_TMP_UNPACK_DIR="${STR_TMP_DIR}/adjustApp"
   local TMP_FILE="application.xml.new"
   local STR_REPLACEMENT=""
+  
+  ${VOLATILE_CP} "${STR_GUIHTTP_APP_FILE}" "$(realpath $HOSTNAME)/GuiHttp.${GUIHTTPVERSION}.app"
+  STR_GUIHTTP_APP_FILE="$(realpath $HOSTNAME)/GuiHttp.${GUIHTTPVERSION}.app"
 
   ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
   ${VOLATILE_MKDIR} -p "${STR_TMP_UNPACK_DIR}"
@@ -2154,6 +2154,9 @@ f_adjust_snmpstatistics_app () {
   local STR_TMP_UNPACK_DIR="${STR_TMP_DIR}/adjustApp"
   local TMP_FILE="application.xml.new"
   local STR_REPLACEMENT=""
+  
+  ${VOLATILE_CP} "${STR_APP_FILE}" "$(realpath $HOSTNAME)/SNMPStatistics.${SNMPSTATVERSION}.app"
+  STR_APP_FILE="$(realpath $HOSTNAME)/SNMPStatistics.${SNMPSTATVERSION}.app"
 
   ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
   ${VOLATILE_MKDIR} -p "${STR_TMP_UNPACK_DIR}"
