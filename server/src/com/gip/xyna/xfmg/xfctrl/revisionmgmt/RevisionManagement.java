@@ -541,7 +541,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
         }
       }
 
-      if (preferredRevision != null && revision != null && preferredRevision != revision) {
+      if (preferredRevision != null && revision != null && !preferredRevision.equals(revision)) {
         throw new RuntimeException("Could not use preferred revision. Other node already created revision " + revision
             + " for this application.");
       }
@@ -1635,7 +1635,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   private void checkRevisionInUse(Long revision) {
     if (revisions.containsValue(revision)) {
       java.util.Optional<RuntimeContext> rev =
-          revisions.entrySet().stream().filter(x -> x.getValue() == revision).map(x -> x.getKey()).findFirst();
+          revisions.entrySet().stream().filter(x -> revision.equals(x.getValue())).map(x -> x.getKey()).findFirst();
       throw new RuntimeException("Revision " + revision + " already in use " + (rev.isPresent() ? "by " + rev.get() : ""));
     }
 
