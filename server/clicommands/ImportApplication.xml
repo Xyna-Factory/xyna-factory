@@ -33,4 +33,5 @@
   <BoolOption Name="ncg" LongName="NoCodeGeneration" Description="If the applicationimport results in (re)-generating the application's code, abort instead" Optional="true" />
   <Argument Name="storableNameGeneration" Description="abort: Abort import if odsNames of different types collide (default). allow: Allows deviation on name colllsions. exclude: Do not import odsNames." Optional="true" />
   <!-- Argument Name="storableNameGeneration" Description="Controls whether odsName should be imported ('exclude') and if a name collision should abort the import ('abort') or a different name should be choosen ('allow')." Optional="true" /-->
+  <Argument Name="revision" Description="Revision number to use for the new application."  Optional="true"/>
 </XynaCommandLineCommand>

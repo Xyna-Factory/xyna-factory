@@ -508,7 +508,12 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
    * @throws XFMG_DuplicateVersionForApplicationName
    * @throws PersistenceLayerException
    */
-  public long buildNewRevisionForNewVersion(String applicationName, String newVersion) throws XFMG_DuplicateVersionForApplicationName, PersistenceLayerException {
+  public Long buildNewRevisionForNewVersion(String applicationName, String newVersion) throws XFMG_DuplicateVersionForApplicationName, PersistenceLayerException {
+    return buildNewRevisionForNewVersion(applicationName, newVersion, null);
+  }
+
+
+  public long buildNewRevisionForNewVersion(String applicationName, String newVersion, Long preferredRevision) throws XFMG_DuplicateVersionForApplicationName, PersistenceLayerException {
     Long revision = null;
     
     DatabaseLock lock = XynaFactory.getInstance().getXynaNetworkWarehouse().getXynaClusteringServices().getClusterLockingInterface()
@@ -535,11 +540,17 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
           revision = xmomversion.getRevision();
         }
       }
-      
-      if(revision == null) {
-        // neue unbenutzte Revisionen erzeugen und anlegen
-        logger.debug("No revision found - create new one");
-        revision = createNewRevision();
+
+      if (preferredRevision != null && revision != null && preferredRevision != revision) {
+        throw new RuntimeException("Could not use preferred revision. Other node already created revision " + revision
+            + " for this application.");
+      }
+
+      if (revision == null) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("No revision found - create new one." + (preferredRevision != null ? "Preferred Revision: " + preferredRevision : ""));
+        }
+        revision = createNewRevision(preferredRevision);
       }
       
       Application application = new Application(applicationName, newVersion);
@@ -603,7 +614,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
       if(revision == null) {
         // neue unbenutzte Revisionen erzeugen und anlegen
         logger.debug("No revision found - create new one");
-        revision = createNewRevision();
+        revision = createNewRevision(null);
       }
       
       XMOMVersionStorable xmomversion = new XMOMVersionStorable(workspace, revision, getOwnBinding());
@@ -627,7 +638,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
 
   
-  private long createNewRevision() throws PersistenceLayerException {
+  private long createNewRevision(Long preferredRevision) throws PersistenceLayerException {
     
     // eigene Connection, weil ggf. ein Rollback durchgeführt wird
     ODSConnection con = ods.openConnection();
@@ -653,8 +664,16 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
         }
       }
       
-      long nextrevision = revision.getMaxrevision() + 1;
-      revision.setMaxrevision(nextrevision);
+      long nextrevision;
+      if (preferredRevision == null) {
+        nextrevision = revision.getMaxrevision() + 1;
+        revision.setMaxrevision(nextrevision);
+      } else {
+        checkRevisionInUse(preferredRevision);
+        nextrevision = preferredRevision;
+        revision.setMaxrevision(Math.max(revision.getMaxrevision(), preferredRevision));
+      }
+      
       con.persistObject(revision);
       con.commit();
       
@@ -1613,4 +1632,18 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
 
 
+  private void checkRevisionInUse(Long revision) {
+    if (revisions.containsValue(revision)) {
+      java.util.Optional<RuntimeContext> rev =
+          revisions.entrySet().stream().filter(x -> x.getValue() == revision).map(x -> x.getKey()).findFirst();
+      throw new RuntimeException("Revision " + revision + " already in use " + (rev.isPresent() ? "by " + rev.get() : ""));
+    }
+
+
+    // check if the rev folder already exsits
+    File revFolder = new File(getPathForRevision(PathType.ROOT, revision));
+    if (revFolder.exists()) {
+      throw new RuntimeException("Revision " + revision + " already exists on file system: " + revFolder.getAbsolutePath());
+    }
+  }
 }
