@@ -2606,7 +2606,9 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     private boolean upgradeRequirements;
     private XMOMODSNameImportSetting odsNames = XMOMODSNameImportSetting.ABORT_ON_COLLISION;
     private boolean abortOnCodegeneration;
-    
+    private Long revision = null;
+
+
     public ImportApplicationCommandParameter() {
     }
     
@@ -2766,6 +2768,15 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       return odsNames;
     }
 
+    public ImportApplicationCommandParameter revision(Long revision) {
+      this.revision = revision;
+      return this;
+    }
+
+    public Long getRevision() {
+      return revision;
+    }
+
   }
   
   
@@ -2908,7 +2919,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
 
       //neue revision anlegen
-      revision = revisionManagement.buildNewRevisionForNewVersion(applicationName, versionName);
+      revision = revisionManagement.buildNewRevisionForNewVersion(applicationName, versionName, importParameter.getRevision());
       if (logger.isDebugEnabled()) {
         logger.debug("Got revision " + revision + " for new application " + applicationName + " " + versionName);
       }

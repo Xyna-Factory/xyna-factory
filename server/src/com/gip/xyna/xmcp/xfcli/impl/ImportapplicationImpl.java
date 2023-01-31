@@ -70,6 +70,9 @@ public class ImportapplicationImpl extends XynaCommandImplementation<Importappli
          .statusOutputStream(clw.getPrintStream())
          .upgradeRequirements(upgradeRequirements)
          .odsNames(XMOMODSNameImportSetting.byName(payload.getStorableNameGeneration()));
+      if (payload.getRevision() != null) {
+        iap.revision(Long.parseLong(payload.getRevision()));
+      }
       
       ApplicationInformation ai = applicationManagement.importApplication(iap);
       if( ai != null ) {
