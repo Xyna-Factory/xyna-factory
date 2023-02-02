@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build_basics" basedir=".">
+
+  <import file="buildMacros.xml" />
+  <property file="../delivery/components.properties" />
+
+  <target name="build_basics"
+          depends="buildScripts" />
+
+  <!--- - - - - - - - - - - - - - - - -
+      target: buildScripts
+      - - - - - - - - - - - - - - - - - -->
+  <target name="buildScripts">
+
+    <copy todir="${delivery.build.dir}">
+      <fileset dir="${checkout.dir}/installation/install">
+        <include name="**/*.sh" />
+        <include name="*.txt" />
+        <include name="README" />
+      </fileset>
+    </copy>
+  	<mkdir dir="${delivery.build.dir}/application/" />
+  	<copy todir="${delivery.build.dir}/application">
+  	  <fileset dir="${checkout.dir}/application" >
+  	    <include name="xynafactory/*" />
+  	    <include name="network_availability_demon/*" />
+  	  </fileset>	
+    </copy>
+    <copy todir="${delivery.build.dir}/scripts">
+      <fileset dir="${checkout.dir}/scripts"/>
+    </copy>
+  </target>
+</project>

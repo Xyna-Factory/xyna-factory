@@ -1,0 +1,85 @@
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Copyright 2022 GIP SmartMercial GmbH, Germany
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+1. Unterstuetze Betriebssysteme:
+
+ - SLES 11 SP1 und SP2 (x86_64)
+ - RHEL 5.7 (x86_64)
+ - Debian (x86 und x86_64)
+ - Solaris 5.10 (i86pc_64)
+
+
+
+2. Installationsanleitung
+
+
+2.1 Liefergegenstaende
+
+Die Softwarelieferung besteht aus einem Basis-Paket:
+
+   "XynaBlackEditionPrerequisites_<Version>_<Datum>_<Betriebssystem>_<Architektur>.zip"
+   
+das entsprechend zum Betriebssystem und der Architektur des Zielsystem zu waehlen ist.
+ 
+ 
+2.2	Zum Entpacken der Liefergegenstaende ist ein neues Verzeichnis im Homeverzeichnis des root-Benutzer anzulegen:
+ 
+   # mkdir -p ${HOME}/Lieferungen/Lieferung_YYYYMMDD 
+   # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
+   
+   Alle benoetigten Pakete werden dann in das neue Verzeichnis kopiert und dort entpackt.
+
+
+
+2.3. Porperties anlegen und anpassen
+
+   # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
+   # cd XynaBlackEditionPrerequisites*
+   # ./install_prerequisites.sh -n
+
+  Dieser Befehl erzeugt das Verzeichnis: /etc/xyna/environment und legt darin die Datei 
+  "black_edition001.properties" und eine rechnerspezifische Properties-Datei  "<hostname>.properties" 
+  jeweils mit Standardwerten an.  Diese Standarwerte sind anschliessend auf das jeweilige Zielsystem anzupassen
+  
+  
+  
+2.4. Installation 
+  Nach der Anpassung der Properties kann die  eigentliche Installation gestartet werden. Diese ist als 
+  root-Benutzer auszufuehren.
+
+    # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
+	# cd XynaBlackEditionPrerequisites*
+	# ./install_prerequisites.sh <optionen>
+ 
+  Welche <optionen> es gibt bekommt man angezeigt durch das Kommando:
+     # ./install_prerequisites.sh
+  
+  
+   Beispiele: 
+   
+   a) Standard-Installation
+      # ./install_prerequisites.sh -a 
+     
+     
+     
+     
+     
+     
+     
+     
+
+

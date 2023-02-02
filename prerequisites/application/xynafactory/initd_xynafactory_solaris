@@ -1,0 +1,55 @@
+#!/bin/bash
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Copyright 2022 GIP SmartMercial GmbH, Germany
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# description: Starts and stops TOKEN_PROVIDES_XYNA_FACTORY
+
+XYNA_USER="TOKEN_XYNA_USER"
+FACTORY_DIR="TOKEN_INSTALL_PREFIX/server"
+
+test -x ${FACTORY_DIR} || { echo "${FACTORY_DIR} not installed";
+  if [[ "$1" == "stop" ]]; then exit 0;
+  else exit 5; fi; }
+
+case "$1" in
+  start)
+    echo "Starting Xyna Factory as user '${XYNA_USER}' "
+    ${FACTORY_DIR}/xynafactory.sh -q start
+    ;;
+  stop)
+    echo "Shutting down Xyna Factory as user '${XYNA_USER}' "
+    ${FACTORY_DIR}/xynafactory.sh -q stop
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  status)
+    echo "Checking for service Xyna Factory as user '${XYNA_USER}' "
+    ${FACTORY_DIR}/xynafactory.sh status
+    ;;
+  version)
+    ${FACTORY_DIR}/xynafactory.sh version
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status|version}"
+    echo
+    echo "Maybe you intended to run this command within the XynaFactory-CommandLine, like this?" 
+    echo "  ${FACTORY_DIR}/xynafactory.sh $@"
+    echo
+    exit 1
+    ;;
+esac

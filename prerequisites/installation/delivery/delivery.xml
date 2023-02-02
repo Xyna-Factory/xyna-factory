@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="delivery" default="localbuild" basedir=".">
+
+  <tstamp>
+    <format property="timestamp" pattern="yyyyMMdd_HHmm" locale="de,DE" />
+  </tstamp>
+
+  <loadproperties srcfile="delivery.properties" />
+
+  <property name="delivery.build.dir"
+            value="${basedir}/${delivery.dir}/build_${timestamp}" />
+
+  <import file="../build/build.xml" />
+  <import file="deliveryMacros.xml" />
+
+
+
+  <!-- - - - - - - - - - - - - - - - - -
+       target: delivery_os
+       - - - - - - - - - - - - - - - - - -->
+  <target name="delivery_os">
+    <!-- Since we can't use any SVN-stuff -->
+    <!-- <exec failonerror="true" executable="${basedir}/check_trunk.sh" /> -->
+    <ant antfile="build.xml" dir="${checkout.dir}/installation/build" inheritall="true" inheritrefs="true">
+      <target name="${buildTarget}" />
+    </ant>
+    <replace file="${delivery.build.dir}/func_lib/func_lib.sh"
+             token="TOKEN_RELEASE_NUMBER"
+             value="${release.number}" />
+    <zipDeliveryItemsSrc nameSrc="${delivery.name}_${release.number}_${timestamp}"
+                         nameZip="${delivery.name}_${release.number}_${timestamp}${zipName}" />
+    <delete dir="${delivery.build.dir}" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - -
+       target: localbuild_basics
+       - - - - - - - - - - - - - - - - - -->
+  <target name="localbuild_basics" description="">
+    <property name="checkout.dir" value="${basedir}/../.." />
+    <property name="buildTarget" value="build_basics" />
+    <property name="zipName" value="_localbuild" />
+    <ant antfile="delivery.xml" target="delivery_os" inheritall="true" inheritrefs="true"/>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - -
+       target: delivery_basics
+       - - - - - - - - - - - - - - - - - -->
+  <target name="delivery_basics">
+    <property name="checkout.dir" value="${basedir}/../../checkout" />
+    <property name="buildTarget" value="build_basics" />
+    <property name="zipName" value="" />
+    <ant antfile="delivery.xml" target="delivery_os" inheritall="true" inheritrefs="true"/>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - -
+       target: localbuild
+       - - - - - - - - - - - - - - - - - -->
+  <target name="localbuild" description="build a delivery for all systems from local repository">
+    <property name="checkout.dir" value="${basedir}/../.." />
+    <ant antfile="delivery.xml" target="localbuild_basics" inheritall="true" inheritrefs="true"/>
+  </target>
+
+</project>
