@@ -44,7 +44,7 @@
       <resolver:files refid="files" dir="${target.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" /> <!--scopes="compile"-->
       <resolver:files refid="internalFiles" dir="${target.dir}/internal_xyna" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
     </resolver:resolve>
-    <!--loadLicenses targetDir="${target.dir}" /-->
+    <loadLicenses targetDir="${target.dir}" />
     <!-- delete generated-resources ? -->
   </target>
 
