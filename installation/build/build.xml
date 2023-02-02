@@ -195,6 +195,9 @@
 		<fileset dir="${root.dir}/installation/sql">
 			<include name="**/create.sql" />
 		</fileset>
+		<fileset dir="${root.dir}/localization/">
+			<include name="**/*.xml" />
+		</fileset>
 	</copy>
 	<copy todir="${build.dir}/server">
 		<fileset dir="${server.dir}">
