@@ -2605,7 +2605,10 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     private PrintStream statusOutputStream;
     private boolean upgradeRequirements;
     private XMOMODSNameImportSetting odsNames = XMOMODSNameImportSetting.ABORT_ON_COLLISION;
-    
+    private boolean abortOnCodegeneration;
+    private Long revision = null;
+
+
     public ImportApplicationCommandParameter() {
     }
     
@@ -2625,6 +2628,15 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     
     public boolean isForce() {
       return force;
+    }
+    
+    public ImportApplicationCommandParameter abortOnCodegeneration(boolean abortOnCodegeneration) {
+      this.abortOnCodegeneration = abortOnCodegeneration;
+      return this;
+    }
+    
+    public boolean isAbortOnCodegeneration() {
+      return abortOnCodegeneration;
     }
     
     public ImportApplicationCommandParameter stopIfExistingAndRunning(boolean stopIfExistingAndRunning) {
@@ -2756,6 +2768,15 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       return odsNames;
     }
 
+    public ImportApplicationCommandParameter revision(Long revision) {
+      this.revision = revision;
+      return this;
+    }
+
+    public Long getRevision() {
+      return revision;
+    }
+
   }
   
   
@@ -2842,6 +2863,11 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       regenerateCode = true;
     }
 
+    if (regenerateCode && importParameter.isAbortOnCodegeneration()) {
+      output(importParameter.getStatusOutputStream(), "Code generation required, but forbidden. Abort.");
+      throw new XFMG_CouldNotImportApplication(importParameter.getFileName());
+    }
+
     RuntimeContextDependencyManagement rcdMgmt =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     Set<RuntimeDependencyContext> parentRuntimeContexts = null;
@@ -2893,7 +2919,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
 
       //neue revision anlegen
-      revision = revisionManagement.buildNewRevisionForNewVersion(applicationName, versionName);
+      revision = revisionManagement.buildNewRevisionForNewVersion(applicationName, versionName, importParameter.getRevision());
       if (logger.isDebugEnabled()) {
         logger.debug("Got revision " + revision + " for new application " + applicationName + " " + versionName);
       }

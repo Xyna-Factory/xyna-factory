@@ -25,7 +25,7 @@
 	<!--Name for the generate archive (jar or tar.gz) file-->
 	<property name="archive.name" value="xynautils-${utils.name}" />
 	<!--Name of the jar vendor-->
-	<property name="vendor.name" value="GIP Mainz" />
+	<property name="vendor.name" value="GIP SmartMercial GmbH" />
 	<!--Description of the generated jar file (only needed in the manifest of the jar file)-->
 	<property name="jar.desc" value="XynaUtils for ${utils.name}" />
 	<!--Package name for the classes included into the jar-->

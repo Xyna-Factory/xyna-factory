@@ -124,7 +124,7 @@
 
   <property name="xynaTarget.default" value="notset" />
 
-  <property name="vendor.name" value="GIP AG" />
+  <property name="vendor.name" value="GIP SmartMercial GmbH" />
 
   <condition property="isInstall" value="true" else="false">
     <not>
