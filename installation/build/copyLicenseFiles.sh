@@ -16,14 +16,8 @@
 # limitations under the License.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#copy license files in input dir to output dir
-#copy alle entries of GROUP-file
+#copy license files (non .jar-files) in input dir to output dir
 
 mkdir "$2"
-for i in $(find "$1" -name "*GROUP*" | grep -v "jar\$" | xargs grep -v "^#"); do cp "$1/$i" "$2"; done
-for i in $(find "$1" -iname "*LICENSE*" | grep -v "jar\$"); do cp "$i" "$2"; done
-for i in $(find "$1" -iname "*LICENCE*" | grep -v "jar\$"); do cp "$i" "$2"; done
-for i in $(find "$1" -iname "*NOTICE*" | grep -v "jar\$"); do cp "$i" "$2"; done
-for i in $(find "$1" -name "*GROUP*" | grep -v "jar\$"); do cp "$i" "$2"; done
-for i in $(find "$1" -iname "*COPYRIGHT*" | grep -v "jar\$"); do cp "$i" "$2"; done
+while read -r i; do cp "$i" "$2"; done <<< $(find "$1" ! -iname "*.jar" -type f)
 

@@ -58,7 +58,7 @@
           <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
           <!--resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/-->
         </resolver:resolve>
-        <!--loadLicenses targetDir="${basedir}/lib" /-->
+        <loadLicenses targetDir="${basedir}/lib" />
         <!-- delete generated-resources ? -->
       </target>
 
