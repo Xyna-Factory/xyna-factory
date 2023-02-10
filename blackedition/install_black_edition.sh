@@ -167,20 +167,11 @@ if f_selected ${ETC_INITD_FILES} ; then
 fi
 
 if f_selected ${DEPLOY_TARGET_GERONIMO} ${DEPLOY_TARGET_TOMCAT} ; then
-  if f_selected ${COMPONENT_FRACTALMODELLER} ; then
-    deploy_xfracmod;
-  fi;
   if f_selected ${COMPONENT_FRACTALMODELLERH5EN} ; then
     deploy_xfracmodh5en;
   fi;
   if f_selected ${COMPONENT_FRACTALMODELLERH5DE} ; then
     deploy_xfracmodh5de;
-  fi;
-  if f_selected ${WEBSERVICE_BLACKEDITION} ; then
-    deploy_webservice_blackedition;
-  fi;
-  if f_selected ${WEBSERVICE_TOPOLOGYMODELLER} ; then
-    deploy_webservice_topologymodeller;
   fi;
 fi
 
