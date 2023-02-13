@@ -52,6 +52,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
+                <artifactId>demonlib</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
                 <artifactId>DHCPSharedLib</artifactId>
                 <version>1.0.0</version>
             </dependency>
