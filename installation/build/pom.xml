@@ -62,6 +62,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
+                <artifactId>DHCPClusterStateSharedLib</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
                 <artifactId>misc</artifactId>
                 <version>1.0.0</version>
             </dependency>
@@ -200,6 +205,11 @@
                 <groupId>com.oracle.database.xml</groupId>
                 <artifactId>xmlparserv2</artifactId>
                 <version>21.8.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun</groupId>
+                <artifactId>tools</artifactId>
+                <version>1.6</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.activation</groupId>
