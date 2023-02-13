@@ -57,12 +57,17 @@
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
-                <artifactId>DHCPSharedLib</artifactId>
+                <artifactId>DHCPClusterStateSharedLib</artifactId>
                 <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
-                <artifactId>DHCPClusterStateSharedLib</artifactId>
+                <artifactId>DHCPv6DBStorablesSharedLib</artifactId>
+                <version>0.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
+                <artifactId>DHCPSharedLib</artifactId>
                 <version>1.0.0</version>
             </dependency>
             <dependency>
