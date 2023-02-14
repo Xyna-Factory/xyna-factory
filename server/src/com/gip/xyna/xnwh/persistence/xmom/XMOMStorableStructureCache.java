@@ -47,13 +47,13 @@ import com.gip.xyna.utils.exception.MultipleExceptions;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
 import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator.QualifiedStorableColumnInformation;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMappingUtils.NameType;
-import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.XMOMStorableStructureInformation;
 import com.gip.xyna.xnwh.persistence.xmom.generation.InMemoryStorableClassLoader;
 import com.gip.xyna.xnwh.persistence.xmom.generation.StorableCodeBuilder;
 import com.gip.xyna.xprc.xfractwfe.DeploymentManagement;
@@ -86,7 +86,6 @@ public class XMOMStorableStructureCache {
 
 
   private XMOMStorableStructureCache(Long revision) {
-    //responsibleRevision = revision;
   }
 
 
@@ -1348,18 +1347,19 @@ public class XMOMStorableStructureCache {
           }
         }
       }
-      if (getSuperEntry() != null &&
-          !visited.contains(getSuperEntry().getInfo()) &&
-          visitor.getRecursionFilter().acceptHierarchy(getSuperEntry().getInfo())) {
-        visited.add(getSuperEntry().getInfo());
-        getSuperEntry().getInfo().traverse(comingFrom, visitor, visited);
+      if (getSuperEntry() != null) {
+        StorableStructureInformation superEntryInfo = checkAndLogNull(getSuperEntry(), "superEntry");
+        if (superEntryInfo != null && !visited.contains(superEntryInfo) && visitor.getRecursionFilter().acceptHierarchy(superEntryInfo)) {
+          visited.add(superEntryInfo);
+          superEntryInfo.traverse(comingFrom, visitor, visited);
+        }
       }
       if (getSubEntries() != null) {
         for (StorableStructureIdentifier subEntry : getSubEntries()) {
-          if (!visited.contains(subEntry.getInfo()) &&
-              visitor.getRecursionFilter().acceptHierarchy(subEntry.getInfo())) {
-            visited.add(subEntry.getInfo());
-            subEntry.getInfo().traverse(comingFrom, visitor, visited);
+          StorableStructureInformation subEntryInfo = checkAndLogNull(subEntry, "subEntry");
+          if (subEntryInfo != null && !visited.contains(subEntryInfo) && visitor.getRecursionFilter().acceptHierarchy(subEntryInfo)) {
+            visited.add(subEntryInfo);
+            subEntryInfo.traverse(comingFrom, visitor, visited);
           }
         }
       }
@@ -1367,6 +1367,39 @@ public class XMOMStorableStructureCache {
     }
     
     
+    private StorableStructureInformation checkAndLogNull(StorableStructureIdentifier ref, String type) {
+      StorableStructureInformation info = ref.getInfo();
+      if (info == null) {
+        String rtc;
+        try {
+          rtc = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRuntimeContext(revision).getGUIRepresentation();
+        } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+          rtc = "unknown (" + e.getMessage() + ")";
+        }
+        String msg = "When traversing xmomstorable " + fqClassNameOfDatatype + " in rev " + revision + "(" + rtc + ") the " + type;
+        if (ref instanceof ReferenceStorableStructureIdentifier) {
+          ReferenceStorableStructureIdentifier rsub = (ReferenceStorableStructureIdentifier) ref;
+          try {
+            rtc = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRuntimeContext(rsub.referenceRevision).getGUIRepresentation();
+          } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+            rtc = "unknown (" + e.getMessage() + ")";
+          }
+          msg += " " + rsub.fqClassName + " in rev " + rsub.referenceRevision + " (" + rtc + ") could not be looked up. ";
+          XMOMStorableStructureCache c = getInstance(rsub.referenceRevision);
+          if (c == null) {
+            msg += "Cache for revision is null";
+          } else {
+            msg += "Cache for revision exists. containsRef=" + c.storableStructureInformation.containsKey(rsub.fqClassName);
+          }
+        } else {
+          msg += " was a direct link but empty."; //unexpected
+        }
+        logger.warn(msg, new Exception());
+      }
+      return info;
+    }
+
+
     public Set<StorableStructureIdentifier> getSubEntries() {
       return subEntries;
     }

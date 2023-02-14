@@ -70,7 +70,6 @@ INSTANCE_PROP_FILE=$(get_properties_filename "product" ${INSTANCE_NUMBER})
 
 #  start main logic
 if [[ "x${DRY_RUN}" == "xtrue" ]]; then 
-  check_usage;
   debug_variables; 
   if f_selected ${COMPONENT_ORACLECLUSTER} ; then 
     check_install_oracle_cluster
@@ -78,8 +77,6 @@ if [[ "x${DRY_RUN}" == "xtrue" ]]; then
   exit;
 fi
 
-#Prüfen der commandline-Parameter-Kombination
-check_usage;
 
 if f_selected ${COMPONENT_ORACLECLUSTER} ; then 
   check_install_oracle_cluster
@@ -167,28 +164,12 @@ if f_selected ${ETC_INITD_FILES} ; then
 fi
 
 if f_selected ${DEPLOY_TARGET_GERONIMO} ${DEPLOY_TARGET_TOMCAT} ; then
-  if f_selected ${COMPONENT_FRACTALMODELLER} ; then
-    deploy_xfracmod;
-  fi;
   if f_selected ${COMPONENT_FRACTALMODELLERH5EN} ; then
     deploy_xfracmodh5en;
   fi;
   if f_selected ${COMPONENT_FRACTALMODELLERH5DE} ; then
     deploy_xfracmodh5de;
   fi;
-  if f_selected ${WEBSERVICE_BLACKEDITION} ; then
-    deploy_webservice_blackedition;
-  fi;
-  if f_selected ${WEBSERVICE_TOPOLOGYMODELLER} ; then
-    deploy_webservice_topologymodeller;
-  fi;
-fi
-
-
-
-if [[ "${BOOL_CAROUSEL_NEEDS_TO_BE_CHECKED:-false}" == "true" ]]; then
-  #TODO direkt in deploy_webservice_topologymodeller?
-  enable_topologymodeller_slide
 fi
 
 register_repositoryaccesses

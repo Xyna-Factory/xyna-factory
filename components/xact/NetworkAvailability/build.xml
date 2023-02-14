@@ -53,7 +53,7 @@
       <resolver:remoterepos refid="xyna.repository"/>
       <resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
     </resolver:resolve>
-    <!--loadLicenses targetDir="${target.dir}/lib" /-->
+    <loadLicenses targetDir="${target.dir}/lib" />
     <!-- delete generated-resources ? -->
   </target>
 
