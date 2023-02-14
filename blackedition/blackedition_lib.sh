@@ -21,12 +21,11 @@
 
 #  Namen der einzelnen Komponenten muessen eindeutig sein!
 #+ Es wird mit grep der CSV-String geprueft...
-ALL_COMPONENTS=("filter" "trigger" "services" "xynacluster" "oraclecluster" "xynafactory" "xynaws" "fractalmodeller", "fractalmodellerh5en", "fractalmodellerh5de")
+ALL_COMPONENTS=("filter" "trigger" "services" "xynacluster" "oraclecluster" "xynafactory", "fractalmodellerh5en", "fractalmodellerh5de")
 ALL_FILTERS=("nsnhix5600" "dhcp_v4" "radius")
 ALL_TRIGGERS=("nsnhix5600" "dhcp_v4" "radius")
 ALL_SERVICES=("nsnhix5600" "templatemechanism" "sipuseragent" "jmsforwarding" "dhcp_v4")
 ALL_DEPLOY_TARGETS=("geronimo" "tomcat" "oracle")
-ALL_WEBSERVICES=("blackedition" "topologymodeller")
 ALL_DATAMODELTYPES=("mib","tr069","xsd");
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
@@ -74,8 +73,6 @@ parse_commandline_arguments () {
       S) parse_services            "${OPTARG}" "false";;
       t) parse_triggers            "${OPTARG}" "true";;
       T) parse_triggers            "${OPTARG}" "false";;
-      w) parse_webservices         "${OPTARG}" "true";;
-      W) parse_webservices         "${OPTARG}" "false";;
       x) parse_applications        "${OPTARG}" "true";; 
       X) parse_applications        "${OPTARG}" "false";;
       h|H) DISPLAY_USAGE="true";;
@@ -102,26 +99,22 @@ parse_components () {
       filter)            parse_filters            "ALL" "${2}";;
       services)          parse_services           "ALL" "${2}";;
       trigger)           parse_triggers           "ALL" "${2}";;
-      xynaws)            parse_webservices        "ALL" "${2}";;
       repositories)      parse_repositoryaccesses "ALL" "${2}";;
       datamodeltypes)    parse_datamodeltypes     "ALL" "${2}";;
       applications)      parse_applications       "ALL" "${2}";;
       xynacluster)       COMPONENT_XYNACLUSTER="${2}";;
       oraclecluster)     COMPONENT_ORACLECLUSTER="${2}";;
       xynafactory)       COMPONENT_XYNAFACTORY="${2}";;
-      fractalmodeller)   COMPONENT_FRACTALMODELLER="${2}";;
       fractalmodellerh5en)COMPONENT_FRACTALMODELLERH5EN="${2}";;
       fractalmodellerh5de)COMPONENT_FRACTALMODELLERH5DE="${2}";;
       ALL)
         parse_filters            "ALL" "${2}";
         parse_services           "ALL" "${2}";
         parse_triggers           "ALL" "${2}";
-        parse_webservices        "ALL" "${2}";
         parse_repositoryaccesses "ALL" "${2}";
         parse_datamodeltypes     "ALL" "${2}";
         parse_applications       "ALL" "${2}";
         COMPONENT_XYNAFACTORY="${2}";
-        COMPONENT_FRACTALMODELLER="${2}";
         COMPONENT_FRACTALMODELLERH5EN="${2}";
         COMPONENT_FRACTALMODELLERH5DE="${2}";
         parse_deploy_targets "${1}" "${2}"
@@ -159,12 +152,6 @@ parse_services () {
       *) attention_msg "Ignoring unknown service \"$v\"";
     esac
   done;
-}
-
-#  Parameter 1: String der geprueft werden soll, Parameter 2: Wert, den die Variable bekommen soll ("true" oder "false")
-parse_webservices () {
-  if [[ "x${1}" == "xALL" || $(echo "${1}" | ${VOLATILE_GREP} -c blackedition         ) -gt 0 ]]; then WEBSERVICE_BLACKEDITION="${2}"; fi
-  if [[ "x${1}" == "xALL" || $(echo "${1}" | ${VOLATILE_GREP} -c topologymodeller     ) -gt 0 ]]; then WEBSERVICE_TOPOLOGYMODELLER="${2}"; fi
 }
 
 #  Parameter 1: String der geprueft werden soll, Parameter 2: Wert, den die Variable bekommen soll ("true" oder "false")
@@ -294,7 +281,6 @@ debug_variables () {
 
   echo "== Components =="
   echo "xynafactory          : ${COMPONENT_XYNAFACTORY:-false}"
-  echo "fractalmodeller      : ${COMPONENT_FRACTALMODELLER:-false}"
   echo "fractalmodellerh5de  : ${COMPONENT_FRACTALMODELLERH5DE:-false}"
   echo "fractalmodellerh5en  : ${COMPONENT_FRACTALMODELLERH5EN:-false}"
   echo "xynacluster          : ${COMPONENT_XYNACLUSTER:-false}"
@@ -318,10 +304,6 @@ debug_variables () {
   echo "nsnhix5600           : ${TRIGGER_NSN_HIX5600:-false}"
   echo "dhcp v4              : ${TRIGGER_DHCP_V4:-false}"
   echo "radius               : ${TRIGGER_RADIUS:-false}"
-  
-  echo "== Webservices =="
-  echo "blackedition         : ${WEBSERVICE_BLACKEDITION:-false}"
-  echo "topologymodeller     : ${WEBSERVICE_TOPOLOGYMODELLER:-false}"
 
   echo "== Deploy-Targets =="
   echo "geronimo             : ${DEPLOY_TARGET_GERONIMO:-false}"
@@ -371,8 +353,6 @@ display_usage () {
     ALL ${ALL_SERVICES[@]}
 -tT   ${DONOT} install one or more of the following triggers:
     ALL ${ALL_TRIGGERS[@]}
--wW   ${DONOT} install one or more of the following webservices:
-    ALL ${ALL_WEBSERVICES[@]}
 -xX   ${DONOT} install one or more of the following applications:
     ALL $(f_list_applications_in_components);
 
@@ -383,11 +363,11 @@ display_usage () {
 
 Examples:
 
-(1) "$(basename "$0")" -a -C xynaws
-      install everything, but exclude Xyna webservices
+(1) "$(basename "$0")" -a -C fractalmodellerh5de
+      install everything, but exclude the FractalModeller
 
-(2) "$(basename "$0")" -A -c xynaws,fractalmodeller
-      install nothing, but include Xyna webservices and FractalModeller
+(2) "$(basename "$0")" -A -c fractalmodellerh5en,fractalmodellerh5de
+      install nothing, but include the FractalModeller
 
 (3) "$(basename "$0")" -c filter
     "$(basename "$0")" -f ALL
@@ -401,189 +381,6 @@ Examples:
 A_HERE_DOCUMENT
 }
 
-# Prüfungen, ob die angegebenen Commandline-Parameter miteinander verträglich sind
-check_usage () {
-  if [[ ${COMPONENT_XYNAFACTORY:-false} != ${WEBSERVICE_BLACKEDITION:-false} ]] ; then
-    local MSG="You are trying to install xynfactory without the webservice or vice versa.\n"
-    MSG="${MSG}This can cause serious problems afterwards using the fractalmodeller.";
-    attention_multi_msg "${MSG}"
-  fi;
-  
-  #TODO schöner wäre es, wenn hier keine Anpassungen gemacht würden. Diese sollten schon beim Parsen geschehen 
-  if f_selected ${WEBSERVICE_BLACKEDITION} ; then
-    ALL_APPLICATIONS=$(f_add_to_list ALL_APPLICATIONS GlobalApplicationMgmt);
-    ALL_APPLICATIONS=$(f_add_to_list ALL_APPLICATIONS GuiHttp);
-  elif f_is_in_list ALL_APPLICATIONS GlobalApplicationMgmt ; then
-    if f_is_installed WEBSERVICE_BLACKEDITION ; then
-      WEBSERVICE_BLACKEDITION=true
-    fi;
-  fi;
-
-  if f_selected ${WEBSERVICE_BLACKEDITION} ; then
-    if ! f_selected ${DEPLOY_TARGET_GERONIMO} ${DEPLOY_TARGET_ORACLE} ${DEPLOY_TARGET_TOMCAT} ;  then
-      attention_msg "You have to select a target to deploy the BlackEdition web service"
-    fi
-  fi
-  
-}
-########################################
-# Test, ob "irgendetwas" installiert ist
-# "irgendetwas" kann dabei sein:
-#  * WEBSERVICE_BLACKEDITION
-# Aufrufbeispiel: if f_is_installed WEBSERVICE_BLACKEDITION ; then ...
-#########################################
-f_is_installed () {
-  local WHAT=%1
-  case $1 in
-    WEBSERVICE_BLACKEDITION)
-      if [[ -e "${TOMCAT_HOME}/webapps/XynaBlackEditionWebServices" ]]; then
-        return 0;
-      else 
-        return 1;
-      fi
-      ;;
-    *) 
-      attention_msg "Unexpected call is_installed $1";
-      return 1;
-      ;;
-  esac
-}
-
-
-f_do_xfracmod_branding () {
-    local ret_val=0
-    local WAR_DELIVERY="${1}"
-    local SSL_PORT="${2:-8443}"
-    local IP_ADDRESS="${3:-10.0.0.1}"
-    local STR_DELIVERY_NAME=$(basename ${WAR_DELIVERY} .war)
-    local STR_DELIVERY_PATH=$(dirname ${WAR_DELIVERY})
-    local STR_TMP_UNPACK_DIR="/tmp/${STR_DELIVERY_NAME}"
-    local FILE_TO_EDIT=""
-
-    if [[ -z "${WAR_DELIVERY}" || ! -f "${WAR_DELIVERY}" ]]; then
-	err_msg "f_do_xfracmod_branding: Unable to work without war file."
-	return
-    fi
-
-    echo "    + copy war file from '${WAR_DELIVERY}' to '$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war'"
-    ${VOLATILE_CP} -p "${WAR_DELIVERY}" "$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
-    WAR_DELIVERY="$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
-
-    echo "    + modifying war file '${WAR_DELIVERY}'"
-    ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
-    ${VOLATILE_MKDIR} -p "${STR_TMP_UNPACK_DIR}"
-
-    choose_interface "Tomcat" "network.interface.tomcat"
-    
-    FILE_TO_EDIT="FractalModelling.properties"
-    ${VOLATILE_UNZIP} "${WAR_DELIVERY}" "${FILE_TO_EDIT}" -d "${STR_TMP_UNPACK_DIR}"
-    if [[ ! -f "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" ]]; then
-      err_msg "f_do_xfracmod_branding: File '${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}' not found!"
-      return 17
-    fi
-    f_replace_in_file "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" \
-      "s+TEMPLATE_HOST:8443+${IP_ADDRESS}:${SSL_PORT}+g" \
-      "s+TEMPLATE_HOST:4245+${CHOOSEN_INTERFACE}:${HTTP_TRIGGER_PORT}+"
-    
-    ${VOLATILE_CHMOD} 664 "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}"
-    cd ${STR_TMP_UNPACK_DIR}
-    # Aufgrund von TIMEZONE-Problem nutze nicht "freshen/update"m sondern entferne zunaechst Datei aus zip und fuege neu hinzu
-    ${VOLATILE_ZIP} "${WAR_DELIVERY}" -d "${FILE_TO_EDIT}"
-    ${VOLATILE_ZIP} "${WAR_DELIVERY}" "${FILE_TO_EDIT}"
-    ret_val=$?
-    cd -
-    ${VOLATILE_RM} -rf ${STR_TMP_UNPACK_DIR}
-    if [[ ${ret_val} -gt 0 ]]; then
-	err_msg "Building of modified war-file failed"
-    fi
-    
-    return  ${ret_val}
-}
-
-f_do_xynaws_branding () {
-    local ret_val=0
-    local WAR_DELIVERY="${1}"
-    local STR_DELIVERY_NAME=$(basename ${WAR_DELIVERY} .war)
-    local STR_DELIVERY_PATH=$(dirname ${WAR_DELIVERY})
-    local STR_TMP_UNPACK_DIR="/tmp/${STR_DELIVERY_NAME}"
-    local FILE_TO_EDIT=""
-
-    PRODUCT_INSTANCE=$(printf "%03g" ${INSTANCE_NUMBER:-1})
-    PORT_OFFSET=$(( ($((10#${PRODUCT_INSTANCE})) - 1) * 10 ))
-    RMI_PORT=$(( 1099 + ${PORT_OFFSET} ))
-
-    if [[ -z "${WAR_DELIVERY}" || ! -f "${WAR_DELIVERY}" ]]; then
-      err_msg "f_do_xynaws_branding: Unable to work without war file."
-      return
-    fi
-
-    echo "    + copy war file from '${WAR_DELIVERY}' to '$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war'"
-    ${VOLATILE_CP} -p "${WAR_DELIVERY}" "$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
-    WAR_DELIVERY="$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
-
-    echo -e " \n    + modifying war file '${WAR_DELIVERY##*/}'"
-    ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
-    ${VOLATILE_MKDIR} -p "${STR_TMP_UNPACK_DIR}"
-
-    choose_interface "Webservice" "network.interface.tomcat"
-    
-    INDENTATION="    |  "
-
-    FILE_TO_EDIT="WEB-INF/classes/XynaBlackEditionWebServices.properties"
-    
-    local OUTPUT=$(${VOLATILE_UNZIP} "${WAR_DELIVERY}" "${FILE_TO_EDIT}" -d "${STR_TMP_UNPACK_DIR}")
-    f_indent "${INDENTATION}" "${OUTPUT}"
-    
-    if [[ ! -f "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" ]]; then
-      err_msg "f_do_xynaws_branding: File '${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}' not found!"
-      return 17
-    fi
-    f_replace_in_file "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" \
-      "s/^port=.*/port=${RMI_PORT}/g" \
-      "s/^port.guihttptrigger=.*/port.guihttptrigger=${HTTP_TRIGGER_PORT}/g" \
-      "s+^host=.*+host=${CHOOSEN_INTERFACE}+"
-    ${VOLATILE_CHMOD} 664 "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}"
-    cd ${STR_TMP_UNPACK_DIR}
-    # Aufgrund von TIMEZONE-Problem nutze nicht "freshen/update"m sondern entferne zunaechst Datei aus zip und fuege neu hinzu
-    OUTPUT=$(${VOLATILE_ZIP} "${WAR_DELIVERY}" -d "${FILE_TO_EDIT}")
-    f_indent "${INDENTATION}" "${OUTPUT}"
-    OUTPUT=$(${VOLATILE_ZIP} "${WAR_DELIVERY}" "${FILE_TO_EDIT}")
-    ret_val=$?
-    f_indent "${INDENTATION}" "${OUTPUT}"
-    cd - > /dev/null
-    ${VOLATILE_RM} -rf ${STR_TMP_UNPACK_DIR}
-    if [[ ${ret_val} -gt 0 ]]; then
-      err_msg "Building of modified war-file failed"
-      return 17
-    fi
-    
-    FILE_TO_EDIT="WEB-INF/classes/log4j2.xml"
-    OUTPUT=$(${VOLATILE_UNZIP} "${WAR_DELIVERY}" "${FILE_TO_EDIT}" -d "${STR_TMP_UNPACK_DIR}")
-    f_indent "${INDENTATION}" "${OUTPUT}"
-    if [[ ! -f "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" ]]; then
-      err_msg "f_do_xynaws_branding: File '${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}' not found!"
-      return 17
-    fi
-    f_replace_in_file "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}" \
-      "s+XYNA +XYNA_WS_${PRODUCT_INSTANCE} +" \
-      "s+facility=\"LOCAL0\"+facility=\"${TOMCAT_SYSLOG_FACILITY}\"+"
-    ${VOLATILE_CHMOD} 664 "${STR_TMP_UNPACK_DIR}/${FILE_TO_EDIT}"
-    cd ${STR_TMP_UNPACK_DIR}
-    # Aufgrund von TIMEZONE-Problem nutze nicht "freshen/update"m sondern entferne zunaechst Datei aus zip und fuege neu hinzu
-    OUTPUT=$(${VOLATILE_ZIP} "${WAR_DELIVERY}" -d "${FILE_TO_EDIT}")
-    f_indent "${INDENTATION}" "${OUTPUT}"
-    OUTPUT=$(${VOLATILE_ZIP} "${WAR_DELIVERY}" "${FILE_TO_EDIT}")
-    ret_val=$?
-    f_indent "${INDENTATION}" "${OUTPUT}"
-    
-    cd - > /dev/null
-    ${VOLATILE_RM} -rf ${STR_TMP_UNPACK_DIR}
-    if [[ ${ret_val} -gt 0 ]]; then
-      err_msg "Building of modified war-file failed"
-      return 17
-    fi
-    return  ${ret_val}
-}
 
 f_indent () {
   local INDENT=${1};
@@ -619,71 +416,6 @@ f_deploy_target () {
   
 }
 
-deploy_webservice_blackedition () {
-  FILE_TO_DEPLOY="${PWD}/server/webservices/XynaBlackEditionWebServices.war"
-  f_update_appmgmt_mdm_in_xbe ${FILE_TO_DEPLOY}
-
-  if [[ -f "${FILE_TO_DEPLOY}" ]]; then
-    echo -e "\n* Deploying XynaBlackEditionWebServices into $(f_deploy_target)"
-  
-    #  call general function
-    if f_selected ${DEPLOY_TARGET_TOMCAT} ${DEPLOY_TARGET_GERONIMO}; then
-      f_do_xynaws_branding "${FILE_TO_DEPLOY}"
-      FILE_TO_DEPLOY="$(realpath $HOSTNAME)/XynaBlackEditionWebServices.war"
-    fi;
-   
-    #f_deploy_war "${FILE_TO_DEPLOY}" "XynaBlackEditionWebServices"
-    if f_selected ${DEPLOY_TARGET_TOMCAT} ; then
-      f_deploy_xbews_safely "${FILE_TO_DEPLOY}" "XynaBlackEditionWebServices"
-    else
-      f_deploy_war "${FILE_TO_DEPLOY}" "XynaBlackEditionWebServices"
-    fi;
-    
-    if f_selected ${DEPLOY_TARGET_ORACLE} ; then
-      f_webservice_blackedition_oracle_special
-    fi;
-    
-    f_install_license "${FILE_TO_DEPLOY}"
-  fi
-}
-
-f_deploy_xbews_safely () {
-  f_stop_application_in_tomcat "$@"
-  f_xynafactory abortfetch
-  f_deploy_war "$@"
-}
-
-deploy_webservice_topologymodeller () {
-  FILE_TO_DEPLOY="${PWD}/server/webservices/XynaTopologyModeller.war"
-
-  if [[ -f "${FILE_TO_DEPLOY}" ]]; then
-    echo -e "\n* Deploying XynaTopologyModeller into $(f_deploy_target)"
-  
-    #  call general function
-    if f_selected ${DEPLOY_TARGET_TOMCAT} ${DEPLOY_TARGET_GERONIMO}; then
-      f_do_xynaws_branding "${FILE_TO_DEPLOY}"
-    fi;
-    
-    f_deploy_war "${FILE_TO_DEPLOY}" "XynaTopologyModeller"
-    
-    if f_selected ${DEPLOY_TARGET_ORACLE} ; then
-      f_webservice_topologymodeller_oracle_special
-    fi;
- 
-    if f_selected ${DEPLOY_TARGET_TOMCAT} ${DEPLOY_TARGET_GERONIMO}; then
-      ${VOLATILE_MV} "${FILE_TO_DEPLOY}.org" "${FILE_TO_DEPLOY}"
-    fi;
-    
-    if [ -e ${INSTALL_PREFIX}/server/xynafactory.jar ] ; then 
-      $(cd ${INSTALL_PREFIX}/server/. ; jar -xf lib/xynafactory.jar com/gip/xyna/xdev/xfractmod/topologymodelling/mdanetelements/ )
-    fi;
-    BOOL_CAROUSEL_NEEDS_TO_BE_CHECKED="true"
-   
-    f_install_license "${FILE_TO_DEPLOY}"
-    
-    configure_persistence_layer_for_topologymodeller
-  fi
-}
 
 f_install_license () {
   echo -e "\n    + Install licenses"
@@ -738,37 +470,6 @@ deploy_xfracmodh5en () {
   fi
 }
 
-deploy_xfracmod () {
-  FILE_TO_DEPLOY="${PWD}/server/xfracmod/FractalModeller.war"
-
-  if [[ -f "${FILE_TO_DEPLOY}" ]]; then
-    echo -e "\n* Deploying XynaFractalModeller into $(f_deploy_target)"
-  
-    #  call general function
-    if f_selected ${DEPLOY_TARGET_TOMCAT} ; then
-      f_do_xfracmod_branding "${FILE_TO_DEPLOY}" "${TOMCAT_SSL_PORT}" "${TOMCAT_IP_ADDRESS}"
-    fi;
-    if f_selected ${DEPLOY_TARGET_GERONIMO} ; then
-      f_do_xfracmod_branding "${FILE_TO_DEPLOY}" "${GERONIMO_SSL_PORT}" "${GERONIMO_IP_ADDRESS}"
-    fi;
-    
-    f_deploy_war "${FILE_TO_DEPLOY}" "FractalModeller"
-    
-    if f_selected ${DEPLOY_TARGET_ORACLE} ; then
-      f_xfracmod_oracle_special
-    fi;
-    
-    if f_selected ${DEPLOY_TARGET_TOMCAT} ${DEPLOY_TARGET_GERONIMO}; then
-      ${VOLATILE_MV} "${FILE_TO_DEPLOY}.org" "${FILE_TO_DEPLOY}"
-    fi;
-    
-    # install third_parties
-    ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/third_parties/
-    ${VOLATILE_CP} server/xfracmod/third_parties/* ${INSTALL_PREFIX}/third_parties/
-    
-    BOOL_CAROUSEL_NEEDS_TO_BE_CHECKED="true"
-  fi
-}
 
 check_oc4j_container_status () {
   if [[ "x${1}" == "x" ]]; then
@@ -837,80 +538,6 @@ select_running_oc4j_container () {
   esac
 }
 
-f_xfracmod_oracle_special () {
-    if [[ -d "${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/FractalModeller/FractalModeller" ]]; then
-      #  SSL-Port des Webservers bestimmen
-      #     opmnctl status -fmt %prt30%por50
-      # process-type                   | ports
-      # -------------------------------+---------------------------------------------------
-      # OC4J:oc4j_soa                  | jms:12601,ajp:12501,rmis:12701,rmi:12401
-      # OC4J:home                      | jms:12602,ajp:8888,rmis:12702,rmi:12402
-      # ASG                            | N/A
-      # HTTP_Server                    | https1:4443,http2:7200,http1:7777
-      #
-      # Es kann sein, dass der Oracle AS kein SSL hat, dann ist unsichere Weg zu verwenden
-      #
-      # Zeile mit 'HTTP_Server' herausfiltern
-      OPMNCTL_PORTS_FOR_HTTP_SERVER=$(${VOLATILE_OPMNCTL} status -fmt %prt30%por50 | ${VOLATILE_AWK} '/^HTTP_Server / {print $NF}')
-      #
-      # Ausgabe passend zerlegen, also die Zahl hinter 'https1:' extrahieren
-      ORACLE_HTTPS_SERVER_PORT=$(echo "${OPMNCTL_PORTS_FOR_HTTP_SERVER}" | ${VOLATILE_SED} -e "s+\(.*https1:\)\([0-9]*\)\(.*\)+\2+")
-      ORACLE_HTTP_SERVER_PORT=$(echo "${OPMNCTL_PORTS_FOR_HTTP_SERVER}" | ${VOLATILE_SED} -e "s+\(.*http1:\)\([0-9]*\)\(.*\)+\2+")
-      if [[ "${OPMNCTL_PORTS_FOR_HTTP_SERVER}" != "${ORACLE_HTTPS_SERVER_PORT}" && ${ORACLE_HTTPS_SERVER_PORT:-0} -gt 0 && ${ORACLE_HTTPS_SERVER_PORT:-0} -lt 65536 ]]; then
-        FILE_TO_EDIT="${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/FractalModeller/FractalModeller/FractalModelling.properties"
-        f_replace_in_file "${FILE_TO_EDIT}" \
-          "s+TEMPLATE_HOST:8443+${XYNA_RMI_IPADDRESS}:${ORACLE_HTTPS_SERVER_PORT}+g" \
-          "s+TEMPLATE_HOST:4245+${CHOOSEN_INTERFACE}:${HTTP_TRIGGER_PORT}+"
-        BOOL_CAROUSEL_NEEDS_TO_BE_CHECKED="true"
-      elif [[ "${OPMNCTL_PORTS_FOR_HTTP_SERVER}" != "${ORACLE_HTTP_SERVER_PORT}" && ${ORACLE_HTTP_SERVER_PORT:-0} -gt 0 && ${ORACLE_HTTP_SERVER_PORT:-0} -lt 65536 ]]; then
-        FILE_TO_EDIT="${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/FractalModeller/FractalModeller/FractalModelling.properties"
-        f_replace_in_file "${FILE_TO_EDIT}" \
-          "s+https://TEMPLATE_HOST:8443+http://${XYNA_RMI_IPADDRESS}:${ORACLE_HTTP_SERVER_PORT}+g" \
-          "s+TEMPLATE_HOST:4245+${CHOOSEN_INTERFACE}:${HTTP_TRIGGER_PORT}+"
-        BOOL_CAROUSEL_NEEDS_TO_BE_CHECKED="true"
-      else
-        err_msg "Oracle HTTP server not running properly."
-      fi
-    else
-      err_msg "Oracle deployment failed. Wrong credentials?! ${ORACLE_AS_USERID}/${ORACLE_AS_PASSWORD}@opmn://${CHOOSEN_INTERFACE}:${ORACLE_REQUEST_PORT}/${ORACLE_OC4J_CONTAINER}"
-    fi
-}
-
-f_webservice_blackedition_oracle_special () {
-    if [[ -d "${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/XynaBlackEditionWebServices/XynaBlackEditionWebServices" ]]; then
-      FILE_TO_EDIT="${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/XynaBlackEditionWebServices/XynaBlackEditionWebServices/WEB-INF/classes/XynaBlackEditionWebServices.properties"
-      f_replace_in_file "${FILE_TO_EDIT}" \
-        "s/^port=.*/port=${XYNA_RMI_PORT}/g" \
-        "s+^host=.*+host=${CHOOSEN_INTERFACE}+"
-      #  Instanznummer in das log4j2.xml der Xyna Webservices eintragen
-      PRODUCT_INSTANCE=$(printf "%03g" ${INSTANCE_NUMBER:-1})
-      FILE_TO_EDIT="${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/XynaBlackEditionWebServices/XynaBlackEditionWebServices/WEB-INF/classes/log4j2.xml"
-      f_replace_in_file "${FILE_TO_EDIT}" \
-        "s+XYNA +XYNA_WS_${PRODUCT_INSTANCE} +"
-    else
-      err_msg "Oracle deployment failed. Wrong credentials?! ${ORACLE_AS_USERID}/${ORACLE_AS_PASSWORD}@opmn://${CHOOSEN_INTERFACE}:${ORACLE_REQUEST_PORT}/${ORACLE_OC4J_CONTAINER}"
-    fi
-}
-
-f_webservice_topologymodeller_oracle_special () {
-    if [[ -d "${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/XynaTopologyModeller/XynaTopologyModeller" ]]; then
-      $(cd ${INSTALL_PREFIX}/server/. ; jar -xf lib/xynafactory.jar com/gip/xyna/xdev/xfractmod/topologymodelling/mdanetelements/ )
-      ${VOLATILE_RM} -f "${TMP_FILE}"
-
-      FILE_TO_EDIT="${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/XynaTopologyModeller/XynaTopologyModeller/WEB-INF/classes/XynaBlackEditionWebServices.properties"
-      f_replace_in_file "${FILE_TO_EDIT}" \
-        "s/^port=.*/port=${XYNA_RMI_PORT}/g" \
-        "s+^host=.*+host=${CHOOSEN_INTERFACE}+"
-      #  Instanznummer in das log4j2.xml der Xyna Webservices eintragen
-      PRODUCT_INSTANCE=$(printf "%03g" ${INSTANCE_NUMBER:-1})
-      FILE_TO_EDIT="${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/XynaTopologyModeller/XynaTopologyModeller/WEB-INF/classes/log4j2.xml"
-      f_replace_in_file "${FILE_TO_EDIT}" \
-        "s+XYNA +XYNA_WS_${PRODUCT_INSTANCE} +"
-      BOOL_CAROUSEL_NEEDS_TO_BE_CHECKED="true"
-    else
-      err_msg "Oracle deployment failed. Wrong credentials?! ${ORACLE_AS_USERID}/${ORACLE_AS_PASSWORD}@opmn://${CHOOSEN_INTERFACE}:${ORACLE_REQUEST_PORT}/${ORACLE_OC4J_CONTAINER}"
-    fi
-}
 
 deploy_war_into_oracle () {
   COMPONENT_WAR_FILE="${1}"
@@ -997,21 +624,6 @@ deploy_war_into_oracle () {
   fi
 }
 
-configure_persistence_layer_for_topologymodeller () {
-  echo -e "\n    + Configuring persistence layer for XynaTopologyModeller"
-
-  local TOKEN_TOPOMOD_PERSISTENCELAYERINSTANCE="alternativeXS"
-  local XML_PERSISTENCELAYER_NAME="xml"
-
-  local INP=$(f_instantiate_named_persistencelayer "${INSTALL_PREFIX}" "${TOKEN_TOPOMOD_PERSISTENCELAYERINSTANCE}" \
-               "${XML_PERSISTENCELAYER_NAME}" "ALTERNATIVE" "xdev" "${TOKEN_TOPOMOD_PERSISTENCELAYERINSTANCE}")
-
-  if f_is_true ${INP} ; then
-    f_register_table_by_name "${INSTALL_PREFIX}" "${TOKEN_TOPOMOD_PERSISTENCELAYERINSTANCE}" "topologies" "ALTERNATIVE"
- 
-    f_set_xyna_property 'xyna.xdev.topology.persistence.alternative.file.location' "storage/${TOKEN_TOPOMOD_PERSISTENCELAYERINSTANCE}/topologies.xml" true
-  fi;
-}
 
 configure_persistence_layer_for_radius_service () {
   echo -e "\n* Configuring persistence layer for XynaRadiusService"
@@ -1282,7 +894,6 @@ update_xynafactory () {
   echo -e "\n  + Copy delivery items to ${INSTALL_PREFIX}/{revisions,server}/."
 
   ${VOLATILE_RM} -rf ${INSTALL_PREFIX}/server/lib
-  fix_bugs_from_previous_releases
    
   ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/revisions/rev_workingset/saved/{services,sharedLibs,XMOM}
   ${VOLATILE_CP} -rp "./func_lib/" ${INSTALL_PREFIX}/server/.
@@ -1440,142 +1051,6 @@ check_component_status () {
 }
 
 
-
-enable_topologymodeller_slide () {
-  echo -e "\n* Enable XynaTopologyModeller slide in FractalModeller carousel"
-
-  #  Apache Geronimo
-  CONFIG_SUBSTITUTIONS="${GERONIMO_HOME}/var/config/config-substitutions.properties"
-  if [[ -f ${CONFIG_SUBSTITUTIONS} && "x${DEPLOY_TARGET_GERONIMO}" == "xtrue" ]]; then
-    echo "    + checking for modeller deployments in Apache Geronimo in '${GERONIMO_HOME}'"
-
-    export NAMING_PORT=$(${VOLATILE_AWK} 'BEGIN { FS="=" } $1 == "NamingPort" {print $2}' ${CONFIG_SUBSTITUTIONS})
-    export PORT_OFFSET=$(${VOLATILE_AWK} 'BEGIN { FS="=" } $1 == "PortOffset" {print $2}' ${CONFIG_SUBSTITUTIONS})
-
-    FRACTAL_MODELLER_IN_GERONIMO="false"
-    if [[ "x$(f_get_geronimo_module_name "FractalModeller")" != "x" ]]; then
-      echo "        * FractalModeller found"
-      FRACTAL_MODELLER_IN_GERONIMO="true"
-    else
-      echo "        * FractalModeller not found"
-    fi
-
-    TOPOLOGY_MODELLER_IN_GERONIMO="false"
-    if [[ "x$(f_get_geronimo_module_name "XynaTopologyModeller")" != "x" ]]; then
-      echo "        * XynaTopologyModeller found"
-      TOPOLOGY_MODELLER_IN_GERONIMO="true"
-    else
-      echo "        * XynaTopologyModeller not found"
-    fi
-  fi
-
-  #  Apache Tomcat
-  if [[ -d "${TOMCAT_HOME}/webapps" && "x${DEPLOY_TARGET_TOMCAT}" == "xtrue" ]]; then
-    echo "    + checking for modeller deployments in Apache Tomcat in '${TOMCAT_HOME}'"
-
-    FRACTAL_MODELLER_IN_TOMCAT="false"
-    if [[ -d "${TOMCAT_HOME}/webapps/FractalModeller" ]]; then
-      echo "        * FractalModeller found"
-      FRACTAL_MODELLER_IN_TOMCAT="true"
-    else
-      echo "        * FractalModeller not found"
-    fi
-
-    TOPOLOGY_MODELLER_IN_TOMCAT="false"
-    if [[ -d "${TOMCAT_HOME}/webapps/XynaTopologyModeller" ]]; then
-      echo "        * XynaTopologyModeller found"
-      TOPOLOGY_MODELLER_IN_TOMCAT="true"
-    else
-      echo "        * XynaTopologyModeller not found"
-    fi
-  fi
-
-  #  Oracle Application Server
-  PROPERTY_NAME="env.oracle.home";        get_property "${PROPERTY_NAME}" "${INSTANCE_PROP_FILE}";  ORACLE_HOME="${CURRENT_PROPERTY}"
-  PROPERTY_NAME="oracle.oc4j.container";  get_property "${PROPERTY_NAME}" "${INSTANCE_PROP_FILE}";  ORACLE_OC4J_CONTAINER="${CURRENT_PROPERTY}"
-  if [[ -d "${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}" && "x${DEPLOY_TARGET_ORACLE}" == "xtrue" ]]; then
-    echo "    + checking for modeller deployments in Oracle Application Server in '${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}'"
-
-    FRACTAL_MODELLER_IN_ORACLE="false"
-    if [[ -d "${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/FractalModeller/FractalModeller" ]]; then
-      echo "        * FractalModeller found"
-      FRACTAL_MODELLER_IN_ORACLE="true"
-    else
-      echo "        * FractalModeller not found"
-    fi
-
-    TOPOLOGY_MODELLER_IN_ORACLE="false"
-    if [[ -d "${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/XynaTopologyModeller/XynaTopologyModeller" ]]; then
-      echo "        * XynaTopologyModeller found"
-      TOPOLOGY_MODELLER_IN_ORACLE="true"
-    else
-      echo "        * XynaTopologyModeller not found"
-    fi
-  fi
-
-  if [[ "x${FRACTAL_MODELLER_IN_TOMCAT}" == "xtrue" || "x${FRACTAL_MODELLER_IN_GERONIMO}" == "xtrue" || "x${FRACTAL_MODELLER_IN_ORACLE}" == "xtrue" ]]; then
-
-    TRIPTYCHON_XML_GERONIMO="${GERONIMO_HOME}/repository/$(f_get_geronimo_module_dirname "server/xfracmod/geronimo-web.xml")/TriptychonConfig.xml"
-    TRIPTYCHON_XML_TOMCAT="${TOMCAT_HOME}/webapps/FractalModeller/TriptychonConfig.xml"
-    TRIPTYCHON_XML_ORACLE="${ORACLE_HOME}/j2ee/${ORACLE_OC4J_CONTAINER}/applications/FractalModeller/FractalModeller/TriptychonConfig.xml"
-
-    if [[ "x${TOPOLOGY_MODELLER_IN_GERONIMO}" == "xtrue" || "x${TOPOLOGY_MODELLER_IN_TOMCAT}" == "xtrue" || "x${TOPOLOGY_MODELLER_IN_ORACLE}" == "xtrue" ]]; then
-      echo "    + enabling XynaTopologyModeller slide in FractalModeller carousel"
-
-      if [[ "x${FRACTAL_MODELLER_IN_TOMCAT}"   == "xtrue" ]]; then enable_topology_modeller_slide_in_triptychon_xml "${TRIPTYCHON_XML_TOMCAT}"   ; fi
-      if [[ "x${FRACTAL_MODELLER_IN_GERONIMO}" == "xtrue" ]]; then enable_topology_modeller_slide_in_triptychon_xml "${TRIPTYCHON_XML_GERONIMO}" ; fi
-      if [[ "x${FRACTAL_MODELLER_IN_ORACLE}"   == "xtrue" ]]; then enable_topology_modeller_slide_in_triptychon_xml "${TRIPTYCHON_XML_ORACLE}"   ; fi
-    else
-      echo "    + disabling XynaTopologyModeller slide in FractalModeller carousel"
-
-      if [[ "x${FRACTAL_MODELLER_IN_TOMCAT}"   == "xtrue" ]]; then disable_topology_modeller_slide_in_triptychon_xml "${TRIPTYCHON_XML_TOMCAT}"  ; fi
-      if [[ "x${FRACTAL_MODELLER_IN_GERONIMO}" == "xtrue" ]]; then disable_topology_modeller_slide_in_triptychon_xml "${TRIPTYCHON_XML_GERONIMO}"; fi
-      if [[ "x${FRACTAL_MODELLER_IN_ORACLE}"   == "xtrue" ]]; then disable_topology_modeller_slide_in_triptychon_xml "${TRIPTYCHON_XML_ORACLE}"  ; fi
-    fi
-  else
-    echo "    + FractalModeller not found - skipping"
-  fi
-}
-
-#  Eingabeparameter: Name von TriptychonConfig.xml mit vollem Pfad
-enable_topology_modeller_slide_in_triptychon_xml () {
-  FILE_TO_EDIT="${1}"
-  if [[ -f "${FILE_TO_EDIT}" ]]; then
-    #  Sicherstellen, dass in der Datei nichts enthalten ist (doppeltes Eintragen verhinder)
-    disable_topology_modeller_slide_in_triptychon_xml "${FILE_TO_EDIT}"
-
-    #  Zeile fuer XynaTopologyModeller2 mittels patch einfuegen
-    INSERT_LINE=$(${VOLATILE_GREP} -n "\"XynaProcessModeller\"" ${FILE_TO_EDIT} | ${VOLATILE_AWK} 'BEGIN { FS=":"} { i=$1 } END {print i}')
-    let START_LINE=INSERT_LINE+1
-    if [[ ${INSERT_LINE:-0} -lt 1 ]]; then
-      err_msg "Can't get line number for regexp 'XynaProcessModeller'."
-      exit 67
-    else
-      ${VOLATILE_RM} -f "${TMP_FILE}"
-      echo "${INSERT_LINE}a${START_LINE}" > "${TMP_FILE}"
-      echo ">   <Slide><Application Source=\"XynaTopologyModeller2\"/></Slide>" >> "${TMP_FILE}"
-      ${VOLATILE_PATCH} -l -i "${TMP_FILE}" ${FILE_TO_EDIT}
-      ${VOLATILE_RM} -f "${TMP_FILE}"
-    fi
-  else
-    err_msg "Unable to locate '${FILE_TO_EDIT}'."
-  fi
-}
-
-#  Eingabeparameter: Name von TriptychonConfig.xml mit vollem Pfad
-disable_topology_modeller_slide_in_triptychon_xml () {
-  FILE_TO_EDIT="${1}"
-  if [[ -f "${FILE_TO_EDIT}" ]]; then
-    backup_file ${FILE_TO_EDIT}
-    ${VOLATILE_RM} -f "${TMP_FILE}"
-    ${VOLATILE_GREP} -v "XynaTopologyModeller2" "${FILE_TO_EDIT}" > "${TMP_FILE}"
-    ${VOLATILE_MV} "${TMP_FILE}" "${FILE_TO_EDIT}"
-    ${VOLATILE_RM} -f "${TMP_FILE}"
-  else
-    err_msg "Unable to locate '${FILE_TO_EDIT}'."
-  fi
-}
-
 install_xyna_cluster () {
   echo -e "\n* Installing Xyna Cluster components"
 
@@ -1666,13 +1141,6 @@ if [[ -f ~/$(basename "${TARGET_FILE}") ]]; then
         . ~/$(basename "${TARGET_FILE}")
 fi
 A_HERE_DOCUMENT
-  fi
-}
-
-fix_bugs_from_previous_releases () {
-  local TARGET_DIR="${INSTALL_PREFIX}/server/xynaws"
-  if [[ -d "${TARGET_DIR}" ]]; then
-    ${VOLATILE_RM} -rf "${TARGET_DIR}"
   fi
 }
 
@@ -2071,43 +1539,6 @@ add_to_server_policy () {
     #Damit server.policy wirksam wird, ist ein Neustart erforderlich
     XYNAFACTORY_NEEDS_RESTART="true";
   fi;
-}
-
-
-f_update_appmgmt_mdm_in_xbe () {
-  local ret_val=0
-  local WAR_DELIVERY="${1}"
-  local STR_DELIVERY_NAME=$(basename ${WAR_DELIVERY} .war)
-  local STR_TMP_DIR="/tmp"
-  local STR_TMP_UNPACK_DIR="${STR_TMP_DIR}/adjustMdmLibrary"
-  local STR_TMP_MDM_BUILD_DIR="${STR_TMP_UNPACK_DIR}/buildMdmLibrary"
-  local FILE_TO_EDIT=""
-
-  ${VOLATILE_CP} -p "${WAR_DELIVERY}" "$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
-  WAR_DELIVERY="$(realpath $HOSTNAME)/${STR_DELIVERY_NAME}.war"
-
-  #TODO: check if XBE is already installed or/and was being installed this run
-  ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
-  ${VOLATILE_MKDIR} -p "${STR_TMP_MDM_BUILD_DIR}"
-
-  local OLD_VAL=$(f_get_xyna_property "xyna.target.mdm.jar.javaversion" "NOTSET")
-  f_set_xyna_property "xyna.target.mdm.jar.javaversion" "Java11"
-  f_xynafactory buildmdmjar -targetDirectory ${STR_TMP_MDM_BUILD_DIR} -applicationName GlobalApplicationMgmt -versionName ${APPMGMTVERSION} -r
-  f_reset_xyna_property "xyna.target.mdm.jar.javaversion" "${OLD_VAL}" "NOTSET"
-
-  ${VOLATILE_MV} "${STR_TMP_MDM_BUILD_DIR}/mdm.jar" "${STR_TMP_UNPACK_DIR}/appmgmt.jar"
-
-  ${VOLATILE_MKDIR} -p "${STR_TMP_UNPACK_DIR}/WEB-INF/lib"
-  ${VOLATILE_CP} "${STR_TMP_UNPACK_DIR}/appmgmt.jar" "${STR_TMP_UNPACK_DIR}/WEB-INF/lib"
-
-  local FILE_TO_EDIT="WEB-INF/lib/appmgmt.jar"
-
-  cd "${STR_TMP_UNPACK_DIR}"
-  ${VOLATILE_ZIP} -q "${WAR_DELIVERY}" -d "${FILE_TO_EDIT}"
-  ${VOLATILE_ZIP} -q "${WAR_DELIVERY}" "${FILE_TO_EDIT}"
-  cd -
-
-  ${VOLATILE_RM} -rf "${STR_TMP_UNPACK_DIR}"
 }
 
 
