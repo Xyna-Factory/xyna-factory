@@ -48,5 +48,18 @@
         <CodeSnippet Type="Java">xmcp.xacm.RightManagementImpl.setDescriptionOfRight(modifyRightRequest);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Fill Parameter Definitions" Name="fillParameterDefinitions">
+      <Input>
+        <Data ID="1" IsList="true" Label="Right" ReferenceName="Right" ReferencePath="xmcp.xacm.rightmanagement.datatypes" VariableName="right1"/>
+        <Data ID="2" Label="Locale" ReferenceName="Locale" ReferencePath="base.locale" VariableName="locale2"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="3" Label="Fill Parameter Definition Exception" ReferenceName="FillParameterDefinitionException" ReferencePath="xmcp.xacm.rightmanagement.exceptions" VariableName="fillParameterDefinitionException3"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.xacm.RightManagementImpl.fillParameterDefinitions(right1, locale2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

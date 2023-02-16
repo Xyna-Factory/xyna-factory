@@ -18,9 +18,12 @@
 package xmcp.xacm.impl;
 
 
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -42,68 +45,103 @@ import xmcp.xacm.rightmanagement.exceptions.ModifyRightException;
 
 
 public class RightManagementServiceOperationImpl implements ExtendedDeploymentTask, RightManagementServiceOperation {
-  
-  private static final XynaFactoryManagement factoryManagement =  (XynaFactoryManagement) XynaFactory.getInstance().getFactoryManagement();
-  
-  @Override
-  public void fillParameterDefinition(Right right, Locale locale) throws FillParameterDefinitionException {
-    if(right.getParameterList() != null) {
-      try {
-        String rightName = right.getRightName();
-        if(rightName.contains(":")) {
-          rightName = rightName.split(":")[0];
+
+  private static final XynaFactoryManagement factoryManagement = (XynaFactoryManagement) XynaFactory.getInstance().getFactoryManagement();
+
+  private static final String regExpPattern = "^\\s*(\\/.*\\/)";
+  private static final String optionsPattern = "^\\s*\\[(.*)\\]";
+
+  private static final String optionsType = "options";
+  private static final String regExpType = "regex";
+  private static final String xynaType = "xyna";
+
+
+  private void fillParameterDefinitionInternal(Right right, Locale locale, Map<String, RightScope> rights) {
+    if (right.getParameterList() == null) {
+      return;
+    }
+
+    String rightName = right.getRightName();
+    RightScope rightScope = rights.get(rightName);
+    if (rightScope == null) {
+      return;
+    }
+
+    String[] split = rightScope.getDefinition().split(":");
+    int i = 1;
+    for (RightParameter parameter : right.getParameterList()) {
+      List<RightParameterDefinition> parameterDefinitionList = new ArrayList<>();
+      String definition = split[i];
+      if (definition.matches(optionsPattern)) {
+        parameter.setType(optionsType);
+        String[] defsplit = definition.replace("[", "").replace("]", "").split(",");
+        for (String def : defsplit) {
+          RightParameterDefinition rpd = new RightParameterDefinition();
+          rpd.setDefinition(def.trim());
+          parameterDefinitionList.add(rpd);
         }
-        Collection<RightScope> rights = XynaFactory.getInstance().getXynaMultiChannelPortal().getRightScopes(getDocumentationLanguage(locale).toString());
-        for (RightScope rightScope : rights) {
-          if(rightScope.getName().equals(rightName)) {
-            String[] split = rightScope.getDefinition().split(":");
-            int i = 1;
-            for (RightParameter parameter : right.getParameterList()) {
-              List<RightParameterDefinition> parameterDefinitionList = new ArrayList<>();
-              String definition = split[i];
-              if(definition.matches("^\\s*\\[(.*)\\]")) {
-                parameter.setType("options");
-                String[] defsplit = definition.replace("[", "").replace("]","").split(",");
-                for(String def : defsplit) {
-                  RightParameterDefinition rpd = new RightParameterDefinition(); 
-                  rpd.setDefinition(def.trim());  
-                  parameterDefinitionList.add(rpd);    
-                }   
-                parameter.setParameterDefinitionList(parameterDefinitionList);
-              } else if(definition.matches("^\\s*(\\/.*\\/)")) {
-                parameter.setType("regexp");      
-                RightParameterDefinition rpd = new RightParameterDefinition();
-                rpd.setDefinition(definition.trim());      
-                parameterDefinitionList.add(rpd);
-                parameter.setParameterDefinitionList(parameterDefinitionList);
-              } else {
-                parameter.setType("xyna");
-                RightParameterDefinition rpd = new RightParameterDefinition();
-                rpd.setDefinition(definition.trim());      
-                parameterDefinitionList.add(rpd);
-                parameter.setParameterDefinitionList(parameterDefinitionList);
-              }
-              i++;
-            }
-            break;
-          }
-        }
-      } catch (PersistenceLayerException e) {
-        throw new FillParameterDefinitionException(e.getMessage(), e);
+      } else {
+        RightParameterDefinition rpd = new RightParameterDefinition();
+        parameter.setType(definition.matches(regExpPattern) ? regExpType : xynaType);
+        rpd.setDefinition(definition.trim());
+        parameterDefinitionList.add(rpd);
       }
+      parameter.setParameterDefinitionList(parameterDefinitionList);
+      i++;
     }
   }
-  
+
+
+  @Override
+  public void fillParameterDefinition(Right right, Locale locale) throws FillParameterDefinitionException {
+    if (right.getParameterList() != null) {
+      Map<String, RightScope> rights = createScopeMap(locale);
+      fillParameterDefinitionInternal(right, locale, rights);
+    }
+  }
+
+
+  private Map<String, RightScope> createScopeMap(Locale locale) throws FillParameterDefinitionException {
+    try {
+      String language = getDocumentationLanguage(locale).toString();
+      Collection<RightScope> rights = XynaFactory.getInstance().getXynaMultiChannelPortal().getRightScopes(language);
+      Map<String, RightScope> result = createScopeMap(rights);
+      return result;
+    } catch (PersistenceLayerException e) {
+      throw new FillParameterDefinitionException(e.getMessage(), e);
+    }
+  }
+
+
+  private Map<String, RightScope> createScopeMap(Collection<RightScope> rights) {
+    Map<String, RightScope> result = new HashMap<>();
+    for (RightScope rightScope : rights) {
+      result.put(rightScope.getName(), rightScope);
+    }
+    return result;
+  }
+
+  @Override
+  public void fillParameterDefinitions(List<? extends Right> rights, Locale locale) throws FillParameterDefinitionException {
+    Map<String, RightScope> factoryRights = createScopeMap(locale);
+
+    for (Right right : rights) {
+      fillParameterDefinitionInternal(right, locale, factoryRights);
+    }
+  }
+
+
   public void setDescriptionOfRight(ModifyRightRequest modifyRightRequest) throws ModifyRightException {
     try {
-      factoryManagement.setDescriptionOfRight(modifyRightRequest.getRightName(), modifyRightRequest.getDocumentation(), getDocumentationLanguage(modifyRightRequest.getLocale()).toString());      
+      String language = getDocumentationLanguage(modifyRightRequest.getLocale()).toString();
+      factoryManagement.setDescriptionOfRight(modifyRightRequest.getRightName(), modifyRightRequest.getDocumentation(), language);
     } catch (XynaException e) {
       throw new ModifyRightException(e.getMessage(), e);
     }
   }
-  
+
   private DocumentationLanguage getDocumentationLanguage(Locale locale) {
-    if(locale == null || locale.getLanguage() == null) {
+    if (locale == null || locale.getLanguage() == null) {
       return DocumentationLanguage.EN;
     } else if (locale.getLanguage().startsWith("de")) {
       return DocumentationLanguage.DE;
