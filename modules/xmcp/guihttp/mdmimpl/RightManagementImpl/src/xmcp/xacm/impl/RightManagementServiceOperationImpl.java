@@ -73,20 +73,20 @@ public class RightManagementServiceOperationImpl implements ExtendedDeploymentTa
       List<RightParameterDefinition> parameterDefinitionList = new ArrayList<>();
       String definition = split[i];
       if (definition.matches(optionsPattern)) {
-        parameter.setType(optionsType);
+        parameter.unversionedSetType(optionsType);
         String[] defsplit = definition.replace("[", "").replace("]", "").split(",");
         for (String def : defsplit) {
           RightParameterDefinition rpd = new RightParameterDefinition();
-          rpd.setDefinition(def.trim());
+          rpd.unversionedSetDefinition(def.trim());
           parameterDefinitionList.add(rpd);
         }
       } else {
         RightParameterDefinition rpd = new RightParameterDefinition();
-        parameter.setType(definition.matches(regExpPattern) ? regExpType : xynaType);
-        rpd.setDefinition(definition.trim());
+        parameter.unversionedSetType(definition.matches(regExpPattern) ? regExpType : xynaType);
+        rpd.unversionedSetDefinition(definition.trim());
         parameterDefinitionList.add(rpd);
       }
-      parameter.setParameterDefinitionList(parameterDefinitionList);
+      parameter.unversionedSetParameterDefinitionList(parameterDefinitionList);
       i++;
     }
   }
