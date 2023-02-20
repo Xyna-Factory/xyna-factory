@@ -158,6 +158,7 @@ $RECYCLE.BIN/
 **/generated
 
 **/.classpath
+localbuild
 
 
 !installation/build/lib/*.jar
