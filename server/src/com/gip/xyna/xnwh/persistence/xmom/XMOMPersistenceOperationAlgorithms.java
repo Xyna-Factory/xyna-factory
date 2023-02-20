@@ -2290,49 +2290,49 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
 
   
   private static class PersistenceStoreContext {
-    
-    private Map<String, List<Storable<?>>> objectsToStorePerTable = new HashMap<>();
+
+    private Map<String, HashMap<String, Storable<?>>> objectsToStorePerTable = new HashMap<>();
     private Map<Storable<?>, XynaObject> collisionInformation = new HashMap<>();
     private final List<StorableStructureInformation> order;
-    
+
     private PersistenceStoreContext(XMOMStorableStructureInformation rootInfo) {
       order = getStorableStructureHierarchyOrder(rootInfo);
     }
-    
-    
+
+
     public boolean add(StorableStructureInformation info, Storable<?> storable, XynaObject xoStorable) {
-      List<Storable<?>> objectsToStoreForTable = objectsToStorePerTable.get(info.getTableName());
+      if (storable == null) {
+         return false;
+      }
+
+      HashMap<String, Storable<?>> objectsToStoreForTable = objectsToStorePerTable.get(info.getTableName());
       if (objectsToStoreForTable == null) {
-        objectsToStoreForTable = new ArrayList<Storable<?>>();
+        objectsToStoreForTable = new HashMap<String, Storable<?>>();
         objectsToStorePerTable.put(info.getTableName(), objectsToStoreForTable);
       }
-      boolean contained = false;
-      if (storable != null) {
-        for (Storable<?> alreadyAddedStorable : objectsToStoreForTable) {
-          if (storable.getPrimaryKey().equals(alreadyAddedStorable.getPrimaryKey())) {
-            contained = true;
-            break;
-          }
+
+      String pk = String.valueOf(storable.getPrimaryKey());
+      boolean contained = objectsToStoreForTable.containsKey(pk);
+
+      if (!contained) {
+        objectsToStoreForTable.put(pk, storable);
+        if (info instanceof XMOMStorableStructureInformation) {
+          collisionInformation.put(storable, xoStorable);
         }
-        if (!contained) {
-          objectsToStoreForTable.add(storable);
-          if (info instanceof XMOMStorableStructureInformation) {
-            collisionInformation.put(storable, xoStorable);
-          }
-        } else {
-          logger.debug("Multiple instances for table " + info.getTableName() + " with same primaryKey " + storable.getPrimaryKey() + " contained in hierarchy, skipping additional Data!");
-        }
+      } else {
+        logger.debug("Multiple instances for table " + info.getTableName() + " with same primaryKey " + pk + " contained in hierarchy, skipping additional Data!");
       }
+
       return contained;
     }
-    
+
     public void store(ODSConnection con) throws HistorizationTimeStampCollision, PersistenceLayerException {
       try {
         for (StorableStructureInformation structureInfo : order) {
-          List<Storable<?>> objectsToStoreForTable = objectsToStorePerTable.remove(structureInfo.getTableName());
-          if (objectsToStoreForTable != null && objectsToStoreForTable.size() > 0) {
+          HashMap<String, Storable<?>> objectsToStoreForTable = objectsToStorePerTable.remove(structureInfo.getTableName());
+          if (objectsToStoreForTable != null && !objectsToStoreForTable.isEmpty()) {
             if (structureInfo instanceof XMOMStorableStructureInformation) {
-              for (Storable<?> rootOrReferenceStorable : objectsToStoreForTable) {
+              for (Storable<?> rootOrReferenceStorable : objectsToStoreForTable.values()) {
                 if (con.persistObject(rootOrReferenceStorable)) {
                   // update-fall
                   // can happen if the entry did not exist during historization but does now exist
@@ -2340,16 +2340,13 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                 }
               }
             } else {
-              if (objectsToStoreForTable.size() > 1) {
-                for (Storable<?> objectToStoreForTable : objectsToStoreForTable) {
+              if (!objectsToStoreForTable.isEmpty()) {
+                for (Storable<?> objectToStoreForTable : objectsToStoreForTable.values()) {
                   if (objectToStoreForTable != null) {
                     con.persistObject(objectToStoreForTable);
                   }
                 }
-              } else {
-                con.persistObject(objectsToStoreForTable.get(0));
               }
-              
             }
           }
         }
