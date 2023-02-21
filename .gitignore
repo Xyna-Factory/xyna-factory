@@ -161,5 +161,9 @@ $RECYCLE.BIN/
 localbuild
 
 
+!**/lib/**/mdm.jar
+!**/lib/**/serviceDefinition.jar
+!**/lib/**/serviceDefinition-javadoc.jar
+
 !installation/build/lib/*.jar
 !xynautils/install/build/lib/*.jar
