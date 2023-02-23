@@ -61,7 +61,7 @@ local.properties
 
 # Uncomment this line if you wish to ignore the project description file.
 # Typically, this file would be tracked if it contains build/dependency configurations:
-#.project
+.project
 
 ### Eclipse Patch ###
 # Spring Boot Tooling
@@ -151,14 +151,19 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/java,visualstudiocode,eclipse,windows,linux
 
 # Xyna specific stuff
-**/local.repository/*
-server/src/com/gip/xyna/xact/exceptions/*
-server/src/com/gip/xyna/xdev/exceptions/*
-server/src/com/gip/xyna/xfmg/exceptions/*
-server/src/com/gip/xyna/xnwh/exceptions/*
-server/src/com/gip/xyna/xmcp/exceptions/*
-server/src/com/gip/xyna/xprc/exceptions/*
-server/src/com/gip/xyna/exceptions/*
-**/xfcli/generated/*
+**/local.repository
+**/deploy
+**/lib
+**/classes
+**/generated
+
+**/.classpath
+localbuild
+
+
+!**/lib/**/mdm.jar
+!**/lib/**/serviceDefinition.jar
+!**/lib/**/serviceDefinition-javadoc.jar
+
 !installation/build/lib/*.jar
 !xynautils/install/build/lib/*.jar
