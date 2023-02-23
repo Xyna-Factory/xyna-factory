@@ -50,6 +50,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -219,6 +220,7 @@ public class ODSImpl implements ODS {
   }
   
 
+  private static final long MEMORY_PERSISTENCE_LAYER_ID = 0L;
   private static final long XML_PERSISTENCE_LAYER_ID = 3L;
 
   private boolean readConfigFromXML;
@@ -1735,7 +1737,7 @@ public class ODSImpl implements ODS {
   
         PersistenceLayerInstanceBean pli = it.next();
         boolean xmlPersistenceLayerFlagMatches =
-            !(xmlLayerInstances ^ pli.getPersistenceLayerID() == XML_PERSISTENCE_LAYER_ID);
+            !(xmlLayerInstances ^ (pli.getPersistenceLayerID() == XML_PERSISTENCE_LAYER_ID || pli.getPersistenceLayerID() == MEMORY_PERSISTENCE_LAYER_ID));
         if (!xmlPersistenceLayerFlagMatches) {
           notYetRegisteredPersistenceLayerIDsByInstanceID.put(pli.getPersistenceLayerInstanceID(),
                                                               pli.getPersistenceLayerID());
@@ -1786,6 +1788,7 @@ public class ODSImpl implements ODS {
               registeredPersistenceLayerInstances.get(tc.getPersistenceLayerInstanceID());
   
           if (instance == null) {
+            logger.debug("Registered persistenceLayerInstances: " + String.join(", ", registeredPersistenceLayerInstances.keySet().stream().map(x -> x == null ? "null" : x.toString()).collect(Collectors.toList())));
             throw new XNWH_PersistenceLayerInstanceIdUnknownForRegisteredTableException(tc.getPersistenceLayerInstanceID(),
                                                                                         tc.getTable());
           }
