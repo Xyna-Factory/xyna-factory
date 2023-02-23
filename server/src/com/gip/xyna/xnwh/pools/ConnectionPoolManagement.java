@@ -48,8 +48,11 @@ import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xmcp.PluginDescription;
 import com.gip.xyna.xmcp.PluginDescription.ParameterUsage;
+import com.gip.xyna.xnwh.exceptions.XNWH_NoPersistenceLayerConfiguredForTableException;
 import com.gip.xyna.xnwh.persistence.ODS;
+import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
+import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.xml.XMLPersistenceLayer;
@@ -96,6 +99,26 @@ public class ConnectionPoolManagement extends Section {
     return DEFAULT_NAME;
   }
 
+  
+  private Collection<PoolDefinition> loadPooldefinitions() throws PersistenceLayerException {
+    ODS ods = ODSImpl.getInstance();
+    ods.registerStorable(PoolDefinition.class);
+    ODSConnection con;
+    con = ods.openConnection(ODSConnectionType.HISTORY);
+    Collection<PoolDefinition> defs;
+    try {
+      try {
+        defs = con.loadCollection(PoolDefinition.class);
+      } catch (XNWH_NoPersistenceLayerConfiguredForTableException e) {
+        logger.debug("using backup xml connection");
+        PersistenceLayerConnection xmlCon = getXMLConnection();
+        defs = xmlCon.loadCollection(PoolDefinition.class);
+      }
+    } finally {
+      con.closeConnection();
+    }
+    return defs;
+  }
 
   @Override
   protected void init() throws XynaException {
@@ -117,10 +140,17 @@ public class ConnectionPoolManagement extends Section {
       .execAsync(new Runnable() {
         public void run() {
           try {
-            PersistenceLayerConnection con = getXMLConnection();
+            ODS ods = ODSImpl.getInstance();
+            ods.registerStorable(PoolDefinition.class);
+            ODSConnection con;
+            con = ods.openConnection(ODSConnectionType.HISTORY);
+            
             try {
-              Collection<PoolDefinition> defs = con.loadCollection(PoolDefinition.class);
+              Collection<PoolDefinition> defs = loadPooldefinitions();
               for (PoolDefinition poolDefinition : defs) {
+                if (logger.isDebugEnabled()) {
+                  logger.debug("adding registeredPoolDefinition for: " + poolDefinition.getName());
+                }
                 registeredPoolDefinitions.put(poolDefinition.getName(), poolDefinition);
               }
             } finally {
@@ -140,6 +170,7 @@ public class ConnectionPoolManagement extends Section {
   
   
   //called via reflection from UpdatePoolDefinition
+  @SuppressWarnings("unused")
   private void reinit() throws PersistenceLayerException {
     registeredPooltypes = new ConcurrentHashMap<String, ConnectionPoolType>();
     registeredPoolDefinitions = new HashMap<String, PoolDefinition>();
@@ -151,18 +182,9 @@ public class ConnectionPoolManagement extends Section {
         registeredPooltypes.put(connectionPoolType.getName(), connectionPoolType);
       }
     }
-    PersistenceLayerConnection con = getXMLConnection();
-    try {
-      Collection<PoolDefinition> defs = con.loadCollection(PoolDefinition.class);
-      for (PoolDefinition poolDefinition : defs) {
-        registeredPoolDefinitions.put(poolDefinition.getName(), poolDefinition);
-      }
-    } finally {
-      try {
-        con.closeConnection();
-      } catch (PersistenceLayerException e) {
-        logger.warn("Could not close connection!",e);
-      }
+    Collection<PoolDefinition> defs = loadPooldefinitions();
+    for (PoolDefinition poolDefinition : defs) {
+      registeredPoolDefinitions.put(poolDefinition.getName(), poolDefinition);
     }
   }
 
@@ -329,7 +351,8 @@ public class ConnectionPoolManagement extends Section {
       }
     }
     PoolDefinition poolDef = registeredPoolDefinitions.remove(name);
-    PersistenceLayerConnection con = getXMLConnection();
+    ODS ods = ODSImpl.getInstance();
+    ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       con.deleteOneRow(poolDef);
       con.commit();
@@ -564,7 +587,9 @@ public class ConnectionPoolManagement extends Section {
       definition.setAllFieldsFromData((TypedConnectionPoolParameter)creationParams);
       registeredPoolDefinitions.put(definition.getName(), definition);
       try {
-        PersistenceLayerConnection con = getXMLConnection();
+        ODS ods = ODSImpl.getInstance();
+        ods.registerStorable(PoolDefinition.class);
+        ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
         try {
           con.persistObject(definition);
           con.commit();
