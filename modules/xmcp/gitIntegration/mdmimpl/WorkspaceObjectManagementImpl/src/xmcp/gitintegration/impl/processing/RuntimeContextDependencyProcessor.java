@@ -55,6 +55,11 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   private static final String TAG_DEPNAME = "depName";
   private static final String TAG_DEPADDITION = "depAddition";
 
+  private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE = "RuntimeContextDependencyProcessor.create";
+  private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_MODIFY = "RuntimeContextDependencyProcessor.modify";
+  private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_DELETE = "RuntimeContextDependencyProcessor.delete";
+
+
   private static final RevisionManagement revisionManagement =
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
   private static final RuntimeContextDependencyManagement rtcDependencyManagement =
@@ -100,8 +105,8 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
 
   @Override
   public RuntimeContextDependency parseItem(Node node) {
-    NodeList childNodes = node.getChildNodes();
     RuntimeContextDependency rcd = new RuntimeContextDependency();
+    NodeList childNodes = node.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node childNode = childNodes.item(i);
       if (childNode.getNodeName().equals(TAG_DEPTYPE)) {
@@ -139,42 +144,48 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
 
 
   @Override
-  public List<WorkspaceContentDifference> compare(Collection<RuntimeContextDependency> from, Collection<RuntimeContextDependency> to) {
+  public List<WorkspaceContentDifference> compare(Collection<? extends RuntimeContextDependency> from,
+                                                  Collection<? extends RuntimeContextDependency> to) {
     List<WorkspaceContentDifference> wcdList = new ArrayList<WorkspaceContentDifference>();
-
+    List<RuntimeContextDependency> toWorkingList = new ArrayList<RuntimeContextDependency>();
+    if (to != null) {
+      toWorkingList.addAll(to);
+    }
     HashMap<String, RuntimeContextDependency> toMap = new HashMap<String, RuntimeContextDependency>();
-    for (RuntimeContextDependency toEntry : to) {
+    for (RuntimeContextDependency toEntry : toWorkingList) {
       String key = toEntry.getDepType() + ":" + toEntry.getDepName();
       toMap.put(key, toEntry);
     }
 
     // iterate over from-list
     // create MODIFY and DELETE entries
-    for (RuntimeContextDependency fromEntry : from) {
-      String key = fromEntry.getDepType() + ":" + fromEntry.getDepName();
-      RuntimeContextDependency toEntry = toMap.get(key);
+    if (from != null) {
+      for (RuntimeContextDependency fromEntry : from) {
+        String key = fromEntry.getDepType() + ":" + fromEntry.getDepName();
+        RuntimeContextDependency toEntry = toMap.get(key);
 
-      WorkspaceContentDifference wcd = new WorkspaceContentDifference();
-      wcd.setContentType(TAG_RUNTIMECONTEXTDEPENDENCY);
-      wcd.setExistingItem(fromEntry);
-      if (toEntry != null) {
-        if ((fromEntry.getDepAddition() != null) && (toEntry.getDepAddition() != null)
-            && !fromEntry.getDepAddition().equals(toEntry.getDepAddition())) {
-          wcd.setDifferenceType(new MODIFY());
-          wcd.setNewItem(toEntry);
-          to.remove(toEntry); // remove entry from to-list
+        WorkspaceContentDifference wcd = new WorkspaceContentDifference();
+        wcd.setContentType(TAG_RUNTIMECONTEXTDEPENDENCY);
+        wcd.setExistingItem(fromEntry);
+        if (toEntry != null) {
+          if ((fromEntry.getDepAddition() != null) && (toEntry.getDepAddition() != null)
+              && !fromEntry.getDepAddition().equals(toEntry.getDepAddition())) {
+            wcd.setDifferenceType(new MODIFY());
+            wcd.setNewItem(toEntry);
+            toWorkingList.remove(toEntry); // remove entry from to-list
+          } else {
+            toWorkingList.remove(toEntry); // remove entry from to-list
+            continue; // EQUAL -> ignore entry
+          }
         } else {
-          to.remove(toEntry); // remove entry from to-list
-          continue; // EQUAL -> ignore entry
+          wcd.setDifferenceType(new DELETE());
         }
-      } else {
-        wcd.setDifferenceType(new DELETE());
+        wcdList.add(wcd);
       }
-      wcdList.add(wcd);
     }
 
-    // iterate over to-list (only CREATE-Entries remain)
-    for (RuntimeContextDependency toEntry : to) {
+    // iterate over toWorking-list (only CREATE-Entries remain)
+    for (RuntimeContextDependency toEntry : toWorkingList) {
       WorkspaceContentDifference wcd = new WorkspaceContentDifference();
       wcd.setContentType(TAG_RUNTIMECONTEXTDEPENDENCY);
       wcd.setNewItem(toEntry);
@@ -188,32 +199,41 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   @Override
   public void create(RuntimeContextDependency item, long revision) {
     try {
-      // Workspaces to change dependencies in
-      Workspace workspace = revisionManagement.getWorkspace(revision);
-      // create TemporarySession
-      TemporarySessionAuthentication tsa = TemporarySessionAuthentication
-          .tempAuthWithUniqueUser("CreateRuntimeContextDependency", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE);
-      tsa.initiate();
-      RuntimeDependencyContext dependency = createRuntimeDependencyContext(item);
-      rtcDependencyManagement.addDependency(workspace, dependency, tsa.getUsername(), true);
+      create(revisionManagement.getWorkspace(revision), item);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
 
 
-  @Override
+  public void create(RuntimeDependencyContext owner, RuntimeContextDependency item) {
+    try {
+      TemporarySessionAuthentication tsa = createTemporarySessionAuthentication(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE);
+
+      RuntimeDependencyContext dependency = createRuntimeDependencyContext(item);
+      rtcDependencyManagement.addDependency(owner, dependency, tsa.getUsername(), true);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+   @Override
   public void modify(RuntimeContextDependency from, RuntimeContextDependency to, long revision) {
     try {
-      // Workspaces to change dependencies in
-      Workspace workspace = revisionManagement.getWorkspace(revision);
-      // create TemporarySession
-      TemporarySessionAuthentication tsa = TemporarySessionAuthentication
-          .tempAuthWithUniqueUser("ModifyRuntimeContextDependency", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE);
-      tsa.initiate();
+      modify(revisionManagement.getWorkspace(revision), from, to);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  public void modify(RuntimeDependencyContext owner, RuntimeContextDependency from, RuntimeContextDependency to) {
+    try {
+      TemporarySessionAuthentication tsa = createTemporarySessionAuthentication(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_MODIFY);
 
       // get all current workspace dependencies
-      Collection<RuntimeDependencyContext> dependencies = rtcDependencyManagement.getDependencies(workspace);
+      Collection<RuntimeDependencyContext> dependencies = rtcDependencyManagement.getRequirements(owner);
 
       // remove from-runtimeContextDepencency from workspace dependency list 
       String fromStr = format(from);
@@ -228,13 +248,14 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
       }
 
       if (!hastFound) {
-        throw new RuntimeException("from entry " + fromStr + " not found in dependencies of the Workspace " + workspace.getName());
+        throw new RuntimeException("from entry " + fromStr + " not found in dependencies of the "
+            + owner.getRuntimeDependencyContextType().getClass().getSimpleName() + ":" + owner.getName());
       }
 
       // add to-Element to the updated newDepencencyList
       newDependenyList.add(createRuntimeDependencyContext(to));
 
-      rtcDependencyManagement.modifyDependencies(workspace, newDependenyList, tsa.getUsername());
+      rtcDependencyManagement.modifyDependencies(owner, newDependenyList, tsa.getUsername());
 
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -245,14 +266,18 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   @Override
   public void delete(RuntimeContextDependency item, long revision) {
     try {
-      // Workspaces to change dependencies in
-      Workspace workspace = revisionManagement.getWorkspace(revision);
-      // create TemporarySession
-      TemporarySessionAuthentication tsa = TemporarySessionAuthentication
-          .tempAuthWithUniqueUser("DeleteRuntimeContextDependency", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE);
-      tsa.initiate();
+      delete(revisionManagement.getWorkspace(revision), item);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  public void delete(RuntimeDependencyContext owner, RuntimeContextDependency item) {
+    try {
+      TemporarySessionAuthentication tsa = createTemporarySessionAuthentication(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_DELETE);
       RuntimeDependencyContext dependency = createRuntimeDependencyContext(item);
-      rtcDependencyManagement.removeDependency(workspace, dependency, tsa.getUsername());
+      rtcDependencyManagement.removeDependency(owner, dependency, tsa.getUsername());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -286,7 +311,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
    * @return
    *  formatted String of item
    */
-  private static String format(RuntimeContextDependency item) {
+  public String format(RuntimeContextDependency item) {
     StringBuffer sb = new StringBuffer();
     sb.append(item.getDepType()).append(":").append(item.getDepName());
     if (item.getDepAddition() != null) {
@@ -312,6 +337,14 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
       sb.append(item.getAdditionalIdentifier());
     }
     return sb.toString();
+  }
+
+
+  private static TemporarySessionAuthentication createTemporarySessionAuthentication(String userName) throws Exception {
+    TemporarySessionAuthentication tsa =
+        TemporarySessionAuthentication.tempAuthWithUniqueUser(userName, TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE);
+    tsa.initiate();
+    return tsa;
   }
 
 

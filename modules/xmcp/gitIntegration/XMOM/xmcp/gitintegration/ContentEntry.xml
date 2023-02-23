@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 8.0 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2018
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 319813 $
+ * $Date: 2023-02-01 16:28:26 +0100 (Mi, 01 Feb 2023) $
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Content Entry" TypeName="ContentEntry" TypePath="xmcp.gitintegration" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Type" VariableName="type">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="FQ Name" VariableName="fQName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

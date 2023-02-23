@@ -33,6 +33,9 @@ import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
 public class OutputCreator {
 
+  public static final int TABLE_LIMIT = 5;
+
+
   private static final HashMap<String, BiFunction<WorkspaceContentDifference, WorkspaceContentProcessingPortal, String>> differenceStringFunctions =
       createDifferenceStringFunctions();
 

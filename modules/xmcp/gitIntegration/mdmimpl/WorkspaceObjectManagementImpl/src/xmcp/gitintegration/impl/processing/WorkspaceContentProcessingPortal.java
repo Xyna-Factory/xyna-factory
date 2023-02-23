@@ -60,6 +60,7 @@ public class WorkspaceContentProcessingPortal {
 
     //register WorkspaceContentProcessors here: addToMap(result, new <WorkspaceContentType>Processor());
     addToMap(result, new RuntimeContextDependencyProcessor());
+    addToMap(result, new ApplicationDefinitionProcessor());
     return result;
   }
 
