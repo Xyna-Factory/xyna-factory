@@ -218,7 +218,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   }
 
 
-   @Override
+  @Override
   public void modify(RuntimeContextDependency from, RuntimeContextDependency to, long revision) {
     try {
       modify(revisionManagement.getWorkspace(revision), from, to);
