@@ -1065,8 +1065,11 @@ install_xyna_cluster () {
     
     echo "    + Xyna Cluster persistence layer"
     if [[ ! -d "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer" ]]; then ${VOLATILE_MKDIR} -p "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer"; fi
+    # remove old jars
+    ${VOLATILE_RM} -f "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer/XynaMemoryPersistenceLayer*.jar"
+    # install new jars
     install_file "components/xnwh/xcs/XynaClusterPersistenceLayer/XynaClusterPersistenceLayer.jar" "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer/."
-    install_file "components/xnwh/xcs/XynaClusterPersistenceLayer/XynaMemoryPersistenceLayer.jar" "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer/."
+    install_file "components/xnwh/xcs/XynaClusterPersistenceLayer/XynaMemoryPersistenceLayer*.jar" "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer/."
 
     echo "    + network availability demon"
     # The folders NetworkAvailability and NetworkAvailability/lib will be created, if it does not exist. 
