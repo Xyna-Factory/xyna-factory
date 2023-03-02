@@ -2400,7 +2400,7 @@
     </Filter>
     <Filter implicitDependency="true">
       <Name>H5XdevFilter</Name>
-      <JarFiles>H5XdevFilter/H5XdevFilter.jar:H5XdevFilter/HttpUtils.jar:H5XdevFilter/commons-io-2.7.jar</JarFiles>
+      <JarFiles>H5XdevFilter/H5XdevFilter.jar:H5XdevFilter/HttpUtils.jar:</JarFiles>
       <FqFilterClassname>com.gip.xyna.xact.filter.H5XdevFilter</FqFilterClassname>
       <TriggerName>Http</TriggerName>
       <SharedLibs>XynaObjectJsonBuilder</SharedLibs>
