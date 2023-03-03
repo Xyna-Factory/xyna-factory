@@ -25,8 +25,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.UnsignedIntegerDH
 
 /**
  * Factory for DOCSIS unsigned integer TLV decoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class UnsignedIntegerDHCPv6TlvDecoderFactory extends AbstractDHCPv6TlvDecoderFactory {
 

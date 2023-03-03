@@ -23,8 +23,6 @@ import java.io.Reader;
 
 /**
  * Text config reader.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TextConfigTokenReader {
 

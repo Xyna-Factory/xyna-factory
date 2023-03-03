@@ -34,8 +34,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.DUIDDHCPv6TlvDeco
 
 /**
  * Tests container DHCP TLV decoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public class DUIDDHCPTlvDecoderTest {
 

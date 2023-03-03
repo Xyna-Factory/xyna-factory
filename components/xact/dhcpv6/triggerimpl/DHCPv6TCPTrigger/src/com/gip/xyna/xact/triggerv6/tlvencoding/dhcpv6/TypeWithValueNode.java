@@ -19,8 +19,6 @@ package com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6;
 
 /**
  * Node with type and value.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public class TypeWithValueNode extends Node {
 

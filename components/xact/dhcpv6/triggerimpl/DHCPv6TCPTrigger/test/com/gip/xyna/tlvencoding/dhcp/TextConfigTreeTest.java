@@ -36,8 +36,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TypeWithValueNode;
 
 /**
  * Tests text config tree.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TextConfigTreeTest {
 

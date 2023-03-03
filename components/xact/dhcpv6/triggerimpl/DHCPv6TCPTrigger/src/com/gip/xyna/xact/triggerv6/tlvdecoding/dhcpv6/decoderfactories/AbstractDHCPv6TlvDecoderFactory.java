@@ -28,8 +28,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.DHCPv6TlvDecoderFactory;
 
 /**
  * Abstract DOCSIS TLV decoder for decoders that do not have sub TLV decoders.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class AbstractDHCPv6TlvDecoderFactory implements DHCPv6TlvDecoderFactory {
 

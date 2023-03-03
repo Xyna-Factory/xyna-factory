@@ -30,8 +30,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TextConfigTokenReader;
 
 /**
  * Tests text config token reader.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TextConfigTokenReaderTest {
 

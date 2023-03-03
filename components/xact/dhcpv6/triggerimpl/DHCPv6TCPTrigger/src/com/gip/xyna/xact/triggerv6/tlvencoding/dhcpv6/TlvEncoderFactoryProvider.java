@@ -56,8 +56,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoderfactories.UnsignedI
 
 /**
  * Provides encoder factory for given value data type.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TlvEncoderFactoryProvider {
 

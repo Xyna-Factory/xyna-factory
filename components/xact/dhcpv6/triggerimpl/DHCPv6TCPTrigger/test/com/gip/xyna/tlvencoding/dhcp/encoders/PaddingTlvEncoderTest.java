@@ -38,8 +38,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.PaddingTlvEncoder
 
 /**
  * Tests padding TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class PaddingTlvEncoderTest {
 

@@ -19,8 +19,6 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders;
 
 /**
  * DOCSIS padding TLV decoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class PaddingDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

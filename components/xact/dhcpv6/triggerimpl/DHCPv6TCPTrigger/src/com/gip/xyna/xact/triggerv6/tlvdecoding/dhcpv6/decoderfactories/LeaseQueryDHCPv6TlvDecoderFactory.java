@@ -30,8 +30,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.LeaseQueryDHCPv6T
 
 /**
  * DOCSIS Container TLV decoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class LeaseQueryDHCPv6TlvDecoderFactory implements DHCPv6TlvDecoderFactory {
 

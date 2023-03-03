@@ -19,8 +19,6 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6;
 
 /**
  * Thrown whenever the decoder fails to decode the input data.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DecoderException extends Exception {
 

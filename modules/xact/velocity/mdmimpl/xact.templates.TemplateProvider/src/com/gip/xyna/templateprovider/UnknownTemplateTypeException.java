@@ -19,8 +19,6 @@ package com.gip.xyna.templateprovider;
 
 /**
  * Unknown template type exception.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class UnknownTemplateTypeException extends Exception {
 

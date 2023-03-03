@@ -27,8 +27,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.DisallowedTlvEnco
 
 /**
  * Disallowed TLV encoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DisallowedTlvEncoderFactory extends AbstractTypeOnlyTlvEncoderFactory {
 

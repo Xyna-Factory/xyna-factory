@@ -19,8 +19,6 @@ package com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6;
 
 /**
  * Thrown when reading of a configuration file fails for some reason.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ConfigFileReadException extends Exception {
 

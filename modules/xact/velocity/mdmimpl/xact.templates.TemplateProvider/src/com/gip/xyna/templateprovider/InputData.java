@@ -19,8 +19,6 @@ package com.gip.xyna.templateprovider;
 
 /**
  * Input data interface.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public interface InputData {
 

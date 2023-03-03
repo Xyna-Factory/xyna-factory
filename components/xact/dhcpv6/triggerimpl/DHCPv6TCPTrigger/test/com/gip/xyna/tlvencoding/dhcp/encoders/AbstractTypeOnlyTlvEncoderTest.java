@@ -40,8 +40,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.AbstractTypeOnlyT
 
 /**
  * Tests abstract type only TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class AbstractTypeOnlyTlvEncoderTest {
 
