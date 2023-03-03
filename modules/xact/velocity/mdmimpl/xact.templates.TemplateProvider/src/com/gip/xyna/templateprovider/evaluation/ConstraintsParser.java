@@ -27,8 +27,6 @@ import com.gip.xyna.templateprovider.util.StringToMapUtil;
 
 /**
  * Constraints parser.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ConstraintsParser {
 

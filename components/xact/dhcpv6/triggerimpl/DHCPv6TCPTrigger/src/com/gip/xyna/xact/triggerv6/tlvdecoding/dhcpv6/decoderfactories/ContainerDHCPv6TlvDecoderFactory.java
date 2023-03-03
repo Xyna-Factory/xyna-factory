@@ -29,14 +29,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.ContainerDHCPv6Tl
 
 /**
  * DOCSIS Container TLV decoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
- */
-public final class ContainerDHCPv6TlvDecoderFactory implements DHCPv6TlvDecoderFactory {
-
-    public static final String DATA_TYPE_NAME = "Container";
-
-    public String getDataTypeName() {
         return DATA_TYPE_NAME;
     }
 

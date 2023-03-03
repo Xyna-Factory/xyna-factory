@@ -35,8 +35,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.IAPDDHCPv6TlvDeco
 
 /**
  * Tests DHCP IAPD TLV decoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IAPDDHCPTlvDecoderFactoryTest {
 

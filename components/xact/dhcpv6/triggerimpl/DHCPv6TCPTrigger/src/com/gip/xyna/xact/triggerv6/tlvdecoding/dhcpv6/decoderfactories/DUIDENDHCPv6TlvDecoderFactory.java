@@ -29,12 +29,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.DUIDENDHCPv6TlvDe
 
 /**
  * DOCSIS Container TLV decoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
- */
-public final class DUIDENDHCPv6TlvDecoderFactory implements DHCPv6TlvDecoderFactory {
-
-    public static final String DATA_TYPE_NAME = "DUIDEN";
 
     public String getDataTypeName() {
         return DATA_TYPE_NAME;

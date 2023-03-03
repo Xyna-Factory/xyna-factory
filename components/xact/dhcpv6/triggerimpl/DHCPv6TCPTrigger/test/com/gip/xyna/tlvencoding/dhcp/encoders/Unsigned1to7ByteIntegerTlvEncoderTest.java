@@ -35,8 +35,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.Unsigned1to7ByteI
 
 /**
  * Tests unsigned 1 to 7 byte integer TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class Unsigned1to7ByteIntegerTlvEncoderTest {
 

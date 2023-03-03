@@ -26,8 +26,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.PaddingTlvEncoder
 
 /**
  * Padding TLV encoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class PaddingTlvEncoderFactory extends AbstractTypeOnlyTlvEncoderFactory {
 

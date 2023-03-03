@@ -34,8 +34,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.EOctetStringTlvEn
 
 /**
  * Tests octet string TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class EOctetStringTlvEncoderTest {
 

@@ -25,8 +25,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.IpV6AddressDHCPv6
 
 /**
  * IPv4 address DOCSIS TLV decoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV6AddressDHCPv6TlvDecoderFactory extends AbstractDHCPv6TlvDecoderFactory {
 

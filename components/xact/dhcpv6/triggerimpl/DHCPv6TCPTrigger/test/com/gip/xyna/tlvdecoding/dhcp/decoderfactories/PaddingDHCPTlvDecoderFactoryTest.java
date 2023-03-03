@@ -34,8 +34,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.PaddingDHCPv6TlvD
 
 /**
  * Tests padding DHCP TLV decoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class PaddingDHCPTlvDecoderFactoryTest {
 

@@ -23,8 +23,6 @@ import java.util.List;
 
 /**
  * Template part selector.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TemplatePartSelector {
 

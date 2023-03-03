@@ -28,8 +28,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.utilv6.ByteUtil;
 
 /**
  * MAC address TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class MacAddressTlvEncoder extends AbstractTypeWithValueTlvEncoder {
 

@@ -19,10 +19,6 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6;
 
 /**
  * TLV reader.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
- */
-public interface TlvReader {
 
     Tlv read() throws TlvReaderException;
 

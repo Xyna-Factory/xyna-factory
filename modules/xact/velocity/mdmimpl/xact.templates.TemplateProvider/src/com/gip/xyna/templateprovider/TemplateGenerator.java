@@ -27,8 +27,6 @@ import java.util.Set;
 
 /**
  * Generates templates based on input data. Template type is ignored.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TemplateGenerator {
 
