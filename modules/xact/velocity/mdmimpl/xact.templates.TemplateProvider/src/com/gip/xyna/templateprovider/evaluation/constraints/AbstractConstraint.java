@@ -22,8 +22,6 @@ import com.gip.xyna.templateprovider.evaluation.Constraint;
 
 /**
  * Abstract constraint.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class AbstractConstraint implements Constraint {
 

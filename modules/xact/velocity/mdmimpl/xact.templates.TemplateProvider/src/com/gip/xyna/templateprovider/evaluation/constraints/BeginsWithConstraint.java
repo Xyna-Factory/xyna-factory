@@ -19,8 +19,6 @@ package com.gip.xyna.templateprovider.evaluation.constraints;
 
 /**
  * Checks if value in input data begins with a given string.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class BeginsWithConstraint extends AbstractConstraint {
 

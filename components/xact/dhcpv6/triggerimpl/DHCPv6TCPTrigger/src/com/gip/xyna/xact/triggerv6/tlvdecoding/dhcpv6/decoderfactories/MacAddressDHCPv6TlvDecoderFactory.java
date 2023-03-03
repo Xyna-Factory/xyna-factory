@@ -25,8 +25,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.MacAddressDHCPv6T
 
 /**
  * MAC address DOCSIS TLV decoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class MacAddressDHCPv6TlvDecoderFactory extends AbstractDHCPv6TlvDecoderFactory {
     

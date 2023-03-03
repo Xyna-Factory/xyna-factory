@@ -30,8 +30,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.utilv6.QuotedStringFormatUtil;
 
 /**
  * Octet string TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class EOctetStringTlvEncoder extends AbstractTypeWithValueTlvEncoder{
 

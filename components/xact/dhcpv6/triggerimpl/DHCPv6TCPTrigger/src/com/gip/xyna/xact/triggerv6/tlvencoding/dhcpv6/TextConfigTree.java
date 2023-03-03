@@ -25,8 +25,6 @@ import java.util.Map;
 
 /**
  * Text config tree.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TextConfigTree {
 

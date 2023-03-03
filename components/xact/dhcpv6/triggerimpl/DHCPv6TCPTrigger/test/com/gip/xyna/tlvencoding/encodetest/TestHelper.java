@@ -31,8 +31,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TextConfigTree;
 
 /**
  * Helper utility for tests.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TestHelper {
 

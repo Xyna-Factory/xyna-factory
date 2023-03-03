@@ -25,8 +25,6 @@ import java.util.List;
 
 /**
  * Text config tree reader.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TextConfigTreeReader {
 

@@ -21,8 +21,6 @@ import java.net.InetAddress;
 
 /**
  * IPv4 address DOCSIS TLV decoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV6AddressDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

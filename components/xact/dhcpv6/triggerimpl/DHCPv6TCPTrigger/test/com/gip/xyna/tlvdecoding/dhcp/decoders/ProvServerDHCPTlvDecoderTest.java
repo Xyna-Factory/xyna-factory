@@ -31,8 +31,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.ProvServerDHCPv6T
 
 /**
  * Tests octet string DHCP TLV decoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ProvServerDHCPTlvDecoderTest {
 

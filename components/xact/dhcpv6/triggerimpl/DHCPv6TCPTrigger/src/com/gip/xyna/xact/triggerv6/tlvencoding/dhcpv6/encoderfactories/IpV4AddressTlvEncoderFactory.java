@@ -26,8 +26,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.IpV4AddressTlvEnc
 
 /**
  * IPv4 address TLV encoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV4AddressTlvEncoderFactory extends AbstractTypeWithValueTlvEncoderFactory {
 

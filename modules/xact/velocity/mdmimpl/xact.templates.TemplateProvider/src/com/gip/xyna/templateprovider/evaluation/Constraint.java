@@ -21,8 +21,6 @@ import com.gip.xyna.templateprovider.InputData;
 
 /**
  * Constraint interface.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public interface Constraint {
 

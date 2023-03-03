@@ -29,8 +29,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.RelayMessageDHCPv
 
 /**
  * DOCSIS Container TLV decoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class RelayMessageDHCPv6TlvDecoderFactory implements DHCPv6TlvDecoderFactory {
 

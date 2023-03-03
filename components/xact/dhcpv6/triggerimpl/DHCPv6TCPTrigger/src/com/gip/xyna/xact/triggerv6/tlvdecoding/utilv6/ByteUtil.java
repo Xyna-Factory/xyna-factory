@@ -19,8 +19,6 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.utilv6;
 
 /**
  * Byte util.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ByteUtil {
 

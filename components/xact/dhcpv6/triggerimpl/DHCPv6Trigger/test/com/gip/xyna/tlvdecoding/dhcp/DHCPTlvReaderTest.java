@@ -35,8 +35,6 @@ import static org.junit.Assert.*;
 
 /**
  * Tests DHCP TLV reader.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DHCPTlvReaderTest {
 

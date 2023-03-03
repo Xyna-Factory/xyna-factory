@@ -36,8 +36,6 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.IAAddressDHCPv6Tl
 
 /**
  * Tests container DHCP TLV decoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public class IAAddressDHCPTlvDecoderTest {
 

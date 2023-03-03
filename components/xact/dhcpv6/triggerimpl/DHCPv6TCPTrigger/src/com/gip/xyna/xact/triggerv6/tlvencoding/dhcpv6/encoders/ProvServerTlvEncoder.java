@@ -29,8 +29,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TypeWithValueNode;
 
 /**
  * Octet string TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ProvServerTlvEncoder extends AbstractTypeWithValueTlvEncoder{
 

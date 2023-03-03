@@ -22,8 +22,6 @@ import java.net.UnknownHostException;
 
 /**
  * IPv4 address DOCSIS TLV decoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class NonTLVIpV6AddressDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

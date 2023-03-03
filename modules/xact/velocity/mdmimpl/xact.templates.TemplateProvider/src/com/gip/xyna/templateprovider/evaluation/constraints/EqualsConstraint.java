@@ -19,8 +19,6 @@ package com.gip.xyna.templateprovider.evaluation.constraints;
 
 /**
  * Checks if value in input data equals given string.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class EqualsConstraint extends AbstractConstraint {
 

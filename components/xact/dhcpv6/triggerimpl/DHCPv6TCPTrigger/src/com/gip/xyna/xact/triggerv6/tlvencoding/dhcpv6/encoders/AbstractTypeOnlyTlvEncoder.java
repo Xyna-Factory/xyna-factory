@@ -28,8 +28,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TypeOnlyNode;
 
 /**
  * Abstract type only TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class AbstractTypeOnlyTlvEncoder extends AbstractTlvEncoder {
 

@@ -33,8 +33,6 @@ import java.util.regex.Pattern;
 
 /**
  * String to Map util.
- * 
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class StringToMapUtil {
 

@@ -33,7 +33,6 @@ import com.gip.xyna.templateprovider.evaluation.ConstraintsParser;
 
 /**
  * Template part.
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TemplatePart {
 

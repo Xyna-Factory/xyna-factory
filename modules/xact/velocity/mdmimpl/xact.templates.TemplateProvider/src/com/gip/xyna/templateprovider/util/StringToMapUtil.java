@@ -27,8 +27,6 @@ import java.util.Set;
 
 /**
  * String to Map util.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class StringToMapUtil {
 

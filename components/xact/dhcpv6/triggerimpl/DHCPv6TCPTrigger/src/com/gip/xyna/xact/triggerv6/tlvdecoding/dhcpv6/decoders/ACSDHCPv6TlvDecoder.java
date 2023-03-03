@@ -23,8 +23,6 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders;
 
 /**
  * OctetString DOCSIS TLV decoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ACSDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 
