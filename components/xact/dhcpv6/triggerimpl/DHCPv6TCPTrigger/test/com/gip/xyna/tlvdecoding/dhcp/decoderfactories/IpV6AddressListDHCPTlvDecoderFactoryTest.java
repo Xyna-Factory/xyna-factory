@@ -34,6 +34,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.IpV6AddressListDH
 
 /**
  * Tests IPv4 address list DHCP TLV decoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV6AddressListDHCPTlvDecoderFactoryTest {
 

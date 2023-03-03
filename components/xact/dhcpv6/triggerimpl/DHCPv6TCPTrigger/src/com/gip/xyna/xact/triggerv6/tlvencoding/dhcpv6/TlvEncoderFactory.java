@@ -22,6 +22,8 @@ import java.util.Map;
 
 /**
  * TLV encoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public interface TlvEncoderFactory {
 

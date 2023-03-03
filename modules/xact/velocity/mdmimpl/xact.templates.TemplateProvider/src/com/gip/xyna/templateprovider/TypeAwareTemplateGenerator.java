@@ -26,6 +26,8 @@ import java.util.Map;
 
 /**
  * Generates different templates depending on type and input data.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TypeAwareTemplateGenerator {
 

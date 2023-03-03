@@ -19,6 +19,8 @@ package com.gip.xyna.templateprovider;
 
 /**
  * Thrown whenever the constraints based selector fails to find a match.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class SelectionFailureException extends Exception {
 

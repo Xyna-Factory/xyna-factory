@@ -27,6 +27,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TypeOnlyNode;
 
 /**
  * Disallowed TLV encoder. Throws exception if user tries to use it.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DisallowedTlvEncoder extends AbstractTypeOnlyTlvEncoder {
 

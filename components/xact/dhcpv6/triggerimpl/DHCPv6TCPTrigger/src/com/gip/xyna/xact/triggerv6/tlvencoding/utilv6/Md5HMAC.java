@@ -24,6 +24,8 @@ import java.security.NoSuchAlgorithmException;
  * MD5 HMAC. The performed operation looks like this: MD5(key XOR opad, MD5(key XOR ipad, message)). The value of ipad
  * is 0x36 repeated 64 times. The value of opad is 0x5C repeated 64 times. Key is padded with 0x00 if it is less than
  * 64 bytes. If the key is larger than 64 bytes it is md5:ed and padded with 0x00 to 64 bytes.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class Md5HMAC {
 

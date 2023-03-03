@@ -35,6 +35,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.TlvReaderException;
 
 /**
  * Container DOCSIS TLV decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DUIDDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

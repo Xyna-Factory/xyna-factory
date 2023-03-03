@@ -35,6 +35,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoderfactories.UnsignedI
 
 /**
  * Tests DHCP TLV decoder factory provider.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DHCPTlvDecoderFactoryProviderTest {
 

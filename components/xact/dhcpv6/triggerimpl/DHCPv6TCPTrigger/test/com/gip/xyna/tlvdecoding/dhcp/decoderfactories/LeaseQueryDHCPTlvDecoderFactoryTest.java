@@ -35,6 +35,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.LeaseQueryDHCPv6T
 
 /**
  * Tests DHCP LeaseQuery TLV decoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class LeaseQueryDHCPTlvDecoderFactoryTest {
 

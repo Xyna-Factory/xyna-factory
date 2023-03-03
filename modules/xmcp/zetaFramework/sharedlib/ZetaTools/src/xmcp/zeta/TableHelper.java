@@ -83,6 +83,8 @@ import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
  * <br>
  * <b>Anzahl der Listeinträge limitieren:</b><br>
  * <code>result = tableHelper.limit(result);</code>
+ * 
+ * @author thomas.scholl
  *
  * @param <T>
  */

@@ -28,6 +28,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.utilv6.ByteUtil;
 
 /**
  * TLV - type length value object.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class Tlv {
 

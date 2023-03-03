@@ -26,6 +26,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TlvEncoder;
 
 /**
  * Abstract type only TLV encoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class AbstractTypeOnlyTlvEncoderFactory extends AbstractTlvEncoderFactory {
 

@@ -25,6 +25,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.IgnoreValueDHCPv6
 
 /**
  * Factory for DOCSIS TLV decoder that ignores value.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IgnoreValueDHCPv6TlvDecoderFactory extends AbstractDHCPv6TlvDecoderFactory {
 

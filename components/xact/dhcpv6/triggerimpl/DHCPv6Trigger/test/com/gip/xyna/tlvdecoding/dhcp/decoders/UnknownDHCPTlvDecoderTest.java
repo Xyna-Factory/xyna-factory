@@ -32,6 +32,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.UnknownDHCPv6TlvD
 
 /**
  * Tests decoder for unknown DHCP TLVs.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class UnknownDHCPTlvDecoderTest {
 

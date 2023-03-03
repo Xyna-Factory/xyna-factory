@@ -23,6 +23,8 @@ import java.util.List;
 
 /**
  * Node with type and no value, but possibly sub nodes.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TypeOnlyNode extends Node {
 

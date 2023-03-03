@@ -35,6 +35,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.utilv6.ByteUtil;
 
 /**
  * DOCSIS configuration decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DHCPv6ConfigurationDecoder implements Decoder {
 

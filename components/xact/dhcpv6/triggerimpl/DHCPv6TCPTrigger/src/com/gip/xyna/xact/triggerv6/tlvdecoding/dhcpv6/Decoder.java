@@ -19,6 +19,8 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6;
 
 /**
  * Decoder interface.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public interface Decoder {
 

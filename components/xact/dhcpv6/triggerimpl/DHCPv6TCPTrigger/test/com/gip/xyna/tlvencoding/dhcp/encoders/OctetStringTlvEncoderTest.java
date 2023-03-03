@@ -34,6 +34,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.OctetStringTlvEnc
 
 /**
  * Tests octet string TLV encoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class OctetStringTlvEncoderTest {
 
@@ -106,7 +108,7 @@ public final class OctetStringTlvEncoderTest {
         encoder.write(node, target);
         assertEquals(TestHelper.createIntegerList(0,12, 0, 8, 34, 92,34,92,92,92,34, 34), TestHelper.toUnsignedIntList(target));
 
-        node = new TypeWithValueNode("StringValue", "\"צÿוה\"");
+        node = new TypeWithValueNode("StringValue", "\"צüוה\"");
         target = new ByteArrayOutputStream();
         encoder.write(node, target);
         assertEquals(TestHelper.createIntegerList(0, 12, 0, 10, 34, 0xC3, 0xB6, 0xC3, 0xBC, 0xC3, 0xA5, 0xC3, 0xA4,34),

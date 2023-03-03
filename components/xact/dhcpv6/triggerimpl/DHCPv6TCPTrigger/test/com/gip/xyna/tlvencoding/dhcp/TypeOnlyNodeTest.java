@@ -35,6 +35,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TypeWithValueNode;
 
 /**
  * Tests type only node.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TypeOnlyNodeTest {
 

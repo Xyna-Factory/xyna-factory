@@ -44,6 +44,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.EContainerTlvEnco
 
 /**
  * Tests container tlv encoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class EContainerTlvEncoderTest {
 

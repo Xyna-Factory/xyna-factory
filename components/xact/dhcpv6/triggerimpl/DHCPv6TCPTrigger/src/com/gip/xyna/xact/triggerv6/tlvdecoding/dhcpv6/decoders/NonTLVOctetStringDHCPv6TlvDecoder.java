@@ -24,6 +24,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.utilv6.OctetStringUtil;
 
 /**
  * OctetString DOCSIS TLV decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class NonTLVOctetStringDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

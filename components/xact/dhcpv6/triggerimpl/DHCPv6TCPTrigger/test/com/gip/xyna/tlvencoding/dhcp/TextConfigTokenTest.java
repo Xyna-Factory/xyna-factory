@@ -27,6 +27,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TextConfigToken;
 
 /**
  * Tests text config token.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TextConfigTokenTest {
 

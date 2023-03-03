@@ -19,6 +19,8 @@ package com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6;
 
 /**
  * Node.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class Node {
 

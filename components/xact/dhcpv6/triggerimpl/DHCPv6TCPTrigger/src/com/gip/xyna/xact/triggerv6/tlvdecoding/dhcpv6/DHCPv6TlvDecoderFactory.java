@@ -22,6 +22,8 @@ import java.util.Set;
 
 /**
  * Factory interface for producing instances of DocsisTlvDecoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public interface DHCPv6TlvDecoderFactory {
 

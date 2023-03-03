@@ -25,6 +25,8 @@ import com.gip.xyna.templateprovider.evaluation.constraints.RegexpConstraint;
 
 /**
  * Constraint factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ConstraintFactory {
 

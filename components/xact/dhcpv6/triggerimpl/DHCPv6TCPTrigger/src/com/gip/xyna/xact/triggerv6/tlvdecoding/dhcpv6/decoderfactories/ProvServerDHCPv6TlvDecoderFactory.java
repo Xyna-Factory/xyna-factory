@@ -25,6 +25,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.ProvServerDHCPv6T
 
 /**
  * Octet string DOCSIS TLV decoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ProvServerDHCPv6TlvDecoderFactory extends AbstractDHCPv6TlvDecoderFactory {
 

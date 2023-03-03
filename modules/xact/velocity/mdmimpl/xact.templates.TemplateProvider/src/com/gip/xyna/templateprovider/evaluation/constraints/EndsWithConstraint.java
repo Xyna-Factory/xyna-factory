@@ -19,6 +19,8 @@ package com.gip.xyna.templateprovider.evaluation.constraints;
 
 /**
  * Checks if value in input data ends with a given string.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public class EndsWithConstraint extends AbstractConstraint {
 

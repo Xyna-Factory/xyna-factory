@@ -26,6 +26,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.utilv6.IpV4AddressValidator;
 
 /**
  * Tests IPv4 address validator.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV4AddressValidatorTest {
 

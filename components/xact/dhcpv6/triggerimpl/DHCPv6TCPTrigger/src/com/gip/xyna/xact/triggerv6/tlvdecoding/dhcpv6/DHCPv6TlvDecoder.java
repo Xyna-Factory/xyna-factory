@@ -21,6 +21,8 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6;
 
 /**
  * DOCSIS TLV decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public interface DHCPv6TlvDecoder extends TlvDecoder {
 

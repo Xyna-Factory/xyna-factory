@@ -27,6 +27,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.RelayMessageTlvEn
 
 /**
  * Container TLV encoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class RelayMessageTlvEncoderFactory extends AbstractTypeOnlyTlvEncoderFactory {
 

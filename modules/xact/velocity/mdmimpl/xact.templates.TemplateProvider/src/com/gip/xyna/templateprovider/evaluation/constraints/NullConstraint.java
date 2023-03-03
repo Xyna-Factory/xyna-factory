@@ -22,6 +22,8 @@ import com.gip.xyna.templateprovider.evaluation.Constraint;
 
 /**
  * Checks that value in input data is null or not defined.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class NullConstraint implements Constraint {
 

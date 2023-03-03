@@ -34,6 +34,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.IgnoreValueDHCPv6
 
 /**
  * Tests factory for DHCP TLV decoder that ignores value.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IgnoreValueDHCPTlvDecoderFactoryTest {
 

@@ -29,6 +29,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.DUIDLLTDHCPv6TlvD
 
 /**
  * DOCSIS Container TLV decoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DUIDLLTDHCPv6TlvDecoderFactory implements DHCPv6TlvDecoderFactory {
 

@@ -38,6 +38,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.NonTLVUnsigned1to
 
 /**
  * Tests unsigned integer TLV encoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class NonTLVUnsignedIntegerTlvEncoderFactoryTest {
 

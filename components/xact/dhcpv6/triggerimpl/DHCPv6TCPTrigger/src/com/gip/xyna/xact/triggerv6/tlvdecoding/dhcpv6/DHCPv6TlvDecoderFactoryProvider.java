@@ -59,6 +59,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoderfactories.UnsignedI
 
 /**
  * DOCSIS TLV decoder factory provider.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DHCPv6TlvDecoderFactoryProvider {
 

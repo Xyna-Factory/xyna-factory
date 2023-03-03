@@ -19,6 +19,8 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders;
 
 /**
  * IPv4 address list DOCSIS TLV decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV4AddressListDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

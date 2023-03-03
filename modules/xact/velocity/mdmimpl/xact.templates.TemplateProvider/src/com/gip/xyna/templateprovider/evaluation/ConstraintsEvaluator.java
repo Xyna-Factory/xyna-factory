@@ -27,6 +27,8 @@ import com.gip.xyna.templateprovider.InputData;
 
 /**
  * Evaluates constraints.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ConstraintsEvaluator {
 

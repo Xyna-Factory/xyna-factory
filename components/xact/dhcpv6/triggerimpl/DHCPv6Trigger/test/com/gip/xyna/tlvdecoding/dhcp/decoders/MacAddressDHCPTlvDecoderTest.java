@@ -33,6 +33,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.MacAddressDHCPv6T
 
 /**
  * Test MAC address DHCP TLV decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class MacAddressDHCPTlvDecoderTest {
 

@@ -19,6 +19,8 @@ package com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6;
 
 /**
  * Text config token.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TextConfigToken {
 

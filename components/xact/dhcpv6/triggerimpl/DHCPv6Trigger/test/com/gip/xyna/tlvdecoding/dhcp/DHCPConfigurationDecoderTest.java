@@ -36,6 +36,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.DHCPv6Encoding;
 
 /**
  * Tests DHCP configuration decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DHCPConfigurationDecoderTest {
 

@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 
 /**
  * Validates IPv4 addresses.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV4AddressValidator {
 

@@ -29,6 +29,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TlvEncoderFactoryProvider;
 
 /**
  * Tests TLV encoder factory provider.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TlvEncoderFactoryProviderTest {
 

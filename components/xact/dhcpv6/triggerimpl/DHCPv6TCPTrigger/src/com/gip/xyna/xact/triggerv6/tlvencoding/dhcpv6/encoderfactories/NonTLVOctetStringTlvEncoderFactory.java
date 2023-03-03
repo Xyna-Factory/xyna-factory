@@ -27,6 +27,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.NonTLVOctetString
 
 /**
  * Octet string TLV encoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class NonTLVOctetStringTlvEncoderFactory extends AbstractTypeWithValueTlvEncoderFactory {
 

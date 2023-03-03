@@ -19,6 +19,8 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders;
 
 /**
  * DOCSIS TLV decoder that only outputs type name.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IgnoreValueDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

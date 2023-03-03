@@ -19,6 +19,8 @@ package com.gip.xyna.templateprovider;
 
 /**
  * Thrown whenever template generation fails.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class GenerationFailureException extends Exception {
 

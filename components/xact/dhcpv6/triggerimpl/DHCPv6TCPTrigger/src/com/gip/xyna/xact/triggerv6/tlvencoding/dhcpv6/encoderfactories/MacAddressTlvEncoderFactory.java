@@ -26,6 +26,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.MacAddressTlvEnco
 
 /**
  * MAC address TLV encoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class MacAddressTlvEncoderFactory extends AbstractTypeWithValueTlvEncoderFactory {
 

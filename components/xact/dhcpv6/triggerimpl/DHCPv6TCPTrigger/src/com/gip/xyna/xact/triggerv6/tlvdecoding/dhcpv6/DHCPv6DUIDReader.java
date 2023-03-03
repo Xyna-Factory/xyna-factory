@@ -33,6 +33,8 @@ import org.apache.log4j.Logger;
 
 /**
  * Reader for TLV:s with DOCSIS-length encoding.
+ * 
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DHCPv6DUIDReader implements TlvReader {
 

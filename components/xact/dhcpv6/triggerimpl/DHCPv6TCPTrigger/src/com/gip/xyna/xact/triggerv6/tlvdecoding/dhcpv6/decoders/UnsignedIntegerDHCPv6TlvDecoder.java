@@ -19,6 +19,8 @@ package com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders;
 
 /**
  * Unsigned integer DOCSIS TLV decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class UnsignedIntegerDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

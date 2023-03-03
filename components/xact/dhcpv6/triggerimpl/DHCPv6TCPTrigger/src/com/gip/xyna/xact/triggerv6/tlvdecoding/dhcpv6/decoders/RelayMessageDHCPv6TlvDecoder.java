@@ -37,6 +37,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.utilv6.ByteUtil;
 
 /**
  * Container DOCSIS TLV decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class RelayMessageDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 

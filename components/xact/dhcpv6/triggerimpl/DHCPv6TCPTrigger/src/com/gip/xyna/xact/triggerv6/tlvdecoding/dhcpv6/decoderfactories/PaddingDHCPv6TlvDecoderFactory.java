@@ -25,6 +25,8 @@ import com.gip.xyna.xact.triggerv6.tlvdecoding.dhcpv6.decoders.PaddingDHCPv6TlvD
 
 /**
  * Padding DOCSIS TLV decoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class PaddingDHCPv6TlvDecoderFactory extends AbstractDHCPv6TlvDecoderFactory {
 

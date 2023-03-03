@@ -27,6 +27,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.TypeOnlyNode;
 
 /**
  * TLV encoder that does nothing. Intended mainly for special types encoded through some other mecanism.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DoNothingTlvEncoder extends AbstractTypeOnlyTlvEncoder {
 

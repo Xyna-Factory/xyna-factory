@@ -28,6 +28,8 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.EContainerTlvEnco
 
 /**
  * Container TLV encoder factory.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class EContainerTlvEncoderFactory extends AbstractTypeOnlyTlvEncoderFactory {
 

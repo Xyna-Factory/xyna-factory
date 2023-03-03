@@ -25,6 +25,8 @@ import java.io.InputStream;
 
 /**
  * OctetString DOCSIS TLV decoder.
+ *
+ * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ProvServerDHCPv6TlvDecoder extends AbstractDHCPv6TlvDecoder {
 
