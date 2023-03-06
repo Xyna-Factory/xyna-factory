@@ -29,7 +29,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.16</VersionName>
+        <VersionName>1.0.17</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Node</ApplicationName>
