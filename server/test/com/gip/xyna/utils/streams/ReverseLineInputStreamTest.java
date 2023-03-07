@@ -118,6 +118,17 @@ public class ReverseLineInputStreamTest extends TestCase {
     compare(list, source.replace("\r\n", "\n").replace("\r\tfeaergaerh", "\tfeaergaerh\n")); //bufferedreader.readline sieht \r als zeilenumbruch
   }
 
+  public void testError() {
+    String source = "thisdoesnotcontainsalinebreak";
+    File f = new File("testfile");
+    createFile("testfile", source);
+   
+    try (ReverseLineInputStream reader = new ReverseLineInputStream(f, 1024 * 1024)) {
+      assertTrue(false); //expected: Exception
+    } catch(Exception e) {
+      assertTrue(e.getMessage().contains(new File("testfile").getAbsolutePath()));
+    }
+  }
 
   public void testPerformance() throws IOException, Ex_FileWriteException {
     File file = new File("testfile");

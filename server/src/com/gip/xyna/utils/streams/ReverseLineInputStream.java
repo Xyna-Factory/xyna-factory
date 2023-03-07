@@ -80,7 +80,7 @@ public class ReverseLineInputStream extends InputStream {
       f.seek(f.length() - 1);
       if (f.read() != 0xA) {
         f.close();
-        throw new RuntimeException("File doesn't end with \\n");
+        throw new RuntimeException("File '" + file.getAbsolutePath() + "' doesn't end with \\n");
       }
     }
   }
