@@ -46,7 +46,6 @@
         <dependency>
             <groupId>com.gip.xyna</groupId>
             <artifactId>XynaMemoryPersistenceLayer</artifactId>
-            <version>1.0.0</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
