@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,15 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.gip.xyna</groupId>
+        <artifactId>bom</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../../../../../../installation/build/pom.xml</relativePath>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
     <artifactId>webspheremq</artifactId>
@@ -30,39 +38,40 @@
     <dependencies>
         <dependency>
             <groupId>com.ibm.mq</groupId>
-            <artifactId>com.ibm.mq.allclient</artifactId> <!-- unfree -->
-            <version>9.0.4.0</version>
+            <artifactId>com.ibm.mq.allclient</artifactId>            <!-- unfree -->
+            <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>com.ibm.mq</groupId>
-            <artifactId>com.ibm.mq.traceControl</artifactId> <!-- unfree -->
-            <version>9.0.0.0</version>
+            <artifactId>com.ibm.mq.traceControl</artifactId>            <!-- unfree -->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sun.jndi</groupId>
-            <artifactId>fscontext</artifactId> <!-- unfree -->
-            <version>1.2</version>
+            <artifactId>fscontext</artifactId>            <!-- unfree -->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>5.0-2</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>javax.jms</groupId>
-            <artifactId>jms</artifactId> <!-- unfree -->
-            <version>1.1</version>
+            <artifactId>jms</artifactId>            <!-- unfree -->
+            <scope>provided</scope>
         </dependency>
-  <!--      <dependency>
+        <!--      
+        <dependency>
             <groupId></groupId> TODO
             <artifactId>JSON4J</artifactId> unfree
             <version></version>
-        </dependency>-->
+        </dependency>
+        -->
         <dependency>
             <groupId>com.sun.jndi</groupId>
-            <artifactId>providerutil</artifactId> <!-- unfree -->
-            <version>1.2</version>
+            <artifactId>providerutil</artifactId>            <!-- unfree -->
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
