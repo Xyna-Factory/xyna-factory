@@ -35,8 +35,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.MacAddressTlvEnco
 
 /**
  * Tests MAC address TLV encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class MacAddressTlvEncoderTest {
 

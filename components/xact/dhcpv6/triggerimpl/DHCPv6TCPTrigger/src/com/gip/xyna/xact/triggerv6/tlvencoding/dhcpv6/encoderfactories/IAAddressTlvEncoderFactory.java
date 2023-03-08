@@ -27,8 +27,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.IAAddressTlvEncod
 
 /**
  * Container TLV encoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IAAddressTlvEncoderFactory extends AbstractTypeOnlyTlvEncoderFactory {
 

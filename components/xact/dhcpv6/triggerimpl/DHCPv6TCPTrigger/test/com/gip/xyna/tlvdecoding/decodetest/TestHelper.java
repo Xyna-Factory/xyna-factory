@@ -22,8 +22,6 @@ import java.util.List;
 
 /**
  * Test helper utility.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TestHelper {
 

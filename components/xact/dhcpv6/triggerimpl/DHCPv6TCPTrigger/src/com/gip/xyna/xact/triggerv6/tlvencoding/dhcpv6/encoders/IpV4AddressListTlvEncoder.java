@@ -33,8 +33,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.utilv6.ByteUtil;
 
 /**
  * IPv4 address list tlv encoder.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV4AddressListTlvEncoder extends AbstractTypeWithValueTlvEncoder {
 

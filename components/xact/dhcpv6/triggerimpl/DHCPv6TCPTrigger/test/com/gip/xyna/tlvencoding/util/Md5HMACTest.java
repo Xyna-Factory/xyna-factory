@@ -31,8 +31,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.utilv6.Md5HMAC;
 
 /**
  * MD5 HMAC test.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class Md5HMACTest {
 

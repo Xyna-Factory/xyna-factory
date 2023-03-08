@@ -22,8 +22,6 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Regular-expression constraint.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class RegexpConstraint extends AbstractConstraint {
 

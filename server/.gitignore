@@ -1,0 +1,9 @@
+/binserver
+/src/com/gip/xyna/exceptions
+/src/com/gip/xyna/xact/exceptions
+/src/com/gip/xyna/xdev/exceptions
+/src/com/gip/xyna/xfmg/exceptions
+/src/com/gip/xyna/xnwh/exceptions
+/src/com/gip/xyna/xmcp/exceptions
+/src/com/gip/xyna/xprc/exceptions
+/src/com/gip/xyna/xnwh/persistence/PersistenceLayerException.java

@@ -56,7 +56,7 @@ public interface WorkspaceContentProcessor<T extends WorkspaceContentItem> {
    * different, a WorkspaceContentDifference with DifferenceType MODIFY is created. Multiple
    * difference between matching workspaceContentItems result in a single WorkspaceContentDifference.
    */
-  public List<WorkspaceContentDifference> compare(Collection<T> from, Collection<T> to);
+  public List<WorkspaceContentDifference> compare(Collection<? extends T> from, Collection<? extends T> to);
 
 
   /**

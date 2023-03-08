@@ -41,8 +41,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.DUIDTlvEncoder;
 
 /**
  * Tests container tvl encoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DUIDTlvEncoderFactoryTest {
 

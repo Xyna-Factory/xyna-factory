@@ -31,8 +31,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.utilv6.ByteUtil;
 
 /**
  * Tests byte util.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ByteUtilTest {
 

@@ -21,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Octet string util.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class OctetStringUtil {
 

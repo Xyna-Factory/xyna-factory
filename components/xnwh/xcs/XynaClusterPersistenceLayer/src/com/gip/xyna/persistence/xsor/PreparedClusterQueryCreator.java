@@ -41,6 +41,7 @@ import com.gip.xyna.xsor.indices.search.SearchRequest;
 import com.gip.xyna.xsor.indices.search.SearchValue;
 import com.gip.xyna.persistence.xsor.ConditionTreeNode.ConditionTreeLeafNode;
 import com.gip.xyna.persistence.xsor.ConditionTreeNode.ConditionTreeIntermidiateNode;
+import com.gip.xyna.persistence.xsor.exceptions.XSOR_Process_Exception;
 import com.gip.xyna.persistence.xsor.helper.TypedValuesHelper;
 import com.gip.xyna.persistence.xsor.indices.StorableBasedSearchCriterion;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
@@ -48,6 +49,7 @@ import com.gip.xyna.xnwh.persistence.Query;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
 import com.gip.xyna.xnwh.persistence.memory.sqlparsing.ParsedQuery;
+import com.gip.xyna.xnwh.persistence.memory.sqlparsing.PreparedQueryParsingException;
 
 
 
@@ -67,7 +69,12 @@ public class PreparedClusterQueryCreator<E> {
   
   
   private PreparedClusterQuery<E> prepareQuery(String tableName, String sqlString, Class<? extends Storable> storableClazz, ResultSetReader<? extends E> reader, List<IndexDefinition<?, ? extends IndexKey, ? extends IndexSearchCriterion>> indexDefinitions) throws PersistenceLayerException {
-    ParsedQuery parsedQuery = new ParsedQuery(sqlString);
+    ParsedQuery parsedQuery;
+    try {
+      parsedQuery = new ParsedQuery(sqlString);
+    } catch (PreparedQueryParsingException e) {
+      throw new XSOR_Process_Exception("ParsedQuery", e);
+    }
     ConditionTreeNode root = ConditionTreeNode.parseIntoTree(parsedQuery) ;
     List<SearchCriterion> searchCriterion = normalizeParsedQuery(root, Storable.getPersistable(storableClazz).primaryKey());
     Map<Integer, SearchValue> prepreparedParameter = prepareFixedParams(root, storableClazz);

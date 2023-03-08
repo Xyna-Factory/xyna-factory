@@ -28,8 +28,6 @@ import com.gip.xyna.xact.triggerv6.tlvencoding.dhcpv6.encoders.LeaseQueryTlvEnco
 
 /**
  * Container TLV encoder factory.
- *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class LeaseQueryTlvEncoderFactory extends AbstractTypeOnlyTlvEncoderFactory {
 
