@@ -1,6 +1,6 @@
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@
   <BoolOption Name="g" LongName="global" Description="On cluster configuration perform the command on all nodes." Optional="true" />
   <BoolOption Name="r" LongName="regenerate" Description="Generated code inside the application will be regenerated during the import." Optional="true" />
   <BoolOption Name="iq" LongName="failOnIncompatibleRequirements" Description="If a required runtime context is only present in a different version, the requirement will not be switched to that version, and the import will fail. Default=false." Optional="true" />
-  <BoolOption Name="ncg" LongName="NoCodeGeneration" Description="If the applicationimport results in (re)-generating the application's code, abort instead" Optional="true" />
+  <BoolOption Name="ncg" LongName="noCodeGeneration" Description="If the applicationimport results in (re)-generating the application's code, abort instead" Optional="true" />
   <Argument Name="storableNameGeneration" Description="abort: Abort import if odsNames of different types collide (default). allow: Allows deviation on name colllsions. exclude: Do not import odsNames." Optional="true" />
   <!-- Argument Name="storableNameGeneration" Description="Controls whether odsName should be imported ('exclude') and if a name collision should abort the import ('abort') or a different name should be choosen ('allow')." Optional="true" /-->
   <Argument Name="revision" Description="Revision number to use for the new application."  Optional="true"/>
