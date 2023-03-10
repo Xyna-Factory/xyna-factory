@@ -33,6 +33,7 @@ public class AwaitOrderNotification extends RemoteCallNotification {
   
   private long absoluteTimeout;
   private ResumeTarget resumeTarget;
+  private boolean aborted;
 
   public AwaitOrderNotification(Long remoteOrderId) {
     setOrderId(remoteOrderId);
@@ -52,6 +53,9 @@ public class AwaitOrderNotification extends RemoteCallNotification {
     return resumeTarget;
   }
 
+  public boolean isAborted() {
+    return aborted;
+  }
 
   @Override
   public RemoteCallNotificationStatus execute(FactoryNodeCaller factoryNodeCaller) {
@@ -79,6 +83,12 @@ public class AwaitOrderNotification extends RemoteCallNotification {
   }
 
   public void disconnect(String nodeName) {
+    setNodeConnectException( new XFMG_NodeConnectException(nodeName) );
+    setStatusAndNotify(RemoteCallNotificationStatus.Failed);
+  }
+  
+  public void abort(String nodeName) {
+    aborted = true;
     setNodeConnectException( new XFMG_NodeConnectException(nodeName) );
     setStatusAndNotify(RemoteCallNotificationStatus.Failed);
   }

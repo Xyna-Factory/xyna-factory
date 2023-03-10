@@ -468,8 +468,8 @@ public class NodeManagement extends FunctionGroup {
     return fnc;
   }
 
-  public void removeFactoryNodeCaller(String nodeName) {
-    factoryNodeCaller.remove(nodeName);
+  public FactoryNodeCaller removeFactoryNodeCaller(String nodeName) {
+    return factoryNodeCaller.remove(nodeName);
   }
 
 }

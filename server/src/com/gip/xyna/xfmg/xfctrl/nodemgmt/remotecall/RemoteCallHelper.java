@@ -60,7 +60,6 @@ import com.gip.xyna.xprc.xpce.ordersuspension.ResumeTarget;
 import com.gip.xyna.xprc.xpce.ordersuspension.SuspensionBackupMode;
 import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause_ShutDown;
 import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause_Standard;
-import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceBackup.BackupCause;
 
@@ -268,6 +267,10 @@ public class RemoteCallHelper {
     } else if( suspend && awaitOrder.isParked() ) {
       logger.debug("RCH: awaitOrder -> suspend "+correlatedXynaOrder.getId()  +  " System time: " + System.currentTimeMillis());
       throw new ProcessSuspendedException( new SuspensionCause_Standard() );
+    } else if( awaitOrder.isAborted()) {
+      //order was aborted because remote node was removed. 
+      //Exception is always set if aborted is true
+      throw awaitOrder.getNodeConnectException();
     } else if( awaitOrder.getNodeConnectException() != null ) {
       if (logger.isDebugEnabled()) {
         logger.debug("RCH: could not connect to node: " + awaitOrder.getNodeConnectException().getMessage());
