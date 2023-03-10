@@ -16,7 +16,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="xynautils_masterbuild" default="help">
+<project name="xynautils_masterbuild" default="help" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+  <resolver:pom file="./pom.xml" id="project.pom"/>
 
   <property name="project.name" value="xynautils-${utils.name}" />
 
@@ -158,6 +160,13 @@
            src="${release.dir}/${project.name}-I${timestamp}.zip" />
     <move file="${release.dir}/${project.name}-I${timestamp}"
           tofile="${release.dir}/${project.name}" failonerror="false"/>
+    <resolver:artifact file="${release.dir}/${project.name}/${project.name}-I${timestamp}.jar" type="jar" classifier="sources" id="src"/>
+    <resolver:artifacts id="producedArtifacts">
+      <resolver:artifact refid="src"/>
+    </resolver:artifacts>
+    <resolver:install artifactsref="producedArtifacts">
+      <resolver:pom refid="project.pom" />
+    </resolver:install>
   </target>
 
   <!-- - - - - - - - - - - - - - - - - - 
