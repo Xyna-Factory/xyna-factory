@@ -18,8 +18,6 @@
 -->
 <project name="xynautils_masterbuild" default="help" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
-  <resolver:pom file="./pom.xml" id="project.pom"/>
-
   <property name="project.name" value="xynautils-${utils.name}" />
 
   <!--Directory to store releases -->
@@ -33,6 +31,8 @@
   <property name="vendor.name" value="GIP SmartMercial GmbH" />
 
   <import file="${ant.file.xynautils_masterbuild}/../../build/ant-xyna.xml" />
+
+  <resolver:pom file="./pom.xml" id="project.pom"/>
 
   <!-- Directory to build releases -->
   <property name="root.dir" value="${release.dir}/checkout_${timestamp}" />
