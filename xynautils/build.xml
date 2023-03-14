@@ -79,6 +79,25 @@
 		<path refid="classpath.run" />
 	</path>
 
+	<!--
+		For each of the following xynautils, ant resolve and ant integration is executed:
+		- xynautils-database,
+		- xynautils-exceptions,
+		- xynautils-snmp,
+		- xynautils-misc
+	-->
+	<target name="integration">
+		<utilIntegration utilDir="./database" />
+		<utilIntegration utilDir="./exceptions" />
+		<utilIntegration utilDir="./logging" />
+		<utilIntegration utilDir="./snmp" />
+		<!-- 
+			xynautils-misc depends on xynautils-database and xynautils-exceptions
+			==> it must be build after them
+		-->
+		<utilIntegration utilDir="./misc" />
+	</target>
+
 	<target name="build" depends="build.dev" />
 
 	<target name="build.dev"
@@ -346,4 +365,15 @@ moves it to the users public_html folder">
 		</javadoc>
 	</target>
 
+	<!-- = = = = = = = = = = = = = = = = =
+		macrodef: utilIntegration         
+		= = = = = = = = = = = = = = = = = -->
+	<macrodef name="utilIntegration">
+		<attribute name="utilDir"
+			description="Path to where the build.xml of that xynautil is placed" />
+		<sequential>
+			<ant dir="@{utilDir}" target="resolve" inheritAll="false" />
+			<ant dir="@{utilDir}" target="integration" inheritAll="false" />
+		</sequential>
+	</macrodef>
 </project>

@@ -29,6 +29,7 @@
 	<property name="trigger.dir" value="${root.dir}/triggerimpl" />
 	<property name="persistencelayers.dir" value="${root.dir}/persistencelayers" />
 	<property name="clusterproviders.dir" value="${root.dir}/clusterproviders" />
+	<property name="xynautils.dir" value="${root.dir}/xynautils" />
 	
 	<property name="components.dir" value="${root.dir}/components" />
 	<property name="configserver.dir" value="${root.dir}/modules/xact/velocity/mdmimpl" />
@@ -54,7 +55,7 @@
               target: build
            - - - - - - - - - - - - - - - - - -->
 	<target name="build"
-          depends="checkAppVersion, buildServer, refreshCommonLibXyna, buildModules, buildPersistenceLayers, buildClusterProviders, copyInstallScripts,
+          depends="checkAppVersion, buildXynautils, buildServer, refreshCommonLibXyna, buildModules, buildPersistenceLayers, buildClusterProviders, copyInstallScripts,
                    buildComponents, buildTrigger, buildFilter, buildServices, 
 									 buildTemplateMechanismStandalone, buildNetworkAvailability, prepareMDM, copyInitScripts, buildJavaDoc,
                    buildPlugins, copyCheckScripts"
@@ -166,6 +167,15 @@
 		</fileset>
 	</classpath>
 </java>
+</target>
+
+<!-- - - - - - - - - - - - - - - - - -
+         target: buildXynautils
+        - - - - - - - - - - - - - - - - - -->
+<target name="buildXynautils">
+<xynaTarget name="buildXynautils">
+	<ant dir="${xynautils.dir}" target="integration" />
+</xynaTarget>
 </target>
 
 <!-- - - - - - - - - - - - - - - - - -
