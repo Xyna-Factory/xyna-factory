@@ -11,7 +11,7 @@ import glob
 CENTRAL_POM_PATH = os.path.normpath("../../installation/build/pom.xml")
 
 
-def remove_inherited_dependencies(pom: io.TextIOWrapper) -> str:
+def remove_inherited_dependencies(pom: io.TextIOWrapper):
     """
     Goes through the contents and removes each <dependency> tag that doesn't specify a version.
 
