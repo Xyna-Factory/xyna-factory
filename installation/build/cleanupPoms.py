@@ -7,7 +7,6 @@ import io
 import os
 import re
 import glob
-import multiprocessing
 
 CENTRAL_POM_PATH = os.path.normpath("../../installation/build/pom.xml")
 
