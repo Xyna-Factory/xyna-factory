@@ -35,8 +35,14 @@ jobs:
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
+    - name: Prepare central POM
+      run: sed -i '/\<\/\?dependencyManagement\>/d' ./installation/build/pom.xml
+    - name: Prune POMs
+      run: |
+        cd installation/build
+        ./cleanupPoms.py
     - name: Run the Anchore Grype scan action
-      uses: anchore/scan-action@v3.3.0
+      uses: anchore/scan-action@v3
       id: scan
       with:
         path: "."
