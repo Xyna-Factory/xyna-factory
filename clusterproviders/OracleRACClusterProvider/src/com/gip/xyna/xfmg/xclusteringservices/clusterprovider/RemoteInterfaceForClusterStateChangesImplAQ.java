@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,10 +118,7 @@ public class RemoteInterfaceForClusterStateChangesImplAQ implements RemoteInterf
     this.listenerThread = new Thread(this, "XOracleInterconnectListenerThread");
     this.listenerThread.setDaemon(true);
     this.impl = propagateIncomingRequestsToThis;
-    this.queue = new QueueData();
-    queue.setQueueName(queueName);
-    queue.setDbSchema(dbUserName);
-
+    this.queue = new QueueData(queueName, dbUserName, null, null, null);
   }
 
 
