@@ -58,6 +58,10 @@ public class InheritanceRuleCollection implements Serializable {
     return Collections.unmodifiableCollection(inheritanceRules.values());
   }
 
+  public InheritanceRule getRuleByChildFilter(String childFilter) {
+    return inheritanceRules.get(childFilter);
+  }
+
   public List<InheritanceRule> getInheritanceRulesOrderedByChildFilter() {
     List<InheritanceRule> ret = new ArrayList<InheritanceRule>(inheritanceRules.values());
     Collections.sort(ret, new ChildFilterComparator());
