@@ -117,5 +117,21 @@ public class MonitoringCodes {
       return STEP_MONITORING;
     }
   }
+
+
+  public static boolean isValid(int val) {
+    switch (val) {
+      case 0 :
+      case 5 :
+      case 10 :
+      case 15 :
+      case 17 :
+      case 18 :
+      case 20 :
+        return true;
+      default :
+        return false;
+    }
+  }
   
 }

@@ -28,7 +28,7 @@ import com.gip.xyna.xfmg.xods.configuration.Configuration;
  *
  */
 public class XynaPropertyInheritanceRule extends InheritanceRule {
-
+  
   private static final long serialVersionUID = 1L;
 
   private String xynaPropertyName;
@@ -99,6 +99,10 @@ public class XynaPropertyInheritanceRule extends InheritanceRule {
     else if (!xynaPropertyName.equals(other.xynaPropertyName))
       return false;
     return true;
+  }
+
+  public String getPropertyName() {
+    return xynaPropertyName;
   }
 
 }

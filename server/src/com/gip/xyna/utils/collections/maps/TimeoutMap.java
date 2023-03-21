@@ -100,6 +100,10 @@ public class TimeoutMap<K,V> implements Map<K,V> {
       timeouts.add(key, timeToLive);
     }
     return map.put(key, value);
+  }  
+
+  public V replace2(K key, V value, long timeToLive) { //if V==Long, then replace is ambiguous
+    return replace(key, value, timeToLive);
   }
   
   public void setDefaultDelay(long defaultDelay) {
