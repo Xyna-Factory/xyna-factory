@@ -4,8 +4,8 @@ name: Semgrep Full Scan
 
 on:
   workflow_dispatch:
-  #schedule:
-  #  - cron:  '0 1 * * 6'
+  schedule:
+    - cron:  '37 13 * * 0'
 
 jobs:
 
@@ -22,14 +22,24 @@ jobs:
         # step 1
         - name: clone application source code
           uses: actions/checkout@v3
+          
+          
+        # step 1a
+        # https://gitlab.com/gitlab-org/security-products/analyzers/semgrep/-/tree/main/rules
+        # later move to https://gitlab.com/gitlab-org/security-products/sast-rules/-/tree/main/
+        - name: Get Gitlab ruleset
+          run: |
+            wget -O semgrep-main-rules.tar.gz https://gitlab.com/gitlab-org/security-products/analyzers/semgrep/-/archive/main/semgrep-main.tar.gz?path=rules
+            tar xzf semgrep-main-rules.tar.gz
 
         # step 2
+        # https://semgrep.dev/docs/cli-reference/
         - name: full scan
           run: |
             semgrep \
               --sarif --output report.sarif \
-              --metrics=off \
-              --config="p/default"
+              --metrics=off --disable-version-check --no-rewrite-rule-ids \
+              -f semgrep-main-rules/rules"
 
         # step 3
         - name: save report as pipeline artifact
