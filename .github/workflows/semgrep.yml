@@ -39,7 +39,7 @@ jobs:
             semgrep \
               --sarif --output report.sarif \
               --metrics=off --disable-version-check --no-rewrite-rule-ids \
-              -f semgrep-main-rules/rules"
+              -f semgrep-main-rules/rules
 
         # step 3
         - name: save report as pipeline artifact
