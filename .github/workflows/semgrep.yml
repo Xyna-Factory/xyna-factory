@@ -1,0 +1,46 @@
+name: Semgrep Full Scan
+# https://dev.to/0xdbe/github-how-to-enable-code-scanning-with-semgrep-501d
+# https://semgrep.dev/docs/semgrep-ci/sample-ci-configs/#sample-github-actions-configuration-file
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #  - cron:  '0 1 * * 6'
+
+jobs:
+
+  semgrep-full:
+      runs-on: ubuntu-latest
+      container:
+        image: returntocorp/semgrep
+        
+      # Skip any PR created by dependabot to avoid permission issues:
+      if: (github.actor != 'dependabot[bot]')
+
+      steps:
+
+        # step 1
+        - name: clone application source code
+          uses: actions/checkout@v3
+
+        # step 2
+        - name: full scan
+          run: |
+            semgrep \
+              --sarif --output report.sarif \
+              --metrics=off \
+              --config="p/default"
+
+        # step 3
+        - name: save report as pipeline artifact
+          uses: actions/upload-artifact@v3
+          with:
+            name: report.sarif
+            path: report.sarif
+
+        # step 4
+        - name: publish code scanning alerts
+          uses: github/codeql-action/upload-sarif@v2
+          with:
+            sarif_file: report.sarif
+            category: semgrep
