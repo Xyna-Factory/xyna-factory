@@ -34,6 +34,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+    <dependencies>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-1.2-api</artifactId>
@@ -54,6 +55,5 @@
             <groupId>org.snmp4j</groupId>
             <artifactId>snmp4j</artifactId>
         </dependency>
-    <dependencies>
     </dependencies>
 </project>

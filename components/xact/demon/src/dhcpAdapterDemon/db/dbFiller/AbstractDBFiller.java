@@ -102,7 +102,7 @@ public abstract class AbstractDBFiller<Data> extends AbstractDBFillerBase<Data> 
       if( lastException != null ) {//Sonderfall Fehlerbehandlung von SQL-Fehlern
         for( int cnt=0; cnt< maxSqlRetry; ++cnt ) {//maxSqlRetry mal Retry, Schleife wird im Normalfall mit break am Ende der Schleife verlassen
           logger.warn( "Retry #+"+cnt+": " );
-          if (lastException instanceof com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException){
+          if (lastException instanceof java.sql.SQLTransactionRollbackException){
             logger.warn( "Exception while sqlData.execute:"+lastException.getMessage(),lastException );
             sqlUtils.rollback();//setzt auch sqlUtils.getLastException() zurueck
             incDeadlockCounter();

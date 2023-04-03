@@ -24,7 +24,7 @@
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy" />
     
-    <target name="build">
+    <target name="build" depends="resolve">
         <buildJar basedir="${basedir}"
               lib.dir="${basedir}/lib"
               destfile="${target.dir}/demonlib.jar" />

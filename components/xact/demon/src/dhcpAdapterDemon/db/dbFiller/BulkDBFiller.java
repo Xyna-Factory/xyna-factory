@@ -95,7 +95,7 @@ public class BulkDBFiller<Data> extends AbstractDBFillerBase<Data> {
     } catch (Exception e){
       logger.info("Problem with bulk commit occurred. cleanup...");
       sqlUtils.rollback();
-      if (e instanceof com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException){
+      if (e instanceof java.sql.SQLTransactionRollbackException){
         incDeadlockCounter();
       } else {
         rebuildConnection("executeSQL  failed");        
@@ -124,7 +124,7 @@ public class BulkDBFiller<Data> extends AbstractDBFillerBase<Data> {
           break;
         } catch (Exception e){
           boolean successRollback=sqlUtils.rollback();
-          if (successRollback && e instanceof com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException){
+          if (successRollback && e instanceof java.sql.SQLTransactionRollbackException){
             incDeadlockCounter();
           } else {//SQLException + sonstige incl. Runtime
             rebuildConnection("executeSQL  failed");        
