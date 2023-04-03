@@ -98,7 +98,7 @@ public class LicenseManagement implements OidSingleHandler {
       lastread=System.currentTimeMillis();
       String tableName = DemonProperties.getProperty("db.snmpTrap.db.tablename");
       if(tableName == null) {
-        throw new RuntimeExceptio("Property 'db.snmpTrap.db.tablename' not set.");
+        throw new RuntimeException("Property 'db.snmpTrap.db.tablename' not set.");
       }
       String sql = "SELECT count(*),devicestatus0 from " + tableName + ".device group by devicestatus0";
       dataList =getSqlUtils().query( sql, new Parameter(), new Reader() ); 
