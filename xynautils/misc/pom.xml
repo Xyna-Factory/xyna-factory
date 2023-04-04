@@ -64,7 +64,6 @@
         <dependency>
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-exceptions</artifactId>
-            <version>3.0.0.0</version>
         </dependency>
     </dependencies>
 </project>
