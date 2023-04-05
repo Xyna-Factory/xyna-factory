@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2298,7 +2298,7 @@ public abstract class GenerationBase {
 
   private static void cleanupGlobalCaches(long revision) {
     Path.clearCache();
-    if (!XynaFactory.isInstanceMocked()) {
+    if (XynaFactory.hasInstance() && !XynaFactory.isInstanceMocked()) {
       XynaObject.clearGenerationCache(revision);
     }
   }
@@ -2397,7 +2397,7 @@ public abstract class GenerationBase {
       }
 
       boolean pauseLoading = false;
-      if (!XynaFactory.getInstance().isStartingUp()) {
+      if (XynaFactory.hasInstance() && !XynaFactory.getInstance().isStartingUp()) {
         for (GenerationBase gb : objects) {
           if(gb.mode.mustPauseMigrationLoadingAtStartup()) {
             // pausieren vom Laden des OrderBackups ... wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurück
@@ -2431,6 +2431,9 @@ public abstract class GenerationBase {
           try {
             cs.compile();
           } catch (XPRC_CompileError e) {
+            if(XynaProperty.NO_SINGLE_COMPILE.get()) {
+              throw e;
+            }
             if (!proceedOnError) { // if the compile does not proceed on error, we have to
               cs.clear();
               compileInCorrectOrder(objectsWithDependencies, cs, false);

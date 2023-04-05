@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.gip.xyna.xfmg.xfctrl.xmomdatabase;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -206,6 +207,15 @@ public class XMOMDatabase extends FunctionGroup {
           return WORKFLOW;
         default :
           throw new IllegalArgumentException(type + " is not a XMOMType");
+      }
+    }
+
+
+    public static XMOMType getXMOMTypeByFile(File file) {
+      try (FileInputStream fis = new FileInputStream(file)) {
+        return XMOMType.getXMOMTypeByRootTag(XMLUtils.getRootElementName(fis));
+      } catch (Exception e) {
+        throw new RuntimeException(e);
       }
     }
   }

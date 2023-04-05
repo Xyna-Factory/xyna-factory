@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ public class InMemoryCompilationSet implements CompilationSet {
 
 
   private String determineJavaVersion() {
-    if (XynaFactory.isFactoryServer()) {
+    if (XynaFactory.hasInstance()) {
       return XynaProperty.BUILDMDJAR_JAVA_VERSION.get();
     }
 
@@ -324,7 +324,7 @@ public class InMemoryCompilationSet implements CompilationSet {
   }
 
   public String getClassPath() {
-    if (XynaFactory.isFactoryServer()) {
+    if (XynaFactory.hasInstance()) {
       String additionalLibsAsString = GenerationBase.flattenClassPathSet(additionalLibs);
       return GenerationBase.getJarFiles() + Constants.PATH_SEPARATOR + additionalLibsAsString;
     } else {
