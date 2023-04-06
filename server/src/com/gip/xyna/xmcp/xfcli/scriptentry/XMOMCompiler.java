@@ -61,6 +61,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.FileSystemXMLSource;
@@ -82,10 +83,11 @@ public class XMOMCompiler {
   private static final String INPUT_RECURSIVE = "recursive";
   private static final String INPUT_TYPES = "types";
   private static final String INPUT_PRINT_CLASSPATH = "printclasspath";
+  private static final String INPUT_TYPERESISTANT = "typresistant";
 
   private static final List<String> inputKeys =
       Arrays.asList(INPUT_APPLICATION_NAME_AND_VERSION, INPUT_OUPTUT_PATH, INPUT_STORABLE_INTERFACES, INPUT_SOURCEPATHS, INPUT_SINGLE_FILE,
-                    INPUT_RECURSIVE, INPUT_TYPES, INPUT_PRINT_CLASSPATH);
+                    INPUT_RECURSIVE, INPUT_TYPES, INPUT_PRINT_CLASSPATH, INPUT_TYPERESISTANT);
 
 
   public static void main(String[] args) {
@@ -161,6 +163,9 @@ public class XMOMCompiler {
         case INPUT_TYPES :
           data.setAllowedTypes(Arrays.asList(value.split(",")).stream().map(x -> XMOMType.valueOf(x)).collect(Collectors.toSet()));
           break;
+        case INPUT_TYPERESISTANT:
+          data.setTypresistant(Boolean.parseBoolean(value));
+          break;
         case INPUT_PRINT_CLASSPATH :
           data.setPrintClasspath(Boolean.parseBoolean(value));
         default :
@@ -194,6 +199,7 @@ public class XMOMCompiler {
     System.out.println("Included XMOM Types: " + data.getAllowedTypes().size() + ": " + String.join(", ", typesAsStrings));
     System.out.println("Result will " + (data.isReturnSingleFile() ? "" : "NOT ") + "be a single file.");
     System.out.println("Result will " + (data.isRecursive() ? "" : "NOT ") + "include Objects from other Applications.");
+    System.out.println("Xyna Property \"xprc.xfractwfe.different.typeresistant\" is set to " + data.isTypresistant());
     System.out.println("Classpath System property (java.class.path): " + classPathString);
   }
 
@@ -210,7 +216,7 @@ public class XMOMCompiler {
       configureLoggers();
       printData(data);
       setStorableInterfaces(data.getStorableInterfaces());
-      setSingleCompileProperty();
+      setProperties(data);
 
       FileSystemXMLSource source = createXMLSource(data, tmpClassFolder);
       Set<GenerationBase> toDeploy = findXmomObjects(data, source, tmpClassFolder);
@@ -240,9 +246,10 @@ public class XMOMCompiler {
   }
 
 
-  private void setSingleCompileProperty() {
+  private void setProperties(XMOMCompilationData data) {
     try {
       XynaProperty.NO_SINGLE_COMPILE.set(true);
+      ModelledExpression.generateTypeResistantMappingCode.set(data.isTypresistant());
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
@@ -536,6 +543,7 @@ public class XMOMCompiler {
     private Set<XMOMType> allowedTypes; //what to compile
     private boolean returnSingleFile; //should result be compressed into a jar file?
     private boolean recursive; //should XMOMs from other applications be included?
+    private boolean typresistant; //xprc.xfractwfe.different.typeresistant
 
     private boolean printClasspath;
 
@@ -616,6 +624,16 @@ public class XMOMCompiler {
     }
 
 
+    public boolean isTypresistant() {
+      return typresistant;
+    }
+
+
+    public void setTypresistant(boolean typresistant) {
+      this.typresistant = typresistant;
+    }
+
+
     public boolean isPrintClasspath() {
       return printClasspath;
     }
@@ -624,5 +642,7 @@ public class XMOMCompiler {
     public void setPrintClasspath(boolean printClasspath) {
       this.printClasspath = printClasspath;
     }
+
+
   }
 }
