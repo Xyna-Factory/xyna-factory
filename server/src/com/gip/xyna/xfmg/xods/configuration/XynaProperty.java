@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -564,6 +564,7 @@ public interface XynaProperty {
   public static XynaPropertyString BUILDMDJAR_JAVA_VERSION = new XynaPropertyString("xyna.target.mdm.jar.javaversion", "Java6");
   
   public static XynaPropertyBoolean TRY_PROCEED_ON_COMPILE_ERROR = new XynaPropertyBoolean("xyna.java.compile.tryproceedonerror", true);
+  public static XynaPropertyBoolean NO_SINGLE_COMPILE = new XynaPropertyBoolean("xyna.java.compile.nosinglecompile", false).setHidden(true);
   
   public static XynaPropertyDuration MESSAGE_BUS_FETCH_TIMEOUT = 
       new XynaPropertyDuration("xyna.messagebus.request.timeout.millis", "10 s", TimeUnit.MILLISECONDS);

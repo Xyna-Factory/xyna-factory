@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -420,7 +420,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   @Deprecated
-  private static final XynaPropertyBuilds<StringSerializableList<String>> storableInterfaces =
+  public static final XynaPropertyBuilds<StringSerializableList<String>> storableInterfaces =
       new XynaPropertyBuilds<StringSerializableList<String>>("xprc.xfractwfe.generation.storable.xmom.interfaces",
                                                              new StringSerializableList<String>(String.class, new ArrayList<String>(),
                                                                                                 new SeparatorSerializeAlgorithm(",")))

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,16 +78,48 @@
         <echo message="${errors}"/>
     </target>
 
-    <target name="create-mdm-jar" description="Create mdm.jar locally">
-    
-        <property name="java.compile.version" value="Java6" />
-        <property name="output.dir" value="." />
-        <property name="apps.paths" value="${root.dir}" />
 
-        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.BuildDatatypeJarFromSource" fork="true" failonerror="true">
-            <arg value="${Application.applicationName}/${Application.versionName}" />
-            <arg value="${output.dir}" />
-            <arg line="${apps.paths}" />
+    <!-- ================================= 
+         target: create-mdm-jar         
+         ================================= -->
+    <target name="create-mdm-jar" description="Create mdm.jar locally">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+
+        <property name="java.compile.version" value="Java6" />
+        <property name="output.dir" value="./mdm.jar" />
+        <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
+        <property name="apps.paths" value="${root.dir}" />
+        <property name="recursive" value="true" />
+        <property name="single.file" value="true" />
+        <property name="types" value="DATATYPE,EXCEPTION" />
+
+        <antcall target="compile-xmoms" />
+    </target>
+
+
+    <!-- ================================= 
+         target: compile-xmoms         
+         ================================= -->
+    <target name="compile-xmoms" description="compile xmom objects locally">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+
+        <property name="java.compile.version" value="Java6" />
+        <property name="output.dir" value="./xmomclasses" />
+        <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
+        <property name="apps.paths" value="${root.dir}" />
+        <property name="recursive" value="false" />
+        <property name="single.file" value="false" />
+        <property name="types" value="DATATYPE,EXCEPTION,WORKFLOW" />
+        <property name="printclasspath" value="false" />
+
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.XMOMCompiler" fork="true" failonerror="true">
+            <arg value="app:${Application.applicationName}/${Application.versionName}" />
+            <arg value="output:${output.dir}" />
+            <arg value="storableInterfaces:${xprc.xfractwfe.generation.storable.xmom.interfaces}" />
+            <arg line="sourcePaths:${apps.paths}" />
+            <arg value="singleFile:${single.file}" />
+            <arg value="recursive:${recursive}" />
+            <arg value="types:${types}" />
             <env key="mdmjarjavaversion" value="${java.compile.version}" />
             <classpath>
                 <fileset dir="${antUtils.dir}lib/factory">

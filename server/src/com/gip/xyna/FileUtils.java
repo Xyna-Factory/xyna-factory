@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1361,5 +1361,9 @@ public class FileUtils {
     } catch (IOException e) {
       throw new Ex_FileAccessException(zipFile.getName(), e);
     }
+  }
+  
+  public static String deriveFqNameFromPath(File rootPath, Path fullPath) {
+    return fullPath.toFile().getAbsolutePath().substring(rootPath.getAbsolutePath().length() + 1, fullPath.toFile().getAbsolutePath().length() - 4).replace(System.getProperty("file.separator"), ".");
   }
 }
