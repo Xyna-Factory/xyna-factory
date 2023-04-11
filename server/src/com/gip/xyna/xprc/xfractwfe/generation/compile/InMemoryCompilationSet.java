@@ -41,11 +41,13 @@ import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xmcp.xfcli.impl.ListsysteminfoImpl;
 import com.gip.xyna.xprc.exceptions.XPRC_CompileError;
+import com.gip.xyna.xprc.exceptions.XPRC_WrappedCompileError;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 
 public class InMemoryCompilationSet implements CompilationSet {
   
   public static final String JAVA_VERSION_ENV_NAME = "mdmjarjavaversion";
+  public static boolean THROW_ALL_ERRORS = false;
   
   public static enum TargetKind {
     FILE, MEMORY;
@@ -227,7 +229,8 @@ public class InMemoryCompilationSet implements CompilationSet {
       }
     }
     if (stfm.getErrorCollector().getCollectedErrors().size() > 0) {
-      XPRC_CompileError e = stfm.getErrorCollector().getCollectedErrors().get(0);
+      List<XPRC_CompileError> errors = new ArrayList<XPRC_CompileError>(stfm.getErrorCollector().getCollectedErrors());
+      XPRC_CompileError e = THROW_ALL_ERRORS ? new XPRC_WrappedCompileError(null, null, null, errors) : errors.get(0);
       throw e;
     }
     
