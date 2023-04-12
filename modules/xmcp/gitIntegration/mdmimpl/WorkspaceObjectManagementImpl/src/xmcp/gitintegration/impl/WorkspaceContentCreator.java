@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,16 +38,25 @@ import xmcp.gitintegration.impl.xml.WorkspaceContentXmlConverter;
 
 public class WorkspaceContentCreator {
 
+  public static final String WORKSPACE_XML_FILENAME = "workspace.xml";
+  public static final String WORKSPACE_XML_SPLITNAME = "config";
+
 
   public File determineWorkspaceXMLFile(String workspaceName) {
     Long revision = getRevision(workspaceName);
     String path = RevisionManagement.getPathForRevision(PathType.ROOT, revision);
-    File file = new File(path, "workspace.xml");
+    File file = new File(path, WORKSPACE_XML_FILENAME);
+    if (!file.exists()) {
+      file = new File(file.getParentFile(), WORKSPACE_XML_SPLITNAME);
+      if (!file.exists()) {
+        throw new RuntimeException("workspace.xml does not exist for '" + workspaceName + "' at " + file.getParent());
+      }
+    }
     return file;
   }
 
 
-  public WorkspaceContent createWorkspaceContent(String workspaceName) {
+  public WorkspaceContent createWorkspaceContentForWorkspace(String workspaceName) {
     WorkspaceContent result = new WorkspaceContent();
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     Long revision = getRevision(workspaceName);
@@ -70,14 +79,29 @@ public class WorkspaceContentCreator {
   }
 
 
+  /**
+   * File is either a workspace.xml or a configuration-folder containing
+   * files named after workspaceContentItem subclasses
+   */
   public WorkspaceContent createWorkspaceContentFromFile(File file) {
+    WorkspaceContent result = null;
     try {
-      String xml = Files.readString(file.toPath());
-      WorkspaceContent result = createWorkspaceContentFromText(xml);
-      return result;
+      result = file.isFile() ? createWorkspaceContentFromText(Files.readString(file.toPath())) : createWorkspaceContentFromDirectory(file);
     } catch (IOException e) {
-      throw new RuntimeException("Could not read file " + file.getAbsolutePath(), e);
+      throw new RuntimeException("Could not read WorkspaceContent from " + file.getAbsolutePath(), e);
     }
+    return result;
+  }
+
+
+  private WorkspaceContent createWorkspaceContentFromDirectory(File file) throws IOException {
+    WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
+    WorkspaceContent result = new WorkspaceContent();
+    for (File f : file.listFiles()) {
+      String input = Files.readString(f.toPath());
+      converter.addToWorkspaceContent(input, result);
+    }
+    return result;
   }
 
 

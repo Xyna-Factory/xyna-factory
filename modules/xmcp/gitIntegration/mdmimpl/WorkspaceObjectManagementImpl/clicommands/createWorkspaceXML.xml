@@ -1,6 +1,6 @@
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,4 +19,5 @@
   <CommandDefinition Name="createworkspacexml" Description="create workspace.xml for a given workspace" />
   <Argument Name="workspaceName" Description="Workspace to create workspace.xml for" />
   <BoolOption Name="p" LongName="printResult" Description="Instead of writing to file, only display content" Optional="true"/>
+  <BoolOption Name="s" LongName="splitResult" Description="Instead of writing to a file, create a folder containing a file for each type of workspace content" Optional="true"/>
 </XynaCommandLineCommand>

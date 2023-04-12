@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class CompareworkspacexmlImpl extends XynaCommandImplementation<Comparewo
     WorkspaceContentCreator creator = new WorkspaceContentCreator();
     File file = creator.determineWorkspaceXMLFile(workspaceName);
     WorkspaceContent xmlConfig = creator.createWorkspaceContentFromFile(file);
-    WorkspaceContent factoryConfig = creator.createWorkspaceContent(workspaceName);
+    WorkspaceContent factoryConfig = creator.createWorkspaceContentForWorkspace(workspaceName);
     WorkspaceContentComparator comparator = new WorkspaceContentComparator();
     WorkspaceContentDifferences differences = comparator.compareWorkspaceContent(factoryConfig, xmlConfig, true);
     List<? extends WorkspaceContentDifference> diffs = differences.getDifferences();
