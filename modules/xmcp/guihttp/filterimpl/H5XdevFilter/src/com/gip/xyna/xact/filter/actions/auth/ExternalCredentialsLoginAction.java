@@ -44,7 +44,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaUserCredentials;
 import com.gip.xyna.xmcp.RMIChannelImpl;
 
-import xmcp.auth.ExternalUserLoginRequest;
+import xmcp.auth.ExternalCredentialsLoginRequest;
 
 
 
@@ -99,12 +99,20 @@ public class ExternalCredentialsLoginAction implements FilterAction {
     String password = request.getPassword();
     boolean force = request.getForce() != null ? request.getForce() : true;
     String domainName = request.getDomain();
-    XynaUserCredentials userCredentials = new XynaUserCredentials(username, password);
+    // @fixme storing username and password in username field, because the password field won't make it up to the auth-Workflow
+    // what is the password field used for, then?
+    XynaUserCredentials userCredentials = new XynaUserCredentials(username + " " + password, "");
     SessionCredentials creds = XynaFactory.getInstance().getFactoryManagement()
         .createSession(userCredentials, Optional.<String> empty(), force);
 
     //session fremd-authorisieren
     try {
+      // logger.info("ExternalCredentialsLogin with: " + username + ", " + password + ", " + domainName);
+
+      // * sessionID oder Token? nutzen, um das Password einzutragen. Im Auth-WF dann dort rauslesen und bind.
+      // * neue Domain in Zeta-Auth-Login bekannt machen: Woher weiß die Login-Component, welchen Endpunkt sie zum Login aufruft?
+      // * neue GuiHttp bauen und auf vacation_test einspielen, später branch pull request
+
       if (!new RMIChannelImpl().authorizeSession(userCredentials, domainName,
                                                  new XynaPlainSessionCredentials(creds.getSessionId(), creds.getToken()))) {
         return error(creds, tc, jfai);
