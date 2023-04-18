@@ -244,6 +244,34 @@ build_plugins() {
   ant -Doracle.home=/tmp buildPlugins
 }
 
+build_clusterproviders() {
+  echo "building clusterproviders..."
+  
+  #oracle rac cluster provider
+  cd $SCRIPT_DIR/../clusterproviders/OracleRACClusterProvider
+  rm -f /test/com/gip/xyna/xfmg/xclusteringservices/clusterprovider/OracleRACClusterProviderTest.java
+  sed -i 's/ojdbc7/ojdbc10/' pom.xml
+  sed -i 's/>com.oracle</>com.oracle.database.jdbc</' pom.xml
+  ant -Doracle.home=/tmp
+  
+  #xsor cluster provider
+  cd $SCRIPT_DIR/../clusterproviders/XSORClusterProvider
+  ant -Doracle.home=/tmp
+}
+
+build_networkavailability() {
+  echo "building networkavailability..."
+  
+  #build and install demon
+  cd $SCRIPT_DIR/../components/xact/demon
+  ant -Doracle.home=/tmp
+  mvn install:install-file -Dfile=$SCRIPT_DIR/../components/xact/demon/deploy/demonlib.jar -DpomFile=$SCRIPT_DIR/../components/xact/demon/pom.xml
+
+  #build networkavailability
+  cd $SCRIPT_DIR/../components/xact/NetworkAvailability
+  ant -Doracle.home=/tmp
+}
+
 build_xyna_factory() {
   echo "building artifact"
   cd $SCRIPT_DIR/..
@@ -271,7 +299,7 @@ zip_result() {
 #TODO: - mb mvn call like for server/lib?
 compose_thridparties() {
   cd $SCRIPT_DIR/../release
-  mkdir thrid_parties
+  mkdir third_parties
 }
 
 #TODO: buildTemplateMechanismStandalone is a target in installation/build/build.xml
@@ -348,16 +376,21 @@ compose_server() {
   compose_server_files
 }
 
-#TODO
 compose_server_files() {
   cd $SCRIPT_DIR/../release
-  #log4j.xml
-  #NSNDSLAMExceptionmappings.xml
-  #product_lib.sh
+  cp ../server/log4j2.xml ./server
+  cp ../server/product_lib.sh ./server
   cp ../server/server.policy ./server
   cp ../server/deploy/TemplateImpl.zip ./server
-  #TemplateImplNew.zip
+  cp ../server/deploy/TemplateImplNew.zip ./server
   cp ../server/xynafactory.sh ./server
+  cp ../server/Exceptions.xml ./server
+}
+
+buildTemplateImplNew() {
+  echo "buildTemplateImplNew..."
+  cd $SCRIPT_DIR/../server
+  ant -Doracle.home=/tmp buildTemplateNew
 }
 
 #TODO: dhcp
@@ -398,7 +431,6 @@ compose_server_orderinpoutsourcetypes() {
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
 }
 
-#TODO: INCLUDE License
 compose_server_lib() {
   cd $SCRIPT_DIR/../release/server
   mkdir lib
@@ -425,10 +457,16 @@ compose_server_conpooltypes() {
   cp -r $SCRIPT_DIR/../localbuild/server/conpooltypes $SCRIPT_DIR/../release/server/conpooltypes
 }
 
-#TODO: clusterprovider build and copy
 compose_server_clusterproviders(){
   cd $SCRIPT_DIR/../release/server
-  mkdir clusterproviders
+  mkdir -p clusterproviders
+  
+  mkdir -p clusterproviders/OracleRACClusterProvider
+  cp $SCRIPT_DIR/../clusterproviders/deploy/OracleRACClusterProvider/* $SCRIPT_DIR/../release/server/clusterproviders/OracleRACClusterProvider
+  cp $SCRIPT_DIR/../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/deploy/OracleAQTools.jar $SCRIPT_DIR/../release/server/clusterproviders/OracleRACClusterProvider
+  
+  mkdir -p clusterproviders/XSORClusterProvider
+  cp $SCRIPT_DIR/../clusterproviders/deploy/XSORClusterProvider/* $SCRIPT_DIR/../release/server/clusterproviders/XSORClusterProvider
 }
 
 
@@ -460,6 +498,9 @@ build_all() {
   build_modules
   build_conpooltypes
   build_plugins
+  build_clusterproviders
+  build_networkavailability
+  buildTemplateImplNew
   build_xyna_factory
 }
 
@@ -478,17 +519,17 @@ prepare_build
 case $1 in
   "xynautils")
     build_xynautils
-	;;
+    ;;
   "all")
     build_all
-	;;
+    ;;
   "compose")
     build_xyna_factory
-	;;
+    ;;
   *)
     echo "unknown argument: $1"
-	exit 1
-	;;
+    exit 1
+    ;;
 esac
 
 exit 0
