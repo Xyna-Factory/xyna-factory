@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -10210,57 +10210,84 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   }
 
 
-  public ApplicationXmlEntry createApplicationDefinitionXml(String applicationName, String versionName, String workspaceName,
+  public ApplicationXmlEntry createApplicationXml(String applicationName, String versionName, String workspaceName,
                                                             boolean createStub) throws XynaException {
  
+    
     ApplicationXmlEntry applicationXmlEntry = new ApplicationXmlEntry(applicationName, versionName, null);
     applicationXmlEntry.setFactoryVersion();
     applicationXmlEntry.getApplicationInfo().setIsRemoteStub(createStub);
-    Long parentRevision = revisionManagement.getRevision(null, null, workspaceName);
-    
+    Long revision;
+    if (workspaceName != null) {
+      revision = revisionManagement.getRevision(null, null, workspaceName);
+    } else {
+      revision = revisionManagement.getRevision(applicationName, versionName, null);
+    }
+
+    Collection<ApplicationEntryStorable> implicitDependencies;
+    Collection<ApplicationEntryStorable> appEntries;
     if (createStub) {
       ODSConnection con = ods.openConnection();
-      List<ApplicationEntryStorable> appEntries;
       try {
-        appEntries = (List<ApplicationEntryStorable>) queryAllApplicationDefinitionStorables(applicationName, parentRevision, con);
+        if (workspaceName != null) {
+          appEntries = (List<ApplicationEntryStorable>) queryAllApplicationDefinitionStorables(applicationName, revision, con);
+        } else {
+          appEntries = queryAllRuntimeApplicationStorables(applicationName, versionName, con);
+        }
       } finally {
         con.closeConnection();
       }
-      Collection<RuntimeDependencyContext> dependentRuntimeContexts = new HashSet<RuntimeDependencyContext>();
       Set<Long> revisions = new HashSet<Long>();
       Application app = new Application(applicationName, versionName);
-      Collection<ApplicationEntryStorable> implicitDependencies = findDependenciesForStub(null, appEntries, parentRevision, revisions, app, false);
+      Collection<RuntimeDependencyContext> dependentRuntimeContexts = new HashSet<RuntimeDependencyContext>();
       for (Long rev : revisions) {
-        dependentRuntimeContexts.add(RuntimeContextDependencyManagement.asRuntimeDependencyContext(revisionManagement.getRuntimeContext(rev)));
+        dependentRuntimeContexts
+            .add(RuntimeContextDependencyManagement.asRuntimeDependencyContext(revisionManagement.getRuntimeContext(rev)));
       }
-      
-      createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, parentRevision, false, false, createStub);
+      implicitDependencies =
+          findDependenciesForStub(null, (List<ApplicationEntryStorable>) appEntries, revision, revisions, app, false);
+
+      createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, revision, false, false, createStub);
+
       addRuntimeContextRequirementXMLEntries(dependentRuntimeContexts, applicationXmlEntry, false, null);
-      
+
     } else {
-      TreeSet<ApplicationEntryStorable> plainSet = new TreeSet<>(ApplicationEntryStorable.COMPARATOR);
-      List<ApplicationEntryStorable> plainEntries = listApplicationDetails(applicationName, null, false, null, parentRevision);
-      if (plainEntries != null) {
-        plainSet.addAll(plainEntries);
+      RuntimeDependencyContext rtc;
+      if (workspaceName != null) {
+        appEntries = new TreeSet<>(ApplicationEntryStorable.COMPARATOR);
+        List<ApplicationEntryStorable> plainEntries = listApplicationDetails(applicationName, null, false, null, revision);
+        if (plainEntries != null) {
+          appEntries.addAll(plainEntries);
+        }
+        implicitDependencies = new TreeSet<>(ApplicationEntryStorable.COMPARATOR);
+        List<ApplicationEntryStorable> includingDeps = listApplicationDetails(applicationName, null, true, null, revision);
+        if (includingDeps != null) {
+          implicitDependencies.addAll(includingDeps);
+        }
+        implicitDependencies.removeAll(appEntries);
+        rtc = new ApplicationDefinition(applicationName, new Workspace(workspaceName));
+      } else {
+        ODSConnection con = ods.openConnection();
+        try {
+          appEntries = queryAllRuntimeApplicationStorables(applicationName, versionName, con);
+        } finally {
+          con.closeConnection();
+        }
+        implicitDependencies = findDependencies((List<ApplicationEntryStorable>) appEntries, revision);
+        rtc = new Application(applicationName, versionName);
       }
-      TreeSet<ApplicationEntryStorable> dependencySet = new TreeSet<>(ApplicationEntryStorable.COMPARATOR);
-      List<ApplicationEntryStorable> includingDeps = listApplicationDetails(applicationName, null, true, null, parentRevision);
-      if (includingDeps != null) {
-        dependencySet.addAll(includingDeps);
-      }
-      dependencySet.removeAll(plainSet);
-      
-      createXMLEntries(plainSet, false, null, applicationXmlEntry, parentRevision, false, false, createStub);
-      createXMLEntries(dependencySet, false, null, applicationXmlEntry, parentRevision, true, false, createStub);
+
+      createXMLEntries(appEntries, false, null, applicationXmlEntry, revision, false, false, createStub);
+      createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, revision, true, false, createStub);
+
       Collection<RuntimeDependencyContext> dependentRuntimeContexts;
       RuntimeContextDependencyManagement rcdMgmt =
           XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-      dependentRuntimeContexts = rcdMgmt.getRequirements(new ApplicationDefinition(applicationName, new Workspace(workspaceName)));
+      dependentRuntimeContexts = rcdMgmt.getRequirements(rtc);
       addRuntimeContextRequirementXMLEntries(dependentRuntimeContexts, applicationXmlEntry, false, null);
     }
-    
-    
+
     return applicationXmlEntry;
   }
-  
+
 }

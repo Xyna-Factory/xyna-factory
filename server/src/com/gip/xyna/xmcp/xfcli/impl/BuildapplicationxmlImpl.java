@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ package com.gip.xyna.xmcp.xfcli.impl;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.io.StringWriter;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -44,15 +43,13 @@ public class BuildapplicationxmlImpl extends XynaCommandImplementation<Buildappl
     ApplicationManagementImpl appMgmt =
         (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
 
-    ApplicationXmlEntry entry = appMgmt.createApplicationDefinitionXml(payload.getApplicationName(), payload.getVersionName(), payload.getWorkspaceName(), payload.getCreateStub());
+    ApplicationXmlEntry entry = appMgmt.createApplicationXml(payload.getApplicationName(), payload.getVersionName(), payload.getWorkspaceName(), payload.getCreateStub());
     Document doc = null;
     try {
       doc = entry.buildXmlDocument();
     } catch (ParserConfigurationException e) {
       throw new XynaException("Exception occurred while building xml. ", e);
     }
-    StringWriter sw = new StringWriter();
-    XMLUtils.saveDomToWriter(sw, doc);
     File file = new File(payload.getFileName() != null ? payload.getFileName() : ApplicationManagementImpl.XML_APPLICATION_FILENAME);
     XMLUtils.saveDom(file, doc);
   }
