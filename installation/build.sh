@@ -295,7 +295,7 @@ build_xyna_factory() {
   compose_etc
   compose_func_lib
   compose_templateMechanismStandalone
-  compose_thridparties
+  compose_thirdparties
   compose_server
   compose_files
   compose_networkavailability
@@ -304,13 +304,15 @@ build_xyna_factory() {
 
 #TODO: version name
 zip_result() {
-  zip -r ../XynaFactory.zip $SCRIPT_DIR/../release
+  zip -r ../XynaFactory_v0.0.0.0_000000_0000.zip $SCRIPT_DIR/../release
 }
 
-#TODO: - mb mvn call like for server/lib?
-compose_thridparties() {
+
+compose_thirdparties() {
   cd $SCRIPT_DIR/../release
   mkdir third_parties
+  cd $SCRIPT_DIR/../server
+  mvn license:download-licenses -s pom.xml license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
 }
 
 #TODO: buildTemplateMechanismStandalone is a target in installation/build/build.xml
