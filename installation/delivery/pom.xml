@@ -119,10 +119,6 @@
                 </dependency>
                 <dependency>
                         <groupId>com.gip.xyna</groupId>
-                        <artifactId>xynafactoryCLIGenerator</artifactId>
-                </dependency>
-                <dependency>
-                        <groupId>com.gip.xyna</groupId>
                         <artifactId>xynafactory</artifactId>
                 </dependency>
         </dependencies>
