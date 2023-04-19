@@ -272,6 +272,16 @@ build_networkavailability() {
   ant -Doracle.home=/tmp
 }
 
+compose_networkavailability() {
+  cd $SCRIPT_DIR/../release
+  mkdir -p components/xact/NetworkAvailability
+  cd components/xact/NetworkAvailability
+  cp -r $SCRIPT_DIR/../components/xact/NetworkAvailability/config .
+  cp -r $SCRIPT_DIR/../components/xact/NetworkAvailability/lib .
+  cp $SCRIPT_DIR/../components/xact/NetworkAvailability/*.sh .
+  cp $SCRIPT_DIR/../components/xact/NetworkAvailability/log4j.properties .
+}
+
 build_xyna_factory() {
   echo "building artifact"
   cd $SCRIPT_DIR/..
@@ -288,6 +298,7 @@ build_xyna_factory() {
   compose_thridparties
   compose_server
   compose_files
+  compose_networkavailability
   zip_result
 }
 
@@ -349,8 +360,7 @@ compose_files() {
   cp ../blackedition/uninstall_black_edition.sh .
 }
 
-# TODO: currently only modules applications
-# buildNetworkAvailability is a target in installation/build/build.xml 
+
 compose_components() {
   cd $SCRIPT_DIR/../release
   mkdir components
@@ -462,11 +472,11 @@ compose_server_clusterproviders(){
   mkdir -p clusterproviders
   
   mkdir -p clusterproviders/OracleRACClusterProvider
-  cp $SCRIPT_DIR/../clusterproviders/deploy/OracleRACClusterProvider/* $SCRIPT_DIR/../release/server/clusterproviders/OracleRACClusterProvider
+  cp $SCRIPT_DIR/../clusterproviders/OracleRACClusterProvider/deploy/* $SCRIPT_DIR/../release/server/clusterproviders/OracleRACClusterProvider
   cp $SCRIPT_DIR/../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/deploy/OracleAQTools.jar $SCRIPT_DIR/../release/server/clusterproviders/OracleRACClusterProvider
   
   mkdir -p clusterproviders/XSORClusterProvider
-  cp $SCRIPT_DIR/../clusterproviders/deploy/XSORClusterProvider/* $SCRIPT_DIR/../release/server/clusterproviders/XSORClusterProvider
+  cp $SCRIPT_DIR/../clusterproviders/XSORClusterProvider/deploy/* $SCRIPT_DIR/../release/server/clusterproviders/XSORClusterProvider
 }
 
 
@@ -492,11 +502,11 @@ build_all() {
   build_xynautils
   build_misc
   build_xynafactory_jar
+  build_conpooltypes
   build_persistencelayers
   prepare_modules
   build_oracle_aq_tools
   build_modules
-  build_conpooltypes
   build_plugins
   build_clusterproviders
   build_networkavailability
