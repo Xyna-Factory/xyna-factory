@@ -29,6 +29,7 @@ check_dependencies() {
   ant -version
   git --version
   zip --version
+  
 }
 
 checkout_factory() {
@@ -294,35 +295,46 @@ build_xyna_factory() {
   rm -rf release
   mkdir -p release
   
+  compose_checkscripts
+  compose_components
+  compose_dhcpd
+  compose_doc
+  compose_etc
+  compose_func_lib
+  compose_templateMechanismStandalone
+  compose_thirdparties
+  compose_server
+  compose_files
+  compose_networkavailability
+  zip_xyna
   compose_prerequisites
-#  compose_checkscripts
-#  compose_components
-#  compose_dhcpd
-#  compose_doc
-#  compose_etc
-#  compose_func_lib
-#  compose_templateMechanismStandalone
-#  compose_thirdparties
-#  compose_server
-#  compose_files
-#  compose_networkavailability
   zip_result
 }
 
 #TODO: version name
-zip_result() {
+zip_xyna() {
+  echo "zipping content of XynaFactory without Prerequisites"
   cd $SCRIPT_DIR/../release
   mkdir ../XynaFactory_v0.0.0.0_000000_0000
   mv * ../XynaFactory_v0.0.0.0_000000_0000
   mv ../XynaFactory_v0.0.0.0_000000_0000 .
-  zip -r ../XynaFactory_v0.0.0.0_000000_0000.zip .
+  zip -r XynaFactory_v0.0.0.0_000000_0000.zip .
+  rm -r XynaFactory_v0.0.0.0_000000_0000
+}
+
+#TODO: version name
+zip_result() {
+  echo "creating "
+  mv $SCRIPT_DIR/../release $SCRIPT_DIR/../XynaFactory_v0.0.0.0_000000_0000_bundle
+  mkdir $SCRIPT_DIR/../release
+  mv $SCRIPT_DIR/../XynaFactory_v0.0.0.0_000000_0000_bundle $SCRIPT_DIR/../release
+  cd $SCRIPT_DIR/../release
+  zip -r ../XynaFactory_v0.0.0.0_000000_0000_bundle.zip .
 }
 
 
 compose_prerequisites() {
-  cd $SCRIPT_DIR/../release
-  mkdir prerequisites
-  cp $SCRIPT_DIR/../prerequisites/release/*.zip ./prerequisites/
+  cp $SCRIPT_DIR/../prerequisites/release/*.zip $SCRIPT_DIR/../release
 }
 
 
@@ -520,18 +532,18 @@ build_xynautils() {
 
 build_all() {
   build_prerequisites
-#  build_xynautils
-#  build_misc
-#  build_xynafactory_jar
-#  build_conpooltypes
-#  build_persistencelayers
-#  prepare_modules
-#  build_oracle_aq_tools
-#  build_modules
-#  build_plugins
-#  build_clusterproviders
-#  build_networkavailability
-#  buildTemplateImplNew
+  build_xynautils
+  build_misc
+  build_xynafactory_jar
+  build_conpooltypes
+  build_persistencelayers
+  prepare_modules
+  build_oracle_aq_tools
+  build_modules
+  build_plugins
+  build_clusterproviders
+  build_networkavailability
+  buildTemplateImplNew
   build_xyna_factory
 }
 
