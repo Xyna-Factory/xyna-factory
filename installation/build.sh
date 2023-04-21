@@ -36,6 +36,12 @@ checkout_factory() {
   # $1 where to check out
 }
 
+build_prerequisites() {
+  echo "building prerequisites..."
+  cd $SCRIPT_DIR/../prerequisites/installation/delivery
+  ant -f delivery.xml
+}
+
 build_xynautils_exceptions() {
   echo "building xynautils-exceptions..."
   cd $SCRIPT_DIR/../xynautils/exceptions
@@ -288,17 +294,18 @@ build_xyna_factory() {
   rm -rf release
   mkdir -p release
   
-  compose_checkscripts
-  compose_components
-  compose_dhcpd
-  compose_doc
-  compose_etc
-  compose_func_lib
-  compose_templateMechanismStandalone
-  compose_thirdparties
-  compose_server
-  compose_files
-  compose_networkavailability
+  compose_prerequisites
+#  compose_checkscripts
+#  compose_components
+#  compose_dhcpd
+#  compose_doc
+#  compose_etc
+#  compose_func_lib
+#  compose_templateMechanismStandalone
+#  compose_thirdparties
+#  compose_server
+#  compose_files
+#  compose_networkavailability
   zip_result
 }
 
@@ -306,6 +313,13 @@ build_xyna_factory() {
 zip_result() {
   cd $SCRIPT_DIR/../release
   zip -r ../XynaFactory_v0.0.0.0_000000_0000.zip .
+}
+
+
+compose_prerequisites() {
+  cd $SCRIPT_DIR/../release
+  mkdir prerequisites
+  cp $SCRIPT_DIR/../prerequisites/release/*.zip ./prerequisites/
 }
 
 
@@ -492,7 +506,7 @@ prepare_build() {
 
 
 build_xynautils() {
- echo "building xynautils..."
+  echo "building xynautils..."
   build_xynautils_exceptions
   build_xynautils_logging
   build_xynautils_database
@@ -502,18 +516,19 @@ build_xynautils() {
 }
 
 build_all() {
-  build_xynautils
-  build_misc
-  build_xynafactory_jar
-  build_conpooltypes
-  build_persistencelayers
-  prepare_modules
-  build_oracle_aq_tools
-  build_modules
-  build_plugins
-  build_clusterproviders
-  build_networkavailability
-  buildTemplateImplNew
+  build_prerequisites
+#  build_xynautils
+#  build_misc
+#  build_xynafactory_jar
+#  build_conpooltypes
+#  build_persistencelayers
+#  prepare_modules
+#  build_oracle_aq_tools
+#  build_modules
+#  build_plugins
+#  build_clusterproviders
+#  build_networkavailability
+#  buildTemplateImplNew
   build_xyna_factory
 }
 
