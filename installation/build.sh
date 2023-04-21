@@ -304,7 +304,8 @@ build_xyna_factory() {
 
 #TODO: version name
 zip_result() {
-  zip -r $SCRIPT_DIR/../XynaFactory_v0.0.0.0_000000_0000.zip $SCRIPT_DIR/../release
+  cd $SCRIPT_DIR/../release
+  zip -r ../XynaFactory_v0.0.0.0_000000_0000.zip .
 }
 
 
