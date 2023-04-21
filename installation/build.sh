@@ -312,6 +312,9 @@ build_xyna_factory() {
 #TODO: version name
 zip_result() {
   cd $SCRIPT_DIR/../release
+  mkdir ../XynaFactory_v0.0.0.0_000000_0000
+  mv * ../XynaFactory_v0.0.0.0_000000_0000
+  mv ../XynaFactory_v0.0.0.0_000000_0000 .
   zip -r ../XynaFactory_v0.0.0.0_000000_0000.zip .
 }
 
