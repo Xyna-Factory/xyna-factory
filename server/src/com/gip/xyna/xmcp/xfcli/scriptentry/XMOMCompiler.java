@@ -40,6 +40,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.log4j.Level;
+import org.w3c.dom.Document;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
@@ -53,18 +54,24 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.XMOMXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlHandler;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
+import com.gip.xyna.xmcp.xfcli.scriptentry.util.ExceptionAnalyzer;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
+import com.gip.xyna.xprc.xfractwfe.generation.compile.Compilation;
+import com.gip.xyna.xprc.xfractwfe.generation.compile.InMemoryCompilationSet;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.FileSystemXMLSource;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.MDMParallelDeploymentException;
 
 
 
@@ -84,10 +91,11 @@ public class XMOMCompiler {
   private static final String INPUT_TYPES = "types";
   private static final String INPUT_PRINT_CLASSPATH = "printclasspath";
   private static final String INPUT_TYPERESISTANT = "typresistant";
+  private static final String INPUT_EXCEPTION_ON_MISSING_APP_XML_ENTRY = "exceptiononmissingappentry";
 
   private static final List<String> inputKeys =
       Arrays.asList(INPUT_APPLICATION_NAME_AND_VERSION, INPUT_OUPTUT_PATH, INPUT_STORABLE_INTERFACES, INPUT_SOURCEPATHS, INPUT_SINGLE_FILE,
-                    INPUT_RECURSIVE, INPUT_TYPES, INPUT_PRINT_CLASSPATH, INPUT_TYPERESISTANT);
+                    INPUT_RECURSIVE, INPUT_TYPES, INPUT_PRINT_CLASSPATH, INPUT_TYPERESISTANT, INPUT_EXCEPTION_ON_MISSING_APP_XML_ENTRY);
 
 
   public static void main(String[] args) {
@@ -163,11 +171,15 @@ public class XMOMCompiler {
         case INPUT_TYPES :
           data.setAllowedTypes(Arrays.asList(value.split(",")).stream().map(x -> XMOMType.valueOf(x)).collect(Collectors.toSet()));
           break;
-        case INPUT_TYPERESISTANT:
+        case INPUT_TYPERESISTANT :
           data.setTypresistant(Boolean.parseBoolean(value));
           break;
         case INPUT_PRINT_CLASSPATH :
           data.setPrintClasspath(Boolean.parseBoolean(value));
+          break;
+        case INPUT_EXCEPTION_ON_MISSING_APP_XML_ENTRY :
+          data.setExceptionOnMissingAppXmlEntry(Boolean.parseBoolean(value));
+          break;
         default :
           throw new RuntimeException("Unknown input: '" + key + "'. Available inputs: " + String.join(", ", inputKeys));
       }
@@ -183,6 +195,7 @@ public class XMOMCompiler {
     CentralFactoryLogging.getLogger(ExceptionGeneration.class).setLevel(Level.WARN);
     CentralFactoryLogging.getLogger(WF.class).setLevel(Level.WARN);
     CentralFactoryLogging.getLogger(XynaProperty.class).setLevel(Level.WARN);
+    CentralFactoryLogging.getLogger(Compilation.class).setLevel(Level.WARN);
   }
 
 
@@ -200,6 +213,8 @@ public class XMOMCompiler {
     System.out.println("Result will " + (data.isReturnSingleFile() ? "" : "NOT ") + "be a single file.");
     System.out.println("Result will " + (data.isRecursive() ? "" : "NOT ") + "include Objects from other Applications.");
     System.out.println("Xyna Property \"xprc.xfractwfe.different.typeresistant\" is set to " + data.isTypresistant());
+    System.out.println("Trying to access an object not listed in application.xml will "
+        + (data.isExceptionOnMissingAppXmlEntry() ? "" : "NOT ") + "result in an exception.");
     System.out.println("Classpath System property (java.class.path): " + classPathString);
   }
 
@@ -212,13 +227,15 @@ public class XMOMCompiler {
   public void compile(XMOMCompilationData data) {
     File outputLocation = new File(data.getOutputPath());
     Path tmpClassFolder = createTmpFolder(outputLocation.getName());
+    ValidatingFileSystemXMLSource source = null;
     try {
       configureLoggers();
       printData(data);
       setStorableInterfaces(data.getStorableInterfaces());
       setProperties(data);
+      InMemoryCompilationSet.THROW_ALL_ERRORS = true;
 
-      FileSystemXMLSource source = createXMLSource(data, tmpClassFolder);
+      source = createXMLSource(data, tmpClassFolder);
       Set<GenerationBase> toDeploy = findXmomObjects(data, source, tmpClassFolder);
 
       deploy(toDeploy);
@@ -233,6 +250,15 @@ public class XMOMCompiler {
       System.out.println("Done");
     } finally {
       FileUtils.deleteDirectory(tmpClassFolder.toFile());
+      if (source != null && !source.getExceptions().isEmpty()) {
+        String severity = data.isExceptionOnMissingAppXmlEntry() ? "ERROR" : "WARN";
+        System.out.println(severity + ": The following " + source.getExceptions().size()
+            + " XMOM Objects are used for compilation, but are not listed in application.xml: \n  "
+            + String.join("\n  ", source.getExceptions()));
+        if (data.isExceptionOnMissingAppXmlEntry()) {
+          throw new RuntimeException("Access to XMOM Objects outside of application xml");
+        }
+      }
     }
   }
 
@@ -293,8 +319,11 @@ public class XMOMCompiler {
   private void deploy(Set<GenerationBase> toDeploy) {
     try {
       GenerationBase.deploy(new ArrayList<>(toDeploy), DeploymentMode.generateMdmJar, false, null);
+    } catch (MDMParallelDeploymentException e1) {
+      ExceptionAnalyzer analyzer = new ExceptionAnalyzer();
+      analyzer.analyzeException(e1);
+      throw new RuntimeException("Exception during deployment");
     } catch (Exception e) {
-      //TODO: improve error message
       throw new RuntimeException(e);
     }
   }
@@ -331,7 +360,7 @@ public class XMOMCompiler {
   }
 
 
-  private FileSystemXMLSource createXMLSource(XMOMCompilationData data, Path classFolder) {
+  private ValidatingFileSystemXMLSource createXMLSource(XMOMCompilationData data, Path classFolder) {
     Map<RuntimeContext, Set<RuntimeContext>> dependencies = new HashMap<>();
     Map<RuntimeContext, File> xmomPaths = new HashMap<>();
     Collection<Path> applicationRoots = new ArrayList<>();
@@ -344,7 +373,7 @@ public class XMOMCompiler {
       xmomPaths.put(newApp.getFirst(), Path.of(applicationRoot.toAbsolutePath().toString(), XMOM_FOLDER).toFile());
     }
 
-    return new FileSystemXMLSource(dependencies, xmomPaths, classFolder.toFile());
+    return new ValidatingFileSystemXMLSource(dependencies, xmomPaths, classFolder.toFile());
   }
 
 
@@ -400,7 +429,7 @@ public class XMOMCompiler {
   }
 
 
-  private ApplicationXmlEntry readApplicationXml(Path applicationRoot) {
+  private static ApplicationXmlEntry readApplicationXml(Path applicationRoot) {
     Path applicationFile = Path.of(applicationRoot.toAbsolutePath().toString(), APPLICATION_DESCRIPTION_FILE);
     ApplicationXmlHandler handler = new ApplicationXmlHandler();
     try {
@@ -416,16 +445,24 @@ public class XMOMCompiler {
 
 
   private Pair<RuntimeContext, Set<RuntimeContext>> readAppMetaData(Path applicationRoot) {
+    try {
     ApplicationXmlEntry applicationXml = readApplicationXml(applicationRoot);
     Application app = new Application(applicationXml.getApplicationName(), applicationXml.getVersionName());
     Stream<RuntimeContextRequirementXmlEntry> depStream = applicationXml.getRuntimeContextRequirements().stream();
     Set<RuntimeContext> dependencies = depStream.map(this::createApplication).collect(Collectors.toSet());
     dependencies = dependencies == null ? new HashSet<RuntimeContext>() : dependencies;
     return Pair.of(app, dependencies);
+    } catch(Exception e) {
+      System.out.println("ERROR while reading Application Meta Data for: " + applicationRoot);
+      throw e;
+    }
   }
 
 
   private Application createApplication(RuntimeContextRequirementXmlEntry x) {
+    if(x.getApplication() == null || x.getApplication().isEmpty()) {
+      System.out.println("ERROR: Dependency to Workspace: '" + x.getWorkspace() + "'.");
+    }
     return new Application(x.getApplication(), x.getVersion());
   }
 
@@ -544,6 +581,7 @@ public class XMOMCompiler {
     private boolean returnSingleFile; //should result be compressed into a jar file?
     private boolean recursive; //should XMOMs from other applications be included?
     private boolean typresistant; //xprc.xfractwfe.different.typeresistant
+    private boolean exceptionOnMissingAppXmlEntry;
 
     private boolean printClasspath;
 
@@ -634,6 +672,16 @@ public class XMOMCompiler {
     }
 
 
+    public boolean isExceptionOnMissingAppXmlEntry() {
+      return exceptionOnMissingAppXmlEntry;
+    }
+
+
+    public void setExceptionOnMissingAppXmlEntry(boolean exceptionOnMissingAppXmlEntry) {
+      this.exceptionOnMissingAppXmlEntry = exceptionOnMissingAppXmlEntry;
+    }
+
+
     public boolean isPrintClasspath() {
       return printClasspath;
     }
@@ -642,7 +690,61 @@ public class XMOMCompiler {
     public void setPrintClasspath(boolean printClasspath) {
       this.printClasspath = printClasspath;
     }
+  }
+
+  private static class ValidatingFileSystemXMLSource extends FileSystemXMLSource {
+
+    private final HashMap<Long, Set<String>> objectsInRevision;
+    private final List<String> exceptions;
 
 
+    public ValidatingFileSystemXMLSource(Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies, Map<RuntimeContext, File> rtcXMOMPaths,
+                                         File targetClassFolder) {
+      super(rtcDependencies, rtcXMOMPaths, targetClassFolder);
+      objectsInRevision = new HashMap<Long, Set<String>>();
+      exceptions = new ArrayList<String>();
+      fillObjectsInRevision();
+    }
+
+
+    private void fillObjectsInRevision() {
+      try {
+        for (RuntimeContext rtc : rtcXMOMPaths.keySet()) {
+          Long revision = getRevision(rtc);
+          File xmomPath = rtcXMOMPaths.get(rtc);
+          ApplicationXmlEntry app = readApplicationXml(xmomPath.getParentFile().toPath());
+          Set<String> xmomEntries = new HashSet<String>();
+          for (XMOMXmlEntry entry : app.getXmomEntries()) {
+            xmomEntries.add(entry.getFqName());
+          }
+          objectsInRevision.put(revision, xmomEntries);
+        }
+      } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+
+    @Override
+    public Document getOrParseXML(GenerationBase generator, boolean fileFromDeploymentLocation)
+        throws Ex_FileAccessException, XPRC_XmlParsingException {
+      boolean inAppXml = objectsInRevision.get(generator.getRevision()).contains(generator.getFqClassName());
+      boolean reservedServerObject = GenerationBase.isReservedServerObjectByFqClassName(generator.getFqClassName());
+      if (!inAppXml && !reservedServerObject) {
+        RuntimeContext rtc = null;
+        try {
+          rtc = getRuntimeContext(generator.getRevision());
+        } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+          rtc = new Workspace("error: " + e.toString());
+        }
+        exceptions.add(generator.getFqClassName() + " should be in " + rtc);
+      }
+      return super.getOrParseXML(generator, fileFromDeploymentLocation);
+    };
+
+
+    public List<String> getExceptions() {
+      return exceptions;
+    }
   }
 }
