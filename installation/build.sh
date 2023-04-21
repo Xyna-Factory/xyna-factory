@@ -29,18 +29,13 @@ check_dependencies() {
   ant -version
   git --version
   zip --version
+  nvm --version
   
 }
 
 checkout_factory() {
   echo "cheking out factory..."
   # $1 where to check out
-}
-
-build_prerequisites() {
-  echo "building prerequisites..."
-  cd $SCRIPT_DIR/../prerequisites/installation/delivery
-  ant -f delivery.xml
 }
 
 build_xynautils_exceptions() {
@@ -289,6 +284,19 @@ compose_networkavailability() {
   cp $SCRIPT_DIR/../components/xact/NetworkAvailability/log4j.properties .
 }
 
+build_prerequisites() {
+  echo "building prerequisites..."
+  cd $SCRIPT_DIR/../prerequisites/installation/delivery
+  ant -f delivery.xml
+}
+
+build_modeller() {
+  echo "building Modeller GUI"
+  cd $SCRIPT_DIR/build
+  nvm use 16
+  ant -f build-gui.xml
+}
+
 build_xyna_factory() {
   echo "building artifact"
   cd $SCRIPT_DIR/..
@@ -308,6 +316,7 @@ build_xyna_factory() {
   compose_networkavailability
   zip_xyna
   compose_prerequisites
+  compose_modeller
   zip_result
 }
 
@@ -330,11 +339,6 @@ zip_result() {
   mv $SCRIPT_DIR/../XynaFactory_v0.0.0.0_000000_0000_bundle $SCRIPT_DIR/../release
   cd $SCRIPT_DIR/../release
   zip -r ../XynaFactory_v0.0.0.0_000000_0000_bundle.zip .
-}
-
-
-compose_prerequisites() {
-  cp $SCRIPT_DIR/../prerequisites/release/*.zip $SCRIPT_DIR/../release
 }
 
 
@@ -511,6 +515,14 @@ compose_server_clusterproviders(){
   cp $SCRIPT_DIR/../clusterproviders/XSORClusterProvider/deploy/* $SCRIPT_DIR/../release/server/clusterproviders/XSORClusterProvider
 }
 
+compose_prerequisites() {
+  cp $SCRIPT_DIR/../prerequisites/release/*.zip $SCRIPT_DIR/../release
+}
+
+compose_modeller() {
+  mv $SCRIPT_DIR/../*.war $SCRIPT_DIR/../release
+}
+
 
 prepare_build() {
   mkdir -p /opt/common
@@ -531,7 +543,6 @@ build_xynautils() {
 }
 
 build_all() {
-  build_prerequisites
   build_xynautils
   build_misc
   build_xynafactory_jar
@@ -544,6 +555,8 @@ build_all() {
   build_clusterproviders
   build_networkavailability
   buildTemplateImplNew
+  build_prerequisites
+  build_modeller
   build_xyna_factory
 }
 
