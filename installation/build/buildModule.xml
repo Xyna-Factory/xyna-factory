@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
@@ -14,41 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-package dhcpAdapterDemon.db;
+-->
+<project name="buildModule" basedir=".">
 
-import dhcpAdapterDemon.db.dbFiller.DBFiller.Status;
-import dhcpAdapterDemon.types.DhcpAction;
-import dhcpAdapterDemon.types.State;
+    <macrodef name="buildModule">
+        <attribute name="dir"/>
+        <attribute name="target"/>
+        <attribute name="target.dir"/>
+        <attribute name="build.file" default="build.xml" />
+        <sequential>
+            <ant antfile="@{build.file}" target="@{target}" inheritAll="false" dir="@{dir}" >
+                <property name="target.dir"        value="@{target.dir}" />
+                <property name="third_parties.dir" value="${third_parties.dir}" />
+            </ant>
+        </sequential>
+    </macrodef>
+    
+</project>
 
-/**
- * 
- *
- */
-public interface DBFillerStatistics {
-  
-  public int getCounter(DhcpAction dhcpAction, State state);
-  
-  public String getCountersAsString(DhcpAction a);
-
-  public Status getStatus();
-
-  public int getWaiting();
-
-  public int getNumReconnects();
-
-  public int getNumFailovers();
-
-  public int getBufferSize();
-
-  public void state(DhcpAction action, State state);
-
-  public float getAverageBulkCommitSize();
-
-  public String getLastException();
-
-  public String getConnectString();
-
-  public int getNumDeadlocks();
-
-}

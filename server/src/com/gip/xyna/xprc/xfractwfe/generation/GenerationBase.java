@@ -6920,10 +6920,10 @@ public abstract class GenerationBase {
   
   public static class FileSystemXMLSource implements XMLSourceAbstraction {
     
-    private final File targetClassFolder;
-    private final Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies;
-    private final Map<RuntimeContext, File> rtcXMOMPaths;
-    private final BijectiveMap<RuntimeContext, Long> revisions;
+    protected final File targetClassFolder;
+    protected final Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies;
+    protected final Map<RuntimeContext, File> rtcXMOMPaths;
+    protected final BijectiveMap<RuntimeContext, Long> revisions;
     
     public FileSystemXMLSource(Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies, Map<RuntimeContext, File> rtcXMOMPaths, File targetClassFolder) {
       this.rtcDependencies = rtcDependencies;

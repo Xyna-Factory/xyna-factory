@@ -15,9 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
+ -->
 <!-- CAUTION: Do not attempt to launch any target from here. Launch them from build.xml instead. -->
 <project name="buildSharedLib" default="deploy" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+    <property name="common.lib.dir" value="${root.dir}/common/lib" />
+    <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
 
     <import file="./macros.xml" />
     <import file="./ant-xyna.xml" />
@@ -37,6 +40,12 @@
     <property name="server.sharedLib.path" value="${server.path}/${revision.dir}/saved/sharedLibs/${sharedLib.folder.name}" />
 
     <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+    <!-- custom libraries to be included -->
+    <path id="libraries">
+        <fileset dir="${common.lib.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
 
     <checkJavaVersion />
     <checkServerProperties />
@@ -66,28 +75,22 @@
     <target name="deploy" depends="build-src" description="scp sharedlib to xyna server and reload sharedlib.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
 
-        <sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="mkdir -p ${server.sharedLib.path}" trust="true" failonerror="false" />
-        <scp todir="${server.userid}:${server.password}@${server.host}:${server.sharedLib.path}" trust="true" verbose="true">
-            <fileset dir="${target.dir}">
-                <include name="**/*" />
-            </fileset>
-            <fileset dir="${base.lib.dir}">
-                <include name="**/*" />
-            </fileset>
-            <fileset dir="${unfree.lib.dir}" erroronmissingdir="false">
-                <include name="**/*" />
-            </fileset>
-        </scp>
-        <sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="cd ${server.path}; ./xynafactory.sh reloadsharedlib -sharedLibName ${sharedLib.folder.name} -workspaceName '${workspacename}'" trust="true" failonerror="true" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.sharedLib.path}" />
 
+        <custom-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.userid}:${server.password}@${server.host}:${server.sharedLib.path}" />
+        <custom-scp-to-remote fromdir="${base.lib.dir}" frominclude="**/*" todir="${server.userid}:${server.password}@${server.host}:${server.sharedLib.path}" />
+        <custom-scp-to-remote fromdir="${unfree.lib.dir}" frominclude="**/*" todir="${server.userid}:${server.password}@${server.host}:${server.sharedLib.path}" />
+
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh reloadsharedlib -sharedLibName ${sharedLib.folder.name} -workspaceName '${workspacename}'" />
     </target>
 
     <!-- =================================
                    target: genExceptionClass
          ================================= -->
-    <target name="genExceptionClass" description="Generate code class for exceptions." if="exception.xml.available" >
+    <target name="genExceptionClass" description="Generate code class for exceptions." if="exception.xml.available">
         <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
             <sysproperty key="BLACK_SERVER_HOME" value="${root.dir}/server" />
+            <classpath refid="libraries" />
             <classpath>
                 <fileset dir="${basedir}/lib">
                     <include name="**/*.jar" />
@@ -109,6 +112,7 @@
         <mkdir dir="${basedir}/classes" />
         <javaCompile>
             <classpath path="${basedir}/classes" />
+            <classpath refid="libraries" />
             <classpath>
                 <fileset dir="${base.lib.dir}" erroronmissingdir="false">
                     <include name="**/*.jar" />
@@ -124,7 +128,7 @@
                     <include name="**/*.jar" />
                 </fileset>
             </classpath>
-        </javaCompile> 
+        </javaCompile>
         <jar destfile="${target.dir}/${sharedLib.name}.jar">
             <manifest>
                 <attribute name="Vendor" value="${vendor.name}" />
@@ -137,7 +141,7 @@
         </jar>
     </target>
 
-    <!-- ================================= 
+    <!-- =================================
                target: resolve             
           =================================  -->
       <target name="resolve">
