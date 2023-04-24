@@ -119,7 +119,6 @@
                 <and>
                     <isset property="server.host" />
                     <isset property="server.userid" />
-                    <isset property="server.password" />
                     <isset property="server.path" />
                 </and>
             </condition>
