@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
+ -->
 <project name="macros" basedir=".">
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
@@ -102,7 +102,7 @@
                             <contains string="${java.version}" substring="1.6.0" />
                             <contains string="${java.version}" substring="1.7.0" />
                             <contains string="${java.version}" substring="1.8.0" />
-			    <contains string="${java.version}" substring="11" />
+                            <contains string="${java.version}" substring="11" />
                         </or>
                     </not>
                 </condition>
@@ -158,6 +158,75 @@
         </sequential>
     </macrodef>
 
+    <!-- ================================= 
+      macro: ssh-exec         
+      ================================= -->
+    <macrodef name="custom-ssh-exec">
+        <attribute name="host" />
+        <attribute name="username" />
+        <attribute name="command" />
+        <sequential>
+            <if>
+                <isset property="server.keyfile" />
+                <!-- authenticate with key -->
+                <then>
+                    <sshexec host="@{host}" username="@{username}" command="@{command}" trust="true" failonerror="true" keyfile="${server.keyfile}" />
+                </then>
+                <!-- authenticate with password -->
+                <else>
+                    <sshexec host="@{host}" username="@{username}" command="@{command}" trust="true" failonerror="true" password="${server.password}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
 
+    <!-- ================================= 
+      macro: custom-scp-to-remote        
+      ================================= -->
+    <macrodef name="custom-scp-to-remote">
+        <attribute name="fromdir" />
+        <attribute name="frominclude" />
+        <attribute name="todir" />
+        <sequential>
+            <if>
+                <isset property="server.keyfile" />
+                <!-- authenticate with key -->
+                <then>
+                    <scp todir="@{todir}" trust="true" verbose="false" keyfile="${server.keyfile}">
+                        <fileset dir="@{fromdir}">
+                            <include name="@{frominclude}" />
+                        </fileset>
+                    </scp>
+                </then>
+                <else>
+                    <scp todir="@{todir}" trust="true" verbose="false" password="${server.password}">
+                        <fileset dir="@{fromdir}">
+                            <include name="@{frominclude}" />
+                        </fileset>
+                    </scp>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+        macro: custom-scp-from-remote        
+        ================================= -->
+    <macrodef name="custom-scp-from-remote">
+        <attribute name="fromFile" />
+        <attribute name="todir" />
+        <sequential>
+            <if>
+                <isset property="server.keyfile" />
+                <!-- authenticate with key -->
+                <then>
+                    <scp todir="@{todir}" file="@{fromFile}" trust="true" verbose="false" keyfile="${server.keyfile}" />
+                </then>
+                <else>
+                    <scp todir="@{todir}" file="@{fromFile}" trust="true" verbose="false" password="${server.password}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
 
 </project>
