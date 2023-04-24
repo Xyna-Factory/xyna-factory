@@ -15,54 +15,125 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
+ -->
 <project name="buildApplication" basedir=".">
+    <import file="macros.xml" />
 
     <property name="antUtils.dir" value="${root.dir}/installation/build/" />
+    <property name="common.lib.dir" value="${root.dir}/common/lib" />
+    <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
 
-    <xmlproperty file="application.xml" collapseAttributes="true"/>
-    <property name="app.name" value="${Application.applicationName}.${Application.versionName}" />
+    <property file="${basedir}/server.properties" />
+    <property file="${root.dir}/server.properties" />
+    <property file="${application.dir}/workspace.properties" />
 
-    <import file="./ant-xyna.xml" />
+
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${common.xyna.lib.dir}/ant-contrib.jar" />
+        </classpath>
+    </taskdef>
 
     <!-- ================================= 
          target: build-application         
          ================================= -->
     <target name="build-application" depends="check">
-
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+        <property name="app.name" value="${Application.applicationName}.${Application.versionName}" />
+    
+        <!-- set to false if the XMOM folder contains objects that should not be included in the application -->
+        <property name="minify" value="false" />
+    
         <mkdir dir="${target.dir}" />
         <mkdir dir="${target.dir}/app" />
         <delete file="${target.dir}/${app.name}" failonerror="false" />
-        
+
         <copy todir="${target.dir}/app">
-          <fileset dir="." includes="application.xml" />
+            <fileset dir="." includes="AppMgmtAdd*" />
+            <fileset dir="." includes="application.xml" />
         </copy>
 
-        <replaceregexp file="${target.dir}/app/application.xml"
-               match="factoryVersion=&quot;&quot;"
-               replace="factoryVersion=&quot;CURRENT_VERSION&quot;"
-               byline="true"
-        />
+        <replaceregexp file="${target.dir}/app/application.xml" match="factoryVersion=&quot;&quot;" replace="factoryVersion=&quot;CURRENT_VERSION&quot;" byline="true" />
 
-        <zip destfile="${target.dir}/${app.name}.app">
-            <!--fileset dir="." includes="application.xml" /-->
-            <zipfileset dir="XMOM" includes="**/*.xml" prefix="XMOM" erroronmissingdir="false"/>
-            <fileset dir="${target.dir}/app" />
-        </zip>
-        
         <if>
             <isset property="third_parties.dir" />
             <then>
                 <copy todir="${third_parties.dir}/" failonerror="false" quiet="true">
                     <fileset dir="${target.dir}/app/third_parties" includes="*">
-                       <include name="*"/>
-                       <exclude name="xyna"/>
+                        <include name="*" />
+                        <exclude name="xyna" />
                     </fileset>
                 </copy>
             </then>
         </if>
 
+        <if>
+            <equals arg1="${minify}" arg2="true" />
+            <!-- copy all XMOM files -->
+            <then>
+                <zip destfile="${target.dir}/${app.name}.app">
+                    <!--fileset dir="." includes="application.xml" /-->
+                    <zipfileset dir="XMOM" includes="**/*.xml" prefix="XMOM" erroronmissingdir="false"/>
+                    <fileset dir="${target.dir}/app" />
+                </zip>
+            </then>
+            <!-- copy only XMOM files referenced in application.xml -->
+            <else>
+                <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.CreateApplicationArchive" fork="true" failonerror="true">
+                    <arg value="${basedir}/application.xml" />
+                    <arg value="${target.dir}" />
+                    <classpath>
+                        <fileset dir="${antUtils.dir}lib/factory">
+                            <include name="*.jar" />
+                        </fileset>
+                    </classpath>
+                </java>
+            </else>
+        </if>
+
         <delete dir="${target.dir}/app" failonerror="true" />
+    </target>
+
+
+    <!-- ================================= 
+         target: build-application-stub         
+         ================================= -->
+    <target name="build-application-stub">
+        <xmlproperty file="application-stub.xml" collapseAttributes="true" />
+        <property name="app.name" value="${Application.applicationName}.${Application.versionName}" />
+
+        <mkdir dir="${target.dir}" />
+        <mkdir dir="${target.dir}/stubapp" />
+        <delete file="${target.dir}/${app.name}" failonerror="false" />
+
+        <copy todir="${target.dir}/stubapp">
+            <fileset dir="." includes="AppMgmtAdd*" />
+            <fileset dir="." includes="application-stub.xml" />
+        </copy>
+
+        <if>
+            <isset property="third_parties.dir" />
+            <then>
+                <copy todir="${third_parties.dir}/" failonerror="false" quiet="true">
+                    <fileset dir="${target.dir}/stubapp/third_parties" includes="*">
+                        <include name="*" />
+                        <exclude name="xyna" />
+                    </fileset>
+                </copy>
+            </then>
+        </if>
+
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.BuildApplicationStub" fork="true" failonerror="true">
+            <arg value="${basedir}/application-stub.xml" />
+            <arg value="${target.dir}" />
+            <classpath>
+                <fileset dir="${antUtils.dir}lib/factory">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+
+        <delete dir="${target.dir}/stubapp" failonerror="true" />
     </target>
 
     <!-- ================================= 
@@ -96,6 +167,35 @@
         <antcall target="compile-xmoms" />
     </target>
 
+    <!-- ================================= 
+         target: update-application-xml         
+         ================================= -->
+    <target name="update-application-xml" description="create application.xml on Xyna Factory">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+        <property name="applicationname" value="${Application.applicationName}" />
+        <property name="applicationversion" value="${Application.versionName}" />
+
+        <!-- create application.xml -->
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -workspaceName '${workspacename}' -versionName '${applicationversion}' -fileName '/tmp/application.xml'" />
+
+        <!-- copy application.xml from xyna server-->
+        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/application.xml" todir="${basedir}" />
+
+    </target>
+
+    <!-- ================================= 
+         target: update-stub        
+         ================================= -->
+    <target name="update-stub" description="create application-stub.xml on Xyna Factory">
+        <xmlproperty file="application-stub.xml" collapseAttributes="true" />
+        <property name="applicationname" value="${Application.applicationName}" />
+        <property name="applicationversion" value="${Application.versionName}" />
+
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -workspaceName '${workspacename}' -versionName '${applicationversion}' -fileName '/tmp/application-stub.xml' -cs" />
+
+        <!-- copy application-stub.xml from xyna server-->
+        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/application-stub.xml" todir="${basedir}" />
+    </target>
 
     <!-- ================================= 
          target: compile-xmoms         
@@ -121,6 +221,23 @@
             <arg value="recursive:${recursive}" />
             <arg value="types:${types}" />
             <env key="mdmjarjavaversion" value="${java.compile.version}" />
+            <classpath>
+                <fileset dir="${antUtils.dir}lib/factory">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+
+    </target>
+
+
+    <!-- ================================= 
+         target: minify application xml         
+         ================================= -->
+    <target name="minify-application-xml" description="Minify an application.xml, removing implicit ordertypes and xmomentries">
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.MinifyApplicationXml" fork="true" failonerror="true">
+            <arg value="${basedir}/application.xml" />
+            <arg value="${basedir}/application.xml_backup" />
             <classpath>
                 <fileset dir="${antUtils.dir}lib/factory">
                     <include name="*.jar" />
