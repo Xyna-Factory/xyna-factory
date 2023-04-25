@@ -1,16 +1,20 @@
-/*----------------------------------------------------
-* Xyna 6.1 (Black Edition)
-* Xyna Multi-Channel Portal
-*----------------------------------------------------
-* Copyright GIP AG 2015
-* (http://www.gip.com)
-* Hechtsheimer Str. 35-37
-* 55131 Mainz
-*----------------------------------------------------
-* $Revision$
-* $Date$
-*----------------------------------------------------
-*/
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
 package com.gip.xyna.xmcp.xfcli.scriptentry;
 
 
@@ -20,11 +24,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 
-import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
-import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlHandler.ApplicationXmlMinifier;
+import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry;
+import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlHandler;
 
 
 
@@ -48,23 +54,26 @@ public class MinifyApplicationXml {
       System.exit(1);
     }
 
-    ApplicationXmlMinifier impl = new ApplicationXmlMinifier();
-    Document doc = null;
-    FileWriter fw = null;
     try {
       if (args.length == 2) {
         Files.copy(f.toPath(), new File(args[1]).toPath());
       }
-      String in = Files.readString(f.toPath());
-      doc = XMLUtils.parseString(in);
-      fw = new FileWriter(f);
-    } catch (XynaException | IOException e) {
+    } catch (IOException e) {
       System.out.println("Error: " + e.getMessage());
       e.printStackTrace();
       System.exit(1);
     }
+    
+    ApplicationXmlEntry app = ApplicationXmlHandler.parseApplicationXml(f.getAbsolutePath());
+    app.minify();
 
-    impl.minifyApplicationXml(doc);
-    XMLUtils.saveDomToWriter(fw, doc);
+    try {
+      Document doc = app.buildXmlDocument();
+      XMLUtils.saveDomToWriter(new FileWriter(f), doc);
+    } catch (IOException | ParserConfigurationException e) {
+      throw new RuntimeException(e);
+    }
   }
+  
+
 }

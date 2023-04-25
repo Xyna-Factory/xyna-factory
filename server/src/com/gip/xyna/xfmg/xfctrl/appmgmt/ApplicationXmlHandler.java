@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,23 @@
  */
 package com.gip.xyna.xfmg.xfctrl.appmgmt;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.gip.xyna.FileUtils;
 import com.gip.xyna.utils.collections.Pair;
+import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.ApplicationInfoEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.CapacityRequirementXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.CapacityXmlEntry;
@@ -960,67 +961,18 @@ public class ApplicationXmlHandler extends DefaultHandler {
   }
 
 
-  public static class ApplicationXmlMinifier {
-
-    private static final List<String> PRUNE_CATEGORIES = setupPruneList();
-
-
-    private static List<String> setupPruneList() {
-      List<String> result = new LinkedList<String>();
-      result.add(TAG_XMOMENTRIES);
-      result.add(TAG_ORDERTYPES);
-      return result;
+  public static ApplicationXmlEntry parseApplicationXml(String path) {
+    ApplicationXmlHandler handler = new ApplicationXmlHandler();
+    try {
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+      SAXParser saxParser = factory.newSAXParser();
+      saxParser.parse(new ByteArrayInputStream(FileUtils.readFileAsString(new File(path)).getBytes(Constants.DEFAULT_ENCODING)), handler);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
-
-
-    public void minifyApplicationXml(Document xml) {
-      NodeList categories = xml.getDocumentElement().getChildNodes();
-      int numberOfCategories = categories.getLength();
-      for (int i = numberOfCategories - 1; i >= 0; i--) {
-        Node category = categories.item(i);
-
-        if (!PRUNE_CATEGORIES.contains(category.getNodeName())) {
-          //this section is not subject to pruning
-          continue;
-        }
-
-        NodeList entries = category.getChildNodes();
-        int length = entries.getLength();
-        for (int j = length; j >= 0; j--) {
-          Node entry = entries.item(j);
-          boolean isImplicitDependency = isImplicitDependency(entry);
-          if (isImplicitDependency) {
-            category.removeChild(entry);
-          }
-        }
-      }
-    }
-
-
-    private boolean isImplicitDependency(Node node) {
-      if (node == null) {
-        return false;
-      }
-      NamedNodeMap attributes = node.getAttributes();
-      if (attributes == null) {
-        return false;
-      }
-      Node implicit = attributes.getNamedItem(ATTRIBUTE_IMPLICIT_DEPENDENCY);
-      if (implicit == null) {
-        return false;
-      }
-
-      String val = implicit.getNodeValue();
-      boolean result = false;
-      try {
-        result = Boolean.parseBoolean(val);
-      } catch (Exception e) {
-        return false;
-      }
-
-      return result;
-    }
+    return handler.getApplicationXmlEntry();
   }
+
 
 
   protected final static String TAG_APPLICATION = "Application";
