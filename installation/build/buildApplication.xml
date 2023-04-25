@@ -176,12 +176,21 @@
         <property name="applicationversion" value="${Application.versionName}" />
 
         <!-- create application.xml -->
-        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -workspaceName '${workspacename}' -versionName '${applicationversion}' -fileName '/tmp/application.xml'" />
+       <if>
+		<equals arg1="${workspacename}" arg2=""/>
+		<then>
+			<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -versionName '${applicationversion}' -fileName '/tmp/application.xml'" />
+		</then>
+		<else>
+			<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -workspaceName '${workspacename}' -versionName '${applicationversion}' -fileName '/tmp/application.xml'" />
+		</else>
+	   </if>
 
         <!-- copy application.xml from xyna server-->
         <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/application.xml" todir="${basedir}" />
 
     </target>
+	
 
     <!-- ================================= 
          target: update-stub        
@@ -191,12 +200,67 @@
         <property name="applicationname" value="${Application.applicationName}" />
         <property name="applicationversion" value="${Application.versionName}" />
 
-        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -workspaceName '${workspacename}' -versionName '${applicationversion}' -fileName '/tmp/application-stub.xml' -cs" />
+		<if>
+			<equals arg1="${workspacename}" arg2=""/>
+			<then>
+				<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -versionName '${applicationversion}' -fileName '/tmp/application-stub.xml' -cs" />
+			</then>
+			<else>
+				<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -workspaceName '${workspacename}' -versionName '${applicationversion}' -fileName '/tmp/application-stub.xml' -cs" />
+			</else>
+		</if>
 
         <!-- copy application-stub.xml from xyna server-->
         <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/application-stub.xml" todir="${basedir}" />
     </target>
+	
+	<!-- ================================= 
+         target: update-xmom         
+         ================================= -->
+    <target name="update-xmom" description="Receive xmom objects from Xyna Factory">
+		<local name="where" />
+		<local name="revision" />
+		<local name="saved" />
+		<xmlproperty file="application.xml" collapseAttributes="true" />
+		<property name="applicationname" value="${Application.applicationName}" />
+        <property name="applicationversion" value="${Application.versionName}" />
+		<if>
+			<equals arg1="${workspacename}" arg2=""/>
+			<then>
+				<property name="where" value="application='${applicationname}' and workspace is null and versionName='${applicationversion}'" />
+                        <property name="saved" value="" />
+			</then>
+			<else> 
+				<property name="where" value="workspace = '${workspacename}'" />    
+				<property name="saved" value="saved/" />
+			</else>
+		</if>
+		<local name="command" />
+		<property name="command" value="cd ${server.path}; ./xynafactory.sh sql &quot;select * from xmomversion where ${where}&quot; |grep revision |awk '{print $3}';"/>
+		<echo message="${server.userid}@:${server.host}${command}" debug="true" />
+		<if>
+			<isset property="server.keyfile" />
+			<then>
+				<sshexec host="${server.host}" username="${server.userid}" keyfile="${server.keyfile}"
+				command="${command}" outputproperty="revision" trust="true" />
+			</then>
+			<else>
+				<sshexec host="${server.host}" username="${server.userid}" password="${server.password}"
+                                command="${command}" outputproperty="revision" trust="true" />
+			</else>
+		</if>
+		<!-- ersetze zeilenumbruch am ende -->
+		<script language="javascript">
+            var revision = project.getProperty("revision").trim();
+            project.setProperty("revision", revision);
+		</script>
+		<echo message="got revision=${revision}" debug="true" />
+		<mkdir dir="XMOM" />
+		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" debug="true" />
+		<custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" todir="XMOM/" />
 
+    </target>
+	
     <!-- ================================= 
          target: compile-xmoms         
          ================================= -->
@@ -246,5 +310,20 @@
         </java>
 
     </target>
+	
+	<!-- ================================= 
+         target: maxify application xml         
+         ================================= -->
+    <target name="maxify-application-xml" description="Maxify an application.xml, adding implicit xmomentries">
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.MaxifyApplicationXml" fork="true" failonerror="true">
+            <arg value="${basedir}/application.xml" />
+            <arg value="${basedir}/application.xml_backup" />
+            <classpath>
+                <fileset dir="${antUtils.dir}lib/factory">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
 
+    </target>
 </project>
