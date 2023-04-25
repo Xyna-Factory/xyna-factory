@@ -31,6 +31,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry;
+import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlHandler.ApplicationXmlMinifier;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xmcp.xfcli.generated.Buildapplicationxml;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -51,6 +52,12 @@ public class BuildapplicationxmlImpl extends XynaCommandImplementation<Buildappl
     } catch (ParserConfigurationException e) {
       throw new XynaException("Exception occurred while building xml. ", e);
     }
+    
+    if(payload.getMinify()) {
+      ApplicationXmlMinifier impl = new ApplicationXmlMinifier();
+      impl.minifyApplicationXml(doc);
+    }
+    
     StringWriter sw = new StringWriter();
     XMLUtils.saveDomToWriter(sw, doc);
     File file = new File(payload.getFileName() != null ? payload.getFileName() : ApplicationManagementImpl.XML_APPLICATION_FILENAME);
