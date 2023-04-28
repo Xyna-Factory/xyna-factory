@@ -197,11 +197,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * 
-   * @param node
-   * @return
-   */
   private static List<DispatcherDestination> parseDispatcherDestinations(Node node) {
     List<DispatcherDestination> ddList = new ArrayList<DispatcherDestination>();
     NodeList childNodes = node.getChildNodes();
@@ -215,11 +210,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * 
-   * @param node
-   * @return
-   */
   private static DispatcherDestination parseDispatcherDestination(Node node) {
     DispatcherDestination dd = new DispatcherDestination();
     NodeList childNodes = node.getChildNodes();
@@ -237,11 +227,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * 
-   * @param node
-   * @return
-   */
+
   private static List<InheritanceRule> parseInheritanceRules(Node node) {
     List<InheritanceRule> ihList = new ArrayList<InheritanceRule>();
     NodeList childNodes = node.getChildNodes();
@@ -255,11 +241,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * 
-   * @param node
-   * @return
-   */
   private static InheritanceRule parseInheritanceRule(Node node) {
     InheritanceRule ih = new InheritanceRule();
     NodeList childNodes = node.getChildNodes();
@@ -279,11 +260,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * 
-   * @param node
-   * @return
-   */
   private static List<Capacity> parseCapacities(Node node) {
     List<Capacity> capList = new ArrayList<Capacity>();
     NodeList childNodes = node.getChildNodes();
@@ -297,11 +273,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * 
-   * @param node
-   * @return
-   */
   private static Capacity parseCapacity(Node node) {
     Capacity cap = new Capacity();
     NodeList childNodes = node.getChildNodes();
@@ -317,11 +288,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * 
-   * @param node
-   * @return
-   */
   private static PrioritySetting parsePrioritySetting(Node node) {
     PrioritySetting ps = new PrioritySetting();
     NodeList childNodes = node.getChildNodes();
@@ -546,12 +512,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * getDispatcherDestinationDiffTypeMap
-   * @param from
-   * @param to
-   * @return
-   */
   private static Map<WorkspaceContentDifferenceType, List<DispatcherDestination>> getDispatcherDestinationDiffTypeMap(OrderType from,
                                                                                                                       OrderType to) {
     Map<WorkspaceContentDifferenceType, List<DispatcherDestination>> resultMap =
@@ -619,13 +579,10 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     return resultMap;
   }
 
+  private static String createKey(InheritanceRule ir) {
+    return ir.getParameterType() + ":" + ir.getChildFilter();
+  }
 
-  /**
-   * getInheritanceRuleDiffTypeMap
-   * @param from
-   * @param to
-   * @return
-   */
   private static Map<WorkspaceContentDifferenceType, List<InheritanceRule>> getInheritanceRuleDiffTypeMap(OrderType from, OrderType to) {
     Map<WorkspaceContentDifferenceType, List<InheritanceRule>> resultMap =
         new HashMap<WorkspaceContentDifferenceType, List<InheritanceRule>>();
@@ -634,13 +591,13 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     Map<String, InheritanceRule> fromMap = new HashMap<String, InheritanceRule>();
     if (from.getInheritanceRules() != null) {
       for (InheritanceRule ir : from.getInheritanceRules()) {
-        fromMap.put(ir.getParameterType() + ":" + ir.getChildFilter(), ir);
+        fromMap.put(createKey(ir), ir);
       }
     }
     Map<String, InheritanceRule> toMap = new HashMap<String, InheritanceRule>();
     if (to.getInheritanceRules() != null) {
       for (InheritanceRule ir : to.getInheritanceRules()) {
-        toMap.put(ir.getParameterType() + ":" + ir.getChildFilter(), ir);
+        toMap.put(createKey(ir), ir);
       }
     }
 
@@ -648,11 +605,11 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     if (to.getInheritanceRules() != null) {
       List<InheritanceRule> createList = new ArrayList<InheritanceRule>();
       for (InheritanceRule ir : to.getInheritanceRules()) {
-        if (fromMap.get(ir.getParameterType() + ":" + ir.getChildFilter()) == null) {
+        if (fromMap.get(createKey(ir)) == null) {
           createList.add(ir);
         }
       }
-      if (createList.size() > 0) {
+      if (!createList.isEmpty()) {
         resultMap.put(new CREATE(), createList);
       }
     }
@@ -694,12 +651,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   }
 
 
-  /**
-   * getCapacityDiffTypeMap
-   * @param from
-   * @param to
-   * @return
-   */
   private static Map<WorkspaceContentDifferenceType, List<Capacity>> getCapacityDiffTypeMap(OrderType from, OrderType to) {
     Map<WorkspaceContentDifferenceType, List<Capacity>> resultMap = new HashMap<WorkspaceContentDifferenceType, List<Capacity>>();
 
@@ -858,7 +809,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       orderTypeManagement.createOrdertype(orderTypeParameter);
     } catch (Exception e) {
       throw new RuntimeException(e);
-  }
+    }
   }
 
 
@@ -869,7 +820,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       orderTypeManagement.modifyOrdertype(orderTypeParameter);
     } catch (Exception e) {
       throw new RuntimeException(e);
-  }
+    }
   }
 
 
@@ -905,7 +856,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           orderTypeParameter.setCustomCleanupDestinationValue(destinationValueParameter);
         } else {
           throw new Exception("Unknown Dispatcher Name " + dd.getDispatcherName());
-  }
+        }
       }
     }
 
@@ -917,7 +868,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
         capacity.setCapName(cap.getCapacityName());
         capacity.setCardinality(cap.getCardinality());
         capacitySet.add(capacity);
-}
+      }
       orderTypeParameter.setRequiredCapacities(capacitySet);
     }
 

@@ -227,12 +227,6 @@ public class OrderInputSourceProcessor implements WorkspaceContentProcessor<Orde
   }
 
 
-  /**
-   * getReferenceDifferenceList
-   * @param from
-   * @param to
-   * @return
-   */
   private List<ItemDifference<InputSourceSpecific>> getInputSourceSpecificrtDifferenceList(OrderInputSource from, OrderInputSource to) {
     InputSourceSpecificSupport issSupport = new InputSourceSpecificSupport();
     return issSupport.compare(from.getInputSourceSpecifics(), to.getInputSourceSpecifics());

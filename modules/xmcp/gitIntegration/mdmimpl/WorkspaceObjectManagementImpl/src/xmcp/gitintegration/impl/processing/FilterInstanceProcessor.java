@@ -177,12 +177,6 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
   }
 
 
-  /**
-   * getFilterInstanceInformationList
-   * @param revision
-   * @return
-   * @throws PersistenceLayerException
-   */
   private List<FilterInstanceInformation> getFilterInstanceInformationList(Long revision) throws PersistenceLayerException {
     List<FilterInstanceInformation> resultList = new ArrayList<FilterInstanceInformation>();
     List<FilterInformation> filterInfoList = xynaActivationPortal.listFilterInformation();

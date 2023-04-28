@@ -163,7 +163,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
       builder.element(TAG_SHAREDLIBS, item.getSharedlibs());
     }
     builder.element(TAG_TRIGGERNAME, item.getTriggerName());
-    if ((item.getReferences() != null) && (item.getReferences().size() > 0)) {
+    if ((item.getReferences() != null) && (!item.getReferences().isEmpty())) {
       ReferenceSupport rs = new ReferenceSupport();
       rs.appendReferences(item.getReferences(), builder);
     }
@@ -232,12 +232,6 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
   }
 
 
-  /**
-   * getReferenceDifferenceList
-   * @param from
-   * @param to
-   * @return
-   */
   private List<ItemDifference<Reference>> getReferenceDifferenceList(Filter from, Filter to) {
     ReferenceSupport rs = new ReferenceSupport();
     return rs.compare(from.getReferences(), to.getReferences());
@@ -280,13 +274,6 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
   }
 
 
-  /**
-   * getFilterInformationList
-   * @param revision
-   * @return
-   * @throws PersistenceLayerException
-   * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY 
-   */
   private List<FilterInformation> getFilterInformationList(Long revision)
       throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     List<FilterInformation> resultList = new ArrayList<FilterInformation>();
@@ -301,15 +288,6 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
   }
 
 
-  /**
-   * 
-   * @param filterName
-   * @param revision
-   * @return
-   * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY
-   * @throws XACT_FilterNotFound 
-   * @throws PersistenceLayerException 
-   */
   private List<String> getJarfileList(String filterName, Long revision)
       throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, PersistenceLayerException, XACT_FilterNotFound {
     List<String> resultList = new ArrayList<String>();
@@ -320,7 +298,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
       for (File file : files) {
         Path path = Paths.get(file.getParent());
         if (path.getNameCount() > 3) {
-          // Abtrennen von "../revision/revision_REV/"
+          // remove prefix "../revision/revision_REV/"
           Path resultPath = path.subpath(3, path.getNameCount() - 1);
           resultList.add((new File(resultPath.toString(), file.getName())).getPath());
         } else {

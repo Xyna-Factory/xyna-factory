@@ -102,6 +102,10 @@ public class ReferenceSupport {
 
 
   public void appendReferences(List<? extends Reference> tags, XmlBuilder builder) {
+    if(tags == null || tags.isEmpty()) {
+      return;
+    }
+    
     builder.startElement(TAG_REFERENCES);
     for (Reference tag : tags) {
       appendReference(tag, builder);
@@ -112,7 +116,7 @@ public class ReferenceSupport {
 
   public void appendReference(Reference tag, XmlBuilder builder) {
     builder.startElement(TAG_REFERENCE);
-    builder.element(TAG_TYPE, tag.getType().toString());
+    builder.element(TAG_TYPE, tag.getType());
     builder.element(TAG_PATH, tag.getPath());
     builder.endElement(TAG_REFERENCE);
   }
@@ -279,12 +283,6 @@ public class ReferenceSupport {
   }
 
 
-  /**
-   * getReferencetorableList
-   * @param revision
-   * @param fqTriggerClassName
-   * @return
-   */
   public List<ReferenceStorable> getReferencetorableList(Long revision, String objectName) {
     List<ReferenceStorable> resultList = new ArrayList<ReferenceStorable>();
     ReferenceStorage storage = new ReferenceStorage();

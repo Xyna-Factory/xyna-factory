@@ -40,19 +40,6 @@ import xmcp.gitintegration.WorkspaceContentDifferenceType;
 import xmcp.gitintegration.impl.ItemDifference;
 
 
-
-/**
- * 
- * should not be a Processor, because ReferenceStorables
- * are not supposed to be shared between factories.
- * Instead, relevant WorkspaceContentItems contains reference
- * tags. Reference tags contain a subset of the data stored
- * in ReferenceStorable objects.
- * 
- * ReferenceStorable objects are specific to a factory (contain
- * workspace revision), while the date provided by reference
- * tags is factory-independent.
- */
 public class InputSourceSpecificSupport {
 
   private static final String TAG_INPUTSOURCESPECIFICS = "inputsourcespecifics";

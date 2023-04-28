@@ -35,7 +35,6 @@ import org.w3c.dom.NodeList;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.lists.StringSerializableList;
 import com.gip.xyna.xact.XynaActivationPortal;
-import com.gip.xyna.xact.exceptions.XACT_TriggerNotFound;
 import com.gip.xyna.xact.trigger.TriggerInformation;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -159,7 +158,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
     if (item.getSharedlibs() != null) {
       builder.element(TAG_SHAREDLIBS, item.getSharedlibs());
     }
-    if ((item.getReferences() != null) && (item.getReferences().size() > 0)) {
+    if ((item.getReferences() != null) && (!item.getReferences().isEmpty())) {
       ReferenceSupport rs = new ReferenceSupport();
       rs.appendReferences(item.getReferences(), builder);
     }
@@ -199,7 +198,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
     }
 
     List<ItemDifference<Reference>> idrList = getReferenceDifferenceList(from, to);
-    if (idrList.size() > 0) {
+    if (!idrList.isEmpty()) {
       ReferenceSupport rs = new ReferenceSupport();
       ds.append("\n");
       ds.append("    " + rs.getTagName());
@@ -222,12 +221,6 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
   }
 
 
-  /**
-   * getReferenceDifferenceList
-   * @param from
-   * @param to
-   * @return
-   */
   private List<ItemDifference<Reference>> getReferenceDifferenceList(Trigger from, Trigger to) {
     ReferenceSupport rs = new ReferenceSupport();
     return rs.compare(from.getReferences(), to.getReferences());
@@ -268,13 +261,6 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
   }
 
 
-  /**
-   * getTriggerInformationList
-   * @param revision
-   * @return
-   * @throws PersistenceLayerException
-   * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY 
-   */
   private List<TriggerInformation> getTriggerInformationList(Long revision)
       throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     List<TriggerInformation> resultList = new ArrayList<TriggerInformation>();
@@ -289,17 +275,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
   }
 
 
-  /**
-   * 
-   * @param triggerName
-   * @param revision
-   * @return
-   * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY
-   * @throws XACT_TriggerNotFound 
-   * @throws PersistenceLayerException 
-   */
-  private List<String> getJarfileList(String triggerName, Long revision)
-      throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, PersistenceLayerException, XACT_TriggerNotFound {
+  private List<String> getJarfileList(String triggerName, Long revision) throws Exception {
     List<String> resultList = new ArrayList<String>();
     com.gip.xyna.xact.trigger.Trigger trigger =
         XynaFactory.getInstance().getActivation().getActivationTrigger().getTrigger(revision, triggerName, false);
@@ -308,7 +284,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
       for (File file : files) {
         Path path = Paths.get(file.getParent());
         if (path.getNameCount() > 3) {
-          // Abtrennen von "../revision/revision_REV>/"
+          // remove prefix "../revision/revision_REV>/"
           Path resultPath = path.subpath(3, path.getNameCount() - 1);
           resultList.add((new File(resultPath.toString(), file.getName())).getPath());
         } else {
