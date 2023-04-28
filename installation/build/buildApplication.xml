@@ -30,7 +30,7 @@
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
-            <pathelement location="${common.xyna.lib.dir}/ant-contrib.jar" />
+            <pathelement location="${root.dir}/installation/build/lib/ant-contrib.jar" />
         </classpath>
     </taskdef>
 
