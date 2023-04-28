@@ -924,25 +924,16 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
 
     // InheritanceRules
     if ((item.getInheritanceRules() != null) && (item.getInheritanceRules().size() > 0)) {
-      Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> parameterInheritanceRules =
-          new HashMap<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>>();
+      Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap = new HashMap<>();
       for (InheritanceRule ir : item.getInheritanceRules()) {
         ParameterType pt = ParameterType.valueOf(ir.getParameterType());
-        if (parameterInheritanceRules.get(pt) == null) {
-          parameterInheritanceRules.put(pt, new ArrayList<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>());
-        }
-        if (pt.equals(ParameterType.MonitoringLevel)) {
-          parameterInheritanceRules.get(pt).add(ParameterType.MonitoringLevel.createInheritanceRuleBuilder(ir.getValue())
-              .precedence(Integer.parseInt(ir.getPrecedence())).childFilter(ir.getChildFilter()).build());
-        } else if (pt.equals(ParameterType.SuspensionBackupMode)) {
-          parameterInheritanceRules.get(pt).add(ParameterType.SuspensionBackupMode.createInheritanceRuleBuilder(ir.getValue())
-              .precedence(Integer.parseInt(ir.getPrecedence())).childFilter(ir.getChildFilter()).build());
-        } else if (pt.equals(ParameterType.BackupWhenRemoteCall)) {
-          parameterInheritanceRules.get(pt).add(ParameterType.BackupWhenRemoteCall.createInheritanceRuleBuilder(ir.getValue())
-              .precedence(Integer.parseInt(ir.getPrecedence())).childFilter(ir.getChildFilter()).build());
-        }
+        ruleMap.putIfAbsent(pt, new ArrayList<>());
+
+        int precedence = Integer.parseInt(ir.getPrecedence());
+        ruleMap.get(pt).add(pt.createInheritanceRuleBuilder(ir.getValue()).precedence(precedence).childFilter(ir.getChildFilter()).build());
+
       }
-      orderTypeParameter.setParameterInheritanceRules(parameterInheritanceRules);
+      orderTypeParameter.setParameterInheritanceRules(ruleMap);
     }
 
     // PrioritySetting
