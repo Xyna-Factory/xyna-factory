@@ -19,6 +19,8 @@
 <!-- CAUTION: Do not attempt to launch any target from here. Launch them from build.xml instead. -->
 <project name="buildFilter" default="deploy" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
+    <property name="common.lib.dir" value="${root.dir}/installation/build/lib/factory" />
+
     <import file="./macros.xml" />
     <import file="./ant-xyna.xml" />
 
@@ -120,7 +122,6 @@
         <mkdir dir="${basedir}/classes" />
         <javaCompile>
             <classpath path="${basedir}/classes" />
-            <classpath refid="libraries" />
             <classpath>
                 <fileset dir="${base.lib.dir}">
                     <include name="**/*.jar" />
@@ -191,7 +192,6 @@
     <target name="genExceptionClass" description="Generate code class for exceptions." if="${exceptions.available}">
         <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
             <sysproperty key="BLACK_SERVER_HOME" value="${exception.xml.dir}" />
-            <classpath refid="libraries" />
             <classpath>
                 <fileset dir="${base.lib.dir}">
                     <include name="**/*.jar" />
