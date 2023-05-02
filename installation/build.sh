@@ -454,11 +454,11 @@ build_all() {
   build_xynautils
   build_misc
   build_xynafactory_jar
+  build_conpooltypes
   build_persistencelayers
   prepare_modules
   build_oracle_aq_tools
   build_modules
-  build_conpooltypes
   build_plugins
   build_xyna_factory
 }
