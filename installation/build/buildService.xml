@@ -262,6 +262,12 @@
             </fileset>
         </delete>
         <java fork="true" failonerror="yes" classname="com.gip.xyna.xmcp.xfcli.generation.CommandLineArgumentJavaGenerator">
+          <classpath>
+            <fileset dir="${base.lib.dir}">
+              <include name="**/*.jar" />
+            </fileset>
+          </classpath>
+
             <arg value="${basedir}/clicommands" />
             <arg value="${basedir}/src" />
             <arg value="${cli.command.java.path}" />
