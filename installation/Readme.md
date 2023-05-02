@@ -14,10 +14,9 @@ Creates a delivery bundle containing the xyna-factory (including GUI) and prereq
 ```
 xyna-factory
   - installation # this folder
-  - *release # created by calling ./build.sh all
-    - XynaFactory_v<Version>_<Date>_bundle.zip # e.g. XynaFactory_v9.0.2.0_230601_0800_bundle
-      - XynaFactory_v<Version>_<Date>.zip # xyna factory, including gui
-      - XBE_Prerequisites_<Version>_<Date>.zip # xyna prerequisites, required for initial installation
+  - *XynaFactory_v<Version>_<Date>_bundle.zip # e.g. XynaFactory_v9.0.2.0_230601_0800_bundle
+    - XynaFactory_v<Version>_<Date>.zip # xyna factory, including gui
+    - XBE_Prerequisites_<Version>_<Date>.zip # xyna prerequisites, required for initial installation
 ```
 
 ## Additional Build Options
