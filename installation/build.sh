@@ -469,7 +469,13 @@ compose_server_persistencelayers() {
   cp -r $SCRIPT_DIR/../localbuild/server/persistencelayers/ .
   
   #cluster
-  cp -r $SCRIPT_DIR/../components/xnwh/xcs $SCRIPT_DIR/../release/components/xnwh
+  mkdir -r $SCRIPT_DIR/../components/xnwh/xcs/XynaClusterPersistenceLayer
+  cp $SCRIPT_DIR/../components/xnwh/xcs/XynaClusterPersistenceLayer/lib/xyna/XynaMemoryPersistenceLayer-1.0.0.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
+  cp $SCRIPT_DIR/../components/xnwh/xcs/XynaClusterPersistenceLayer/XynaClusterPersistenceLayer.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
+  
+  #xsor
+  mkdir -r $SCRIPT_DIR/../components/xnwh/xcs/xsor
+  cp ./components/xnwh/xcs/XynaClusterPersistenceLayer/lib/xsor.jar $SCRIPT_DIR/../components/xnwh/xcs/xsor
 }
 
 compose_server_orderinpoutsourcetypes() {
