@@ -314,31 +314,38 @@ build_xyna_factory() {
   compose_server
   compose_files
   compose_networkavailability
+  setversion
   zip_xyna
   compose_prerequisites
   compose_modeller
   zip_result
 }
 
-#TODO: version name
+
+setversion() {
+  VERSION=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^release.number | cut -d'=' -f2) #e.g. v9.0.0.0
+  DATE=$(date +"%Y%m%d_%H%M") #e.g. 20230530_1055
+}
+
+
 zip_xyna() {
   echo "zipping content of XynaFactory without Prerequisites"
   cd $SCRIPT_DIR/../release
-  mkdir ../XynaFactory_v0.0.0.0_000000_0000
-  mv * ../XynaFactory_v0.0.0.0_000000_0000
-  mv ../XynaFactory_v0.0.0.0_000000_0000 .
-  zip -r XynaFactory_v0.0.0.0_000000_0000.zip .
-  rm -r XynaFactory_v0.0.0.0_000000_0000
+  mkdir ../XynaFactory_${VERSION}_${DATE}
+  mv * ../XynaFactory_${VERSION}_${DATE}
+  mv ../XynaFactory_${VERSION}_${DATE} .
+  zip -r XynaFactory_${VERSION}_${DATE} .
+  rm -r XynaFactory_${VERSION}_${DATE}
 }
 
-#TODO: version name
+
 zip_result() {
   echo "creating "
-  mv $SCRIPT_DIR/../release $SCRIPT_DIR/../XynaFactory_v0.0.0.0_000000_0000_bundle
+  mv $SCRIPT_DIR/../release $SCRIPT_DIR/../XynaFactory_${VERSION}_${DATE}_bundle
   mkdir $SCRIPT_DIR/../release
-  mv $SCRIPT_DIR/../XynaFactory_v0.0.0.0_000000_0000_bundle $SCRIPT_DIR/../release
+  mv $SCRIPT_DIR/../XynaFactory_${VERSION}_${DATE}_bundle $SCRIPT_DIR/../release
   cd $SCRIPT_DIR/../release
-  zip -r ../XynaFactory_v0.0.0.0_000000_0000_bundle.zip .
+  zip -r ../XynaFactory_${VERSION}_${DATE}_bundle.zip .
 }
 
 
