@@ -334,7 +334,7 @@ zip_xyna() {
   mkdir ../XynaFactory_${VERSION}_${DATE}
   mv * ../XynaFactory_${VERSION}_${DATE}
   mv ../XynaFactory_${VERSION}_${DATE} .
-  zip -r XynaFactory_${VERSION}_${DATE} .
+  zip -r XynaFactory_${VERSION}_${DATE}.zip .
   rm -r XynaFactory_${VERSION}_${DATE}
 }
 
