@@ -467,15 +467,15 @@ compose_server_repositoryaccess() {
 compose_server_persistencelayers() {
   cd $SCRIPT_DIR/../release/server
   cp -r $SCRIPT_DIR/../localbuild/server/persistencelayers/ .
-  
+
   #cluster
-  mkdir -r $SCRIPT_DIR/../components/xnwh/xcs/XynaClusterPersistenceLayer
+  mkdir -p $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
   cp $SCRIPT_DIR/../components/xnwh/xcs/XynaClusterPersistenceLayer/lib/xyna/XynaMemoryPersistenceLayer-1.0.0.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
-  cp $SCRIPT_DIR/../components/xnwh/xcs/XynaClusterPersistenceLayer/XynaClusterPersistenceLayer.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
-  
+  cp $SCRIPT_DIR/../localbuild/components/xnwh/xcs/XynaClusterPersistenceLayer/XynaClusterPersistenceLayer.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
+
   #xsor
-  mkdir -r $SCRIPT_DIR/../components/xnwh/xcs/xsor
-  cp ./components/xnwh/xcs/XynaClusterPersistenceLayer/lib/xsor.jar $SCRIPT_DIR/../components/xnwh/xcs/xsor
+  mkdir -p $SCRIPT_DIR/../release/components/xnwh/xcs/xsor
+  cp $SCRIPT_DIR/../components/xnwh/xcs/xsor/xsor.jar $SCRIPT_DIR/../release/components/xnwh/xcs/xsor
 }
 
 compose_server_orderinpoutsourcetypes() {
