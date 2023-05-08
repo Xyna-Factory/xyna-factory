@@ -40,6 +40,7 @@ jobs:
               --sarif --output report.sarif \
               --metrics=off --disable-version-check --no-rewrite-rule-ids \
               -f semgrep-main-rules/rules
+            sed -ri 's/"(ruleId|id|name)": "([^"]{250})[^"]+"/"\1": "\2..."/' report.sarif
 
         # step 3
         - name: save report as pipeline artifact
