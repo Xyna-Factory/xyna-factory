@@ -109,10 +109,11 @@ public class ExternalCredentialsLoginAction implements FilterAction {
     try {
       // logger.info("ExternalCredentialsLogin with: " + username + ", " + password + ", " + domainName);
 
-      // * sessionID oder Token? nutzen, um das Password einzutragen. Im Auth-WF dann dort rauslesen und bind.
-      // * neue Domain in Zeta-Auth-Login bekannt machen: Woher weiß die Login-Component, welchen Endpunkt sie zum Login aufruft?
-      // * neue GuiHttp bauen und auf vacation_test einspielen, später branch pull request
-
+      /* TODO
+       * sessionID oder Token? nutzen, um das Password einzutragen. Im Auth-WF dann dort rauslesen und bind.
+       * neue Domain in Zeta-Auth-Login bekannt machen: Woher weiß die Login-Component, welchen Endpunkt sie zum Login aufruft?
+       * neue GuiHttp bauen und auf vacation_test einspielen, später branch pull request
+       */
       if (!new RMIChannelImpl().authorizeSession(userCredentials, domainName,
                                                  new XynaPlainSessionCredentials(creds.getSessionId(), creds.getToken()))) {
         return error(creds, tc, jfai);
