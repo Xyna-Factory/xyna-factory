@@ -77,7 +77,7 @@ public class XynaSSHServer {
     boolean success = false;
     
     try {
-      SimpleGeneratorHostKeyProvider hkp =  new SimpleGeneratorHostKeyProvider(new File(sp.getHostKeyFilename()) );
+      SimpleGeneratorHostKeyProvider hkp =  new XynaHostKeyProvider(new File(sp.getHostKeyFilename()) );
       hkp.setAlgorithm(sp.getAlgorithm()); 
       
       sshd.setPort(sp.getPort());
