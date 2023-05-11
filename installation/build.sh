@@ -19,7 +19,7 @@
 
 print_help() {
   echo "$0: build some or all parts of xyna."
-  echo "available options are: xynautils, all, compose"
+  echo "available options are: xynautils, build, all, compose"
 }
 
 check_dependencies() {
@@ -573,6 +573,14 @@ build_all() {
   build_xyna_factory
 }
 
+build() {
+  build_xynautils
+  build_misc
+  build_xynafactory_jar
+  build_conpooltypes
+  build_persistencelayers
+  build_oracle_aq_tools
+}
 
 # main
 if [ $# -eq 0 ]
@@ -588,6 +596,9 @@ prepare_build
 case $1 in
   "xynautils")
     build_xynautils
+    ;;
+  "build")
+    build
     ;;
   "all")
     build_all
