@@ -18,10 +18,12 @@
 package xact.ssh.server;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.spec.InvalidKeySpecException;
@@ -34,10 +36,24 @@ import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
  * A simple extension over the `SimpleGeneratorHostKeyProvider` to overwrite the
  * `doReadKeyParis`-method.
  * 
- * The code of this class is basically the code of the original `SimpleGeneratorHostKeyProvider` of version 2.9.2 of the Apache Mina package (https://github.com/apache/mina-sshd; https://github.com/apache/mina-sshd/blob/4f36d879d98230939a72c6f4f41a01c5cf8f8489/sshd-common/src/main/java/org/apache/sshd/server/keyprovider/SimpleGeneratorHostKeyProvider.java).
+ * The code of this class is basically the code of the original
+ * `SimpleGeneratorHostKeyProvider` of version 2.9.2 of the Apache Mina package
+ * (https://github.com/apache/mina-sshd;
+ * https://github.com/apache/mina-sshd/blob/4f36d879d98230939a72c6f4f41a01c5cf8f8489/sshd-common/src/main/java/org/apache/sshd/server/keyprovider/SimpleGeneratorHostKeyProvider.java).
  * The Usage of SecurityUtils and OpenSSHKeyPairResource have been removed.
  */
 public class XynaHostKeyProvider extends SimpleGeneratorHostKeyProvider {
+    public XynaHostKeyProvider() {
+        super();
+    }
+
+    public XynaHostKeyProvider(File file) {
+        super(file);
+    }
+
+    public XynaHostKeyProvider(Path path) {
+        super(path);
+    }
 
     @Override
     protected KeyPair doReadKeyPair(String resourceKey, InputStream inputStream)
