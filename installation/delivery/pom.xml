@@ -99,11 +99,22 @@
                 <dependency>
                         <groupId>com.gip.xyna</groupId>
                         <artifactId>XynaJavaSerializationPersistenceLayer</artifactId>
+                        <exclusions>
+                                <exclusion>
+                                        <groupId>*</groupId>
+                                        <artifactId>*</artifactId>
+                                </exclusion>
+                        </exclusions>
                 </dependency>
                 <dependency>
                         <groupId>com.gip.xyna</groupId>
                         <artifactId>xynautils-database</artifactId>
-                        <version>I20190829_1328</version>
+                        <exclusions>
+                                <exclusion>
+                                        <groupId>*</groupId>
+                                        <artifactId>*</artifactId>
+                                </exclusion>
+                        </exclusions>
                 </dependency>
                 <dependency>
                         <groupId>com.gip.xyna</groupId>
@@ -116,10 +127,22 @@
                 <dependency>
                         <groupId>com.gip.xyna</groupId>
                         <artifactId>xynautils-misc</artifactId>
+                        <exclusions>
+                                <exclusion>
+                                        <groupId>*</groupId>
+                                        <artifactId>*</artifactId>
+                                </exclusion>
+                        </exclusions>
                 </dependency>
                 <dependency>
                         <groupId>com.gip.xyna</groupId>
                         <artifactId>xynafactory</artifactId>
+                        <exclusions>
+                                <exclusion>
+                                        <groupId>*</groupId>
+                                        <artifactId>*</artifactId>
+                                </exclusion>
+                        </exclusions>
                 </dependency>
         </dependencies>
 </project>
