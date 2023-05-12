@@ -482,7 +482,7 @@ compose_server_persistencelayers() {
 
   #xsor
   mkdir -p $SCRIPT_DIR/../release/components/xnwh/xcs/xsor
-  cp $SCRIPT_DIR/../components/xnwh/xcs/xsor/xsor.jar $SCRIPT_DIR/../release/components/xnwh/xcs/xsor
+  cp $SCRIPT_DIR/../clusterproviders/XSORClusterProvider/lib/xsor.jar $SCRIPT_DIR/../release/components/xnwh/xcs/xsor
 }
 
 compose_server_orderinpoutsourcetypes() {
