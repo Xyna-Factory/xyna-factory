@@ -22,9 +22,9 @@
   </Meta>
   <Libraries>SOAPServicesImpl.jar</Libraries>
   <Libraries>jakarta.activation-1.2.1.jar</Libraries>
-  <Libraries>javax.xml.soap-api.jar</Libraries>
-  <Libraries>saaj-impl.jar</Libraries>
-  <Libraries>stax-ex.jar</Libraries>
+  <Libraries>javax.xml.soap-api-1.4.0.jar</Libraries>
+  <Libraries>saaj-impl-1.5.0.jar</Libraries>
+  <Libraries>stax-ex-1.8.jar</Libraries>
   <Service Label="SOAP Services" TypeName="SOAPServices">
     <Operation IsStatic="true" Label="Add Element To Header" Name="addElementToHeader">
       <Input>
