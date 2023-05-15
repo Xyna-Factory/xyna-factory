@@ -1,6 +1,6 @@
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,4 +22,5 @@
   <Argument Name="versionName" Description="The name of the version. Default: 'workingset'" Optional="true" />
   <Argument Name="fileName" Description="The name of the resulting XML file. Default: 'application.xml'" Optional="true" />
   <BoolOption Name="cs" LongName="createStub" Description="Create an application.xml for the stub version of the application"  Optional="true" />
+  <BoolOption Name="m" LongName="minify" Description="Minify application.xml by removing implicit ordertypes and XmomEntries"  Optional="true" />
 </XynaCommandLineCommand>

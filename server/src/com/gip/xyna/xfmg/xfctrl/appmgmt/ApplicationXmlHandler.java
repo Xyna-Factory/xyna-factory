@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,23 @@
  */
 package com.gip.xyna.xfmg.xfctrl.appmgmt;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.gip.xyna.FileUtils;
 import com.gip.xyna.utils.collections.Pair;
+import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.ApplicationInfoEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.CapacityRequirementXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.CapacityXmlEntry;
@@ -953,11 +959,22 @@ public class ApplicationXmlHandler extends DefaultHandler {
       }
     }
   }
-  
 
-  
-  
-  
+
+  public static ApplicationXmlEntry parseApplicationXml(String path) {
+    ApplicationXmlHandler handler = new ApplicationXmlHandler();
+    try {
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+      SAXParser saxParser = factory.newSAXParser();
+      saxParser.parse(new ByteArrayInputStream(FileUtils.readFileAsString(new File(path)).getBytes(Constants.DEFAULT_ENCODING)), handler);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return handler.getApplicationXmlEntry();
+  }
+
+
+
   protected final static String TAG_APPLICATION = "Application";
   protected final static String TAG_APPLICATION_INFO = "ApplicationInfo";
   protected final static String TAG_AI_DESCRIPTION = "Description";
