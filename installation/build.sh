@@ -414,6 +414,7 @@ compose_components() {
 
 compose_server() {
   cd $SCRIPT_DIR/../release
+  mkdir revisions
   mkdir server
   cd server
   compose_server_clusterproviders
