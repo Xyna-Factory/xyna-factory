@@ -19,7 +19,7 @@
 <!-- CAUTION: Do not attempt to launch any target from here. Launch them from build.xml instead. -->
 <project name="buildService" default="deploy" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
-    <property name="common.lib.dir" value="${root.dir}/common/lib" />
+    <property name="common.lib.dir" value="${root.dir}/installation/build/lib/factory" />
     <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
 
     <import file="./macros.xml" />
@@ -49,12 +49,7 @@
     <property name="deploy.sharedlibs" value=":" />
     <property name="deploy.template" value="deploydatatype -fqDatatypeName ${fqclassname} -workspaceName '${workspacename}' -protectionMode TRY -registerWithXMOM true" />
 
-    <!-- custom libraries to be included -->
-    <path id="libraries">
-        <fileset dir="${common.lib.dir}">
-            <include name="**/*.jar" />
-        </fileset>
-    </path>
+    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
     <checkJavaVersion />
     <checkServerProperties />
@@ -136,7 +131,6 @@
         <mkdir dir="${basedir}/classes" />
         <javaCompile>
             <classpath path="${basedir}/classes" />
-            <classpath refid="libraries" />
             <classpath>
                 <fileset dir="${base.lib.dir}">
                     <include name="**/*.jar" />
@@ -246,7 +240,6 @@
     <target name="genExceptionClass" description="Generate code class for exceptions." if="${exceptions.available}">
         <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
             <sysproperty key="BLACK_SERVER_HOME" value="${exception.xml.dir}" />
-            <classpath refid="libraries" />
             <classpath>
                 <fileset dir="${base.lib.dir}">
                     <include name="**/*.jar" />
@@ -269,7 +262,12 @@
             </fileset>
         </delete>
         <java fork="true" failonerror="yes" classname="com.gip.xyna.xmcp.xfcli.generation.CommandLineArgumentJavaGenerator">
-            <classpath refid="libraries" />
+          <classpath>
+            <fileset dir="${base.lib.dir}">
+              <include name="**/*.jar" />
+            </fileset>
+          </classpath>
+
             <arg value="${basedir}/clicommands" />
             <arg value="${basedir}/src" />
             <arg value="${cli.command.java.path}" />

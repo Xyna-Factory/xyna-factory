@@ -44,12 +44,18 @@ public class BuildapplicationxmlImpl extends XynaCommandImplementation<Buildappl
         (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
 
     ApplicationXmlEntry entry = appMgmt.createApplicationXml(payload.getApplicationName(), payload.getVersionName(), payload.getWorkspaceName(), payload.getCreateStub());
+
+    if (payload.getMinify()) {
+      entry.minify();
+    }
+
     Document doc = null;
     try {
       doc = entry.buildXmlDocument();
     } catch (ParserConfigurationException e) {
       throw new XynaException("Exception occurred while building xml. ", e);
     }
+
     File file = new File(payload.getFileName() != null ? payload.getFileName() : ApplicationManagementImpl.XML_APPLICATION_FILENAME);
     XMLUtils.saveDom(file, doc);
   }

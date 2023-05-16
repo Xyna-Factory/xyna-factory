@@ -54,11 +54,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jdt</groupId>
-            <artifactId>ecj</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <scope>compile</scope>
@@ -129,7 +124,6 @@
         <dependency>
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-database</artifactId>
-            <version>I20190829_1328</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -145,12 +139,12 @@
         <dependency>
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-misc</artifactId>
-            <scope>runtime</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynafactoryCLIGenerator</artifactId>
-            <scope>runtime</scope>
+            <scope>compile</scope>
         </dependency>
 
 

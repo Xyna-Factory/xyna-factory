@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.snmp4j.AbstractTarget;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
+import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.ScopedPDU;
 import org.snmp4j.Snmp;
 import org.snmp4j.UserTarget;
@@ -189,7 +190,7 @@ public final class SnmpContextImplApache implements SnmpContext {
 
     MPv3 mpv3 = new MPv3(usm);
     if (logger.isDebugEnabled()) {      
-      logger.debug("enterpriseid=" + MPv3.getEnterpriseID());
+      logger.debug("enterpriseid=" + SNMP4JSettings.getEnterpriseID());
     }
     //mpv3.addEngineID(address, engineID)
     snmp.getMessageDispatcher().addMessageProcessingModel(mpv3);     

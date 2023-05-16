@@ -22,4 +22,5 @@
   <Argument Name="versionName" Description="The name of the version." Optional="true" />
   <Argument Name="fileName" Description="The name of the resulting XML file. Default: 'application.xml'" Optional="true" />
   <BoolOption Name="cs" LongName="createStub" Description="Create an application.xml for the stub version of the application"  Optional="true" />
+  <BoolOption Name="m" LongName="minify" Description="Minify application.xml by removing implicit ordertypes and XmomEntries"  Optional="true" />
 </XynaCommandLineCommand>

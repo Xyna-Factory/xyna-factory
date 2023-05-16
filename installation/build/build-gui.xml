@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,29 +22,12 @@
 
   <property name="modeller.git" value="xyna-modeller.git" />
   <property name="modeller.name" value="xyna-modeller" />
-  <property name="zeta.git" value="xyna-zeta.git" />
-  <property name="zeta.name" value="zeta" />
-  <property name="pmod.git" value="xyna-process-modeller.git" />
-  <property name="pmod.name" value="processmodeller" />
-  <property name="pmon.git" value="xyna-process-monitor.git" />
-  <property name="pmon.name" value="processmonitor" />
-  <property name="fman.git" value="xyna-factory-manager.git" />
-  <property name="fman.name" value="factorymanager" />
-  <property name="xtf.git" value="xyna-test-factory.git" />
-  <property name="xtf.name" value="testfactory" />
-  <property name="acm.git" value="xyna-xacm.git" />
-  <property name="acm.name" value="acm" />
-  <property name="ygg.git" value="xyna-yggdrasil.git" />
-  <property name="ygg.name" value="yggdrasil" />
-
-  <property name="modeller.dir" value="${basedir}/${modeller.name}" />
+  <property name="modeller.dir" value="../../${modeller.name}" />
   <property name="impl.dir" value="${modeller.dir}/impl" />
   <property name="script.dir" value="${modeller.dir}/script" />
-  <property name="zeta.dir" value="${modeller.dir}/impl/projects/xyna/src/app/" />
-  <property name="xfm.dir" value="${modeller.dir}/impl/projects/xyna/src/app/xfm/" />
 
   <target name="build" depends="release"
-          description="Installs Angular modules and builds release">
+          description="Installs node modules and builds release">
   </target>
 
   <target name="download"
@@ -52,47 +35,12 @@
     
     <!-- modeller -->
     <exec executable="git" failonerror="true">
-      <arg line="clone ${repository-url}/${modeller.git} ${modeller.name}" />
-    </exec>
-
-    <!-- zeta -->
-    <exec executable="git" failonerror="true">
-      <arg line="clone ${repository-url}/${zeta.git} ${zeta.dir}${zeta.name}" />
-    </exec>
-
-    <!-- pmod -->
-    <exec executable="git" failonerror="true">
-      <arg line="clone ${repository-url}/${pmod.git} ${xfm.dir}${pmod.name}" />
-    </exec>
-
-    <!-- pmon -->
-    <exec executable="git" failonerror="true">
-      <arg line="clone ${repository-url}/${pmon.git} ${xfm.dir}${pmon.name}" />
-    </exec>
-
-    <!-- fman -->
-    <exec executable="git" failonerror="true">
-      <arg line="clone ${repository-url}/${fman.git} ${xfm.dir}${fman.name}" />
-    </exec>
-
-    <!-- xtf -->
-    <exec executable="git" failonerror="true">
-      <arg line="clone ${repository-url}/${xtf.git} ${xfm.dir}${xtf.name}" />
-    </exec>
-
-    <!-- acm -->
-    <exec executable="git" failonerror="true">
-      <arg line="clone ${repository-url}/${acm.git} ${xfm.dir}${acm.name}" />
-    </exec>
-
-    <!-- ygg -->
-    <exec executable="git" failonerror="true">
-      <arg line="clone ${repository-url}/${ygg.git} ${xfm.dir}${ygg.name}" />
+      <arg line="clone --recurse-submodules ${repository-url}/${modeller.git} ${modeller.dir}" />
     </exec>
   </target>
 
   <target name="install"
-          description="Installs Angular-modules">
+          description="Installs node modules">
     <delete dir="${impl.dir}/node_modules"/>
     <delete dir="${script.dir}/node_modules"/>
     <exec dir="${impl.dir}" executable="npm">
@@ -111,9 +59,9 @@
     </exec>
     
     <!-- cleanup -->
-    <move todir="${basedir}" includeEmptyDirs="yes" verbose="true">
-        <fileset dir="${modeller.dir}" >
-            <include name="dist/**" />
+    <move todir="../.." includeEmptyDirs="yes" verbose="true">
+        <fileset dir="${modeller.dir}/dist" >
+            <include name="**" />
         </fileset>
     </move>
     <delete dir="${modeller.dir}" />

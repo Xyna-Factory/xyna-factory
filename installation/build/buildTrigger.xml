@@ -23,7 +23,7 @@
     <import file="./ant-xyna.xml" />
     <!--import file="${root.dir}/installation/build/ant-xyna.xml" /-->
 
-    <property name="common.lib.dir" value="${root.dir}/common/lib" />
+    <property name="common.lib.dir" value="${root.dir}/installation/build/lib/factory" />
     <property name="common.xyna.lib.dir" value="${root.dir}/common/lib/xyna" />
 
     <import file="./macros.xml" />
@@ -49,13 +49,6 @@
     <condition property="exceptions.available">
         <available file="${basedir}/Exceptions.xml" />
     </condition>
-
-    <!-- custom libraries to be included -->
-    <path id="libraries">
-        <fileset dir="${common.lib.dir}">
-            <include name="**/*.jar" />
-        </fileset>
-    </path>
 
 
     <!-- =================================
@@ -123,7 +116,6 @@
         <mkdir dir="${basedir}/classes" />
         <javaCompile>
             <classpath path="${basedir}/classes" />
-            <classpath refid="libraries" />
             <classpath>
                 <fileset dir="${base.lib.dir}">
                     <include name="**/*.jar" />
@@ -178,7 +170,6 @@
     <target name="genExceptionClass" description="Generate code class for exceptions." if="${exceptions.available}">
         <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
             <sysproperty key="BLACK_SERVER_HOME" value="${root.dir}/server" />
-            <classpath refid="libraries" />
             <classpath>
                 <fileset dir="${basedir}/lib">
                     <include name="**/*.jar" />

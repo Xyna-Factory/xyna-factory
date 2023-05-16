@@ -19,7 +19,7 @@
 
 print_help() {
   echo "$0: build some or all parts of xyna."
-  echo "available options are: xynautils, all, compose"
+  echo "available options are: xynautils, build, all, compose"
 }
 
 check_dependencies() {
@@ -29,6 +29,8 @@ check_dependencies() {
   ant -version
   git --version
   zip --version
+  nvm --version
+  
 }
 
 checkout_factory() {
@@ -244,6 +246,57 @@ build_plugins() {
   ant -Doracle.home=/tmp buildPlugins
 }
 
+build_clusterproviders() {
+  echo "building clusterproviders..."
+  
+  #oracle rac cluster provider
+  cd $SCRIPT_DIR/../clusterproviders/OracleRACClusterProvider
+  rm -f /test/com/gip/xyna/xfmg/xclusteringservices/clusterprovider/OracleRACClusterProviderTest.java
+  sed -i 's/ojdbc7/ojdbc10/' pom.xml
+  sed -i 's/>com.oracle</>com.oracle.database.jdbc</' pom.xml
+  ant -Doracle.home=/tmp
+  
+  #xsor cluster provider
+  cd $SCRIPT_DIR/../clusterproviders/XSORClusterProvider
+  ant -Doracle.home=/tmp
+}
+
+build_networkavailability() {
+  echo "building networkavailability..."
+  
+  #build and install demon
+  cd $SCRIPT_DIR/../components/xact/demon
+  ant -Doracle.home=/tmp
+  mvn install:install-file -Dfile=$SCRIPT_DIR/../components/xact/demon/deploy/demonlib.jar -DpomFile=$SCRIPT_DIR/../components/xact/demon/pom.xml
+
+  #build networkavailability
+  cd $SCRIPT_DIR/../components/xact/NetworkAvailability
+  ant -Doracle.home=/tmp
+}
+
+compose_networkavailability() {
+  cd $SCRIPT_DIR/../release
+  mkdir -p components/xact/NetworkAvailability
+  cd components/xact/NetworkAvailability
+  cp -r $SCRIPT_DIR/../components/xact/NetworkAvailability/config .
+  cp -r $SCRIPT_DIR/../components/xact/NetworkAvailability/lib .
+  cp $SCRIPT_DIR/../components/xact/NetworkAvailability/*.sh .
+  cp $SCRIPT_DIR/../components/xact/NetworkAvailability/log4j.properties .
+}
+
+build_prerequisites() {
+  echo "building prerequisites..."
+  cd $SCRIPT_DIR/../prerequisites/installation/delivery
+  ant -f delivery.xml
+}
+
+build_modeller() {
+  echo "building Modeller GUI"
+  cd $SCRIPT_DIR/build
+  nvm use 16
+  ant -f build-gui.xml
+}
+
 build_xyna_factory() {
   echo "building artifact"
   cd $SCRIPT_DIR/..
@@ -257,21 +310,50 @@ build_xyna_factory() {
   compose_etc
   compose_func_lib
   compose_templateMechanismStandalone
-  compose_thridparties
+  compose_thirdparties
   compose_server
   compose_files
+  compose_networkavailability
+  setversion
+  zip_xyna
+  compose_prerequisites
+  compose_modeller
   zip_result
 }
 
-#TODO: version name
-zip_result() {
-  zip -r ../XynaFactory.zip $SCRIPT_DIR/../release
+
+setversion() {
+  VERSION=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^release.number | cut -d'=' -f2) #e.g. v9.0.0.0
+  DATE=$(date +"%Y%m%d_%H%M") #e.g. 20230530_1055
 }
 
-#TODO: - mb mvn call like for server/lib?
-compose_thridparties() {
+
+zip_xyna() {
+  echo "zipping content of XynaFactory without Prerequisites"
   cd $SCRIPT_DIR/../release
-  mkdir thrid_parties
+  mkdir ../XynaFactory_${VERSION}_${DATE}
+  mv * ../XynaFactory_${VERSION}_${DATE}
+  mv ../XynaFactory_${VERSION}_${DATE} .
+  zip -r XynaFactory_${VERSION}_${DATE}.zip .
+  rm -r XynaFactory_${VERSION}_${DATE}
+}
+
+
+zip_result() {
+  echo "creating "
+  mv $SCRIPT_DIR/../release $SCRIPT_DIR/../XynaFactory_${VERSION}_${DATE}_bundle
+  mkdir $SCRIPT_DIR/../release
+  mv $SCRIPT_DIR/../XynaFactory_${VERSION}_${DATE}_bundle $SCRIPT_DIR/../release
+  cd $SCRIPT_DIR/../release
+  zip -r ../XynaFactory_${VERSION}_${DATE}_bundle.zip .
+}
+
+
+compose_thirdparties() {
+  cd $SCRIPT_DIR/../release
+  mkdir third_parties
+  cd $SCRIPT_DIR/../server
+  mvn license:download-licenses -s pom.xml license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
 }
 
 #TODO: buildTemplateMechanismStandalone is a target in installation/build/build.xml
@@ -321,8 +403,7 @@ compose_files() {
   cp ../blackedition/uninstall_black_edition.sh .
 }
 
-# TODO: currently only modules applications
-# buildNetworkAvailability is a target in installation/build/build.xml 
+
 compose_components() {
   cd $SCRIPT_DIR/../release
   mkdir components
@@ -348,16 +429,21 @@ compose_server() {
   compose_server_files
 }
 
-#TODO
 compose_server_files() {
   cd $SCRIPT_DIR/../release
-  #log4j.xml
-  #NSNDSLAMExceptionmappings.xml
-  #product_lib.sh
+  cp ../server/log4j2.xml ./server
+  cp ../server/product_lib.sh ./server
   cp ../server/server.policy ./server
   cp ../server/deploy/TemplateImpl.zip ./server
-  #TemplateImplNew.zip
+  cp ../server/deploy/TemplateImplNew.zip ./server
   cp ../server/xynafactory.sh ./server
+  cp ../server/Exceptions.xml ./server
+}
+
+buildTemplateImplNew() {
+  echo "buildTemplateImplNew..."
+  cd $SCRIPT_DIR/../server
+  ant -Doracle.home=/tmp buildTemplateNew
 }
 
 #TODO: dhcp
@@ -388,9 +474,15 @@ compose_server_repositoryaccess() {
 compose_server_persistencelayers() {
   cd $SCRIPT_DIR/../release/server
   cp -r $SCRIPT_DIR/../localbuild/server/persistencelayers/ .
-  
+
   #cluster
-  cp -r $SCRIPT_DIR/../components/xnwh/xcs $SCRIPT_DIR/../release/components/xnwh
+  mkdir -p $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
+  cp $SCRIPT_DIR/../components/xnwh/xcs/XynaClusterPersistenceLayer/lib/xyna/XynaMemoryPersistenceLayer-1.0.0.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
+  cp $SCRIPT_DIR/../localbuild/components/xnwh/xcs/XynaClusterPersistenceLayer/XynaClusterPersistenceLayer.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
+
+  #xsor
+  mkdir -p $SCRIPT_DIR/../release/components/xnwh/xcs/xsor
+  cp $SCRIPT_DIR/../clusterproviders/XSORClusterProvider/lib/xsor.jar $SCRIPT_DIR/../release/components/xnwh/xcs/xsor
 }
 
 compose_server_orderinpoutsourcetypes() {
@@ -398,7 +490,6 @@ compose_server_orderinpoutsourcetypes() {
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
 }
 
-#TODO: INCLUDE License
 compose_server_lib() {
   cd $SCRIPT_DIR/../release/server
   mkdir lib
@@ -425,10 +516,24 @@ compose_server_conpooltypes() {
   cp -r $SCRIPT_DIR/../localbuild/server/conpooltypes $SCRIPT_DIR/../release/server/conpooltypes
 }
 
-#TODO: clusterprovider build and copy
 compose_server_clusterproviders(){
   cd $SCRIPT_DIR/../release/server
-  mkdir clusterproviders
+  mkdir -p clusterproviders
+  
+  mkdir -p clusterproviders/OracleRACClusterProvider
+  cp $SCRIPT_DIR/../clusterproviders/OracleRACClusterProvider/deploy/* $SCRIPT_DIR/../release/server/clusterproviders/OracleRACClusterProvider
+  cp $SCRIPT_DIR/../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/deploy/OracleAQTools.jar $SCRIPT_DIR/../release/server/clusterproviders/OracleRACClusterProvider
+  
+  mkdir -p clusterproviders/XSORClusterProvider
+  cp $SCRIPT_DIR/../clusterproviders/XSORClusterProvider/deploy/* $SCRIPT_DIR/../release/server/clusterproviders/XSORClusterProvider
+}
+
+compose_prerequisites() {
+  cp $SCRIPT_DIR/../prerequisites/release/*.zip $SCRIPT_DIR/../release
+}
+
+compose_modeller() {
+  mv $SCRIPT_DIR/../*.war $SCRIPT_DIR/../release
 }
 
 
@@ -441,7 +546,7 @@ prepare_build() {
 
 
 build_xynautils() {
- echo "building xynautils..."
+  echo "building xynautils..."
   build_xynautils_exceptions
   build_xynautils_logging
   build_xynautils_database
@@ -454,15 +559,28 @@ build_all() {
   build_xynautils
   build_misc
   build_xynafactory_jar
+  build_conpooltypes
   build_persistencelayers
   prepare_modules
   build_oracle_aq_tools
   build_modules
-  build_conpooltypes
   build_plugins
+  build_clusterproviders
+  build_networkavailability
+  buildTemplateImplNew
+  build_prerequisites
+  build_modeller
   build_xyna_factory
 }
 
+build() {
+  build_xynautils
+  build_misc
+  build_xynafactory_jar
+  build_conpooltypes
+  build_persistencelayers
+  build_oracle_aq_tools
+}
 
 # main
 if [ $# -eq 0 ]
@@ -478,17 +596,20 @@ prepare_build
 case $1 in
   "xynautils")
     build_xynautils
-	;;
+    ;;
+  "build")
+    build
+    ;;
   "all")
     build_all
-	;;
+    ;;
   "compose")
     build_xyna_factory
-	;;
+    ;;
   *)
     echo "unknown argument: $1"
-	exit 1
-	;;
+    exit 1
+    ;;
 esac
 
 exit 0

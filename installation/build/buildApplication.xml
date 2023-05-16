@@ -30,7 +30,7 @@
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
-            <pathelement location="${common.xyna.lib.dir}/ant-contrib.jar" />
+            <pathelement location="${root.dir}/installation/build/lib/ant-contrib.jar" />
         </classpath>
     </taskdef>
 
@@ -43,7 +43,10 @@
     
         <!-- set to false if the XMOM folder contains objects that should not be included in the application -->
         <property name="minify" value="false" />
-    
+
+
+        <ant antfile="build.xml" dir="${antUtils.dir}/lib" target="resolve" />
+
         <mkdir dir="${target.dir}" />
         <mkdir dir="${target.dir}/app" />
         <delete file="${target.dir}/${app.name}" failonerror="false" />

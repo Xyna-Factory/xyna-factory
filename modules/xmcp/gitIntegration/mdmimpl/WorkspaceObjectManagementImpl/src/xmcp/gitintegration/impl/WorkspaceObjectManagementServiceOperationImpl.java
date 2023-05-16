@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
   public WorkspaceContent createWorkspaceContent(Workspace workspace) {
     WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
-    WorkspaceContent result = contentCreator.createWorkspaceContent(workspace.getName());
+    WorkspaceContent result = contentCreator.createWorkspaceContentForWorkspace(workspace.getName());
     return result;
   }
 
