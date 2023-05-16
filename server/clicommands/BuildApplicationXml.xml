@@ -16,10 +16,10 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="buildapplicationxml" Groups="Application" Description="Build application.xml for a given application definition."/>
-  <Argument Name="workspaceName" Description="The name of the workspace."/>
+  <CommandDefinition Name="buildapplicationxml" Groups="Application" Description="Build application.xml for a given application definition (workspace must be set) or runtime application (workspace must not be set)."/>
+  <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
   <Argument Name="applicationName" Description="The name of the application."/>
-  <Argument Name="versionName" Description="The name of the version. Default: 'workingset'" Optional="true" />
+  <Argument Name="versionName" Description="The name of the version." Optional="true" />
   <Argument Name="fileName" Description="The name of the resulting XML file. Default: 'application.xml'" Optional="true" />
   <BoolOption Name="cs" LongName="createStub" Description="Create an application.xml for the stub version of the application"  Optional="true" />
   <BoolOption Name="m" LongName="minify" Description="Minify application.xml by removing implicit ordertypes and XmomEntries"  Optional="true" />
