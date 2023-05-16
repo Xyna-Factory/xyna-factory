@@ -180,7 +180,7 @@
 
         <!-- create application.xml -->
        <if>
-		<equals arg1="${workspacename}" arg2=""/>
+	       <equals arg1="${workspacename}" arg2="$${workspacename}"/>
 		<then>
 			<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -versionName '${applicationversion}' -fileName '/tmp/application.xml'" />
 		</then>
@@ -204,7 +204,7 @@
         <property name="applicationversion" value="${Application.versionName}" />
 
 		<if>
-			<equals arg1="${workspacename}" arg2=""/>
+			<equals arg1="${workspacename}" arg2="$${workspacename}"/>
 			<then>
 				<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -versionName '${applicationversion}' -fileName '/tmp/application-stub.xml' -cs" />
 			</then>
@@ -228,7 +228,7 @@
 		<property name="applicationname" value="${Application.applicationName}" />
         <property name="applicationversion" value="${Application.versionName}" />
 		<if>
-			<equals arg1="${workspacename}" arg2=""/>
+			<equals arg1="${workspacename}" arg2="$${workspacename}"/>
 			<then>
 				<property name="where" value="application='${applicationname}' and workspace is null and versionName='${applicationversion}'" />
                         <property name="saved" value="" />
@@ -240,7 +240,7 @@
 		</if>
 		<local name="command" />
 		<property name="command" value="cd ${server.path}; ./xynafactory.sh sql &quot;select * from xmomversion where ${where}&quot; |grep revision |awk '{print $3}';"/>
-		<echo message="${server.userid}@:${server.host}${command}" debug="true" />
+		<echo message="${server.userid}@:${server.host}${command}" />
 		<if>
 			<isset property="server.keyfile" />
 			<then>
@@ -257,9 +257,9 @@
             var revision = project.getProperty("revision").trim();
             project.setProperty("revision", revision);
 		</script>
-		<echo message="got revision=${revision}" debug="true" />
+		<echo message="got revision=${revision}" />
 		<mkdir dir="XMOM" />
-		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" debug="true" />
+		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" />
 		<custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" todir="XMOM/" />
 
     </target>
