@@ -455,7 +455,9 @@ compose_server_storage() {
   cp ../../installation/codegroup.xml storage/BlackExceptionCodeManagement
   cp ../../installation/codepattern.xml storage/BlackExceptionCodeManagement
   #TODO: dhcp -> optionsv4 and optionsv6
-  cp $SCRIPT_DIR/../localbuild/server/storage/persistence/persistencelayers.xml storage
+
+  mkdir storage/persistence
+  cp $SCRIPT_DIR/../localbuild/server/storage/persistence/persistencelayers.xml storage/persistence
 }
 
 compose_server_resources() {
