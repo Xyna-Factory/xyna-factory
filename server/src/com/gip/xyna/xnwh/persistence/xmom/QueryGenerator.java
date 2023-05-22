@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,7 +207,7 @@ public class QueryGenerator {
   
   private QualifiedStorableColumnInformation reResolveColumn(QualifiedStorableColumnInformation column) {
     // dann hoch zum root
-    // den root neu auflösen
+    // den root neu auflï¿½sen
     // dann runter dem accessPath entlang
     // und dann neu bauen mit dem richtigem Besitzer
     XMOMStorableStructureInformation root;
@@ -685,7 +685,7 @@ public class QueryGenerator {
           sb.append(ccc.getParentStorableInfo().getTableName()).append(".");
         }
         sb.append(orderbb.getColumn().getParentStorableInfo().getTableName()).append(".");
-        queryBuilder.append(dictionary.getOrCreateColumnAlias(orderbb)).append(" DESC"); //damit das rootelement am ende kommt (hat als listen-index überall NULL)
+        queryBuilder.append(dictionary.getOrCreateColumnAlias(orderbb)).append(" DESC"); //damit das rootelement am ende kommt (hat als listen-index ï¿½berall NULL)
         if (orderByIterator.hasNext()) {
           queryBuilder.append(", ");
         }
@@ -821,11 +821,11 @@ public class QueryGenerator {
   
   
   /* Column Resolution According to "Xyna XMOM GUIs v0.25" 4.2.2.3.
-   * (1) %0% gilt implizit und liefert nur Primärschlüssel (uid und timestamp) zurück.
-   * (2) POINTER_AUF_REFERENZIERTE_DATEN liefert deren Primärschlüssel
-   * (3) POINTER_AUF_SIMPLE_DATEN gibt simple Werte zurück
-   * (4) POINTER_AUF_EXPANDIERTE_DATEN gibt Werte der simplen Membervariablen und Primärschlüssel referenzierter Member zurück. Listen und komplexe Membervariablen werden ausgespart.
-   * (5) POINTER_AUF_DATEN.* liefert rekursiv alle simplen und expandierten Membervariablen zurück, sowie alle Primärschlüssel referenzierter Membervariablen.
+   * (1) %0% gilt implizit und liefert nur Primï¿½rschlï¿½ssel (uid und timestamp) zurï¿½ck.
+   * (2) POINTER_AUF_REFERENZIERTE_DATEN liefert deren Primï¿½rschlï¿½ssel
+   * (3) POINTER_AUF_SIMPLE_DATEN gibt simple Werte zurï¿½ck
+   * (4) POINTER_AUF_EXPANDIERTE_DATEN gibt Werte der simplen Membervariablen und Primï¿½rschlï¿½ssel referenzierter Member zurï¿½ck. Listen und komplexe Membervariablen werden ausgespart.
+   * (5) POINTER_AUF_DATEN.* liefert rekursiv alle simplen und expandierten Membervariablen zurï¿½ck, sowie alle Primï¿½rschlï¿½ssel referenzierter Membervariablen.
    * (6) Listen analog mit Zusatz []
    */
   private List<QualifiedStorableColumnInformation> resolveColumns(XMOMStorableStructureInformation root, List<String> unresolvedColumns, AliasDictionary dictionary) {
@@ -921,8 +921,8 @@ public class QueryGenerator {
               }
             }
             if (info == null) {
-              //evtl wegen flattening nichts zu finden. vom flatteningtransformator wurden aber ja vollständige pfade bereits ersetzt. d.h. es kann sich
-              //höchstens um einen teilweisen pfad handeln. z.b. ist a.b.c.d eine in a geflattete referenz. dann könnte der accesspath a.b.c.* oder a,b.c sein.
+              //evtl wegen flattening nichts zu finden. vom flatteningtransformator wurden aber ja vollstï¿½ndige pfade bereits ersetzt. d.h. es kann sich
+              //hï¿½chstens um einen teilweisen pfad handeln. z.b. ist a.b.c.d eine in a geflattete referenz. dann kï¿½nnte der accesspath a.b.c.* oder a,b.c sein.
               boolean endsWithStar = variableAccessParts[variableAccessParts.length - 1].equals("*");
               for (int j = currentPosition + 1; j < variableAccessParts.length - (endsWithStar ? 1 : 0); j++) {
                 relativePathToParentXMOMStorable += "." + variableAccessParts[j];
@@ -931,7 +931,7 @@ public class QueryGenerator {
               for (QualifiedStorableColumnInformation entry : currentContext.getColumnInfoAndPath(ColumnInfoRecursionMode.ONLY_LOCAL)) {
                 if (entry.getColumn().isFlattened() && entry.getColumn().getPath().startsWith(relativePathToParentXMOMStorable + ".")) {
                   foundFlatMember = true;
-                  //geflachte member die einen tieferen pfad haben, nur dann hinzufügen, wenn accessPath mit * endet.
+                  //geflachte member die einen tieferen pfad haben, nur dann hinzufï¿½gen, wenn accessPath mit * endet.
                   if (endsWithStar || 
                       flattenedColNeedsToBeIncluded(entry.getColumn(), relativePathToParentXMOMStorable)) {
 

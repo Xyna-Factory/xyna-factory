@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -329,7 +329,7 @@ public class DataModelStorage {
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       DataModelStorable dms = new DataModelStorable(fqName);
-      con.queryOneRow(dms); //nur überprüfen, ob Datenmodell existiert
+      con.queryOneRow(dms); //nur ï¿½berprï¿½fen, ob Datenmodell existiert
       return DataModelXmomTypeStorable.toFiles(basePath, getAllDataModelXmomTypeForFqName(con, fqName) );
     } finally {
       finallyClose(con);
@@ -369,7 +369,7 @@ public class DataModelStorage {
   }
 
   /**
-   * Löscht oldDms, trägt newDms neu ein
+   * Lï¿½scht oldDms, trï¿½gt newDms neu ein
    * @param dataModel
    * @param oldDms
    * @param newDms

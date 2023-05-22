@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
 public interface VetoManagementInterface {
 
   /**
-   * Versucht, die übergebenen Vetos für die angegebene OrderInformation zu belegen.
+   * Versucht, die ï¿½bergebenen Vetos fï¿½r die angegebene OrderInformation zu belegen.
    * Kann mehrfach gerufen werden, loggt dann aber eine Meldung.
    * @param orderInformation
    * @param vetos
@@ -41,7 +41,7 @@ public interface VetoManagementInterface {
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency);
 
   /**
-   * Macht die Belegungen des letzten allocateVetos(...) rückgängig.
+   * Macht die Belegungen des letzten allocateVetos(...) rï¿½ckgï¿½ngig.
    * @param orderInformation
    * @param vetos
    */
@@ -55,7 +55,7 @@ public interface VetoManagementInterface {
   public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos);  
 
   /**
-   * Versucht, die Vetos für die übergebene XynaOrder freizugeben.
+   * Versucht, die Vetos fï¿½r die ï¿½bergebene XynaOrder freizugeben.
    * Kann mehrfach gerufen werden, loggt dann aber eine Meldung.
    * @param orderInformation
    * @return false, wenn Vetos nicht oder von einem anderen Auftrag belegt waren 
@@ -63,7 +63,7 @@ public interface VetoManagementInterface {
   public boolean freeVetos(OrderInformation orderInformation);
 
   /**
-   * Versucht, die Vetos für die übergebene XynaOrder freizugeben.
+   * Versucht, die Vetos fï¿½r die ï¿½bergebene XynaOrder freizugeben.
    * Falls keine allokierten Vetos direkt gefunden werden, werden nochmal 
    * alle Vetos durchsucht.
    * Kann mehrfach gerufen werden, loggt dann aber eine Meldung.
@@ -82,7 +82,7 @@ public interface VetoManagementInterface {
   public void allocateAdministrativeVeto(AdministrativeVeto administrativeVeto) throws XPRC_AdministrativeVetoAllocationDenied, PersistenceLayerException;
 
   /**
-   * Ändert Dokumentation eines administrativen Vetos, gibt alte Dokumentation zurück
+   * ï¿½ndert Dokumentation eines administrativen Vetos, gibt alte Dokumentation zurï¿½ck
    * @param administrativeVeto
    * @return
    * @throws PersistenceLayerException
@@ -91,7 +91,7 @@ public interface VetoManagementInterface {
   public String setDocumentationOfAdministrativeVeto(AdministrativeVeto administrativeVeto) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
   /**
-   * Entfernt ein administratives Veto, gibt entferntes Veto zurück
+   * Entfernt ein administratives Veto, gibt entferntes Veto zurï¿½ck
    * @param administrativeVeto
    * @return
    * @throws XPRC_AdministrativeVetoDeallocationDenied
@@ -106,7 +106,7 @@ public interface VetoManagementInterface {
   public Collection<VetoInformation> listVetos();
 
   /**
-   * TODO wofür?
+   * TODO wofï¿½r?
    * @param select
    * @param maxRows
    * @return
@@ -116,7 +116,7 @@ public interface VetoManagementInterface {
 
   
   /**
-   * Gibt VetoManagementAlgorithmType zurück
+   * Gibt VetoManagementAlgorithmType zurï¿½ck
    * @return
    */
   public VetoManagementAlgorithmType getAlgorithmType();

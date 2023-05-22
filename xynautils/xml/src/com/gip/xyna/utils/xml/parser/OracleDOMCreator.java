@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import com.gip.xyna.utils.xml.schema.SchemaUtils;
 public class OracleDOMCreator {
    
    /**
-    * parst den xml-String und gibt das zugehörige xmldocument zurück
+    * parst den xml-String und gibt das zugehï¿½rige xmldocument zurï¿½ck
     * 
     * @param xml
     * @return
@@ -50,8 +50,8 @@ public class OracleDOMCreator {
    }
 
    /**
-    * parst das xml in dem übergebenen filenamen und gibt das zugehörige
-    * xmldocument zurück
+    * parst das xml in dem ï¿½bergebenen filenamen und gibt das zugehï¿½rige
+    * xmldocument zurï¿½ck
     * 
     * @param file
     * @return
@@ -66,7 +66,7 @@ public class OracleDOMCreator {
    }
    
    /**
-    * fügt eine referenz auf den nachrichtennamen aus dem xsd-file filename in
+    * fï¿½gt eine referenz auf den nachrichtennamen aus dem xsd-file filename in
     * das xsd xsd hinzu (innerhalb der ersten sequenz)
     * 
     * @param xsd
@@ -90,7 +90,7 @@ public class OracleDOMCreator {
       xsd.getElementsByTagName("schema").item(0).insertBefore(importElement,
             xsd.getElementsByTagName("element").item(0));
 
-      // namespace abkürzung definieren
+      // namespace abkï¿½rzung definieren
       NamedNodeMap attributes = ((XMLElement) xsd
             .getElementsByTagName("schema").item(0)).getAttributes();
       String shortNS = "";
@@ -112,7 +112,7 @@ public class OracleDOMCreator {
       ((XMLElement) xsd.getElementsByTagName("schema").item(0)).setAttribute(
             "xmlns:" + shortNS, schema.getSchemaTargetNS());
 
-      // referenz in sequence einfügen
+      // referenz in sequence einfï¿½gen
       Node root = xsd.getElementsByTagName("sequence").item(0);
       XMLElement ref = (XMLElement) xsd.createElementNS(
             "http://www.w3.org/2001/XMLSchema", "element");

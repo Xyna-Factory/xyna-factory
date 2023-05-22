@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ public class GenerationBaseCache {
 
 
   /**
-   * objekt kann auch in abhängiger revision definiert sein
+   * objekt kann auch in abhï¿½ngiger revision definiert sein
    */
   public GenerationBase getFromCacheInCorrectRevision(String fqXmlName, Long revision) {
     GenerationBase gb = getFromCache(fqXmlName, revision);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
  * synchron darf nur vom Scheduler gerufen werden:
  *   - allocateVetos
  *   - undoAllocation
- * asynchrone Methoden setzen Cache früh und leeren Cache spät, damit Veto immer im Cache gefunden wird.
+ * asynchrone Methoden setzen Cache frï¿½h und leeren Cache spï¿½t, damit Veto immer im Cache gefunden wird.
  *
  */
 public class VM_CachedStorable implements VetoManagementInterface {
@@ -69,7 +69,7 @@ public class VM_CachedStorable implements VetoManagementInterface {
     VetoAllocationResult var2 = vetoStorableAccess.allocateVetos(orderInformation, vetos, urgency);
     if( ! var2.isAllocated() ) {
       if( var2.getVetoName() != null ) {
-        vetoCache.allocate(var2); //nachträglich!
+        vetoCache.allocate(var2); //nachtrï¿½glich!
       }
       vetoCache.undoAllocation(orderInformation, vetos);
     }
@@ -171,7 +171,7 @@ public class VM_CachedStorable implements VetoManagementInterface {
   }
 
   public VetoSearchResult searchVetos(VetoSelectImpl select, int maxRows) throws PersistenceLayerException {
-    return vetoStorableAccess.searchVetos(select, maxRows); //TODO vetoCache berücksichtigen?
+    return vetoStorableAccess.searchVetos(select, maxRows); //TODO vetoCache berï¿½cksichtigen?
   }
   
   @Override

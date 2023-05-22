@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,9 +63,9 @@ import com.gip.xyna.xprc.xpce.OrderContextServerExtension;
 
 
 /**
- * oberklasse für trigger. eine solche klasse muss beim processing registriert werden. bei
+ * oberklasse fï¿½r trigger. eine solche klasse muss beim processing registriert werden. bei
  * der registration wird start() aufgerufen. 
- * TODO besserer Name wäre TriggerInstance
+ * TODO besserer Name wï¿½re TriggerInstance
  */
 public abstract class EventListener<I extends TriggerConnection, J extends StartParameter> { 
   //achtung, reihenfolge der generischen parameter ist wichtig, darauf wird in xynaactivationtrigger zugegriffen
@@ -90,7 +90,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
 
   
   /**
-   * TODO dies wäre besser ein Konstruktor
+   * TODO dies wï¿½re besser ein Konstruktor
    */
   public void init(TriggerInstanceIdentification triggerInstanceId ) {
     this.triggerInstanceId = triggerInstanceId;
@@ -108,12 +108,12 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
 
   /**
    * wartet blockierend, bis ein event empfangen wird.
-   * gibt nur null zurück, wenn der trigger angehalten wird.
+   * gibt nur null zurï¿½ck, wenn der trigger angehalten wird.
    */
   protected abstract I receive();
 
   /**
-   * soll dazu führen, dass {@link #receive()} null zurück gibt. 
+   * soll dazu fï¿½hren, dass {@link #receive()} null zurï¿½ck gibt. 
    */
   public abstract void stop() throws XACT_TriggerCouldNotBeStoppedException;
 
@@ -177,7 +177,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
   }
   
   /**
-   * entfernt und undeployed den outdatedfilter in der übergebenen revision
+   * entfernt und undeployed den outdatedfilter in der ï¿½bergebenen revision
    */
   public void removeOutdatedFilter(String nameOfFilterInstance, long revision) {
     wl.lock();
@@ -243,7 +243,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
   }
 
   /**
-   * Entfernt eine Filterinstanz mit ihren zugehörigen OutdatedFilterinstanzen
+   * Entfernt eine Filterinstanz mit ihren zugehï¿½rigen OutdatedFilterinstanzen
    * @param cf
    */
   public void removeFilter(ConnectionFilterInstance<ConnectionFilter<I>> cf) {
@@ -266,7 +266,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
         }
       }
 
-      //alle zugehörigen outdated filter entfernen
+      //alle zugehï¿½rigen outdated filter entfernen
       Iterator<ConnectionFilterInstance<?>> iter = outdatedFilterVersion.iterator();
       while (iter.hasNext()) {
         ConnectionFilterInstance<?> cfi = iter.next();
@@ -322,7 +322,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
       } catch (ClassNotFoundException e) {
         throw new RuntimeException(e);
       } catch (XFMG_SHARED_LIB_NOT_FOUND e) {
-        //das muss beim deployment überprüft werden, hier ist die falsche stelle
+        //das muss beim deployment ï¿½berprï¿½ft werden, hier ist die falsche stelle
         throw new RuntimeException(e);
       }
       cache.put(className, c);
@@ -424,7 +424,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
   }
 
   /**
-   * Ermitteln des zuständigen Filters
+   * Ermitteln des zustï¿½ndigen Filters
    * @param triggerRevision 
    * @param tc 
    * @return
@@ -442,7 +442,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
           cf = (ConnectionFilter<I>) c.getConstructor().newInstance();
           cf.setRevision(cfi.getRevision());
           Long lastDeploymentId = DeploymentManagement.getInstance().getLatestDeploymentId(); //direkt vor createXynaOrder rufen, dann ist 
-          //Wahrscheinlichkeit hoch, dass deploymentId mit den in XynaOrder eingetragenen Daten übereinstimmt
+          //Wahrscheinlichkeit hoch, dass deploymentId mit den in XynaOrder eingetragenen Daten ï¿½bereinstimmt
           //TODO das geht doch bestimmt besser!
           filterResponse = cf.createXynaOrder(tc, cfi.getConfiguration());
           if( filterResponse != null && filterResponse.getResponsibility() == FilterResponsibility.RESPONSIBLE ) {
@@ -465,13 +465,13 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
           case RESPONSIBLE_WITHOUT_XYNAORDER:
             return ResponsibleFilter.filterFound(cf,null);
           case NOT_RESPONSIBLE:
-            break; //nächsten Filter probieren
+            break; //nï¿½chsten Filter probieren
           case RESPONSIBLE_BUT_TOO_NEW:
             if( ! isOutdated ) {
               List<ConnectionFilterInstance<?>> outdated = getOutdatedFilters(cfi.getInstanceName());
               ResponsibleFilter rf = findResponsibleFilter(outdated,triggerRevision,tc, true);
               if( rf.getResult() == ResponsibleFilter.Result.NoFilterFound ) {
-                break; //weitersuchen und nächsten Filter probieren
+                break; //weitersuchen und nï¿½chsten Filter probieren
               } else {
                 return rf;
               }
@@ -565,7 +565,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
     }
     
     if( isXynaException ) {
-      //Dass der Filter eine XynaException geworfen hat, ist ok. Dies ist sogar üblich, 
+      //Dass der Filter eine XynaException geworfen hat, ist ok. Dies ist sogar ï¿½blich, 
       //wenn ein Filter erkennt, dass die Eingangsnachricht falsch ist.
       //In diesem Fall soll einfach OnError gerufen werden
       try {
@@ -575,11 +575,11 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
       } catch( Throwable t2 ) {
         Department.handleThrowable(t);
         logger.debug( "Exception while calling onError: " + t2.getMessage(), t2);
-        //Das hätte nun nicht mehr passieren dürfen. Evtl. hat der Filter doch eine Macke
+        //Das hï¿½tte nun nicht mehr passieren dï¿½rfen. Evtl. hat der Filter doch eine Macke
         return ResponsibleFilter.filterFailed(cf, t2);
       }
     } else {
-      //Filter hätte diese Exception nicht werden dürfen. Filter hat anscheinend eine Macke
+      //Filter hï¿½tte diese Exception nicht werden dï¿½rfen. Filter hat anscheinend eine Macke
       return ResponsibleFilter.filterFailed(cf, t);
     }
   }
@@ -659,7 +659,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
 
   
   /**
-   * leitet weiter zu {@link #receive()}, führt überprüfung von {@link #getMaxReceivesInParallel()} durch.
+   * leitet weiter zu {@link #receive()}, fï¿½hrt ï¿½berprï¿½fung von {@link #getMaxReceivesInParallel()} durch.
    */
   public final I receiveNext() {
     if( ! receiveControlAlgorithm.canReceive() ) {
@@ -667,8 +667,8 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
       return null;
     }
     
-    //Receive durchführen
-    I tc = receive(); //kann länger dauern
+    //Receive durchfï¿½hren
+    I tc = receive(); //kann lï¿½nger dauern
     if( tc == null ) {
       return null;
     }
@@ -695,8 +695,8 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
     try {
       onProcessingRejected(cause, tc);
     } catch (Throwable t) {
-      //FIXME warn würde das log vollspammen. evtl sollte man sich hier merken, ob eine fehlermeldung bereits als warn ausgegeben wurde, und dies dann
-      //nur in längeren zeitabständen tun.
+      //FIXME warn wï¿½rde das log vollspammen. evtl sollte man sich hier merken, ob eine fehlermeldung bereits als warn ausgegeben wurde, und dies dann
+      //nur in lï¿½ngeren zeitabstï¿½nden tun.
       logger.debug("problem rejecting event", t);
     } finally {
       tc.close();
@@ -705,23 +705,23 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
   
   
   /**
-   * ermöglicht es dem Trigger auf angenommene Aufträge zu reagieren 
-   * nicht abstract aufgrund von abwärts kompaktibilität...wait all your triggers are belong to us?
+   * ermï¿½glicht es dem Trigger auf angenommene Auftrï¿½ge zu reagieren 
+   * nicht abstract aufgrund von abwï¿½rts kompaktibilitï¿½t...wait all your triggers are belong to us?
    */
   protected void onFilterFound(XynaOrderServerExtension xo, OrderContextServerExtension ctx, I tc) {
   }
   
   /**
-   * ermöglicht es dem Trigger zu reagieren, wenn Filter verantwortlich ist, aber keine XynaOrder startet
-   * nicht abstract aufgrund von Abwärtskompatibilität
+   * ermï¿½glicht es dem Trigger zu reagieren, wenn Filter verantwortlich ist, aber keine XynaOrder startet
+   * nicht abstract aufgrund von Abwï¿½rtskompatibilitï¿½t
    * @param tc
    */
   protected void onFilterFoundWithoutXynaOrder(I tc) {
   }
 
   /**
-   * ermöglicht es dem Trigger zu reagieren, wenn Filter mit unerwarteten Exceptions fehlschlägt
-   * nicht abstract aufgrund von Abwärtskompatibilität
+   * ermï¿½glicht es dem Trigger zu reagieren, wenn Filter mit unerwarteten Exceptions fehlschlï¿½gt
+   * nicht abstract aufgrund von Abwï¿½rtskompatibilitï¿½t
    * @param tc
    * @param connectionFilter
    * @param cause

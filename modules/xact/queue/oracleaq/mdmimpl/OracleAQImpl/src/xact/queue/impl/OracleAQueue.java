@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class OracleAQueue {
   }
 
   public void close() {
-    //derzeit nichts zu tun, da Connections immer sofort zurückgegeben werden
+    //derzeit nichts zu tun, da Connections immer sofort zurï¿½ckgegeben werden
   }
 
   public QueueMessage dequeue(DequeueOptions dequeueOptions) throws DequeueFailedException, NoSuchMessageException, NoConnectionException {
@@ -138,7 +138,7 @@ public class OracleAQueue {
     }
     
     MessageProperties messageProperties = new MessageProperties();
-    //FIXME füllen
+    //FIXME fï¿½llen
     messageProperties.setCorrelationId(new CorrelationId(aqMessage.getCorrelationID()));
     messageProperties.setPriority(aqMessage.getPriority());
     if( hasProperties ) {
@@ -165,7 +165,7 @@ public class OracleAQueue {
     
     
     enqueueOptionsBuilder.defaultPriority( getPriority(queueMessage) );
-    //enqueueOptionsBuilder.delay(enqueueOptions.getDelay()). //nur für Oracle, nicht bei anderen Queue-Implementierungen. Daher aktuell nicht unterstützt
+    //enqueueOptionsBuilder.delay(enqueueOptions.getDelay()). //nur fï¿½r Oracle, nicht bei anderen Queue-Implementierungen. Daher aktuell nicht unterstï¿½tzt
     
     if( enqueueOptions.getExpiration() != null ) {
       enqueueOptionsBuilder.expiration( toRelativeSeconds( enqueueOptions.getExpiration() ) );

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ public class XMLExtension {
       if (xmlRevision == null) {
         throw new RuntimeException("Owner-Revision not found for " + auditData.getProcess() + ", parentRevision = " + revision);
       }
-      //FIXME synchronisieren mit generationbase, weil dort gleichzeitig auch auf das xml schreibend zugegriffen werden könnte.
+      //FIXME synchronisieren mit generationbase, weil dort gleichzeitig auch auf das xml schreibend zugegriffen werden kï¿½nnte.
       xmlReader =
           inputFactory.createXMLStreamReader(new FileInputStream(new File(GenerationBase
                                                                           .getFileLocationForDeploymentStaticHelper(auditData.getProcess(), xmlRevision)
@@ -140,7 +140,7 @@ public class XMLExtension {
         try {
           boolean operationFound = false; //es muss genau ein Operation-Element vorhanden sein
   
-          //Die Schritte für die compensations umgekehrt sortieren, damit diese in der richtigen reihenfolge ins xml geschrieben werden.
+          //Die Schritte fï¿½r die compensations umgekehrt sortieren, damit diese in der richtigen reihenfolge ins xml geschrieben werden.
           Map<Integer, Integer> mapStepIdToRefIdForCompensation = new TreeMap<Integer, Integer>(comparatorHighToLow);
           
           while (xmlReader.hasNext()) {
@@ -163,7 +163,7 @@ public class XMLExtension {
                 String id = xmlReader.getAttributeValue(null, GenerationBase.ATT.ID);
                 idStack.add(id);
                 
-                //Ids für compensations sammeln
+                //Ids fï¿½r compensations sammeln
                 if (name.equals(GenerationBase.EL.FUNCTION)) {
                   Integer refId = Integer.valueOf(id);
                   Integer stepId = auditData.getStepIdByRefId(refId);
@@ -196,7 +196,7 @@ public class XMLExtension {
                 xmlWriter.writeCData(xmlReader.getText());
                 break;
               case XMLStreamReader.COMMENT :
-                //ignore für audit
+                //ignore fï¿½r audit
                 break;
               case XMLStreamReader.START_DOCUMENT :
                 //processing instruction wird oben bereits geschrieben
@@ -207,7 +207,7 @@ public class XMLExtension {
               case XMLStreamReader.NAMESPACE :
                 //ntbd
                 break;
-              case XMLStreamReader.CHARACTERS : //Zeilenumbrüche
+              case XMLStreamReader.CHARACTERS : //Zeilenumbrï¿½che
                 xmlWriter.writeCharacters(xmlReader.getText());
                 break;
               default : throw new RuntimeException("unsupported type: " + xmlType);
@@ -285,15 +285,15 @@ public class XMLExtension {
  
   /*
    * TODO
-   * getdependencies() gibt auch abhängigkeiten zu datentypen, die sich aus instanzenmethoden des typs ergeben. die will man nicht mitnehmen!
+   * getdependencies() gibt auch abhï¿½ngigkeiten zu datentypen, die sich aus instanzenmethoden des typs ergeben. die will man nicht mitnehmen!
    */
   public Set<DependencyNode> getAuditImports() throws Ex_FileWriteException {
     Set<DependencyNode> imports = new HashSet<DependencyNode>();
 
-    //dynamische Anteile (nur Datentypen?) hinzufügen
+    //dynamische Anteile (nur Datentypen?) hinzufï¿½gen
     for (DependencyNode importNode : cache.getAuditImports()) {
       if (BasicAuditImport.isBasicDataType(importNode.getUniqueName())) {
-        continue; //für Modellierung wichtige Datentypen werden dynamisch zum Audit hinzugefügt
+        continue; //fï¿½r Modellierung wichtige Datentypen werden dynamisch zum Audit hinzugefï¿½gt
       }
 
       if (imports.add(importNode)) {
@@ -317,7 +317,7 @@ public class XMLExtension {
       }
     }
     
-    //statische Anteile hinzufügen (darf erst nach den dynamischen gemacht werden, da hier (teilweise) keine Rekursion nötig ist)
+    //statische Anteile hinzufï¿½gen (darf erst nach den dynamischen gemacht werden, da hier (teilweise) keine Rekursion nï¿½tig ist)
     DependencyNode rootNode = depReg.getDependencyNode(auditData.getProcess(), DependencySourceType.WORKFLOW, revision);
     if (rootNode == null) {
       long revisionDefiningWF = rcdm.getRevisionDefiningXMOMObjectOrParent(auditData.getProcess(), revision);
@@ -331,12 +331,12 @@ public class XMLExtension {
   private void getDependencies(DependencyNode rootNode, Set<DependencyNode> imports, boolean recursive) {
     for (DependencyNode node : rootNode.getUsedNodes()) {
       if (BasicAuditImport.isBasicDataType(node.getUniqueName())) {
-        continue; //für Modellierung wichtige Datentypen werden dynamisch zum Audit hinzugefügt
+        continue; //fï¿½r Modellierung wichtige Datentypen werden dynamisch zum Audit hinzugefï¿½gt
       }
       
       boolean isGeneralXO = node.getType().equals(DependencySourceType.DATATYPE) || node.getType().equals(DependencySourceType.XYNAEXCEPTION);
       boolean isWF = node.getType().equals(DependencySourceType.WORKFLOW);
-      //datentypen und exceptions müssen auch ihre usedobjects hinzufügen, solange die im audit/import noch referenziert sind
+      //datentypen und exceptions mï¿½ssen auch ihre usedobjects hinzufï¿½gen, solange die im audit/import noch referenziert sind
       if (isGeneralXO || isWF) {
         if (imports.add(node)) {
           if (recursive || isGeneralXO) {
@@ -492,8 +492,8 @@ public class XMLExtension {
               } else if (xo instanceof XynaExceptionContainer) {
                 xei = new XynaExceptionInformation(((XynaExceptionContainer) xo).getException(), version, cache);
               } else {
-                throw new RuntimeException("unexpected class"); // kann nicht vorkommen, wegen dem if oben drüber. find
-                                                                // bugs ist so aber glücklich
+                throw new RuntimeException("unexpected class"); // kann nicht vorkommen, wegen dem if oben drï¿½ber. find
+                                                                // bugs ist so aber glï¿½cklich
               }
               createExceptionElement(xei);
             } else {
@@ -511,9 +511,9 @@ public class XMLExtension {
   
   private Set<String> additionalImports = new HashSet<String>();
   
-  //FIXME: das ist ganz hässlich hier, dass die exceptions bereits als xml serialisiert vorliegen. 
+  //FIXME: das ist ganz hï¿½sslich hier, dass die exceptions bereits als xml serialisiert vorliegen. 
   //weil dadurch wird das referenzierungs-feature (InstanceId=X, RefInstanceId=Y) ausgehebelt.
-  //ich bin nicht sicher, ob es notwendig (für deserialisierung) ist, die exceptions schon vorher zu serialisieren.
+  //ich bin nicht sicher, ob es notwendig (fï¿½r deserialisierung) ist, die exceptions schon vorher zu serialisieren.
   private void createExceptionElement(XynaExceptionInformation exception) throws XMLStreamException {
     Document doc;
     try {
@@ -612,7 +612,7 @@ public class XMLExtension {
     if (auditData.containsCompensation()) {
       xmlWriter.writeStartElement(GenerationBase.EL.COMPENSATIONS);
       
-      //FIXME der status der compensations sollte über die auftragsdatenbank gelöst werden und nicht im xml stehen.
+      //FIXME der status der compensations sollte ï¿½ber die auftragsdatenbank gelï¿½st werden und nicht im xml stehen.
       xmlWriter.writeAttribute(GenerationBase.ATT.STATUS, "Success");
       
       for (Entry<Integer, Integer> entry : mapStepIdToRefIdForCompensation.entrySet()) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -196,8 +196,8 @@ public class CSVDatamodelServicesServiceOperationImpl implements ExtendedDeploym
        * }
        */
       
-      //beim create wird immer bereits die gesamte (teil-)baumstruktur erzeugt, die für die befüllung notwendig ist.
-      //damit spart man sich das lazy checken später
+      //beim create wird immer bereits die gesamte (teil-)baumstruktur erzeugt, die fï¿½r die befï¿½llung notwendig ist.
+      //damit spart man sich das lazy checken spï¿½ter
       boolean isRootMappings;
       List<PathPart> pathParts;
       if (mapperCreation.getSecond()) {
@@ -221,7 +221,7 @@ public class CSVDatamodelServicesServiceOperationImpl implements ExtendedDeploym
       while (csvit.hasNext()) {
         String field = csvit.next();
         if (field == null || para.getNullRepresentation().equals(field)) {
-          //null-werte überspringen
+          //null-werte ï¿½berspringen
           idx++;
           continue;
         }
@@ -416,7 +416,7 @@ public class CSVDatamodelServicesServiceOperationImpl implements ExtendedDeploym
       List<MemberCreation> currentMembers = memberCreation;
       for (int i = fields.size() - 1; i >= 0; i--) {
         AbstractXmomField axf = fields.get(i);
-        //hier wäre eine map performanter, aber es ist nicht zu erwarten, dass man so viele verschiedene members hat, dass das eine rolle spielt
+        //hier wï¿½re eine map performanter, aber es ist nicht zu erwarten, dass man so viele verschiedene members hat, dass das eine rolle spielt
         //check, ob member bereits erzeugt wird
         boolean found = false;
         for (MemberCreation mc : currentMembers) {
@@ -448,7 +448,7 @@ public class CSVDatamodelServicesServiceOperationImpl implements ExtendedDeploym
     }
 
 
-    //erzeugt zielobjekt mit leer initialisierten komplexwertigen members, falls diese für die befüllung durch csv-spalten benötigt werden
+    //erzeugt zielobjekt mit leer initialisierten komplexwertigen members, falls diese fï¿½r die befï¿½llung durch csv-spalten benï¿½tigt werden
     public GeneralXynaObject create(List<PathPart> meta) {
       try {
         GeneralXynaObject gxo = constructor.newInstance();

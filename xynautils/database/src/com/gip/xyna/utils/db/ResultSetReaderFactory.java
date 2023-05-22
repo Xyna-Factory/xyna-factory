@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,7 +142,7 @@ public class ResultSetReaderFactory {
   
   /**
    * ResultSetReader, der einen Enum ausliest
-   * Achtung: noch nicht genügend getestet
+   * Achtung: noch nicht genï¿½gend getestet
    * @return
    */
   public static <E extends Enum<E>> ResultSetReader<E> getEnumReader( final Class<E> clazz ) {
@@ -160,7 +160,7 @@ public class ResultSetReaderFactory {
   
   /**
    * ResultSetReader der ein Array beliebiger Strings, Longs, Integers und Enums ausliest
-   * Achtung: noch nicht genügend getestet
+   * Achtung: noch nicht genï¿½gend getestet
    * @param types
    * @return
    */

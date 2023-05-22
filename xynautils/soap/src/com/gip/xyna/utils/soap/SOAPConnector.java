@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Kapselt HttpURLConnection mit Util Methoden für Soap.
+ * Kapselt HttpURLConnection mit Util Methoden fï¿½r Soap.
  * 
  */
 public class SOAPConnector {
@@ -110,12 +110,12 @@ public class SOAPConnector {
       }
       httpConn.setConnectTimeout(connectTimeout);
       httpConn.setReadTimeout(readTimeout);
-      // Connection für Input und Output einrichten
+      // Connection fï¿½r Input und Output einrichten
       httpConn.setDoInput(true);
       httpConn.setDoOutput(true);
       // kein Cache, da dynamische Daten
       httpConn.setUseCaches(false);
-      // Angaben zur Übertragung (siehe http://www.ietf.org/rfc/rfc2068.txt)
+      // Angaben zur ï¿½bertragung (siehe http://www.ietf.org/rfc/rfc2068.txt)
       httpConn.setRequestMethod("POST");
       Iterator<String> it = properties.keySet().iterator();
       while (it.hasNext()) {
@@ -148,7 +148,7 @@ public class SOAPConnector {
 
 
   /**
-   * falls httpConnection offen, wird die property dort gesetzt, ansonsten beim nächsten öffnen
+   * falls httpConnection offen, wird die property dort gesetzt, ansonsten beim nï¿½chsten ï¿½ffnen
    * 
    * @param key
    * @param value
@@ -164,7 +164,7 @@ public class SOAPConnector {
 
 
   /**
-   * kurz für setRequestProperty(PROPERTYKEY_CONTENT_TYPE, ct);
+   * kurz fï¿½r setRequestProperty(PROPERTYKEY_CONTENT_TYPE, ct);
    * 
    * @param ct
    */
@@ -174,7 +174,7 @@ public class SOAPConnector {
 
 
   /**
-   * kurz für setRequestProperty(PROPERTYKEY_USER_AGENT, userAgent);
+   * kurz fï¿½r setRequestProperty(PROPERTYKEY_USER_AGENT, userAgent);
    * 
    * @param userAgent The userAgent to set.
    */

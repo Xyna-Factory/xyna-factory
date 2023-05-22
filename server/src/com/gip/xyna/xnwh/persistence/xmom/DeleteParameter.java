@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,8 +55,8 @@ public class DeleteParameter {
   
   
  /**
-  * - recursive: Alle abhängigen XMOM Storables rekursiv löschen. Dabei wird jeweils auch das Verhalten für Rückwärtsreferenzen beachtet.
-  * - keep: Referenzierte Objekte werden nicht gelöscht sondern bleiben bestehen
+  * - recursive: Alle abhï¿½ngigen XMOM Storables rekursiv lï¿½schen. Dabei wird jeweils auch das Verhalten fï¿½r Rï¿½ckwï¿½rtsreferenzen beachtet.
+  * - keep: Referenzierte Objekte werden nicht gelï¿½scht sondern bleiben bestehen
   */
   public static enum ForwardReferenceHandling {
     RECURSIVE_DELETE("recursive"), KEEP("keep");
@@ -83,9 +83,9 @@ public class DeleteParameter {
   
   
   /**
-   * - cascade: Alle XMOM Storables, die ein zu löschendes XMOM Storable referenzieren, werden ebenso gelöscht. Rekursiv
-   * - error: Default. Fehler, falls eine solche Abhängigkeit festgestellt wird
-   * - delete: Das Objekt wird entfernt. Andere XMOM Storables, die dieses Objekt referenzieren, referenzieren es jetzt nicht mehr, sind aber noch funktionstüchtig.
+   * - cascade: Alle XMOM Storables, die ein zu lï¿½schendes XMOM Storable referenzieren, werden ebenso gelï¿½scht. Rekursiv
+   * - error: Default. Fehler, falls eine solche Abhï¿½ngigkeit festgestellt wird
+   * - delete: Das Objekt wird entfernt. Andere XMOM Storables, die dieses Objekt referenzieren, referenzieren es jetzt nicht mehr, sind aber noch funktionstï¿½chtig.
    * 
    * - ignore is only to be used internally, no handling for backward references will be performed
    */

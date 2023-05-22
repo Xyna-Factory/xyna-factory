@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * AllArgs kapselt Kommando und Parameter.
- * Es werden verschiedene Methoden angeboten, um einfach auf die Argumente zugreifen zu können.
+ * Es werden verschiedene Methoden angeboten, um einfach auf die Argumente zugreifen zu kï¿½nnen.
  *
  */
 public class AllArgs {

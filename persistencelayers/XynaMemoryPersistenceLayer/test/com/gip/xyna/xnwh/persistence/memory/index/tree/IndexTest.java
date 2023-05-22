@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -808,7 +808,7 @@ public class IndexTest extends TestCase {
         System.out.println("deleting " + toDelete.size() + " rows");
         System.out.println("rebalances: " + Rebalancer.cnt);
 
-        //löschen
+        //lï¿½schen
         bulk = index.startBulkUpdate(null);
         for (RowData rd : toDelete) {
           bulk.remove(rd.col1, rd);
@@ -869,7 +869,7 @@ public class IndexTest extends TestCase {
     index.rebalance();
   }
 
-  public void testBuildUpdateAndDelete() { //nicht unterstützt! vglkommentar von bulkupdate.commit
+  public void testBuildUpdateAndDelete() { //nicht unterstï¿½tzt! vglkommentar von bulkupdate.commit
     Index<String, RowData> index = new IndexImplTree<String, RowData>(new NodeCreatorTest());
     RowData rd = new RowData("a", 1, "c");
     index.add("a", rd);

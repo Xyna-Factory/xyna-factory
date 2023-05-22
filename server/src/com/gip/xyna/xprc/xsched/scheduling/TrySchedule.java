@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,14 +42,14 @@ public interface TrySchedule {
     CAPACITY,        //wegen Capacity
     VETO,            //wegen Veto
     TIME_CONSTRAINT, //wegen TimeConstraint
-    CONTINUE,        //aus irgendeinem Grund: Fortsetzen mit nächstem Auftrag
+    CONTINUE,        //aus irgendeinem Grund: Fortsetzen mit nï¿½chstem Auftrag
     BREAKLOOP,       //aus irgendeinem Grund: Abbruch und Neustart der Scheduler-Schleife
     PAUSE,           //Auftrag darf nicht geschedult werden
     
     //Auftrag soll nochmal geschedult werden
     //RETRY,           //in der gleichen Scheduler-Schleife
-    RETRY_NEXT,      //in der nächsten Scheduler-Schleife Try-Schedules rückgängig machen, weil in der nächsten Scheduler-Schleife der Auftrag eventuell durch einen mit höherer Urgency versteckt wird
-    REORDER;         //in der nächsten Scheduler-Schleife mit anderer Urgency
+    RETRY_NEXT,      //in der nï¿½chsten Scheduler-Schleife Try-Schedules rï¿½ckgï¿½ngig machen, weil in der nï¿½chsten Scheduler-Schleife der Auftrag eventuell durch einen mit hï¿½herer Urgency versteckt wird
+    REORDER;         //in der nï¿½chsten Scheduler-Schleife mit anderer Urgency
   }
   
   public static class TryScheduleResult {
@@ -78,7 +78,7 @@ public interface TrySchedule {
     }
     
     public static TryScheduleResult getCapacityNotAvailableInstance(CapacityAllocationResult car) {
-      //TODO Performance für jede Capacity cachen statt immer neue Objekte zu bauen
+      //TODO Performance fï¿½r jede Capacity cachen statt immer neue Objekte zu bauen
       TryScheduleResult ret = new TryScheduleResult(TryScheduleResultType.CAPACITY);
       ret.car = car;
       return ret;
@@ -90,7 +90,7 @@ public interface TrySchedule {
       return ret;
     }
     
-    //timeconstraint sagt, dass z.b. zeitfenster gerade zu ist, aber später wieder aufgeht
+    //timeconstraint sagt, dass z.b. zeitfenster gerade zu ist, aber spï¿½ter wieder aufgeht
     public static TryScheduleResult getScheduleLaterInstance(TimeConstraintResult tr) {
       TryScheduleResult ret = new TryScheduleResult(TryScheduleResultType.TIME_CONSTRAINT);
       ret.tr = tr;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -172,7 +172,7 @@ public class SecureStorage extends FunctionGroup {
           }
           logger.debug("caching deactivated");
         } else {
-          throw new RuntimeException("invalid value für property " + PROP_CACHE);
+          throw new RuntimeException("invalid value fï¿½r property " + PROP_CACHE);
         }
       }
     });
@@ -570,7 +570,7 @@ public class SecureStorage extends FunctionGroup {
       oos.flush();
       oos.close();
     } catch (IOException e1) {
-      throw new RuntimeException(e1); //da sollte nichts passieren können
+      throw new RuntimeException(e1); //da sollte nichts passieren kï¿½nnen
     }
     
     if (logger.isTraceEnabled()) {
@@ -665,7 +665,7 @@ public class SecureStorage extends FunctionGroup {
   }
 
   /**
-   * Verschlüsselt den übergebenen String mittels DES und Base64.
+   * Verschlï¿½sselt den ï¿½bergebenen String mittels DES und Base64.
    * Identifier dient zum Suchen der PassPhrase im SecureStorage.
    * @param identifier
    * @param string
@@ -678,7 +678,7 @@ public class SecureStorage extends FunctionGroup {
   }
 
   /**
-   * Verschlüsselt den übergebenen String mittels DES und Base64.
+   * Verschlï¿½sselt den ï¿½bergebenen String mittels DES und Base64.
    * Identifier dient zum Erzeugen der PassPhrase.
    * @param identifier
    * @param string
@@ -705,7 +705,7 @@ public class SecureStorage extends FunctionGroup {
 
   
   /**
-   * Entschlüsselt den übergebenen String mittels Base64 und DES.
+   * Entschlï¿½sselt den ï¿½bergebenen String mittels Base64 und DES.
    * Identifier dient zum Suchen der PassPhrase im SecureStorage.
    * @param identifier
    * @param string
@@ -718,7 +718,7 @@ public class SecureStorage extends FunctionGroup {
   }
  
   /**
-   * Entschlüsselt den übergebenen String mittels Base64 und DES.
+   * Entschlï¿½sselt den ï¿½bergebenen String mittels Base64 und DES.
    * Identifier dient zum Erzeugen der PassPhrase.
    * @param identifier
    * @param string

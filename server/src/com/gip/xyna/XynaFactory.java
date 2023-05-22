@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,13 +138,13 @@ public final class XynaFactory implements XynaFactoryBase {
 
 
   public static XynaFactoryBase getInstance() {
-    //TODO für bestimmte aufrufer nicht erlauben  Ist dies noch nötig?
+    //TODO fï¿½r bestimmte aufrufer nicht erlauben  Ist dies noch nï¿½tig?
     if (factoryInstance == null) {
       synchronized (XynaFactory.class) {
         if (createdFactoryInstance == null) {
-          //hier sollte kein Aufruf innerhalb der Factory hingelangen können.  
+          //hier sollte kein Aufruf innerhalb der Factory hingelangen kï¿½nnen.  
           logger.trace( "XynaFactory instantiated as mock", new Exception("called from") );
-          factoryInstance = new XynaFactory(); //FIXME diese Zeile sollte raus! nur wegen Abwärtskompatibilität hier, sollte hoffentlich nie gerufen werden  
+          factoryInstance = new XynaFactory(); //FIXME diese Zeile sollte raus! nur wegen Abwï¿½rtskompatibilitï¿½t hier, sollte hoffentlich nie gerufen werden  
         } else {
           factoryInstance = createdFactoryInstance;
         }
@@ -154,11 +154,11 @@ public final class XynaFactory implements XynaFactoryBase {
   }
   
   public static XynaFactoryBase createServerInstance() {
-    //TODO Prüfen dass nur von XynaFactoryCommandLineInterface.init aufgerufen wird
+    //TODO Prï¿½fen dass nur von XynaFactoryCommandLineInterface.init aufgerufen wird
     if (factoryInstance == null) {
       synchronized (XynaFactory.class) {
         if (createdFactoryInstance == null) {
-          createdFactoryInstance = new XynaFactory(); //einzige Stelle, bei der regulär die Factory instantiiert wird
+          createdFactoryInstance = new XynaFactory(); //einzige Stelle, bei der regulï¿½r die Factory instantiiert wird
         }
         factoryInstance = createdFactoryInstance;
       }
@@ -176,13 +176,13 @@ public final class XynaFactory implements XynaFactoryBase {
    * @param xfi
    */
   public static void setInstance(XynaFactoryBase xfi) {
-    //zum testen! //TODO überprüfen, dass man das darf
+    //zum testen! //TODO ï¿½berprï¿½fen, dass man das darf
     factoryInstance = xfi;
   }
   
   
   /**
-   * Zurücksetzen der Instance auf die bei Serverstart angelegte Instance
+   * Zurï¿½cksetzen der Instance auf die bei Serverstart angelegte Instance
    */
   public static void resetInstance() {
     factoryInstance = createdFactoryInstance;
@@ -192,14 +192,14 @@ public final class XynaFactory implements XynaFactoryBase {
   /**
    * Ist die Instance gerade durch einen Mock ersetzt?
    */
-  //ist z.B. während der Updatephase true, wenn da UpdateGeneratedClasses o.ä. läuft
+  //ist z.B. wï¿½hrend der Updatephase true, wenn da UpdateGeneratedClasses o.ï¿½. lï¿½uft
   public static boolean isInstanceMocked() {
     return factoryInstance != createdFactoryInstance;
   }
 
 
   /**
-   * gibt true zurück, wenn die fabrik instanz existiert und kein mock ist
+   * gibt true zurï¿½ck, wenn die fabrik instanz existiert und kein mock ist
    */
   public static boolean isFactoryServer() {
     return factoryInstance != null && factoryInstance instanceof XynaFactory
@@ -231,7 +231,7 @@ public final class XynaFactory implements XynaFactoryBase {
   }
   
   /*
-   * nur für performance
+   * nur fï¿½r performance
    */
   private static class SecMan1 extends SecurityManager {
 
@@ -364,10 +364,10 @@ public final class XynaFactory implements XynaFactoryBase {
 
   public void init() throws XynaException {
     
-    GenerationBase.removeFromCache = false; //für updates und wf-database
+    GenerationBase.removeFromCache = false; //fï¿½r updates und wf-database
     isStartingUp = true;
 
-    //bugz 11042: fehler im server.policy file frühzeitig entdecken
+    //bugz 11042: fehler im server.policy file frï¿½hzeitig entdecken
     SecurityManager securityManager = System.getSecurityManager();
     if (securityManager == null) {
       System.setSecurityManager(Constants.NORMAL_SECURITY_MANAGER ? new SecurityManager() : new SecMan1());
@@ -401,7 +401,7 @@ public final class XynaFactory implements XynaFactoryBase {
     //Bug 17897 ClassLoader-Deadlock? hier Single-threaded laden
     TimeConstraint.immediately();
     
-    //ConnectionPools sollen das Cleanup über das ShutdownHookManagement ausführen
+    //ConnectionPools sollen das Cleanup ï¿½ber das ShutdownHookManagement ausfï¿½hren
     ConnectionPool.setCleanupWrapper(new ConnectionPool.CleanupWrapper() {
       public void registerCleanup(Runnable hook) {
         ShutdownHookManagement.getInstance().addTask(hook);
@@ -414,8 +414,8 @@ public final class XynaFactory implements XynaFactoryBase {
     
     ConnectionPoolManagement.getInstance();
 
-    //zwei getrennte future-execution instanzen, eine für die tasks die bis hierhin passieren sollen
-    //und eine für die danach
+    //zwei getrennte future-execution instanzen, eine fï¿½r die tasks die bis hierhin passieren sollen
+    //und eine fï¿½r die danach
     futureExecutionInstanceInit.finishedRegistrationProcess();
 
     clusterNodeName = System.getProperty(CLUSTER_NODE_SYS_PROP_KEY);
@@ -432,12 +432,12 @@ public final class XynaFactory implements XynaFactoryBase {
     }
 
     //objekte wurden evtl mit regenerateDeployed deployed
-    // => dann sind sie im state cleanup, haben aber keine deploymenthandler ausgeführt. das muss dann noch geschehen.
+    // => dann sind sie im state cleanup, haben aber keine deploymenthandler ausgefï¿½hrt. das muss dann noch geschehen.
     GenerationBase.clearGlobalCache();  
 
     // instantiate IDGenerator so that it registers itself as a late init component
     idGenerator = IDGenerator.getInstance();
-    //durch ein Update wurde in XynaOrder evtl. für den idGenerator 'null' gechached, daher hier noch einmal explizit setzen
+    //durch ein Update wurde in XynaOrder evtl. fï¿½r den idGenerator 'null' gechached, daher hier noch einmal explizit setzen
     XynaOrder.setIDGenerator(idGenerator);
     
     //bootCntId ermitteln
@@ -450,7 +450,7 @@ public final class XynaFactory implements XynaFactoryBase {
       });
     setBootCount();
   
-    //Prüfung des MDM-Verzeichnisses
+    //Prï¿½fung des MDM-Verzeichnisses
     checkDirs();
     if (logger.isDebugEnabled()) {
       logger.debug("classloader: " + getClass().getClassLoader());
@@ -591,7 +591,7 @@ public final class XynaFactory implements XynaFactoryBase {
       }
 
       logger.info("Shutting down now");
-      XynaFactoryCommandLineInterface.shutdown(); //ruft über XynaFactoryCommandLineInterface-Thread shutdownComponents() auf
+      XynaFactoryCommandLineInterface.shutdown(); //ruft ï¿½ber XynaFactoryCommandLineInterface-Thread shutdownComponents() auf
       while (!XynaFactory.getInstance().isShuttingDown()) {
         try {
           Thread.sleep(20);
@@ -610,18 +610,18 @@ public final class XynaFactory implements XynaFactoryBase {
 
     //Shutdown-Reihenfolge ist hier wichtig:
     //1. eigene laufende Workflows im Processing beenden: stopGracefully
-    //2. dann erst den Cluster verlassen: dann wird anderer Knoten DISCONNECTED_MASTER und übernimmt Aufträge, 
+    //2. dann erst den Cluster verlassen: dann wird anderer Knoten DISCONNECTED_MASTER und ï¿½bernimmt Auftrï¿½ge, 
     //   die in stopGracefully hoffentlich beendet wurden.
-    //3. TODO weitere Reihenfolge überdenken: sollte CronLikeScheduler nich früher beendet werden?
+    //3. TODO weitere Reihenfolge ï¿½berdenken: sollte CronLikeScheduler nich frï¿½her beendet werden?
         
     
-    //damit nicht jemand das shutdownlock holen kann, während die komponenten bereits am runterfahren sind.
-    //falls jemand das lock bereits hält, muss er es freigeben, bevor das shutdown fortsetzen darf.
-    //TODO für den fall, dass die application irgendwie hängt, die das lock hält, sollte man hier noch einen weg 
-    //ermöglichen, dass der shutdown irgendwann forciert fortgesetzt wird. timeout ist gefährlich. vielleicht ein cli-befehl?
+    //damit nicht jemand das shutdownlock holen kann, wï¿½hrend die komponenten bereits am runterfahren sind.
+    //falls jemand das lock bereits hï¿½lt, muss er es freigeben, bevor das shutdown fortsetzen darf.
+    //TODO fï¿½r den fall, dass die application irgendwie hï¿½ngt, die das lock hï¿½lt, sollte man hier noch einen weg 
+    //ermï¿½glichen, dass der shutdown irgendwann forciert fortgesetzt wird. timeout ist gefï¿½hrlich. vielleicht ein cli-befehl?
     if (!shutdownLock.writeLock().tryLock()) {
       if( shutdownLockCause.equals(FACTORY_SHUTDOWN) ) {
-        //Lock-Übergabe an XynaFactoryCommandLineInterface-Thread sollte innerhalb weniger Millisekunden stattfinden.
+        //Lock-ï¿½bergabe an XynaFactoryCommandLineInterface-Thread sollte innerhalb weniger Millisekunden stattfinden.
         //Siehe shutdown()-Methode oben
       } else {
         logger.info("shutdown is temporarily suspended by some application thread ("+shutdownLockCause+") and will continue as soon as it has finished.");
@@ -852,11 +852,11 @@ public final class XynaFactory implements XynaFactoryBase {
             allDependenciesOfAllComponents.remove(e.getKey());
             break;
           } else {
-            //null kann nur passieren, wenn eine komponente mehrfach als abhängig von der gleichen komponente angegeben wurde.
+            //null kann nur passieren, wenn eine komponente mehrfach als abhï¿½ngig von der gleichen komponente angegeben wurde.
 
             //FIXME das kann auch passieren, wenn die klasse, die dependencies hat (statisch gesetzt), nicht die gleiche ist, wie die 
             //instanz der klasse, die initialisiert wird.
-            //beispiel: section rmichannelimplsessionextension ist von rmichannelimpl abgeleitet. rmichannelimpl könnte abhängigkeiten haben, dann gibt es diesen fehler.
+            //beispiel: section rmichannelimplsessionextension ist von rmichannelimpl abgeleitet. rmichannelimpl kï¿½nnte abhï¿½ngigkeiten haben, dann gibt es diesen fehler.
             throw new XDEV_ERRONEOUS_DEPENDENCY(e.getKey().getSimpleName());
           }
         }
@@ -949,7 +949,7 @@ public final class XynaFactory implements XynaFactoryBase {
   public static ReturnCode getStatusCodeSLESLike() {
     if (factoryInstance == null) {
       return ReturnCode.STATUS_STOPPING; // kann beim startup eine sehr sehr kurze Phase null sein und beim Shutdown eine 
-                                                              // längere Phase (wenn Shutdown-Hooks sehr lange brauchen zBsp)
+                                                              // lï¿½ngere Phase (wenn Shutdown-Hooks sehr lange brauchen zBsp)
     }
     if (factoryInstance.isShuttingDown()) {
       return ReturnCode.STATUS_STOPPING; // "service stopping"

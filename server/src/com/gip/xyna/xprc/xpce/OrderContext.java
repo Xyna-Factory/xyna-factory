@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public class OrderContext implements Serializable {
   protected final XynaOrderServerExtension xo;
   
   /**
-   * einträge vererben sich auf series-nachfolger.
+   * eintrï¿½ge vererben sich auf series-nachfolger.
    */
   protected transient HashMap<String, Serializable> mapForSeriesFamily = null;
 
@@ -142,7 +142,7 @@ public class OrderContext implements Serializable {
   }
 
 
-  //TODO klarmachen, dass das nur während planning funktioniert.
+  //TODO klarmachen, dass das nur wï¿½hrend planning funktioniert.
   public void setPriority(int prio) {
     synchronized (this) {
       xo.setPriority(prio);

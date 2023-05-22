@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@
 package com.gip.xyna.utils.concurrent;
 
 /**
- * ParallelLock gibt die Möglichkeit, parallel nebeneinander ähnliche Locks zu halten. 
- * Bei Locken und Unlocken wird ein Lock-Object übergeben, anhand dessen der Lock vorgenomment wird.
+ * ParallelLock gibt die Mï¿½glichkeit, parallel nebeneinander ï¿½hnliche Locks zu halten. 
+ * Bei Locken und Unlocken wird ein Lock-Object ï¿½bergeben, anhand dessen der Lock vorgenomment wird.
  * 
  * Dabei ist erforderlich, dass das Lock-Object {@link Object#hashCode()} und {@link Object#equals(Object)}
  * korrekt implementiert.
  * 
- * Damit kann erreicht werden, dass zwei Operationen zu verschiedenen Lock-Objecten parallel laufen können, 
- * zwei Operationen zum gleichen Lock-Object jedoch seriell laufen müssen.
+ * Damit kann erreicht werden, dass zwei Operationen zu verschiedenen Lock-Objecten parallel laufen kï¿½nnen, 
+ * zwei Operationen zum gleichen Lock-Object jedoch seriell laufen mï¿½ssen.
  *
  */
 public interface ParallelLock<T> {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,8 +169,8 @@ public final class CronLikeOrderHelpers {
       public Boolean executeAndCommit(ODSConnection con) throws PersistenceLayerException {
         CronLikeOrder defaultOrder = new CronLikeOrder(id);
         boolean existed = con.containsObject(defaultOrder);
-        // Das kann z.B. false sein, wenn es eine Racecondition gibt zwischen dem Löschen und dem Ausführen des Jobs.
-        // Z.B. bei Synchronization, falls der timeout los läuft und den job löschen will und in der Zwischenzeit ist
+        // Das kann z.B. false sein, wenn es eine Racecondition gibt zwischen dem Lï¿½schen und dem Ausfï¿½hren des Jobs.
+        // Z.B. bei Synchronization, falls der timeout los lï¿½uft und den job lï¿½schen will und in der Zwischenzeit ist
         // er aber gecancelt worden.
         if (existed) {
           con.deleteOneRow(defaultOrder);

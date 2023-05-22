@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -219,7 +219,7 @@ public class Tree<K,V> {
   
   /**
    * Existieren Branches?
-   * @return TreeStatus.Unknown, falls dies nicht bekannt ist, weil nicht vollständig initialsiert, 
+   * @return TreeStatus.Unknown, falls dies nicht bekannt ist, weil nicht vollstï¿½ndig initialsiert, 
    *   TreeStatus.BranchNotFound, falls es keine Branches gibt
    *   TreeStatus.BranchFound, falls Branches vorliegen
    */
@@ -249,13 +249,13 @@ public class Tree<K,V> {
     
   
   /**
-   * Hat der Baum einen Zweig mit dem angegebenen Namen? Es werden nur Unterzweige überprüft, 
+   * Hat der Baum einen Zweig mit dem angegebenen Namen? Es werden nur Unterzweige ï¿½berprï¿½ft, 
    * nicht der aktuelle Zweig.  
    * @param branchKey
    * @param depthLimit
    * @return TreeStatus.BranchFound, wenn ein Zweig gefunden wurde.
-   *   Ansonsten TreeStatus.Unknown, wenn ungefüllte Zweige existieren;
-   *   TreeStatus.LimitReached, wenn die Suchtiefe depthLimit überschritten wurde;
+   *   Ansonsten TreeStatus.Unknown, wenn ungefï¿½llte Zweige existieren;
+   *   TreeStatus.LimitReached, wenn die Suchtiefe depthLimit ï¿½berschritten wurde;
    *   oder TreeStatus.BranchNotFound, wenn sicher ist, dass so ein Zweig nicht exisitiert.
    */
   public TreeStatus hasBranch( K branchKey, int depthLimit) {
@@ -297,8 +297,8 @@ public class Tree<K,V> {
     }
   }
 
-  /**Gibt aus der Predecessor-Hierarchie den ersten gefunden Eintrag zurück, 
-   * der entweder nicht gefüllt ist oder das depthLimit überschreitet.
+  /**Gibt aus der Predecessor-Hierarchie den ersten gefunden Eintrag zurï¿½ck, 
+   * der entweder nicht gefï¿½llt ist oder das depthLimit ï¿½berschreitet.
    * @param depthLimit
    * @return gefundener Eintrag oder null, falls nichts gefunden
    */
@@ -333,7 +333,7 @@ public class Tree<K,V> {
   
   
   /**
-   * Liefert alle Knoten des Baums zurück
+   * Liefert alle Knoten des Baums zurï¿½ck
    * @param depthLimit
    * @return
    */
@@ -354,7 +354,7 @@ public class Tree<K,V> {
     if( depthLimit <= 1 ) {
       return;
     }
-    //Reihenfolge hier etwas komplizierter, dafür aber immer Einträge mit minimaler depth 
+    //Reihenfolge hier etwas komplizierter, dafï¿½r aber immer Eintrï¿½ge mit minimaler depth 
     ArrayList<Tree<K,V>> notInserted = new ArrayList<Tree<K,V>>();
     for( Map.Entry<K,Tree<K,V>> entry : branches.entrySet() ) {
       if( ! all.containsKey( entry.getValue() ) ) {
@@ -371,7 +371,7 @@ public class Tree<K,V> {
 
   /**
    * Ausgegeben wird die maximale Tiefe des Baums. Falls depthLimit ausgegeben wird, ist 
-   * wahrscheinlich die Maximale Suchtiefe überschritten worden.
+   * wahrscheinlich die Maximale Suchtiefe ï¿½berschritten worden.
    * @param depthLimit
    * @return
    */
@@ -436,8 +436,8 @@ public class Tree<K,V> {
    * Achtung: diese Operation ist recht teuer, da sie den gesamten 
    * Baum durchsuchen muss.
    * Daher nur im Notfall einsetzen.
-   * Sie gibt unter Umständen ein falsches Ergebnis "false" zurück,
-   * wenn im Baum noch ungefüllte Zweige vorliegen. 
+   * Sie gibt unter Umstï¿½nden ein falsches Ergebnis "false" zurï¿½ck,
+   * wenn im Baum noch ungefï¿½llte Zweige vorliegen. 
    * @return
    */
   public boolean hasCycle() {
@@ -507,7 +507,7 @@ public class Tree<K,V> {
   }
 
   /**
-   * Austausch der Zweige der beiden Bäume
+   * Austausch der Zweige der beiden Bï¿½ume
    * @param tree1
    * @param tree2
    */
@@ -521,7 +521,7 @@ public class Tree<K,V> {
   /**
    * Bau des Baums 
    * @param key Identifikation des untersten Baumabschnitts 
-   * @param treeBuilder Interface, welches die konkreten Einzelaufgaben beim Baum-Bauen löst
+   * @param treeBuilder Interface, welches die konkreten Einzelaufgaben beim Baum-Bauen lï¿½st
    * @return fertiger Baum (halbfertig, wenn beim Bauen ein Zirkel entdeckt wird)
    */
   public static <K,V,T extends Tree<K,V>> T buildTree( K key, TreeBuilder<K,V,T> treeBuilder ) {
@@ -535,7 +535,7 @@ public class Tree<K,V> {
     private HashSet<Tree<K,V>> alreadyFilledTrees = new HashSet<Tree<K,V>>();
     private TreeBuilder<K, V, T> treeBuilder;
     private LinkedHashSet<K> cycleData = new LinkedHashSet<K>(); //cycleData dient zur Detektion 
-                                                                 //von zirkulären Referenzen beim Füllen des Baums.
+                                                                 //von zirkulï¿½ren Referenzen beim Fï¿½llen des Baums.
     public RecursiveTreeBuilder(TreeBuilder<K, V, T> treeBuilder) {
       this.treeBuilder = treeBuilder;
     }
@@ -578,10 +578,10 @@ public class Tree<K,V> {
       }
       Collection<K> branches = treeBuilder.getBranchKeys(tree.getKey());
       if( branches == null ) {
-        //tree muss weiter ungefüllt bleiben
+        //tree muss weiter ungefï¿½llt bleiben
         unfillableTrees.add(tree);
       } else {
-        //Branches anlegen und füllen
+        //Branches anlegen und fï¿½llen
         tree.createBranchesMap();
         for( K branchKey : branches ) {
           T branch = buildTree( branchKey );
@@ -605,21 +605,21 @@ public class Tree<K,V> {
   
   /**
    * Interface, mit dem das Erzeugen von Baumknoten und das Ermitteln der Zweige angepasst 
-   * werden können.
+   * werden kï¿½nnen.
    */
   public interface TreeBuilder<K,V,T extends Tree<K,V>> {
     
     /**
-     * Liefert einen Tree-Knoten zurück, entweder neu gebaut oder ein bereits bestehender Baum. 
+     * Liefert einen Tree-Knoten zurï¿½ck, entweder neu gebaut oder ein bereits bestehender Baum. 
      * @param key
      * @return
      */
     T createTree( K key );
     
     /**
-     * Wird für ungefüllte Tree-Knoten gerufen, um diese zu füllen
+     * Wird fï¿½r ungefï¿½llte Tree-Knoten gerufen, um diese zu fï¿½llen
      * @param key Identifikation des Tree-Knotens
-     * @return alle Branch-Keys, null falls Tree-Knoten ungefüllt bleiben muss
+     * @return alle Branch-Keys, null falls Tree-Knoten ungefï¿½llt bleiben muss
      */
     Collection<K> getBranchKeys( K key );
         

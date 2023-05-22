@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import java.util.List;
 public interface ODSConnection extends Connection {
 
   /**
-   * falls listenToPersistenceLayerChanges=true, bleibt zurückgegebenes command wirksam, wenn die zugrundeliegende
-   * persistencelayer geändert wird. achtung, diese preparedcommands werden nicht garbagecollected, bis zum
+   * falls listenToPersistenceLayerChanges=true, bleibt zurï¿½ckgegebenes command wirksam, wenn die zugrundeliegende
+   * persistencelayer geï¿½ndert wird. achtung, diese preparedcommands werden nicht garbagecollected, bis zum
    * servershutdown
    */
   public PreparedCommand prepareCommand(Command cmd, boolean listenToPersistenceLayerChanges)
@@ -34,8 +34,8 @@ public interface ODSConnection extends Connection {
 
 
   /**
-   * falls listenToPersistenceLayerChanges=true, bleibt zurückgegebene query wirksam, wenn die zugrundeliegende
-   * persistencelayer geändert wird achtung, diese preparedqueries werden nicht garbagecollected, bis zum servershutdown
+   * falls listenToPersistenceLayerChanges=true, bleibt zurï¿½ckgegebene query wirksam, wenn die zugrundeliegende
+   * persistencelayer geï¿½ndert wird achtung, diese preparedqueries werden nicht garbagecollected, bis zum servershutdown
    */
   public <E> PreparedQuery<E> prepareQuery(Query<E> query, boolean listenToPersistenceLayerChanges)
       throws PersistenceLayerException;
@@ -56,7 +56,7 @@ public interface ODSConnection extends Connection {
   public void executeAfterCommitFails(Runnable runnable);
   
   /**
-   * wird auch ausgeführt, wenn rollback nicht funktioniert.
+   * wird auch ausgefï¿½hrt, wenn rollback nicht funktioniert.
    */
   public void executeAfterRollback(Runnable runnable);
 
@@ -68,7 +68,7 @@ public interface ODSConnection extends Connection {
   public void executeAfterCommitFails(Runnable runnable, int priority);
   
   /**
-   * wird auch ausgeführt, wenn rollback nicht funktioniert.
+   * wird auch ausgefï¿½hrt, wenn rollback nicht funktioniert.
    */
   public void executeAfterRollback(Runnable runnable, int priority);
 
@@ -82,7 +82,7 @@ public interface ODSConnection extends Connection {
   public boolean isInTransaction();
   
   /**
-   * Stellt sicher, dass alle benötigten Connections vorliegen, um auf die übergebenen Storables zugreifen zu können.
+   * Stellt sicher, dass alle benï¿½tigten Connections vorliegen, um auf die ï¿½bergebenen Storables zugreifen zu kï¿½nnen.
    * Bereits in der Transaktion benutzte Connections werden nicht validiert.
    * @param storableClazz
    * @throws PersistenceLayerException
@@ -90,11 +90,11 @@ public interface ODSConnection extends Connection {
   public void ensurePersistenceLayerConnectivity(List<Class<? extends Storable<?>>> storableClazz) throws PersistenceLayerException;
 
   /**
-   * verbindet die andere connection mit dieser (und andersherum), so dass intern benötigte connections aus dem gleichen connectionpool nicht doppelt aufgemacht werden.
-   * genauer: falls nach diesem aufruf neue connections aufgemacht werden (in einer der beiden connections), wird falls möglich eine bestehende connection wiederverwendet.
+   * verbindet die andere connection mit dieser (und andersherum), so dass intern benï¿½tigte connections aus dem gleichen connectionpool nicht doppelt aufgemacht werden.
+   * genauer: falls nach diesem aufruf neue connections aufgemacht werden (in einer der beiden connections), wird falls mï¿½glich eine bestehende connection wiederverwendet.
    * 
    * beispiel:
-   * OrderArchive persist-&gt;HISTORY + delete from OrderBackup.DEFAULT sollen über den gleichen Connectionpool gehen.
+   * OrderArchive persist-&gt;HISTORY + delete from OrderBackup.DEFAULT sollen ï¿½ber den gleichen Connectionpool gehen.
    */
   public void shareConnectionPools(ODSConnection con);
 

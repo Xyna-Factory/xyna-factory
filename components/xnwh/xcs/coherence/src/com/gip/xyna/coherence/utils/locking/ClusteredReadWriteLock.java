@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,13 +35,13 @@ import com.gip.xyna.coherence.exceptions.ObjectNotInCacheException;
 
 /**
  * auf mehrere knoten gibt es instanzen dieser klasse, die einen eigenen lokalen kontext haben und einen gemeinsamen
- * über die beiden im konstruktor anzugebenden objectIds.<br>
+ * ï¿½ber die beiden im konstruktor anzugebenden objectIds.<br>
  * ACHTUNG: man kann nicht einfach diese klasse serialisieren und an einen anderen knoten schicken. die idee ist gerade,
  * dass es einen lokalen kontext gibt.
  */
 /*
- * TODO: andere implementierung, die für readlocks keinen netzwerkzugriff benötigt
- *  - zb, indem man beim holen des writelocks die anzahl der readlocks übers netzwerk holt und sie ansosnten nur lokal hält.
+ * TODO: andere implementierung, die fï¿½r readlocks keinen netzwerkzugriff benï¿½tigt
+ *  - zb, indem man beim holen des writelocks die anzahl der readlocks ï¿½bers netzwerk holt und sie ansosnten nur lokal hï¿½lt.
  */
 public class ClusteredReadWriteLock implements ReadWriteLock {
 
@@ -287,7 +287,7 @@ public class ClusteredReadWriteLock implements ReadWriteLock {
   }
 
   private boolean waitForSharedLocksToVanish(boolean tryLock, long nanos) throws InterruptedException {
-    //TODO eigene sharedlocks abziehen, für den fall, dass lock upgrade funktionieren soll.
+    //TODO eigene sharedlocks abziehen, fï¿½r den fall, dass lock upgrade funktionieren soll.
     if (tryLock) {
     //gibt es noch lokale locks?
       long endTime = System.nanoTime() + nanos;
@@ -339,12 +339,12 @@ public class ClusteredReadWriteLock implements ReadWriteLock {
           if (n.get() == 0) {
             break;
           } else {
-            //hier würde man sich gerne benachrichtigen lassen, wenn das objekt geupdated wird.
+            //hier wï¿½rde man sich gerne benachrichtigen lassen, wenn das objekt geupdated wird.
             //das problem ist, dass wenn das coherenceobjekt remote geupdated wird, ist es modified, und hier (lokal) invalid.
             //in dem fall wird die payload genullt und folglich wird die benachrichtigung (onChange) nicht in dem lokalen
             //objekt ankommen.
             
-            //inkrementell immer länger werdend warten, ob das lock inzwischen freigeworden ist.
+            //inkrementell immer lï¿½nger werdend warten, ob das lock inzwischen freigeworden ist.
             Thread.sleep(sleepTimes[sleepTimeIndex++]);
             if (sleepTimeIndex > sleepTimes.length-1) {
               sleepTimeIndex--;

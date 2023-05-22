@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class SchedulerInformationBean {
     Timestamp(false,false), Width(false,false),
     SchedulerRuns(true,true), OrdersScheduled(true,true), CapacitiesTransfered(true,true);
     private boolean isValue;
-    private boolean isRate;  //Raten-Werte können im Histogramm normlisiert werden: auf ganze Sekunden beziehen
+    private boolean isRate;  //Raten-Werte kï¿½nnen im Histogramm normlisiert werden: auf ganze Sekunden beziehen
     HistogramColumn(boolean isValue, boolean isRate) {
       this.isValue = isValue;
       this.isRate = isRate;
@@ -76,7 +76,7 @@ public class SchedulerInformationBean {
   private int lastTransportedCaps=-1;
   
   //TODO sortieren
-  private long schedulerRunNumber = 0; //Id des letzten SchedulerRuns, Anzahl der bislang durchgeführten SchedulerRuns 
+  private long schedulerRunNumber = 0; //Id des letzten SchedulerRuns, Anzahl der bislang durchgefï¿½hrten SchedulerRuns 
   
   private long schedulerRunsLast5Minutes = 0;
   private long schedulerRunsLast60Minutes = 0;

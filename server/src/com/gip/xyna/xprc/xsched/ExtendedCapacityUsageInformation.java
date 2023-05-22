@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public final class ExtendedCapacityUsageInformation implements Serializable {
   public final static long ORDER_ID_FOR_RESERVED_CAPACITY = -3;
   
   //TODO refactoren, damit capacityName Key ist
-  //besser wäre TreeMap<String, List<CapacityUsageSlotInformation>> slotInformation;
+  //besser wï¿½re TreeMap<String, List<CapacityUsageSlotInformation>> slotInformation;
   private final TreeMap<Integer, HashSet<CapacityUsageSlotInformation>> slotInformation;
 
 
@@ -103,7 +103,7 @@ public final class ExtendedCapacityUsageInformation implements Serializable {
               mcd.capacityName = capName;
               mcdMap.put( capName, mcd );
             }
-            mcd.cardinality += cusi.getMaxSlotIndex()+1; //Cardinality dieses Knotens zur Gesamt-Cardinality hinzufügen
+            mcd.cardinality += cusi.getMaxSlotIndex()+1; //Cardinality dieses Knotens zur Gesamt-Cardinality hinzufï¿½gen
             first = false;
           }
           if( cusi.isOccupied() ) {
@@ -127,7 +127,7 @@ public final class ExtendedCapacityUsageInformation implements Serializable {
         //FIXME Fehlermeldung
       }
       
-      //Einträge für benutzte Caps
+      //Eintrï¿½ge fï¿½r benutzte Caps
       int slotIndex = -1;
       Collections.sort( mcd.orders, new CapacityUsageSlotInformationComparator() );
       
@@ -147,7 +147,7 @@ public final class ExtendedCapacityUsageInformation implements Serializable {
         );
       }
       
-      //Einträge für ungenutzte Caps erzeugen
+      //Eintrï¿½ge fï¿½r ungenutzte Caps erzeugen
       Collections.sort( mcd.unused, new CapacityUsageSlotInformationComparator() );
       for( CapacityUsageSlotInformation unused : mcd.unused ) {
         ++slotIndex;

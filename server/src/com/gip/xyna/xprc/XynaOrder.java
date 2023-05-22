@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@ public class XynaOrder implements Serializable {
   @Column(name="seriesInformation", type=ColumnType.BLOBBED_JAVAOBJECT)
   private SeriesInformation seriesInformation; 
     //seriesInformation sollte transient werden, das geht aber erst, wenn die Daten nicht mehr gelesen werden 
-    //müssen. Dies ist derzeit noch der Fall beim Lesen aus OrderInstanceBackup
+    //mï¿½ssen. Dies ist derzeit noch der Fall beim Lesen aus OrderInstanceBackup
   private boolean inOrderSeries = false;
   private String seriesCorrelationId = null;
   
@@ -377,7 +377,7 @@ public class XynaOrder implements Serializable {
 
 
   /**
-   * gibt input payload zurück
+   * gibt input payload zurï¿½ck
    * @deprecated use getInputPayload() or getOutputPayload()
    */
   @Deprecated
@@ -422,7 +422,7 @@ public class XynaOrder implements Serializable {
 
 
   /**
-   * bedeutung der priorität siehe {@link Thread#MIN_PRIORITY}, {@link Thread#MAX_PRIORITY}
+   * bedeutung der prioritï¿½t siehe {@link Thread#MIN_PRIORITY}, {@link Thread#MAX_PRIORITY}
    * @return
    */
   public int getPriority() {
@@ -430,13 +430,13 @@ public class XynaOrder implements Serializable {
   }
 
   /**
-   * bedeutung der priorität siehe {@link Thread#MIN_PRIORITY}, {@link Thread#MAX_PRIORITY}
+   * bedeutung der prioritï¿½t siehe {@link Thread#MIN_PRIORITY}, {@link Thread#MAX_PRIORITY}
    */
   public void setPriority(int i) {
     schedulingData.setPriority(i);
   }
 
-  //FIXME in monitoringlevel umbenennen wenn mal abwärtskompatibilität nicht so wichtig ist
+  //FIXME in monitoringlevel umbenennen wenn mal abwï¿½rtskompatibilitï¿½t nicht so wichtig ist
   public Integer getMonitoringCode() {
     return monitoringCode;
   }
@@ -453,8 +453,8 @@ public class XynaOrder implements Serializable {
 
 
   /**
-   * absoluten zeitstempel setzen, bei Überschreitung dessen der auftrag fehlerhaft beendet wird FIXME: umbenennen in
-   * setAbsoluteSchedulingTimeout, wenn wir mal auf abwärtskompatibilität nicht soviel wert legen.
+   * absoluten zeitstempel setzen, bei ï¿½berschreitung dessen der auftrag fehlerhaft beendet wird FIXME: umbenennen in
+   * setAbsoluteSchedulingTimeout, wenn wir mal auf abwï¿½rtskompatibilitï¿½t nicht soviel wert legen.
    * @deprecated use setTimeConstraint( TimeConstraint.immediately().withSchedulingTimeout(5000) )
    */
   @Deprecated
@@ -481,8 +481,8 @@ public class XynaOrder implements Serializable {
 
 
   /**
-   * dieser auftrag soll status änderungs listener benachrichtigen. dieser parameter wird gesetzt, falls ein listener
-   * für diesen ordertype gesetzt ist.
+   * dieser auftrag soll status ï¿½nderungs listener benachrichtigen. dieser parameter wird gesetzt, falls ein listener
+   * fï¿½r diesen ordertype gesetzt ist.
    */
   public boolean isCancelled() {
     return cancelled;
@@ -490,7 +490,7 @@ public class XynaOrder implements Serializable {
 
 
   /**
-   * vorgänger und nachfolger aufträge.
+   * vorgï¿½nger und nachfolger auftrï¿½ge.
    */
   public void setSeriesInformation(SeriesInformation si) {
     if( si != null ) {
@@ -665,7 +665,7 @@ public class XynaOrder implements Serializable {
         logger.debug("No runnables available.");
       }
       if (schedulingData == null) {
-        //nur für abwärtskompatibilität. alte auftragsobjekte haben kein schedulingData
+        //nur fï¿½r abwï¿½rtskompatibilitï¿½t. alte auftragsobjekte haben kein schedulingData
         schedulingData = new SchedulingData(entranceTimestamp);
         schedulingData.setTimeConstraint(SchedulingData.legacyTimeConstraintFor(entranceTimestamp, earliestStartTimestamp,
                                                                                 schedulingTimeout));
@@ -766,7 +766,7 @@ public class XynaOrder implements Serializable {
       if( logOrderId ) {
         return Long.toString(getId());
       } else {
-        return null; //kein Log4jDiagContext gewünscht
+        return null; //kein Log4jDiagContext gewï¿½nscht
       }
     } else {
       if( logOrderId ) {

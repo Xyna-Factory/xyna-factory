@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ public class JMSUtils {
    private QueueConnection connection = null;
 
    /**
-    * Beginnt eine neue QueueSession, die für die übrigen Methoden benötigt
-    * wird. Für AQ bitte anderen Konstruktor verwenden. Dieser funktioniert über
+    * Beginnt eine neue QueueSession, die fï¿½r die ï¿½brigen Methoden benï¿½tigt
+    * wird. Fï¿½r AQ bitte anderen Konstruktor verwenden. Dieser funktioniert ï¿½ber
     * JNDI.
     * 
     * @param url
@@ -73,7 +73,7 @@ public class JMSUtils {
    }
 
    /**
-    * Gibt die Anzahl der Nachrichten zurück, die sich in der Queue befinden.
+    * Gibt die Anzahl der Nachrichten zurï¿½ck, die sich in der Queue befinden.
     * 
     * @param queueName
     * @return
@@ -84,7 +84,7 @@ public class JMSUtils {
    }
 
    /**
-    * Gibt alle Nachrichten in der Queue zurück, ohne sie auszulesen.
+    * Gibt alle Nachrichten in der Queue zurï¿½ck, ohne sie auszulesen.
     * 
     * @param queueName
     * @return
@@ -104,7 +104,7 @@ public class JMSUtils {
    }
 
    /**
-    * löscht alle Nachrichten aus der Queue
+    * lï¿½scht alle Nachrichten aus der Queue
     * 
     * @param queueName
     * @throws Exception
@@ -119,7 +119,7 @@ public class JMSUtils {
    }
 
    /**
-    * löscht alle Nachrichten mit der angegebenen correlationID aus der Queue
+    * lï¿½scht alle Nachrichten mit der angegebenen correlationID aus der Queue
     * 
     * @param queueName
     * @param correlationId
@@ -137,7 +137,7 @@ public class JMSUtils {
    }
 
    /**
-    * stellt eine neue Textnachricht mit übergebenem Text und correlationID in
+    * stellt eine neue Textnachricht mit ï¿½bergebenem Text und correlationID in
     * die Queue ein
     * 
     * @param queueName
@@ -197,7 +197,7 @@ public class JMSUtils {
    }
 
    /**
-    * räumt session und connection auf.
+    * rï¿½umt session und connection auf.
     * 
     * @throws Exception
     */

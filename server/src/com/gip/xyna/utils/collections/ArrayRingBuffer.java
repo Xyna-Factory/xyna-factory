@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.lang.reflect.Array;
 public class ArrayRingBuffer<E> {
 
   private final Object[] arr;
-  private int start; //Nächster zu belegender Index
+  private int start; //Nï¿½chster zu belegender Index
   private int size; //Anzahl belegter Objekte (maximal gleich capacity)
   private final int capacity; //Maximale Anzahl
   
@@ -50,9 +50,9 @@ public class ArrayRingBuffer<E> {
   }
   
   /**
-   * RingBuffer Inhalt wird als Array zurückgegeben. Ältestes Element ist an Stelle 0, neustes Element an Stelle (size-1).
+   * RingBuffer Inhalt wird als Array zurï¿½ckgegeben. ï¿½ltestes Element ist an Stelle 0, neustes Element an Stelle (size-1).
    * 
-   * Falls übergebenes Array zu klein ist, wird ein neues erzeugt, ansonsten wird es befüllt. 
+   * Falls ï¿½bergebenes Array zu klein ist, wird ein neues erzeugt, ansonsten wird es befï¿½llt. 
    * @return
    */
   @SuppressWarnings("unchecked")
@@ -62,8 +62,8 @@ public class ArrayRingBuffer<E> {
       ret = (E[]) Array.newInstance(array.getClass().getComponentType(), size);
     }
     if (size == capacity && start != 0) {
-      System.arraycopy(arr, start, ret, 0, capacity-start); //alten objekte fangen da an, wo der nächste einfügepunkt ist
-      System.arraycopy(arr, 0, ret, capacity-start, start); //neuen objekte enden da, wo der nächste einfügepunkt ist
+      System.arraycopy(arr, start, ret, 0, capacity-start); //alten objekte fangen da an, wo der nï¿½chste einfï¿½gepunkt ist
+      System.arraycopy(arr, 0, ret, capacity-start, start); //neuen objekte enden da, wo der nï¿½chste einfï¿½gepunkt ist
     } else {
       System.arraycopy(arr, 0, ret, 0, size);
     }
@@ -71,7 +71,7 @@ public class ArrayRingBuffer<E> {
   }
 
   /**
-   * @param relativeIndex 0 -&gt; ältestes element
+   * @param relativeIndex 0 -&gt; ï¿½ltestes element
    * @return
    */
   @SuppressWarnings("unchecked")

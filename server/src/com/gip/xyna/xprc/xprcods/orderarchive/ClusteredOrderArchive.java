@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -311,7 +311,7 @@ public class ClusteredOrderArchive extends OrderArchive implements Clustered, Cl
 
       for (Pair<SortedMap<OrderInstance, Collection<OrderInstance>>, List<OrderInstance>> rmiResult : rmiResults) {
         result.getFirst().putAll(rmiResult.getFirst());
-        //FIXME mehr als einen remote knoten für die rmizugriffe unterstützen für die rückgabe der selectedPreCommittedOrdersFromDEFAULT. besser wäre es, wenn man hier die schnittstellen zu den knoten so ändert, dass der remoteknoten bereits über die connectiontypes aggregiert.
+        //FIXME mehr als einen remote knoten fï¿½r die rmizugriffe unterstï¿½tzen fï¿½r die rï¿½ckgabe der selectedPreCommittedOrdersFromDEFAULT. besser wï¿½re es, wenn man hier die schnittstellen zu den knoten so ï¿½ndert, dass der remoteknoten bereits ï¿½ber die connectiontypes aggregiert.
       }
 
     }
@@ -418,10 +418,10 @@ public class ClusteredOrderArchive extends OrderArchive implements Clustered, Cl
         // Versuch, die Migration zu stoppen ... 
         orderBackupStartupAndMigrationHelperInstance.stopMigrating();
       }
-      // solange Migration läuft, sind keine ClusterState-Änderungen gewünscht
+      // solange Migration lï¿½uft, sind keine ClusterState-ï¿½nderungen gewï¿½nscht
       return !orderBackupStartupAndMigrationHelperInstance.isMigrationRunning();
     } catch (MigrationAbortedWithErrorException e) {
-      // wenn Migration eh abgebrochen wurde, kann auch Status geändert werden.
+      // wenn Migration eh abgebrochen wurde, kann auch Status geï¿½ndert werden.
       orderBackupStartupAndMigrationHelperInstance.clearError(); //dann ist der andere knoten wieder erreichbar, dann kann der fehler vergessen werden.
       logger.error("Migration aborted with error:", e);
       return true;
@@ -439,8 +439,8 @@ public class ClusteredOrderArchive extends OrderArchive implements Clustered, Cl
     FutureExecution fe =
         XynaFactory.getInstance().getFactoryManagement().getXynaClusteringServicesManagement()
             .getFutureExecutionsOnChangeHandler(clusterStoreableInstanceId);
-    // das futureexecutiontask immer erstellen, auch wenn es gar nicht notwendig wäre, damit nachfolgende
-    // onChangeHandler  die möglichkeit haben, davon abhängige futureexecution tasks einzustellen
+    // das futureexecutiontask immer erstellen, auch wenn es gar nicht notwendig wï¿½re, damit nachfolgende
+    // onChangeHandler  die mï¿½glichkeit haben, davon abhï¿½ngige futureexecution tasks einzustellen
     ClusterOnChangeFutureExecutionTask onchangeFET =
         new ClusterOnChangeFutureExecutionTask(FUTURE_EXECUTION_TASK_ON_CHANGEHANDLER_ID, finalCurrentState, newState);
     fe.execAsync(onchangeFET);

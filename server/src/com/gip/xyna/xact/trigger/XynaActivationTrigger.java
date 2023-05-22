@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -198,7 +198,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     super();
   }
 
-  //enthält alle enabled Triggerinstanzen, der Thread muss nicht laufen (z.B. falls eine Filterinstanz einen Fehler hat)
+  //enthï¿½lt alle enabled Triggerinstanzen, der Thread muss nicht laufen (z.B. falls eine Filterinstanz einen Fehler hat)
   //alle laufenden Trigger sind in XynaProcessCtrlExecution.eventListenerThreads zu finden
   private Map<Long, Map<String, EventListenerInstance<?, ?>>> eventListenerInstancesByName =
       new ConcurrentHashMap<Long, Map<String, EventListenerInstance<?, ?>>>();
@@ -413,7 +413,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
   
   /*
-   *  Aufruf von außerhalb (ChannelPortal) 
+   *  Aufruf von auï¿½erhalb (ChannelPortal) 
    */
   public void addTrigger(String triggerName, ZipInputStream jarFiles, String fqTriggerClassName, String[] sharedLibs,
                          String description, String startParameterDocumentation, long revision) throws XynaException {
@@ -435,7 +435,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
 
   /*
-   * wird von außen aufgerufen (ChannelPortal und CLI-Command)
+   * wird von auï¿½en aufgerufen (ChannelPortal und CLI-Command)
    */
   public void removeTrigger(String nameOfTrigger) throws XACT_TriggerNotFound,
                   XACT_TriggerMayNotBeRemovedIsDeployedException, PersistenceLayerException {
@@ -575,7 +575,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
 
   /*
-   * wird von außen aufgerufen (ChannelPortal)
+   * wird von auï¿½en aufgerufen (ChannelPortal)
    */
   public void addFilter(String filterName, ZipInputStream jarFiles, String fqFilterClassName, String triggerName, String[] sharedLibs,
                         String description, long revision) throws XPRC_ExclusiveDeploymentInProgress, XACT_FilterImplClassNotFoundException,
@@ -600,7 +600,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
 
   /*
-   * wird von außen aufgerufen (ChannelPortal und CLI-Command)
+   * wird von auï¿½en aufgerufen (ChannelPortal und CLI-Command)
    */
   public void removeFilter(String nameOfFilter) throws XACT_FilterNotFound,
                   XACT_FilterMayNotBeRemovedIsDeployedException, PersistenceLayerException {
@@ -609,7 +609,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
   }
   
   /**
-   * entfernt den filter in der revision überall dort, wo er als outdaten filter verwendet wird
+   * entfernt den filter in der revision ï¿½berall dort, wo er als outdaten filter verwendet wird
    */
   private void removeOutdatedFilterFromOtherTriggers(String filterInstanceName, String triggerInstanceName, long revisionOfFilterInstance) {
     RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
@@ -733,7 +733,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
   }
   
   /*
-   * wird von außen aufgerufen (ChannelPortal und CLI-Command)
+   * wird von auï¿½en aufgerufen (ChannelPortal und CLI-Command)
    */
   public void removeFilterWithUndeployingInstances(String nameOfFilter) throws XACT_FilterNotFound,
                   PersistenceLayerException {
@@ -798,7 +798,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
   private String repairPath(String path, String lastPathEntry) {
     // 1. suche nach vorkommen von <lastPathEntry>
-    // 2. lösche alles vor <lastPathEntry> inkl. <lastPathEntry>/
+    // 2. lï¿½sche alles vor <lastPathEntry> inkl. <lastPathEntry>/
     // Bsp. ./filter/DHCPFilter/DHCPFilter.jar --> DHCPFilter/DHCPFilter.jar
     int index = path.indexOf(lastPathEntry);
     if(index < 0) {
@@ -826,7 +826,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       XACT_DuplicateTriggerDefinitionException {
 
     if (name.contains("#")) {
-      // Zeichen wird für Primary-Key in Tabelle verwendet ... verboten!
+      // Zeichen wird fï¿½r Primary-Key in Tabelle verwendet ... verboten!
       throw new RuntimeException("Illegal character '#' in name " + name);
     }
 
@@ -834,15 +834,15 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     try {
       TriggerStorable trigger = storage.getTriggerByName(name, revision, false);
       if(trigger.getStateAsEnum() == TriggerState.EMPTY) {
-        //für vorher mittels addEmpty hinzugefügte trigger
+        //fï¿½r vorher mittels addEmpty hinzugefï¿½gte trigger
         addNewTriggerInternally(name, revision, jarFiles, fqTriggerClassName, sharedLibs, 
                                 isStarting, addEmpty, disableFailedInstances, "jars to existing trigger", false, repositoryEvent);
       } else {
-        //bereits existierenden Trigger ändern
+        //bereits existierenden Trigger ï¿½ndern
         addExistingTrigger(name, revision, jarFiles, fqTriggerClassName, sharedLibs, isStarting, disableFailedInstances, repositoryEvent);
       }
     } catch (XACT_TriggerNotFound e) {
-      //neuen Trigger hinzufügen
+      //neuen Trigger hinzufï¿½gen
       addNewTriggerInternally(name, revision, jarFiles, fqTriggerClassName, sharedLibs, isStarting, addEmpty, disableFailedInstances, "new trigger", true, repositoryEvent);
     } finally {
       managementLock.unlock();
@@ -884,7 +884,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
         jarFiles = copySavedToDeployed(savedPath, deploymentPath, jarFiles).toArray(new File[1]);
       }
 
-      //Überprüfen, dass nicht bereits ein Trigger mit anderem Namen, aber gleichem ClassLoader existiert
+      //ï¿½berprï¿½fen, dass nicht bereits ein Trigger mit anderem Namen, aber gleichem ClassLoader existiert
       if (validate) {
         try {
           XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
@@ -1098,7 +1098,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
         throw new RuntimeException(e); //sollte nicht vorkommen, da addTriggerInternally mit validate = false aufgerufen wird
       }
 
-      //alte triggerinstanzen an den neuen trigger hängen (oder beim rollback an den alten trigger)
+      //alte triggerinstanzen an den neuen trigger hï¿½ngen (oder beim rollback an den alten trigger)
       Collection<TriggerInstanceStorable> triggerInstanceStorables;
       try {
         triggerInstanceStorables = storage.getTriggerInstancesByTriggerName(name, revision, true);
@@ -1134,7 +1134,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
      * TODO exceptionhandling verbessern
      * wie? ideen:
      * - exceptions gruppieren mittels gemeinsamer oberklasse oder mittels wrappen in gemeinsame exception
-     *   - leider habe ich nicht viele sinnvolle gruppen gefunden bzw das würde keine nennenswerte verbesserung des codes ergeben.
+     *   - leider habe ich nicht viele sinnvolle gruppen gefunden bzw das wï¿½rde keine nennenswerte verbesserung des codes ergeben.
      *   - auf java 7 warten, wo man exceptionhandling besser gruppieren kann
      */
     CommandWithFolderBackup addTriggerWithRollback = new AddTriggerCommand(name, fqTriggerClassName,
@@ -1250,7 +1250,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       throw new RuntimeException(e); //bestehende trigger instanz: konnte ja auch deployed werden
     }
 
-    //neu deployen (Filter werden dabei wieder angehängt)
+    //neu deployen (Filter werden dabei wieder angehï¿½ngt)
     return deployTriggerInternally(trigger, oldEl.getInstanceName(), startParameter, description, false,
                                    true, -1, false, oldEl.getRevision());
   }
@@ -1258,11 +1258,11 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
   /**
    * Erstellt eine Instanz eines Triggers mit Hilfe der Startparameter. Gibt es schon eine Instanz mit dem gleichen
-   * Namen, wird diese redeployed und die angehängten Filter bleiben erhalten.
+   * Namen, wird diese redeployed und die angehï¿½ngten Filter bleiben erhalten.
    * -- bei deploydisabled kann passieren:
    * @throws XACT_TriggerNotFound 
    * @throws PersistenceLayerException 
-   * -- bei deployenabled kann zusätzlich passieren:
+   * -- bei deployenabled kann zusï¿½tzlich passieren:
    * @throws XACT_TriggerInstanceNeedsEnabledTriggerException
    * @throws XACT_TriggerCouldNotBeStartedException 
    * @throws XACT_AdditionalDependencyDeploymentException 
@@ -1281,7 +1281,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
        XACT_TriggerCouldNotBeStartedException {
 
     if (nameOfTriggerInstance.contains("#")) {
-      // Zeichen wird für Primary-Key in Tabelle verwendet ... verboten!
+      // Zeichen wird fï¿½r Primary-Key in Tabelle verwendet ... verboten!
       throw new RuntimeException("Illegal character '#' in name " + nameOfTriggerInstance);
     }
     
@@ -1298,7 +1298,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       Trigger trigger = getTrigger(revisionOfTriggerInstance, nameOfTrigger, true);
       
       EventListenerInstance oldeli =
-                      getEventListenerInstanceByName(nameOfTriggerInstance, revisionOfTriggerInstance, false); //undeployment der Filter muss auch für nicht laufende Trigger ausgeführt werden
+                      getEventListenerInstanceByName(nameOfTriggerInstance, revisionOfTriggerInstance, false); //undeployment der Filter muss auch fï¿½r nicht laufende Trigger ausgefï¿½hrt werden
       
       if (oldeli != null) {
         if (deployedDisabled) {
@@ -1634,7 +1634,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
         } catch (XACT_FilterNotFound e) {
           //egal, ist optional
         }
-        continue; //Filterinstanz wird für den Trigger nicht unbedingt benötigt
+        continue; //Filterinstanz wird fï¿½r den Trigger nicht unbedingt benï¿½tigt
       }
       switch (fi.getStateAsEnum()) {
         case DISABLED:
@@ -1688,7 +1688,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution()
         .unregisterEventListener(nameOfTriggerInstance, revisionOfTriggerInstance);
     
-    //für alle vorhandenen ConnectionFilterInstances onUndeployment aufrufen
+    //fï¿½r alle vorhandenen ConnectionFilterInstances onUndeployment aufrufen
     ConnectionFilterInstance[] filterInstances = eli.getEL().getAllFilters();
     if (filterInstances != null) {
       for (ConnectionFilterInstance filterInstance : filterInstances) {
@@ -1736,7 +1736,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
   /**
    * Filterinstanz wird als disabled gespeichert.
-   * am eigenen trigger wird nichts gemacht. (TODO unschön!) 
+   * am eigenen trigger wird nichts gemacht. (TODO unschï¿½n!) 
    */
   public boolean disableFilterInstanceDontTouchTrigger(ConnectionFilterInstance cfi) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     managementLock.lock();
@@ -1861,7 +1861,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       //aus eventListenerMap entfernen
       EventListenerInstance eli = removeEventListenerInstanceFromMap(nameOfTriggerInstance, revisionOfTriggerInstance);
 
-      //TiggerInstanceStorable und TriggerConfigurationStorable löschen
+      //TiggerInstanceStorable und TriggerConfigurationStorable lï¿½schen
       triggerInstanceStorable = storage.getTriggerInstanceByName(nameOfTriggerInstance, revisionOfTriggerInstance, false);
       storage.deleteTriggerInstance(nameOfTriggerInstance, revisionOfTriggerInstance);
       return eli;
@@ -1946,7 +1946,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       XFMG_SHARED_LIB_NOT_FOUND {
 
     if (filterName.contains("#")) {
-      // Zeichen wird für Primary-Key in Tabelle verwendetet ... verboten!
+      // Zeichen wird fï¿½r Primary-Key in Tabelle verwendetet ... verboten!
       throw new RuntimeException("Illegal character '#' in name " + filterName);
     }
 
@@ -2070,8 +2070,8 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
         if (additionalDependencies != null) {
           /*
            * TODO notwendig, weil es sonst zu deadlocks kommt, weil das deployment intern das managementlock holt. vgl. ClassloaderDispatcher
-           * so ist das aber nur ein workaround, weil jetzt theoretisch ein weiteres addfilter loslaufen könnte, bevor man hier persistiert hat
-           * das ist natürlich nicht gut. das passiert aber in der praxis so selten, dass das so erst mal viel besser als ein deadlock ist
+           * so ist das aber nur ein workaround, weil jetzt theoretisch ein weiteres addfilter loslaufen kï¿½nnte, bevor man hier persistiert hat
+           * das ist natï¿½rlich nicht gut. das passiert aber in der praxis so selten, dass das so erst mal viel besser als ein deadlock ist
            */
           boolean heldByThread = managementLock.isHeldByCurrentThread();
           if (heldByThread) {
@@ -2161,7 +2161,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       //Filter-Status auf ERROR setzen
       storage.setFilterError(filterName, revision, new XACT_ErrorDuringTriggerAdditionRollback(filterName, t));
       
-      //Trigger Threads dürfen für optionale Instanzen trotz Filter-Fehler wieder starten
+      //Trigger Threads dï¿½rfen fï¿½r optionale Instanzen trotz Filter-Fehler wieder starten
       try {
         for (FilterInstanceStorable fi : storage.getFilterInstancesByFilterName(filterName, revision, true)) {
           restartEventListener(fi.getTriggerInstanceName(), revision);
@@ -2221,7 +2221,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       
       if (getCurrentPhase() == ExecutionPhase.EXECUTION) {
         //FIXME sicherstellen, dass nicht noch aktive filter instanzen unterwegs sind, die evtl klassen mit dem alten classloader
-        //      nachladen wollen. das gleiche gilt für trigger-instanzen bei der entsprechenden stelle wo trigger-jars ausgetauscht werden
+        //      nachladen wollen. das gleiche gilt fï¿½r trigger-instanzen bei der entsprechenden stelle wo trigger-jars ausgetauscht werden
         try {
           String deploymentPath = getFilterDeploymentFolderByFilterFqClassName(fqFilterClassName, revision);
           String savedPath = guessSourceFolderByJarFileLocation(fqFilterClassName, jarFiles);
@@ -2269,7 +2269,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
         throw new RuntimeException(e); //kommt nur wenn addExistingFilter aufgerufen wird
       }
       
-      //für alle enabled filterinstanzen die diesen filter bereits benutzten: ondeployment aufrufen.
+      //fï¿½r alle enabled filterinstanzen die diesen filter bereits benutzten: ondeployment aufrufen.
       List<FilterInstanceStorable> filterInstances;
       try {
         filterInstances = storage.getFilterInstancesByFilterName(filterName, revision, true);
@@ -2411,7 +2411,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
           triggerInstanceName(nameOfTriggerInstance).description(description).revision(revision).optional(false).build()
           );
     } catch (XACT_InvalidFilterConfigurationParameterValueException e) {
-      //heir unerwartet, da nicht über Parameter konfigurierbar
+      //heir unerwartet, da nicht ï¿½ber Parameter konfigurierbar
       throw new RuntimeException("Filter configuration failed", e);
     }
   }
@@ -2448,7 +2448,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
    * -- bei deploydisabled kann geworfen werden:
    * @throws XACT_FilterNotFound 
    * @throws PersistenceLayerException 
-   * -- bei deployenabled zusätzlich:
+   * -- bei deployenabled zusï¿½tzlich:
    * @throws XACT_LibOfFilterImplNotFoundException 
    * @throws XFMG_SHARED_LIB_NOT_FOUND 
    * @throws XACT_IncompatibleFilterImplException 
@@ -2474,7 +2474,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       boolean persistOnly = deployDisabled;
       EventListenerInstance eli = getEventListenerInstanceByName(filterInstanceStorable.getTriggerInstanceName(), filterInstanceStorable.getRevision(), true);
       if (eli == null) {
-        //falls die Triggerinstanz nicht deployed ist, nur den Zustand im FilterInstanceStorable ändern
+        //falls die Triggerinstanz nicht deployed ist, nur den Zustand im FilterInstanceStorable ï¿½ndern
         persistOnly = true;
         if (!deployDisabled) {
           filterInstanceStorable.setError(new XACT_TriggerInstanceNotFound(filterInstanceStorable.getTriggerInstanceName()));
@@ -2486,7 +2486,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
         persistOnly = true; 
 
         if (filterInstanceStorable.isOptional()) {
-          //optional-Flag hat sich evtl. geändert -> überprüfen ob Trigger Thread laufen darf
+          //optional-Flag hat sich evtl. geï¿½ndert -> ï¿½berprï¿½fen ob Trigger Thread laufen darf
           restartEventListener(filterInstanceStorable.getTriggerInstanceName(), filterInstanceStorable.getRevision());
         } else if (eli != null) {
           //Trigger Thread darf nicht ohne diese Filterinstanz laufen -> Thread stoppen
@@ -2558,7 +2558,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       throw new RuntimeException(t);
     }
     try {
-      //OutdatedFilter zum EventListener hinzufügen
+      //OutdatedFilter zum EventListener hinzufï¿½gen
       addOutdatedFilter(cfi, eli);
     } catch (Throwable e) {
       //FIXME fehler werfen? aber dann in den aufrufern ggfs auch nur dann weiterwerfen, wenn alle anderen aufgaben fertig sind?!
@@ -2578,7 +2578,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
         //Deployment geschieht automatisch, d.h. ein Fehler hier ist unerwarte und sollte daher gespeichert werden
         storage.persistObject(filterInstance);
       } else {
-        //Der Fehler ist während einer initialen Konfigurierung oder einer Umkonfigurierung aufgetreten. 
+        //Der Fehler ist wï¿½hrend einer initialen Konfigurierung oder einer Umkonfigurierung aufgetreten. 
         //Dieser Vorgang wird mit einer Exception beantwortet, daher sollte der fehlerhafte Zustand 
         //nicht persistiert werden.
       }
@@ -2602,7 +2602,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     long filterInstanceRevision = cfi.getRevision();
     if (!revisionManagement.isWorkspaceRevision(filterInstanceRevision)) {
-      //suche gleich benannte filter in einer älteren version der gleichen applikation
+      //suche gleich benannte filter in einer ï¿½lteren version der gleichen applikation
       String currentApplicationName;
       try {
         currentApplicationName = revisionManagement.getApplication(filterInstanceRevision).getName();
@@ -2625,7 +2625,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
                   continue;
                 }
                 if (!revisionManagement.isWorkspaceRevision(revisionOldFilter)) {
-                  if (filterInstanceRevision < revisionOldFilter) { //es existiert bereits eine neuere Version des Filters -> den aktuellen dort als outdated hinzufügen
+                  if (filterInstanceRevision < revisionOldFilter) { //es existiert bereits eine neuere Version des Filters -> den aktuellen dort als outdated hinzufï¿½gen
                     try {
                       EventListenerInstance[] elis = getTriggerInstances(filterInformation.getTriggerName(), revisionOldFilter);
                       for (EventListenerInstance parentEli : elis) {
@@ -2634,18 +2634,18 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
                         }
                       }
                     } catch (XACT_TriggerNotFound e) {
-                      // Trigger nicht mehr gefunden -> Filter muss nicht als outdated hinugefügt werden
+                      // Trigger nicht mehr gefunden -> Filter muss nicht als outdated hinugefï¿½gt werden
                     }
                   }
                   
-                  if (revisionOldFilter < filterInstanceRevision) { //anderer filter ist in älterer revision der gleichen application deployed
+                  if (revisionOldFilter < filterInstanceRevision) { //anderer filter ist in ï¿½lterer revision der gleichen application deployed
                     try {
                       Filter oldFilter = getFilter(revisionOldFilter, filtername, false);
-                      // puuhhh, geschafft. Jetzt haben wir einen Filter mit einer älteren Revision, der auf die gleiche
+                      // puuhhh, geschafft. Jetzt haben wir einen Filter mit einer ï¿½lteren Revision, der auf die gleiche
                       // Filterinstanz und Triggerinstanz deployt ist/war
 
                       //nun wird die passende filterinstanz einer alten revision an den aktuellen trigger gebunden,
-                      //damit weiterhin aufträge in der alten revision gestartet werden können.
+                      //damit weiterhin auftrï¿½ge in der alten revision gestartet werden kï¿½nnen.
 
                       try {
                         ConnectionFilter cfiOldFilter = oldFilter.instantiateFilter(filterInstanceRevision, eli.getRevision());
@@ -2658,13 +2658,13 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
                                                                                           oldFilter.getDescription(),
                                                                                           revisionOldFilter));
                       } catch (Exception e) {
-                        //trotzdem weitermachen mit nächstem. FIXME diese fehler sollten zu einer zustandsänderung des filters führen, die man sich anschauen kann
+                        //trotzdem weitermachen mit nï¿½chstem. FIXME diese fehler sollten zu einer zustandsï¿½nderung des filters fï¿½hren, die man sich anschauen kann
                         logger.warn("Outdated filter could not be added to old application version.",
                                     createOldFilterVersionInstantiationException(nameOfFilterInstance, oldFilter.getRevision(), filterInstanceRevision,
                                                                                  nameOfTriggerInstance, e));
                       }
                     } catch (XACT_FilterNotFound e) {
-                      //ok, kein älterer Filter vorhanden
+                      //ok, kein ï¿½lterer Filter vorhanden
                     }
                   }
                 }
@@ -2715,7 +2715,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     }
     
     //outdated filter handling:
-    //eigene filter instanz überall entfernen
+    //eigene filter instanz ï¿½berall entfernen
     removeOutdatedFilterFromOtherTriggers(filterInstanceName, filterInstanceStorable.getTriggerInstanceName(), revisionOfFilterInstance);
 
     //Undeployment
@@ -2734,7 +2734,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
       return cfi;
     }
 
-    //falls keine ConnectionFilterInstance gefunden wurde, nur das Storable löschen
+    //falls keine ConnectionFilterInstance gefunden wurde, nur das Storable lï¿½schen
     //und ggf. den Trigger Thread wieder starten
     storage.deleteFilterInstance(filterInstanceName, revisionOfFilterInstance);
     executeUndeploymentHandlers(filterInstanceStorable);
@@ -2768,7 +2768,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
 
   private void executeUndeploymentHandlers(FilterInstanceStorable fis) {
-    managementLock.unlock(); //lock nicht halten, während die undeploymenthandler ausgeführt werden
+    managementLock.unlock(); //lock nicht halten, wï¿½hrend die undeploymenthandler ausgefï¿½hrt werden
     try {
       Integer[] priorities = DeploymentHandling.allPriorities;
       for (int i = priorities.length - 1; i >= 0; i--) {
@@ -2821,7 +2821,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
   }
 
   /**
-   * gibt nur laufende filter, keine disabled filter zurück. dafür {@link #getFilterInstancesForFilter(String, Long)} verwenden
+   * gibt nur laufende filter, keine disabled filter zurï¿½ck. dafï¿½r {@link #getFilterInstancesForFilter(String, Long)} verwenden
    */
   public ConnectionFilterInstance[] getFilterInstances(String filterName, Long revisionOfFilter) {
     List<ConnectionFilterInstance> ret = new ArrayList<ConnectionFilterInstance>();
@@ -2856,8 +2856,8 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
   
   /**
-   * gibt die OutdatedFilter mit Namen filterName zurück, die Aufträge in revision revisionOfFilter 
-   * starten und am Trigger von revision revisionOfTriggerWhereOutdatedFilterInstanceIsRegisteredAt hängen.
+   * gibt die OutdatedFilter mit Namen filterName zurï¿½ck, die Auftrï¿½ge in revision revisionOfFilter 
+   * starten und am Trigger von revision revisionOfTriggerWhereOutdatedFilterInstanceIsRegisteredAt hï¿½ngen.
    */
   public ConnectionFilterInstance[] getOutdatedFilterInstances(String filterName, Long revisionOfFilter,
                                                                Long revisionOfTriggerWhereOutdatedFilterInstanceIsRegisteredAt) {
@@ -2961,7 +2961,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
   }
   
   /**
-   * gibt nur enabled trigger zurück. Für alle Triggerinstanzen {@link #getTriggerInstancesForTrigger(String, Long, boolean)} verwenden
+   * gibt nur enabled trigger zurï¿½ck. Fï¿½r alle Triggerinstanzen {@link #getTriggerInstancesForTrigger(String, Long, boolean)} verwenden
    */
   public EventListenerInstance[] getTriggerInstances(String triggerName, Long revisionOfTriggerOrParent) throws XACT_TriggerNotFound {
     managementLock.lock();
@@ -3376,7 +3376,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
   }
   
   /**
-   * disabled die Triggerinstanz mit ihren zugehörigen Filterinstanzen
+   * disabled die Triggerinstanz mit ihren zugehï¿½rigen Filterinstanzen
    * @param triggerInstanceName
    * @param revision
    * @return
@@ -3427,10 +3427,10 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     try {
       return enableFilterInstance(filterInstanceName, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
     } catch (XACT_OldFilterVersionInstantiationException e) {
-      throw new RuntimeException(e); //workingset hat keine kompatibilität mit anderen versionen
+      throw new RuntimeException(e); //workingset hat keine kompatibilitï¿½t mit anderen versionen
     } catch (XACT_InvalidFilterConfigurationParameterValueException e) {
       throw new RuntimeException(e); //ist ein Fehler beim Deploy, hier unerwartet und wegen 
-       //Schnittstellenänderung nicht in Signatur übernommen
+       //Schnittstellenï¿½nderung nicht in Signatur ï¿½bernommen
     }
   }
   
@@ -3523,7 +3523,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     
     List<FilterInformation> filterInfo = new ArrayList<>();
     for (FilterStorable filterStorable : filters) {
-      Set<Long> revisions = new HashSet<Long>(); //TODO wofür revisions filtern?
+      Set<Long> revisions = new HashSet<Long>(); //TODO wofï¿½r revisions filtern?
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
           .getParentRevisionsRecursivly(filterStorable.getRevision(), revisions);
       revisions.add(filterStorable.getRevision());
@@ -3608,7 +3608,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
         if (ti.getStateAsEnum() == TriggerInstanceState.ENABLED) {
           numberEnabled++;
-          //Überprüfung, ob der Thread läuft
+          //ï¿½berprï¿½fung, ob der Thread lï¿½uft
           EventListenerInstance eli =
               XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution()
                   .getEventListenerByName(ti.getTriggerInstanceName(), ti.getRevision());
@@ -3758,7 +3758,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
 
   /**
    * addFilter mit den bestehenden parametern.
-   * nur im workingset. wird z.b. von refactoring verwendet, nachdem sich das filter-xml geändert hat
+   * nur im workingset. wird z.b. von refactoring verwendet, nachdem sich das filter-xml geï¿½ndert hat
    */
   public void reAddExistingFilterWithExistingParameters(String filterSimpleClassName, Long revision) throws XPRC_ExclusiveDeploymentInProgress,
       XACT_FilterImplClassNotFoundException, XACT_TriggerNotFound, PersistenceLayerException,
@@ -3802,7 +3802,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
           }
         }
         
-        //die zugehörigen outdated versions suchen
+        //die zugehï¿½rigen outdated versions suchen
         for (Trigger trigger : getTriggers(revision)) {
           for (EventListenerInstance<?, ?> eli : getTriggerInstances(trigger.getTriggerName(), trigger.getRevision())) {
             List<ConnectionFilterInstance<?>> outdatedFilters = eli.getEL().getAllOutdatedFilters();

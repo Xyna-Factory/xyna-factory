@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 
 /**
- * Interface, um verschiedene IdGeneration-Algorithmen im IDGenerator verwenden zu können.
+ * Interface, um verschiedene IdGeneration-Algorithmen im IDGenerator verwenden zu kï¿½nnen.
  * IDGenerator stellt sicher, dass auf die Methoden dieses Interfaces nicht konkurrierend 
- * zugegriffen wird, daher sind keine weiteren Locks etc. nötig.
+ * zugegriffen wird, daher sind keine weiteren Locks etc. nï¿½tig.
  */
 public interface IdGenerationAlgorithm {
 

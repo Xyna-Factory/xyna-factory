@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,13 +103,13 @@ public class RemoteDestinationManagement extends FunctionGroup {
     
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
     
-    //frühe Initialisierung mit Properties und PersistenceLayer, 
-    //NodeManagement für gültige FactoryNodes
+    //frï¿½he Initialisierung mit Properties und PersistenceLayer, 
+    //NodeManagement fï¿½r gï¿½ltige FactoryNodes
     fExec.addTask("RemoteDestinationManagement_init", "RemoteDestinationManagement.initPropertiesAndStorables").
           after(XynaProperty.class, PersistenceLayerInstances.class, NodeManagement.class).
           execAsync(new Runnable() { public void run() { initPropertiesAndStorables(); } });
     
-    //Cluster-Initialisierung, damit verwendbar für andere Factories
+    //Cluster-Initialisierung, damit verwendbar fï¿½r andere Factories
     fExec.addTask(FUTUREEXECUTION_REMOTEDESTINATIONS_FULL_INIT, "RemoteDestinationManagement.initRmi").
           after(RMIManagement.class).
           after(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).
@@ -398,7 +398,7 @@ public class RemoteDestinationManagement extends FunctionGroup {
   }
   
   public void removeRemoteDestinationInstance(String instancename) {
-    //TODO checken, ob instanz von laufenden aufträgen verwendet wird. force-parameter? -> vermutlich nicht notwendig
+    //TODO checken, ob instanz von laufenden auftrï¿½gen verwendet wird. force-parameter? -> vermutlich nicht notwendig
   }
 
 

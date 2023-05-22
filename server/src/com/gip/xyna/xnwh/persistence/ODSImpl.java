@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,7 +164,7 @@ public class ODSImpl implements ODS {
     }
 
     /**
-     * Sorgt auf interessante Weise für das richtige Setzen des aufrufenden Zeile: (keine Zeile dieser Datei, sondern
+     * Sorgt auf interessante Weise fï¿½r das richtige Setzen des aufrufenden Zeile: (keine Zeile dieser Datei, sondern
      * der Aufrufer) siehe http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/Category.html
      * http://marc.info/?l=log4j-user&m=99859247618691&w=2 That's why you need to provide the fully-qualified classname.
      * If you use the wrapper I showed, you will not have this problem. That is, the class and method name of the
@@ -371,12 +371,12 @@ public class ODSImpl implements ODS {
 
   private class ODSConnectionImpl implements ODSConnection {
 
-    //nicht-transaktions-bezogene Daten, überdauern eine Transaktion
+    //nicht-transaktions-bezogene Daten, ï¿½berdauern eine Transaktion
     private final ODSConnectionType conType;
     private final boolean isDedicated;
     private boolean closed;
-    private final Map<String, PersistenceLayerConnection> openConnectionsPerTable; //enthält Connections evtl. mehrfach
-    private final Map<Long, PersistenceLayerConnection> openConnectionsPerPLI; //enthält jede Connection nur einfach
+    private final Map<String, PersistenceLayerConnection> openConnectionsPerTable; //enthï¿½lt Connections evtl. mehrfach
+    private final Map<Long, PersistenceLayerConnection> openConnectionsPerPLI; //enthï¿½lt jede Connection nur einfach
     private Set<TransactionProperty> transactionProperties;
     private List<FactoryWarehouseCursor<?>> cursors;
     private PriorityQueue<PriorityRunnable> afterCloseHandlers;
@@ -409,8 +409,8 @@ public class ODSImpl implements ODS {
 
 
     /**
-     * schliesst die connections in konsistenter reihenfolge (sortiert nach comparator<tabellenname>, default = alphabetisch (TODO oder rückwärts))
-     *  TODO wofür ist Reihenfolge nötig?
+     * schliesst die connections in konsistenter reihenfolge (sortiert nach comparator<tabellenname>, default = alphabetisch (TODO oder rï¿½ckwï¿½rts))
+     *  TODO wofï¿½r ist Reihenfolge nï¿½tig?
      *
      */
     public void closeConnection() throws PersistenceLayerException {
@@ -425,7 +425,7 @@ public class ODSImpl implements ODS {
         
         List<Throwable> closeFailures = null;
 
-        //Cursors schließen
+        //Cursors schlieï¿½en
         if (cursors != null) {
           for (FactoryWarehouseCursor<?> cursor : cursors) {
             closeFailures = closeCursor(cursor, closeFailures);
@@ -433,13 +433,13 @@ public class ODSImpl implements ODS {
         }
         int failedCursors = closeFailures != null ? closeFailures.size() : 0;
 
-        //Connections schließen
+        //Connections schlieï¿½en
         for (PersistenceLayerConnection con : openConnectionsPerPLI.values()) {
           closeFailures = closeConnection(con,closeFailures);
         }
         int failedCons = (closeFailures != null ? closeFailures.size() : 0 )- failedCursors;
         
-        //CloseHandler ausführen
+        //CloseHandler ausfï¿½hren
         closeFailures = executeHandler(afterCloseHandlers, closeFailures);
         
         int failedHandler = (closeFailures != null ? closeFailures.size() : 0 )- failedCursors-failedCons;
@@ -528,9 +528,9 @@ public class ODSImpl implements ODS {
     }
     
     /**
-     * 1) es werden alle Connections gesucht, auf denen Änderungen vorgenommen wurden.
-     * 2) auf diesen wird das Commit oder Rollback ausgeführt, alle Fehler werden gefangen
-     * 3) die Handler werden ausgeführt, alle Fehler werden gefangen
+     * 1) es werden alle Connections gesucht, auf denen ï¿½nderungen vorgenommen wurden.
+     * 2) auf diesen wird das Commit oder Rollback ausgefï¿½hrt, alle Fehler werden gefangen
+     * 3) die Handler werden ausgefï¿½hrt, alle Fehler werden gefangen
      * 4) alle Fehler werden zu einem Fehler zusammengefasst und geworfen
      * @param commit
      * @throws PersistenceLayerException
@@ -559,8 +559,8 @@ public class ODSImpl implements ODS {
     }
     
     /**
-     * 2) auf diesen wird das Commit oder Rollback ausgeführt, alle Fehler werden gefangen
-     * 3) die Handler werden ausgeführt, alle Fehler werden gefangen
+     * 2) auf diesen wird das Commit oder Rollback ausgefï¿½hrt, alle Fehler werden gefangen
+     * 3) die Handler werden ausgefï¿½hrt, alle Fehler werden gefangen
      * 4) alle Fehler werden zu einem Fehler zusammengefasst und geworfen
      * @param commit
      * @param pls
@@ -570,7 +570,7 @@ public class ODSImpl implements ODS {
       List<Throwable> failuresCR = null;
       List<Throwable> failuresH = null;
       try {
-        //Commit/Rollback ausführen, Throwables sammeln
+        //Commit/Rollback ausfï¿½hren, Throwables sammeln
         for( PersistenceLayerConnection plc : plcs) {
           failuresCR = commitOrRollback(commit, plc, failuresCR);
         }
@@ -633,7 +633,7 @@ public class ODSImpl implements ODS {
     /**
      * Bau einer PersistenceLayerException (PLE) aus den aufgetretenen Fehlern in failuresCR und failuresH.
      * 
-     * Bei den Fehlern können verschiedene Exceptiontypen vorliegen, die unterschiedlich schwerwiegend sind:
+     * Bei den Fehlern kï¿½nnen verschiedene Exceptiontypen vorliegen, die unterschiedlich schwerwiegend sind:
      * (Error -> RuntimeException/Throwable -> PersistenceLayerException -> XNWH_RetryTransactionException)
      * Geworfen werden soll nun immmer der schwerste. 
      * Es sollen immer alle Fehler geworfen werden, indem diese als Causes in eine XNWH_GeneralPersistenceLayerException
@@ -647,9 +647,9 @@ public class ODSImpl implements ODS {
      *    exceptiontyp = schlimmster Exceptiontyp aus failuresCR (bzw. failuresH, wenn failuresCR leer)
      *    dann throw new Exceptiontyp(message,cause);
      * 
-     * @param commit Wurde Commit(true) oder Rollback(false) ausgeführt?
+     * @param commit Wurde Commit(true) oder Rollback(false) ausgefï¿½hrt?
      * @param failuresCR Fehler, die beim Commit/Rollback entstanden sind
-     * @param failuresH Fehler, die beim Ausführen der Handler entstanden sind
+     * @param failuresH Fehler, die beim Ausfï¿½hren der Handler entstanden sind
      * @return
      */
     private PersistenceLayerException buildPersistenceLayerException(boolean commit, int connections, List<Throwable> failuresCR, List<Throwable> failuresH) {
@@ -660,7 +660,7 @@ public class ODSImpl implements ODS {
         //einzigen Fehler unmodifiziert weiterwerfen 
         return castToPersistenceLayerExceptionOrThrow( failuresCR.get(0) );
       } else {
-        //Message füllen 
+        //Message fï¿½llen 
         StringBuilder message = new StringBuilder();
         message.append( commit ? "Commit":"Rollback").append(" failed for ");
         if( cntCR > 0 ) {
@@ -1144,7 +1144,7 @@ public class ODSImpl implements ODS {
     }
 
     /**
-     * query muss als letzten parameter (also '?' in statement) einen haben, der für den cursor tauglich ist,
+     * query muss als letzten parameter (also '?' in statement) einen haben, der fï¿½r den cursor tauglich ist,
      * d.h. zb 'where pk > ?'
      * FIXME validierung, dass das gegeben ist 
      */
@@ -1278,7 +1278,7 @@ public class ODSImpl implements ODS {
         list.add(c);
       }
       
-      //Connection anlegen und Connectivity prüfen
+      //Connection anlegen und Connectivity prï¿½fen
       for (Entry<PersistenceLayerInstanceBean,List<Class<? extends Storable<?>>>> entry : persistencelayerInstances.entrySet()) {
         ensurePersistenceLayerConnectivity( entry.getKey(), entry.getValue() );
       }
@@ -1294,7 +1294,7 @@ public class ODSImpl implements ODS {
       if( plCon != null ) {
         //Connection liegt bereits vor. Nimmt sie evtl. bereits an Transaktion teil?
         if( usedConnectionsInTransaction.values().contains(plCon) ) {
-          //Connection nimmt schon an Transaktion teil, daher keine weitere Überprüfung
+          //Connection nimmt schon an Transaktion teil, daher keine weitere ï¿½berprï¿½fung
           return;
         }
       } else {
@@ -1304,7 +1304,7 @@ public class ODSImpl implements ODS {
           logger.info("New persistenceLayerConnection for storables "+storables +" in transaction "+usedConnectionsInTransaction.keySet() , new Exception());
         }
       }
-      //Nun noch Connectivity prüfen
+      //Nun noch Connectivity prï¿½fen
       for (Class<? extends Storable<?>> c : storables) {
         plCon.ensurePersistenceLayerConnectivity(c);
         openConnectionsPerTable.put(getTableName(c),plCon); 
@@ -1353,7 +1353,7 @@ public class ODSImpl implements ODS {
 
   /*
    * listen von prepared querys und commands merken. beim umstellen einer tabelle auf eine andere persistence
-   * layer instance müssen die prepared querys und commands auf der neuen pli neu prepared werden.
+   * layer instance mï¿½ssen die prepared querys und commands auf der neuen pli neu prepared werden.
    * ODSConnectionIndex => tablename => preparedobjects
    */
   private final List<Map<String, List<ODSPreparedQuery<?>>>> preparedQuerys =
@@ -1376,7 +1376,7 @@ public class ODSImpl implements ODS {
       new ConcurrentHashMap<Long, PersistenceLayerInstanceBean>();
 
   /**
-   * mapping von tabelle auf persistencelayerinstance. für jeden ODSConnectionType (arraylist) eine map von (Tabelle ->
+   * mapping von tabelle auf persistencelayerinstance. fï¿½r jeden ODSConnectionType (arraylist) eine map von (Tabelle ->
    * PersistenceLayerInstance)
    */
   private final List<Map<String, PersistenceLayerInstanceBean>> persistenceLayerInstancesMap =
@@ -1395,7 +1395,7 @@ public class ODSImpl implements ODS {
 
   private void init() throws XynaException {
     //achtung, threadpool ist hier noch nicht konfigurierbar, weil xynaproperties ggf nicht initialisiert sind
-    //threadpool wird deshalb unten durch futureexecutiontask überschrieben
+    //threadpool wird deshalb unten durch futureexecutiontask ï¿½berschrieben
     FactoryWarehouseCursor.threadPool =
         new ThreadPoolExecutor(15,
                                15,
@@ -1755,7 +1755,7 @@ public class ODSImpl implements ODS {
         try {
           pli.createInstance(memoryBean);
         } catch (XNWH_PersistenceLayerClassIncompatibleException e) {
-          throw new RuntimeException(e); //hätte vorher schon auffallen müssen
+          throw new RuntimeException(e); //hï¿½tte vorher schon auffallen mï¿½ssen
         }
   
         if (pli.getIsDefault()) {
@@ -1877,7 +1877,7 @@ public class ODSImpl implements ODS {
     try {
       //TODO removetable auf altem PLI
       synchronized (storables) {
-        //addtable für alle registrierten storables, die nicht auf ein andere PLI gemappt sind (nur für den connectionType)
+        //addtable fï¿½r alle registrierten storables, die nicht auf ein andere PLI gemappt sind (nur fï¿½r den connectionType)
         for (String tableName : storables.keySet()) {
           Map<String, PersistenceLayerInstanceBean> map = persistenceLayerInstancesMap.get(connectionType.getIndex());
           boolean addedTable = false;
@@ -1894,12 +1894,12 @@ public class ODSImpl implements ODS {
       }
 
       logger.debug("reinitializing prepared queries and commands on tables configured for default persistence layer.");
-      //für alle tabellen, die nach default gehen (=storables X connectiontype, für die kein persistencelayerinstance definiert ist)
-      //müssen bestehende prepared objekte neu erstellt werden.
+      //fï¿½r alle tabellen, die nach default gehen (=storables X connectiontype, fï¿½r die kein persistencelayerinstance definiert ist)
+      //mï¿½ssen bestehende prepared objekte neu erstellt werden.
       synchronized (storables) {
         synchronized (tableConfiguration) {
           for (String tableName : storables.keySet()) {
-            //gibt es konfiguration für diese tabelle?
+            //gibt es konfiguration fï¿½r diese tabelle?
             boolean found = false;
             for (TableConfiguration tc : tableConfiguration) {
               if (tc.getTable().toLowerCase().equals(tableName)) {
@@ -2014,10 +2014,10 @@ public class ODSImpl implements ODS {
   public void setPersistenceLayerForTable(long persistenceLayerInstanceID, String tableName, String properties)
       throws XNWH_PersistenceLayerInstanceIdUnknownException, PersistenceLayerException {
     tableName = tableName.toLowerCase();
-    //checken, ob die konfiguration sich geändert hat, damit man nicht fälschlicherweise auf dem gleichen PL zweimal addtable sagt
+    //checken, ob die konfiguration sich geï¿½ndert hat, damit man nicht fï¿½lschlicherweise auf dem gleichen PL zweimal addtable sagt
     TableConfiguration tc = null;
     synchronized (tableConfiguration) {
-      //alte tableconfig löschen falls vorhanden
+      //alte tableconfig lï¿½schen falls vorhanden
       Iterator<TableConfiguration> it = tableConfiguration.iterator();
       while (it.hasNext()) {
         tc = it.next();
@@ -2049,7 +2049,7 @@ public class ODSImpl implements ODS {
 
     long tableConfigurationID = 0;
     synchronized (tableConfiguration) {
-      //alte tableconfig löschen falls vorhanden
+      //alte tableconfig lï¿½schen falls vorhanden
       Iterator<TableConfiguration> it = tableConfiguration.iterator();
       while (it.hasNext()) {
         tc = it.next();
@@ -2073,7 +2073,7 @@ public class ODSImpl implements ODS {
       }
     }
 
-    //prepared objekte für diese tabelle reinitialisieren
+    //prepared objekte fï¿½r diese tabelle reinitialisieren
     reinitializePreparedObjects(instance, instance.getConnectionTypeEnum(), tableName);
 
     saveTCsToXML();
@@ -2102,7 +2102,7 @@ public class ODSImpl implements ODS {
     
     TableConfiguration tc = null;
     synchronized (tableConfiguration) {
-      //alte tableconfig löschen falls vorhanden
+      //alte tableconfig lï¿½schen falls vorhanden
       Iterator<TableConfiguration> it = tableConfiguration.iterator();
       while (it.hasNext()) {
         tc = it.next();
@@ -2138,14 +2138,14 @@ public class ODSImpl implements ODS {
 
   private void registerStorable(Class<? extends Storable> tableClass, boolean forceWidening)
        throws PersistenceLayerException {
-    //während der durchführung von addTable kann ein weiteres registerStorable aufgerufen werden
-    //und die noch nicht passierten (und nicht das aktive) addTable fortführen.
-    //beide thread kehren in dieser methode erst zurück, wenn alle addTables
-    //durchgeführt worden sind.
-    //damit ist z.b. rekursives registerStorable mit ggfs unterschiedlichen threads möglich, wie es
+    //wï¿½hrend der durchfï¿½hrung von addTable kann ein weiteres registerStorable aufgerufen werden
+    //und die noch nicht passierten (und nicht das aktive) addTable fortfï¿½hren.
+    //beide thread kehren in dieser methode erst zurï¿½ck, wenn alle addTables
+    //durchgefï¿½hrt worden sind.
+    //damit ist z.b. rekursives registerStorable mit ggfs unterschiedlichen threads mï¿½glich, wie es
     //in xynacoherenceclusterprovider verwendet wird.
     // project sagt registerTable(lease) -> clusterpersistencelayer sagt xcc.loadData(lease)
-    //  -> xcc sagt persistencestrategy.loadData(lease) -> führt in clusterprovider zu
+    //  -> xcc sagt persistencestrategy.loadData(lease) -> fï¿½hrt in clusterprovider zu
     //     registerTable(lease) um danach die daten aus zweiter odsconnection zu lesen.
     String tableName = Storable.getTableNameLowerCase(tableClass);
     long revision = getRevision(tableClass);
@@ -2160,7 +2160,7 @@ public class ODSImpl implements ODS {
           unregisterStorable(existingClass);
         }
       }
-      //ansonsten überschreiben/einfügen
+      //ansonsten ï¿½berschreiben/einfï¿½gen
       
       work = new DistributedWork(ODSConnectionType.values().length);
       DistributedWork oldWork = registeredTables.putIfAbsent(tableName, work);
@@ -2199,12 +2199,12 @@ public class ODSImpl implements ODS {
     return RevisionManagement.REVISION_DEFAULT_WORKSPACE;
   }
 
-  //map für die verteilung der register-table aufgaben an mehrere threads
+  //map fï¿½r die verteilung der register-table aufgaben an mehrere threads
   private ConcurrentMap<String, DistributedWork> registeredTables = new ConcurrentHashMap<String, DistributedWork>();
 
 
   /**
-   * für alle diesem storable zugeordneten (spezifisch oder default) persistencelayerinstanzen wird addTable()
+   * fï¿½r alle diesem storable zugeordneten (spezifisch oder default) persistencelayerinstanzen wird addTable()
    * aufgerufen
    * @param work 
    * @throws XNWH_GeneralPersistenceLayerException 
@@ -2214,11 +2214,11 @@ public class ODSImpl implements ODS {
        {
 
     PersistenceLayerInstanceBean[] plis = getPersistenceLayerInstanceBeansForTable(tableName);
-    //FIXME verhindern, dass die persistencelayerconfig geändert wird, während die addTables durchgeführt werden.
+    //FIXME verhindern, dass die persistencelayerconfig geï¿½ndert wird, wï¿½hrend die addTables durchgefï¿½hrt werden.
 
     int nextWorkIdx; //connectiontype-idx
     while (-1 != (nextWorkIdx = work.getAndLockNextOpenTaskIdx())) {
-      //bit wurde gesetzt, weil ansosnten continue, d.h. jetzt kann dieser thread in ruhe das addTable durchführen
+      //bit wurde gesetzt, weil ansosnten continue, d.h. jetzt kann dieser thread in ruhe das addTable durchfï¿½hren
       TableConfiguration tc = getTableConfiguration(tableName, nextWorkIdx);
       Properties props = null;
       if (tc != null) {
@@ -2234,7 +2234,7 @@ public class ODSImpl implements ODS {
         try {
           con.addTable(tableClass, forceWidening, props);
         } finally {
-          work.taskDone(); //auch bei einem fehler sollen die threads nicht warten müssen.
+          work.taskDone(); //auch bei einem fehler sollen die threads nicht warten mï¿½ssen.
           con.closeConnection();
         }
       } catch( PersistenceLayerException e ) {
@@ -2555,8 +2555,8 @@ public class ODSImpl implements ODS {
     registerPersistenceLayer(bean.getId(), bean.getName(), persistenceLayerClass);
 
     // Bei classloaderdispatcher registrieren, damit
-    //    * Im SerializableClassLoadedObject beim Deserialisieren PL-Classloader aufgelöst werden können
-    //    * Man mit listclassloaderinfos über die cli infos über die classloaders bekommen kann
+    //    * Im SerializableClassLoadedObject beim Deserialisieren PL-Classloader aufgelï¿½st werden kï¿½nnen
+    //    * Man mit listclassloaderinfos ï¿½ber die cli infos ï¿½ber die classloaders bekommen kann
     // Aufpassen: auch wieder deregistrieren, wenn persistencelayer undeployed wird.
     ClassLoaderDispatcherFactory.getInstance().getImpl()
         .registerPersistenceLayerClassLoader(fqClassName, persLayerClassloader);

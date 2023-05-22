@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ package com.gip.xyna.utils.misc;
 
 
 /**
- * StringBuilder-Nachbau, der sich um eine Einrückung der generierten Textes kümmert.
+ * StringBuilder-Nachbau, der sich um eine Einrï¿½ckung der generierten Textes kï¿½mmert.
  * <br>
- * Die Einrückung wird dabei automatisch eingefügt, sobald der nächste 
+ * Die Einrï¿½ckung wird dabei automatisch eingefï¿½gt, sobald der nï¿½chste 
  * {@link #append(Object)}- oder {@link #append(String)}-Aufruf nach einem 
  * {@link #linebreak()}-Aufruf erfolgt.<br>
- * Die Einrückung ist anfangs 0, sie kann dann über {@link #increment()}, {@link #increment(int)},
+ * Die Einrï¿½ckung ist anfangs 0, sie kann dann ï¿½ber {@link #increment()}, {@link #increment(int)},
  * {@link #decrement()} und {@link #decrement(int)} angepasst werden.
- * Default-Einrückzeichen ist ein Leerzeichen und Default-Einrücktiefe ist 2.
+ * Default-Einrï¿½ckzeichen ist ein Leerzeichen und Default-Einrï¿½cktiefe ist 2.
  *
  */
 public class IndentableStringBuilder {
@@ -44,7 +44,7 @@ public class IndentableStringBuilder {
   }
  
   /**
-   * Erhöhung der Einrücktiefe um die Default-Einrücktiefe
+   * Erhï¿½hung der Einrï¿½cktiefe um die Default-Einrï¿½cktiefe
    * @return
    */
   public IndentableStringBuilder increment() {
@@ -53,7 +53,7 @@ public class IndentableStringBuilder {
   }
   
   /**
-   * Verringerung der Einrücktiefe um die Default-Einrücktiefe
+   * Verringerung der Einrï¿½cktiefe um die Default-Einrï¿½cktiefe
    * @return
    */
   public IndentableStringBuilder decrement() {
@@ -79,7 +79,7 @@ public class IndentableStringBuilder {
   }
   
   /**
-   * Ergänzt einen Zeilenumbruch und setzt das Flag, so dass das nächste Append eingerückt wird.
+   * Ergï¿½nzt einen Zeilenumbruch und setzt das Flag, so dass das nï¿½chste Append eingerï¿½ckt wird.
    * @return
    */
   public IndentableStringBuilder linebreak() {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ public class RemoteCallXynaOrderCreationParameter extends XynaOrderCreationParam
 
   /**
    * Entfernen der XynaObject-InputPayload, damit die RemoteXorderCreationParameter
-   * auch wieder außerhalb der Factory deserialisiert werden kann
+   * auch wieder auï¿½erhalb der Factory deserialisiert werden kann
    */
   public void removeXynaObjectInputPayload() {
     super.setInputPayload((GeneralXynaObject) null);

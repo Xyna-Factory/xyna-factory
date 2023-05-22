@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class StepRetry extends Step implements HasDocumentation {
   
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_RESET_EXECUTIONS_COUNTER = IRetryStep.class.getDeclaredMethod(_METHODNAME_RESET_EXECUTIONS_COUNTER_ORIG).getName();
     } catch (Exception e) {
@@ -118,7 +118,7 @@ public class StepRetry extends Step implements HasDocumentation {
                   throws XPRC_InvalidVariableIdException, XPRC_MissingContextForNonstaticMethodCallException,
                   XPRC_OperationUnknownException, XPRC_InvalidServiceIdException, XPRC_InvalidVariableIdException {
     
-    //TODO eigtl wäre schön, das beim validate zu machen. in parseXML ist es zu früh dafür
+    //TODO eigtl wï¿½re schï¿½n, das beim validate zu machen. in parseXML ist es zu frï¿½h dafï¿½r
     input = getParentScope().identifyVariable(inputConnections.getVarIds()[0]);
 
     //input kann nicht null sein, das macht identifyVariable
@@ -194,7 +194,7 @@ public class StepRetry extends Step implements HasDocumentation {
       cb.addLine(FractalProcessStep.class.getSimpleName(), " parent = ", METHODNAME_GET_PARENT_STEP, "()");
       cb.addLine("while (parent != null) {");
       cb.addLine("if (parent instanceof " + ProcessStepCatch.class.getSimpleName() + ") {");
-      //FIXME exception handling übernehmen aus zb stepcatch
+      //FIXME exception handling ï¿½bernehmen aus zb stepcatch
       cb.addLine("if (parent.", METHODNAME_GET_LAST_CAUGHT_XYNA_EXCEPTION_CONTAINER, "().getThrowable() instanceof ", XynaException.class.getSimpleName(), ") {"); 
       cb.addLine("throw (", XynaException.class.getSimpleName(), ") parent.", METHODNAME_GET_LAST_CAUGHT_XYNA_EXCEPTION_CONTAINER, "().getThrowable();");
       cb.addLine("} else if (parent.", METHODNAME_GET_LAST_CAUGHT_XYNA_EXCEPTION_CONTAINER, "().getThrowable() instanceof ", RuntimeException.class.getSimpleName(), ") {");

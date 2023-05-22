@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ public class OrderSeriesSeparator {
   }
 
   /**
-   * Liegt die SeriesInformation im alten Format vor und müssen deshalb die darin enthaltenen 
+   * Liegt die SeriesInformation im alten Format vor und mï¿½ssen deshalb die darin enthaltenen 
    * XynaOrders separiert in den Scheduler eingestellt werden?
    * @param xo
    * @return
@@ -109,12 +109,12 @@ public class OrderSeriesSeparator {
   /**
    * Separieren eines Auftrags:
    * <ul>
-   * <li> Rekursive Sammlung aller Aufträge, die in den SeriesInformation gespeichert
+   * <li> Rekursive Sammlung aller Auftrï¿½ge, die in den SeriesInformation gespeichert
    *      sind (XynaOrder-&gt;SeriesInformation-&gt;XynaOrder-&gt;SeriesInformation-&gt;...)
    * <li> Migration der enthalten SeriesInformation auf das neue Format mit CorrIds
-   * <li> Für alle XynaOrder außer der übergebenen: Erzeugung der 
-   *      XynaOrderServerExtension, Füllen des OrderContext und Speichern in Liste, 
-   *      die über {@link getSeries()} erhältlich ist
+   * <li> Fï¿½r alle XynaOrder auï¿½er der ï¿½bergebenen: Erzeugung der 
+   *      XynaOrderServerExtension, Fï¿½llen des OrderContext und Speichern in Liste, 
+   *      die ï¿½ber {@link getSeries()} erhï¿½ltlich ist
    * </ul>
    * @param xo
    */
@@ -123,7 +123,7 @@ public class OrderSeriesSeparator {
     mainOrderId = xo.getId();
     OrderContext baseOrderContext = xo.getOrderContext();
     
-    //nun erhält jeder Auftrag eine neue SeriesInformation
+    //nun erhï¿½lt jeder Auftrag eine neue SeriesInformation
     for( XynaOrder o : allOrders.values() ) {
       o.setSeriesInformation(migrateSeriesInformation( o ));
     }
@@ -149,13 +149,13 @@ public class OrderSeriesSeparator {
       //BackupAck erzeugen
       backup = new BackupAck( backupCon );
       
-      //Sichern des ursprüngliches Acks, da es sonst aus dem gemeinsamen OrderContext verschwindet
+      //Sichern des ursprï¿½ngliches Acks, da es sonst aus dem gemeinsamen OrderContext verschwindet
       originalAck = xo.getOrderContext().getAcknowledgableObject();
     }
   }
   
   /**
-   * Liefert Liste aller Serien-Aufträge ohne den Basis-Auftrag
+   * Liefert Liste aller Serien-Auftrï¿½ge ohne den Basis-Auftrag
    * @return
    */
   public List<XynaOrderServerExtension> getSeries() {
@@ -185,7 +185,7 @@ public class OrderSeriesSeparator {
   }
 
   /**
-   * Extraktion aller SeriesInformation->XynaOrder aus der übergeben XynaOrder
+   * Extraktion aller SeriesInformation->XynaOrder aus der ï¿½bergeben XynaOrder
    * @param allOrders
    * @param xo
    */
@@ -242,13 +242,13 @@ public class OrderSeriesSeparator {
   }
 
   public void prepareAcknowledge(XynaOrderServerExtension xose) {
-    //BackupAck jedes mal neu setzen, da es aus dem gemeinsamen OrderContext nach jedem acknowledge gelöscht wird
+    //BackupAck jedes mal neu setzen, da es aus dem gemeinsamen OrderContext nach jedem acknowledge gelï¿½scht wird
     xose.getOrderContext().set(OrderContextServerExtension.ACKNOWLEDGABLE_OBJECT_KEY,backup);
   }
 
   public void restoreAcknowledge(XynaOrderServerExtension xo) {
     if( hasToBeAcknowledged ) {
-      //ursprüngliches Ack wiederherstellen
+      //ursprï¿½ngliches Ack wiederherstellen
       xo.getOrderContext().set(OrderContextServerExtension.ACKNOWLEDGABLE_OBJECT_KEY,originalAck);
     }
   }

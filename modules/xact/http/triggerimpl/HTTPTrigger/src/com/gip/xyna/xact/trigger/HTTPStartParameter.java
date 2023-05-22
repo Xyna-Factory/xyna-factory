@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,7 +129,7 @@ public class HTTPStartParameter extends EnhancedStartParameter {
   public static final StringParameter<KeyStoreParameter> HTTPS = 
       StringParameter.typeEnum(KeyStoreParameter.class, "https", true).
       documentation( Documentation
-                     .de("Wird HTTPS verwendet und wenn, wie wird der SSLContext befüllt. NONE: http, FILE: https und Angabe eines gemeinsamen Key/Trust-Files, KEY_MGMT: https und Angabe eines KeyStores und TrustManagers")
+                     .de("Wird HTTPS verwendet und wenn, wie wird der SSLContext befï¿½llt. NONE: http, FILE: https und Angabe eines gemeinsamen Key/Trust-Files, KEY_MGMT: https und Angabe eines KeyStores und TrustManagers")
                      .en("Use HTTPS and if so, how will the SSLContext be initialised. NONE: http, FILE: https und parameters for a shared Key/Trust-File, KEY_MGMT: https and para,eters for a key store and a trust manager").build() ).
       defaultValue(KeyStoreParameter.NONE).build();
   public static final StringParameter<ClientAuth> CLIENTAUTH = 
@@ -170,7 +170,7 @@ public class HTTPStartParameter extends EnhancedStartParameter {
                   documentation( Documentation.de("TrustManager-Name").en("TrustManager Name").build() ).
                   optional().build();
   public static final StringParameter<Boolean> SUPPRESS_LOGGING = StringParameter.typeBoolean("suppressRequestLogging").
-                  documentation(Documentation.de("Unterdrücke requestabhängiges Logging").en("Suppress request dependent logging.").build()).
+                  documentation(Documentation.de("Unterdrï¿½cke requestabhï¿½ngiges Logging").en("Suppress request dependent logging.").build()).
                   optional().defaultValue(false).build();
   
   public static final List<StringParameter<?>> allParameters = 
@@ -344,7 +344,7 @@ public class HTTPStartParameter extends EnhancedStartParameter {
       logger.info("address " + address + " unknown in network configuration management.");
     }
 
-    //else: abwärtskompatibel:
+    //else: abwï¿½rtskompatibel:
     boolean ipv6 = interfacePreference == InterfaceProtocolPreference.IPV6;
     boolean useLocalAddresses = false;
     return NetworkInterfaceUtils.getFirstIpAddressByInterfaceName(address, ipv6, useLocalAddresses);

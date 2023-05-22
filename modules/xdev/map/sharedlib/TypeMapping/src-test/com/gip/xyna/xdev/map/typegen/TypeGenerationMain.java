@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.AbstractXynaProper
 
 /**
  * Versuch, TypeGeneration direkt aus dem Jar aufzurufen. Kann leider nicht klappen, da 
- * IDGeneration und ODS nicht funktionieren. Deployment etc. könnte noch über RMI abgewickelt 
+ * IDGeneration und ODS nicht funktionieren. Deployment etc. kï¿½nnte noch ï¿½ber RMI abgewickelt 
  * werden, das Speichern der TypeMappings allerdings nicht...
  */
 public class TypeGenerationMain {

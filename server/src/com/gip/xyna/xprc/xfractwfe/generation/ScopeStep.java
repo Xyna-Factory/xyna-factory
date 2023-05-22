@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public class ScopeStep extends Step {
 
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_GET_PARENT_SCOPE = Scope.class.getDeclaredMethod(_METHODNAME_GET_PARENT_SCOPE_ORIG).getName();
     } catch (Exception e) {
@@ -198,7 +198,7 @@ public class ScopeStep extends Step {
         }
       }
       if (!(s instanceof ScopeStep)) {
-        //typ des steps mit beachten - weil ein ausgetauschter step den gleichen namen hat, aber für die serialisierung nicht mehr kompatibel sein wird
+        //typ des steps mit beachten - weil ein ausgetauschter step den gleichen namen hat, aber fï¿½r die serialisierung nicht mehr kompatibel sein wird
         types.add(Pair.of(s.getVarName(), s.getClassName() + "$" + s.getClass().getSimpleName()));
       }
     }
@@ -223,7 +223,7 @@ public class ScopeStep extends Step {
 
 
   /**
-   * alle steps, die die scope als membervars enthält. also ohne this und ohne steps, die unterhalb von weiteren scopes
+   * alle steps, die die scope als membervars enthï¿½lt. also ohne this und ohne steps, die unterhalb von weiteren scopes
    * liegen.
    */
   protected List<Step> getAllLocalSubSteps(boolean includeChildScopeStep) {
@@ -333,9 +333,9 @@ public class ScopeStep extends Step {
       if (!(s instanceof ScopeStep)) {
         cb.addLine("private ", s.getClassName(), " ", s.getVarName(), " = new ", s.getClassName(), "()");
         if (s instanceof StepChoice) {
-          //Für Alias-Fälle in Choices einen zusätzlichen Step generieren. Diese sind vom Typ des referenzierten Steps.
-          //Die Steps vom eigenen Typ werden bei Alias-Fällen nicht mehr verwendet, werden aber wegen
-          //Abwärtskompatibilität weiter generiert.
+          //Fï¿½r Alias-Fï¿½lle in Choices einen zusï¿½tzlichen Step generieren. Diese sind vom Typ des referenzierten Steps.
+          //Die Steps vom eigenen Typ werden bei Alias-Fï¿½llen nicht mehr verwendet, werden aber wegen
+          //Abwï¿½rtskompatibilitï¿½t weiter generiert.
           StepChoice choice = (StepChoice)s;
           choice.generateAliasSteps(cb);
         }
@@ -351,7 +351,7 @@ public class ScopeStep extends Step {
     //muss reinitialisiert werden, weil kann dynamisch sein (foreach oder sowas)
     cb.addLine("private ", FractalProcessStep.class.getSimpleName(), "[] ", VARIABLE_NAME_ALLSTEPS);
 
-    // initialize vars für wiederverwendung durch workflowpools
+    // initialize vars fï¿½r wiederverwendung durch workflowpools
     generateInitializeMemberVars(cb, importedClassesFqStrings, allLocalSteps );
     
     cb.addLine("public ", FractalProcessStep.class.getSimpleName(), "[] ", METHODNAME_GET_ALL_LOCAL_STEPS, "() {");
@@ -365,10 +365,10 @@ public class ScopeStep extends Step {
     //entweder dynamisch oder hardgecodet alle steps bestimmen.
     //hardgecodet, falls keine foreach-kindsteps vorhanden sind (diese erzeugen eine dynamische anzahl
     //von steps) und keine scopesteps
-    //TODO performance: falls liste für for-each konstant belegt ist, könnte man das auch hardgecodet erzeugen.
+    //TODO performance: falls liste fï¿½r for-each konstant belegt ist, kï¿½nnte man das auch hardgecodet erzeugen.
     if (containsForeachOrScopeSubStep()) {
       cb.addLine("public " + FractalProcessStep.class.getSimpleName() + "[] ", METHODNAME_GET_ALL_STEPS, "() {");
-      cb.addLine("List<", FractalProcessStep.class.getSimpleName(), "> l = new ArrayList<", FractalProcessStep.class.getSimpleName(), ">()"); //TODO performance: liste mit korrekter länge initialisieren
+      cb.addLine("List<", FractalProcessStep.class.getSimpleName(), "> l = new ArrayList<", FractalProcessStep.class.getSimpleName(), ">()"); //TODO performance: liste mit korrekter lï¿½nge initialisieren
       cb.addLine("l.addAll(Arrays.asList(", VARIABLE_NAME_ALLSTEPS, "))");
       for (Step s : allLocalSteps) {
         if (s instanceof StepForeach) {
@@ -460,7 +460,7 @@ public class ScopeStep extends Step {
       if (!(s instanceof ScopeStep)) {
         cb.addListElement(s.getVarName());
         if (s instanceof StepChoice) {
-          //für Choices die Alias-Steps zu allSteps hinzufügen
+          //fï¿½r Choices die Alias-Steps zu allSteps hinzufï¿½gen
           StepChoice choice = (StepChoice)s;
           choice.addAliasStepVarNames(cb);
         }
@@ -493,7 +493,7 @@ public class ScopeStep extends Step {
   private void generateJavaReadWriteObject(CodeBuffer cb, Set<String> currentImportsFqClasses, Set<ExceptionVariable> transientExceptionVariables) {
     //irgendwie muss man bei der deserialisierung wieder an die classloader der causes von exceptions kommen => dazu serializableclassloadedobject verwenden
     
-    //TODO sortierung derart, dass eine umbenennung einer variablen nicht zur inkompatibilität mit dem alten stand führt.
+    //TODO sortierung derart, dass eine umbenennung einer variablen nicht zur inkompatibilitï¿½t mit dem alten stand fï¿½hrt.
     //sortieren, damit die reihenfolge immer gleich ist:
     List<ExceptionVariable> exceptionVariables = new ArrayList<ExceptionVariable>(transientExceptionVariables);
     Collections.sort(exceptionVariables, comparatorForExceptionVariableSerialization);
@@ -543,7 +543,7 @@ public class ScopeStep extends Step {
   }
 
 
-  //überschrieben von wf, weil man dort die methoden nicht braucht
+  //ï¿½berschrieben von wf, weil man dort die methoden nicht braucht
   protected void generateJavaStepMethods(CodeBuffer cb, HashSet<String> importedClassesFqStrings) throws XPRC_InvalidVariableIdException {
     //executeInternally
     

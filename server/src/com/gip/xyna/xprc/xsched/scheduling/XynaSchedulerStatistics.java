@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +48,8 @@ public class XynaSchedulerStatistics {
   }
 
   private static enum SlidingWindowSizes {
-    last5Min(5*60*10, 100), //100ms genauigkeit, 5 min länge
-    last60Min(60*60*2, 500); // 500ms genauigkeit, 60 minuten länge
+    last5Min(5*60*10, 100), //100ms genauigkeit, 5 min lï¿½nge
+    last60Min(60*60*2, 500); // 500ms genauigkeit, 60 minuten lï¿½nge
     //custom(); //TODO aus Property einmal zu Serverstart
     
     private int number;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -400,9 +400,9 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     XMOMType type = XMOMType.getXMOMTypeByRootTag(rootTag);
     switch (type) {
       case DATATYPE :
-        return DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), -100L /* gibts nicht, wird nicht benötigt */, inputSource);
+        return DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), -100L /* gibts nicht, wird nicht benï¿½tigt */, inputSource);
       case EXCEPTION :
-        return ExceptionGeneration.getOrCreateInstance(fqName, new GenerationBaseCache(), -100L /* gibts nicht, wird nicht benötigt */, inputSource);
+        return ExceptionGeneration.getOrCreateInstance(fqName, new GenerationBaseCache(), -100L /* gibts nicht, wird nicht benï¿½tigt */, inputSource);
       default :
         throw new RuntimeException("unsupported type: " + type);
     }
@@ -467,9 +467,9 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     XMOMType type = XMOMType.getXMOMTypeByRootTag(rootTag);
     switch (type) {
       case DATATYPE :
-        return DOM.getOrCreateInstance(fqName, cache, -100L /* gibts nicht, wird nicht benötigt */, inputSource);
+        return DOM.getOrCreateInstance(fqName, cache, -100L /* gibts nicht, wird nicht benï¿½tigt */, inputSource);
       case EXCEPTION :
-        return ExceptionGeneration.getOrCreateInstance(fqName, cache, -100L /* gibts nicht, wird nicht benötigt */, inputSource);
+        return ExceptionGeneration.getOrCreateInstance(fqName, cache, -100L /* gibts nicht, wird nicht benï¿½tigt */, inputSource);
       default :
         throw new RuntimeException("unsupported type: " + type);
     }

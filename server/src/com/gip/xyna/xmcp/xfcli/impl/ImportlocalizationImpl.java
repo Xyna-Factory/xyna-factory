@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class ImportlocalizationImpl extends XynaCommandImplementation<Importloca
     List<Localization> store = new ArrayList<Localization>();
     for (Localization l : coll) {
       String key = l.getType() + "_" + l.getLanguage() + "_" + l.getIdentifier();
-      //pk alter daten muss übernommen werden
+      //pk alter daten muss ï¿½bernommen werden
       Localization old = oldData.get(key);
       if (old == null) {
         //neuer eintrag

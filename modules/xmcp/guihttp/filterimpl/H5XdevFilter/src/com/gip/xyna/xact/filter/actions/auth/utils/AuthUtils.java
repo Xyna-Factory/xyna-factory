@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -203,7 +203,7 @@ public class AuthUtils {
     
   }
   
-  private static final XynaPropertyEnum<SameSite> samesiteproperty = //nicht erlauben, dass cookie für requests von anderen origins benutzt werden darf
+  private static final XynaPropertyEnum<SameSite> samesiteproperty = //nicht erlauben, dass cookie fï¿½r requests von anderen origins benutzt werden darf
                   new XynaPropertyEnum<SameSite>("xmcp.guihttp.filter.h5xdev.cookie.samesite", SameSite.class, SameSite.STRICT);
   
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ public class SuspendAllOrdersJavaDestination extends JavaDestination {
     EngineSpecificWorkflowProcessor executionProcessor =
         XynaFactory.getInstance().getProcessing().getWorkflowEngine().getExecutionProcessor();
     
-    //warten bis Aufträge sicher den Scheduler verlassen haben und im ExecutionProcessor angekommen sind
+    //warten bis Auftrï¿½ge sicher den Scheduler verlassen haben und im ExecutionProcessor angekommen sind
     waitForUnreachableOrders(deploymentId); 
 
     SuspendResumeManagement srm = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getSuspendResumeManagement();
@@ -103,7 +103,7 @@ public class SuspendAllOrdersJavaDestination extends JavaDestination {
     for( XynaOrderServerExtension xo : executionProcessor.getOrdersOfRunningProcesses() ) {
       if (suspendForShutdown) {
         //set a flag for it
-        xo.setSuspendedOnShutdown(true); //FIXME wofür?
+        xo.setSuspendedOnShutdown(true); //FIXME wofï¿½r?
       }
       suspendOrders.put( xo.getRootOrder().getId(), xo.getRootOrder());
     }
@@ -116,7 +116,7 @@ public class SuspendAllOrdersJavaDestination extends JavaDestination {
       .suspensionTimedOutAction(SuspensionTimedOutAction.Stop)
       .suspensionFailedAction(SuspensionFailedAction.KeepSuspending);
     } else {
-      //TODO wie könnte das gebraucht werden?
+      //TODO wie kï¿½nnte das gebraucht werden?
       suspendRootOrderData.suspensionCause(new SuspensionCause_Manual())
       .suspensionSuccededAction(SuspensionSucceededAction.None)
       .suspensionTimedOutAction(SuspensionTimedOutAction.None)
@@ -153,23 +153,23 @@ public class SuspendAllOrdersJavaDestination extends JavaDestination {
 
 
   private void waitForUnreachableOrders(long deploymentId) {
-    //Unreachable Orders sind hier eigentlich nur die Aufträge, die den Scheduler verlassen haben,
-    //aber noch nicht im ExecutionProcessor angekommen sind. Diese Aufträge würden nicht entdeckt 
-    //werden und daher während ihrer Ausführung abgebrochen werden, ihr OrderBackup aber wäre noch 
-    //auf dem vorigen Stand. Diese Aufträge würden dann nach dem Start der Factroy oder nach der 
-    //OrderMigration teilweise doppelt ausgeführt werden.  
-    //Hier wird nun der Auftragszähler aus dem DeploymentManagement dafür zweckentfremdet.
-    //Dieser Auftragszähler zählt auch noch Aufträge an anderen Stellen mit, dies sollte jedoch
-    //eher positive Auswirkungen haben: So werden z.B. JavaDestinations noch komplett ausgeführt.
+    //Unreachable Orders sind hier eigentlich nur die Auftrï¿½ge, die den Scheduler verlassen haben,
+    //aber noch nicht im ExecutionProcessor angekommen sind. Diese Auftrï¿½ge wï¿½rden nicht entdeckt 
+    //werden und daher wï¿½hrend ihrer Ausfï¿½hrung abgebrochen werden, ihr OrderBackup aber wï¿½re noch 
+    //auf dem vorigen Stand. Diese Auftrï¿½ge wï¿½rden dann nach dem Start der Factroy oder nach der 
+    //OrderMigration teilweise doppelt ausgefï¿½hrt werden.  
+    //Hier wird nun der Auftragszï¿½hler aus dem DeploymentManagement dafï¿½r zweckentfremdet.
+    //Dieser Auftragszï¿½hler zï¿½hlt auch noch Auftrï¿½ge an anderen Stellen mit, dies sollte jedoch
+    //eher positive Auswirkungen haben: So werden z.B. JavaDestinations noch komplett ausgefï¿½hrt.
     
-    //eigener Auftrag SuspendAllOrders wird mitgezählt, dieser soll jetzt jedoch ignoriert werden
+    //eigener Auftrag SuspendAllOrders wird mitgezï¿½hlt, dieser soll jetzt jedoch ignoriert werden
     DeploymentManagement.getInstance().countDownOrderThatKnowsAboutDeployment(deploymentId);
     try {
       
-      //DeploymentId erhöhen, damit waitForUnreachableOrders() bisherige Aufträge als alt ansieht und darauf wartet
+      //DeploymentId erhï¿½hen, damit waitForUnreachableOrders() bisherige Auftrï¿½ge als alt ansieht und darauf wartet
       DeploymentManagement.getInstance().propagateDeployment(); //TODO anderes waitForUnreachableOrders
       try {
-        //auf alle versteckten Aufträge warten
+        //auf alle versteckten Auftrï¿½ge warten
         DeploymentManagement.getInstance().waitForUnreachableOrders();
         if( logger.isDebugEnabled() ) {
           logger.debug( DeploymentManagement.getInstance().getOrderAndDeploymentCounterState("waitForUnreachableOrders") );
@@ -179,7 +179,7 @@ public class SuspendAllOrdersJavaDestination extends JavaDestination {
         logger.warn( DeploymentManagement.getInstance().getOrderAndDeploymentCounterState("waitForUnreachableOrders") );
       }
     } finally {
-      //eigenen Auftrag SuspendAllOrders wieder mitzählen
+      //eigenen Auftrag SuspendAllOrders wieder mitzï¿½hlen
       DeploymentManagement.getInstance().countOrderThatKnowsAboutDeployment(deploymentId);
     }
   }

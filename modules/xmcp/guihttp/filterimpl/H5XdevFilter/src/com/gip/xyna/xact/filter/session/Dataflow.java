@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,8 +101,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 
 import xmcp.processmodeller.datatypes.Connection;
 
-//ermittlung von linkstates für alle variablen eines workflows (~autosnapping). die linkstates werden dann gespeichert in dataflowentry-listen
-//das anwenden der neuen linkstates auf die xml-repräsentation (generationbase+steps) passiert erst beim speichern des workflows
+//ermittlung von linkstates fï¿½r alle variablen eines workflows (~autosnapping). die linkstates werden dann gespeichert in dataflowentry-listen
+//das anwenden der neuen linkstates auf die xml-reprï¿½sentation (generationbase+steps) passiert erst beim speichern des workflows
 public class Dataflow {
   
   private static final Logger logger = CentralFactoryLogging.getLogger(Dataflow.class);
@@ -112,7 +112,7 @@ public class Dataflow {
   
   
   private GenerationBaseObject gbo;
-  //zwischenspeicher während der berechnung
+  //zwischenspeicher wï¿½hrend der berechnung
   private Map<AVariableIdentification, InputConnection> inputConnections;
   private Set<AVariableIdentification> missingVarIds = new HashSet<AVariableIdentification>();
   private Set<AVariableIdentification> consumedVars = new HashSet<AVariableIdentification>();
@@ -224,7 +224,7 @@ public class Dataflow {
       return connectionsPerLane;
     }
 
-    //ist die verbindung derart, dass ein foreach dafür vorhanden sein muss
+    //ist die verbindung derart, dass ein foreach dafï¿½r vorhanden sein muss
     public boolean foreachLink(AVariableIdentification target, int sourceIdx) {
       if (target.getIdentifiedVariable().isList()) {
         return false;
@@ -246,7 +246,7 @@ public class Dataflow {
   public static class MultiLaneConnection implements InputConnection {
     /**
      * contains one simple connection info per lane bei choices
-     * bei catchblöcken gibt es für die outputs auch noch den fall "branchId==null" für den fall, dass kein branch selektiert ist.
+     * bei catchblï¿½cken gibt es fï¿½r die outputs auch noch den fall "branchId==null" fï¿½r den fall, dass kein branch selektiert ist.
      */
     private List<SimpleConnection> connectionsPerLane;
     private List<String> branchIds = new ArrayList<>();
@@ -701,9 +701,9 @@ public class Dataflow {
     /*
      * WF -> stepserial -> childsteps
      *                  -> stepcatch (globaler catchblock)
-     * stepserial.getChildSteps berücksichtigt stepcatch nicht
-     * wf.getChildSteps gibt stepserial+stepcatch zurück. falls es stepcatch gibt, zeigt der wiederum auf stepserial (das ist sein try-block)
-     * wenn man also für alle wf.getChildSteps die rekursion durchführt, kommt man bei den steps doppelt vorbei.
+     * stepserial.getChildSteps berï¿½cksichtigt stepcatch nicht
+     * wf.getChildSteps gibt stepserial+stepcatch zurï¿½ck. falls es stepcatch gibt, zeigt der wiederum auf stepserial (das ist sein try-block)
+     * wenn man also fï¿½r alle wf.getChildSteps die rekursion durchfï¿½hrt, kommt man bei den steps doppelt vorbei.
      */
     List<Step> childSteps = step.getChildSteps();
     Step childStep;
@@ -966,17 +966,17 @@ public class Dataflow {
       providersFromChildren.removeAll(providersFromForeach); //prevents single version of loop variable from showing up in the output
       
       
-      //wenn auf der Lane ein verstecktes Mapping ist, müssen wir die FilterCondition daraus jetzt wieder den providern hinzufügen 
+      //wenn auf der Lane ein verstecktes Mapping ist, mï¿½ssen wir die FilterCondition daraus jetzt wieder den providern hinzufï¿½gen 
       //-> wir haben sie beim darauffolgenden StepFunction (query) entfernt
       List<AVariableIdentification> previouslyHiddenFilterConditions = findHiddenFilterConditions((StepSerial)childStep);
       providersFromChildren.addAll(previouslyHiddenFilterConditions);
       
-      //wenn auf der Lane ein DocumentContext entsteht, muss dieser jetzzt wieder den providern hinzugefügt werden
+      //wenn auf der Lane ein DocumentContext entsteht, muss dieser jetzzt wieder den providern hinzugefï¿½gt werden
       //auch wenn er eigentlich durch ein End Document verbraucht wurde
       List<AVariableIdentification> previouslyConsumedDocumentContext = findConsumedDocumentContext((StepSerial) childStep);
       providersFromChildren.addAll(previouslyConsumedDocumentContext);
       
-      //wenn auf der Lane ein ForEach mit verstecktem Output ist, dann müssen wir diesen versteckten Output jetzt wieder den providern hinzufügen.
+      //wenn auf der Lane ein ForEach mit verstecktem Output ist, dann mï¿½ssen wir diesen versteckten Output jetzt wieder den providern hinzufï¿½gen.
       List<AVariableIdentification> previouslyHiddenDocumentParts = findHiddenDocumentParts((StepSerial)childStep, providersFromChildren);
       List<AVariableIdentification> cpy = new ArrayList<AVariableIdentification>(previouslyHiddenDocumentParts);
       
@@ -993,7 +993,7 @@ public class Dataflow {
       
       /*
        * falls lane mit throw endet, nicht als possible output adden
-       * falls throw weiter oben ist, ist der workflow eh ungültig, das muss hier nicht behandelt werden 
+       * falls throw weiter oben ist, ist der workflow eh ungï¿½ltig, das muss hier nicht behandelt werden 
        * 
        * lane ignorieren, wenn sie mit einer anderen verbunden ist
        */
@@ -1023,9 +1023,9 @@ public class Dataflow {
 
     /*
      * 1. erzeuge output von choice (kombination von commonoutputs (berechnete outputs) und useroutputs (bei conditional branching)
-     * 2. führe autosnapping für alle outputs durch
-     *    für commonoutputs nur die provider aus der lane verwenden
-     *    für useroutputs sind auch provider von oberhalb der choice erlaubt
+     * 2. fï¿½hre autosnapping fï¿½r alle outputs durch
+     *    fï¿½r commonoutputs nur die provider aus der lane verwenden
+     *    fï¿½r useroutputs sind auch provider von oberhalb der choice erlaubt
      * 3. update alle zuweisungen in den assign-steps am ende der lanes (applyDataflowToGB)
      */
     identifiedVariablesStepChoice.createOutputsAndAssigns(); //outputs aktualisieren
@@ -1107,7 +1107,7 @@ public class Dataflow {
         }
       }
     }
-    addToConnections(identifiedVariablesStepChoice, connections); //nur für TypeChoice/ConditionalChoice benötigt. ansonsten schadet es nix
+    addToConnections(identifiedVariablesStepChoice, connections); //nur fï¿½r TypeChoice/ConditionalChoice benï¿½tigt. ansonsten schadet es nix
     
     List<AVariableIdentification> result = new ArrayList<AVariableIdentification>(providers);
     result.addAll(outputVars);
@@ -1284,7 +1284,7 @@ public class Dataflow {
     }
     
     
-    //Listenwertige Variable über die Iteriert wird auch den Kindern anbieten
+    //Listenwertige Variable ï¿½ber die Iteriert wird auch den Kindern anbieten
     List<AVariableIdentification> childProviders = null;
     childProviders = new ArrayList<AVariableIdentification>(providers);
     // einzelwertige Loop-Variable ist nur fuer Schritt innerhalb von Foreach ein Provider
@@ -1705,12 +1705,12 @@ public class Dataflow {
     //analyze Branches
     for (int i = 0; i < branchesForGUI.size(); i++) {
       BranchInfo branch = branchesForGUI.get(i);
-      //die darin hinzugefügten provider sind nur innerhalb des catchblocks verfügbar
+      //die darin hinzugefï¿½gten provider sind nur innerhalb des catchblocks verfï¿½gbar
       
       List<AVariableIdentification> providersForBranch = new ArrayList<AVariableIdentification>(providers);
       
       //id of Exception [-> type this branch covers]
-      final String id = new ArrayList<String>(stepCatch.getAllUsedVariableIds()).get(i); //TODO: order .. wir können sonst vllt noch den complexName vergleichen (Pfad+Name)
+      final String id = new ArrayList<String>(stepCatch.getAllUsedVariableIds()).get(i); //TODO: order .. wir kï¿½nnen sonst vllt noch den complexName vergleichen (Pfad+Name)
       VariableIdentification exception = null;
       try {
         exception = currentStep.getParentScope().identifyVariable(id);
@@ -1729,7 +1729,7 @@ public class Dataflow {
       List<AVariableIdentification> childProviders =
           analyzeDataflow(((CatchBranchInfo) branch).getMainStep(), providersForBranch, connections);
       /*
-       * output-vars von übergeordnetem objekt (wfstep/stepfunction) müssen als input verbunden werden:
+       * output-vars von ï¿½bergeordnetem objekt (wfstep/stepfunction) mï¿½ssen als input verbunden werden:
        * - branchid setzen
        * - falls catch immer mit throw endet, linkstate auf NOT_NEEDED setzen.  
        * 
@@ -2140,7 +2140,7 @@ public class Dataflow {
           continue; //not the provider we are looking for
         }
         
-        //user-defined sind bereits in allen möglichen Inputs zu finden, die varId passt bereits
+        //user-defined sind bereits in allen mï¿½glichen Inputs zu finden, die varId passt bereits
         if (varId.equals(idCandidate)) {
           return p;
         }
@@ -2149,7 +2149,7 @@ public class Dataflow {
     return null;
   }
 
-  //nach dem autosnapping dieser variablen überprüfen, ob foreaches erzeugt oder entfernt werden müssen
+  //nach dem autosnapping dieser variablen ï¿½berprï¿½fen, ob foreaches erzeugt oder entfernt werden mï¿½ssen
   //returns true, if a ForEach was added
   private boolean checkForeaches(Step currentStep, IdentifiedVariables identifiedVariables, Map<AVariableIdentification, InputConnection> connections,
                                        List<AVariableIdentification> providers) {
@@ -2612,7 +2612,7 @@ public class Dataflow {
     }
     
 
-    //currentStep seinen neuen ParentScope geben (wird für StepFunction benötigt)
+    //currentStep seinen neuen ParentScope geben (wird fï¿½r StepFunction benï¿½tigt)
     //muss nach umsetzten der InputVarIds passieren, da sonst die alte AVariable nicht im Scope gefunden wird
     stepToReplace.setParentScope(sfe.getChildScope());
     Utils.updateScopeOfSubSteps(stepToReplace);
@@ -2724,7 +2724,7 @@ public class Dataflow {
     }
   }
   
-  //alles außer den angegebenen ids
+  //alles auï¿½er den angegebenen ids
   protected Set<AVariableIdentification> getFilteredVarIdents(List<AVariableIdentification> identifications, String[] idsToRemove) {
     Set<AVariableIdentification> filteredIdentifications = new HashSet<AVariableIdentification>();
     for (AVariableIdentification identification : identifications) {
@@ -2877,7 +2877,7 @@ public class Dataflow {
       AVariableIdentification existingLink = null;
       if (varId != null && varId.length() > 0) {
         for (AVariableIdentification p : actualProviders) {
-          //user-defined sind bereits in allen möglichen Inputs zu finden, die varId passt bereits
+          //user-defined sind bereits in allen mï¿½glichen Inputs zu finden, die varId passt bereits
           if(p.idprovider instanceof ThrowExceptionIdProvider)
             continue;
           if (varId.equals(p.idprovider.getId())) {
@@ -3132,10 +3132,10 @@ public class Dataflow {
   //  -- because it is the list version of a loop variable (and toSatisfy is connected to the single version of it)
   //  -- because it is the single version of a loop variable (and toSatisfy is not connected to it)
   //
-  //wenn wir im ForEach sind, müssen folgende Fälle betrachtet werden:
-  //  für die Variable, die mit der Singlewertigen Loopvariable verbunden ist: ignoriere die Listenwertige Variable ( aktueller code )
-  //  für andere singlewertige Variablen mit gleichem Typ: ignoriere die Singlewertige Variable
-  //    dies gilt nur für das direkte Kind von ForEach, weitere Schritte darunter (im ForEach, aber nicht das direkte Kind) können beide Variablen sehen
+  //wenn wir im ForEach sind, mï¿½ssen folgende Fï¿½lle betrachtet werden:
+  //  fï¿½r die Variable, die mit der Singlewertigen Loopvariable verbunden ist: ignoriere die Listenwertige Variable ( aktueller code )
+  //  fï¿½r andere singlewertige Variablen mit gleichem Typ: ignoriere die Singlewertige Variable
+  //    dies gilt nur fï¿½r das direkte Kind von ForEach, weitere Schritte darunter (im ForEach, aber nicht das direkte Kind) kï¿½nnen beide Variablen sehen
   //    das betrifft zum Beispiel StepChoice
   private boolean foreachSkip(AVariableIdentification toSatisfy, 
                               AVariableIdentification provider, 
@@ -3397,12 +3397,12 @@ public class Dataflow {
     List<AVariableIdentification> assignInputs = identifyVariableIds(assign.getInputVarIds(), providers, assign.getParentScope(), VarUsageType.input);
     /*
      * nicht connectedness bei den input setzen, weil die assign-inputs nur referenzen auf variablen weiter oben im workflow sind
-     * damit würde man fall-abhängig die connectedness überschreiben.
+     * damit wï¿½rde man fall-abhï¿½ngig die connectedness ï¿½berschreiben.
      * => assigninputs clonen.
      * 
-     * man benötigt die assigninputs als avariableidentification aus zwei gründen:
+     * man benï¿½tigt die assigninputs als avariableidentification aus zwei grï¿½nden:
      * 1) beim getOrCalculateLinkState wird auf die vorherige connectedness zugegriffen, damit vorherige user-/constant-connectedness wiederhergestellt werden kann
-     * 2) beim zurückschreiben der verbindungen (applyDataflowToGB()) wird auf die connectedness zugegriffen
+     * 2) beim zurï¿½ckschreiben der verbindungen (applyDataflowToGB()) wird auf die connectedness zugegriffen
      */
     for (int i = 0; i < assignInputs.size(); i++) {
       if(assignInputs.get(i) == null) { 
@@ -3434,7 +3434,7 @@ public class Dataflow {
     }
     
     /*
-     * suche für alle zu belegenden outputVars: gibt es eine assign-zuweisung darauf? dann übernimm möglichst den existierenden input
+     * suche fï¿½r alle zu belegenden outputVars: gibt es eine assign-zuweisung darauf? dann ï¿½bernimm mï¿½glichst den existierenden input
      */
     List<Pair<AVariableIdentification, AVariableIdentification>> resolutions = new ArrayList<>();
     for (AVariableIdentification varIdentOutput : outputVars) {
@@ -4397,7 +4397,7 @@ public class Dataflow {
         //bei stepassign kann man sich nicht auf die anzahl der inputconnections verlassen, sondern die ergeben sich durch autosnapping
         IdentifiedVariables vars = identifyVariables(stepProvidingOutputVars);
         
-        List<Pair<String, boolean[]>> assignList = new ArrayList<>(); //erstes boolean für userconnected, zweites für constantconnected
+        List<Pair<String, boolean[]>> assignList = new ArrayList<>(); //erstes boolean fï¿½r userconnected, zweites fï¿½r constantconnected
         List<String> outputVarIds = new ArrayList<>();
         for (int i = 0; i < vars.getVariables(VarUsageType.output).size(); i++) {
           AVariableIdentification var = vars.getVariable(VarUsageType.output, i);

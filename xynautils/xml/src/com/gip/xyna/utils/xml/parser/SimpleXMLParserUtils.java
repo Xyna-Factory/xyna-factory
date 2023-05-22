@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ public class SimpleXMLParserUtils {
 
    /**
     * Liefert die Values zu allen Tags tagname, die sich zwischen dem
-    * einschließenden Tag between befinden Bei mehreren Tags between ist das
+    * einschlieï¿½enden Tag between befinden Bei mehreren Tags between ist das
     * Ergebnis undefiniert
     * 
     * @param xml
@@ -206,8 +206,8 @@ public class SimpleXMLParserUtils {
    }
 
    /**
-    * Sucht das erste Intervall ab startPos, das von tagName als öffnendes und
-    * schließendes Tag begrenzt wird
+    * Sucht das erste Intervall ab startPos, das von tagName als ï¿½ffnendes und
+    * schlieï¿½endes Tag begrenzt wird
     * 
     * @param xml
     * @param tagName

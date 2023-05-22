@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class SoapUtilsTest {
       {"true", "http://www.gip.com"},
       {"malFormedUrlException", "www.gip.com"},
       {"malFormedUrlException", "gip.com"},
-      {"malFormedUrlException", "äöü.äöüäö.de"}
+      {"malFormedUrlException", "ï¿½ï¿½ï¿½.ï¿½ï¿½ï¿½ï¿½ï¿½.de"}
   };
 
   /**

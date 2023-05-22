@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ public class ReverseLineInputStreamTest extends TestCase {
 
 
   public void testManyLines() {
-    String source = "\nasdas\ndasdadweqaü\n\näßdq    -\r\n\r\tfeaergaerh\naergha\nergaergheraerbaerbaergaergeargaergfWEFSD\n";
+    String source = "\nasdas\ndasdadweqaï¿½\n\nï¿½ï¿½dq    -\r\n\r\tfeaergaerh\naergha\nergaergheraerbaerbaergaergeargaergfWEFSD\n";
     createFile("testfile", source);
     List<String> list = parse("testfile", 5);
     compare(list, source.replace("\r\n", "\n").replace("\r\tfeaergaerh", "\tfeaergaerh\n")); //bufferedreader.readline sieht \r als zeilenumbruch

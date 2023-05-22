@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,24 +27,24 @@ import com.gip.xyna.xprc.xpce.planning.Capacity;
 
 /**
  * MultiAllocationCapacities wird im CapacityManagement bzw. genauer in {@link CMAbstract#allocateCapacities(com.gip.xyna.xprc.xsched.scheduling.OrderInformation, com.gip.xyna.xprc.xsched.SchedulingData)}
- * verwendet, um Capacities mehrfach allokieren zu können. 
+ * verwendet, um Capacities mehrfach allokieren zu kï¿½nnen. 
  * 
- * Mehrfache bedeutet hier nicht, dass die Kardinalität einer Capacity höher ist als 1, sondern dass die 
+ * Mehrfache bedeutet hier nicht, dass die Kardinalitï¿½t einer Capacity hï¿½her ist als 1, sondern dass die 
  * gesamte CapacityGruppe mehrfach allokiert wird.
  * 
- * Beispiel: MultiAllocationCapacities ({(A,1),(B,2)},min=3,max=5) möchte eine Capacitygruppe mindestens 
+ * Beispiel: MultiAllocationCapacities ({(A,1),(B,2)},min=3,max=5) mï¿½chte eine Capacitygruppe mindestens 
  * 3 mal und maximal 5 allokieren, die Capacitygruppe besteht dabei aus 1 mal "A" und 2 mal "B".
  * <pre>
  * Vorhanden -----&gt; allokiert                Kommentar
  * A    B           A     B    allocations  
- * 20   20          5     10             5   genügend vorhanden, um max=5 zu erhalten
+ * 20   20          5     10             5   genï¿½gend vorhanden, um max=5 zu erhalten
  * 20    9          4      8             4   reicht nur noch, um Gruppe 4 mal zu erhalten
  * 4    20          4      8             4   reicht nur noch, um Gruppe 4 mal zu erhalten
  * 10    6          3      6             3   reicht nur noch, um Gruppe 3 mal zu erhalten
- * 10    5          0      0             0   reicht nicht mehr, um min=3 zu erfüllen -&gt; Auftrag wird nicht geschedult. 
+ * 10    5          0      0             0   reicht nicht mehr, um min=3 zu erfï¿½llen -&gt; Auftrag wird nicht geschedult. 
  * </pre>
  * 
- * Über das Flag "transferable" können die allokierten Capacities  
+ * ï¿½ber das Flag "transferable" kï¿½nnen die allokierten Capacities  
  */
 public class MultiAllocationCapacities implements Serializable {
 
@@ -53,7 +53,7 @@ public class MultiAllocationCapacities implements Serializable {
   private List<Capacity> capacities;
   private int minAllocation = 1;
   private int maxAllocation = Integer.MAX_VALUE;
-  private int allocations;   //wie häufig konnte allokiert werden? 
+  private int allocations;   //wie hï¿½ufig konnte allokiert werden? 
   private boolean transferable; //werden in CapacityCache als transferierbar markiert
   //private String orderType ?,
 

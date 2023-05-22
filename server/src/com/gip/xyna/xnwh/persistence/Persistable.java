@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ public @interface Persistable {
   public enum StorableProperty {
 
     /**
-     * schützt storables vor unnötigen ausgaben im logfile und über das commandlineinterface, damit keine daten sichtbar
-     * werden, die durch dieses storable geschützt sein sollen. beispielsweise passwörter.
+     * schï¿½tzt storables vor unnï¿½tigen ausgaben im logfile und ï¿½ber das commandlineinterface, damit keine daten sichtbar
+     * werden, die durch dieses storable geschï¿½tzt sein sollen. beispielsweise passwï¿½rter.
      */
     PROTECTED, STORE_REDUNDANTLY;
 
@@ -58,7 +58,7 @@ public @interface Persistable {
 
   public String tableName();
   /**
-   * name der spalte die den primary key enthält
+   * name der spalte die den primary key enthï¿½lt
    * @return
    * @see com.gip.xyna.xnwh.persistence.Column
    */

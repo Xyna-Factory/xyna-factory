@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * utilklasse zum angenehmen verteilten abarbeiten von mehreren aufgaben über mehrere threads hinweg.
+ * utilklasse zum angenehmen verteilten abarbeiten von mehreren aufgaben ï¿½ber mehrere threads hinweg.
  * 
  * falls man nicht explizit mit Tasks arbeiten will, so zu verwenden:<br>
  * <pre>
@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *   } 
  * }
  * //kein freies task mehr gefunden. die anderen tasks sind entweder fertig oder werden noch bearbeitet.
- * work.waitForCompletion(); //aufruf wartet nur, falls nicht rekursiv aufgerufen, ansonsten kommt er sofort zurück. das ist dann okay.
+ * work.waitForCompletion(); //aufruf wartet nur, falls nicht rekursiv aufgerufen, ansonsten kommt er sofort zurï¿½ck. das ist dann okay.
  * </pre>
  * @see DistributedWorkWithTasks
  */
@@ -86,7 +86,7 @@ public class DistributedWork {
 
 
   /**
-   * gibt -1 zurück, falls kein weiteres offenes task vorhanden ist
+   * gibt -1 zurï¿½ck, falls kein weiteres offenes task vorhanden ist
    */
   public int getAndLockNextOpenTaskIdx() {
     Thread t = Thread.currentThread();

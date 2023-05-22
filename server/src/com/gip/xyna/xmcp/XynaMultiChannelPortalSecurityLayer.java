@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -197,7 +197,7 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
   }
 
   /**
-   * Rechteüberprüfung für Rechtebereiche.
+   * Rechteï¿½berprï¿½fung fï¿½r Rechtebereiche.
    */
   private void checkScopedRights(String scopedRight, Role role) throws PersistenceLayerException, XFMG_ACCESS_VIOLATION {
     if (!hasRight(scopedRight, role)) {
@@ -544,7 +544,7 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
     String scopedRight = getUserManagement().getScopedRight(ScopedRight.CRON_LIKE_ORDER, Action.insert);
     checkScopedRights(scopedRight, role);
 
-    //Start-Order-Recht wird zusätzlich benötigt
+    //Start-Order-Recht wird zusï¿½tzlich benï¿½tigt
     if (!hasRight(resolveFunctionToRight("startOrder"), role)) {
       String startOrderRight = getUserManagement().getStartOrderRight(clocp.getDestinationKey());
       checkScopedRights(startOrderRight, role);
@@ -571,7 +571,7 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
     String scopedRight = getUserManagement().getScopedRight(ScopedRight.CRON_LIKE_ORDER, Action.write);
     checkScopedRights(scopedRight, role);
 
-    //Start-Order-Recht für neue Destination wird benötigt
+    //Start-Order-Recht fï¿½r neue Destination wird benï¿½tigt
     if (!hasRight(resolveFunctionToRight("startOrder"), role)) {
       if (destination != null) {
         String scopedRightDestination = getUserManagement().getStartOrderRight(destination);
@@ -598,7 +598,7 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
     String scopedRight = getUserManagement().getScopedRight(ScopedRight.CRON_LIKE_ORDER, Action.write);
     checkScopedRights(scopedRight, role);
     
-    //Start-Order-Recht für neue Destination wird benötigt
+    //Start-Order-Recht fï¿½r neue Destination wird benï¿½tigt
     if (!hasRight(resolveFunctionToRight("startOrder"), role)) {
       String startOrderRight = getUserManagement().getStartOrderRight(clocp.getDestinationKey());
       checkScopedRights(startOrderRight, role);
@@ -660,7 +660,7 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
   public BatchProcessInformation getBatchProcessInformation(Long batchProcessId, Role role) throws XynaException {
     BatchProcessInformation info = super.getBatchProcessInformation(batchProcessId);
     if (info != null) {
-      //ist das Read-Recht für diese TCO vorhanden?
+      //ist das Read-Recht fï¿½r diese TCO vorhanden?
       String scopedRight = getUserManagement().getReadTCORight(info);
       checkScopedRights(scopedRight, role);
     }
@@ -673,8 +673,8 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
       //es ist kein Read-Recht vorhanden
       throw new XFMG_ACCESS_VIOLATION("searchBatchProcesses", role.getName());
     }
-    //vorhandene Read-Rechte der SelectImpl übergeben, damit nur die TCOs
-    //selektiert werden, für die ein passendes Recht vorhanden ist
+    //vorhandene Read-Rechte der SelectImpl ï¿½bergeben, damit nur die TCOs
+    //selektiert werden, fï¿½r die ein passendes Recht vorhanden ist
     select.setRightWhereClauses(scopedRights);
     
     return super.searchBatchProcesses(select,maxRows);
@@ -723,14 +723,14 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
 
 
   public PropertyMap<String, String> getPropertiesReadOnly(Role role) throws XynaException {
-    //überprüfen, ob überhaupt ein read-Recht vorhanden ist
+    //ï¿½berprï¿½fen, ob ï¿½berhaupt ein read-Recht vorhanden ist
     String scopedRight = getUserManagement().getXynaPropertyRight(null, Action.read);
     checkScopedRights(scopedRight, role);
     
     //Properties bestimmen
     PropertyMap<String, String> properties = super.getPropertiesReadOnly();
     
-    //nur die Properties zurückgeben, für die ein read-Recht vorhanden ist
+    //nur die Properties zurï¿½ckgeben, fï¿½r die ein read-Recht vorhanden ist
     PropertyMap<String, String> allowedProperties = new PropertyMap<String, String>();
     for (String key : properties.keySet()) {
       scopedRight = getUserManagement().getXynaPropertyRight(key, Action.read);
@@ -743,14 +743,14 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
   }
   
   public Collection<XynaPropertyWithDefaultValue> getPropertiesWithDefaultValuesReadOnly(Role role) throws XynaException {
-    //überprüfen, ob überhaupt ein read-Recht vorhanden ist
+    //ï¿½berprï¿½fen, ob ï¿½berhaupt ein read-Recht vorhanden ist
     String scopedRight = getUserManagement().getXynaPropertyRight(null, Action.read);
     checkScopedRights(scopedRight, role);
     
     //Properties bestimmen
     Collection<XynaPropertyWithDefaultValue> properties = super.getPropertiesWithDefaultValuesReadOnly();
     
-    //nur die Properties zurückgeben, für die ein read-Recht vorhanden ist
+    //nur die Properties zurï¿½ckgeben, fï¿½r die ein read-Recht vorhanden ist
     Iterator<XynaPropertyWithDefaultValue> it = properties.iterator();
     while (it.hasNext()) {
       scopedRight = getUserManagement().getXynaPropertyRight(it.next().getName(), Action.read);
@@ -1176,13 +1176,13 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
 
 
   /**
-   * ACHTUNG: Hier wird überprüft, ob die Rolle des Aufrufers das Recht USER_MANAGEMENT oder
-   * USER_MANAGEMENT_EDIT_OWN hat. Es wird jedoch nicht überprüft, ob bei USER_MANAGEMENT_EDIT_OWN 
-   * auch "Aufrufer = zu ändernder User" gilt (da an dieser Stelle nur noch die Rolle und nicht
+   * ACHTUNG: Hier wird ï¿½berprï¿½ft, ob die Rolle des Aufrufers das Recht USER_MANAGEMENT oder
+   * USER_MANAGEMENT_EDIT_OWN hat. Es wird jedoch nicht ï¿½berprï¿½ft, ob bei USER_MANAGEMENT_EDIT_OWN 
+   * auch "Aufrufer = zu ï¿½ndernder User" gilt (da an dieser Stelle nur noch die Rolle und nicht
    * mehr der Aufrufer bekannt ist).
-   * D.h. es ist möglich mit dieser Methode das Passwort eines andern Benutzers
-   * zu ändern, obwohl man nur das Recht USER_MANAGEMENT_EDIT_OWN hat.
-   * Aus dem XynaBlackEditionWebService wird die Methode im Moment nur mit "Aufrufer = zu ändernder User" 
+   * D.h. es ist mï¿½glich mit dieser Methode das Passwort eines andern Benutzers
+   * zu ï¿½ndern, obwohl man nur das Recht USER_MANAGEMENT_EDIT_OWN hat.
+   * Aus dem XynaBlackEditionWebService wird die Methode im Moment nur mit "Aufrufer = zu ï¿½ndernder User" 
    * aufgerufen.
    */
   public boolean changePassword(String id, String oldPassword, String newPassword, boolean isNewPasswordHashed, Role role) throws XynaException {

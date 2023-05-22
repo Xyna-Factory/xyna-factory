@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public interface ODSAdministration {
 
 
   /**
-   * gibt id zurück, der für instantiate PersistenceLayer gebraucht wird. die id darf sich nicht ändern, wenn
+   * gibt id zurï¿½ck, der fï¿½r instantiate PersistenceLayer gebraucht wird. die id darf sich nicht ï¿½ndern, wenn
    * persistencelayers entfernt werden
    */
   public void registerPersistenceLayer(long persistenceLayerId, Class<? extends PersistenceLayer> persistenceLayerClass);
@@ -103,7 +103,7 @@ public interface ODSAdministration {
 
 
   /**
-   * wird von allen tabellen benutzt, für die nicht spezifisch ein anderer persistencelayer definiert ist
+   * wird von allen tabellen benutzt, fï¿½r die nicht spezifisch ein anderer persistencelayer definiert ist
    * @throws XNWH_PersistenceLayerInstanceIdUnknownException
    * @throws PersistenceLayerException
    */
@@ -128,9 +128,9 @@ public interface ODSAdministration {
 
   //wie stellt man sicher, dass tabellen in persistence layer angelegt sind
 
-  //regeln festlegen, die ermöglichen,
-  //1. daten die ein bestimmtes kriterium erfüllen von einem connectionType zu einem anderen transferieren
-  //2. daten die ein bestimmtes kriterium erfüllen zu löschen?
+  //regeln festlegen, die ermï¿½glichen,
+  //1. daten die ein bestimmtes kriterium erfï¿½llen von einem connectionType zu einem anderen transferieren
+  //2. daten die ein bestimmtes kriterium erfï¿½llen zu lï¿½schen?
   // regel hat eine bedingung (zb cache vollgelaufen oder sowas)
 
   public <T extends Storable<?>> long getPersistenceLayerInstanceId(ODSConnectionType connectionType, Class<T> targetStorable);
@@ -154,7 +154,7 @@ public interface ODSAdministration {
 
   /**
    * sind die persistencelayer so konfiguriert, dass beiden connections auf die gleiche physische tabelle zeigen? das
-   * beudetet zb, dass ein zeilenlock über den einen connectiontype dazu führt, dass die andere connection nicht auf die
+   * beudetet zb, dass ein zeilenlock ï¿½ber den einen connectiontype dazu fï¿½hrt, dass die andere connection nicht auf die
    * gelockte zeile zugreifen kann.
    */
   public boolean isSamePhysicalTable(String tableName, ODSConnectionType type1, ODSConnectionType type2)

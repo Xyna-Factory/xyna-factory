@@ -1,13 +1,13 @@
-unterhalb dieses ordners liegen ordner für sequentielle updates von einer version zur nächsten.
+unterhalb dieses ordners liegen ordner fï¿½r sequentielle updates von einer version zur nï¿½chsten.
 jeder ordner muss den namen haben, der in order.properties angegeben ist.
-die updates werden in der reihenfolge ausgeführt, die durch order.properties vorgegeben ist.
+die updates werden in der reihenfolge ausgefï¿½hrt, die durch order.properties vorgegeben ist.
 
 die updates werden von update.xml unter ../install sequentiell aufgerufen.
 
-in update.xml müssen an den stellen, wo in xml kommentaren ein ? steht, die korrekten versions-
+in update.xml mï¿½ssen an den stellen, wo in xml kommentaren ein ? steht, die korrekten versions-
 nummern eingetragen werden.
 
-damit das update funktioniert, müssen im projektspezifischen environment property file
+damit das update funktioniert, mï¿½ssen im projektspezifischen environment property file
 folgende properties gesetzt sein:
 
 #user/schema in the database
@@ -16,7 +16,7 @@ db.userid=processing
 db.password=processing
 
 
-jeder update-order enthält mindestens folgende dateien:
+jeder update-order enthï¿½lt mindestens folgende dateien:
 
 1. version.properties
 
@@ -33,7 +33,7 @@ version.end=1.2.3.5
 mit dem inhalt
 
 -----------------------------------------------------
--- Copyright 2022 GIP SmartMercial GmbH, Germany
+-- Copyright 2023 Xyna GmbH, Germany
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.

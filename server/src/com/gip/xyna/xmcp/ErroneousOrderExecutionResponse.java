@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,10 +138,10 @@ public class ErroneousOrderExecutionResponse extends OrderExecutionResponse {
       return;
     }
     try {
-      //TODO gibt es noch andere spezialexceptions, die getCause() überschrieben haben oder getMessage?
-      //     das führt bei der deserialisierung dann evtl auch zu problemen...
+      //TODO gibt es noch andere spezialexceptions, die getCause() ï¿½berschrieben haben oder getMessage?
+      //     das fï¿½hrt bei der deserialisierung dann evtl auch zu problemen...
       if (currentThrowable instanceof RemoteException) {
-        detailFieldOfRemoteException.set(currentThrowable, null); //nicht auf currentthrowable setzen, das führt zu stackoverflow
+        detailFieldOfRemoteException.set(currentThrowable, null); //nicht auf currentthrowable setzen, das fï¿½hrt zu stackoverflow
       }
       causeField.set(currentThrowable, currentThrowable);
     } catch (IllegalArgumentException e) {
@@ -357,7 +357,7 @@ public class ErroneousOrderExecutionResponse extends OrderExecutionResponse {
 
 
     /**
-     * Versucht, die ursprüngliche Exception zu rekonstruieren. 
+     * Versucht, die ursprï¿½ngliche Exception zu rekonstruieren. 
      * Dazu sollte diese als Throwable oder als XML vorliegen, ansonsten wird ein 
      * Surrogat XMCP_RMIExceptionWrapper gebaut.
      * @return
@@ -412,7 +412,7 @@ public class ErroneousOrderExecutionResponse extends OrderExecutionResponse {
        * 2) mit parametern
        * 3) mit parametern und throwable
        * 
-       * der mittlere entfällt, wenn es keine parameter gibt
+       * der mittlere entfï¿½llt, wenn es keine parameter gibt
        */
       try {
      

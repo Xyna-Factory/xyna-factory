@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,9 +46,9 @@ import xmcp.processmodeller.datatypes.RepairsRequiredError;
 import xmcp.processmodeller.datatypes.response.GetXMOMItemResponse;
 
 /**
- * XMOMGui behandelt die meisten Anfragen der Gui für den neuen H5-Modeler.
+ * XMOMGui behandelt die meisten Anfragen der Gui fï¿½r den neuen H5-Modeler.
  * Dabei werden alle Sessions verwaltet, um unterschiedliche Einstellungen 
- * und Bearbeitungsstände für jeden Benutzer zu ermöglichen.
+ * und Bearbeitungsstï¿½nde fï¿½r jeden Benutzer zu ermï¿½glichen.
  */
 public class XMOMGui {
   
@@ -56,7 +56,7 @@ public class XMOMGui {
   private static final SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
   
   private static Map<String, SessionBasedData> sessionBasedData = new ConcurrentHashMap<>();
-  private XMOMLoader xmomLoader; //gemeinsamer Cache, Änderungen werden differentiell eingepflegt
+  private XMOMLoader xmomLoader; //gemeinsamer Cache, ï¿½nderungen werden differentiell eingepflegt
   
   public XMOMGui() throws XynaException {
     super();

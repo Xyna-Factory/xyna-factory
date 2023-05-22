@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -249,7 +249,7 @@ public class XynaProcessCtrlExecution extends Section {
                           }
                           DestinationKey dk = new DestinationKey(GenerationBase.getDefaultOrdertype(object), runtimeContext);
 
-                          // destinations müssen nicht in file gespeichert werden, da beim serverneustart
+                          // destinations mï¿½ssen nicht in file gespeichert werden, da beim serverneustart
                           // deployment erneut aufgerufen wird.
                           if (Objects.equals(wf.getOutputTypeFullyQualified(), SchedulerBean.class.getName())) {
 
@@ -265,7 +265,7 @@ public class XynaProcessCtrlExecution extends Section {
                           getXynaCleanup().getCleanupEngineDispatcher()
                                           .setDestination(dk, XynaDispatcher.DESTINATION_EMPTY_WORKFLOW, false);
                           
-                          //bestehende customdestinations müssen wieder aktiviert werden
+                          //bestehende customdestinations mï¿½ssen wieder aktiviert werden
                           getXynaPlanning().getPlanningDispatcher().activateCustomDestinations(dv);
                           getXynaExecution().getExecutionEngineDispatcher().activateCustomDestinations(dv);
                           getXynaCleanup().getCleanupEngineDispatcher().activateCustomDestinations(dv);
@@ -417,9 +417,9 @@ public class XynaProcessCtrlExecution extends Section {
     DeploymentManagement deploymentMgmt = DeploymentManagement.getInstance();
     try {
       deploymentMgmt.countOrderThatKnowsAboutDeployment(xo.getIdOfLatestDeploymentFromOrder());      
-      //ACHTUNG: hier darf man kein einfaches try-finally verwenden, um den counter wieder runterzuzählen, falls der auftrag (asynchron) gescheduled wird!
-      //ansonsten kann es passieren, dass der executionthread bereits läuft und dann im orderfilter die deploymentid umgesetzt wird, bevor hier 
-      //finally ausgeführt wird. für die fälle, wo das scheduling nicht passiert, braucht man das finally aber.
+      //ACHTUNG: hier darf man kein einfaches try-finally verwenden, um den counter wieder runterzuzï¿½hlen, falls der auftrag (asynchron) gescheduled wird!
+      //ansonsten kann es passieren, dass der executionthread bereits lï¿½uft und dann im orderfilter die deploymentid umgesetzt wird, bevor hier 
+      //finally ausgefï¿½hrt wird. fï¿½r die fï¿½lle, wo das scheduling nicht passiert, braucht man das finally aber.
       xo.setDeploymentCounterMustBeCountDown();
       try {
         new MasterWorkflowPreScheduler(xo, this).startOrder();
@@ -427,7 +427,7 @@ public class XynaProcessCtrlExecution extends Section {
         if (!xo.isDeploymentCounterCountDownDone()) {
           deploymentMgmt.countDownOrderThatKnowsAboutDeployment(xo.getIdOfLatestDeploymentFromOrder());
           xo.setDeploymentCounterCountDownDone();
-        } //else: bereits runtergezählt. siehe XynaScheduler.addOrderIntoAllOrdersEtc und XynaOrderExecutor.cancelOrder      
+        } //else: bereits runtergezï¿½hlt. siehe XynaScheduler.addOrderIntoAllOrdersEtc und XynaOrderExecutor.cancelOrder      
         
       }
     } finally {
@@ -471,7 +471,7 @@ public class XynaProcessCtrlExecution extends Section {
   }
 
   /**
-   * erstellt ordercontext (der die order enthält) und notifiziert inputsource (falls nötig)
+   * erstellt ordercontext (der die order enthï¿½lt) und notifiziert inputsource (falls nï¿½tig)
    * @param orderId optional: -1 =&gt; es wird neue id generiert.
    */
   public OrderContextServerExtension createAndPrepareOrderAndContext(XynaOrderCreationParameter xocp, long orderId) throws XynaException {
@@ -638,10 +638,10 @@ public class XynaProcessCtrlExecution extends Section {
   private XynaOrderServerExtension startOrderSynchronous(XynaOrderServerExtension xo, boolean onlyPushToScheduler, boolean setMonitoringLevel)
                   throws XynaException, ProcessSuspendedException {
     
-    //Latch, um auf Ende der Ausführung zu warten
+    //Latch, um auf Ende der Ausfï¿½hrung zu warten
     final CountDownLatch latch = new CountDownLatch(1);
    
-    //ResponseListener-Implementierung unterschiedlich je nach Grund der synchronen Ausführung 
+    //ResponseListener-Implementierung unterschiedlich je nach Grund der synchronen Ausfï¿½hrung 
     SynchronousResponseListenerForXpce xpceRL = null;
     if( xo.hasParentOrder() ) { //wird zur Unterscheidung "Subworkflow"/"extern synchron eingestellt" verwendet
       SubworkflowResponseListener rl = new SubworkflowResponseListener(latch, xo);
@@ -653,7 +653,7 @@ public class XynaProcessCtrlExecution extends Section {
       xpceRL = rl;
     }
     
-    //Ausführung
+    //Ausfï¿½hrung
     executeOrder(xo, onlyPushToScheduler, setMonitoringLevel);
 
     //Warten auf Beendigung
@@ -670,7 +670,7 @@ public class XynaProcessCtrlExecution extends Section {
     //Spezialbehandlung des ResponseListeners wirft evtl. Exceptions
     xpceRL.handleAfterAwait();
     
-    //Rückgabe der erfolgreichen XynaOrder ...
+    //Rï¿½ckgabe der erfolgreichen XynaOrder ...
     GeneralXynaObject response = xpceRL.getResponse();
     if( response != null ) {
       xo.setOutputPayload(response);
@@ -747,9 +747,9 @@ public class XynaProcessCtrlExecution extends Section {
   }
 
   /**
-   * Workflow wird gestartet. Falls gewünscht, wird die XynaOrderId als 
+   * Workflow wird gestartet. Falls gewï¿½nscht, wird die XynaOrderId als 
    * LoggingDiagnosisContext geloggt. 
-   * Im Falle des Starts eines Subworkflows besteht der LoggingDiagnosisContext anschließend
+   * Im Falle des Starts eines Subworkflows besteht der LoggingDiagnosisContext anschlieï¿½end
    * aus zwei Teilen: dem LoggingDiagnosisContext des Parents und der XynaOrderId des Subworkflows.
    * Detached gestartete Workflows werden hier wie Subworkflows behandelt.
    * @param xo
@@ -766,7 +766,7 @@ public class XynaProcessCtrlExecution extends Section {
 
 /**
  * @deprecated Ist durch {@link SynchronousResponseListener} und {@link SubworkflowResponseListener} ersetzt, soll nur 
- * noch zum Deserialisieren existierender Aufträge verwendet werden 
+ * noch zum Deserialisieren existierender Auftrï¿½ge verwendet werden 
  */
   @Deprecated
   private static class CountDownLatchResponseListenerWithSuspensionSupport
@@ -822,7 +822,7 @@ public class XynaProcessCtrlExecution extends Section {
     public void onOrderAbortion(ProcessAbortedException e) {
       if (xo == null) {
         //deserialisiert und aborted, bevor wieder der thread gestartet wurde
-        //TODO in welchen fällen kann das genau passieren?
+        //TODO in welchen fï¿½llen kann das genau passieren?
         logger.warn("Order has been aborted. ParentOrder can not be notified.", e);
         return;
       }
@@ -983,7 +983,7 @@ public class XynaProcessCtrlExecution extends Section {
     } catch (XNWH_RetryTransactionException ctcbe) {
       if (usingConnection) {
         cons.closeUncommited();
-        throw ctcbe; //retry oben drüber
+        throw ctcbe; //retry oben drï¿½ber
       }
     } catch (Throwable t) {
       if (usingConnection) {
@@ -1149,7 +1149,7 @@ public class XynaProcessCtrlExecution extends Section {
         }
 
       };
-      //TODO wie beim service-deployment den trigger über timeout und reaktion bei timeout entscheiden lassen
+      //TODO wie beim service-deployment den trigger ï¿½ber timeout und reaktion bei timeout entscheiden lassen
       try {
         XynaExecutor.getInstance().executeRunnableWithUnDeploymentThreadpool(wrapper);
         if (!wrapper.await(triggerStopTimeout.get().getDurationInMillis())) {
@@ -1183,7 +1183,7 @@ public class XynaProcessCtrlExecution extends Section {
 
 
   /**
-   * falls es keine EL instanz mit diesem namen gibt, wird null zurückgegeben.
+   * falls es keine EL instanz mit diesem namen gibt, wird null zurï¿½ckgegeben.
    * @param nameOfTriggerInstance
    */
   public EventListenerInstance getEventListenerByName(String nameOfTriggerInstance, Long revision) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class XMLUtilsExample {
             + "<xsd:element name=\"bla\" type=\"xsd:string\"></xsd:element>"
             + "</xsd:schema>";
       try {
-         URL relativeURL = new URL("file:///C:/blablabla"); // für imports und
+         URL relativeURL = new URL("file:///C:/blablabla"); // fï¿½r imports und
                                                             // includes
          // xsd als xml parsen und damit schema bauen.
          XMLDocument xmlDoc = OracleDOMCreator.parseXMLString(xsdString);
@@ -71,15 +71,15 @@ public class XMLUtilsExample {
                .getElement(schema.getSchemaTargetNS(), "bla");
          System.out.println("Element: " + schema.getSchemaTargetNS() + ":"
                + xsdEl.getName());
-         // schema ändern
+         // schema ï¿½ndern
          String namespace = "http://www.w3.org/2001/XMLSchema";
          XMLElement xmlElement = (XMLElement) xmlDoc.createElementNS(namespace,
                "xsd:element");
          xmlElement.setAttribute("name", "blaKi");
          xmlElement.setAttribute("type", "xsd:string");
-         // hänge das element auf rootebene an
+         // hï¿½nge das element auf rootebene an
          xmlDoc.getElementsByTagName("schema").item(0).appendChild(xmlElement);
-         // nach änderung ausgeben:
+         // nach ï¿½nderung ausgeben:
          schema = SchemaUtils.buildSchema(xmlDoc, relativeURL);
          schema.printSchema();
          xmlDoc.print(System.out);
@@ -104,7 +104,7 @@ public class XMLUtilsExample {
             + "</xsd:element>" + "</xsd:schema>";
 
       // 2 xsds mergen, indem die rootelemente der beiden in eine gemeinsame
-      // sequenz gehängt werden.
+      // sequenz gehï¿½ngt werden.
       try {
          XMLDocument xmlDoc1 = OracleDOMCreator.parseXMLString(xsdString);
          XMLDocument xmlDoc2 = OracleDOMCreator.parseXMLString(xsdString2);
@@ -114,7 +114,7 @@ public class XMLUtilsExample {
                .getChildNodes();
          Node root = xmlDocMerged.getElementsByTagName("sequence").item(0);
 
-         // rootelemente anhängen (der import muss sein, da ansonsten das
+         // rootelemente anhï¿½ngen (der import muss sein, da ansonsten das
          // vater-document nicht passt)
          for (int i = 0; i < children.getLength(); i++) {
             root.appendChild(xmlDocMerged.importNode(children.item(i), true));
@@ -129,7 +129,7 @@ public class XMLUtilsExample {
          e.printStackTrace();
       }
 
-      // lese mehrere xsds, und füge gewünschte nachrichten in neues xsd ein
+      // lese mehrere xsds, und fï¿½ge gewï¿½nschte nachrichten in neues xsd ein
       // (als ref innerhalb einer sequence)
       // TODO pfade der imports korrigieren?!
       String f1 = "/afs/gip.local/home/lippert/jdevhome/mywork/Xyna1.4/XSDsForJMSWrapper/f1.xsd";
@@ -166,11 +166,11 @@ public class XMLUtilsExample {
          e.printStackTrace();
       }
 
-      // generierung von xml aus xsds für verschiedene möglichkeiten, wo das xsd
+      // generierung von xml aus xsds fï¿½r verschiedene mï¿½glichkeiten, wo das xsd
       // herkommt: file, string, mischung.
       // die utility arbeitet nicht mit oracle-xml klassen...
       try {
-         // 1. vollständig aus dem filesystem (oder andere url) (imports
+         // 1. vollstï¿½ndig aus dem filesystem (oder andere url) (imports
          // geschehen automatisch)
          String xsdt1 = "/home/jdevhome/mywork/bpel/_Interfaces/BPELMessages_VPN_Simple_2Standorte.xsd";
          System.out.println(StringCreator.generateXMLFromXSD(OracleDOMCreator
@@ -201,9 +201,9 @@ public class XMLUtilsExample {
                + "</xsd:schema>";
          System.out.println(StringCreator.generateXMLFromXSD(xsdt0, "element3"));
 
-         // 3. vollständig zur laufzeit vorhandene xsds, eigtl mit imports,
-         // diese müssen aber zur xsd-compilierung gelöscht werden. dafür dann
-         // alle nötigen xsds übergeben.
+         // 3. vollstï¿½ndig zur laufzeit vorhandene xsds, eigtl mit imports,
+         // diese mï¿½ssen aber zur xsd-compilierung gelï¿½scht werden. dafï¿½r dann
+         // alle nï¿½tigen xsds ï¿½bergeben.
          // gleiches xsd wie in beispiel 1.
          String xsdt0_ohneimport = "<?xml version=\"1.0\" encoding=\"ISO-8859-15\" ?>"
                + "<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.namespace2\""

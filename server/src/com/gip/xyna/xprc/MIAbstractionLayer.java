@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class MIAbstractionLayer extends JavaDestination implements WorkflowAbstr
 
 
   public RedirectionAnswer createOutputData(GeneralXynaObject obj) {
-    //FIXME das ist sehr unschön. siehe bugz 8866
+    //FIXME das ist sehr unschï¿½n. siehe bugz 8866
     if (obj.getClass().getName().contains("Retry")) {
       return new RedirectionAnswer(Answers.RETRY);
     } else if (obj.getClass().getName().contains("Continue")) {

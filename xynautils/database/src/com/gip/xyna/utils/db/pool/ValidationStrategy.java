@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ public interface ValidationStrategy {
   public Exception validate(Connection con);
   
   /**
-   * in millisekunden: nach welcher zeit der nicht-benutzung im pool wird eine connection erneut überprüft, ob sie noch gültig ist.
-   * falls <=0 : überprüfung jedes mal
+   * in millisekunden: nach welcher zeit der nicht-benutzung im pool wird eine connection erneut ï¿½berprï¿½ft, ob sie noch gï¿½ltig ist.
+   * falls <=0 : ï¿½berprï¿½fung jedes mal
    * 
    */
   public void setValidationInterval(long validationInterval);
@@ -47,9 +47,9 @@ public interface ValidationStrategy {
 
   /**
    * Soll nach der fehlgeschlagenen Validierung eine neue Connection verwendet werden?
-   * Oder soll der Aufrufer über eine NoConnectionAvailableException informiert werden, 
+   * Oder soll der Aufrufer ï¿½ber eine NoConnectionAvailableException informiert werden, 
    * dass die Validierung fehlgeschlagen ist? 
-   * Üblicherweise (true) soll eine neue Connection verwendet werden.
+   * ï¿½blicherweise (true) soll eine neue Connection verwendet werden.
    * @return
    */
   public boolean rebuildConnectionAfterFailedValidation();

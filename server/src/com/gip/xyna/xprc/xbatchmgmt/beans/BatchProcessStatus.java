@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceStatus;
 public enum BatchProcessStatus {
   Planning,  //MasterWorkflow ist in Planning-Phase
   Waiting,   //BatchProcess wartet auf TimeConstraint, (seltener auf Capacities, Vetos), Wiederherstellung des BatchProcesses
-  Running,   //BatchProcess schedult gerade / BatchProcessMaster läuft
+  Running,   //BatchProcess schedult gerade / BatchProcessMaster lï¿½uft
   Disabled,  //BatchProcess ist pausiert
   Cancelled, //BatchProcess wurde abgebrochen
   Failed,    //BatchProcessMaster wurde mit Fehler beendet
-  Finished;  //BatchProcessMaster wurde erfolgreich ausgeführt
+  Finished;  //BatchProcessMaster wurde erfolgreich ausgefï¿½hrt
   
   
   public static BatchProcessStatus from(OrderInstanceStatus archiveStatus, OrderInstanceStatus currentStatus ) {

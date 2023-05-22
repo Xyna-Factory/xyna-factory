@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,7 +129,7 @@ public class UpdateOrderArchiveNewXynaExceptionInformation extends Update {
   @Override
   protected void update() throws XynaException {
 
-    // aufträge aus orderarchive lesen, aktualisieren und speichern
+    // auftrï¿½ge aus orderarchive lesen, aktualisieren und speichern
     Persistable p = Storable.getPersistable(OrderInstance.class);
     ODS ods = ODSImpl.getInstance();
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);

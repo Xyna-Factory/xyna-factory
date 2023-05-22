@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class PoolCreation {
     }
     
     ConnectionPool pool = null;
-    //TODO schöner!
+    //TODO schï¿½ner!
     for (ConnectionPool p : ConnectionPool.getAllRegisteredConnectionPools()) {
       if (p.getId().equals(conPoolName)) {
         pool = p;
@@ -66,8 +66,8 @@ public class PoolCreation {
         throw new RuntimeException(e);
       }
     }
-    //TODO schöneres Target!  username.queuename@db
-    //dafür muss ConnectionPool Daten ausgeben!
+    //TODO schï¿½neres Target!  username.queuename@db
+    //dafï¿½r muss ConnectionPool Daten ausgeben!
     //pool.getSchema()+"."+oac.getName_externalQueue()+"@"+pool.getDB();
     
     return Pair.of(pool, conPoolName);

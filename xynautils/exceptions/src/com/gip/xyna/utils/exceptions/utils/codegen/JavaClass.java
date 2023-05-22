@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ public class JavaClass {
     if (staticInitBlocks.size() > 0) {
       cb.addLine("static {");
       for (CodeBuffer staticInitBlock : staticInitBlocks) {
-        cb.addLine("{"); //lokale variablen ermöglichen
+        cb.addLine("{"); //lokale variablen ermï¿½glichen
         cb.add(staticInitBlock);
         cb.addLine("}");
       }
@@ -127,8 +127,8 @@ public class JavaClass {
 
 
   /**
-   * gibt den im code zu benutztenden string für diesen import zurück. d.h. falls bereits ein import mit dem gleichen
-   * simple name existiert, wird der fqname zurückgegeben, ansosnten der simplename
+   * gibt den im code zu benutztenden string fï¿½r diesen import zurï¿½ck. d.h. falls bereits ein import mit dem gleichen
+   * simple name existiert, wird der fqname zurï¿½ckgegeben, ansosnten der simplename
    * @param packageName
    * @param className
    * @return
@@ -140,7 +140,7 @@ public class JavaClass {
   }
 
   /**
-   * gibt true zurück, falls element vorhanden war.
+   * gibt true zurï¿½ck, falls element vorhanden war.
    * @return
    */
   public boolean removeImport(String fqName) {
@@ -162,7 +162,7 @@ public class JavaClass {
     }
     if (JavaGenUtils.getPackageNameFromFQName(fqClassName)
                     .equals(JavaGenUtils.getPackageNameFromFQName(this.fqClassName))) {
-      //kein import nötig, da gleiches package
+      //kein import nï¿½tig, da gleiches package
       return simpleName;
     }
     for (String imp : imports) {
@@ -177,7 +177,7 @@ public class JavaClass {
 
 
   /**
-   * führt addImport aus und gibt entsprechenden wert zurück
+   * fï¿½hrt addImport aus und gibt entsprechenden wert zurï¿½ck
    * @see #addImport(String, String)
    * @param fqClassName
    * @return
@@ -192,7 +192,7 @@ public class JavaClass {
 
 
   /**
-   * führt addImport aus und gibt entsprechenden wert zurück
+   * fï¿½hrt addImport aus und gibt entsprechenden wert zurï¿½ck
    * @see #addImport(String, String)
    * @param fqSuperClassName
    * @return

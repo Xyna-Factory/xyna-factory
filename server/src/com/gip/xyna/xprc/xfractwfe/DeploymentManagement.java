@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,11 +124,11 @@ import com.gip.xyna.xprc.xsched.ordersuspension.SuspendOrdertypeBean;
 
 
 /**
- * - bietet Hilfsfunktionen, um prüfen zu können, ob Workflows in Benutzung sind
+ * - bietet Hilfsfunktionen, um prï¿½fen zu kï¿½nnen, ob Workflows in Benutzung sind
  * - koordiniert die DeploymentProcesses
  * - jedes Deployment meldet sich mittels addDeployment an
- * - wenn ein DeploymentProcess bereits erzeugt wurde und dieser noch in der Prüfungsphase ist,
- *   wird das Deployment an diesen DeploymentProcess angehängt - im anderen Fall wird ein neuer (wartener)
+ * - wenn ein DeploymentProcess bereits erzeugt wurde und dieser noch in der Prï¿½fungsphase ist,
+ *   wird das Deployment an diesen DeploymentProcess angehï¿½ngt - im anderen Fall wird ein neuer (wartener)
  *   DeploymentProcess erzeugt
  */
 public class DeploymentManagement {
@@ -440,7 +440,7 @@ public class DeploymentManagement {
           //kein neues Deployment -> Deployment ist beendet worden
           return;
         } else {
-          //Deployment noch nicht möglich, weiter probieren
+          //Deployment noch nicht mï¿½glich, weiter probieren
           long now = System.currentTimeMillis();
           if( now > start + 10 * XynaProperty.DEPLOYMENT_RELOAD_TIMEOUT.getMillis() ) {
             XPRC_TimeoutWhileWaitingForUnaccessibleOrderException e = new XPRC_TimeoutWhileWaitingForUnaccessibleOrderException();
@@ -572,17 +572,17 @@ public class DeploymentManagement {
     try {
       failFastIfOrdertypeInOrderArchive();
       
-      //Pausieren der FQTasks TODO erst hier? oder zeitlich noch früher?
+      //Pausieren der FQTasks TODO erst hier? oder zeitlich noch frï¿½her?
       List<Long> activeFQTasks = getAffectedFqTasks(affectedWorkflowsPerProtectionMode.get(WorkflowProtectionMode.BREAK_ON_USAGE));
       XynaFactory.getInstance().getProcessing().getFrequencyControl().pauseFrequencyControlledTasks(activeFQTasks);
       getActiveDeploymentProcess().addPausedTaskIds(activeFQTasks);
 
-      //Welche Aufträge befinden sich derzeit im System?
+      //Welche Auftrï¿½ge befinden sich derzeit im System?
       Pair<Map<Presence, Set<WorkflowRevision>>, Map<WorkflowRevision, List<Long>>> pair = getWorkflowsPresentInSystem();
       Map<Presence, Set<WorkflowRevision>> workflowsPresentInSystem = pair.getFirst();
       Map<WorkflowRevision, List<Long>> suspendedOrders = pair.getSecond();
      
-      //Prüfen, ob die WorkflowProtectionMode eingehalten werden
+      //Prï¿½fen, ob die WorkflowProtectionMode eingehalten werden
       for( WorkflowProtectionMode wpm : WorkflowProtectionMode.getWorkflowProtectionModesOrderdByForce(true) ) {
         for( Map.Entry<Presence, Set<WorkflowRevision>> entry : workflowsPresentInSystem.entrySet() ) {
           WorkflowRevision failed = checkProtectionModeViolation(entry.getValue(), wpm);
@@ -595,11 +595,11 @@ public class DeploymentManagement {
       //Ermitteln der laufenden OrderTypes
       HashSet<WorkflowRevision> toSuspend = new HashSet<WorkflowRevision>();
       toSuspend.addAll(workflowsPresentInSystem.get(Presence.Execution));
-      toSuspend.addAll(workflowsPresentInSystem.get(Presence.Backup)); //könnte wegen Resume schon wieder laufen
+      toSuspend.addAll(workflowsPresentInSystem.get(Presence.Backup)); //kï¿½nnte wegen Resume schon wieder laufen
       logger.debug("all running OrderTypes "+toSuspend);
       toSuspend.retainAll( getAllProtectedWorkflows() );
       
-      //Sammeln der betroffenen suspendierten Aufträge im OrderBackup
+      //Sammeln der betroffenen suspendierten Auftrï¿½ge im OrderBackup
       HashSet<Long> suspendedOrderIds = new HashSet<Long>();
       for( WorkflowRevision wr : toSuspend ) {
         List<Long> list = suspendedOrders.get(wr);
@@ -607,12 +607,12 @@ public class DeploymentManagement {
           suspendedOrderIds.addAll(list);
         }
       }
-      //Sperren der suspendierten Aufträge im SuspendResumeManagement
+      //Sperren der suspendierten Auftrï¿½ge im SuspendResumeManagement
       logger.info("OrderIds prevented from resuming: "+suspendedOrderIds);
       XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getSuspendResumeManagement().addUnresumeableOrders(suspendedOrderIds);
-      //FIXME ist das hier evtl. schon zu spät?
+      //FIXME ist das hier evtl. schon zu spï¿½t?
       
-      //Im SuspendResumeManagement gesperrte Aufträge zum Entsperren speichern
+      //Im SuspendResumeManagement gesperrte Auftrï¿½ge zum Entsperren speichern
       getActiveDeploymentProcess().addPausedResumes(suspendedOrderIds);
       
       //Suspendieren der laufenden OrderTypes
@@ -680,7 +680,7 @@ public class DeploymentManagement {
   }
 
   /**
-   * suspendierbare OrderTypen suspendieren, damit sie beim Deployment nicht stören
+   * suspendierbare OrderTypen suspendieren, damit sie beim Deployment nicht stï¿½ren
    * @param workflowsPresentInSystem
    * @param suspendedOrderIds 
    * @param wpm
@@ -831,32 +831,32 @@ public class DeploymentManagement {
    * @param fromThisProcess
    */
   public void reloadAffectedOrders(DeploymentProcess fromThisProcess) {
-    //1. Analysieren aller Aufträge im Scheduler
-    //   a) betroffene Aufträge:
+    //1. Analysieren aller Auftrï¿½ge im Scheduler
+    //   a) betroffene Auftrï¿½ge:
     //      in Wartezustand WaitingCause.Deployment versetzen
-    //      UrgencyOrder merken für ReloadOrderBackup und zum Aufheben des WaitingCause
-    //   b) nicht betroffene Aufträge:
-    //      Id merken für ReloadOrderBackup
-    //2. Warten auf nicht-neuladbare Aufträge
-    //   Nun muss gewartet werden, dass keine Aufträge mehr an Stellen vorkommen, dan denen sie nicht
-    //   neu geladen werden können. Dies ist der Fall, wenn sie vom Planning oder Cleanup ausgeführt
-    //   werden oder wenn der OrderCount Aufträge in unsichtbaren Bereichen meldet.
-    //3. Analysieren aller an OrderFilter wartenden Aufträge
-    //   a) betroffene Aufträge:
-    //      XynaOrder merken für ReloadOrderBackup
-    //   b) nicht betroffene Aufträge:
-    //      Id merken für ReloadOrderBackup
+    //      UrgencyOrder merken fï¿½r ReloadOrderBackup und zum Aufheben des WaitingCause
+    //   b) nicht betroffene Auftrï¿½ge:
+    //      Id merken fï¿½r ReloadOrderBackup
+    //2. Warten auf nicht-neuladbare Auftrï¿½ge
+    //   Nun muss gewartet werden, dass keine Auftrï¿½ge mehr an Stellen vorkommen, dan denen sie nicht
+    //   neu geladen werden kï¿½nnen. Dies ist der Fall, wenn sie vom Planning oder Cleanup ausgefï¿½hrt
+    //   werden oder wenn der OrderCount Auftrï¿½ge in unsichtbaren Bereichen meldet.
+    //3. Analysieren aller an OrderFilter wartenden Auftrï¿½ge
+    //   a) betroffene Auftrï¿½ge:
+    //      XynaOrder merken fï¿½r ReloadOrderBackup
+    //   b) nicht betroffene Auftrï¿½ge:
+    //      Id merken fï¿½r ReloadOrderBackup
     //4. ReloadOrderBackup
     //   Suchen aller Backup-OrderIds
     //   FallUnterscheidung
     //   a) nicht betroffene Auftrag aus obigen Analysen -> nichts zu tun
-    //   b) betroffene Aufträge aus obigen Analysen -> reloadOrder(XynaOrder) in Memory und Backup
-    //   c) unbekannte Aufträge: -> Lesen des Backups mit SerialVersionUIDIgnoringReader, neues Backup falls betroffen
-    //   Rückgabe der XynaOrders, die nicht im Backup gefunden wurden
+    //   b) betroffene Auftrï¿½ge aus obigen Analysen -> reloadOrder(XynaOrder) in Memory und Backup
+    //   c) unbekannte Auftrï¿½ge: -> Lesen des Backups mit SerialVersionUIDIgnoringReader, neues Backup falls betroffen
+    //   Rï¿½ckgabe der XynaOrders, die nicht im Backup gefunden wurden
     //5. ReloadOrdersNotInBackup
     //   reloadOrder(XynaOrder) in Memory
     //6. weitere Reloads CronLikeOrders, FQ-Tasks
-    //7. Es könnten nun neue Aufträge am Planning-OrderFilter warten. Es ist jedoch unwahrscheinlich, dass
+    //7. Es kï¿½nnten nun neue Auftrï¿½ge am Planning-OrderFilter warten. Es ist jedoch unwahrscheinlich, dass
     //   diese noch nicht mit den neuen Klassen erstellt wurden. Daher werden diese jetzt nicht nochmal angeschaut.
     
     HashMap<DestinationKey,Boolean> affectedDestinationKeys = new HashMap<DestinationKey,Boolean>();
@@ -864,15 +864,15 @@ public class DeploymentManagement {
     Map<Long,XynaOrderServerExtension> affectedOrders = new HashMap<Long,XynaOrderServerExtension>();
     Set<Long> unaffectedOrderIds = new HashSet<Long>();
     
-    //1. Analysieren aller Aufträge im Scheduler
+    //1. Analysieren aller Auftrï¿½ge im Scheduler
     analyzeAllOrdersFromScheduler(affectedDestinationKeys, affectedOrders, unaffectedOrderIds);
     fromThisProcess.addPausedScheduling(affectedOrders.keySet());
-    //FIXME wieso erst im scheduler entnehmen und dann auf unreachable aufträge warten? wasist mit aufträgen,
-    //   die im scheduler ankommen, nachdem wir (im nächsten schritt) auf nicht-reloadable aufträge gewartet haben?
-    //2. Warten auf nicht-neuladbare Aufträge
+    //FIXME wieso erst im scheduler entnehmen und dann auf unreachable auftrï¿½ge warten? wasist mit auftrï¿½gen,
+    //   die im scheduler ankommen, nachdem wir (im nï¿½chsten schritt) auf nicht-reloadable auftrï¿½ge gewartet haben?
+    //2. Warten auf nicht-neuladbare Auftrï¿½ge
     waitUntilAllOrdersAreReloadable(affectedDestinationKeys);
     
-    //3. Analysieren aller an OrderFilter wartenden Aufträge -> Ermittlung der Affected Orders
+    //3. Analysieren aller an OrderFilter wartenden Auftrï¿½ge -> Ermittlung der Affected Orders
     analyzeAllOrdersForReload(fromThisProcess, affectedDestinationKeys, affectedOrders, unaffectedOrderIds);
 
     //4. ReloadOrderBackup
@@ -887,9 +887,9 @@ public class DeploymentManagement {
   }
 
   /**
-   * Wartet, bis alle Aufträge reloadbar sind oder ein (langes) Timeout erreicht wurde.
-   * Das Reload darf nicht einfach abgebrochen werden, das würde nur mehr Probleme machen als ein
-   * zu früh ausgeführtes Reload.
+   * Wartet, bis alle Auftrï¿½ge reloadbar sind oder ein (langes) Timeout erreicht wurde.
+   * Das Reload darf nicht einfach abgebrochen werden, das wï¿½rde nur mehr Probleme machen als ein
+   * zu frï¿½h ausgefï¿½hrtes Reload.
    *
    * @param affectedDestinationKeys
    */
@@ -925,15 +925,15 @@ public class DeploymentManagement {
       return true; //kein Process betroffen, daher fertig
     }
     if( timeout <= 0 ) {
-      return false; //Prozesse betroffen, aber kein Warten gewünscht
+      return false; //Prozesse betroffen, aber kein Warten gewï¿½nscht
     }
     long start = System.currentTimeMillis();
-    long sleep = Math.min(1000, timeout/10); //bei langen Timeouts jede Sekunde prüfen, bei kurzen Timeouts häufiger
+    long sleep = Math.min(1000, timeout/10); //bei langen Timeouts jede Sekunde prï¿½fen, bei kurzen Timeouts hï¿½ufiger
     do {
       try {
         Thread.sleep(sleep);
       } catch (InterruptedException e) {
-        //dann halt kürzer warten
+        //dann halt kï¿½rzer warten
       }
       affected = isRunningProcessAffected(affectedDestinationKeys,dispatcherType);
       if( !affected ) {
@@ -990,7 +990,7 @@ public class DeploymentManagement {
   }
 
   /**
-   * Update der im OrderBackup gefundenen Aufträge
+   * Update der im OrderBackup gefundenen Auftrï¿½ge
    * @param unaffectedOrderIds
    * @param affectedOrders
    * @return 
@@ -999,17 +999,17 @@ public class DeploymentManagement {
     ODS ods = ODSImpl.getInstance();
     ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
     try {
-      //Liste aller OrderIds im Backup: Es können keine weiteren betroffenen Aufträge ins Backup kommen außer
+      //Liste aller OrderIds im Backup: Es kï¿½nnen keine weiteren betroffenen Auftrï¿½ge ins Backup kommen auï¿½er
       //den bereits bekannten aus Scheduler und OrderFiltern
       List<Long> orderBackupIds = selectAllOrderBackupIds(con);
       int numberOfBackups = orderBackupIds.size();
       
-      //nicht betroffene orderBackups müssen nicht weiter beachtet werden
+      //nicht betroffene orderBackups mï¿½ssen nicht weiter beachtet werden
       orderBackupIds.removeAll(unaffectedOrderIds);
 
       logger.info(orderBackupIds.size() +" orderbackups out of "+numberOfBackups+" are affected");  
       
-      int batchSize = 50; //für Batch-Commit
+      int batchSize = 50; //fï¿½r Batch-Commit
       for( int i=0; i<orderBackupIds.size(); ++i ) {
         Long orderId = orderBackupIds.get(i);
         reloadOrder(con, affectedOrders.get(orderId), orderId);
@@ -1019,17 +1019,17 @@ public class DeploymentManagement {
           con.commit();
         }
       }
-      //Commit für Rest
+      //Commit fï¿½r Rest
       con.commit();
       
-      //alle bekannten betroffenen Aufträge ohne Backup rückmelden für Reload in Memory
+      //alle bekannten betroffenen Auftrï¿½ge ohne Backup rï¿½ckmelden fï¿½r Reload in Memory
       Set<Long> affectedNotInBackup = CollectionUtils.differenceSet(affectedOrders.keySet(), orderBackupIds);
       return CollectionUtils.valuesForKeys(affectedOrders, affectedNotInBackup);
      
     } catch (PersistenceLayerException e) {
       // don't abort, but we could need to delete the now probably corrupted entries
       logger.error("Error while retrieving orderBackup for reload", e);
-      //alle bekannten betroffenen Aufträge in Memory neuladen, um Schaden zu minimieren
+      //alle bekannten betroffenen Auftrï¿½ge in Memory neuladen, um Schaden zu minimieren
       return affectedOrders.values();
     } finally {
       try {
@@ -1076,10 +1076,10 @@ public class DeploymentManagement {
   
 
   /**
-   * Reload der XynaOrder, mit zwei Fällen:
+   * Reload der XynaOrder, mit zwei Fï¿½llen:
    * 1) XynaOrder in Memory gefunden -> reloadOrder und normales Backup
    * 2) XynaOrder nicht in Memory gefunden -> Austausch nur im OrderBackup
-   * Es ist kein SELECT_FOR_UPDATE nötig, da es keinen Thread geben kann und darf, der
+   * Es ist kein SELECT_FOR_UPDATE nï¿½tig, da es keinen Thread geben kann und darf, der
    * gleichzeitig auf das OrderBackup zugreift:
    * a) Resume ist gesperrt; b) laufende Prozesse sind suspendiert; c) Scheduler schedult nicht
    * d) OrderFilter blockieren weitere Stellen
@@ -1090,7 +1090,7 @@ public class DeploymentManagement {
    */
   private void reloadOrder(ODSConnection con, XynaOrderServerExtension xo, Long orderId) throws PersistenceLayerException {
     if( xo == null ) {
-      //Auftrag im Backup lesen und geändert backuppen, falls betroffen
+      //Auftrag im Backup lesen und geï¿½ndert backuppen, falls betroffen
       PreparedQuery<? extends SerialVersionIgnoringOrderInstanceBackup> oibQuery =
           queryCache.getQueryFromCache(selectOrderInstanceBackup, con,
                                        SerialVersionIgnoringOrderInstanceBackup.getSerialVersionIgnoringReader());
@@ -1248,7 +1248,7 @@ public class DeploymentManagement {
       logger.debug("myUsedWFs: " + myUsedWFs);
     }
 
-    // FIXME innen drin werden connections geholt, das kann zu deadlocks führen, wenn jemand mit einer connection
+    // FIXME innen drin werden connections geholt, das kann zu deadlocks fï¿½hren, wenn jemand mit einer connection
     //       das lock haben will
     entranceLock.lock();
     AtomicBoolean entranceLockLocked = new AtomicBoolean(true);
@@ -1310,11 +1310,11 @@ public class DeploymentManagement {
     DeploymentProcess activeDeployment = getActiveDeploymentProcess();
     try {
       if (activeDeployment != null &&
-          //wenn das deployment mit dem aktuellen thread bereits abgebrochen wurde (z.b. wegen laufender aufträge), ist nichts mehr zu tun
+          //wenn das deployment mit dem aktuellen thread bereits abgebrochen wurde (z.b. wegen laufender auftrï¿½ge), ist nichts mehr zu tun
           activeDeployment.participatingThreads.contains(Thread.currentThread().getId()) && 
           //evtl ist bereits ein cleanup am laufen, dann muss dieser thread nichts tun (kann das passieren? eigtl sollten ja alle an der cyclic barrier warten)
           !activeDeployment.someoneWantsToCleanUp.get() &&
-          //auf die anderen deployments warten und dann einen thread fürs cleanup auswählen
+          //auf die anderen deployments warten und dann einen thread fï¿½rs cleanup auswï¿½hlen
           activeDeployment.isDesignatedToCleanup()) {
         reloadAndCleanup(activeDeployment.getOrderFilters());
       }
@@ -1615,7 +1615,7 @@ public class DeploymentManagement {
 
         if (order.getXynaorder() == null) {
           //kann passieren, falls z.b. die xynaorder nicht deserialisierbar ist.
-          //das sollte aber dann hier nicht zu npes führen, schliesslich wird absichtlich
+          //das sollte aber dann hier nicht zu npes fï¿½hren, schliesslich wird absichtlich
           //der orderbackup-reader verwendet, der damit zurecht kommt.
 
           //so ein fehler wurde bereits vom factorywarehousecursor geloggt.
@@ -1678,10 +1678,10 @@ public class DeploymentManagement {
   }
 
   /**
-   * Überprüft, ob das übergebene objekt (inkl dem daran hängenden objektgraph von modellierten objekten) mit richtigem classloader geladen ist.
-   * der richtige classloader ist einer, der von der übergebenen rootRevision aus erreichbar ist.<p>
+   * ï¿½berprï¿½ft, ob das ï¿½bergebene objekt (inkl dem daran hï¿½ngenden objektgraph von modellierten objekten) mit richtigem classloader geladen ist.
+   * der richtige classloader ist einer, der von der ï¿½bergebenen rootRevision aus erreichbar ist.<p>
    * fall 1. bestehender classloader ist alt (passt zwar von der revision her, ist aber nicht aktuell)<p>
-   * fall 2. bestehender classloader gehört zu nicht erreichbarer revision<p>
+   * fall 2. bestehender classloader gehï¿½rt zu nicht erreichbarer revision<p>
    * <br>
    * falls classloader nicht richtig ist, wird das objekt neu mit dem passenden classloader geladen.
    */
@@ -1697,7 +1697,7 @@ public class DeploymentManagement {
          && (object instanceof GeneralXynaObject || object instanceof XynaProcess);
 
     if (recursionImPossible
-        || isUsedClassLoaderTheCurrentlyResponsibleForGivenRevision(object, rootRevision) //immer false (aber falls man an recursion(Im)Possible mal etwas ändert, passt es so immer noch
+        || isUsedClassLoaderTheCurrentlyResponsibleForGivenRevision(object, rootRevision) //immer false (aber falls man an recursion(Im)Possible mal etwas ï¿½ndert, passt es so immer noch
     ) {
       SerializableClassloadedObject wrapper =
           new SerializableClassloadedObject(object, getFactoryClassLoaderForObject(object, rootRevision));
@@ -1748,9 +1748,9 @@ public class DeploymentManagement {
         }
         return (O) newContainer;
         //} else if (object instanceof GeneralXynaObject) {
-        //Achtung, bei Rekursion müssen auch oldVersions von MemberVars berücksichtigt werden
+        //Achtung, bei Rekursion mï¿½ssen auch oldVersions von MemberVars berï¿½cksichtigt werden
         //} else if (object instanceof XynaProcess) {
-        //Achtung, bei Rekursion müssen auch ScopeSteps (For-Eaches) berücksichtigt werden. Evtl noch mehr?
+        //Achtung, bei Rekursion mï¿½ssen auch ScopeSteps (For-Eaches) berï¿½cksichtigt werden. Evtl noch mehr?
       }
 
       return object;
@@ -1928,7 +1928,7 @@ public class DeploymentManagement {
   }
 
   /**
-   * filter für alle aufträge einer revision, abzüglich interner aufträge ({@link XynaDispatcher#INTERNAL_ORDER_TYPES}
+   * filter fï¿½r alle auftrï¿½ge einer revision, abzï¿½glich interner auftrï¿½ge ({@link XynaDispatcher#INTERNAL_ORDER_TYPES}
    */
   private static class RevisionOrderFilter implements OrderFilter {
 
@@ -1978,7 +1978,7 @@ public class DeploymentManagement {
 
 
   /**
-   * auftragseingangsschnittstellen müssen bereits geschlossen sein.
+   * auftragseingangsschnittstellen mï¿½ssen bereits geschlossen sein.
    * internalorders werden ignoriert, weil sie keine deploybaren objekte verwenden.
    * @return true, falls in der revision auf diesem knoten irgendein auftrag am laufen ist
    */
@@ -2041,10 +2041,10 @@ public class DeploymentManagement {
         return true;
       }
 
-      //warten, bis keine aufträge mehr in den zwischenräumen sind und deploymentalgorithm alle solchen aufträge kennt.
+      //warten, bis keine auftrï¿½ge mehr in den zwischenrï¿½umen sind und deploymentalgorithm alle solchen auftrï¿½ge kennt.
       waitForUnreachableOrders();
 
-      //deploymentalgorithms checken (als letztes, weil aufträge könnten sich ja von oben geprüften stellen hierhin bewegen)
+      //deploymentalgorithms checken (als letztes, weil auftrï¿½ge kï¿½nnten sich ja von oben geprï¿½ften stellen hierhin bewegen)
       if (OrderFilterAlgorithmsImpl.getInstance().countFilteredBy(of) > 0) {
         return true;
       }
@@ -2067,9 +2067,9 @@ public class DeploymentManagement {
 
 
   /**
-   * gibt alle gerade laufenden aufträge (inkl der suspendierten) zurück und alle crons und alle frequencycontrolled tasks.
+   * gibt alle gerade laufenden auftrï¿½ge (inkl der suspendierten) zurï¿½ck und alle crons und alle frequencycontrolled tasks.
    * internalorders und crons die internalorders starten werden ignoriert.
-   * alles nur für die übergebene revision und ohne die aufträge auf dem anderen knoten.
+   * alles nur fï¿½r die ï¿½bergebene revision und ohne die auftrï¿½ge auf dem anderen knoten.
    */
   public OrdersInUse getInUse(long revision, FillingMode fillingMode) throws XPRC_TimeoutWhileWaitingForUnaccessibleOrderException, PersistenceLayerException {
     OrdersInUse result = new OrdersInUse(fillingMode);
@@ -2165,10 +2165,10 @@ public class DeploymentManagement {
         }
       }
 
-      //warten, bis keine aufträge mehr in den zwischenräumen sind und deploymentalgorithm alle solchen aufträge kennt.
+      //warten, bis keine auftrï¿½ge mehr in den zwischenrï¿½umen sind und deploymentalgorithm alle solchen auftrï¿½ge kennt.
       waitForUnreachableOrders();
 
-      //deploymentalgorithms checken (als letztes, weil aufträge könnten sich ja von oben geprüften stellen hierhin bewegen)
+      //deploymentalgorithms checken (als letztes, weil auftrï¿½ge kï¿½nnten sich ja von oben geprï¿½ften stellen hierhin bewegen)
       for (XynaOrderServerExtension xo : OrderFilterAlgorithmsImpl.getInstance().getOrdersHeldAtProcessors(of)) {
         if (of.isOrderToBeFiltered(xo)) {
           //Status anhand der XynaOrder bestimmen

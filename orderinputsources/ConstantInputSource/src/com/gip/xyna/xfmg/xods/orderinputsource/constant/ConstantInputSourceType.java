@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,13 +58,13 @@ public class ConstantInputSourceType implements OrderInputSourceType {
 
   private static final PluginDescription pluginDescription;
   private static final StringParameter<String> INPUT = StringParameter.typeString(PARA_PAYLOAD_XML)
-      .documentation(Documentation.en("Input XMOM objects of order").de("XMOM Objekte für den Input des Auftrags").build()).mandatory()
+      .documentation(Documentation.en("Input XMOM objects of order").de("XMOM Objekte fï¿½r den Input des Auftrags").build()).mandatory()
       .pattern(Pattern.compile(".*", Pattern.DOTALL)).label("Input data of order").build();
 
   private static final StringParameter<Integer> PRIO = StringParameter
       .typeInteger(PARA_PRIO)
       .documentation(Documentation.en("Priority of order (highest = 10, lowest = 1)")
-                         .de("Priorität des Auftrags von 1 (am niedrigsten) bis 10.").build()).optional().label("Priority of order")
+                         .de("Prioritï¿½t des Auftrags von 1 (am niedrigsten) bis 10.").build()).optional().label("Priority of order")
       .build();
 
   @SuppressWarnings("unchecked")
@@ -138,7 +138,7 @@ public class ConstantInputSourceType implements OrderInputSourceType {
                                                  String documentation) throws XynaException {
     String payload = (String) parameters.get(PARA_PAYLOAD_XML);
     //checken, ob ein wrapper-element um payload notwendig ist.
-    String check = "<Wrapper>" + payload + "</Wrapper>"; //TODO achtung, da könnte ein PI element in payload enthalten sein?!
+    String check = "<Wrapper>" + payload + "</Wrapper>"; //TODO achtung, da kï¿½nnte ein PI element in payload enthalten sein?!
     Document doc = XMLUtils.parseString(check);
     if (XMLUtils.getChildElements(doc.getDocumentElement()).size() == 1) {
       //alles gut
@@ -180,7 +180,7 @@ public class ConstantInputSourceType implements OrderInputSourceType {
         String simpleNameNew = GenerationBase.getSimpleNameFromFQName(fqNameNew);
         String pathNew = GenerationBase.getPackageNameFromFQName(fqNameNew);
 
-        String check = "<Wrapper>" + payload + "</Wrapper>"; //TODO achtung, da könnte ein PI element in payload enthalten sein?!
+        String check = "<Wrapper>" + payload + "</Wrapper>"; //TODO achtung, da kï¿½nnte ein PI element in payload enthalten sein?!
         Document doc = XMLUtils.parseString(check);
 
         List<Element> dataElements = XMLUtils.getChildElementsRecursively(doc.getDocumentElement(), GenerationBase.EL.DATA);
@@ -221,7 +221,7 @@ public class ConstantInputSourceType implements OrderInputSourceType {
         }
 
         if (changed) {
-          //neues xml in die parameter reinhängen
+          //neues xml in die parameter reinhï¿½ngen
           dataElements = XMLUtils.getChildElementsByName(doc.getDocumentElement(), GenerationBase.EL.DATA);
           payload = "";
           for (Element dataEl : dataElements) {

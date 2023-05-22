@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class StringDTO extends OBDTO implements OBDTOInterface {
 
   
   /**
-   * Liefert die Länge des enthaltenen Wertes.
+   * Liefert die Lï¿½nge des enthaltenen Wertes.
    * @return String-Laenge
    */
   public int length() {

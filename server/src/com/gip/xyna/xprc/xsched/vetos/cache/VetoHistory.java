@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public abstract class VetoHistory {
   public static final XynaPropertyInt HISTORY_SIZE = 
       new XynaPropertyInt("xprc.veto.cache_history_size", 0).
       setDefaultDocumentation(DocumentationLanguage.EN, "Size of state-history in each veto in cache: 0, 1, n").
-      setDefaultDocumentation(DocumentationLanguage.DE, "Länge der Status-Historie in jedem Veto im Cache: 0, 1, n");
+      setDefaultDocumentation(DocumentationLanguage.DE, "Lï¿½nge der Status-Historie in jedem Veto im Cache: 0, 1, n");
 
   private static final VetoHistory NONE = new VetoHistory() {
     @Override

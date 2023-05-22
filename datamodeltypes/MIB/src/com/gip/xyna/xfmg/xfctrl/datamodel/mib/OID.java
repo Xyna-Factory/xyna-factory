@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class OID implements TreeElement<OID>, Comparable<OID> {
   public boolean hasChild(OID possibleChild) {
     int min = oidInts.length;
     if( possibleChild.oidInts.length < min ) {
-      return false; //Child hat längere OID
+      return false; //Child hat lï¿½ngere OID
     }
     for( int i=0; i<min; ++i ) {
       if( oidInts[i] != possibleChild.oidInts[i] ) {

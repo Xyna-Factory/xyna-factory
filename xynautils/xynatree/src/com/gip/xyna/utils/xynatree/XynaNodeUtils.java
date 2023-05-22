@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,14 +48,14 @@ public class XynaNodeUtils {
     * Erzeugt ein XynaSchema aus dem Baum tree. Die Typen der XSD-Elemente
     * werden aus dem Typ des Wertes eines Knotens ermittelt. Falls der Wert
     * eines Knotens ein XMLObject ist, wird XMLObject.getType() benutzt. Falls
-    * nicht, wird versucht, den Typ möglichst genau zu ermitteln. Falls der Wert
+    * nicht, wird versucht, den Typ mï¿½glichst genau zu ermitteln. Falls der Wert
     * null ist, wird der Typ auf den STANDARD_XSD_TYPE gesetzt.
     * 
     * @param tree
     * @param namespace
-    *              gewünschter namespace
+    *              gewï¿½nschter namespace
     * @param minmaxOccursUnbounded
-    *              true => setzt für jedes Element minOcc = 0 und maxOcc =
+    *              true => setzt fï¿½r jedes Element minOcc = 0 und maxOcc =
     *              unbounded.
     * @return
     * @throws Exception
@@ -101,7 +101,7 @@ public class XynaNodeUtils {
             } else {
                String classname = node.getValue().getClass().getName();
                el.setType(XynaSchemaNode.getXSDTypeOfClassname(classname));
-               // TODO ggfs hier erweitern für beliebige objekte mittels
+               // TODO ggfs hier erweitern fï¿½r beliebige objekte mittels
                // reflection?!
                // und importierten Types/References?
             }

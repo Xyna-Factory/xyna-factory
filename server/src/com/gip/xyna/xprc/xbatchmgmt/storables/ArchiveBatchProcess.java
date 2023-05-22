@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceStatus;
 
 /**
  * WarehouseRetryExecutable, um ein BatchProcessRuntimeInformationStorable
- * zu löschen, nachdem das entsprechende BatchProcessArchiveStorable angelegt wurde.
+ * zu lï¿½schen, nachdem das entsprechende BatchProcessArchiveStorable angelegt wurde.
  *
  */
 public class ArchiveBatchProcess implements WarehouseRetryExecutableNoResult {
@@ -54,7 +54,7 @@ public class ArchiveBatchProcess implements WarehouseRetryExecutableNoResult {
   }
   
   public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-    //Es soll jetzt nichts mehr an den RuntimeInformations geändert werden.
+    //Es soll jetzt nichts mehr an den RuntimeInformations geï¿½ndert werden.
     runtimeInformation.getLock().lock();
     try {
       runtimeInformation.setUpdateAllowed(false);
@@ -71,14 +71,14 @@ public class ArchiveBatchProcess implements WarehouseRetryExecutableNoResult {
     batchProcessArchive.updateWithRestartInformation(restartInformation);
     con.persistObject(batchProcessArchive);
     
-    //BatchProcessRuntimeInformation Eintrag löschen
+    //BatchProcessRuntimeInformation Eintrag lï¿½schen
     con.deleteOneRow(runtimeInformation);
     
-    //BatchProcessCustomizationStorable Eintrag löschen
+    //BatchProcessCustomizationStorable Eintrag lï¿½schen
     con.deleteOneRow(customization);
     
-    //BatchProcessRestartInformationStorable Eintrag soll derzeit nicht gelöscht werden
-    //Daher sogar persistieren, um Änderungen zu behalten
+    //BatchProcessRestartInformationStorable Eintrag soll derzeit nicht gelï¿½scht werden
+    //Daher sogar persistieren, um ï¿½nderungen zu behalten
     con.persistObject(restartInformation);
     
     con.commit();

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 package com.gip.xyna.xprc.xfqctrl;
 
 /**
- * markerinterface für die parameter der algorithm-typen
+ * markerinterface fï¿½r die parameter der algorithm-typen
  */
 public interface FrequencyControlledTaskEventAlgorithmParameter {
 

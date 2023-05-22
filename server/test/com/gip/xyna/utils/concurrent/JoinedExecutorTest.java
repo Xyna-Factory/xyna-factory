@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public class JoinedExecutorTest extends TestCase {
     sleep(10);
     m2.start();
    
-    sleep(10); //wichtig, damit beide Thread laufen und in execute hängen
+    sleep(10); //wichtig, damit beide Thread laufen und in execute hï¿½ngen
     
     cdl.countDown();
     
@@ -131,7 +131,7 @@ public class JoinedExecutorTest extends TestCase {
     sleep(10);
     m2.start();
    
-    sleep(10); //wichtig, damit beide Thread laufen und in execute hängen
+    sleep(10); //wichtig, damit beide Thread laufen und in execute hï¿½ngen
     
     cdl.countDown();
     
@@ -195,7 +195,7 @@ public class JoinedExecutorTest extends TestCase {
     }
     
     //int expected = 200/3; //64 -66, schwankt leider 
-    //deswegen nicht prüfen assertEquals( expected, next);
+    //deswegen nicht prï¿½fen assertEquals( expected, next);
     
     assertEquals( next, lm.getNumResults() );
     System.out.println( counter);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,8 +131,8 @@ public class PriorityManagement extends FunctionGroup {
   
   /**
    * Mehrstufige Suche nach der Priority:
-   * 1. Suche nach Prio für (OrderType,Revision)
-   * 2. Übernahme der Priority aus copyPriorityFrom
+   * 1. Suche nach Prio fï¿½r (OrderType,Revision)
+   * 2. ï¿½bernahme der Priority aus copyPriorityFrom
    * 3. XynaProperty.CONFIGURABLE_DEFAULT_XYNAORDER_PRIORITY
    * 4. HARDCODED_DEFAULT_PRIORITY
    * @param orderType darf null sein
@@ -166,8 +166,8 @@ public class PriorityManagement extends FunctionGroup {
   }
   
   /**
-   * Setzt die Priority über {@link #determinePriority(String, Long, XynaOrderServerExtension)} mit 
-   * Übername der Priority aus der Parent-XynaOrder
+   * Setzt die Priority ï¿½ber {@link #determinePriority(String, Long, XynaOrderServerExtension)} mit 
+   * ï¿½bername der Priority aus der Parent-XynaOrder
    * @param xo
    */
   public void discoverPriority(XynaOrderServerExtension xo) {
@@ -232,7 +232,7 @@ public class PriorityManagement extends FunctionGroup {
   }
   
   /**
-   * @return konfigurierte priority oder null, falls nicht konfiguriert für den ordertype 
+   * @return konfigurierte priority oder null, falls nicht konfiguriert fï¿½r den ordertype 
    */
   public Integer getPriority(String orderType, Long revision) {
     priorityLock.readLock(orderType);

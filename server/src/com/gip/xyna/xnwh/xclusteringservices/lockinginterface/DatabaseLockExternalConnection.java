@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import com.gip.xyna.xnwh.xclusteringservices.lockinginterface.ClusterLockingInte
  * } catch( Exception e ) {
  *   databaseLock.rollback();
  * } finally {
- *   databaseLock.unlock(); //schließt con
+ *   databaseLock.unlock(); //schlieï¿½t con
  * }
  * 
  * 
@@ -143,7 +143,7 @@ public class DatabaseLockExternalConnection extends AbstractDatabaseLock {
         }
       }
     } finally {
-      //auf jeden Fall Reentrant-Lock zurückgeben
+      //auf jeden Fall Reentrant-Lock zurï¿½ckgeben
       super.unlock();
     }
   }

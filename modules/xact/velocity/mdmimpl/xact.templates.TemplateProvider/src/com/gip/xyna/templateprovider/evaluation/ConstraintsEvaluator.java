@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public final class ConstraintsEvaluator {
     }
 
     /**
-     * gibt score zurück, falls alle gruppen mindestens eine zutreffende constraint haben.
+     * gibt score zurï¿½ck, falls alle gruppen mindestens eine zutreffende constraint haben.
      * D.h. die Gruppen werden ge-UND-et, die Gruppenmitglieder ge-ODER-t.
      * @return
      */

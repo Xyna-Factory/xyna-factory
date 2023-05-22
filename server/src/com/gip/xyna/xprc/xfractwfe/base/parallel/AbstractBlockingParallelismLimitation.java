@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,15 @@ import com.gip.xyna.xprc.xpce.ordersuspension.ProcessSuspendedException;
 
 
 /**
- * Thread-Beschränkung mit blockierten Tasks: Solange der Task suspendiert ist, steht dem ParallelExecutor ein 
- * Thread weniger zu Verfügung.
+ * Thread-Beschrï¿½nkung mit blockierten Tasks: Solange der Task suspendiert ist, steht dem ParallelExecutor ein 
+ * Thread weniger zu Verfï¿½gung.
  * 
- * Dies ist beispielsweise sinnvoll, wenn zuwenig Capacities zu Verfügung stehen, so dass weitere Threads 
- * mit ihrem synchronen Subworkflow-Aufruf durch das Warten auf die Capacity blockiert würden. Dann sollen diese 
+ * Dies ist beispielsweise sinnvoll, wenn zuwenig Capacities zu Verfï¿½gung stehen, so dass weitere Threads 
+ * mit ihrem synchronen Subworkflow-Aufruf durch das Warten auf die Capacity blockiert wï¿½rden. Dann sollen diese 
  * Threads besser erst gar nicht nicht gestartet werden.
  * 
- * Über {@link #awaitLimitationNotZero()} wartet der FractalWorkflowParallelExecutor blockierend solange, bis 
- * ein Thread ausgeführt werden darf.
+ * ï¿½ber {@link #awaitLimitationNotZero()} wartet der FractalWorkflowParallelExecutor blockierend solange, bis 
+ * ein Thread ausgefï¿½hrt werden darf.
  * 
  */
 public abstract class AbstractBlockingParallelismLimitation implements ParallelismLimitation<FractalProcessStep<?>> {
@@ -50,7 +50,7 @@ public abstract class AbstractBlockingParallelismLimitation implements Paralleli
   private volatile CountDownLatch awaitNotZero;
   private volatile HashSet<String> blockingLaneIds;
   protected AtomicInteger maxThreadLimit = new AtomicInteger(); //ThreadLimit, welches von der Subklasse bestimmt wird
-  protected AtomicInteger threadLimit = new AtomicInteger(); //tatsächliches ThreadLimit unter Berücksichtigung der blockierten Lanes
+  protected AtomicInteger threadLimit = new AtomicInteger(); //tatsï¿½chliches ThreadLimit unter Berï¿½cksichtigung der blockierten Lanes
   
   public void setParallelExecutor(ParallelExecutor parallelExecutor) {
     this.parallelExecutor = parallelExecutor;
@@ -78,7 +78,7 @@ public abstract class AbstractBlockingParallelismLimitation implements Paralleli
     if (isBlocking) {
       taskToResume.setPriority(SuspendableParallelTask.PRIORITY_RESUME_BLOCKED);
       parallelExecutor.addTask(taskToResume);
-      changeThreadLimit(1); //ThreadLimit wieder erhöhen
+      changeThreadLimit(1); //ThreadLimit wieder erhï¿½hen
       if (logger.isDebugEnabled()) {
         logger.debug("Resuming blocking lane " + taskToResume.getLaneId() + ". threadlimit=" + parallelExecutor.getThreadLimit()
             + ", taskconsumerCnt=" + parallelExecutor.currentlyExecutingTasks());
@@ -110,9 +110,9 @@ public abstract class AbstractBlockingParallelismLimitation implements Paralleli
       }
     }
     synchronized (this) { 
-      //synchronized, damit zwischen dem lesen und schreiben nichts passieren kann. ansonstne könnte die reihenfolge sein
+      //synchronized, damit zwischen dem lesen und schreiben nichts passieren kann. ansonstne kï¿½nnte die reihenfolge sein
       //thread1 liest threadlimit
-      //thread2 ändert threadlimit
+      //thread2 ï¿½ndert threadlimit
       //thread2 schreibt threadlimit in PE
       //thread1 schreibt falsches threadlimit in PE
       parallelExecutor.setThreadLimit(threadLimit.get());
@@ -139,7 +139,7 @@ public abstract class AbstractBlockingParallelismLimitation implements Paralleli
       return true;
     } else {
       //TODO wenn alle slots blockiert sind, sollte man hier nicht ewig warten, sondern der fractalworkflowparallelexecutor sollte sich beenden/suspendieren.
-      //TODO später: wenn z.b. die kardinalität der kapazität vergrößert wird = maxthreadlimit vergrößert => suspendierten auftrag aufwecken!
+      //TODO spï¿½ter: wenn z.b. die kardinalitï¿½t der kapazitï¿½t vergrï¿½ï¿½ert wird = maxthreadlimit vergrï¿½ï¿½ert => suspendierten auftrag aufwecken!
       awaitNotZero = new CountDownLatch(1);
       try {
         if( logger.isDebugEnabled() ) {

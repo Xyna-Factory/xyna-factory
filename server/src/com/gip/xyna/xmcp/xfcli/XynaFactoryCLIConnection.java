@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -293,7 +293,7 @@ public class XynaFactoryCLIConnection extends XynaRunnable {
           //Parameter eintragen
           addToAllArgs(allArgs, mode, baos );
           if( mode == Mode.command ) {
-            //Abwärtskompatibilität für alte Übergabe: Weiterschalten zum nächsten Mode
+            //Abwï¿½rtskompatibilitï¿½t fï¿½r alte ï¿½bergabe: Weiterschalten zum nï¿½chsten Mode
             mode = Mode.args;
           }
           continue; //r nicht in baos eintragen
@@ -303,7 +303,7 @@ public class XynaFactoryCLIConnection extends XynaRunnable {
             //nur Command eintragen
             addToAllArgs(allArgs, mode, baos );
           }
-          mode = mode.next(); //weiterschalten zum nächsten Mode
+          mode = mode.next(); //weiterschalten zum nï¿½chsten Mode
           continue; //r nicht in baos eintragen
         }
         baos.write(r);
@@ -361,7 +361,7 @@ public class XynaFactoryCLIConnection extends XynaRunnable {
       clw = new CommandLineWriter(socket.getOutputStream());
     } catch( IOException e ) {
       logger.error("No communication with caller possible", e);
-      return; //TODO statt CLW zum versenden von nachrichten zu verwenden, CommandLineWriter umkonfigurieren auf Logging - trotzdem befehl ausführen!
+      return; //TODO statt CLW zum versenden von nachrichten zu verwenden, CommandLineWriter umkonfigurieren auf Logging - trotzdem befehl ausfï¿½hren!
     }
     if( allArgs == null ) {
       fillAllArgsFromSocket(socket);
@@ -485,11 +485,11 @@ public class XynaFactoryCLIConnection extends XynaRunnable {
                                      new Class[0]);
       String[] dependencies = (String[]) methodGetDependencies.invoke(null, new Object[0]);
       for (String dependency : dependencies) {
-        // TODO: besseren Dependency-Check für entsprechende Komponenten einbauen ...
+        // TODO: besseren Dependency-Check fï¿½r entsprechende Komponenten einbauen ...
         if (AXynaCommand.DEPENDENCIES_OPTION_NONE.equalsIgnoreCase(dependency)) {
           return true;
         } 
-        //TODO else dependency überprüfen
+        //TODO else dependency ï¿½berprï¿½fen
       }
     } catch (NoSuchMethodException e) {
       logger.warn("Could not call <" + generatedCommand.getCanonicalName() + "."
@@ -523,7 +523,7 @@ public class XynaFactoryCLIConnection extends XynaRunnable {
             clw.writeEndToCommandLine(ReturnCode.SUCCESS);
           } catch( CommandLineWriterIOException e ) {
             if( "java.net.SocketException: Socket closed".equals(e.getMessage()) ) {
-              //Command newCommand hat den OutputStream eigenhändig geschlossen!
+              //Command newCommand hat den OutputStream eigenhï¿½ndig geschlossen!
               clw.setEndWritten(true);
             } else {
               throw e; //andere weiterwerfen

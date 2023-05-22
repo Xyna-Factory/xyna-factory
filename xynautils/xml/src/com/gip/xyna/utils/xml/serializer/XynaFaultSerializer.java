@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class XynaFaultSerializer implements XMLSerializer {
     XMLDocument doc = parser.getDocument();
     NodeList xol = doc.getChildrenByTagName(XYNAFAULT, NS_FAULTS);
     if (xol.getLength() != 1) {
-      throw new Exception("XynaFault hat ungültiges Format. Element XynaFault nicht gefunden.");
+      throw new Exception("XynaFault hat ungï¿½ltiges Format. Element XynaFault nicht gefunden.");
     }
     xf = new XynaFault_ctype();
     XMLElement xfel = (XMLElement) xol.item(0);
@@ -72,7 +72,7 @@ public class XynaFaultSerializer implements XMLSerializer {
       if (childIsOptional) {
         return null;
       }
-      throw new Exception("Benötigtes Kindelement {" + ns + "}" + name + " nicht gefunden.");
+      throw new Exception("Benï¿½tigtes Kindelement {" + ns + "}" + name + " nicht gefunden.");
     }
     return ((XMLElement) xol.item(0)).getTextContent();
   }

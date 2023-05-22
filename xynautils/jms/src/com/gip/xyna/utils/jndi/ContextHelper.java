@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 
 /**
  * klasse zum einfacheren und sicheren erstellen von initialcontext.<br>
- * falls man den context des eigenen containers haben möchte, benötigt man diese helperklasse
+ * falls man den context des eigenen containers haben mï¿½chte, benï¿½tigt man diese helperklasse
  * nicht, sondern kann einfach <code>new InitialContext();</code> benutzen.<br>
  * benutzungsbeispiel:<br>
  * <code>
@@ -50,7 +50,7 @@ public class ContextHelper {
   }
 
   /**
-   * enumeration für die unterschiedlichen standard context factory types (oracle). <br>
+   * enumeration fï¿½r die unterschiedlichen standard context factory types (oracle). <br>
    * OAS_CLIENT = oracle.j2ee.naming.ApplicationClientInitialContextFactory zu benutzen, wenn die
    * klasse im OAS lebt.<br>
    * REMOTE_CLIENT = oracle.j2ee.rmi.RMIInitialContextFactory zu benutzen, wenn die klasse von ausserhalb
@@ -76,7 +76,7 @@ public class ContextHelper {
   private Hashtable<String, String> env = new Hashtable<String, String>();
 
   /**
-   * setzt (oder löscht bei null) den value für key Context.SECURITY_PRINCIPAL
+   * setzt (oder lï¿½scht bei null) den value fï¿½r key Context.SECURITY_PRINCIPAL
    * @param user
    */
   public void setOC4JUserName(String user) {
@@ -84,7 +84,7 @@ public class ContextHelper {
   }
 
   /**
-   * setzt (oder löscht bei null) den value für key Context.SECURITY_CREDENTIALS
+   * setzt (oder lï¿½scht bei null) den value fï¿½r key Context.SECURITY_CREDENTIALS
    * @param password
    */
   public void setOC4JPassword(String password) {
@@ -92,7 +92,7 @@ public class ContextHelper {
   }
 
   /**
-   * setzt (oder löscht bei null) den value für key Context.INITIAL_CONTEXT_FACTORY
+   * setzt (oder lï¿½scht bei null) den value fï¿½r key Context.INITIAL_CONTEXT_FACTORY
    * @param cf
    */
   public void setContextFactory(ContextFactoryType cf) {
@@ -100,7 +100,7 @@ public class ContextHelper {
   }
 
   /**
-   * setzt (oder löscht bei null) den value für key Context.INITIAL_CONTEXT_FACTORY
+   * setzt (oder lï¿½scht bei null) den value fï¿½r key Context.INITIAL_CONTEXT_FACTORY
    * @param cf
    */
   public void setContextFactory(String cf) {
@@ -108,7 +108,7 @@ public class ContextHelper {
   }
 
   /**
-   * setzt (oder löscht bei null) den value für key Context.PROVIDER_URL
+   * setzt (oder lï¿½scht bei null) den value fï¿½r key Context.PROVIDER_URL
    * @param providerUrl
    */
   public void setProviderUrl(String providerUrl) {
@@ -116,7 +116,7 @@ public class ContextHelper {
   }
 
   /**
-   * setzt (oder löscht bei null) den value für key Context.PROVIDER_URL im format <br>
+   * setzt (oder lï¿½scht bei null) den value fï¿½r key Context.PROVIDER_URL im format <br>
    * opmn:ormi://hostname:opmnport:oc4jname
    * @param hostname
    * @param opmnPort
@@ -157,7 +157,7 @@ public class ContextHelper {
   }
 
   /**
-   * möglichkeit zusätzliche parameter zu setzen
+   * mï¿½glichkeit zusï¿½tzliche parameter zu setzen
    * @param key
    * @param value
    */
@@ -184,7 +184,7 @@ public class ContextHelper {
 
   /**
    * loggt den Context Baum
-   * @param indent zusätzliche einrückung
+   * @param indent zusï¿½tzliche einrï¿½ckung
    * @param ctx der zu debuggende context
    * @param start start-knoten (zb. java:comp/env)
    * @param logger hier wird hingelogt

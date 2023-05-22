@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,13 +71,13 @@ public class XmomDataCreator {
   
   public static enum LabelCustomization implements DocumentedEnum {
     suffixForAttribute(Documentation.en("labels for attributes get this suffix").
-                       de("Labels für Attribute erhalten diesen Suffix").
+                       de("Labels fï¿½r Attribute erhalten diesen Suffix").
                        build()),
     suffixForOptional(Documentation.en("optional elements get this suffix").
-                      de("Labels für optionale Elemente erhalten diesen Suffix").
+                      de("Labels fï¿½r optionale Elemente erhalten diesen Suffix").
                       build()),
     uppercaseFirstLetter(Documentation.en("label starts with uppercase letter").
-                         de("Label beginnt mit Großbuchstaben").
+                         de("Label beginnt mit Groï¿½buchstaben").
                          build());
     private Documentation doc;
 
@@ -111,10 +111,10 @@ public class XmomDataCreator {
                      de("Pfad aus dem XSD-Namespace ohne Versionsnummern").
                      build()),
     type_prefix(Documentation.en("prefix from type name (till first uppercase letter)" ).
-                de("Prefix des Types, (bis zum ersten Großbuchstaben)").
+                de("Prefix des Types, (bis zum ersten Groï¿½buchstaben)").
                 build()),           
     type_suffix(Documentation.en("suffix from type name (from last uppercase letter)" ).
-                de("Suffix des Types, (ab dem letzten Großbuchstaben)").
+                de("Suffix des Types, (ab dem letzten Groï¿½buchstaben)").
                 build()),
                 ;
     
@@ -342,7 +342,7 @@ public class XmomDataCreator {
    *  - Ersetzen aller Separatoren durch "."
    *  - keine Separatoren am Beginn und Ende
    *  - alle Namen klein
-   *  - reservierte Namen mit RESERVED_SUFFIX ergänzt
+   *  - reservierte Namen mit RESERVED_SUFFIX ergï¿½nzt
    * @param path
    * @return
    */

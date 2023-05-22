@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -188,7 +188,7 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
   public abstract void visit( StepVisitor visitor );
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     // FractalProcessStep
     try {
       METHODNAME_COMPENSATE = FractalProcessStep.class.getDeclaredMethod(_METHODNAME_COMPENSATE_ORIG).getName();
@@ -806,7 +806,7 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
   //folgende methoden nicht rekursiv!
 
   /**
-   * enthält nicht this
+   * enthï¿½lt nicht this
    */
   public abstract List<Step> getChildSteps();
   protected abstract List<ServiceVariable> getServiceVariables();
@@ -818,7 +818,7 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
 
 
   public boolean replaceChild(Step oldChild, Step newChild) {
-    throw new UnsupportedOperationException(); //wird in Kindklassen teilweise ausführbar
+    throw new UnsupportedOperationException(); //wird in Kindklassen teilweise ausfï¿½hrbar
   }
 
 
@@ -843,11 +843,11 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
   }
 
   public void setLabel(String label) {
-    throw new UnsupportedOperationException(); //wird in Kindklassen teilweise ausführbar
+    throw new UnsupportedOperationException(); //wird in Kindklassen teilweise ausfï¿½hrbar
   }
   
   public String getLabel() {
-    throw new UnsupportedOperationException(); //wird in Kindklassen teilweise ausführbar
+    throw new UnsupportedOperationException(); //wird in Kindklassen teilweise ausfï¿½hrbar
   }
   
   protected void generatedGetRefIdMethod(CodeBuffer cb) {
@@ -1177,14 +1177,14 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
   }
 
   /**
-   * gibt ids von vars zurück, die in diesem schritt als input gelten. wird von stepcatch benutzt
+   * gibt ids von vars zurï¿½ck, die in diesem schritt als input gelten. wird von stepcatch benutzt
    */
   public String[] getInputVarIds() {
     return new String[0];
   }
 
   /**
-   * gibt ids von vars zurück, die in diesem schritt als output gelten. wird von stepcatch benutzt
+   * gibt ids von vars zurï¿½ck, die in diesem schritt als output gelten. wird von stepcatch benutzt
    */
   public String[] getOutputVarIds() {
     return new String[0];

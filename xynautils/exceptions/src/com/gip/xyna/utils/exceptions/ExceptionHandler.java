@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import com.gip.xyna._1_5.xsd.faults._1.XynaFault_ctype;
 
 
 /**
- * Klasse für das generische Exceptionhandling
+ * Klasse fï¿½r das generische Exceptionhandling
  * <p>
  * XynaFault hat im Feld "code" einen Xyna internen Fehlercode der Form "XYNA-12345", wobei die ersten 2 Ziffern
  * Xyna-Department spezifisch sein sollten.<br>
@@ -47,7 +47,7 @@ import com.gip.xyna._1_5.xsd.faults._1.XynaFault_ctype;
  * <p>
  * Entwickler: Im Code sollten Fehler geworfen werden, indem nur ihr Fehlercode angegeben wird (XynaException), sofern
  * es sich um eine statische Fehlermeldung handelt. Wenn die Fehler Parameter enthalten, werden die Parameter als
- * String-Array separat mitübergeben:<br>
+ * String-Array separat mitï¿½bergeben:<br>
  * <code>throw new
  * XynaException("XYNA-12345", "parameter1").initCause(e);</code><br>
  * Oder noch besser:<br>
@@ -60,19 +60,19 @@ import com.gip.xyna._1_5.xsd.faults._1.XynaFault_ctype;
  * <code>ExceptionHandler.handleException()</code> aufgerufen werden, welches je nach Einstellung die Fehlermeldung
  * generiert. Alternativ geht auch {@link #toXynaFault(Exception)} oder {@link XynaException#toXynaFault()}.
  * <p>
- * Features: Unterstützt unterschiedliche Sprachen, und eigene Filter zur Umwandlung von bestimmten Exceptions in
+ * Features: Unterstï¿½tzt unterschiedliche Sprachen, und eigene Filter zur Umwandlung von bestimmten Exceptions in
  * XynaFaults.
  * <p>
  * Anfangs wird versucht mittels {@link ExceptionStorage} FehlerCodes und Nachrichten aus zu initialisieren (aus XML
- * File oder ähnlichem, abhängig von der Implementierung)
+ * File oder ï¿½hnlichem, abhï¿½ngig von der Implementierung)
  */
 public class ExceptionHandler {
 
   private static final Logger logger = Logger.getLogger("xyna.utils.exceptions");
 
   /**
-   * Fehlernachrichten können Parameter in der Form %zahl% haben, wobei die Zahl angibt, der wievielte Parameter hier
-   * eingesetzt wird. Es wird mit 0 angefangen zu zählen.
+   * Fehlernachrichten kï¿½nnen Parameter in der Form %zahl% haben, wobei die Zahl angibt, der wievielte Parameter hier
+   * eingesetzt wird. Es wird mit 0 angefangen zu zï¿½hlen.
    * 
    * @see #getErrorParameterLocator(int)
    */
@@ -83,15 +83,15 @@ public class ExceptionHandler {
   private static final String ERRORMSG_UNKNOWN_EN = "Error was not caused by XynaException.";
 
   /**
-   * Hier steht drin: Welche Fehlermeldung gehört zu welchem Code. Für Mehrsprachlichkeit kann es für verschiedene
+   * Hier steht drin: Welche Fehlermeldung gehï¿½rt zu welchem Code. Fï¿½r Mehrsprachlichkeit kann es fï¿½r verschiedene
    * Sprachen Fehlermeldungen geben. Die HashMap ordnet dazu intern jedem Code eine Hashmap zu, die wiederum jeder
    * Sprache eine Fehlermeldung zuordnet: errorMessagesCache = new HashMap<String, HashMap<String, String>>();
    */
   private static ConcurrentMap<Long, ConcurrentMap<String, ConcurrentMap<String, String>>> errorMessagesCache = null;
   public static final String LANG_DE = "DE";
   public static final String LANG_EN = "EN";
-  private static final String LANG_ALL = "ALL"; // nur für internen Gebrauch, damit bei auch bei
-  // falsch eingestellter sprache sicher eine fehlermeldung zurückkommt.
+  private static final String LANG_ALL = "ALL"; // nur fï¿½r internen Gebrauch, damit bei auch bei
+  // falsch eingestellter sprache sicher eine fehlermeldung zurï¿½ckkommt.
 
   private static final long DEFAULT_REVISION = -1L;
   
@@ -142,7 +142,7 @@ public class ExceptionHandler {
 
 
   /**
-   * fügt einen eigenen ExceptionFilter zum Fehlerhandling hinzu. ExceptionFilter-Klassen müssen die Methode
+   * fï¿½gt einen eigenen ExceptionFilter zum Fehlerhandling hinzu. ExceptionFilter-Klassen mï¿½ssen die Methode
    * filterException() implementieren.
    * 
    * @see ExceptionFilter
@@ -154,7 +154,7 @@ public class ExceptionHandler {
 
 
   /**
-   * legt fest, in welcher Sprache Fehler standardmässig ausgegeben werden
+   * legt fest, in welcher Sprache Fehler standardmï¿½ssig ausgegeben werden
    * 
    * @see #LANG_DE
    * @see #LANG_EN
@@ -187,7 +187,7 @@ public class ExceptionHandler {
 
 
   /**
-   * cacht die übergebene Fehlernachricht zugeordnet zum Fehlercode für die aktuell eingestellte Sprache
+   * cacht die ï¿½bergebene Fehlernachricht zugeordnet zum Fehlercode fï¿½r die aktuell eingestellte Sprache
    * 
    * @param code
    * @param message
@@ -199,7 +199,7 @@ public class ExceptionHandler {
 
 
   /**
-   * cacht die übergebene Fehlernachricht zugeordnet zum Fehlercode für die übergebene Sprache
+   * cacht die ï¿½bergebene Fehlernachricht zugeordnet zum Fehlercode fï¿½r die ï¿½bergebene Sprache
    * 
    * @param code
    * @param message
@@ -425,7 +425,7 @@ public class ExceptionHandler {
 
 
   /**
-   * man kann zusätzlich die Sprache angeben, in der die Fehlermeldung erzeugt wird.
+   * man kann zusï¿½tzlich die Sprache angeben, in der die Fehlermeldung erzeugt wird.
    * 
    * @see #handleException(Exception)
    * @param e

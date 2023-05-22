@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ public class TypeGeneration {
           overwrite(generationParameter.isOverwrite()).
           build();
     } catch (XFMG_NoSuchRevision e) {
-      throw new RuntimeException(e); //sollte nie auftreten können
+      throw new RuntimeException(e); //sollte nie auftreten kï¿½nnen
     }
   }
 
@@ -222,7 +222,7 @@ public class TypeGeneration {
 
   /**
    * iteriert durch XSD-DOM-Baum und erzeugt Informationen ueber XSD-Struktur,
-   * die im Generator-Objekt gespeichert werden. Erzeugt die XMOMs und TypeMapping-Einträge.
+   * die im Generator-Objekt gespeichert werden. Erzeugt die XMOMs und TypeMapping-Eintrï¿½ge.
    */
   public void generateTypes() {
     typeInfoGenerator = new TypeInfoGenerator(generationParameter);
@@ -260,7 +260,7 @@ public class TypeGeneration {
   }
 
   /**
-   * speichert die tatsächlichen XMOM-Datentypen und die DatenModell-Daten
+   * speichert die tatsï¿½chlichen XMOM-Datentypen und die DatenModell-Daten
    */
   public boolean saveDataTypes_persistDataModel(DataModelResult dataModelResult, DataModelStorage dataModelStorage, DataModel dataModel, ImportParameter parameter) {
     if (parameter.getDistributeToWorkspaces()) {
@@ -412,7 +412,7 @@ public class TypeGeneration {
     List<String> errors = new ArrayList<String>();
         
     public boolean handleError(DOMError error) {
-      //hier schon auswerten, da DOMError recyclet wird (nur eine Instanz für alle Fehler)
+      //hier schon auswerten, da DOMError recyclet wird (nur eine Instanz fï¿½r alle Fehler)
       StringBuilder sb = new StringBuilder();
       
       

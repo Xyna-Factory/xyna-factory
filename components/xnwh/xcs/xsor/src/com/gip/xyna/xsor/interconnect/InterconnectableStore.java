@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public abstract class InterconnectableStore {
 
 
   /**
-   * Registrieren von XSORMemories unter einem typspezifischen (clusterübergreifend identischen) Dispatching-Codes
+   * Registrieren von XSORMemories unter einem typspezifischen (clusterï¿½bergreifend identischen) Dispatching-Codes
    */
   public synchronized void register(Interconnectable interconnectable) {
     Hashtable<Integer, Interconnectable> registeredXSORMemoryTemp =

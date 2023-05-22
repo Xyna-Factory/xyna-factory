@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public abstract class RuntimeContext implements Serializable, StringSerializable
 
 
   /**
-   * Vergleicht die Klassennamen miteinander, um z.B. Applications und Workspaces sortieren zu können
+   * Vergleicht die Klassennamen miteinander, um z.B. Applications und Workspaces sortieren zu kï¿½nnen
    * @param class1
    * @return
    */

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public abstract class OrderBackedUserAuthentication extends UserAuthentification
   @Override
   public Role authenticateUserInternally(String username, String password) throws XFMG_UserAuthenticationFailedException, XFMG_UserIsLockedException {
     int tries = 0;
-    //FIXME keine retries auf gleichen ldap server, wenn result sich nicht ändern kann
+    //FIXME keine retries auf gleichen ldap server, wenn result sich nicht ï¿½ndern kann
     do {
       Future<AuthenticationResult> execution = executor.submit(new OrderExecution(username, password, domain, tries));
       try {

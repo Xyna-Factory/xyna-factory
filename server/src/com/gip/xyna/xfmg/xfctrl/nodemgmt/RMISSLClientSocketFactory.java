@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,11 +66,11 @@ public class RMISSLClientSocketFactory implements RMIClientSocketFactory, Serial
   }
   
   /*
-   * TODO: pattern mit threadlocal und con-parameter allgemein zum rmi management umziehen und dort auch für die nicht-ssl-clientsocketfactory verwenden
+   * TODO: pattern mit threadlocal und con-parameter allgemein zum rmi management umziehen und dort auch fï¿½r die nicht-ssl-clientsocketfactory verwenden
    */
   public static class ClientSocketConnectionParameter {
     
-    private final String host; //Host und Port werden hier gespeichert, da der Server/Host evtl. nicht weiß, ...
+    private final String host; //Host und Port werden hier gespeichert, da der Server/Host evtl. nicht weiï¿½, ...
     private int port;    //... wie er vom Client aus erreichbar ist. (Port-Forwarding, NAT, 0.0.0.0, ...)
     //TODO port ist nicht im Konstruktor bekannt...
     private final String keystoreFileName;

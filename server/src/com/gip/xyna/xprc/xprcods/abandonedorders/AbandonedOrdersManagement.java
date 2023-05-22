@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,7 +163,7 @@ public class AbandonedOrdersManagement extends FunctionGroup {
     }
     
     // TODO weitere Regeln:
-    //        * Es existiert kein Serien-Vorgänger und man kann ausschließen, dass dieser noch kommt
+    //        * Es existiert kein Serien-Vorgï¿½nger und man kann ausschlieï¿½en, dass dieser noch kommt
     //        * Parentauftrag wartet auf ResponseListener, und Subauftrag ist irgendwie verstorben
 
   }
@@ -520,8 +520,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
     ODSConnection defaultCon = ODSImpl.getInstance().openConnection(ODSConnectionType.DEFAULT);
     try {
 
-      // zunächst alte Einträge löschen, die möglicherweise gar nicht mehr aktuell sind
-      // TODO falls man keine deep search anstellt, nur diese löschen, die durch eine nicht-deep search auch wieder
+      // zunï¿½chst alte Eintrï¿½ge lï¿½schen, die mï¿½glicherweise gar nicht mehr aktuell sind
+      // TODO falls man keine deep search anstellt, nur diese lï¿½schen, die durch eine nicht-deep search auch wieder
       //      gefunden werden!
       defaultCon.deleteAll(AbandonedOrderInformationStorable.class);
       defaultCon.persistCollection(realAbandonedOrders);
@@ -531,9 +531,9 @@ public class AbandonedOrdersManagement extends FunctionGroup {
     }
 
     // TODO Offene Punkte:
-    //        * sollten ab und zu diese orders gelöscht werden?
+    //        * sollten ab und zu diese orders gelï¿½scht werden?
     //        * wie kommt man an die abandoned orders ran, die mehr als "maxrows 100" entfernt liegen? gar nicht?
-    //        * (Anzahl der Regeln)*100 kann trotzdem viel sein. Auch die Gesamtzahl beschränken? Default geht ja
+    //        * (Anzahl der Regeln)*100 kann trotzdem viel sein. Auch die Gesamtzahl beschrï¿½nken? Default geht ja
     //          dann nach Memory.
 
 
@@ -563,9 +563,9 @@ public class AbandonedOrdersManagement extends FunctionGroup {
   }
 
 
-  //  Code-Snipped für das erzeugen von intentionally abandoned orders zu platzieren in MasterWorkflowPostScheduler::normalMasterWorkflow vor handleSuspension(e); :
+  //  Code-Snipped fï¿½r das erzeugen von intentionally abandoned orders zu platzieren in MasterWorkflowPostScheduler::normalMasterWorkflow vor handleSuspension(e); :
   //    if (xo.getOrderContext().getOrderType().equals("mk.Abandon")) {
-  //      throw new XNWH_GeneralPersistenceLayerException("ich habe bock drauf zu schmeißen");
+  //      throw new XNWH_GeneralPersistenceLayerException("ich habe bock drauf zu schmeiï¿½en");
   //    }
   //  Der Workflow sollte einen Wait-Schritt haben.
   
@@ -573,10 +573,10 @@ public class AbandonedOrdersManagement extends FunctionGroup {
       throws AbandonedOrderCouldNotBeStoredException {
 
     // TODO Diese Methode aufrufen, wenn z.B. in er Suspendierung eines Auftrags kein Zugriff mehr auf
-    //      die DB möglich ist. Danach wird dann wie bisher die OrderDeathException geworfen
+    //      die DB mï¿½glich ist. Danach wird dann wie bisher die OrderDeathException geworfen
 
     // diese Details nach HISTORY abspeichern, damit in der default-Konfiguration die Daten in XML aufbewahrt
-    // werden können. PL-Fehler nach außen propagieren, damit situationsabhängig darauf reagiert werden kann. 
+    // werden kï¿½nnen. PL-Fehler nach auï¿½en propagieren, damit situationsabhï¿½ngig darauf reagiert werden kann. 
 
     IntentionallyAbandonedOrderDetails newDetails =
         new IntentionallyAbandonedOrderDetails(abandonedRootOrder.getId(), abandonedRootOrder.getRootOrder().getId(), cause);
@@ -584,8 +584,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
         new AbandonedOrderInformationStorable(newDetails.getOrderID(), newDetails.getRootOrderID(), "intentionally", newDetails);
 
     if (!abandonedRootOrder.hasBeenBackuppedAtLeastOnce()) {
-      // TODO hier könnte man auch ein backup nachträglich in ALTERNATIVE erzeugen. Das wäre allerdings auch bei
-      //      Parallelitäten wieder problematisch.
+      // TODO hier kï¿½nnte man auch ein backup nachtrï¿½glich in ALTERNATIVE erzeugen. Das wï¿½re allerdings auch bei
+      //      Parallelitï¿½ten wieder problematisch.
       logger.warn("No backup of order " + abandonedRootOrder.getId()
           + " is available, a resume may not be possible later.");
     }
@@ -621,8 +621,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
 
 
   /**
-   * Spezialbehandlung für die intentionally abandoned orders: <li>Status für Auftrag korrigieren</li> <li>Status für
-   * alle Subaufträge ändern, die noch nicht fertig gelaufen sind</li> <li>Suspensionentries löschen (evtl lässt sich
+   * Spezialbehandlung fï¿½r die intentionally abandoned orders: <li>Status fï¿½r Auftrag korrigieren</li> <li>Status fï¿½r
+   * alle Subauftrï¿½ge ï¿½ndern, die noch nicht fertig gelaufen sind</li> <li>Suspensionentries lï¿½schen (evtl lï¿½sst sich
    * cleanupSuspensionEntries verwenden?)</li> <li>root-Auftrag wieder frisch in den Scheduler einstellen</li>
    * @throws XPRC_UnknownIntentionallyAbandonedOrderID if the passed rootorderid does not belong to an intentionally
    *           abandoned order
@@ -702,7 +702,7 @@ public class AbandonedOrdersManagement extends FunctionGroup {
       SuspendResumeManagement srm = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getSuspendResumeManagement();
       
       for (XynaOrderServerExtension xo : rootAndChildren) {
-        // capacities müssen freigegeben werden, weil sie im Scheduler wieder neu geholt werden.
+        // capacities mï¿½ssen freigegeben werden, weil sie im Scheduler wieder neu geholt werden.
         writeStatus("Freeing capacities for order " + xo.getId(), statusOutputStream);
         sched.getCapacityManagement().forceFreeCapacities(xo.getId());
         srm.cleanupSuspensionEntries(xo.getId());
@@ -731,8 +731,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
     }
 
     // TODO offene Fragen:
-    //        * muss es eine Sonderbehandlung für Aufträge geben, die in der compensation abandoned wurden?
-    //        * Ist eine sonderbehandlung für Serien erforderlich?
+    //        * muss es eine Sonderbehandlung fï¿½r Auftrï¿½ge geben, die in der compensation abandoned wurden?
+    //        * Ist eine sonderbehandlung fï¿½r Serien erforderlich?
   }
 
 

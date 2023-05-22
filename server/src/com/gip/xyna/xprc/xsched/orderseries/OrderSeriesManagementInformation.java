@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,11 +84,11 @@ public class OrderSeriesManagementInformation {
     Running, Paused, Finished;
   }
   
-  private int waitingOrders; //Anzahl der im OrderSeriesManagement wartenden Aufträge
-  private int readyOrders;   //Anzahl der im OrderSeriesManagement noch nicht eingestellten lauffähigen Aufträge
+  private int waitingOrders; //Anzahl der im OrderSeriesManagement wartenden Auftrï¿½ge
+  private int readyOrders;   //Anzahl der im OrderSeriesManagement noch nicht eingestellten lauffï¿½higen Auftrï¿½ge
   private int predecessorTreesSize; //Anzahl der gecachten Predecessor-Informationen
   
-  private int cacheSize;  //Größe des SeriesInformationStorable-Caches
+  private int cacheSize;  //Grï¿½ï¿½e des SeriesInformationStorable-Caches
   private int currentTasks; //aktuelle Anzahl wartender Tasks in der Queue 
   
   private List<WaitingOrder> waitingOrderList;

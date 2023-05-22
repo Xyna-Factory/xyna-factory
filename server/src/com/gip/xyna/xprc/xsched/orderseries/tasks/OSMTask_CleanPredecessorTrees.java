@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class OSMTask_CleanPredecessorTrees extends OSMTask {
       int sizeBefore = predecessorTrees.getNumberOfTrees();
       predecessorTrees.prune(ownBinding);
       int sizeAfter = predecessorTrees.getNumberOfTrees();
-      //ab und zu bleiben noch Leichen im OSMCache zurück
+      //ab und zu bleiben noch Leichen im OSMCache zurï¿½ck
       if( osmCache instanceof OSMCacheImpl ) {
         OSMCacheImpl osmCacheImpl = (OSMCacheImpl)osmCache;
         osmCacheImpl.lockAll();

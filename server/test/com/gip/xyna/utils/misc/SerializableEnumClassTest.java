@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class SerializableEnumClassTest extends TestCase {
     abc( Documentation.de("erste 3 Buchstaben des Alphabets").
                        en("first 3 letters of alphabet").
                        build() ), 
-    def( Documentation.de("Abkürzung für default").
+    def( Documentation.de("Abkï¿½rzung fï¿½r default").
                        en("abbreviation for default").
                        build() ), 
     ghi( Documentation.de("weitere drei Buchstaben").

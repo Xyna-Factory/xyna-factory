@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,10 @@ import com.gip.xyna.xact.rmi.RMIConnectionFailureException;
 import com.gip.xyna.xfmg.xclusteringservices.RMIClusterProvider.InvalidIDException;
 
 /**
- * Sammlung aller benötigten Daten <code>(clusterInstance, rmiInterfaceId, runnable)</code> 
+ * Sammlung aller benï¿½tigten Daten <code>(clusterInstance, rmiInterfaceId, runnable)</code> 
  * sowie der Spezialisierungen 
  * <code>(localImpl, connectionFailureValue, noConHandler, addConnectionFailureValue)</code> mit Defaults.
- * Eigentliche Ausführung über {@link #executeAndCumulate()} bzw. {@link #executeAndCumulateNoException()}
+ * Eigentliche Ausfï¿½hrung ï¿½ber {@link #executeAndCumulate()} bzw. {@link #executeAndCumulateNoException()}
  *
  * @param <R> Result
  * @param <I> RMI-Interface
@@ -73,7 +73,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   }
   
   /**
-   * Ausführung der gewünschten Methode auf dem übergebenen rmiInterface
+   * Ausfï¿½hrung der gewï¿½nschten Methode auf dem ï¿½bergebenen rmiInterface
    * @param rmiInterface
    * @return
    * @throws E
@@ -104,7 +104,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   }
 
   /**
-   * Ausführen des Remote-Aufrufs und evtl. des lokalen Aufrufs, Sammeln der Ergebnisse in einer List
+   * Ausfï¿½hren des Remote-Aufrufs und evtl. des lokalen Aufrufs, Sammeln der Ergebnisse in einer List
    * @return
    * @throws E
    * @throws InvalidIDException
@@ -112,7 +112,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   public List<R> executeAndCumulate() throws E, InvalidIDException {
     List<R> result = new ArrayList<R>();
 
-    // TODO lokalen call und remote calls parallel in mehreren threads ausführen
+    // TODO lokalen call und remote calls parallel in mehreren threads ausfï¿½hren
     if (localImpl != null) {
       addLocalValue(result);
     }
@@ -124,8 +124,8 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   }
   
   /**
-   * Ausführen des Remote-Aufrufs und evtl. des lokalen Aufrufs, Sammeln der Ergebnisse in einer List,
-   * Unterdrücken der nicht erwarteten XynaException 
+   * Ausfï¿½hren des Remote-Aufrufs und evtl. des lokalen Aufrufs, Sammeln der Ergebnisse in einer List,
+   * Unterdrï¿½cken der nicht erwarteten XynaException 
    * @return
    * @throws InvalidIDException
    */
@@ -139,7 +139,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   }
   
   /**
-   * Hinzufügen des lokalen Ergebnisses
+   * Hinzufï¿½gen des lokalen Ergebnisses
    * @param result
    * @throws E
    */
@@ -153,7 +153,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   }
 
   /**
-   * Hinzufügen des remote Ergebnisses
+   * Hinzufï¿½gen des remote Ergebnisses
    * @param result
    * @param rmiAdapter
    * @throws E
@@ -174,7 +174,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   }
 
   /**
-   * Hinzufügen des Fehler-Ergebnisses
+   * Hinzufï¿½gen des Fehler-Ergebnisses
    * @param result
    */
   protected void addFailureValue(List<R> result) {
@@ -184,7 +184,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   }
   
   /**
-   * Ausführen des Remote-Aufrufs, über Property konfigurierte Wiederholung im Fehlerfall
+   * Ausfï¿½hren des Remote-Aufrufs, ï¿½ber Property konfigurierte Wiederholung im Fehlerfall
    * @param rmiAdapter
    * @return
    * @throws E
@@ -196,7 +196,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
     int maxAttempts = Math.max(0, RMIClusterProvider.RMI_RETRY_ATTEMPTS.get() );
     Exception lastException = null;
     
-    for( int r=RETRY_CNT_START; r<maxAttempts; ++r ) { //Start bei -1: erste Ausführung ist kein Retry!
+    for( int r=RETRY_CNT_START; r<maxAttempts; ++r ) { //Start bei -1: erste Ausfï¿½hrung ist kein Retry!
       Pair<R,Exception> result = executeRetry( r, rmiAdapter );
       
       if( result == null ) {
@@ -223,20 +223,20 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
     }
   }
 
-  private static final int RETRY_CNT_START = -1; //nicht ändern, weil oben die logmeldung davon abhängt, dass das -1 ist
+  private static final int RETRY_CNT_START = -1; //nicht ï¿½ndern, weil oben die logmeldung davon abhï¿½ngt, dass das -1 ist
 
-  //  könnte man ändern:
+  //  kï¿½nnte man ï¿½ndern:
   private static final int FIRST_RETRY_CNT__TO_SLEEP = 1;
   private static final int FIRST_RETRY_CNT__TO_RECONNECT = 0;
   
   /**
-   * Remote-Ausführung: Evtl. warten bei Retries; Holen des RMI-Interfaces; Ausführen des RMI-Calls
-   * Wenn Fehler auftreten, wird die Exception entweder im Pair zurückgegeben, wenn ein Retry versucht werden soll, 
+   * Remote-Ausfï¿½hrung: Evtl. warten bei Retries; Holen des RMI-Interfaces; Ausfï¿½hren des RMI-Calls
+   * Wenn Fehler auftreten, wird die Exception entweder im Pair zurï¿½ckgegeben, wenn ein Retry versucht werden soll, 
    * ansonsten wird sie geworfen.
    * 
    * @param retry
    * @param rmiAdapter
-   * @return Pair&lt;R, Exception> null: Retries abbrechen, ansonsten Ergebnis oder Exceptiuon, die zum Retry führt;
+   * @return Pair&lt;R, Exception> null: Retries abbrechen, ansonsten Ergebnis oder Exceptiuon, die zum Retry fï¿½hrt;
    * @throws RMIConnectionDownException
    * @throws RemoteException
    * @throws E
@@ -263,7 +263,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
       start = logTimeStamp(start, "connectWithReconnectTrys");
     }
     
-    //Ausführen des RMI-Calls
+    //Ausfï¿½hren des RMI-Calls
     Pair<R,Exception> result = null;
     try {
       result = tryExecute(remoteImpl);
@@ -294,7 +294,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   }
   
   /**
-   * Ausführen des eigentlichen Remote-Calls: Exceptions die zum Retry führen werden gefangen und im Pair ausgegeben;
+   * Ausfï¿½hren des eigentlichen Remote-Calls: Exceptions die zum Retry fï¿½hren werden gefangen und im Pair ausgegeben;
    * Fehler, bei denen ein Retry nicht sinnvoll ist, werden weitergeworfen. 
    * @param remoteImpl
    * @return Pair&lt;R,Exception>
@@ -308,7 +308,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
       return Pair.of(result, null);
     } catch (NoSuchObjectException e) {
       /*
-       * fehler passiert, wenn zb auf der gegenseite das exportierte objekt sich geändert hat. regelmässig
+       * fehler passiert, wenn zb auf der gegenseite das exportierte objekt sich geï¿½ndert hat. regelmï¿½ssig
        * passiert das beim deployment bei classreloadable-rmi-objekten, zb manualinteractionmgmt.
        * siehe auch bugz 12394
        * helfen tut in diesem fall eine neu-erstellung des remote stubs
@@ -339,7 +339,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
 
   /**
    * Verbindungsaufbau: Holen der Remote-Implementierung des RmiInterface.
-   * Bei Fehlern wird ein unverzüglicher Retry probiert, weitere Retries muss 
+   * Bei Fehlern wird ein unverzï¿½glicher Retry probiert, weitere Retries muss 
    * der RMIConnectionNotAvailableHandler versuchen
    * @param rmiAdapter
    * @return
@@ -348,7 +348,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
   private I connectWithReconnectTrys(GenericRMIAdapter<I> rmiAdapter, boolean forceReconnect) throws RMIConnectionDownException {
 
     if (!forceReconnect) {
-      //RmiInterface holen und zurückgeben
+      //RmiInterface holen und zurï¿½ckgeben
       try {
         return rmiAdapter.getRmiInterface();
       } catch (RMIConnectionFailureException e) {
@@ -356,7 +356,7 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
       }
     }
 
-    //nicht erfolgreich, daher unverzüglicher Reconnect
+    //nicht erfolgreich, daher unverzï¿½glicher Reconnect
     try {
       rmiAdapter.reconnect();
       return rmiAdapter.getRmiInterface();
@@ -364,23 +364,23 @@ public abstract class RMIRetryExecutor<R, I extends Remote, E extends XynaExcept
       logger.info("immediate reconnect to " + e.getCode() + " failed"); //FIXME RMIConnectionFailureException ist kaputte XynaException
     }
 
-    //nicht erfolgreich, handler muss sich um das weitere Vorgehen kümmern 
+    //nicht erfolgreich, handler muss sich um das weitere Vorgehen kï¿½mmern 
     return noConHandler.getRmiImpl(clusterInstance, rmiAdapter);
   }
 
 
   /**
    * Default-Implementierung des RMIConnectionNotAvailableHandler-Interfaces:
-   * Es werden über Properties konfiguriert Retries ausgeführt.
+   * Es werden ï¿½ber Properties konfiguriert Retries ausgefï¿½hrt.
    * Vor jedem Retry wird erst gewartet, dann ein 
-   * {@link com.gip.xyna.xfmg.xclusteringservices.RMIClusterProvider#checkInterconnect()} ausgeführt.
+   * {@link com.gip.xyna.xfmg.xclusteringservices.RMIClusterProvider#checkInterconnect()} ausgefï¿½hrt.
    */
   private static class DefaultRMIConnectionNotAvailableHandler implements RMIConnectionNotAvailableHandler {
 
     private RepeatedExceptionCheck repeatedExceptionCheck; //TODO static? 
     
     public <I extends Remote> I getRmiImpl(RMIClusterProvider clusterInstance, GenericRMIAdapter<I> rmiAdapter) throws RMIConnectionDownException {
-      //verzögerte Reconnects und Anfragen an ClusterProvider
+      //verzï¿½gerte Reconnects und Anfragen an ClusterProvider
       
       int retryCounter = 0;
       ClusterState clusterState;

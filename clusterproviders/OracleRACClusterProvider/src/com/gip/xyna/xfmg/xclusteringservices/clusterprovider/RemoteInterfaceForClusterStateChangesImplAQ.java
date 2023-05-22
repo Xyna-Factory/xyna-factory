@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class RemoteInterfaceForClusterStateChangesImplAQ implements RemoteInterf
   }
   
   /**
-   * wartezeit auf antworten, falls über aq kommuniziert wird
+   * wartezeit auf antworten, falls ï¿½ber aq kommuniziert wird
    */
   public static int ANSWER_TIMEOUT = 5;
   /**
@@ -188,7 +188,7 @@ public class RemoteInterfaceForClusterStateChangesImplAQ implements RemoteInterf
     boolean success = false;
     try {
       Logger localLogger = logger;
-      if (true) { //TODO konfigurierbar, ob logger oder null übergeben wird, um loghierarchy steuern zu können
+      if (true) { //TODO konfigurierbar, ob logger oder null ï¿½bergeben wird, um loghierarchy steuern zu kï¿½nnen
         localLogger = null;
       }
       final SQLUtilsLogger infoLogger = new DefaultSQLUtilsLogger(localLogger, dbProblemHandler, Level.INFO);
@@ -260,7 +260,7 @@ public class RemoteInterfaceForClusterStateChangesImplAQ implements RemoteInterf
                 + ": " + t.getMessage(), t);
           }
           if (!running) {
-            continue; //Thread soll beendet werden, daher zurück zum while
+            continue; //Thread soll beendet werden, daher zurï¿½ck zum while
           }
           //connection neu aufmachen
           while( running && !reopenConnection() ) {
@@ -481,7 +481,7 @@ public class RemoteInterfaceForClusterStateChangesImplAQ implements RemoteInterf
         } catch (TimeoutException e2) {
           //Oh, die Nachricht wurde doch schon entfernt!
 
-          //ist die Antwort doch noch verspätet eingetroffen?
+          //ist die Antwort doch noch verspï¿½tet eingetroffen?
           try {
             answerMsg = getNextMessage(sqlUtils, 0, "corrId = '" + corrIdRes + "'", cs);
             //OK, Antwort erhalten
@@ -620,14 +620,14 @@ public class RemoteInterfaceForClusterStateChangesImplAQ implements RemoteInterf
           }
         }
         catch (InterruptedException e) {
-          //Exception ingorieren: dann halt kürzer warten
+          //Exception ingorieren: dann halt kï¿½rzer warten
         }
         now = System.currentTimeMillis();
       }
       if( ! canceled ) {
         //Der erwartete CONNECT kam nun nach dem Timeout nicht. 
         //Es kann davon ausgegangen werden, dass der andere Knoten verstorben ist, 
-        //daher wird nun ein Übergang nach DISCONNECTED_MASTER versucht.
+        //daher wird nun ein ï¿½bergang nach DISCONNECTED_MASTER versucht.
 
         if (logger.isInfoEnabled()) {
           logger.info("No connect with other node after " + timeout

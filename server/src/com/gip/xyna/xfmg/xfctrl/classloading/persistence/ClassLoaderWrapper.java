@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ import com.gip.xyna.CentralFactoryLogging;
 
 
 /**
- * sort dafür, dass {@link ContainerClass} von diesem classloader geladen wird, und das laden nicht delegiert wird. nur
- * das laden von abhängigen klassen wird an den parent delegiert.
+ * sort dafï¿½r, dass {@link ContainerClass} von diesem classloader geladen wird, und das laden nicht delegiert wird. nur
+ * das laden von abhï¿½ngigen klassen wird an den parent delegiert.
  */
 public class ClassLoaderWrapper extends ClassLoader {
 
@@ -51,7 +51,7 @@ public class ClassLoaderWrapper extends ClassLoader {
 
     // only exists during Testcases. at least dont check for directory existence every time in production environment.
  /*   if (EXECUTION_DURING_TESTS) {
-      if (new File("classes.test").exists()) { //FIXME: das gehört nicht in den produktivcode
+      if (new File("classes.test").exists()) { //FIXME: das gehï¿½rt nicht in den produktivcode
         try {
           addURL(new File("deploy/xynaserver.jar").toURI().toURL());
         } catch (MalformedURLException e) {
@@ -105,11 +105,11 @@ public class ClassLoaderWrapper extends ClassLoader {
     Class<?> c = findLoadedClass(name);
     if (c == null) {
       if (name.equals(ContainerClass.class.getName())) {
-        //dafür ist der classloader wrapper gedacht: die containerklasse nicht mit einem fremden classloader laden,
-        //sondern mit diesem, damit man kontrolle über die parent-classloader hat
+        //dafï¿½r ist der classloader wrapper gedacht: die containerklasse nicht mit einem fremden classloader laden,
+        //sondern mit diesem, damit man kontrolle ï¿½ber die parent-classloader hat
         c = findClass(name);
       } else {
-        //alle anderen klassen können nun delegiert werden, automatisch zuerst an den gewünschten parent-classloader
+        //alle anderen klassen kï¿½nnen nun delegiert werden, automatisch zuerst an den gewï¿½nschten parent-classloader
         //und von dort falls unbekannt zum applicationclassloader hin...
 
         for (URLClassLoader parent : allParents) {

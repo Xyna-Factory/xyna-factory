@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public class LockManagement extends FunctionGroup implements LockManagementPorta
       } else { // jemand versucht Lock zu holen und Lock existiert schon
         if (lock.getUser() == null || lock.getUser().equals(creator)) {
           if (lock.getSessionId().equals(sessionId)) {
-            return true; // reentrant FIXME das führt zu fälschlichen Fehlermeldungen "Autosave not locked", wenn man zwei separate threads mit der gleichen sessionid hat
+            return true; // reentrant FIXME das fï¿½hrt zu fï¿½lschlichen Fehlermeldungen "Autosave not locked", wenn man zwei separate threads mit der gleichen sessionid hat
           } else {
             SessionDetails lockingSession = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement().getSessionDetails(lock.getSessionId());
             SessionDetails newSession = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement().getSessionDetails(sessionId);

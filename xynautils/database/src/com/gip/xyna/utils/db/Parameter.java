@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class Parameter implements Iterable<Object> {
   }
         
   /**
-   * Eintragen des übergebenen Objects
+   * Eintragen des ï¿½bergebenen Objects
    * @param p
    * @throws UnexpectedParameterException, bei unbekanntem Parametertyps
    */
@@ -98,7 +98,7 @@ public class Parameter implements Iterable<Object> {
   }
   
   /**
-   * @param index, Zählung beginnt bei 1
+   * @param index, Zï¿½hlung beginnt bei 1
    * @return
    */
   public Object getParameter( int index ) {
@@ -106,7 +106,7 @@ public class Parameter implements Iterable<Object> {
   }
   
   /**
-   * @param index, Zählung beginnt bei 1
+   * @param index, Zï¿½hlung beginnt bei 1
    * @return
    */
   public boolean isOutputParam( int index ) {
@@ -174,7 +174,7 @@ public class Parameter implements Iterable<Object> {
   protected void addParameterTo(PreparedStatement stmt, int pos, Object param)
         throws SQLException {
      if ( param == null ) {
-       stmt.setNull(pos, Types.VARCHAR ); //VARCHAR sollte überall funktionieren
+       stmt.setNull(pos, Types.VARCHAR ); //VARCHAR sollte ï¿½berall funktionieren
        return;
      }
      if (param instanceof String) {

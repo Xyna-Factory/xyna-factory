@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class UpdateConfigureTriggerConfigurationPersistenceLayerToXml extends Up
     ODS ods = ODSImpl.getInstance();
     ods.registerStorable(TriggerConfigurationStorable.class);
     
-    //Überprüfen, ob bereits persistent konfiguriert
+    //ï¿½berprï¿½fen, ob bereits persistent konfiguriert
     ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
     try {
       Collection<TriggerConfigurationStorable> collection = con.loadCollection(TriggerConfigurationStorable.class);
@@ -63,8 +63,8 @@ public class UpdateConfigureTriggerConfigurationPersistenceLayerToXml extends Up
       con.closeConnection();
     }
     
-    //TriggerConfiguration auf die XMLPersistenceLayerInstanz für XynaActivation konfigurieren
-    //(wird in UpdateTriggerFilterUseNewPersistence für Trigger und Filter angelegt)
+    //TriggerConfiguration auf die XMLPersistenceLayerInstanz fï¿½r XynaActivation konfigurieren
+    //(wird in UpdateTriggerFilterUseNewPersistence fï¿½r Trigger und Filter angelegt)
     Long targetXmlPlID = null;
     for (PersistenceLayerInstanceBean bean : ods.getPersistenceLayerInstances()) {
       if (bean.getConnectionTypeEnum() == ODSConnectionType.DEFAULT
@@ -77,7 +77,7 @@ public class UpdateConfigureTriggerConfigurationPersistenceLayerToXml extends Up
     }
 
     if (targetXmlPlID == null) {
-      //XMLPersistenceLayerInstanz für XynaActivation nicht gefunden, daher neu anlegen
+      //XMLPersistenceLayerInstanz fï¿½r XynaActivation nicht gefunden, daher neu anlegen
       targetXmlPlID = ods.instantiatePersistenceLayerInstance(ods.getXmlPersistenceLayerID(),
                                                               XynaActivation.DEFAULT_NAME, ODSConnectionType.DEFAULT,
                                                               new String[] {"XynaActivation"});

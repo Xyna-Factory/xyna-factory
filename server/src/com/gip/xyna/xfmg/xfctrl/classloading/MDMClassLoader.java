@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ public class MDMClassLoader extends MDMClassLoaderXMLBase {
           if (isResponsible != IsResponsibleEnum.NOT_RESPONSIBLE) {
             checkClosed();
             try {
-              //achtung, das findet auch klassen, für die der classloader eigtl nicht zuständig wäre, nämlich die, die auch in xmomclasses 
+              //achtung, das findet auch klassen, fï¿½r die der classloader eigtl nicht zustï¿½ndig wï¿½re, nï¿½mlich die, die auch in xmomclasses 
               //liegen. deshalb muss man vorher andere mdmclassloader checken. 
               c = findClass(name);
             } catch (ClassNotFoundException e) {
@@ -213,7 +213,7 @@ public class MDMClassLoader extends MDMClassLoaderXMLBase {
     if (isOtherXMOMObject(name)) {
       return IsResponsibleEnum.NOT_RESPONSIBLE;
     }
-    //z.b. klassen aus korrelierten jar-files. könnte aber auch in jars der superklassen sein, und deshalb muss anderes xmomobjekt das laden
+    //z.b. klassen aus korrelierten jar-files. kï¿½nnte aber auch in jars der superklassen sein, und deshalb muss anderes xmomobjekt das laden
     return IsResponsibleEnum.MAYBE_RESPONSIBLE;
   }
 

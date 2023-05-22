@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class LocalTableObject<T extends Storable> extends TableObject<T, LocalRo
 
   public LocalTableObject(Class<T> storableClass) throws PersistenceLayerException {
     super(storableClass);
-    //TODO auf concurrenthashmap umstellen und damit einiges an lockingnotwendigkeit in tableobject-klasse unnötig machen -> benötigt aber noch anpassungen und zb verwendung von CAS operations auf der map...
+    //TODO auf concurrenthashmap umstellen und damit einiges an lockingnotwendigkeit in tableobject-klasse unnï¿½tig machen -> benï¿½tigt aber noch anpassungen und zb verwendung von CAS operations auf der map...
     data = new HashMap<Object, LocalRowData<T>>();
     uncommittedData = new HashMap<Object, LocalRowData<T>>(); 
   }

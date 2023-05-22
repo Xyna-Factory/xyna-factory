@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class HTTPTriggerConnectionTest extends TestCase {
    public void testUmlautsPost() throws XynaException, IOException {
      startTrigger();
      try {
-       sendMessage("Meine Testnachricht mit Umlauten ÄÖÜ@-x - so das wars.");
+       sendMessage("Meine Testnachricht mit Umlauten ï¿½ï¿½ï¿½@-x - so das wars.");
        String result = getResult();
        assertEquals("", result);
      } finally {

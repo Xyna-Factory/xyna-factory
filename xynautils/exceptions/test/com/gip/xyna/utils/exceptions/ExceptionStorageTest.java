@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class ExceptionStorageTest extends TestCase {
 
 
   public void setUp() throws Exception {
-    //damit files als resource verfügbar sind
+    //damit files als resource verfï¿½gbar sind
     FileUtils.copyFile(new File("AdditionalStorage.xml"), new File("classes/AdditionalStorage.xml"));
     FileUtils.copyFile(new File("ExampleExceptionStorage.xml"), new File("classes/ExampleExceptionStorage.xml"));
   }

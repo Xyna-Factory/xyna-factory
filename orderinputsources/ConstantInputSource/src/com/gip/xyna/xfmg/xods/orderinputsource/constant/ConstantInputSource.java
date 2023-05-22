@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,8 +79,8 @@ public class ConstantInputSource implements OrderInputSource, OrderInputCreation
     constantParas.setDestinationKey(new DestinationKey(xocp.getDestinationKey().getOrderType(), xocp.getDestinationKey()
         .getRuntimeContext()));
 
-    //immer erst beim starten des auftrags konvertieren, weil ansonsten die classloader evtl veraltet sind - es gibt hier keinen mechanismus, der für ein reload sorgen würde.
-    //FIXME performance: das convert sparen, wenn sich nichts am classloader geändert hat...
+    //immer erst beim starten des auftrags konvertieren, weil ansonsten die classloader evtl veraltet sind - es gibt hier keinen mechanismus, der fï¿½r ein reload sorgen wï¿½rde.
+    //FIXME performance: das convert sparen, wenn sich nichts am classloader geï¿½ndert hat...
     xocp.setInputPayload(payloadXML);
     xocp.convertInputPayload();
     return xocp;

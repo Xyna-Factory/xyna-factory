@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,9 @@ public class PasswordHistoryStorable extends Storable<PasswordHistoryStorable>{
 
   @Column(name = COL_ID)
   private String id;
-  @Column(name = COL_USERNAME, size = 50) //gleiche Größe wie bei User
+  @Column(name = COL_USERNAME, size = 50) //gleiche Grï¿½ï¿½e wie bei User
   private String userName;
-  @Column(name = COL_PASSWORD, size = 100) //gleiche Größe wie bei User
+  @Column(name = COL_PASSWORD, size = 100) //gleiche Grï¿½ï¿½e wie bei User
   private String password;
   @Column(name = COL_CHANGEDATE)
   private long changeDate;

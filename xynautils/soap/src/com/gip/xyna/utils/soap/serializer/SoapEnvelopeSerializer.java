@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 
-public class SoapEnvelopeSerializer implements XMLSerializer { //TODO unterstützt nur soap1.1
+public class SoapEnvelopeSerializer implements XMLSerializer { //TODO unterstï¿½tzt nur soap1.1
 
   private SoapEnvelope soapEnv;
 

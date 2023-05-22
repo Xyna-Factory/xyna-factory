@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import com.gip.xyna.xprc.xpce.planning.Capacity;
 
 /**
  * TransferCapacities wird im CapacityManagement bzw. genauer in {@link CMAbstract#allocateCapacities(com.gip.xyna.xprc.xsched.scheduling.OrderInformation, com.gip.xyna.xprc.xsched.SchedulingData)}
- * und {@link CMAbstract#transferCapacities(com.gip.xyna.xprc.XynaOrderServerExtension, TransferCapacities) } verwendet, um Capacities von einem Auftrag auf einen anderen übertragen zu können.
+ * und {@link CMAbstract#transferCapacities(com.gip.xyna.xprc.XynaOrderServerExtension, TransferCapacities) } verwendet, um Capacities von einem Auftrag auf einen anderen ï¿½bertragen zu kï¿½nnen.
  * <br>
- * Dazu muss die OrderId des Capacity-spendenden Auftrags angegeben werden. Zusätzlich muss der spendende Auftrag seine 
+ * Dazu muss die OrderId des Capacity-spendenden Auftrags angegeben werden. Zusï¿½tzlich muss der spendende Auftrag seine 
  * Capacities bei der Allozierung als "transferable" markiert haben.  
  *
  */

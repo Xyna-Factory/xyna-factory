@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import com.gip.xyna.utils.collections.Pair;
 
 
 /**
- * StringSplitter zerlegt Strings anhand des im Konstruktor übergebenen Patterns. 
- * Im Unterschied zu String.split(..) können auch die Trenner mit die zurückgegebene 
+ * StringSplitter zerlegt Strings anhand des im Konstruktor ï¿½bergebenen Patterns. 
+ * Im Unterschied zu String.split(..) kï¿½nnen auch die Trenner mit die zurï¿½ckgegebene 
  * Liste eingetragen werden.
  * Beispiel: new StringSplitter("\\.").split(".a.bc.d") liefert Liste [., a, ., bc, ., d]
  */

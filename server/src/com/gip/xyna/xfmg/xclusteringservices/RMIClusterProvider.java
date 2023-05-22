@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,19 +72,19 @@ import com.gip.xyna.xnwh.persistence.Storable;
 
 
 /**
- * cluster von knoten, die über rmi kommunizieren können.<br>
- * die interfaces, über die kommuniziert wird, können dynamisch erweitert werden. es wird immer der gleiche port
+ * cluster von knoten, die ï¿½ber rmi kommunizieren kï¿½nnen.<br>
+ * die interfaces, ï¿½ber die kommuniziert wird, kï¿½nnen dynamisch erweitert werden. es wird immer der gleiche port
  * benutzt.
  * <p>
  * verwendung: <br>
  * 1. erstelle neuen {@link RMIClusterProvider} an festem port <br>
- * 2. füge andere knoten hinzu.<br>
+ * 2. fï¿½ge andere knoten hinzu.<br>
  * 3. registriere rmi-interfaces<br>
- * 4. greife auf registrierte rmi-interfaces zu zusätzlich monitoring-möglichkeiten, die jeder clusterprovider bietet
+ * 4. greife auf registrierte rmi-interfaces zu zusï¿½tzlich monitoring-mï¿½glichkeiten, die jeder clusterprovider bietet
  */
 public class RMIClusterProvider implements ClusterProvider {
 
-  //ACHTUNG: die xynaproperties werden auch indirekt vom xsorclusterprovider verwendet, nämlich über die verwendung vom rmiretryexecutor
+  //ACHTUNG: die xynaproperties werden auch indirekt vom xsorclusterprovider verwendet, nï¿½mlich ï¿½ber die verwendung vom rmiretryexecutor
   public static final XynaPropertyInt RMI_RETRY_ATTEMPTS = new XynaPropertyInt("xyna.xfmg.xcs.rmi_retry_attempts", 1);
   public static final XynaPropertyInt RMI_RETRY_WAIT = new XynaPropertyInt("xyna.xfmg.xcs.rmi_retry_wait", 10); //sekunden
     
@@ -96,7 +96,7 @@ public class RMIClusterProvider implements ClusterProvider {
 
   private ConnectGuard connectGuard;
   //FIXME codeduplication zusammen mit OracleRACCLusterprovider => extraktion von algorithmus+methoden+innere klassen,
-  //wo möglich, damit der code wiederverwendet werden kann!
+  //wo mï¿½glich, damit der code wiederverwendet werden kann!
   private class ConnectGuard implements Runnable {
 
     private volatile long waitingRefreshed;
@@ -123,7 +123,7 @@ public class RMIClusterProvider implements ClusterProvider {
       while (!canceled ) {
         long now = System.currentTimeMillis();
         if( waitingRefreshed + timeout < now ) {
-          break; //Abbruch wegen überschrittener Wartezeit
+          break; //Abbruch wegen ï¿½berschrittener Wartezeit
         } else { 
           try { //weiter warten
             synchronized (this) {
@@ -132,14 +132,14 @@ public class RMIClusterProvider implements ClusterProvider {
               }
             }
           } catch (InterruptedException e) {
-            //Exception ignorieren: dann halt kürzer warten
+            //Exception ignorieren: dann halt kï¿½rzer warten
           }
         }
       }
       if( ! canceled ) {
         //Der erwartete CONNECT kam nun nach dem Timeout nicht. 
         //Es kann davon ausgegangen werden, dass der andere Knoten verstorben ist, 
-        //daher wird nun ein Übergang nach DISCONNECTED_MASTER versucht.
+        //daher wird nun ein ï¿½bergang nach DISCONNECTED_MASTER versucht.
 
         if (logger.isInfoEnabled()) {
           logger.info("No connect with other node after " + timeout
@@ -189,7 +189,7 @@ public class RMIClusterProvider implements ClusterProvider {
               }
             }
           } catch (InterruptedException e) {
-            //Ignorieren, dann ist Wartezeit halt kürzer
+            //Ignorieren, dann ist Wartezeit halt kï¿½rzer
           }
         }
       }
@@ -221,7 +221,7 @@ public class RMIClusterProvider implements ClusterProvider {
 
 
     private void connect() {
-      //ursprünglich hat der andere knoten angefragt, dass connected werden soll und wir haben ihm immer bescheid
+      //ursprï¿½nglich hat der andere knoten angefragt, dass connected werden soll und wir haben ihm immer bescheid
       //gesagt, dass wird versuchen, nach connected zu gehen, und er bitte warten soll.
       //jetzt sind wir endlich soweit, nach connected gehen, vorher fragen wir aber sicherheitshalber nochmal
       //nach, ob er auch noch ready ist, oder ob in der zwischenzeit irgendein timeout passiert ist.
@@ -303,7 +303,7 @@ public class RMIClusterProvider implements ClusterProvider {
       } catch( NoClassDefFoundError e ) {
         logger.error( "It seems that this running xynafactory ist incompatible with its xynafactory.jar. Maybe the xynafactory.jar was modified. ");
         logger.error( "Detected via ", e );
-        //Exception ist für Remote-Knoten!
+        //Exception ist fï¿½r Remote-Knoten!
         throw new RemoteException("It seems that the remote running xynafactory ist incompatible with its xynafactory.jar");
       }
     }
@@ -327,7 +327,7 @@ public class RMIClusterProvider implements ClusterProvider {
     //anderer knoten ist nicht mehr vorhanden
     public void disconnect(String hostname, int port) {
       logger.debug("Other nodes sends disconnect-request");
-      //zukünftig nicht mehr mit rmi-verbindungen zu diesem knoten aufmachen
+      //zukï¿½nftig nicht mehr mit rmi-verbindungen zu diesem knoten aufmachen
       NodeConnectionParameters nc = getNodeConnection(hostname, port);
       removeRMIAdaptersForNode(nc);
 
@@ -364,7 +364,7 @@ public class RMIClusterProvider implements ClusterProvider {
   }
   
   /**
-   * Prüft den InterConnect, indem ein Heartbeat-Ping verschickt wird. 
+   * Prï¿½ft den InterConnect, indem ein Heartbeat-Ping verschickt wird. 
    * Kann von vielen Threads gleichzeitig gerufen werden, nur ein Thread ist aktiv, die anderen warten
    * dann auf das Ergebnis.
    */
@@ -397,7 +397,7 @@ public class RMIClusterProvider implements ClusterProvider {
 
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "rmiclusternode";
-    //FIXME mehr als einen weiteren knoten unterstützen indem man den remote knoten noch eine eigene id als PK verpasst.
+    //FIXME mehr als einen weiteren knoten unterstï¿½tzen indem man den remote knoten noch eine eigene id als PK verpasst.
     public static final String COL_CLUSTERID = "clusterinstanceid";
     public static final String COL_HOSTNAME = "hostname";
     public static final String COL_PORT = "port";
@@ -672,7 +672,7 @@ public class RMIClusterProvider implements ClusterProvider {
         return Boolean.TRUE;
       } catch (ClusterNodeOnlineButNotExpectingHeartbeatPingException e) {
         // anderer knoten erreichbar, aber der erwartet nicht, dass man online ist. passiert z.b. wenn dieser knoten
-        // hier längere zeit "gehangen" hat. beim testen z.b. passiert, als man am profilen war und der knoten deshalb
+        // hier lï¿½ngere zeit "gehangen" hat. beim testen z.b. passiert, als man am profilen war und der knoten deshalb
         // nicht erreichbar gewesen ist. vergleiche bugz 12216.
         if (XynaFactory.getInstance().isShuttingDown()) {
           logger.info("Other cluster node is online but remote node does not expect heartbeat. "
@@ -708,14 +708,14 @@ public class RMIClusterProvider implements ClusterProvider {
             result = RMIClusterProviderTools.executeAndCumulateNoException(clusterProvider, clusterProvider.interconnectId, this, null, Boolean.FALSE );
           }
           if( ! result.get(0) ) {
-            //HeartBeat-Ausführung hat trotz Retries nicht geklappt. Daher muss die Factory auf DISCONNECTED wechseln
+            //HeartBeat-Ausfï¿½hrung hat trotz Retries nicht geklappt. Daher muss die Factory auf DISCONNECTED wechseln
             if(clusterProvider.isConnected()) {
               clusterProvider.changeClusterState(ClusterState.DISCONNECTED);
             }
           }          
           
           try {
-            //schläft zwischen 85 und 115% von heartBeatInterval
+            //schlï¿½ft zwischen 85 und 115% von heartBeatInterval
             Thread.sleep(Math.round(heartBeatInterval * (1 + (r.nextDouble() - 0.5) * 0.3)));
           } catch (InterruptedException e) {
             //wenn das unterbrochen werden soll, ist hoffentlich auch heartbeatrunning auf false gesetzt.
@@ -758,7 +758,7 @@ public class RMIClusterProvider implements ClusterProvider {
         }
         logger.warn("Can not connect to other node, changing cluster state to "+ ClusterState.DISCONNECTED, lastException);
         heartBeatFailed = true;
-        clusterInstance.changeClusterState(ClusterState.DISCONNECTED); //FIXME: für mehr als 2 knoten stimmt das so nicht.
+        clusterInstance.changeClusterState(ClusterState.DISCONNECTED); //FIXME: fï¿½r mehr als 2 knoten stimmt das so nicht.
         throw new RMIConnectionDownException("Initiated cluster state change to "+ ClusterState.DISCONNECTED, lastException);
       }
     }
@@ -772,7 +772,7 @@ public class RMIClusterProvider implements ClusterProvider {
         List<Boolean> result = RMIClusterProviderTools.executeAndCumulateNoException(clusterProvider, clusterProvider.interconnectId, this, noConHandler, null, Boolean.FALSE );
         //liste kann leer sein, wenn kein anderer knoten mehr bekannt ist
         if (result.size() == 0 || !result.get(0)) {
-          //HeartBeat-Ausführung hat trotz Retries nicht geklappt. Daher muss die Factory auf DISCONNECTED wechseln
+          //HeartBeat-Ausfï¿½hrung hat trotz Retries nicht geklappt. Daher muss die Factory auf DISCONNECTED wechseln
           if (logger.isInfoEnabled()) {
             logger.info("checkInterconnect returned " + (result.size() == 0 ? "no result." : "false."));
           }
@@ -793,9 +793,9 @@ public class RMIClusterProvider implements ClusterProvider {
   //ConcurrentHashMap, anstatt ConcurrentMap, weil weakly-consistent iterator benutzt wird. das garantiert ConcurrentMap nicht
   private ConcurrentHashMap<Long, RegisteredRMIInterface> rmiAdapters;
   private List<NodeConnectionParameters> nodeConnections; //andere knoten
-  private AtomicLong maxId = new AtomicLong(1); //ids für die map der rmi-adapter. bei 1 anfangen zu zählen, damit zugriffe mit 0 bessere fehlermeldung bekommen
+  private AtomicLong maxId = new AtomicLong(1); //ids fï¿½r die map der rmi-adapter. bei 1 anfangen zu zï¿½hlen, damit zugriffe mit 0 bessere fehlermeldung bekommen
   private volatile boolean initialized = false;
-  private long interconnectId; //die id für den rmiadapter für das interconnect aus der rmiAdapters-Map
+  private long interconnectId; //die id fï¿½r den rmiadapter fï¿½r das interconnect aus der rmiAdapters-Map
   private RMIClusterProviderInterconnectInterface interconnectImpl;
   private ODS ods;
   private ClusterStateChangeHandler clusterStateChangeHandler;
@@ -834,21 +834,21 @@ public class RMIClusterProvider implements ClusterProvider {
 
 
   /**
-   * bindet das implobjekt lokal und erstellt rmiadapter für das entsprechende remote-objekt an allen registrierten
+   * bindet das implobjekt lokal und erstellt rmiadapter fï¿½r das entsprechende remote-objekt an allen registrierten
    * knoten
    */
   public <T extends Remote> long addRMIInterface(String rmiBindingName, T remoteImpl) {
     try {
       return addRMIInterface(rmiBindingName, remoteImpl, false);
     } catch (XMCP_RMI_BINDING_ERROR e) {
-      //sollte nie passieren, weil false übergeben wird
+      //sollte nie passieren, weil false ï¿½bergeben wird
       throw new RuntimeException(e);
     }
   }
 
 
   /**
-   * entfernt eine RMI-Schnittstelle. Das zugehörige RemoteImpl Objekt wird dabei aus der Registry entfernt.
+   * entfernt eine RMI-Schnittstelle. Das zugehï¿½rige RemoteImpl Objekt wird dabei aus der Registry entfernt.
    * Falls clusterprovider bereits disconnected wurde, passiert einfach gar nichts.
    * @param timeoutMillis wie lange soll gewartet werden (millisekunden), bis aktuell laufende methoden-aufrufe abgebrochen
    *          werden
@@ -895,7 +895,7 @@ public class RMIClusterProvider implements ClusterProvider {
               .createRMIImplProxy(remoteImpl, rmiBindingName, clusterInstanceStorable.hostname,
                                   clusterInstanceStorable.port);
     } catch (XMCP_RMI_BINDING_ERROR e) {
-      //beim anlegen des clusterproviders wird das gecheckt. wenn es dann funktioniert hat, funktioniert es später auch, weil gleiche registry!
+      //beim anlegen des clusterproviders wird das gecheckt. wenn es dann funktioniert hat, funktioniert es spï¿½ter auch, weil gleiche registry!
       if (firstTryToCreateRegistry) {
         throw e;
       } else {
@@ -923,8 +923,8 @@ public class RMIClusterProvider implements ClusterProvider {
 
 
   /**
-   * unterstützt class-reloading in objekten, die über rmi versendet werden, indem das eigentliche rmi-impl mit eigenem
-   * classloader reloaded wird. d.h. das veröffentlichte remote-objekt, worüber man über rmi ansprechbar ist, ist nicht
+   * unterstï¿½tzt class-reloading in objekten, die ï¿½ber rmi versendet werden, indem das eigentliche rmi-impl mit eigenem
+   * classloader reloaded wird. d.h. das verï¿½ffentlichte remote-objekt, worï¿½ber man ï¿½ber rmi ansprechbar ist, ist nicht
    * immer die gleiche objekt-instanz.<br>
    * ansonsten genauso wie {@link #addRMIInterface(String, Remote)}
    */
@@ -1276,7 +1276,7 @@ public class RMIClusterProvider implements ClusterProvider {
 
 
   private long getInternalClusterId() {
-    //FIXME SPS korrekte internalclusterId zurückgeben
+    //FIXME SPS korrekte internalclusterId zurï¿½ckgeben
     return 1;
   }
 
@@ -1312,7 +1312,7 @@ public class RMIClusterProvider implements ClusterProvider {
   private boolean registerNodeAtRemoteCluster(String remoteHostname, int remotePort, final boolean registerNodeForTheFirstTime)
       throws XFMG_ClusterConnectionException {
 
-    final AtomicBoolean result = new AtomicBoolean(false); //FIXME das funktioniert so nur für einen anderen knoten: unklar wie man mit größeren clustern umgeht.
+    final AtomicBoolean result = new AtomicBoolean(false); //FIXME das funktioniert so nur fï¿½r einen anderen knoten: unklar wie man mit grï¿½ï¿½eren clustern umgeht.
 
     try {
       new Thread(new ConnectGuard(CONNECTGUARD_TIMEOUT * 1000), "RMI-ConnectGuard-"
@@ -1324,7 +1324,7 @@ public class RMIClusterProvider implements ClusterProvider {
 
           public void execute(RMIClusterProviderInterconnectInterface clusteredInterface)
           throws XFMG_ClusterConnectionException, RemoteException {
-            //wird nur ausgeführt, wenn anderer knoten erreichbar ist
+            //wird nur ausgefï¿½hrt, wenn anderer knoten erreichbar ist
             clusteredInterface.register(clusterInstanceStorable.hostname, clusterInstanceStorable.port, !registerNodeForTheFirstTime);
             result.set(true);
           }
@@ -1444,7 +1444,7 @@ public class RMIClusterProvider implements ClusterProvider {
           try {
             if (registerNodeAtRemoteCluster(otherNode.getHostname(), otherNode.getPort(), false)) {
               //alter state und ob ein crash vorlag ist hier unerheblich.
-              //kurz darauf meldet sich hoffentlich der andere Knoten und es gibt einen Übergang nach CONNECTED
+              //kurz darauf meldet sich hoffentlich der andere Knoten und es gibt einen ï¿½bergang nach CONNECTED
             } else {
               changeClusterStateInternally(ClusterState.DISCONNECTED, true);
             }
@@ -1506,7 +1506,7 @@ public class RMIClusterProvider implements ClusterProvider {
 
 
   public void leaveCluster() {
-    // FIXME SPS leaveCluster für RMI implementieren
+    // FIXME SPS leaveCluster fï¿½r RMI implementieren
   }
 
 
@@ -1525,7 +1525,7 @@ public class RMIClusterProvider implements ClusterProvider {
 
 
   /**
-   * Prüft den InterConnect, indem ein Heartbeat-Ping verschickt wird.
+   * Prï¿½ft den InterConnect, indem ein Heartbeat-Ping verschickt wird.
    * Kann von vielen Threads gleichzeitig gerufen werden, nur ein Thread ist aktiv, die anderen warten
    * dann auf das Ergebnis.
    */

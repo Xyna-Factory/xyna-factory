@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   private static final String SESSION_TIMEOUT_THREAD_NAME = "Session Timeout Thread";
 
   /*
-   * ACHTUNG: bei änderungen auch in der dokumentation anpassen
+   * ACHTUNG: bei ï¿½nderungen auch in der dokumentation anpassen
    */
   public final static Long DEFAULT_GUI_SESSION_TIMEOUT_SECONDS = new Long(15 * 60);
   public final static Long DEFAULT_SESSION_DELETION_INTERVAL = new Long(30 * 60);
@@ -127,7 +127,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
 
   private ODS ods;
 
-  //Zuordnung zwischen Sessions und Users, damit für gesperrte Benutzer die Session
+  //Zuordnung zwischen Sessions und Users, damit fï¿½r gesperrte Benutzer die Session
   //beendet werden kann
   private SessionUserMap sessionUserMap = new SessionUserMap(); 
 
@@ -279,7 +279,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
       if (logger.isDebugEnabled()) {
         logger.debug("could not create session ", e);
       }
-      //sollte nur vorkommen, wenn sich ein Benutzer gerade einloggt, während er gesperrt wird
+      //sollte nur vorkommen, wenn sich ein Benutzer gerade einloggt, wï¿½hrend er gesperrt wird
       quitSession(randomId);
     }
     
@@ -450,9 +450,9 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   }
 
   /**
-   * Beendet alle (bekannten) Sessions für einen User. <br>
+   * Beendet alle (bekannten) Sessions fï¿½r einen User. <br>
    * 
-   * TODO In folgenden Fällen kann es vorkommen, dass nicht alle Sessions beendet werden:
+   * TODO In folgenden Fï¿½llen kann es vorkommen, dass nicht alle Sessions beendet werden:
    * - nach einem Factory-Neustart, falls die Sessions persistiert werden
    * - im Cluster-Betrieb (wenn der User auf einem andern Knoten gesperrt wird, als er eingeloggt ist)
    * 
@@ -725,7 +725,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   public void performChangeNotification(AChangeEvent event) throws PersistenceLayerException {
     notificationListenerLock.lock();
     try {
-      // FIXME deadlock-gefahr! connection außerhalb des locks holen und lowlevel connectivity sicherstellen!
+      // FIXME deadlock-gefahr! connection auï¿½erhalb des locks holen und lowlevel connectivity sicherstellen!
       ODSConnection con = ods.openConnection();
       try {
         for (ManagedSession session : con.loadCollection(ManagedSession.class)) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -235,7 +235,7 @@ public abstract class Operation implements HasDocumentation {
   }
   
   /**
-   * enthält ggfs auch xynaexception-klasse
+   * enthï¿½lt ggfs auch xynaexception-klasse
    */
   public List<ExceptionVariable> getThrownExceptions() {
     return Collections.unmodifiableList(thrownExceptions);
@@ -391,7 +391,7 @@ public abstract class Operation implements HasDocumentation {
 
   
   /**
-   * signature ab output, ohne öffnende klammer für impl, also z.b.<br>
+   * signature ab output, ohne ï¿½ffnende klammer fï¿½r impl, also z.b.<br>
    * Type1 m(Type2 para1, Type3 para2) throws A, B<br>
    * endet nicht mit leerzeichen
    */
@@ -480,7 +480,7 @@ public abstract class Operation implements HasDocumentation {
 
 
   /**
-   * vergleicht methodenname, und inputvariablen auf kompatibilität. es berücksichtigt nicht "throws"-parameter und outputparameter 
+   * vergleicht methodenname, und inputvariablen auf kompatibilitï¿½t. es berï¿½cksichtigt nicht "throws"-parameter und outputparameter 
    */
   public boolean hasEqualSignature(Operation otherOperation) {
     if (otherOperation == null) {

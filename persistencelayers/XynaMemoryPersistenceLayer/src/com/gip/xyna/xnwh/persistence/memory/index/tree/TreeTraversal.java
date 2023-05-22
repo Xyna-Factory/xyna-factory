@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,31 +121,31 @@ public class TreeTraversal<E extends Comparable<E>> {
       loop : for (int i = 0; i < node.getNumberOfChildren(); i++) {
         AbstractNode<E> child = node.getChild(i);
         if (checkCondition) {
-          //muss ggfs nicht mehrfach ausgeführt werden (vgl RECURSE_ALL)
+          //muss ggfs nicht mehrfach ausgefï¿½hrt werden (vgl RECURSE_ALL)
           result = condition.check(child, false);
         }
         if (result.isHit()) {
       /*    if (lockedNode != null) {
             if (handler.needsWriteLock()) {
-              //lock upgrade nicht möglich
+              //lock upgrade nicht mï¿½glich
               lockedNode.getLock().readLock().unlock();
               lockedNode.getLock().writeLock().lock();
               //TODO:
-              //checken, dass die kinder dieses knotens nicht geändert wurden
+              //checken, dass die kinder dieses knotens nicht geï¿½ndert wurden
               //das kann passieren, wenn zb ein rebalance thread das writelock zuerst bekommt
-              //dann ist man nun evtl an einer ganz anderen stelle im baum (sowohl child als auch parent können im baum ihre position geändert haben)
+              //dann ist man nun evtl an einer ganz anderen stelle im baum (sowohl child als auch parent kï¿½nnen im baum ihre position geï¿½ndert haben)
               //idee 1: 
-              //=> solange zum parent zurück, bis parent sich nicht geändert hat.
+              //=> solange zum parent zurï¿½ck, bis parent sich nicht geï¿½ndert hat.
               //von dort aus dann traverseTree erneut aufrufen
-              //frage: was passiert mit bereits behandelten knoten (handler ausgeführt), die dann erneut gecheckt werden?
-              //antwort: needsWriteLock UseCase => entfernen und/oder hinzufügen von knoten im baum. dann darf man handler nicht erneut ausführen
+              //frage: was passiert mit bereits behandelten knoten (handler ausgefï¿½hrt), die dann erneut gecheckt werden?
+              //antwort: needsWriteLock UseCase => entfernen und/oder hinzufï¿½gen von knoten im baum. dann darf man handler nicht erneut ausfï¿½hren
               
               //idee 2:
-              //=> bei dem knoten weitermachen, auch wenn der knoten nun an einem anderen parent hängt, weil die position im baum
+              //=> bei dem knoten weitermachen, auch wenn der knoten nun an einem anderen parent hï¿½ngt, weil die position im baum
               //nicht so wichtig ist, wie die position in der sortierreihenfolge (diese ist aber gleich geblieben, weil der wert
-              //des knotens sich nicht ändern kann).
-              //dann muss man bei der rekursion an den parent-aufruf den neuen parentknoten zurückgeben, weil sich dieser geändert haben kann.
-              //ausserdem muss die stacktiefe nicht mehr mit der tiefe des aktuellen knotens im baum übereinstimmen. => kompliziert.
+              //des knotens sich nicht ï¿½ndern kann).
+              //dann muss man bei der rekursion an den parent-aufruf den neuen parentknoten zurï¿½ckgeben, weil sich dieser geï¿½ndert haben kann.
+              //ausserdem muss die stacktiefe nicht mehr mit der tiefe des aktuellen knotens im baum ï¿½bereinstimmen. => kompliziert.
               
               //es kann ausserdem sein, dass der parent derweil ein anderes readlock besitzt, und dieses im handler versucht wird, auf 
               //ein writelock zu upgraden (=>deadlock).
@@ -162,7 +162,7 @@ public class TreeTraversal<E extends Comparable<E>> {
               }
             }*/
           }
-          //FIXME beim einfügen oder delete anderen returnwert, weil hier die liste der kinder evtl geändert wird? (removenode oder addnode)
+          //FIXME beim einfï¿½gen oder delete anderen returnwert, weil hier die liste der kinder evtl geï¿½ndert wird? (removenode oder addnode)
           if (continuation == TraversalContinuation.BREAK) {
             //z.b. maxrows erreicht, die gefunden werden sollen
             return continuation;
@@ -173,7 +173,7 @@ public class TreeTraversal<E extends Comparable<E>> {
             boolean recurse = false;
             if (i < node.getNumberOfChildren() - 1) {
               //FIXME wie ist das mit locking-reihenfolge? => ok, wenn das lock hier wieder freigegeben wird.
-              AbstractNode<E> nextChild = node.getChild(i + 1); //FIXME performance: kann in nächstem schleifendurchlauf wiederverwendet werden
+              AbstractNode<E> nextChild = node.getChild(i + 1); //FIXME performance: kann in nï¿½chstem schleifendurchlauf wiederverwendet werden
               ConditionResult nextResult = condition.check(nextChild, false);
               if (nextResult.recursionRequest == RecursionRequest.RECURSE_ALL) {
                 recurse = true;
@@ -192,7 +192,7 @@ public class TreeTraversal<E extends Comparable<E>> {
           case RECURSE_IF_NEXTSIBLING_A :
             recurse = false;
             if (i < node.getNumberOfChildren() - 1) {
-              AbstractNode<E> nextChild = node.getChild(i + 1); //FIXME performance: kann in nächstem schleifendurchlauf wiederverwendet werden
+              AbstractNode<E> nextChild = node.getChild(i + 1); //FIXME performance: kann in nï¿½chstem schleifendurchlauf wiederverwendet werden
               ConditionResult nextResult = condition.check(nextChild, false);
               if (nextResult.a) {
                 recurse = true;
@@ -209,7 +209,7 @@ public class TreeTraversal<E extends Comparable<E>> {
             }
             break;
           case RECURSE_CHILD_CHECK_NEXT :
-            //rekursion für dieses kind, für das nächste erneut checken: geoderte bedingungen
+            //rekursion fï¿½r dieses kind, fï¿½r das nï¿½chste erneut checken: geoderte bedingungen
             continuation = traverseTree(child, condition, handler, null);
             if (continuation == TraversalContinuation.BREAK) {
               //z.b. maxrows wurde in rekursion erreicht
@@ -217,10 +217,10 @@ public class TreeTraversal<E extends Comparable<E>> {
             }
             break;
           case NO_RECURSION_CHECK_NEXT :
-            //keine rekursion für dieses kind, für das nächste erneut checken: geoderte bedingungen
+            //keine rekursion fï¿½r dieses kind, fï¿½r das nï¿½chste erneut checken: geoderte bedingungen
             break;
           case RECURSE_ALL :
-            //für dieses und alle folgenden kinder rekursion (entspricht suchen nach > bedingung, wenn für alle folgenden kinder klar ist, was passieren muss)
+            //fï¿½r dieses und alle folgenden kinder rekursion (entspricht suchen nach > bedingung, wenn fï¿½r alle folgenden kinder klar ist, was passieren muss)
             //zb bei >: result.isHit = true, result.recursionRequest = RECURSE_ALL
             checkCondition = false;
             continuation = traverseTree(child, null, handler, result);
@@ -230,7 +230,7 @@ public class TreeTraversal<E extends Comparable<E>> {
             }
             break;
           case RECURSE_CHILD_ONLY :
-            //nur für das kind rekursion, und nicht für folgende (entspricht suchen nach knoten mit gleichheits-bedingung)    
+            //nur fï¿½r das kind rekursion, und nicht fï¿½r folgende (entspricht suchen nach knoten mit gleichheits-bedingung)    
             continuation = traverseTree(child, condition, handler, null);
             if (continuation == TraversalContinuation.BREAK) {
               //z.b. maxrows wurde in rekursion erreicht
@@ -280,7 +280,7 @@ public class TreeTraversal<E extends Comparable<E>> {
         boolean breakloop = false;
         AbstractNode<E> child = node.getChild(i);
         if (checkCondition) {
-          //muss ggfs nicht mehrfach ausgeführt werden (vgl RECURSE_ALL)
+          //muss ggfs nicht mehrfach ausgefï¿½hrt werden (vgl RECURSE_ALL)
           result = condition.check(child, true);
         }
         switch (result.recursionRequest()) {
@@ -288,7 +288,7 @@ public class TreeTraversal<E extends Comparable<E>> {
             boolean recurse = false;
             if (i > 0) {
               //FIXME wie ist das mit locking-reihenfolge? => ok, wenn das lock hier wieder freigegeben wird.
-              AbstractNode<E> nextChild = node.getChild(i - 1); //FIXME performance: kann in nächstem schleifendurchlauf wiederverwendet werden
+              AbstractNode<E> nextChild = node.getChild(i - 1); //FIXME performance: kann in nï¿½chstem schleifendurchlauf wiederverwendet werden
               ConditionResult nextResult = condition.check(nextChild, true);
               if (nextResult.recursionRequest == RecursionRequest.RECURSE_ALL) {
                 recurse = true;
@@ -307,7 +307,7 @@ public class TreeTraversal<E extends Comparable<E>> {
           case RECURSE_IF_NEXTSIBLING_A :
             recurse = false;
             if (i > 0) {
-              AbstractNode<E> nextChild = node.getChild(i - 1); //FIXME performance: kann in nächstem schleifendurchlauf wiederverwendet werden
+              AbstractNode<E> nextChild = node.getChild(i - 1); //FIXME performance: kann in nï¿½chstem schleifendurchlauf wiederverwendet werden
               ConditionResult nextResult = condition.check(nextChild, true);
               if (nextResult.a) {
                 recurse = true;
@@ -324,7 +324,7 @@ public class TreeTraversal<E extends Comparable<E>> {
             }
             break;
           case RECURSE_CHILD_CHECK_NEXT :
-            //rekursion für dieses kind, für das nächste erneut checken: geoderte bedingungen
+            //rekursion fï¿½r dieses kind, fï¿½r das nï¿½chste erneut checken: geoderte bedingungen
             continuation = traverseTreeReverse(child, condition, handler, null);
             if (continuation == TraversalContinuation.BREAK) {
               //z.b. maxrows wurde in rekursion erreicht
@@ -332,10 +332,10 @@ public class TreeTraversal<E extends Comparable<E>> {
             }
             break;
           case NO_RECURSION_CHECK_NEXT :
-            //keine rekursion für dieses kind, für das nächste erneut checken: geoderte bedingungen
+            //keine rekursion fï¿½r dieses kind, fï¿½r das nï¿½chste erneut checken: geoderte bedingungen
             break;
           case RECURSE_ALL :
-            //für dieses und alle folgenden kinder rekursion (entspricht suchen nach > bedingung, wenn für alle folgenden kinder klar ist, was passieren muss)
+            //fï¿½r dieses und alle folgenden kinder rekursion (entspricht suchen nach > bedingung, wenn fï¿½r alle folgenden kinder klar ist, was passieren muss)
             //zb bei >: result.isHit = true, result.recursionRequest = RECURSE_ALL
             checkCondition = false;
             continuation = traverseTreeReverse(child, null, handler, result);
@@ -345,7 +345,7 @@ public class TreeTraversal<E extends Comparable<E>> {
             }
             break;
           case RECURSE_CHILD_ONLY :
-            //nur für das kind rekursion, und nicht für folgende (entspricht suchen nach knoten mit gleichheits-bedingung)    
+            //nur fï¿½r das kind rekursion, und nicht fï¿½r folgende (entspricht suchen nach knoten mit gleichheits-bedingung)    
             continuation = traverseTreeReverse(child, condition, handler, null);
             if (continuation == TraversalContinuation.BREAK) {
               //z.b. maxrows wurde in rekursion erreicht
@@ -363,25 +363,25 @@ public class TreeTraversal<E extends Comparable<E>> {
         if (result.isHit()) {
           /*    if (lockedNode != null) {
                 if (handler.needsWriteLock()) {
-                  //lock upgrade nicht möglich
+                  //lock upgrade nicht mï¿½glich
                   lockedNode.getLock().readLock().unlock();
                   lockedNode.getLock().writeLock().lock();
                   //TODO:
-                  //checken, dass die kinder dieses knotens nicht geändert wurden
+                  //checken, dass die kinder dieses knotens nicht geï¿½ndert wurden
                   //das kann passieren, wenn zb ein rebalance thread das writelock zuerst bekommt
-                  //dann ist man nun evtl an einer ganz anderen stelle im baum (sowohl child als auch parent können im baum ihre position geändert haben)
+                  //dann ist man nun evtl an einer ganz anderen stelle im baum (sowohl child als auch parent kï¿½nnen im baum ihre position geï¿½ndert haben)
                   //idee 1: 
-                  //=> solange zum parent zurück, bis parent sich nicht geändert hat.
+                  //=> solange zum parent zurï¿½ck, bis parent sich nicht geï¿½ndert hat.
                   //von dort aus dann traverseTree erneut aufrufen
-                  //frage: was passiert mit bereits behandelten knoten (handler ausgeführt), die dann erneut gecheckt werden?
-                  //antwort: needsWriteLock UseCase => entfernen und/oder hinzufügen von knoten im baum. dann darf man handler nicht erneut ausführen
+                  //frage: was passiert mit bereits behandelten knoten (handler ausgefï¿½hrt), die dann erneut gecheckt werden?
+                  //antwort: needsWriteLock UseCase => entfernen und/oder hinzufï¿½gen von knoten im baum. dann darf man handler nicht erneut ausfï¿½hren
                   
                   //idee 2:
-                  //=> bei dem knoten weitermachen, auch wenn der knoten nun an einem anderen parent hängt, weil die position im baum
+                  //=> bei dem knoten weitermachen, auch wenn der knoten nun an einem anderen parent hï¿½ngt, weil die position im baum
                   //nicht so wichtig ist, wie die position in der sortierreihenfolge (diese ist aber gleich geblieben, weil der wert
-                  //des knotens sich nicht ändern kann).
-                  //dann muss man bei der rekursion an den parent-aufruf den neuen parentknoten zurückgeben, weil sich dieser geändert haben kann.
-                  //ausserdem muss die stacktiefe nicht mehr mit der tiefe des aktuellen knotens im baum übereinstimmen. => kompliziert.
+                  //des knotens sich nicht ï¿½ndern kann).
+                  //dann muss man bei der rekursion an den parent-aufruf den neuen parentknoten zurï¿½ckgeben, weil sich dieser geï¿½ndert haben kann.
+                  //ausserdem muss die stacktiefe nicht mehr mit der tiefe des aktuellen knotens im baum ï¿½bereinstimmen. => kompliziert.
                   
                   //es kann ausserdem sein, dass der parent derweil ein anderes readlock besitzt, und dieses im handler versucht wird, auf 
                   //ein writelock zu upgraden (=>deadlock).
@@ -398,7 +398,7 @@ public class TreeTraversal<E extends Comparable<E>> {
               }
             }*/
           }
-          //FIXME beim einfügen oder delete anderen returnwert, weil hier die liste der kinder evtl geändert wird? (removenode oder addnode)
+          //FIXME beim einfï¿½gen oder delete anderen returnwert, weil hier die liste der kinder evtl geï¿½ndert wird? (removenode oder addnode)
           if (continuation == TraversalContinuation.BREAK) {
             //z.b. maxrows erreicht, die gefunden werden sollen
             return continuation;

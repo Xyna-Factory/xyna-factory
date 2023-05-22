@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public abstract class CommandWithFolderBackup {
   protected abstract void rollbackFailureTreatment(Throwable t) throws InternalException;
  
   /**
-   * ExceptionWrapper für alle Exceptions, die in implementierten methoden passieren können
+   * ExceptionWrapper fï¿½r alle Exceptions, die in implementierten methoden passieren kï¿½nnen
    */
   public static class InternalException extends Exception {
 

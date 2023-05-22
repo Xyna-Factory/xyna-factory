@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,13 +44,13 @@ public class BatchProcessSlaveCreatorTask implements ParallelTask {
   }
 
   /**
-   * Holt sich die nächsten Inputs für die Slaves, legt SlaveTasks zum Starten
-   * der Slaves an und führt diese im ParallelExecutor aus.
+   * Holt sich die nï¿½chsten Inputs fï¿½r die Slaves, legt SlaveTasks zum Starten
+   * der Slaves an und fï¿½hrt diese im ParallelExecutor aus.
    */
   public void execute() {
     //SlaveTasks in den ParallelExecutor einstellen
     int numberOfSlaves = allocatedCaps;
-    //Wenn die Anzahl der zu startenden Slaves nicht durch Kapazitäten beschränkt ist,
+    //Wenn die Anzahl der zu startenden Slaves nicht durch Kapazitï¿½ten beschrï¿½nkt ist,
     //sollen "maxParallelism" Slaves gestartet werden
     if (allocatedCaps == 0) {
       numberOfSlaves = batchProcess.getMaxParallelism(); 

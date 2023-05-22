@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ import com.gip.xyna.xprc.xsched.timeconstraint.TimeConstraintExecutor.TimeWindow
 
 
 /**
- * TimeConstraintWindow ist die kapselnde Klasse, die ein oder mehrere zusammengehörige {@link TimeWindow}s,
- * einen Namen und Beschreibung sowie eine Liste aller auf das Zeitfenster wartenden Aufträge 
+ * TimeConstraintWindow ist die kapselnde Klasse, die ein oder mehrere zusammengehï¿½rige {@link TimeWindow}s,
+ * einen Namen und Beschreibung sowie eine Liste aller auf das Zeitfenster wartenden Auftrï¿½ge 
  * zusammenfasst.
  */
 public class TimeConstraintWindow {
@@ -42,7 +42,7 @@ public class TimeConstraintWindow {
   private String name;
   private volatile TimeWindowState state;
   private TimeWindow timeWindow;
-  private volatile ArrayList<SchedulingOrder> waitingOrders; //TODO wäre ConcurrentHashMap besser? //Lock könnte evtl. entfallen
+  private volatile ArrayList<SchedulingOrder> waitingOrders; //TODO wï¿½re ConcurrentHashMap besser? //Lock kï¿½nnte evtl. entfallen
   private ReentrantLock lock;
   private long openSince;
   private long nextOpen;
@@ -103,7 +103,7 @@ public class TimeConstraintWindow {
    * Zeitfenster wird nicht mehr verwendet
    */
   public void setRemoved() {
-    //TODO Warnung, wenn noch wartende Aufträge vorliegen
+    //TODO Warnung, wenn noch wartende Auftrï¿½ge vorliegen
     this.state = TimeWindowState.Removed;
   }
 
@@ -144,7 +144,7 @@ public class TimeConstraintWindow {
   }
   
   /**
-   * Warten derzeit Aufträge?
+   * Warten derzeit Auftrï¿½ge?
    * @return
    */
   public boolean hasWaitingOrders() {
@@ -152,7 +152,7 @@ public class TimeConstraintWindow {
   }
 
   /**
-   * Hinzufügen eines wartenden Auftrags
+   * Hinzufï¿½gen eines wartenden Auftrags
    * (wird innerhalb des Locks gerufen)
    * @param so
    */
@@ -193,7 +193,7 @@ public class TimeConstraintWindow {
 
 
   /**
-   * Wiedereinstellen aller wartenden Aufträge in den Scheduler
+   * Wiedereinstellen aller wartenden Auftrï¿½ge in den Scheduler
    * (wird innerhalb des Locks gerufen)
    * @param allOrders
    */
@@ -212,8 +212,8 @@ public class TimeConstraintWindow {
   
 
   /**
-   * Schutz, damit nicht gleichzeitig Zeitfenster geöffnet wird und trotzdem noch 
-   * wartende Aufträge angehängt werden.   
+   * Schutz, damit nicht gleichzeitig Zeitfenster geï¿½ffnet wird und trotzdem noch 
+   * wartende Auftrï¿½ge angehï¿½ngt werden.   
    */
   public void lock() {
     lock.lock();

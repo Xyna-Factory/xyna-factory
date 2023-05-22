@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ public class SuspendTest extends TestCase {
   }
 
   private static void assertSuspensions(String expected) {
-    //FIXME nach einigen Umbauten können die erwarteten Daten nicht mehr ausgegeben werden!
+    //FIXME nach einigen Umbauten kï¿½nnen die erwarteten Daten nicht mehr ausgegeben werden!
     //assertEquals( "Suspensions", expected, SuspendTestFactory.getInstance().getSuspendResumeManagement().toString() );
     System.out.println(SuspendTestFactory.getInstance().getSuspendResumeManagement().toString());
   }
@@ -206,7 +206,7 @@ public class SuspendTest extends TestCase {
     assertSuspensions("{2=SuspensionEntry(I=2,R=1,P=1,L=P1-2)}{1={P1=ParallelExecutor(P1,3T,2F,1E)}#null}");
 
     SuspendTestFactory.getInstance().getSynchronization().notify("xy");
-    waitUntilWorkflowCountIs(102, wf, 1000, 2); //notify startet Thread und kehrt sofort zurück, daher hier kurz warten
+    waitUntilWorkflowCountIs(102, wf, 1000, 2); //notify startet Thread und kehrt sofort zurï¿½ck, daher hier kurz warten
     assertEquals( "102 false", wf.getCount() + " "+ wf.isFinished() );
     assertSynchronization("{}");
     assertOrders("{1=Running_TestWorkflow2b}");
@@ -534,7 +534,7 @@ public class SuspendTest extends TestCase {
     assertSuspensions("{}{1={P1=ParallelExecutor(P1,3T,1F,2E), P2=ParallelExecutor(P2,2T,1F,1E)}#null}");
     
     SuspendTestFactory.getInstance().getSynchronization().notify("ab");
-    waitUntilSynchronizationHasEntries(0, 200, 2); //notify startet Thread und kehrt sofort zurück, daher hier kurz warten
+    waitUntilSynchronizationHasEntries(0, 200, 2); //notify startet Thread und kehrt sofort zurï¿½ck, daher hier kurz warten
     assertEquals( "12 false", wf.getCount() + " "+ wf.isFinished() );
     assertSynchronization("{}");
     assertOrders("{1=Running_TestWorkflow6}");
@@ -1275,7 +1275,7 @@ public class SuspendTest extends TestCase {
           try {
             Thread.sleep(sleep);
           } catch (InterruptedException e) {
-            //dann halt kürzer warten
+            //dann halt kï¿½rzer warten
           }
           now = System.currentTimeMillis();
         }

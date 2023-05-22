@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ public class ProxyValidation {
     check( ScopedRightUtils.getManageTCORight(action, batchProcessInput) );
   }
   public void check_TIME_CONTROLLED_ORDER(Action action, Long batchProcessId) throws AccessViolationException {
-    //TODO kann im Proxy nicht weiter geprüft werden
+    //TODO kann im Proxy nicht weiter geprï¿½ft werden
     check( ScopedRightUtils.getScopedRight(ScopedRight.TIME_CONTROLLED_ORDER, action ) );
   }
   @ProxyCheckAfterwards
@@ -104,7 +104,7 @@ public class ProxyValidation {
     check( ScopedRightUtils.getScopedRight(ScopedRight.TIME_CONTROLLED_ORDER, action ) );
   }
   public void check_TIME_CONTROLLED_ORDER(Action action, Long batchProcessId, BatchProcessInput batchProcessInput) throws AccessViolationException {
-    //TODO kann im Proxy nicht weiter geprüft werden
+    //TODO kann im Proxy nicht weiter geprï¿½ft werden
     check( ScopedRightUtils.getScopedRight(ScopedRight.TIME_CONTROLLED_ORDER, action ) );
   }
   
@@ -126,7 +126,7 @@ public class ProxyValidation {
     check( ScopedRightUtils.getApplicationRight(null, null, action) ); //TODO
   }
   public void check_APPLICATION(Action action, String fileId) throws AccessViolationException {
-    //TODO kann im Proxy nicht weiter geprüft werden
+    //TODO kann im Proxy nicht weiter geprï¿½ft werden
     check( ScopedRightUtils.getScopedRight(ScopedRight.APPLICATION, action) );
   }
   
@@ -165,7 +165,7 @@ public class ProxyValidation {
     check( ScopedRightUtils.getScopedRight(ScopedRight.ORDER_INPUT_SOURCE, action ) );
   }
   public void check_ORDER_INPUT_SOURCE(Action action, long orderInputId) throws AccessViolationException {
-    //TODO kann im Proxy nicht weiter geprüft werden
+    //TODO kann im Proxy nicht weiter geprï¿½ft werden
     check( ScopedRightUtils.getScopedRight(ScopedRight.ORDER_INPUT_SOURCE, action ) );
   }
   
@@ -173,7 +173,7 @@ public class ProxyValidation {
     check_CRON_LIKE_ORDER( action, (DestinationKey)null);
   }
   public void check_CRON_LIKE_ORDER(Action action, Long id) throws AccessViolationException {
-    //TODO kann im Proxy nicht weiter geprüft werden
+    //TODO kann im Proxy nicht weiter geprï¿½ft werden
     check( ScopedRightUtils.getScopedRight(ScopedRight.CRON_LIKE_ORDER, action) );
   }
   public void check_CRON_LIKE_ORDER(Action action, String orderType) throws AccessViolationException {
@@ -188,7 +188,7 @@ public class ProxyValidation {
   private void check_CRON_LIKE_ORDER(Action action, DestinationKey destinationKey) throws AccessViolationException {
     check( ScopedRightUtils.getScopedRight(ScopedRight.CRON_LIKE_ORDER, action) );
     if( action == Action.insert || action == Action.write ) {
-      //Start-Order-Recht für neue Destination wird benötigt
+      //Start-Order-Recht fï¿½r neue Destination wird benï¿½tigt
       if( proxyRole.hasRight(Rights.START_ORDER ) ) {
         return;
       }

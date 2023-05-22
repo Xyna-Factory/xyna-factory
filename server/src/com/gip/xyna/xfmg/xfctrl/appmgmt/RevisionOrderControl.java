@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ import com.gip.xyna.xprc.xsched.ordercancel.KillStuckProcessBean;
 
 
 /**
- * handling von aufträgen und auftragseingangsschnittstellen in einer revision
+ * handling von auftrï¿½gen und auftragseingangsschnittstellen in einer revision
  */
 public class RevisionOrderControl {
   
@@ -124,9 +124,9 @@ public class RevisionOrderControl {
 
 
   /**
-   * gibt true zurück sobald kein auftrag mehr in der revision am laufen ist und keine tco/clo's mehr existieren.
+   * gibt true zurï¿½ck sobald kein auftrag mehr in der revision am laufen ist und keine tco/clo's mehr existieren.
    * falls dies nicht der fall ist, wird maximal bis zum angegebenen timeout gewartet.
-   * @return true falls keine aufträge und tco/clo's mehr am laufen sind, ansonsten false.
+   * @return true falls keine auftrï¿½ge und tco/clo's mehr am laufen sind, ansonsten false.
    */
   public boolean waitForRunningOrders(long relativeTimeout, TimeUnit unit) throws PersistenceLayerException,
       XPRC_TimeoutWhileWaitingForUnaccessibleOrderException {
@@ -155,7 +155,7 @@ public class RevisionOrderControl {
 
 
   /**
-   * dürfen über die rmi schnittstelle aufträge in dieser application gestartet werden?
+   * dï¿½rfen ï¿½ber die rmi schnittstelle auftrï¿½ge in dieser application gestartet werden?
    * @param revision
    */
   public static void checkRmiClosed(long revision) {
@@ -163,7 +163,7 @@ public class RevisionOrderControl {
   }
 
   /**
-   * dürfen über die cli schnittstelle aufträge in dieser application gestartet werden?
+   * dï¿½rfen ï¿½ber die cli schnittstelle auftrï¿½ge in dieser application gestartet werden?
    * @param revision
    */
   public static void checkCliClosed(long revision) {
@@ -171,7 +171,7 @@ public class RevisionOrderControl {
   }
   
   /**
-   * dürfen über die rmi schnittstelle aufträge in dieser application gestartet werden?
+   * dï¿½rfen ï¿½ber die rmi schnittstelle auftrï¿½ge in dieser application gestartet werden?
    * @param applicationName
    * @param versionName
    */
@@ -180,7 +180,7 @@ public class RevisionOrderControl {
   }
 
   /**
-   * dürfen über die cli schnittstelle aufträge in dieser application gestartet werden?
+   * dï¿½rfen ï¿½ber die cli schnittstelle auftrï¿½ge in dieser application gestartet werden?
    * @param applicationName
    * @param versionName
    */
@@ -189,7 +189,7 @@ public class RevisionOrderControl {
   }
   
   /**
-   * dürfen über die rmi bzw. cli schnittstelle aufträge in dieser application gestartet werden?
+   * dï¿½rfen ï¿½ber die rmi bzw. cli schnittstelle auftrï¿½ge in dieser application gestartet werden?
    * @param revision
    * @param type RMI oder CLI
    */
@@ -210,7 +210,7 @@ public class RevisionOrderControl {
 
 
   /**
-   * dürfen über die rmi bzw. cli schnittstelle aufträge in dieser application gestartet werden?
+   * dï¿½rfen ï¿½ber die rmi bzw. cli schnittstelle auftrï¿½ge in dieser application gestartet werden?
    * @param applicationName
    * @param versionName
    * @param type RMI oder CLI
@@ -296,7 +296,7 @@ public class RevisionOrderControl {
 
 
   /**
-   * entfernt alle in der revision laufenden aufträge und time-controlled orders/crons.
+   * entfernt alle in der revision laufenden auftrï¿½ge und time-controlled orders/crons.
    */
   public void killRunningOrders() throws XPRC_TimeoutWhileWaitingForUnaccessibleOrderException, PersistenceLayerException {
     OrdersInUse ordersInUse = DeploymentManagement.getInstance().getInUse(revision, FillingMode.OnlyIds);
@@ -334,7 +334,7 @@ public class RevisionOrderControl {
         }
       } catch (Throwable t) {
         Department.handleThrowable(t);
-        //abort auftrag konnte nicht gestartet werden -> latch.countdown durchführen, damit nicht ewig gewartet wird.
+        //abort auftrag konnte nicht gestartet werden -> latch.countdown durchfï¿½hren, damit nicht ewig gewartet wird.
         logger.warn("could not abort order " + orderId, t);
         latch.countDown();
       }
@@ -365,7 +365,7 @@ public class RevisionOrderControl {
           }
         } else {
           if (logger.isDebugEnabled()) {
-            //kein fehler. der cron ist evtl von allein losgelaufen oder wurde vom kill eines zugehörigen auftrags entfernt
+            //kein fehler. der cron ist evtl von allein losgelaufen oder wurde vom kill eines zugehï¿½rigen auftrags entfernt
             logger.debug("could not remove cronlike order " + cronId + ".");
           }
         }
@@ -425,14 +425,14 @@ public class RevisionOrderControl {
 
   /**
    * stoppt in der revision alle trigger, time-controlled orders/crons und verhindert, dass weitere
-   * aufträge in dieser revision über rmi/cli eingestellt werden.
-   * filter werden auch disabled, damit keine aufträge über trigger in anderen revisions (abwärtskompatibel) eingestellt werden.
+   * auftrï¿½ge in dieser revision ï¿½ber rmi/cli eingestellt werden.
+   * filter werden auch disabled, damit keine auftrï¿½ge ï¿½ber trigger in anderen revisions (abwï¿½rtskompatibel) eingestellt werden.
    * 
    * FIXME man muss auch verhindern, dass neue tco/clo's erstellt werden.
    * 
    * tco/clo's die eine interne order starten werden nicht angehalten (vergleiche {@link XynaDispatcher#INTERNAL_ORDER_TYPES}).
    * @param blackList objekte aus der blacklist werden nicht gestoppt. darf null sein
-   * @param temporarily Schnittstellen sollen nur temporär gestoppt werden
+   * @param temporarily Schnittstellen sollen nur temporï¿½r gestoppt werden
    */
   public void closeOrderEntryInterfaces(RevisionContentBlackWhiteList blackList, boolean temporarily) throws OrderEntryInterfacesCouldNotBeClosedException {
     stoppedTriggerInstances.clear();
@@ -443,7 +443,7 @@ public class RevisionOrderControl {
     boolean success = false;
     try {
       if (temporarily) {
-        //Trigger nur temporär anhalten, Filter disablen
+        //Trigger nur temporï¿½r anhalten, Filter disablen
         stopTriggerInstances(blackList);
         disableFilterInstances(blackList);
       } else {
@@ -469,7 +469,7 @@ public class RevisionOrderControl {
       //Frequency Controlled Tasks pausieren
       pauseFCTasks();
       
-      //RMI/CLI-Schnittstellen schließen
+      //RMI/CLI-Schnittstellen schlieï¿½en
       closeRMICLI();
       
       success = true;
@@ -501,7 +501,7 @@ public class RevisionOrderControl {
   }
   
   /**
-   * disabled TriggerInstances und zugehörige Filterinstances
+   * disabled TriggerInstances und zugehï¿½rige Filterinstances
    * @param blackList
    * @param temporarily
    * @throws OrderEntryInterfacesCouldNotBeClosedException
@@ -518,16 +518,16 @@ public class RevisionOrderControl {
             EventListenerInstance<?, ?> triggerInstance =
                 xt.getEventListenerInstanceByName(tii.getTriggerInstanceName(), tii.getRevision(), false);
             if (triggerInstance != null) {
-              //nur enabled Triggerinstanzen disablen und EventListenerinstanz für späteres enablen merken
+              //nur enabled Triggerinstanzen disablen und EventListenerinstanz fï¿½r spï¿½teres enablen merken
               if (blackList == null || !blackList.getTriggerInstanceNames().contains(triggerInstance.getInstanceName())) {
-                //Trigger- und Filterinstanzen merken, damit sie später wieder enabled werden können
+                //Trigger- und Filterinstanzen merken, damit sie spï¿½ter wieder enabled werden kï¿½nnen
                 disabledFilterInstances.addAll(Arrays.asList(triggerInstance.getEL().getAllFilters()));
                 disabledTriggerInstances.add(triggerInstance);
                 //Trigger- und Filterinstanzen disablen
                 xt.disableTriggerInstance(triggerInstance.getInstanceName(), revision, true);
               }
             }
-          } else { //auch fehlerhafte Triggerinstanzen disablen (z.B. für stopApplication)
+          } else { //auch fehlerhafte Triggerinstanzen disablen (z.B. fï¿½r stopApplication)
             if (blackList == null || !blackList.getTriggerInstanceNames().contains(tii.getTriggerInstanceName())) {
               if (tii.getState() != TriggerInstanceState.DISABLED) {
                 xt.disableTriggerInstance(tii.getTriggerInstanceName(), revision, true);
@@ -549,7 +549,7 @@ public class RevisionOrderControl {
   
   
   /**
-   * Enabled alle disabledTriggerInstances. Dabei werden zunächst die 
+   * Enabled alle disabledTriggerInstances. Dabei werden zunï¿½chst die 
    * Filterinstanzen enabled, dann die Triggerinstanzen und
    * zuletzt der Thread gestartet.
    */
@@ -599,7 +599,7 @@ public class RevisionOrderControl {
   
   
   /**
-   * Überprüft, ob alle Auftragseingangsschnittstellen geschlossen sind.
+   * ï¿½berprï¿½ft, ob alle Auftragseingangsschnittstellen geschlossen sind.
    * @return
    * @throws PersistenceLayerException
    */
@@ -612,8 +612,8 @@ public class RevisionOrderControl {
       }
     }
     
-    //Filter können nicht laufen, wenn alle Trigger disabled sind
-    //-> müssen nicht extra überprüft werden
+    //Filter kï¿½nnen nicht laufen, wenn alle Trigger disabled sind
+    //-> mï¿½ssen nicht extra ï¿½berprï¿½ft werden
     
     //sind alle CLOs disabled?
     CronLikeScheduler cls = XynaFactory.getInstance().getProcessing().getXynaScheduler().getCronLikeScheduler();
@@ -677,9 +677,9 @@ public class RevisionOrderControl {
   }
 
   /**
-   * Öffnet die RMI und/oder CLI Schnittstellen.
-   * @param types Schnittstellen, die geöffnet werden sollen.
-   *  Wird null übergeben, so werden beide geöffnet.
+   * ï¿½ffnet die RMI und/oder CLI Schnittstellen.
+   * @param types Schnittstellen, die geï¿½ffnet werden sollen.
+   *  Wird null ï¿½bergeben, so werden beide geï¿½ffnet.
    */
   public void openRMICLI(EnumSet<OrderEntranceType> types) {
     OrderEntryInstances oei = closedOrderEntries.get(revision);
@@ -697,9 +697,9 @@ public class RevisionOrderControl {
   
   
   /**
-   * Schließt die RMI und/oder CLI Schnittstellen.
-   * @param types Schnittstellen, die geöffnet werden sollen.
-   *  Wird null übergeben, so werden beide geschloßen.
+   * Schlieï¿½t die RMI und/oder CLI Schnittstellen.
+   * @param types Schnittstellen, die geï¿½ffnet werden sollen.
+   *  Wird null ï¿½bergeben, so werden beide geschloï¿½en.
    */
   public void closeRMICLI(EnumSet<OrderEntranceType> types) {
     OrderEntryInstances oei = closedOrderEntries.get(revision);
@@ -723,9 +723,9 @@ public class RevisionOrderControl {
 
 
   /**
-   * startet in der revision alle trigger, tco/clo's, die vorher über {@link #closeOrderEntryInterfaces(RevisionContentBlackWhiteList, boolean)} 
+   * startet in der revision alle trigger, tco/clo's, die vorher ï¿½ber {@link #closeOrderEntryInterfaces(RevisionContentBlackWhiteList, boolean)} 
    * ausgeschaltet wurden und die noch existieren.
-   * öffnet rmi/cli schnittstellen für diese revision.
+   * ï¿½ffnet rmi/cli schnittstellen fï¿½r diese revision.
    * 
    * darf mehrfach aufgerufen werden.
    */
@@ -761,8 +761,8 @@ public class RevisionOrderControl {
         //unerwarteter Fehler beim Deployen: Filter war vorher ja fehlerfrei deployt
         throw new RuntimeException(e);
       } catch (PersistenceLayerException e) {
-        //unerwartetes DB-Problem, kann hier aber nicht behandelt werden. Ignorieren, um andere Filter enablen zu können.
-        //TODO Fehler sammeln und anschließend weiterwerfen?
+        //unerwartetes DB-Problem, kann hier aber nicht behandelt werden. Ignorieren, um andere Filter enablen zu kï¿½nnen.
+        //TODO Fehler sammeln und anschlieï¿½end weiterwerfen?
         logger.warn("could not enable filter instance " + cfi.getInstanceName() + " in " + runtimeContext + ".", e);
       }
     }
@@ -819,8 +819,8 @@ public class RevisionOrderControl {
   }
 
   /**
-   * Disabled alle Crons für die angegebenen OrderTypes. Um alle Crons einer Revision zu disablen
-   * muss 'null' für die orderTypes übergeben werden.
+   * Disabled alle Crons fï¿½r die angegebenen OrderTypes. Um alle Crons einer Revision zu disablen
+   * muss 'null' fï¿½r die orderTypes ï¿½bergeben werden.
    * @param orderTypes
    * @throws XPRC_CronLikeOrderStorageException
    * @throws PersistenceLayerException
@@ -868,8 +868,8 @@ public class RevisionOrderControl {
   
   
   /**
-   * Enabled alle Crons für die angegebenen OrderTypes. Um alle Crons einer Revision zu enablen
-   * muss 'null' für die orderTypes übergeben werden.
+   * Enabled alle Crons fï¿½r die angegebenen OrderTypes. Um alle Crons einer Revision zu enablen
+   * muss 'null' fï¿½r die orderTypes ï¿½bergeben werden.
    * @param orderTypes
    * @param onlyDisabled true, wenn nur die in 'disabledCrons' enthaltenden Crons wieder enabled werden sollen
    * @throws PersistenceLayerException
@@ -939,7 +939,7 @@ public class RevisionOrderControl {
   }
   
   /**
-   * Zählt die Cron Like Orders der Revision
+   * Zï¿½hlt die Cron Like Orders der Revision
    * @return Pair mit Anzahl an aktiven und inaktiven Cron Like Orders
    * @throws PersistenceLayerException
    */
@@ -975,7 +975,7 @@ public class RevisionOrderControl {
   }
 
   /**
-   * Zählt die Batch Prozesse der Revision
+   * Zï¿½hlt die Batch Prozesse der Revision
    * @return Pair mit Anzahl an aktiven und inaktiven Batch Prozessen
    * @throws PersistenceLayerException
    */
@@ -996,7 +996,7 @@ public class RevisionOrderControl {
   }
 
   /**
-   * Zählt die Triggerinstanzen der Revision
+   * Zï¿½hlt die Triggerinstanzen der Revision
    * @return Triple mit Anzahl an aktiven, inaktiven und fehlerhaften Triggerinstanzen
    * @throws PersistenceLayerException
    */
@@ -1032,7 +1032,7 @@ public class RevisionOrderControl {
   }
   
   /**
-   * Zählt die Filterinstanzen der Revision
+   * Zï¿½hlt die Filterinstanzen der Revision
    * @return Triple mit Anzahl an aktiven, inaktiven und fehlerhaften Filterinstanzen
    * @throws PersistenceLayerException
    */

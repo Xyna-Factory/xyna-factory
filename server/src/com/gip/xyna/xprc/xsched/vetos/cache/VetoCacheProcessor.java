@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public abstract class VetoCacheProcessor implements Algorithm {
     int processed = processVetos();
     if( processed > 0 ) {
       notifyScheduler();
-      //evtl zuviel, wenn Vetos nicht in Zustand "Local" gelangt sind. Scheduler wird aber eh häufig gerufen...
+      //evtl zuviel, wenn Vetos nicht in Zustand "Local" gelangt sind. Scheduler wird aber eh hï¿½ufig gerufen...
       if( logger.isDebugEnabled() ) {
         logger.debug( "Processed "+processed+" vetos");
       }
@@ -92,7 +92,7 @@ public abstract class VetoCacheProcessor implements Algorithm {
   /**
    * @param veto
    * @return True, wenn Scheduler wieder laufen kann, wird allerdings nicht verwendet. 
-   * Rückgabe dient eher zur Kontrolle, ob alle Pfade implementiert wurden
+   * Rï¿½ckgabe dient eher zur Kontrolle, ob alle Pfade implementiert wurden
    */
   private boolean processVeto(VetoCacheEntry veto) {
     State state = veto.getState();
@@ -100,7 +100,7 @@ public abstract class VetoCacheProcessor implements Algorithm {
     case Free:
       return processFree(veto);
     case Local:
-      return true; //Status nur für Scheduler änderbar
+      return true; //Status nur fï¿½r Scheduler ï¿½nderbar
     case Compare:
       return processCompare(veto);
     case Comparing:
@@ -114,9 +114,9 @@ public abstract class VetoCacheProcessor implements Algorithm {
     case Scheduled:
       return processScheduled(veto);
     case Scheduling:
-      return false; //Status nur für Scheduler änderbar
+      return false; //Status nur fï¿½r Scheduler ï¿½nderbar
     case Usable:
-      return true; //Status nur für Scheduler änderbar
+      return true; //Status nur fï¿½r Scheduler ï¿½nderbar
     case Used:
       //aktuell verwendetes Veto, hier nichts zu tun
       return false;

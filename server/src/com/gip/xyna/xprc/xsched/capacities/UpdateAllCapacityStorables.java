@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public abstract class UpdateAllCapacityStorables {
       List<CapacityStorable> allCapacities = capacityStorableQueries.loadAllForUpdate(con);
       ArrayList<CapacityStorable> ownCapacities = new ArrayList<CapacityStorable>();
       
-      //cardinalities zählen
+      //cardinalities zï¿½hlen
       HashMap<String, AtomicInteger> cardinalities = new HashMap<String, AtomicInteger>();
       for (CapacityStorable cs : allCapacities) {
         AtomicInteger cardCounter = cardinalities.get(cs.getName());

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,19 +31,19 @@ public interface VetoCachePersistence {
   public int getOwnBinding();
 
   /**
-   * Vetos mit übergebenem Binding werden gelesen und in den VetoCache eingetragen
+   * Vetos mit ï¿½bergebenem Binding werden gelesen und in den VetoCache eingetragen
    * Binding darf -1 sein: alle Vetos werden gelesen
-   * Macht eine Prüfung, ob Veto korrekt in DB eingetragen war.
+   * Macht eine Prï¿½fung, ob Veto korrekt in DB eingetragen war.
    * Falls nicht, werden diese aus der DB entfernt.
    * @param binding
    */
   public void initVetoCache(int binding);
   
   /**
-   * Speichert die Vetos aus toPersist und löscht die Vetos aus toDelete.
-   * Zurückgegeben wird die Liste der Vetos, die doch nicht gespeichert wurden, beispielsweise weil 
-   * der Status doch nicht Scheduled ist. Dies kann sich laufend ändern, daher kann das schlecht 
-   * zuvor überprüft werden.
+   * Speichert die Vetos aus toPersist und lï¿½scht die Vetos aus toDelete.
+   * Zurï¿½ckgegeben wird die Liste der Vetos, die doch nicht gespeichert wurden, beispielsweise weil 
+   * der Status doch nicht Scheduled ist. Dies kann sich laufend ï¿½ndern, daher kann das schlecht 
+   * zuvor ï¿½berprï¿½ft werden.
    * @param toPersist
    * @param toDelete
    * @return
@@ -51,13 +51,13 @@ public interface VetoCachePersistence {
   public List<VetoCacheEntry> persist(List<VetoCacheEntry> toPersist, List<VetoCacheEntry> toDelete);
   
   /**
-   * Macht eine Prüfung, ob Vetos mit anderem als ownBinding korrekt in DB eingetragen waren. 
+   * Macht eine Prï¿½fung, ob Vetos mit anderem als ownBinding korrekt in DB eingetragen waren. 
    * Falls nicht, werden diese aus dem VetoCache entfernt
    */
   public void cleanupVetoCache();
   
   /**
-   * Anzeige der Vetos in der GUI: beliebige Suchparameter werden durch Suche in der DB unterstützt
+   * Anzeige der Vetos in der GUI: beliebige Suchparameter werden durch Suche in der DB unterstï¿½tzt
    */
   public VetoSearchResult searchVetos(VetoSelectImpl select, int maxRows) throws PersistenceLayerException;
 

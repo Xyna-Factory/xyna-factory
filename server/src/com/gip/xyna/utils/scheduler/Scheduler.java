@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import com.gip.xyna.xprc.xsched.Algorithm;
 
 /**
  * 
- * Aus Auftragsdaten eines Auftrags (üblicherweise Priority und Wartezeit) wird eine einzige Zahl 
+ * Aus Auftragsdaten eines Auftrags (ï¿½blicherweise Priority und Wartezeit) wird eine einzige Zahl 
  * "Urgency" berechnet. 
  * Mit dieser Urgency ist die Reihenfolge festgelegt, in der versucht wird, die Auftraege
  * zu schedulen. Der Vorteil dieser Urgency gegenueber einer Sortierung durch den 
@@ -101,7 +101,7 @@ public class Scheduler<O,I> implements Algorithm {
   }
   
   /**
-   * Runnable wird ausgeführt, während Scheduler pausiert: konsistente Daten 
+   * Runnable wird ausgefï¿½hrt, wï¿½hrend Scheduler pausiert: konsistente Daten 
    * @param r
    */
   public void executeExclusively(Runnable r) {
@@ -118,7 +118,7 @@ public class Scheduler<O,I> implements Algorithm {
       //solange schedulen, bis Queues leer sind
       trySchedule();
     } while( ! ( entranceQueue.isEmpty() && reorderQueue.isEmpty() ) );
-    //Queues sind leer: nun warten, bis Scheduler von außen geweckt wird
+    //Queues sind leer: nun warten, bis Scheduler von auï¿½en geweckt wird
   }
   
   
@@ -154,10 +154,10 @@ public class Scheduler<O,I> implements Algorithm {
   
   private void tryScheduleLocked() {
     try {
-      //Sammeln der neuen Aufträge
+      //Sammeln der neuen Auftrï¿½ge
       entranceQueue.drainTo(urgencyOrders);
 
-      //Wiedereinstellen umzuordnender Aufträge
+      //Wiedereinstellen umzuordnender Auftrï¿½ge
       if( ! reorderQueue.isEmpty() ) {
         urgencyOrders.reorder(reorderQueue);
       }
@@ -165,7 +165,7 @@ public class Scheduler<O,I> implements Algorithm {
       customisation.preparation();
       informationBuilder.timestamp(Timestamp.PreparationFinished);
 
-      //Schleife über alle zu schedulenden Aufträge
+      //Schleife ï¿½ber alle zu schedulenden Auftrï¿½ge
       boolean loopEndedRegularily = loopOverUrgencyOrders();
       informationBuilder.loopEndedRegularily(loopEndedRegularily);
 
@@ -176,7 +176,7 @@ public class Scheduler<O,I> implements Algorithm {
 
       customisation.postparation();
       if (!loopEndedRegularily) {
-        //endlosschleife von nicht erfolgreichen scheduler-läufen verlangsamen, damit sich system besser erholen kann
+        //endlosschleife von nicht erfolgreichen scheduler-lï¿½ufen verlangsamen, damit sich system besser erholen kann
         loopFailedCounter ++;
         if (loopFailedCounter == 10) {
           sleepCounter.reset();
@@ -232,7 +232,7 @@ public class Scheduler<O,I> implements Algorithm {
               iter.tag(scheduleResult.getTag());
               if( scheduleResult.isHide() ) {
                 //es werden keine weiteren Urgency<O>s versucht zu schedulen, 
-                //die dieses Tag ebenfalls benötigen. (Urgency<O>s müssen bereits getaggt sein) 
+                //die dieses Tag ebenfalls benï¿½tigen. (Urgency<O>s mï¿½ssen bereits getaggt sein) 
                 iter.hide(scheduleResult.getTag());
               }
               break;
@@ -258,7 +258,7 @@ public class Scheduler<O,I> implements Algorithm {
           }
         }
       }
-      return true; //Schleife regulär durchlaufen
+      return true; //Schleife regulï¿½r durchlaufen
     } finally {
       informationBuilder.iteratedOrders(iteratedCounter);
       informationBuilder.scheduledOrders(scheduled);

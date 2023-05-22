@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public abstract class InterconnectCallee implements InterconnectProtocol {
 
 
   /**
-   * callee ist nun zwar erreichbar, aber beantwortet alle remote anfragen mit ungefährlichen pseudoantworten solange bis initconnected aufgerufen worden ist.
+   * callee ist nun zwar erreichbar, aber beantwortet alle remote anfragen mit ungefï¿½hrlichen pseudoantworten solange bis initconnected aufgerufen worden ist.
    */
   public final void initNotConnected() {
     calleeAlgorithm = new InterconnectCalleeAlgorithmDisconnected(impl);
@@ -57,7 +57,7 @@ public abstract class InterconnectCallee implements InterconnectProtocol {
   }
 
   /**
-   * ab sofort können alle remote requests vom {@link InterconnectProtocol} verarbeitet werden. vorher werden alle angesammelten anfragen bearbeitet.
+   * ab sofort kï¿½nnen alle remote requests vom {@link InterconnectProtocol} verarbeitet werden. vorher werden alle angesammelten anfragen bearbeitet.
    */
   public final void initConnected() {
     Object lock = ((InterconnectCalleeAlgorithmDisconnected) calleeAlgorithm).lock;

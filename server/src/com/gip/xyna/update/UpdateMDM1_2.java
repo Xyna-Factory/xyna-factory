@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class UpdateMDM1_2 extends MDMUpdate {
 
   protected Version getVersionAfterUpdate() throws XynaException {
     Version v = getAllowedVersionForUpdate();
-    // letzte stelle um eins erhöhen
+    // letzte stelle um eins erhï¿½hen
     v.increaseToNextMajorVersion(v.length());
     return v;
   }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@ package com.gip.xyna.coherence.utils.threadpool;
 
 /**
  * kapselt einen thread, der solange aktiv bleibt, bis {@link #shutdown()} aufgerufen wird. in dieser zeit kann
- * sequentiell so oft wie gewünscht ein runnable in dem thread mittels {@link #execute(Runnable)} ausgeführt werden.
+ * sequentiell so oft wie gewï¿½nscht ein runnable in dem thread mittels {@link #execute(Runnable)} ausgefï¿½hrt werden.
  * sequentiell bedeutet in diesem fall, dass erneut {@link #execute(Runnable)} aufgerufen werden kann, sobald das
- * vorherige Runnable ausgeführt worden ist. Dies kann man z.B. dadurch erkennen, dass der FinishedListener aufgerufen
+ * vorherige Runnable ausgefï¿½hrt worden ist. Dies kann man z.B. dadurch erkennen, dass der FinishedListener aufgerufen
  * wird. <br>
  * TODO:<br>
  * - fehlerbehandlung (was wenn eines der runnables fehler wirft?) <br>
- * - synchronisierung (was, wenn man execute aufruft, während der thread bereits in der ausführung begriffen ist <br>
+ * - synchronisierung (was, wenn man execute aufruft, wï¿½hrend der thread bereits in der ausfï¿½hrung begriffen ist <br>
  * - zugrundeliegenden thread lazy starten, sobald das erste mal execute aufgerufen wird <br>
- * - thread nicht suspenden (wait), wenn eh gleich der nächste request kommt. evtl ist es performanter, ihn dann aktiv warten zu lassen oder mit kurzen sleeps?
+ * - thread nicht suspenden (wait), wenn eh gleich der nï¿½chste request kommt. evtl ist es performanter, ihn dann aktiv warten zu lassen oder mit kurzen sleeps?
  */
 public class ExecutorThread implements Runnable, Shutdownable {
 
@@ -78,7 +78,7 @@ public class ExecutorThread implements Runnable, Shutdownable {
               lock.wait();
             } catch (InterruptedException e) {
               //TODO prio5: InterruptedException behandeln? Im Moment stellt der Thread einfach die Arbeit ein.
-              // Das ist möglicherweise schon das, was man hier erwartet.
+              // Das ist mï¿½glicherweise schon das, was man hier erwartet.
             }
           }
         }

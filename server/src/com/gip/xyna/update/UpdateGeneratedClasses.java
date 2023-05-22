@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -240,14 +240,14 @@ import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
 
 /**
  * generiert alle generierten klassen neu und kompiliert sie. deploymenthandler werden nicht aufgerufen. dateien werden
- * nicht aus dem saved-verzeichnis kopiert, sodnern aus dem deployedverzeichnis übernommen.
+ * nicht aus dem saved-verzeichnis kopiert, sodnern aus dem deployedverzeichnis ï¿½bernommen.
  */
 public class UpdateGeneratedClasses {
 
   public static Logger logger = CentralFactoryLogging.getLogger(UpdateGeneratedClasses.class);
 
   /**
-   * dieses update muss nicht mehrfach bei einem serverstart ausgeführt werden.
+   * dieses update muss nicht mehrfach bei einem serverstart ausgefï¿½hrt werden.
    */
   private static boolean hasBeenExecuted = false;
 
@@ -422,9 +422,9 @@ public class UpdateGeneratedClasses {
 
       deployments.get(); //wait till all are finished
     } catch (InterruptedException e) {
-      //wird oben drüber behandelt
+      //wird oben drï¿½ber behandelt
     } catch (ExecutionException e) {
-      //wird oben drüber behandelt
+      //wird oben drï¿½ber behandelt
     } finally {
       threadpool.shutdown();
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@
 package com.gip.xyna.utils.db.types;
 
 /**
- * Var<T> macht den Typen variabel: Über get und set kann der Inhalt
- * ausgelesen und verändert werden. 
+ * Var<T> macht den Typen variabel: ï¿½ber get und set kann der Inhalt
+ * ausgelesen und verï¿½ndert werden. 
  * 
  * Beispiel: ein Integer kann nur einen festen Wert haben, der 
- * zugrundeliegende int kann nicht verändert werden. Mit dem 
- * Var<Integer> ist dies nun möglich. Damit kann der Var<Integer> an 
+ * zugrundeliegende int kann nicht verï¿½ndert werden. Mit dem 
+ * Var<Integer> ist dies nun mï¿½glich. Damit kann der Var<Integer> an 
  * verschiedenen Stellen gespeichert werden, und dann gleichzeitg an 
- * allen Stellen den Wert ändern.
+ * allen Stellen den Wert ï¿½ndern.
  * 
  * Achtung: nicht als Key in einer HashMap speichern, da hashCode variabel ist!
  * 

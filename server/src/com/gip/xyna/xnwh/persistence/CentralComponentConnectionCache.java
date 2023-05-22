@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -177,7 +177,7 @@ public class CentralComponentConnectionCache {
     try {
       sleepCnt.sleep();
     } catch (InterruptedException e) {
-      //dann halt kürzer warten
+      //dann halt kï¿½rzer warten
       Thread.currentThread().interrupt();
     }
     
@@ -234,7 +234,7 @@ public class CentralComponentConnectionCache {
       logger.info("Recreated dedicated connection \""+con.getConnectionName()+"\"");
       return con;
     } catch (XNWH_TooManyDedicatedConnections e) {
-      //hätte bei der ersten Initialisierung in openCachedConnection schon geworfen werden müssen.
+      //hï¿½tte bei der ersten Initialisierung in openCachedConnection schon geworfen werden mï¿½ssen.
       //hier deshalb unerwartet, daher auch keine Retries
       throw new CentralComponentConnectionCacheException(con, "Too many", e);
     }

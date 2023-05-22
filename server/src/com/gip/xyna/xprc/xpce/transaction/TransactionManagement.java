@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class TransactionManagement extends FunctionGroup {
     if (logger.isDebugEnabled()) {
       logger.debug("Created transaction " + id + " of type " + tp.getTransactionType() + " with disposalstrategy " + guard.getClass().getSimpleName());
     }
-    //anzahl offener transaktionen merken, damit persistenceservices schnell wissen, ob sie transaktion suchen müssen.
+    //anzahl offener transaktionen merken, damit persistenceservices schnell wissen, ob sie transaktion suchen mï¿½ssen.
     ChildOrderStorageStack childOrderStorageStack = ChildOrderStorage.childOrderStorageStack.get();
     if (childOrderStorageStack.getCorrelatedXynaOrder() != null) {
       long rootId = childOrderStorageStack.getCorrelatedXynaOrder().getRootOrder().getId();

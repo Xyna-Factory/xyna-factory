@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ public class MonitoringDispatcher extends FunctionGroup {
     }
     ods.registerStorable(MonitoringDispatcherStorable.class);
     destinations = new HashMap<DestinationKey, MonitoringDispatcherStorable>();
-    isInitialized = true; //shutdown ist nun durchführbar 
+    isInitialized = true; //shutdown ist nun durchfï¿½hrbar 
     
     XynaFactory
         .getInstance()
@@ -361,7 +361,7 @@ public class MonitoringDispatcher extends FunctionGroup {
       }
     }
     
-    //Regel für das eigene Monitoringlevel entfernen
+    //Regel fï¿½r das eigene Monitoringlevel entfernen
     ParameterInheritanceManagement parameterInheritanceMgmt = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getParameterInheritanceManagement();
     try {
       parameterInheritanceMgmt.removeInheritanceRule(ParameterType.MonitoringLevel, dk, null);

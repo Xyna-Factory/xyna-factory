@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public class InputGeneratorData implements Serializable {
 
   private final InputGeneratorType inputGeneratorType; //Typ des InputGenerators
   private String constantInput; //XML-Darstellung des konstanten Inputss 
-  private String storable; //vollqualifizierter Name des Storables für den OnTheFly-InputGenerator 
+  private String storable; //vollqualifizierter Name des Storables fï¿½r den OnTheFly-InputGenerator 
   private String sortCriteria; //Sortierkriterien (bei OnTheFly)
   private String query; //benutzerdefinierte QueryCondition in XFL (bei OnTheFly)
   private int maximumInputs; //maximale Anzahl an Inputs, die der Generator erzeugen soll

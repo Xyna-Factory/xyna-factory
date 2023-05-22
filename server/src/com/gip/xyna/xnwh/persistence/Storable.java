@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public abstract class Storable<T extends Storable<?>> implements Serializable {
   private static final long serialVersionUID = 1294652313288358794L;
   protected static final Logger logger = CentralFactoryLogging.getLogger(Storable.class);
 
-  //FIXME alle caches müssen geleert werden, wenn das storable undeployed wird (oder redeployed)
+  //FIXME alle caches mï¿½ssen geleert werden, wenn das storable undeployed wird (oder redeployed)
   private static Map<Class<? extends Storable>, Persistable> cachedPersistables = new HashMap<Class<? extends Storable>, Persistable>();
   private static Map<Class<? extends Storable>, CompositeIndex[]> cachedCompositeIndices = new HashMap<Class<? extends Storable>, CompositeIndex[]>();
   private static Map<Class<? extends Storable>, Column[]> cachedColumns = new HashMap<Class<? extends Storable>, Column[]>();
@@ -322,7 +322,7 @@ public abstract class Storable<T extends Storable<?>> implements Serializable {
 
   /**
    * default = false.
-   * wenn true zurückgegeben wird, verwendet {@link #getValueByColString(String)} die getter
+   * wenn true zurï¿½ckgegeben wird, verwendet {@link #getValueByColString(String)} die getter
    * (via {@link #getValueByColStringViaGetter(String)}, ansonsten wird direkt per 
    * reflection auf die felder zugegriffen.
    */
@@ -473,7 +473,7 @@ public abstract class Storable<T extends Storable<?>> implements Serializable {
         }
       }
     } catch (SQLException e) {
-      //FIXME Workaround für memory implementierung
+      //FIXME Workaround fï¿½r memory implementierung
       if (e.getMessage().equals(UnsupportingResultSet.UNSUPPORTED_MESSAGE)) {
         if (logger.isTraceEnabled()) {
           logger.trace("readByteArrayDirectlyFromResultSet failed. this is normal for objects in memory persistence layer.", e);
@@ -536,7 +536,7 @@ public abstract class Storable<T extends Storable<?>> implements Serializable {
         }
       }
     } catch (SQLException e) {
-      //FIXME Workaround für memory implementierung
+      //FIXME Workaround fï¿½r memory implementierung
       if (UnsupportingResultSet.UNSUPPORTED_MESSAGE.equals(e.getMessage())) {
         if (logger.isTraceEnabled()) {
           logger.trace("readBlobbedJavaObjectFromResultSet failed. this is normal "
@@ -563,12 +563,12 @@ public abstract class Storable<T extends Storable<?>> implements Serializable {
   }
   
   /**
-   * Object soll aus InputStream is gelesen und zurückgegeben werden.
+   * Object soll aus InputStream is gelesen und zurï¿½ckgegeben werden.
    * Die Serialisierung kann in abgeleiteten Klassen pro Spalte colName individuell angepasst werden.
    */
   public Object deserializeByColName( String colName, InputStream is) throws IOException {
     try {
-      ObjectInputStream ois = getObjectInputStreamForStorable(is); //der objectinputstream kann damit überschrieben werden
+      ObjectInputStream ois = getObjectInputStreamForStorable(is); //der objectinputstream kann damit ï¿½berschrieben werden
       Object o = ois.readObject();
       if (o instanceof SerializableClassloadedObject) {
         o = ((SerializableClassloadedObject) o).getObject();
@@ -579,7 +579,7 @@ public abstract class Storable<T extends Storable<?>> implements Serializable {
     }
   }
  
-  //folgende methoden könnten auch hier definiert sein und per reflection herausfinden, wie das command auszusehen hat (cachen)
+  //folgende methoden kï¿½nnten auch hier definiert sein und per reflection herausfinden, wie das command auszusehen hat (cachen)
   /**
    * @return wert des pks
    */
@@ -594,10 +594,10 @@ public abstract class Storable<T extends Storable<?>> implements Serializable {
 
 
   /**
-   * von storables kann das überschrieben werden, zb für updates durch {@link UpdateObjectInputStream} wird von
+   * von storables kann das ï¿½berschrieben werden, zb fï¿½r updates durch {@link UpdateObjectInputStream} wird von
    * {@link #readBlobbedJavaObjectFromResultSet(ResultSet, String)} benutzt, um einzelne spalten aus dem resultset als
    * blob zu lesen.
-   * @return überschriebener stream
+   * @return ï¿½berschriebener stream
    */
   public ObjectInputStream getObjectInputStreamForStorable(InputStream in) throws IOException {
     if (in instanceof ObjectInputStream) {

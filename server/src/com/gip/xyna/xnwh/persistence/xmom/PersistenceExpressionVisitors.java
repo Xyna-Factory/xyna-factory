@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -268,7 +268,7 @@ public class PersistenceExpressionVisitors {
               accessPath.add(column);
               targetColumn = column.getStorableVariableInformation().getColInfoByVarType(VarType.DEFAULT); // all other columns have an infrastructure purpose
             } else {
-              // entspricht where liste is leer -> wir können noch kein length auf listen
+              // entspricht where liste is leer -> wir kï¿½nnen noch kein length auf listen
               throw new RuntimeException("Condition on list valued members not supported in this way (" + column.getVariableName() + ").");
             }
           }
@@ -308,7 +308,7 @@ public class PersistenceExpressionVisitors {
               accessPath.add(column);
               targetColumn = column.getStorableVariableInformation().getColInfoByVarType(VarType.DEFAULT);
             } else {
-              //entspricht where liste is leer -> wir können noch kein length auf listen
+              //entspricht where liste is leer -> wir kï¿½nnen noch kein length auf listen
               throw new RuntimeException("Condition on list valued members not supported in this way (" + column.getVariableName() + ").");
             }
           }
@@ -392,7 +392,7 @@ public class PersistenceExpressionVisitors {
                 if (lastFunctionInStackIsGlob()) {
                   //TODO: das stimmt so nicht unbedingt, wenn die parameter von functions noch irgendwie anderweitig bearbeitet werden
                   //     beispiel: glob(%0%.a, "1"+"*")
-                  //     dann müsste man aber eh solche funktionen noch separat auswerten, bevor man sie als parameter weitergibt!
+                  //     dann mï¿½sste man aber eh solche funktionen noch separat auswerten, bevor man sie als parameter weitergibt!
                   
                   v = applyGlobEscapes(v);
                 }
@@ -531,7 +531,7 @@ public class PersistenceExpressionVisitors {
       if (!variableIdentification.isEmpty()) {
         StorableColumnInformation column = variableIdentification.peek(); 
         if (part.getIndexDef() != null) {
-          //die index-spalte ist immer im nächsten storable definiert (helper-storable oder expansiv)
+          //die index-spalte ist immer im nï¿½chsten storable definiert (helper-storable oder expansiv)
           StorableStructureInformation ssi = column.getStorableVariableInformation();
           StorableColumnInformation idxCol = ssi.getColInfoByVarType(VarType.LIST_IDX);
           whereClause.append(new ArrayList<StorableColumnInformation>(variableIdentification), idxCol);
@@ -890,7 +890,7 @@ public class PersistenceExpressionVisitors {
   
   protected static class XMOMStorableStructureCacheVariableContextIdentification implements VariableContextIdentification {
 
-    private final XMOMStorableStructureInformation infoForVarNum0; //%0% zugehörige info
+    private final XMOMStorableStructureInformation infoForVarNum0; //%0% zugehï¿½rige info
     
     public XMOMStorableStructureCacheVariableContextIdentification(XMOMStorableStructureInformation info) {
       this.infoForVarNum0  = info;
@@ -1317,7 +1317,7 @@ private static class StorableStructureType implements ModelledType {
     
     public String getSqlString(AliasDictionary dictionary) {
       String whereClauseString = whereClause.finishWhereClause(dictionary);
-      whereClauseString = whereClauseString.replaceAll("!= NULL ", "IS NOT NULL "); //FIXME IS NULL-behandlung ist hier nicht schön aufgehoben...
+      whereClauseString = whereClauseString.replaceAll("!= NULL ", "IS NOT NULL "); //FIXME IS NULL-behandlung ist hier nicht schï¿½n aufgehoben...
       whereClauseString = whereClauseString.replaceAll("= NULL ", "IS NULL ");
       return whereClauseString;
     }
@@ -1353,7 +1353,7 @@ private static class StorableStructureType implements ModelledType {
     }
 
     /**
-     * enthält nur listen indizes seit dem letzten xmom storable 
+     * enthï¿½lt nur listen indizes seit dem letzten xmom storable 
      */
     public String getPrimaryKeyListSuffix() {
       return primaryKeyListSuffix;

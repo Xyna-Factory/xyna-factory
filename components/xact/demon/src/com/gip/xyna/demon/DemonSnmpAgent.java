@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,12 @@ import com.gip.xyna.utils.snmp.varbind.VarBindList;
 import com.gip.xyna.utils.snmp.OID;
 
 /**
- * DemonSnmpAgent ist ein SnmpAgent zur Überwachung des Demons.
- * Er besitzt folgende Überwachungsmöglichkeiten:
+ * DemonSnmpAgent ist ein SnmpAgent zur ï¿½berwachung des Demons.
+ * Er besitzt folgende ï¿½berwachungsmï¿½glichkeiten:
  * <ul>
  *   <li>Ausgabe des aktuellen Status "running" oder "stopped"</li>
  *   <li>Verschicken eines Signals an den Demon, Start(1), Stop(15), Log(0), Kill(9)</li>
- *   <li>Ausgabe folgender Parameter zur Überwachung, entweder einzeln oder als Walk:
+ *   <li>Ausgabe folgender Parameter zur ï¿½berwachung, entweder einzeln oder als Walk:
  *     <ul>
  *       <li>Anzahl aktiver Threads</li>
  *       <li>Anzahl der eingegangenen Requests</li>

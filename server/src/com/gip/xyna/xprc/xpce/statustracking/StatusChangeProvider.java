@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -282,11 +282,11 @@ public class StatusChangeProvider extends FunctionGroup {
     IStatusChangeListener[] copy;
     readLock.lock();
     try {
-      //TODO performance: die sicherheitskopie könnte man auch nur einmal machen und sich dann in der xynaorder merken.
+      //TODO performance: die sicherheitskopie kï¿½nnte man auch nur einmal machen und sich dann in der xynaorder merken.
      
-      //vielleicht ist das sogar ein bug, und man MUSS das machen. ansonsten werden nicht alle zustandsübergänge
-      //eines auftrags innerhalb eines listeners ausgeführt
-      //achtung: transactionmgmt verlässt sich auf das bisherige feature!!
+      //vielleicht ist das sogar ein bug, und man MUSS das machen. ansonsten werden nicht alle zustandsï¿½bergï¿½nge
+      //eines auftrags innerhalb eines listeners ausgefï¿½hrt
+      //achtung: transactionmgmt verlï¿½sst sich auf das bisherige feature!!
 
       IStatusChangeListener[] relevantListeners = listeners.get(xo.getDestinationKey());
 
@@ -296,7 +296,7 @@ public class StatusChangeProvider extends FunctionGroup {
       }
 
       int l = relevantListeners.length;
-      //ungelockt auf kopie arbeiten, falls statusChanged länger dauert
+      //ungelockt auf kopie arbeiten, falls statusChanged lï¿½nger dauert
       copy = new IStatusChangeListener[l];
       System.arraycopy(relevantListeners, 0, copy, 0, l);
 

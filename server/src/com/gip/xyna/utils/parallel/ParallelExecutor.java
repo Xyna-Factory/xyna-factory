@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,61 +31,61 @@ import com.gip.xyna.utils.concurrent.IncrementableCountDownLatch;
 
 
 /**
- * ParallelExecutor kann priorisierte Tasks in einer Queue sammeln und ausführen.
+ * ParallelExecutor kann priorisierte Tasks in einer Queue sammeln und ausfï¿½hren.
  * Eigenschaften:
  * <ul>
- * <li>{@link #addTask(ParallelTask)} nimmt auch während der Ausführung weitere {@link ParallelTask}s an</li>
- * <li>{@link #execute()} führt die Task aus und kehrt sofort zurück</li>
+ * <li>{@link #addTask(ParallelTask)} nimmt auch wï¿½hrend der Ausfï¿½hrung weitere {@link ParallelTask}s an</li>
+ * <li>{@link #execute()} fï¿½hrt die Task aus und kehrt sofort zurï¿½ck</li>
  * <li>{@link #await()} wartet auf Beendigung der Tasks</li>
- * <li>{@link #executeAndAwait()} führt die Task aus und wartet auf Beendigung, auch der aktuelle Thread wird benutzt.</li>
- * <li>{@link #size()} gibt die Anzahl der noch nicht ausgeführten Task an</li>
- * <li>{@link #currentlyExecutingTasks()} gibt die Anzahl der aktuell ausgeführten Tasks an</li>
- * <li>{@link #executedTasks()} gibt die Anzahl der bereits ausgeführten Task an</li>
- * <li>{@link #isExecuting()} gibt an, ob derzeit Threads mit der Task-Bearbeitung beschäftigt sind</li>
+ * <li>{@link #executeAndAwait()} fï¿½hrt die Task aus und wartet auf Beendigung, auch der aktuelle Thread wird benutzt.</li>
+ * <li>{@link #size()} gibt die Anzahl der noch nicht ausgefï¿½hrten Task an</li>
+ * <li>{@link #currentlyExecutingTasks()} gibt die Anzahl der aktuell ausgefï¿½hrten Tasks an</li>
+ * <li>{@link #executedTasks()} gibt die Anzahl der bereits ausgefï¿½hrten Task an</li>
+ * <li>{@link #isExecuting()} gibt an, ob derzeit Threads mit der Task-Bearbeitung beschï¿½ftigt sind</li>
  * <li>{@link #drainTasksTo(Collection)} entfernt alle unbearbeiteten Task aus der Queue und kopiert diese
-       in die übergebene Collection</li>
+       in die ï¿½bergebene Collection</li>
  * <li>Die ParallelTasks haben eine Priority, mit {@link #setPriorityThreshold(int)} kann ein Schwellenwert
- *     gesetzt werden. Tasks mit einer Priority unter diesem Wert werden nicht ausgeführt. Damit kann während 
- *     der Ausführung das Abarbeiten von weiteren Tasks unterbunden oder eingeschränkt werden.</li>
- * <li>Im Konstruktor kann ein ThreadLimit angegeben werden. Darüber wird die Anzahl der laufenden 
- *     Threads kontrolliert, auch eine nachträgliche Änderung der Threadanzahl ist über 
- *     {@link #setThreadLimit(int)} (und {@link #getThreadLimit()}) möglich.</li>
- * <li>Die Tasks werden in den Threads nicht direkt ausgeführt, sondern erst in den {@link TaskConsumer}n,
- *     welche in den Threads ausgeführt werden. Die TaskConsumer können über den 
- *     {@link TaskConsumerPreparator} konfiguriert werden, der TaskConsumerPreparator kann über 
+ *     gesetzt werden. Tasks mit einer Priority unter diesem Wert werden nicht ausgefï¿½hrt. Damit kann wï¿½hrend 
+ *     der Ausfï¿½hrung das Abarbeiten von weiteren Tasks unterbunden oder eingeschrï¿½nkt werden.</li>
+ * <li>Im Konstruktor kann ein ThreadLimit angegeben werden. Darï¿½ber wird die Anzahl der laufenden 
+ *     Threads kontrolliert, auch eine nachtrï¿½gliche ï¿½nderung der Threadanzahl ist ï¿½ber 
+ *     {@link #setThreadLimit(int)} (und {@link #getThreadLimit()}) mï¿½glich.</li>
+ * <li>Die Tasks werden in den Threads nicht direkt ausgefï¿½hrt, sondern erst in den {@link TaskConsumer}n,
+ *     welche in den Threads ausgefï¿½hrt werden. Die TaskConsumer kï¿½nnen ï¿½ber den 
+ *     {@link TaskConsumerPreparator} konfiguriert werden, der TaskConsumerPreparator kann ï¿½ber 
  *     {@link #setTaskConsumerPreparator(TaskConsumerPreparator)} gesetzt werden.</li>
  * </ul>   
  * 
- * Funktioniert besonders gut mit Threadpools, die keine große Queue besitzen (z.b. SynchronousQueue).
- * TODO Queues besser unterstützen. Ziel: Main-Thread arbeitet alle Tasks ab, auch wenn der Threadpool voll ist, aber Platz in der Queue ist. 
+ * Funktioniert besonders gut mit Threadpools, die keine groï¿½e Queue besitzen (z.b. SynchronousQueue).
+ * TODO Queues besser unterstï¿½tzen. Ziel: Main-Thread arbeitet alle Tasks ab, auch wenn der Threadpool voll ist, aber Platz in der Queue ist. 
  */
 public class ParallelExecutor {
 
   protected static final Logger logger = Logger.getLogger(ParallelExecutor.class);
 
   protected final PriorityBlockingQueue<ParallelTask> allTasks; //alle Tasks 
-  protected Executor threadPoolExecutor;              //ausführender ThreadPool
+  protected Executor threadPoolExecutor;              //ausfï¿½hrender ThreadPool
   protected AtomicBoolean executing;                            //Sperre, damit execute oder executeAndAwait nicht mehrfach gleichzeitig gestarten werden
-  protected volatile int priorityThreshold;                     //Schwellwert, so dass nicht alle Tasks ausgeführt werden
+  protected volatile int priorityThreshold;                     //Schwellwert, so dass nicht alle Tasks ausgefï¿½hrt werden
   protected volatile ExecutionFinishedLatch executionFinished;  //Registriering laufender TaskConsumer/Threads
-  protected volatile int threadLimit;                           //Einschränkung der Parallelität
-  protected AtomicInteger executionCount;                       //Zählt, wieviel Tasks ausgeführt wurden
+  protected volatile int threadLimit;                           //Einschrï¿½nkung der Parallelitï¿½t
+  protected AtomicInteger executionCount;                       //Zï¿½hlt, wieviel Tasks ausgefï¿½hrt wurden
   protected TaskConsumerPreparator taskConsumerPreparator;      //Konfiguration der TaskConsumer
-  protected boolean logTasks = false;                           //LogMeldungen, wenn neue Tasks hinzugefügt werden
-  protected Runnable executionFinishedRunnable;                 //wird ausgeführt, wenn alle Task ausgeführt wurden
+  protected boolean logTasks = false;                           //LogMeldungen, wenn neue Tasks hinzugefï¿½gt werden
+  protected Runnable executionFinishedRunnable;                 //wird ausgefï¿½hrt, wenn alle Task ausgefï¿½hrt wurden
   private final AtomicInteger runningTaskConsumerCnt = new AtomicInteger(0);
   private final Object lock = new Object();
   
   /**
-   * Unbeschränkte Verwendung des ThreadPools
+   * Unbeschrï¿½nkte Verwendung des ThreadPools
    */
   public ParallelExecutor(Executor threadPoolExecutor) {
     this(threadPoolExecutor, Integer.MAX_VALUE );
   }
   
   /**
-   * Auf Limit eingeschränkte Verwendung des ThreadPools
-   * (bei executeAndAwait auf Limit-1 eingeschränkt, so dass maximal Limit Threads laufen)
+   * Auf Limit eingeschrï¿½nkte Verwendung des ThreadPools
+   * (bei executeAndAwait auf Limit-1 eingeschrï¿½nkt, so dass maximal Limit Threads laufen)
    * @param threadPoolExecutor
    * @param threadLimit
    */
@@ -114,9 +114,9 @@ public class ParallelExecutor {
 
   /**
    * ExecutionFinishedLatch:
-   * <li>Latch, mit dem auf das Ende der aktuell ausgeführten Threads
+   * <li>Latch, mit dem auf das Ende der aktuell ausgefï¿½hrten Threads
    * gewartet werden kann</li>
-   * <li>zählt die Anzahl der aktuell ausgeführten Threads</li>
+   * <li>zï¿½hlt die Anzahl der aktuell ausgefï¿½hrten Threads</li>
    * <li>Setzt das <code>executing</code>-Flag auf <code>false</code> nach Beendigung der Threads</li>
    */
   private class ExecutionFinishedLatch extends IncrementableCountDownLatch {
@@ -159,28 +159,28 @@ public class ParallelExecutor {
   }
   
   /**
-   * Tasks mit hoher Priority sollen bevorzugt bearbeitet werden, dazu müssen die Tasks sortiert werden können.
+   * Tasks mit hoher Priority sollen bevorzugt bearbeitet werden, dazu mï¿½ssen die Tasks sortiert werden kï¿½nnen.
    */
   private static class TaskPrioComparator implements Comparator<ParallelTask> {
     public int compare(ParallelTask pt1, ParallelTask pt2) {
-      return pt2.getPriority() - pt1.getPriority(); //höchste zuerst
+      return pt2.getPriority() - pt1.getPriority(); //hï¿½chste zuerst
     }
   }  
 
   /**
-   * Modifikation der Task-Ausführung: Vor und nach der Ausführung des Tasks 
-   * werden diese Methoden ausgeführt.
+   * Modifikation der Task-Ausfï¿½hrung: Vor und nach der Ausfï¿½hrung des Tasks 
+   * werden diese Methoden ausgefï¿½hrt.
    */
   public interface BeforeAndAfterExecution {
 
     /**
-     * Wird vor jeder Task-Ausführung aufgerufen
+     * Wird vor jeder Task-Ausfï¿½hrung aufgerufen
      * @param task
      */
     void beforeExecution(ParallelTask task);
 
     /**
-     * Wird nach jeder Task-Ausführung aufgerufen
+     * Wird nach jeder Task-Ausfï¿½hrung aufgerufen
      * @param task
      */
     void afterExecution(ParallelTask task);
@@ -192,13 +192,13 @@ public class ParallelExecutor {
    * <ul>
    * <li>mit {@link #newTaskConsumer()} kann eine Subklasse des {@link TaskConsumer} erzeugt werden</li>
    * <li>mit {@link #prepareExecutorRunnable(TaskConsumer)} kann ein anderes Runnable als der 
-   * TaskConsumer im ThreadPool ausgeführt werden. Dieses Runnable muss natürlich
-   * auch TaskConsumer.run() ausführen</li>
+   * TaskConsumer im ThreadPool ausgefï¿½hrt werden. Dieses Runnable muss natï¿½rlich
+   * auch TaskConsumer.run() ausfï¿½hren</li>
    * </ul>
-   * Damit kann beispielsweise im TaskConsumer über 
+   * Damit kann beispielsweise im TaskConsumer ï¿½ber 
    * {@link TaskConsumer#setBeforeAndAfterExecution(BeforeAndAfterExecution)} eine Implementierung des 
-   * Interfaces {@link BeforeAndAfterExecution} angeben werden, mit der Code vor und nach jeder Task-Ausführung
-   * ausgeführt werden kann. 
+   * Interfaces {@link BeforeAndAfterExecution} angeben werden, mit der Code vor und nach jeder Task-Ausfï¿½hrung
+   * ausgefï¿½hrt werden kann. 
    */
   public interface TaskConsumerPreparator {
 
@@ -209,7 +209,7 @@ public class ParallelExecutor {
     TaskConsumer newTaskConsumer();
 
     /**
-     * Rückgabe des Runnable, welches dann im ThreadPool laufen soll
+     * Rï¿½ckgabe des Runnable, welches dann im ThreadPool laufen soll
      * @param tc
      * @return
      */
@@ -217,7 +217,7 @@ public class ParallelExecutor {
 
     /**
      * TaskConsumerPreparator sollte seinen ParallelExecutor kennen, da die neuen 
-     * TaskConsumer den ParallelExecutor kennen müssen
+     * TaskConsumer den ParallelExecutor kennen mï¿½ssen
      * @param parallelExecutor
      */
     void setParallelExecutor(ParallelExecutor parallelExecutor);
@@ -227,10 +227,10 @@ public class ParallelExecutor {
    * TaskConsumer konsumiert die Tasks aus der Queue.
    * Eigenschaften:
    * <ul>
-   * <li>Die Tasks werden in einer Schleife der Queue entnommen und ausgeführt -&gt;
-   *   weniger Threads insgesamt werden verwendet, da ein Thread mehrere Tasks ausführen kann.</li>
-   * <li>Zusätzlich wird in jedem Schleifendurchlauf probiert, einen weiteren TaskConsumer zu starten -&gt;
-   *   ThreadPool kann voll ausgelastet werden, auch wenn zu Beginn nicht alle Threads zu Verfügung standen.</li>
+   * <li>Die Tasks werden in einer Schleife der Queue entnommen und ausgefï¿½hrt -&gt;
+   *   weniger Threads insgesamt werden verwendet, da ein Thread mehrere Tasks ausfï¿½hren kann.</li>
+   * <li>Zusï¿½tzlich wird in jedem Schleifendurchlauf probiert, einen weiteren TaskConsumer zu starten -&gt;
+   *   ThreadPool kann voll ausgelastet werden, auch wenn zu Beginn nicht alle Threads zu Verfï¿½gung standen.</li>
    * </ul>
    */
   public static class TaskConsumer implements Runnable {
@@ -240,7 +240,7 @@ public class ParallelExecutor {
     protected BeforeAndAfterExecution beforeAndAfterExecution;    
    
     /**
-     * Zählt die Anzahl der laufenden Tasks/Thread herauf
+     * Zï¿½hlt die Anzahl der laufenden Tasks/Thread herauf
      */
     public TaskConsumer(ParallelExecutor parallelExecutor) {
       if (logger.isDebugEnabled()) {
@@ -251,7 +251,7 @@ public class ParallelExecutor {
     }
     
     /**
-     * Setzt BeforeAndAfterExecution, damit bestimmte Aktionen vor und nach Ausführung des Tasks durchgeführt werden können
+     * Setzt BeforeAndAfterExecution, damit bestimmte Aktionen vor und nach Ausfï¿½hrung des Tasks durchgefï¿½hrt werden kï¿½nnen
      * @param beforeAndAfterExecution
      */
     public void setBeforeAndAfterExecution(BeforeAndAfterExecution beforeAndAfterExecution) {
@@ -259,7 +259,7 @@ public class ParallelExecutor {
     }
     
     /**
-     * Zählt die Anzahl der laufenden Tasks/Thread herunter
+     * Zï¿½hlt die Anzahl der laufenden Tasks/Thread herunter
      */
     public void finish() {
       parallelExecutor.executionFinished.countDown();
@@ -267,12 +267,12 @@ public class ParallelExecutor {
 
     
     /**
-     * Ausführung des TaskConsumers:<br>
-     * Schleife, solange noch Tasks ausgeführt werden können (ThreadLimit):<br>
+     * Ausfï¿½hrung des TaskConsumers:<br>
+     * Schleife, solange noch Tasks ausgefï¿½hrt werden kï¿½nnen (ThreadLimit):<br>
      * <ul>
-     * <li>Holen des nächsten Tasks, Abbruch, wenn keiner mehr existiert</li>
-     * <li>Versuch, neuen TaskConsumer zu starten, um ThreadPool so gut wie möglich auszunutzen</li>
-     * <li>Eigentliche Ausführung des Tasks</li>
+     * <li>Holen des nï¿½chsten Tasks, Abbruch, wenn keiner mehr existiert</li>
+     * <li>Versuch, neuen TaskConsumer zu starten, um ThreadPool so gut wie mï¿½glich auszunutzen</li>
+     * <li>Eigentliche Ausfï¿½hrung des Tasks</li>
      * </ul>
      */
     public void run() {
@@ -283,7 +283,7 @@ public class ParallelExecutor {
       int cnt = 0;
       try {
         /*
-         * achtung, hier können alle consumer-threads gleichzeitig entscheiden, dass sie sich beenden sollen, weil mehr consumer als tasks vorhanden sind.
+         * achtung, hier kï¿½nnen alle consumer-threads gleichzeitig entscheiden, dass sie sich beenden sollen, weil mehr consumer als tasks vorhanden sind.
          * es gibt aber immer einen consumer mit "keepThreadRunningUntilTasksEmpty=true", deshalb ist das nicht so schlimm.
          * vgl bug 25926. 
          */
@@ -314,7 +314,7 @@ public class ParallelExecutor {
 
 
     /**
-     * Eigentliche Ausführung des Tasks
+     * Eigentliche Ausfï¿½hrung des Tasks
      */
     private void executeTask(ParallelTask task) {
       if( beforeAndAfterExecution == null ) {
@@ -339,8 +339,8 @@ public class ParallelExecutor {
       TaskConsumer tc = newTaskConsumer();
       int currentlyRunning = executionFinished.getCount();
       if (currentlyRunning > threadLimit) {
-        //doch bereits threadlimit überschritten -> nochmal versuchen TODO das kann man bestimmt auch atomar sicher hinbekommen!
-        //wenn man nicht erneut versuchen würde, gehen evtl alle taskconsumer zu (falls gleichzeitig erstellt)
+        //doch bereits threadlimit ï¿½berschritten -> nochmal versuchen TODO das kann man bestimmt auch atomar sicher hinbekommen!
+        //wenn man nicht erneut versuchen wï¿½rde, gehen evtl alle taskconsumer zu (falls gleichzeitig erstellt)
         tc.finish();
         continue;
       }
@@ -360,7 +360,7 @@ public class ParallelExecutor {
   }
   
   /**
-   * Hinzufügen eines neuen Tasks
+   * Hinzufï¿½gen eines neuen Tasks
    * @param task
    */
   public void addTask(ParallelTask task) {
@@ -371,7 +371,7 @@ public class ParallelExecutor {
   }
   
   /**
-   * Hinzufügen mehrerer neuer Tasks
+   * Hinzufï¿½gen mehrerer neuer Tasks
    * @param tasks
    */
   public void addTasks(Collection<? extends ParallelTask> tasks) {
@@ -382,7 +382,7 @@ public class ParallelExecutor {
   }
 
   /**
-   * Startet die Ausführung der Tasks, kehrt sofort zurück.
+   * Startet die Ausfï¿½hrung der Tasks, kehrt sofort zurï¿½ck.
    * @throws RejectedExecutionException wenn kein Task gestartet werden konnte
    */
   public void execute() throws RejectedExecutionException {
@@ -390,10 +390,10 @@ public class ParallelExecutor {
   }
   
   /**
-   * Startet die Ausführung der Tasks, und wartet, bis die gestarteten Tasks/Threads beendet sind.
+   * Startet die Ausfï¿½hrung der Tasks, und wartet, bis die gestarteten Tasks/Threads beendet sind.
    * Im aktuellen Thread werden ebenfalls Tasks gestartet, nicht nur im ThreadPool.
-   * Achtung: Es kann sein, dass danach noch Tasks nicht ausgeführt worden sind,
-   * wenn es eine ParallelismLimitation mit Limit 0 oder Task mit zu niedriger Priorität gibt
+   * Achtung: Es kann sein, dass danach noch Tasks nicht ausgefï¿½hrt worden sind,
+   * wenn es eine ParallelismLimitation mit Limit 0 oder Task mit zu niedriger Prioritï¿½t gibt
    * @throws InterruptedException 
    */
   public void executeAndAwait() throws InterruptedException {
@@ -402,7 +402,7 @@ public class ParallelExecutor {
   }
   
   /**
-   * Führt executeAndAwait() solange aus, bis kein Task mehr ausgeführt werden kann und schluckt
+   * Fï¿½hrt executeAndAwait() solange aus, bis kein Task mehr ausgefï¿½hrt werden kann und schluckt
    * bis dahin alle InterruptedExceptions.
    * Achtung: Endlosschleife, wenn ParallelismLimitation mit Limit 0 konfiguriert ist.
    */
@@ -430,7 +430,7 @@ public class ParallelExecutor {
     TaskConsumer tc;
     synchronized (lock) { //synchronized, damit nicht erst execution auf false gesetzt wird, und dann trotzdem noch taskconsumer gestartet werden
       if (executing.compareAndSet(false, true)) {
-        //initialisiert latch mit count=1 - muss nach der taskconsumer erstellung wieder runtergezählt werden.
+        //initialisiert latch mit count=1 - muss nach der taskconsumer erstellung wieder runtergezï¿½hlt werden.
         //darf hier nicht mit 0 initialisiert werden, weil sonst ein zeitintervall existiert, in dem das latch von einem anderen thread releast werden kann.
         executionFinished = new ExecutionFinishedLatch(executionFinishedRunnable, lock);
       } else {
@@ -439,7 +439,7 @@ public class ParallelExecutor {
       tc = newTaskConsumer();
     }
     if (!join) {
-      //latch wurde mit 1 initialisiert und in newTaskConsumer nochmal um 1 erhöht
+      //latch wurde mit 1 initialisiert und in newTaskConsumer nochmal um 1 erhï¿½ht
       executionFinished.countDown();
     }
     boolean success = false;
@@ -464,8 +464,8 @@ public class ParallelExecutor {
   
   /**
    * Wartet, bis die derzeit gestarteten Tasks/Threads beendet sind.
-   * Achtung: Es kann sein, dass danach noch Tasks nicht ausgeführt worden sind,
-   * wenn es eine ParallelismLimitation mit Limit 0 oder Task mit zu niedriger Priorität gibt
+   * Achtung: Es kann sein, dass danach noch Tasks nicht ausgefï¿½hrt worden sind,
+   * wenn es eine ParallelismLimitation mit Limit 0 oder Task mit zu niedriger Prioritï¿½t gibt
    * @throws InterruptedException
    */
   public void await() throws InterruptedException {
@@ -479,8 +479,8 @@ public class ParallelExecutor {
 
 
   /**
-   * Liefert den nächsten ausführbaren Task. 
-   * Wegen zu niedriger Priorität können evtl. manche Threads nicht ausgeführt werden
+   * Liefert den nï¿½chsten ausfï¿½hrbaren Task. 
+   * Wegen zu niedriger Prioritï¿½t kï¿½nnen evtl. manche Threads nicht ausgefï¿½hrt werden
    * @return
    */
   private ParallelTask getNextTask() {
@@ -489,7 +489,7 @@ public class ParallelExecutor {
       return null;
     }
     if( task.getPriority() < priorityThreshold ) {
-      addTask(task); //Task wieder hinzufügen
+      addTask(task); //Task wieder hinzufï¿½gen
       logger.debug("task priority too low");
       return null;
     }
@@ -498,7 +498,7 @@ public class ParallelExecutor {
 
 
   /**
-   * Erzeugt neuen TaskConsumer, evtl. über taskConsumerPreparator
+   * Erzeugt neuen TaskConsumer, evtl. ï¿½ber taskConsumerPreparator
    * @return
    */
   private TaskConsumer newTaskConsumer() {
@@ -510,7 +510,7 @@ public class ParallelExecutor {
   }
   
   /**
-   * Startet den TaskConsumer im ThreadPool oder für MainThread direkt, evtl. über taskConsumerPreparator
+   * Startet den TaskConsumer im ThreadPool oder fï¿½r MainThread direkt, evtl. ï¿½ber taskConsumerPreparator
    * @param tc
    * @throws RejectedExecutionException
    */
@@ -530,15 +530,15 @@ public class ParallelExecutor {
   }
 
   /**
-   * Prüfung, ob ein weiterer Task ausgeführt werden darf.
-   * Der Grund dafür, einen Task nicht ausführen zu dürfen ist eine ParallelismLimitation, 
+   * Prï¿½fung, ob ein weiterer Task ausgefï¿½hrt werden darf.
+   * Der Grund dafï¿½r, einen Task nicht ausfï¿½hren zu dï¿½rfen ist eine ParallelismLimitation, 
    * die ein kleineres Limit vorgibt als gerade an Threads aktiv ist.
    * @param runningInMainThread
    * @return
    */
   private synchronized boolean canNewTaskBeExcecuted(boolean keepThreadRunningUntilTasksEmpty) {
     //synchronized, weil: 
-    //wenn 2 taskconsumer am laufen sind, können beide sehen, dass sie nichts mehr machen sollen und sich beenden.
+    //wenn 2 taskconsumer am laufen sind, kï¿½nnen beide sehen, dass sie nichts mehr machen sollen und sich beenden.
     //dann wurden ggf zuviele beendet.
     //deshalb muss der check serialisiert werden.
 
@@ -555,8 +555,8 @@ public class ParallelExecutor {
   }
 
   /**
-   * Prüfung, ob ein weiterer Thread benutzt werden darf.
-   * Der Grund dafür, keinen weiteren Thread benutzen zu dürfen ist eine ParallelismLimitation, 
+   * Prï¿½fung, ob ein weiterer Thread benutzt werden darf.
+   * Der Grund dafï¿½r, keinen weiteren Thread benutzen zu dï¿½rfen ist eine ParallelismLimitation, 
    * deren Limit erreicht wurde.
    * @return
    */
@@ -567,7 +567,7 @@ public class ParallelExecutor {
   }
 
   /**
-   * Anzahl der noch nicht bearbeiteten Tasks, kann bei laufender Ausführung kurzzeitig zu klein sein
+   * Anzahl der noch nicht bearbeiteten Tasks, kann bei laufender Ausfï¿½hrung kurzzeitig zu klein sein
    * @return
    */
   public int size() {
@@ -575,10 +575,10 @@ public class ParallelExecutor {
   }
 
   /**
-   * ungefähre Anzahl der in Bearbeitung befindlichen Tasks/Threads
-   * Ungefähr bedeutet, dass Threads noch einen kurzen Zeitraum nach Beendigung des Tasks gezählt werden
-   * bzw. auch schon kurz vor Beginn der Ausführung. Außerdem werden kurzzeitig Tasks gezählt, die sofort 
-   * vom ThreadPoolExecutor über RejectedExecutionException abgelehnt werden.
+   * ungefï¿½hre Anzahl der in Bearbeitung befindlichen Tasks/Threads
+   * Ungefï¿½hr bedeutet, dass Threads noch einen kurzen Zeitraum nach Beendigung des Tasks gezï¿½hlt werden
+   * bzw. auch schon kurz vor Beginn der Ausfï¿½hrung. Auï¿½erdem werden kurzzeitig Tasks gezï¿½hlt, die sofort 
+   * vom ThreadPoolExecutor ï¿½ber RejectedExecutionException abgelehnt werden.
    * @return
    */
   public int currentlyExecutingTasks() {
@@ -590,7 +590,7 @@ public class ParallelExecutor {
   }
   
   /**
-   * Anzahl der bereits ausgeführten Tasks
+   * Anzahl der bereits ausgefï¿½hrten Tasks
    * @return
    */
   public int executedTasks() {
@@ -606,14 +606,14 @@ public class ParallelExecutor {
   }
 
   /**
-   * Entfernt alle unbearbeiteten Task aus der Queue und kopiert diese in die übergebene Collection
+   * Entfernt alle unbearbeiteten Task aus der Queue und kopiert diese in die ï¿½bergebene Collection
    */
   public void drainTasksTo(Collection<? super ParallelTask> c) {
     allTasks.drainTo(c);
   }
 
   /**
-   * Setzen einer Prioritätsschwelle: Nur Task mit der gleichen oder höherer Priority dürfen bearbeitet werden
+   * Setzen einer Prioritï¿½tsschwelle: Nur Task mit der gleichen oder hï¿½herer Priority dï¿½rfen bearbeitet werden
    * @param priorityThreshold
    */
   public void setPriorityThreshold(int priorityThreshold) {
@@ -665,9 +665,9 @@ public class ParallelExecutor {
   }
 
   /**
-   * Liegen noch unbearbeitete, ausführbare Tasks in der Liste?
-   * Wegen priorityThreshold können manche Tasks nicht ausgeführt werden
-   * @return true, wenn Tasks gestartet werden können
+   * Liegen noch unbearbeitete, ausfï¿½hrbare Tasks in der Liste?
+   * Wegen priorityThreshold kï¿½nnen manche Tasks nicht ausgefï¿½hrt werden
+   * @return true, wenn Tasks gestartet werden kï¿½nnen
    */
   public boolean hasExecutableTasks() {
     ParallelTask pt = allTasks.peek();

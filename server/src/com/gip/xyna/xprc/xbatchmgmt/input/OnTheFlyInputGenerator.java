@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ public class OnTheFlyInputGenerator extends InputGenerator {
   
   @Override
   public boolean hasNext() throws PersistenceLayerException, InvalidObjectPathException {
-    //wieviel müssen noch gestartet werden?
+    //wieviel mï¿½ssen noch gestartet werden?
     int numberToBeStarted = maximumInputs == 0 ? Integer.MAX_VALUE : (maximumInputs-startedInputs);
     
     if (numberToBeStarted <= 0 ) {
@@ -143,7 +143,7 @@ public class OnTheFlyInputGenerator extends InputGenerator {
     String lastInputQuery = createLastInputQuery();
     IFormula formula = new GetNextInputs(lastInputQuery);
     
-    //maxRows: es müssen nur so viele Datensätze geholt werden, wie noch Slaves gestartet werden müssen.
+    //maxRows: es mï¿½ssen nur so viele Datensï¿½tze geholt werden, wie noch Slaves gestartet werden mï¿½ssen.
     int maxRows = Math.min(XynaProperty.BATCH_INPUT_MAX_ROWS.get(), numberToBeStarted);
    
     QueryParameter queryParameter = new QueryParameter(maxRows, false, sortCriteria);
@@ -167,7 +167,7 @@ public class OnTheFlyInputGenerator extends InputGenerator {
         return buildNext(inputId, getInputById(inputId) );
       }
       
-      //nächsten neuen Input ausgeben
+      //nï¿½chsten neuen Input ausgeben
       XynaObject nextInput = inputs.remove(0);
       lastInputId = String.valueOf(nextInput.get(idColumn));
 
@@ -232,14 +232,14 @@ public class OnTheFlyInputGenerator extends InputGenerator {
       }
     }
     if( containerIndex < 0 ) {
-      //Keine freie Position, daher einfach hintenanhängen
+      //Keine freie Position, daher einfach hintenanhï¿½ngen
       containerIndex = container.size();
       container.add(null);    
     }
   }
 
   /**
-   * IFormula, um die nächsten Inputs zu selektieren.
+   * IFormula, um die nï¿½chsten Inputs zu selektieren.
    */
   public class GetNextInputs implements IFormula {
 
@@ -260,7 +260,7 @@ public class OnTheFlyInputGenerator extends InputGenerator {
       if (query != null && query.length() > 0) {
         sb.append("(").append(query).append(")");
       }
-      //nur Werte größer als der letzte Input selektieren
+      //nur Werte grï¿½ï¿½er als der letzte Input selektieren
       if (lastInputId != null) {
         if (sb.length() > 0) {
           sb.append(" && ");
@@ -301,7 +301,7 @@ public class OnTheFlyInputGenerator extends InputGenerator {
   
   @Override
   public int getRemainingInputs() {
-    //FIXME hier müsste ein select count(*) ausgeführt werden, geht derzeit nicht.... BUG 16141
+    //FIXME hier mï¿½sste ein select count(*) ausgefï¿½hrt werden, geht derzeit nicht.... BUG 16141
     //deswegen wie im ConstantInputGenerator
     if( maximumInputs == 0 ) {
       return -1;

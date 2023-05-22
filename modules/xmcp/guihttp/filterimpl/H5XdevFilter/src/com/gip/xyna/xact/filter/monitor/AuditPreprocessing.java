@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class AuditPreprocessing {
   
   public static final String PROPERTY_LAZY_LOADING_LIMIT = "xyna.processmonitor.lazyloading.limit";
   public static final XynaPropertyInt LAZY_LOADING_LIMIT = new XynaPropertyInt(PROPERTY_LAZY_LOADING_LIMIT, 1000)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Maximale Anzahl an Schleifen-Iterationen und Elementen in Listen, die bei Lazy Loading in Audits gesendet werden. -1 bedeutet kein Limit - Warnung: kann zu Fabrikabstürzen wegen Out-of-Memory führen!")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Maximale Anzahl an Schleifen-Iterationen und Elementen in Listen, die bei Lazy Loading in Audits gesendet werden. -1 bedeutet kein Limit - Warnung: kann zu Fabrikabstï¿½rzen wegen Out-of-Memory fï¿½hren!")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Maximum number of loop iterations and elements in lists to be transferred for lazy loading in audits. -1 means no limit - Warning: can lead to factory crashes due to out-of-memory!");
 
   private static final Logger logger = CentralFactoryLogging.getLogger(AuditPreprocessing.class);

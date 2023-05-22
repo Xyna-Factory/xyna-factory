@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,8 +58,8 @@ public class TypeMappingCache {
   }
 
   /**
-   * versucht eine klasse zu laden, deren name der value zu dem übergebenen key in der mapping-tabelle ist.
-   * zum laden wird der übergebene classloader verwendet.
+   * versucht eine klasse zu laden, deren name der value zu dem ï¿½bergebenen key in der mapping-tabelle ist.
+   * zum laden wird der ï¿½bergebene classloader verwendet.
    */
   public Class<? extends XynaObject> lookupClass(ClassLoader classLoader, String targetId, String key) {
     String typeName = lookup(targetId, key);
@@ -70,8 +70,8 @@ public class TypeMappingCache {
   }
   
   /**
-   * versucht eine klasse zu laden, deren name der value zu dem übergebenen key in der mapping-tabelle ist.
-   * zum laden wird der übergebene classloader verwendet.
+   * versucht eine klasse zu laden, deren name der value zu dem ï¿½bergebenen key in der mapping-tabelle ist.
+   * zum laden wird der ï¿½bergebene classloader verwendet.
    */
   public Class<? extends XynaObject> lookupClass(ClassLoader classLoader, String typeName) {
     if (typeName == null) {

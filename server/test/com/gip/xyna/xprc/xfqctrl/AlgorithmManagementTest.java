@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -459,7 +459,7 @@ public abstract class AlgorithmManagementTest extends TestCase {
     public final static String SPR_NAME = "StartParameterRunnable";
     public final static StringParameter<Integer> INTERVAL = StringParameter.typeInteger("interval")
                                                                            .defaultValue(1)
-                                                                           .documentation(Documentation.de("Interval für die Erhöhung des ExecutionCounters")
+                                                                           .documentation(Documentation.de("Interval fï¿½r die Erhï¿½hung des ExecutionCounters")
                                                                                                        .en("Interval for incrementation of the ExecutionCounter")
                                                                                                        .build())
                                                                            .label("ExecutionCounter interval")

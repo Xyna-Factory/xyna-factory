@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class PropertyMap<K, V> extends ConcurrentHashMap<K, V> {
   }
 
   /**
-   * erstellt eine nicht modifizierbare kopie der map und übernimmt den modifiedcount
+   * erstellt eine nicht modifizierbare kopie der map und ï¿½bernimmt den modifiedcount
    */
   public PropertyMap<K, V> getAsUnmodifiablePropertyMap() {
     Map<K, V> newMap = Collections.unmodifiableMap(this);

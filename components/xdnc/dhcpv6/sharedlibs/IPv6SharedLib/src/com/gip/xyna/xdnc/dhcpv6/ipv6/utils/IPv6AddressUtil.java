@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 /**
  * IPv6AddressUtil liefert eine Darstellung einer IPv6-Addresse und bietet
- * einige Hilfsfunktionen für Manipulationen.
+ * einige Hilfsfunktionen fï¿½r Manipulationen.
  *
  * IPv6Address ist immutable und threadsafe.
  *
@@ -82,7 +82,7 @@ public class IPv6AddressUtil implements IPv6Util{
    */
   public int compareTo(IPv6AddressUtil other) {
     for( int i=0; i<8; ++i ) {
-      int diff =  parts[i] - other.parts[i]; //es kann kein Überlauf geben, daher ok
+      int diff =  parts[i] - other.parts[i]; //es kann kein ï¿½berlauf geben, daher ok
       if( diff != 0 ) {
         return diff;
       }
@@ -149,7 +149,7 @@ public class IPv6AddressUtil implements IPv6Util{
           throw new IPv6AddressParseException("IPv6-Check: multiple double-colons found");
         }
         nullBlock = true;
-        p += 8 - stringParts.length; //auffüllen
+        p += 8 - stringParts.length; //auffï¿½llen
       }
     }
     return new IPv6AddressUtil(parts);
@@ -157,7 +157,7 @@ public class IPv6AddressUtil implements IPv6Util{
 
 
   /**
-   * Parsen einer IP in Form einer großen 128-Bit-Zahl
+   * Parsen einer IP in Form einer groï¿½en 128-Bit-Zahl
    * @param val
    * @return
    */
@@ -209,7 +209,7 @@ public class IPv6AddressUtil implements IPv6Util{
 
 
   /**
-   * Hängt die Zahl i als HexString an sb an
+   * Hï¿½ngt die Zahl i als HexString an sb an
    * @param sb
    * @param i
    * @param leadingZeros falls true: Leftpadding mit 0
@@ -316,23 +316,23 @@ public class IPv6AddressUtil implements IPv6Util{
 
 
   /**
-   * Berücksichtigung des Übertrags bei Increments
+   * Berï¿½cksichtigung des ï¿½bertrags bei Increments
    * @param partsInc
    * @return
    */
   private int[] carryIncrement(int[] partsInc) {
     boolean carry = false;
     for( int p=7; p>=0; --p ) {
-      int val     = partsInc[p] + (carry?1:0);  //aktuellen Wert, evtl. erhöhen;
-      carry       = val > FFFF;                 //weiterer Übertrag nötig?
-      partsInc[p] = val - (carry ? FFFF+1 : 0); //Wert setzen, bei Übertrag aktuellen Wert erniedrigen
+      int val     = partsInc[p] + (carry?1:0);  //aktuellen Wert, evtl. erhï¿½hen;
+      carry       = val > FFFF;                 //weiterer ï¿½bertrag nï¿½tig?
+      partsInc[p] = val - (carry ? FFFF+1 : 0); //Wert setzen, bei ï¿½bertrag aktuellen Wert erniedrigen
     }
     return partsInc;
   }
 
 
   /**
-   * Berücksichtigung des Übertrags bei Decrements
+   * Berï¿½cksichtigung des ï¿½bertrags bei Decrements
    * @param partsDec
    * @return
    */
@@ -340,15 +340,15 @@ public class IPv6AddressUtil implements IPv6Util{
     boolean carry = false;
     for( int p=7; p>=0; --p ) {
       int val     = partsDec[p] - (carry?1:0);  //aktuellen Wert, evtl. erniedrigen
-      carry       = val < 0;                    //weiterer Übertrag nötig?
-      partsDec[p] = val + (carry ? FFFF+1 : 0); //Wert setzen, bei Übertrag aktuellen Wert erhöhen
+      carry       = val < 0;                    //weiterer ï¿½bertrag nï¿½tig?
+      partsDec[p] = val + (carry ? FFFF+1 : 0); //Wert setzen, bei ï¿½bertrag aktuellen Wert erhï¿½hen
     }
     return partsDec;
   }
 
 
   /**
-   * Liefert die Anzahl der 0 am Geräte-Teil-Ende
+   * Liefert die Anzahl der 0 am Gerï¿½te-Teil-Ende
    * @return
    */
   public int numberOfTrailingZeros() {
@@ -365,7 +365,7 @@ public class IPv6AddressUtil implements IPv6Util{
 
 
   /**
-   * Liefert die Anzahl der führenden Nullen (Start Netzwerk-Teil)
+   * Liefert die Anzahl der fï¿½hrenden Nullen (Start Netzwerk-Teil)
    * @return
    */
   public int numberOfLeadingZeros() {
@@ -429,7 +429,7 @@ public class IPv6AddressUtil implements IPv6Util{
 
   /**
    * Differenz zweier IP-Adressen
-   * @throws ArithmeticException Wenn subtrahend > minuend, also Differenz negativ wäre
+   * @throws ArithmeticException Wenn subtrahend > minuend, also Differenz negativ wï¿½re
    */
   public static IPv6AddressUtil minus( IPv6AddressUtil minuend, IPv6AddressUtil subtrahend ) throws ArithmeticException {
     int[] parts = new int[8];
@@ -460,7 +460,7 @@ public class IPv6AddressUtil implements IPv6Util{
    * 1:*              => 0001:*</BR>
    * 0::0::1*         => Fehler!</BR>
    *
-   * Wird für die Suche von IPv6-Adressen in der DB benötigt.
+   * Wird fï¿½r die Suche von IPv6-Adressen in der DB benï¿½tigt.
    * @param ipv6Prefix
    * @return
    * @throws IPv6AddressParseException (Runtime-Exceptions)
@@ -487,7 +487,7 @@ public class IPv6AddressUtil implements IPv6Util{
       }
     }
 
-    string = REPLACE_PERCENT_SIGNS_PATTERN.matcher(string).replaceAll("*"); // macht es später ein wenig einfacher
+    string = REPLACE_PERCENT_SIGNS_PATTERN.matcher(string).replaceAll("*"); // macht es spï¿½ter ein wenig einfacher
     boolean nullBlock = false; // existiert ein leerer Block wie in "10ab:2::1234:abcd"
     String[] parts = new String[8];
     for (int i = 0, p = 0; i < stringParts.length; ++i, ++p) {
@@ -500,7 +500,7 @@ public class IPv6AddressUtil implements IPv6Util{
           throw new IPv6AddressParseException("IPv6-Check: multiple double-colons found");
         }
         nullBlock = true;
-        p += 8 - stringParts.length; // auffüllen
+        p += 8 - stringParts.length; // auffï¿½llen
       }
     }
 
@@ -508,10 +508,10 @@ public class IPv6AddressUtil implements IPv6Util{
     String lastChar="";
     boolean breackByLastAsterisk=false;
 
-    // jetzt nochmal alle Parts durchgehen und ggf. auffüllen:
+    // jetzt nochmal alle Parts durchgehen und ggf. auffï¿½llen:
     for (int j=0; j<parts.length; j++) {
 
-      if (lastChar.equals("*")) { // NUR für diesen Fall:   '1:*' => '0001:*'
+      if (lastChar.equals("*")) { // NUR fï¿½r diesen Fall:   '1:*' => '0001:*'
         breackByLastAsterisk=true;
         for (int k=j; k<parts.length; k++) {
           if (parts[k]!=null) {

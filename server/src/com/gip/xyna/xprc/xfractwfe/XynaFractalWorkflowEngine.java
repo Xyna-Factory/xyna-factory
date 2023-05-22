@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -261,7 +261,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
               .compensationStatus(process.getCorrelatedXynaOrder(), OrderInstanceCompensationStatus.RUNNING);
         } catch (Throwable t) {
           Department.handleThrowable(t);
-          //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhängen
+          //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhï¿½ngen
           logger.warn("Could not write compensation status "+OrderInstanceCompensationStatus.RUNNING+" for "+process.getCorrelatedXynaOrder(), t);
         }
       }
@@ -288,12 +288,12 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
     stepHandlerManager = new FractalStepHandlerManager();
     deployFunctionGroup(stepHandlerManager);
 
-    // log handler hinzufügen
+    // log handler hinzufï¿½gen
     XynaProcess.addGlobalPreHandler(new LogHandler( "Starting", true, false ));
     XynaProcess.addGlobalErrorHandler(new LogHandler( "Error in", false, false ));
     XynaProcess.addGlobalPostHandler(new LogHandler( "Finished", false, true ));
     XynaProcess.addGlobalPreCompensationHandler(new LogHandler( "Starting compensate", true, false,
-                                                                new StartCompensationHandler() ) ); //FIXME ist das hier nötig? besser MasterWorkflowPostScheduler?
+                                                                new StartCompensationHandler() ) ); //FIXME ist das hier nï¿½tig? besser MasterWorkflowPostScheduler?
     XynaProcess.addGlobalPostCompensationHandler(new LogHandler( "Finished compensate", false, true ));
 
     deploymentHandling = new DeploymentHandling();
@@ -540,7 +540,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
           FileUtils.saveZipToDir(new ZipInputStream(entry.getValue()), targetdir);
         } else if (entry.getKey().endsWith("jar")) {
           File sourceFile = new File(entry.getKey());
-          //ans target dir nur den file-namen (ohne pfad) anhängen
+          //ans target dir nur den file-namen (ohne pfad) anhï¿½ngen
           File f = new File(targetdir, sourceFile.getName());
           FileUtils.saveToFile(entry.getValue(), f);
         } else {
@@ -643,7 +643,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
   
   
   /**
-   * Gibt aus der übergebenen Liste alle WORKFLOWs, EXCEPTIONs und DATATYPEs zurück, die bereits in der Revision vorliegen
+   * Gibt aus der ï¿½bergebenen Liste alle WORKFLOWs, EXCEPTIONs und DATATYPEs zurï¿½ck, die bereits in der Revision vorliegen
    * @param xmomObjects
    * @param revision
    * @return
@@ -670,7 +670,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
   
   
   /**
-   * Kopiert aus der übergebenen Liste alle WORKFLOWs, EXCEPTIONs und DATATYPEs aus einer Revision in die andere und deploy anschließend
+   * Kopiert aus der ï¿½bergebenen Liste alle WORKFLOWs, EXCEPTIONs und DATATYPEs aus einer Revision in die andere und deploy anschlieï¿½end
    * @param xmomObjects
    * @param fromRevision
    * @param toRevision
@@ -865,7 +865,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
             try {
               service = stepAsStepFunction.getParentScope().identifyService(stepAsStepFunction.getServiceId()).service;
             } catch (XPRC_InvalidServiceIdException e) {
-              //wurde bereits beim parsen überprüft.
+              //wurde bereits beim parsen ï¿½berprï¿½ft.
               throw new RuntimeException(e);
             }
             if (service.isDOMRef()) {
@@ -916,7 +916,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
       } catch (XFMG_MDMObjectClassLoaderNotFoundException e) {
         throw new RuntimeException(e); //classloader wurde von deploymenthandler vorher erstellt
       } catch (XPRC_OperationNotFoundInDatatypeException e) {
-        throw new RuntimeException(e); //dann hätte es vorher schon probleme beim parsen geben müssen
+        throw new RuntimeException(e); //dann hï¿½tte es vorher schon probleme beim parsen geben mï¿½ssen
       }
 
       XynaProcessCtrlExecution xpce = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution();
@@ -955,7 +955,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
             try {
               service = stepAsStepFunction.getParentScope().identifyService(stepAsStepFunction.getServiceId()).service;
             } catch (XPRC_InvalidServiceIdException e) {
-              //wurde bereits beim parsen überprüft.
+              //wurde bereits beim parsen ï¿½berprï¿½ft.
               throw new RuntimeException(e);
             }
             if (service.isDOMRef()) {
@@ -963,7 +963,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
                       + stepAsStepFunction.getOperationName(), object.getRevision());
 
             } else if (stepAsStepFunction.isRemoteCall()) {
-              //nicht deregistrieren, weil es noch andere detached remotecalls geben könnte
+              //nicht deregistrieren, weil es noch andere detached remotecalls geben kï¿½nnte
               //unregisterServiceDestination(RemoteCall.class.getName() + ".RemoteCall.initiateRemoteCallForDetachedCalls", object.getRevision());
             }
           } else {

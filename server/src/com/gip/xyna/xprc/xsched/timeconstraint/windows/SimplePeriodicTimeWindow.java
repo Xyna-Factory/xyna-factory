@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,18 +23,18 @@ import java.util.regex.Pattern;
 
 /**
  * SimplePeriodicTimeWindow ist eine einfache Implementierung von TimeWindow, bei der 
- * sich das Zeitfenster periodisch öffnet.
+ * sich das Zeitfenster periodisch ï¿½ffnet.
  * Im Konstruktor kann die PeriodenDauer und Offset und die Dauer der Offen-Phase angegeben werden.
  * PeriodenDauer und Offset werden im Format "%PeriodenDauer+Offset" angegeben.
  *
  * Beispiele:<br>
  * <ul>
- * <li>SimplePeriodicTimeWindow("%3600+0",60): Zeitfenster öffnet sich zu Beginn jeder Stunde
- *     für eine Minute, also 0:00-0:01, 1:00-1:01, ...</li>
- * <li>SimplePeriodicTimeWindow("%3600+1800",300): Zeitfenster öffnet sich in jeder Stunde 
- *     jeweils um halb für fünf Minuten, also 0:30-0:35, 1:30-1:35, ...</li>
- * <li>SimplePeriodicTimeWindow("%86400+21600",7200): Zeitfenster öffnet sich in jeden Tag 
- *     um 6 Uhr für 2 Stunden, 86400=24*60*60, 21600=6*60*60</li> 
+ * <li>SimplePeriodicTimeWindow("%3600+0",60): Zeitfenster ï¿½ffnet sich zu Beginn jeder Stunde
+ *     fï¿½r eine Minute, also 0:00-0:01, 1:00-1:01, ...</li>
+ * <li>SimplePeriodicTimeWindow("%3600+1800",300): Zeitfenster ï¿½ffnet sich in jeder Stunde 
+ *     jeweils um halb fï¿½r fï¿½nf Minuten, also 0:30-0:35, 1:30-1:35, ...</li>
+ * <li>SimplePeriodicTimeWindow("%86400+21600",7200): Zeitfenster ï¿½ffnet sich in jeden Tag 
+ *     um 6 Uhr fï¿½r 2 Stunden, 86400=24*60*60, 21600=6*60*60</li> 
  * </ul>    
  */
 public class SimplePeriodicTimeWindow extends TimeWindow {
@@ -45,7 +45,7 @@ public class SimplePeriodicTimeWindow extends TimeWindow {
   private SimplePeriodicTimeWindowDefinition definition;
   
   /**
-   * @param modAddString enthält die Periodendauer in Sekunden
+   * @param modAddString enthï¿½lt die Periodendauer in Sekunden
    * @param duration Dauer der Offen-Phase in Sekunden
    */
   public SimplePeriodicTimeWindow(String modAddString, long duration) {
@@ -81,7 +81,7 @@ public class SimplePeriodicTimeWindow extends TimeWindow {
     if( isOpen ) {
       since = lastOpenedTimestamp;
     } else {
-      //bereits geschlossen, deshalb ist nextClose in nächster Periode
+      //bereits geschlossen, deshalb ist nextClose in nï¿½chster Periode
       since = nextClose;
       nextClose = nextClose + periodLength;
     }

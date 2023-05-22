@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -250,13 +250,13 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
         return false; //valide Vetos behalten
       } else {
         vetoCache.free(vce, vi.getUsingOrderId() );
-        return false; //eigentlich true, aber Löschen wird von free erledigt
+        return false; //eigentlich true, aber Lï¿½schen wird von free erledigt
       }
     }
     
     @Override
     protected void executeAfterwards() {
-      //alle fremden Vetos löschen, die nicht mehr valide sind
+      //alle fremden Vetos lï¿½schen, die nicht mehr valide sind
       for( VetoInformation vi : vetoCache.listVetos() ) {
         if( ! checkValid(vi) ) {
           VetoCacheEntry vce = vetoCache.get(vi.getName());
@@ -341,7 +341,7 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
         String id = delete.getVetoName();
         VetoInformationStorable existing = toPersist.remove(id); 
         if( existing != null ) {
-          //Muss nicht mehr in DB ergänzt werden
+          //Muss nicht mehr in DB ergï¿½nzt werden
         } else {
           toDelete.put(id,delete);
           //Muss weiterhin aus DB entfernt werden

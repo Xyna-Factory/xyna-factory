@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public abstract class AXynaCommand implements Comparable<AXynaCommand> {
   }
   
   /**
-   * options, die wegen abwärtskompatibilität noch bekannt sein sollen, aber nicht mehr in verwendung sind 
+   * options, die wegen abwï¿½rtskompatibilitï¿½t noch bekannt sein sollen, aber nicht mehr in verwendung sind 
    */
   public String[] getOldOptionNames() {
     return null;

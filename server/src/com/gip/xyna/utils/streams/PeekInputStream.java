@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class PeekInputStream extends InputStream {
   }
   
   public int[] peek() throws IOException {
-    int p =0; //nächster zu füllender Platz in peek
+    int p =0; //nï¿½chster zu fï¿½llender Platz in peek
     if( peekPos > 0 ) {
       //bisherige Peek-Daten verschieben 
       for( ; peekPos< peek.length; ++p, ++peekPos) {
@@ -58,12 +58,12 @@ public class PeekInputStream extends InputStream {
       }
     }
     if( eof ) {
-      //nicht mehr lesbare Peek-Daten mit -1 füllen
+      //nicht mehr lesbare Peek-Daten mit -1 fï¿½llen
       for( ; p<peek.length; ++p ) {
         peek[p] = -1;
       }
     }
-    //nächstes lesen findet Daten in peek
+    //nï¿½chstes lesen findet Daten in peek
     peekPos = 0;
     peeked = true;
     return peek;

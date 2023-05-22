@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ public interface Repository {
 
 
   /**
-   * übergebene InputStreams werden nicht geschlossen, sondern nur bis EOF ausgelesen
+   * ï¿½bergebene InputStreams werden nicht geschlossen, sondern nur bis EOF ausgelesen
    * @return revision, in der objekte gespeichert wurden
    */
   public long saveFilesInNewRevision(VersionedObject[] objects, String comment) throws XynaException;
@@ -120,7 +120,7 @@ public interface Repository {
 
 
   /**
-   * zurückgegebener inputstream muss vom aufrufer geschlossen werden
+   * zurï¿½ckgegebener inputstream muss vom aufrufer geschlossen werden
    * @return null falls das file in der revision nicht existierte
    */
   public InputStream getContentOfFileInRevision(String fileNameWithRelativePath, long revision) throws XynaException;
@@ -135,7 +135,7 @@ public interface Repository {
   public void cleanupEarlierThan(long timestampMillis) throws XynaException;
 
   /**
-   * gibt die informationen zum letzten change &lt;= der übergebenen revision zurück
+   * gibt die informationen zum letzten change &lt;= der ï¿½bergebenen revision zurï¿½ck
    */
   public Revision getRevision(long revision);
 }

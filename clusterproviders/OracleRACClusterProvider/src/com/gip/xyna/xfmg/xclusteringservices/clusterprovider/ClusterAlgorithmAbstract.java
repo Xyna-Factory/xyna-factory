@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public abstract class ClusterAlgorithmAbstract implements ClusterAlgorithm {
       rows = sqlUtils.query(SQLStrings.SELECT_ALL_BINDINGS_FOR_UPDATE_SQL, new Parameter(), XynaClusterSetup.reader);
       if( rows == null ) {
         rows = new ArrayList<XynaClusterSetup>(); //Fehler: rows konnten nicht gelesen werden, 
-        //dieser Fehler wird hier nun unterdrückt
+        //dieser Fehler wird hier nun unterdrï¿½ckt
       }
       return rows.size();
     }
@@ -105,7 +105,7 @@ public abstract class ClusterAlgorithmAbstract implements ClusterAlgorithm {
     }
 
     public int getMaxBinding() {
-      //rows ist sortiert nach Binding, daher ist letzter Eintrag der mit größtem Binding
+      //rows ist sortiert nach Binding, daher ist letzter Eintrag der mit grï¿½ï¿½tem Binding
       return rows.get(rows.size() - 1).getBinding();
     }
     

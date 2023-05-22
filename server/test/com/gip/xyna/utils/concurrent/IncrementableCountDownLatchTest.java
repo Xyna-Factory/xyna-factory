@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -273,7 +273,7 @@ public class IncrementableCountDownLatchTest extends TestCase {
     assertEquals( 0, cdl.getCount() );
   }
 
-  //testen, dass bei gleichzeitigem runterzählen auf 0  und hochzählen auf 1 korrekt erkannt wird, dass cdl nicht hochgezählt werden darf
+  //testen, dass bei gleichzeitigem runterzï¿½hlen auf 0  und hochzï¿½hlen auf 1 korrekt erkannt wird, dass cdl nicht hochgezï¿½hlt werden darf
   public void test_Race() throws InterruptedException {
     int n = 2;
     final IncrementableCountDownLatch cdl = new IncrementableCountDownLatch(n);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ public abstract class ConnectionFilter<I extends TriggerConnection> extends Resp
   private long revision;
   
   public enum FilterResponsibility {
-    NOT_RESPONSIBLE,                    // Der Filter ist nicht zuständig.
-    RESPONSIBLE,                        // Der Filter ist zuständig und liefert eine XynaOrder.
-    RESPONSIBLE_WITHOUT_XYNAORDER,      // Der Filter ist zuständig. Der Request wird allerdings direkt im Filter behandelt und dementsprechend keine
-                                        // XynaOrder zurückgeliefert.
-    RESPONSIBLE_BUT_TOO_NEW             // Der Filter ist zuständig, aber die Filterversion ist zu neu. Der Request wird an eine ältere Version
+    NOT_RESPONSIBLE,                    // Der Filter ist nicht zustï¿½ndig.
+    RESPONSIBLE,                        // Der Filter ist zustï¿½ndig und liefert eine XynaOrder.
+    RESPONSIBLE_WITHOUT_XYNAORDER,      // Der Filter ist zustï¿½ndig. Der Request wird allerdings direkt im Filter behandelt und dementsprechend keine
+                                        // XynaOrder zurï¿½ckgeliefert.
+    RESPONSIBLE_BUT_TOO_NEW             // Der Filter ist zustï¿½ndig, aber die Filterversion ist zu neu. Der Request wird an eine ï¿½ltere Version
                                         // des Filters weitergeleitet.
   }
   
@@ -78,8 +78,8 @@ public abstract class ConnectionFilter<I extends TriggerConnection> extends Resp
   }
   
   
-  //TODO: hier könnte man per generics den richtigen trigger übergeben, das wäre aber eine schnittstellenänderung, 
-  //weil dann der connectionfilter die triggerklasse auch über generics kennen muss.
+  //TODO: hier kï¿½nnte man per generics den richtigen trigger ï¿½bergeben, das wï¿½re aber eine schnittstellenï¿½nderung, 
+  //weil dann der connectionfilter die triggerklasse auch ï¿½ber generics kennen muss.
   @SuppressWarnings("rawtypes")
   public void onDeployment(EventListener trigger) {
     if (logger.isDebugEnabled()) {
@@ -108,12 +108,12 @@ public abstract class ConnectionFilter<I extends TriggerConnection> extends Resp
   /**
    * Wird vom Processing in einem eigenen Thread aufgerufen, sobald etwas empfangen wurde und ein Workerthread zur
    * Verarbeitung aufgerufen wurde.
-   * Wenn der Filter nicht zuständig ist, wird ein FilterResponse-Objekt mit leerer XynaOrder
-   * und NOT_RESPONSIBLE oder RESPONSIBLE_BUT_TO_NEW als FilterResponsibility zurückgeliefert.
+   * Wenn der Filter nicht zustï¿½ndig ist, wird ein FilterResponse-Objekt mit leerer XynaOrder
+   * und NOT_RESPONSIBLE oder RESPONSIBLE_BUT_TO_NEW als FilterResponsibility zurï¿½ckgeliefert.
    * 
    */
   public FilterResponse createXynaOrder(I tc, FilterConfigurationParameter config) throws XynaException {
-    return createXynaOrder(tc); //Default-Implementierung für alte Filter
+    return createXynaOrder(tc); //Default-Implementierung fï¿½r alte Filter
   }
   
   @Deprecated
@@ -136,7 +136,7 @@ public abstract class ConnectionFilter<I extends TriggerConnection> extends Resp
 
 
   // FIXME make the following method abstract and remove the onResponse method accepting only XynaObject
-  // das ist nur aus abwärtskompatibilitätsgründen so wie es ist (umstellung auf generalxynaobject)
+  // das ist nur aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden so wie es ist (umstellung auf generalxynaobject)
   /**
    * Wird aufgerufen, sobald ein Auftrag, der von diesem Filter gestartet wurde, erfolgreich beendet wurde.
    */
@@ -169,7 +169,7 @@ public abstract class ConnectionFilter<I extends TriggerConnection> extends Resp
 
 
   /**
-   * Hier kommen Antworten zu Aufträgen an, die durch diesen Eventlistener getriggert worden sind. Das können
+   * Hier kommen Antworten zu Auftrï¿½gen an, die durch diesen Eventlistener getriggert worden sind. Das kï¿½nnen
    * unterschiedliche Typen sein.
    */
   @SuppressWarnings("unchecked")
@@ -209,7 +209,7 @@ public abstract class ConnectionFilter<I extends TriggerConnection> extends Resp
   }
   
   /**
-   * Führt das Runnable nach dem Commit/Close auf die HISTORY-Connection aus
+   * Fï¿½hrt das Runnable nach dem Commit/Close auf die HISTORY-Connection aus
    * Achtung: wenn ein Runnable gesetzt ist, wird die TriggerConnection nicht mehr automatisch geschlossen!
    * @param runnable
    * @throws IllegalStateException wenn keine HISTORY-Connection vorhanden ist

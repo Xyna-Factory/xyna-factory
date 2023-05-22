@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class XSORProcess {
 
     xsorPayload.copyIntoByteArray(xsorMemory.getData(objectIndex), xsorMemory.getOffsetBytes(objectIndex));
 
-    xsorMemory.setState(objectIndex,'N');//= Not exists, zeigt an, dass Objekt trotz Indexeintrags ungültig ist
+    xsorMemory.setState(objectIndex,'N');//= Not exists, zeigt an, dass Objekt trotz Indexeintrags ungï¿½ltig ist
     xsorMemory.lockObject(objectIndex);
     boolean objectStillLocked = true;
     try {
@@ -106,7 +106,7 @@ public class XSORProcess {
               indexDelete(xsorMemory, objectIndex, xsorPayload);
               /*
                * usecase: konflikt wegen gleichzeitigem create:
-               *   dann wurde remote das objekt nach konfliktauflösung in shared hinterlassen.
+               *   dann wurde remote das objekt nach konfliktauflï¿½sung in shared hinterlassen.
                *   kann es nun passieren, dass der remotethread das objekt hier nicht anlegt und trotzdem remote nicht entfernt?
                *     szenario:
                *       zeitliche abfolge:
@@ -114,13 +114,13 @@ public class XSORProcess {
                *       2. n2 hat objekt im index erzeugt
                *       3. n1 remote conflict
                *       4. jetzt kann "n2 remote" nie erfolg haben, solange n1 nicht fertig ist.
-               *          d.h. n2 remote hinterlässt 's', und dann löscht n2 das objekt auch
+               *          d.h. n2 remote hinterlï¿½sst 's', und dann lï¿½scht n2 das objekt auch
                *       oder
                *       1. n1 hat objekt im index erzeugt
                *       2. n2 hat objekt im index erzeugt
                *       3. n2 remote conflict
                *       4. n1 remote conflict
-               *       5. danach ist es auf beiden seiten gelöscht
+               *       5. danach ist es auf beiden seiten gelï¿½scht
                *       
                *       oder
                *       1. n1 hat objekt im index erzeugt
@@ -192,7 +192,7 @@ public class XSORProcess {
 
           if (xsorMemory.hasOutstandingTransactions(objectID)) {
             /*
-             * spezialbehandlung für den fall, dass die queue bereits eine nachricht I und S enthält.
+             * spezialbehandlung fï¿½r den fall, dass die queue bereits eine nachricht I und S enthï¿½lt.
              * also zustand = S (q=IS) / S (q=)
              *  -> lokal [tx1] E (q=ISI) / S (q=)
              *  -> remote [tx2] grab E (q=ISI) / E (q=I)
@@ -319,11 +319,11 @@ public class XSORProcess {
 
   public static ReleaseResultCode release(final int objectIndex, XSORMemory xsorMemory, boolean isStrictlyCoherent) {
     /*
-     * FIXME: eigtl bräuchte man hier gar nich so viel machen, wenn man wüsste, dass nur ein 
+     * FIXME: eigtl brï¿½uchte man hier gar nich so viel machen, wenn man wï¿½sste, dass nur ein 
      * grab->release passiert ist.
-     * wenn dies der fall ist, ist der writecopy-index überflüssig und man muss auch nicht die indizes anpassen.
+     * wenn dies der fall ist, ist der writecopy-index ï¿½berflï¿½ssig und man muss auch nicht die indizes anpassen.
      * man kann sich also einiges sparen.
-     * dann kann man sich auch die transactionlock-sonderlösung um die entsprechenden release-aufrufe sparen.
+     * dann kann man sich auch die transactionlock-sonderlï¿½sung um die entsprechenden release-aufrufe sparen.
      */
     if(objectIndex==-1){
       return ReleaseResultCode.wrapResultCode(ResultCode.OBJECT_NOT_FOUND);
@@ -349,7 +349,7 @@ public class XSORProcess {
           char currentState = xsorMemory.getState(objectIndex);
           switch (currentState) {
             case 'M' :
-            case 'E' : //M, E: erwartete zustände
+            case 'E' : //M, E: erwartete zustï¿½nde
             case 'S' : //S: vorher gab es einen konflikt, der in processIncommingRequest verarbeitet wurde und den zustand auf S umgebogen hat.
               ClusterState clusterState = clusterManagement.getCurrentState();
               switch(clusterState){
@@ -364,7 +364,7 @@ public class XSORProcess {
 
                   xsorMemory.updateForRelease(objectIndex, releaseTimeNew);
                   Object objectId = oldPayload.getPrimaryKey();
-                  int corrId=xsorMemory.sendMessage(objectId, objectIndex, 'S',  currentState=='M' || currentState=='S'); //bei S könnte zustand eigtl M sein.
+                  int corrId=xsorMemory.sendMessage(objectId, objectIndex, 'S',  currentState=='M' || currentState=='S'); //bei S kï¿½nnte zustand eigtl M sein.
 
                   //nun braucht man den alten stand nicht mehr
                   //gibt den backup-index frei
@@ -412,7 +412,7 @@ public class XSORProcess {
                     xsorMemory.setState(objectIndex,'S');
                     releaseTimeNew=System.currentTimeMillis();            
                     
-                    //alte writecopy => neues original, benötigt noch zugriff aufs backup
+                    //alte writecopy => neues original, benï¿½tigt noch zugriff aufs backup
                     indexUpdate(xsorMemory, objectIndex, oldPayload);
                     xsorMemory.updateForRelease(objectIndex, releaseTimeNew);
                     corrId=xsorMemory.sendMessage(oldPayload.getPrimaryKey(), objectIndex, 'S',  currentState=='M');
@@ -430,7 +430,7 @@ public class XSORProcess {
                   xsorMemory.setState(objectIndex,'S');
                   releaseTimeNew=System.currentTimeMillis();            
   
-                  //alte writecopy => neues original, benötigt noch zugriff aufs backup
+                  //alte writecopy => neues original, benï¿½tigt noch zugriff aufs backup
   
                   indexUpdate(xsorMemory, objectIndex, oldPayload);
                   //gibt den backup-index frei
@@ -464,21 +464,21 @@ public class XSORProcess {
   }
 
 
-  //ACHTUNG bei den backingstore methoden kopien von payload-objekten übergeben, die nicht anderweitig verwendet werden, weil diese evtl eine
+  //ACHTUNG bei den backingstore methoden kopien von payload-objekten ï¿½bergeben, die nicht anderweitig verwendet werden, weil diese evtl eine
   //zeitlang in der persistencestrategy gequeued werden.
 
   /*
    * man kann argumentieren, dass die backingstore-zugriffe nicht innerhalb des xc-memory locks passieren sollten, damit man
-   * die locks weniger lange hält. da man trotzdem noch pro objekt gewährleisten muss, dass die backingstore-zugriffe in der
-   * korrekten reihenfolge passieren (damit nicht ein update vor einem create passiert o.ä.), muss man dann aber doch
+   * die locks weniger lange hï¿½lt. da man trotzdem noch pro objekt gewï¿½hrleisten muss, dass die backingstore-zugriffe in der
+   * korrekten reihenfolge passieren (damit nicht ein update vor einem create passiert o.ï¿½.), muss man dann aber doch
    * wieder pro objekt synchronisieren.
-   * der einzige vorteil davon wäre dann, dass man auf ein anderes objekt-spezifisches lock synchronisieren könnte, und 
-   * zugriffe aufs xc, die keinen backingstore-zugriff nach sich ziehen, würden dann schneller gehen.
+   * der einzige vorteil davon wï¿½re dann, dass man auf ein anderes objekt-spezifisches lock synchronisieren kï¿½nnte, und 
+   * zugriffe aufs xc, die keinen backingstore-zugriff nach sich ziehen, wï¿½rden dann schneller gehen.
    * 
    * von denen haben wir aber kaum welche! => backingstore-zugriffe innerhalb des xc-memory locks haben kaum nachteile
    * und sind erstmal einfacher!
    * 
-   * da es noch das transaktions-lock gibt, das die reihenfolge pro objekt in XCProcess sicherstellt, können die
+   * da es noch das transaktions-lock gibt, das die reihenfolge pro objekt in XCProcess sicherstellt, kï¿½nnen die
    * backingstore-zugriffe weiterhin ausserhalb des xc-memory locks passieren.
    */
 
@@ -852,7 +852,7 @@ public class XSORProcess {
         try {
           if (objectIndex < 0) { // Im PK reservieren
             objectIndex = xsorMemory.freeListGet();
-            xsorMemory.lockObjectForceUnlock(objectIndex); // FIXME nur wegen bug so hartes unlock. eigtl genügt normales lock.
+            xsorMemory.lockObjectForceUnlock(objectIndex); // FIXME nur wegen bug so hartes unlock. eigtl genï¿½gt normales lock.
             locked = true;
             newObjectInserted = xsorMemory.testPkIndexPut(objectID, objectIndex);
             if (!newObjectInserted) {
@@ -863,7 +863,7 @@ public class XSORProcess {
               continue;
             }
           } else {
-            xsorMemory.lockObjectForceUnlock(objectIndex); // FIXME nur wegen bug so hartes unlock. eigtl genügt normales lock.
+            xsorMemory.lockObjectForceUnlock(objectIndex); // FIXME nur wegen bug so hartes unlock. eigtl genï¿½gt normales lock.
             locked = true;
           }
           if (xsorMemory.getObjectIndex(objectID) == objectIndex) {
@@ -917,13 +917,13 @@ public class XSORProcess {
           delete();
         } else {//Kein delete und kein create:
           if ((newState == 'I' && currentState == 'S') || (newState == 'S' && currentState == 'I')
-              || (newState == 'S' && currentState == 'S')) {// angeforderter Zustandswechsel möglich
+              || (newState == 'S' && currentState == 'S')) {// angeforderter Zustandswechsel mï¿½glich
             modify();
-          } else { //Zustandswechsel nicht möglich
+          } else { //Zustandswechsel nicht mï¿½glich
             invalidStateChangeRequested();
           }
         }
-      } else { //Aenderung in Prüfsumme oder ReleaseDate
+      } else { //Aenderung in Prï¿½fsumme oder ReleaseDate
         traceChange();
         if (newState != 'N') {
           if (hasReceivedPayload) {
@@ -972,7 +972,7 @@ public class XSORProcess {
         xsorMemory.setState(objectIndex, 'S');
       }
       if (xsorPayload == null) {
-        //in den anderen fällen ist objectIndex nicht mehr der aktuelle objektindex für das objekt und releasetime wurde bereits korrekt gesetzt.
+        //in den anderen fï¿½llen ist objectIndex nicht mehr der aktuelle objektindex fï¿½r das objekt und releasetime wurde bereits korrekt gesetzt.
         xsorMemory.updateReleaseTime(objectIndex, Math.max(xsorMemory.getReleaseTime(objectIndex), relTimeNew));
       } else {
         backingStoreUpdateObject(relTimeNew, modTime, xsorPayload, xsorMemory);
@@ -1064,7 +1064,7 @@ public class XSORProcess {
         xsorMemory.delete(objectIndex);
         indexDelete(xsorMemory, objectIndex, xsorPayload);
 
-        //TODO in processingincommingrequest dafür sorgen, dass backingstore-requests 
+        //TODO in processingincommingrequest dafï¿½r sorgen, dass backingstore-requests 
         //in der richtigen reihenfolge passieren.
         backingStoreDeleteObject(xsorPayload, xsorMemory);
         xsorMemory.sendReplyMessage(ReplyCode.OK, cid, 1, replyable, xsorMemory.getName());
@@ -1100,7 +1100,7 @@ public class XSORProcess {
   }
 
   private static void indexDelete(XSORMemory xsorMemory, int objectIndex, XSORPayload xsorPayload) {
-    xsorMemory.updateIndex(-1, null, objectIndex, xsorPayload); //aus index löschen
+    xsorMemory.updateIndex(-1, null, objectIndex, xsorPayload); //aus index lï¿½schen
   }
 
   private static void indexCreate(XSORMemory xsorMemory, int objectIndex, XSORPayload xsorPayload) {

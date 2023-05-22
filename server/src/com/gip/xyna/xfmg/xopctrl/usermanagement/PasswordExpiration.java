@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,16 +30,16 @@ public class PasswordExpiration implements Serializable{
   private static final long serialVersionUID = 1L;
 
   private ExpirationState state;
-  private Duration remainingDuration; //verbleibende Zeitdauer, bis das Passwort abläuft, falls state=limited
+  private Duration remainingDuration; //verbleibende Zeitdauer, bis das Passwort ablï¿½uft, falls state=limited
 
   
   public static enum ExpirationState {
-    unlimited(false),   // unbegrenzt gültig
-    limited(false),     // läuft nach einer bestimmten Zeit ab
-    expired(true),      // bereits abgelaufen (d.h. Gültigkeitsdauer überschritten)
-    setByAdmin(true);   // ungültig weil durch Admin gesetzt
+    unlimited(false),   // unbegrenzt gï¿½ltig
+    limited(false),     // lï¿½uft nach einer bestimmten Zeit ab
+    expired(true),      // bereits abgelaufen (d.h. Gï¿½ltigkeitsdauer ï¿½berschritten)
+    setByAdmin(true);   // ungï¿½ltig weil durch Admin gesetzt
     
-    private boolean invalid; //gibt an, ob das Passwort ungültig ist und nicht mehr verwendet werden darf
+    private boolean invalid; //gibt an, ob das Passwort ungï¿½ltig ist und nicht mehr verwendet werden darf
 
     private ExpirationState(boolean invalid) {
       this.invalid = invalid;
@@ -87,13 +87,13 @@ public class PasswordExpiration implements Serializable{
   
   
   /**
-   * Ermittelt die aktuelle Gültigkeitsdauer für das Passwort des Users.
+   * Ermittelt die aktuelle Gï¿½ltigkeitsdauer fï¿½r das Passwort des Users.
    * @param user
    * @return
    */
   public static PasswordExpiration calculate(User user) {
     if (passwordMustBeChanged(user.getPasswordChangeReasonEnum())) {
-      return PasswordExpiration.setByAdmin(); //Passwort wurde durch Admin gesetzt und muss nun durch Benutzer geändert werden
+      return PasswordExpiration.setByAdmin(); //Passwort wurde durch Admin gesetzt und muss nun durch Benutzer geï¿½ndert werden
     }
     
     int expirationDays = XynaProperty.PASSWORD_EXPIRATION_DAYS.get();
@@ -105,7 +105,7 @@ public class PasswordExpiration implements Serializable{
   }
 
   /**
-   * Ermittelt, ob das Passwort des Users noch geändert werden darf.
+   * Ermittelt, ob das Passwort des Users noch geï¿½ndert werden darf.
    * @param user
    * @return
    */
@@ -114,11 +114,11 @@ public class PasswordExpiration implements Serializable{
     int changeAllowedDays = XynaProperty.PASSWORD_EXPIRATION_CHANGEALLOWED_DURATION_DAYS.get();
 
     if (passwordMustBeChanged(user.getPasswordChangeReasonEnum())) {
-      expirationDays = 0; //Passwort wurde durch Admin gesetzt und muss nun durch Benutzer innerhalb der changeAllowedDays geändert werden
+      expirationDays = 0; //Passwort wurde durch Admin gesetzt und muss nun durch Benutzer innerhalb der changeAllowedDays geï¿½ndert werden
     }
     
     if (expirationDays < 0 || changeAllowedDays < 0) {
-      return PasswordExpiration.unlimited(); //nicht abgelaufen oder Änderung immer erlaubt
+      return PasswordExpiration.unlimited(); //nicht abgelaufen oder ï¿½nderung immer erlaubt
     }
     
     return calculate(user.getPasswordChangeDate(), expirationDays + changeAllowedDays);

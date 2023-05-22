@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,14 +89,14 @@ public class BatchProcessManagement extends Section {
   }
   
   public enum MissingLimitationReaction {
-    SlowDown,     //Slaves werden über eine SlaveExecutionPeriod verzögert
+    SlowDown,     //Slaves werden ï¿½ber eine SlaveExecutionPeriod verzï¿½gert
     Fail,         //BatchProcess wird abgewiesen
     Unlimited;    //trotzdem startem
 
     public static String documentation(DocumentationLanguage lang) {
       switch( lang ) {
         case DE:
-          return "'SlowDown': Slaves werden über eine SlaveExecutionPeriod verzögert; "
+          return "'SlowDown': Slaves werden ï¿½ber eine SlaveExecutionPeriod verzï¿½gert; "
           +"'Fail': BatchProcess wird mit einer Exception abgewiesen; "
           +"'Unlimited': BatchProcess wird unlimitiert gestartet";
         case EN:
@@ -145,7 +145,7 @@ public class BatchProcessManagement extends Section {
     }
 
     public void finish(boolean success) throws XPRC_DeploymentHandlerException {
-      //TODO das muss nicht für alle batchprocesses gemacht werden. optimierungsmöglichkeit
+      //TODO das muss nicht fï¿½r alle batchprocesses gemacht werden. optimierungsmï¿½glichkeit
       for( BatchProcess bp : batchProcesses.values() ) {
         bp.refreshInputGenerator();
       }
@@ -237,7 +237,7 @@ public class BatchProcessManagement extends Section {
   
   
   /**
-   * Schließt die Auftragseingangsschnittstelle der Batch Prozesse für eine Application,
+   * Schlieï¿½t die Auftragseingangsschnittstelle der Batch Prozesse fï¿½r eine Application,
    * indem alle laufenden Prozesse pausiert werden
    * @param revision
    */
@@ -249,7 +249,7 @@ public class BatchProcessManagement extends Section {
   
   
   /**
-   * Überprüft, ob die Auftragseingangsschnittstelle der Batch Prozesse für eine Application
+   * ï¿½berprï¿½ft, ob die Auftragseingangsschnittstelle der Batch Prozesse fï¿½r eine Application
    * geschlossen ist, d.h. ob alle Batch Prozesse pausiert sind oder
    * keine weiteren Slaves starten
    * @param revision
@@ -322,8 +322,8 @@ public class BatchProcessManagement extends Section {
   }
   
   /**
-   * Aktiviert die Auftragseingansschnittstelle der Batch Prozesse für eine Revision wieder,
-   * indem alle Prozesse wieder fortgesetzt werden, die durch das Schließen der
+   * Aktiviert die Auftragseingansschnittstelle der Batch Prozesse fï¿½r eine Revision wieder,
+   * indem alle Prozesse wieder fortgesetzt werden, die durch das Schlieï¿½en der
    * Schnittstelle pausiert worden sind.
    * @param revision
    */
@@ -340,7 +340,7 @@ public class BatchProcessManagement extends Section {
    * Bricht einen Batch Process ab. D.h. es werden keine neuen Slaves mehr gestartet und die
    * laufenden Slaves werden abgebrochen. Bei CancelMode == WAIT wird vor dem Abbrechen gewartet,
    * ob die Slaves innerhalb ihres OrderExecutionTimeouts fertig werden.
-   * Anschließend geht der Master in die Execution-Phase über.
+   * Anschlieï¿½end geht der Master in die Execution-Phase ï¿½ber.
    * @param batchProcessId
    * @param cancelMode
    * @param callerOrderId Id des Auftrags der das Cancel aufruft. Falls das selbst ein Slaveauftrag ist, wird nicht
@@ -354,13 +354,13 @@ public class BatchProcessManagement extends Section {
       return false;
     }
     
-    //TODO falls true Übergabe weitergegeben werden soll, sollte man die schnittstelle hier nochmal überdenken,
+    //TODO falls true ï¿½bergabe weitergegeben werden soll, sollte man die schnittstelle hier nochmal ï¿½berdenken,
     //ob man statt booleanflag lieber ein enum-set baut oder das enum erweitert
     return batchProcess.cancelBatchProcess(cancelMode, true, callerOrderId);
   }
   
   /**
-   * Ändert die Werte eines BatchProcesses, die im übergebenen Input ungleich null sind.
+   * ï¿½ndert die Werte eines BatchProcesses, die im ï¿½bergebenen Input ungleich null sind.
    * @param batchProcessId
    * @param input
    * @throws PersistenceLayerException 
@@ -387,7 +387,7 @@ public class BatchProcessManagement extends Section {
     
     batchProcess.getBatchProcessScheduling().refreshSlaveSchedulingData();
     
-    //TODO die Priorität des ParallelExecutors muss angepasst werden
+    //TODO die Prioritï¿½t des ParallelExecutors muss angepasst werden
     
     return true;
   }
@@ -445,10 +445,10 @@ public class BatchProcessManagement extends Section {
   }
   
   /**
-   * Falls BatchProcess noch nicht angelegt wurde, müssen die Slaves, deren BatchProcess
+   * Falls BatchProcess noch nicht angelegt wurde, mï¿½ssen die Slaves, deren BatchProcess
    * fehlt, warten:
    * entweder bis der Master geschedult wurde und der BatchProcess angelegt wurde,
-   * oder bis bekannt ist, dass der andere Knoten den BatchProcessMaster ausfÜhrt. //FIXME nicht implementiert!
+   * oder bis bekannt ist, dass der andere Knoten den BatchProcessMaster ausfï¿½hrt. //FIXME nicht implementiert!
    * Weitere Behandlung geschieht in {@link BatchProcessScheduling#tryScheduleBatch(SchedulingOrder,boolean)}
    * @param so
    * @return
@@ -470,8 +470,8 @@ public class BatchProcessManagement extends Section {
   
   /**
    * BatchProcess kann gestartet werden:
-   * entweder Slaves erzeugen und TryScheduleResult zurückgeben
-   * oder null zurückgeben, so dass Master in die Execution gelangt
+   * entweder Slaves erzeugen und TryScheduleResult zurï¿½ckgeben
+   * oder null zurï¿½ckgeben, so dass Master in die Execution gelangt
    * @param so
    * @return
    */
@@ -482,8 +482,8 @@ public class BatchProcessManagement extends Section {
 
   /**
    * BatchProcessRestarter ist ein XynaRunnable, mit dem die Initialisierung des kompletten BatchProcess
-   * außerhalb des SchedulerThread durchgeführt werden kann. Der BatchProcess wird aber gleich sichtbar im
-   * BatchProcessManagement, jedoch geschätzt durch das ManagementOperationLock.
+   * auï¿½erhalb des SchedulerThread durchgefï¿½hrt werden kann. Der BatchProcess wird aber gleich sichtbar im
+   * BatchProcessManagement, jedoch geschï¿½tzt durch das ManagementOperationLock.
    */
   public static class BatchProcessRestarter extends XynaRunnable {
 
@@ -495,7 +495,7 @@ public class BatchProcessManagement extends Section {
       AllOrdersList allOrders = XynaFactory.getInstance().getProcessing().getXynaScheduler().getAllOrdersList();
       this.batchProcess = new BatchProcess(batchProcessId, master, allOrders.getXynaOrder(master));
       this.waitForManagementOperationLock = new CountDownLatch(1);
-      this.priority = master.getSchedulingData().getPriority(); //könnte Prio vom Slave sein
+      this.priority = master.getSchedulingData().getPriority(); //kï¿½nnte Prio vom Slave sein
     }
 
     public void run() {
@@ -534,10 +534,10 @@ public class BatchProcessManagement extends Section {
   
   
   /**
-   * Führt die Aufräumarbeiten aus:
+   * Fï¿½hrt die Aufrï¿½umarbeiten aus:
    * 1) Austragen aus laufenden BatchProcessen
-   * 2) Löschen der Runtime-Storables und archivieren des BatchProcessArchive
-   * 3) Entfernen des zugehörigen Zeitfensters
+   * 2) Lï¿½schen der Runtime-Storables und archivieren des BatchProcessArchive
+   * 3) Entfernen des zugehï¿½rigen Zeitfensters
    * @param batchProcessId
    * @throws PersistenceLayerException
    */
@@ -622,7 +622,7 @@ public class BatchProcessManagement extends Section {
 
   public void terminateSlaves(Long batchProcessId, long orderId, boolean success) {
     BatchProcess batchProcess = getBatchProcess(batchProcessId);
-    if (batchProcess != null) { //BatchProcess könnte inzwischen abgebrochen worden sein
+    if (batchProcess != null) { //BatchProcess kï¿½nnte inzwischen abgebrochen worden sein
       try {
         //Slave aus Map der aktuellen Slaves austragen
         OrderInstanceStatus slaveState = batchProcess.removeCurrentSlave(orderId);
@@ -645,9 +645,9 @@ public class BatchProcessManagement extends Section {
   }
 
   /*
-   * falls master noch am slave-scheduling ist, dieses unterbrechen und TryScheduleResult.ReSchedule zurückgeben
+   * falls master noch am slave-scheduling ist, dieses unterbrechen und TryScheduleResult.ReSchedule zurï¿½ckgeben
    * 
-   * ansonsten null zurückgeben (-> master wird abgebrochen)
+   * ansonsten null zurï¿½ckgeben (-> master wird abgebrochen)
    */
   public TryScheduleResult tryScheduleMasterFailed(SchedulingOrder so) {
     BatchProcess batchProcess = batchProcesses.get(so.getBatchProcessMarker().getBatchProcessId());

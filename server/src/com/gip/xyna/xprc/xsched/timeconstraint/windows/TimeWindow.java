@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,22 +20,22 @@ package com.gip.xyna.xprc.xsched.timeconstraint.windows;
 
 
 /**
- * TimeWindow ist die Basisklasse für verschiedene Zeitfenster-Implementierungen.
+ * TimeWindow ist die Basisklasse fï¿½r verschiedene Zeitfenster-Implementierungen.
  * Nachdem ein {@link #recalculate(long) recalculate} mit dem aktuellen Timestamp aufgerufen wurde,
- * kann über {@link #isOpen()} der Zustand des Zeitfensters und über {@link #getNextChange()}
- * der Zeitpunkt des nächsten Zustandswechsel erfragt werden.
+ * kann ï¿½ber {@link #isOpen()} der Zustand des Zeitfensters und ï¿½ber {@link #getNextChange()}
+ * der Zeitpunkt des nï¿½chsten Zustandswechsel erfragt werden.
  */
 public abstract class TimeWindow {
   
   private TimeWindowData timeWindowData;
   
   /**
-   * TimeWindowData enthält die wesentlichen Daten, die das Zeitfenster derzeit charakterisieren.
-   * Dazu gehören nicht die Daten, die Grundlage zur Neuberechnung sind.
+   * TimeWindowData enthï¿½lt die wesentlichen Daten, die das Zeitfenster derzeit charakterisieren.
+   * Dazu gehï¿½ren nicht die Daten, die Grundlage zur Neuberechnung sind.
    * <ul>
    * <li>isOpen: ist Zeitfenster derzeit offen (nextClose&lt;nextOpen)</li>
-   * <li>nextOpen: nächster Zeitpunkt, zu dem Zeitfenster geöffnet wird</li>
-   * <li>nextClose: nächster Zeitpunkt, zu dem Zeitfenster geschlossen wird</li>
+   * <li>nextOpen: nï¿½chster Zeitpunkt, zu dem Zeitfenster geï¿½ffnet wird</li>
+   * <li>nextClose: nï¿½chster Zeitpunkt, zu dem Zeitfenster geschlossen wird</li>
    * </ul>
    * TimeWindowData ist immutable.
    */
@@ -117,7 +117,7 @@ public abstract class TimeWindow {
   }
 
   /**
-   * Was ist der Zeitpunkt des nächsten Wechsel offen nach geschlossen oder umgekehrt?
+   * Was ist der Zeitpunkt des nï¿½chsten Wechsel offen nach geschlossen oder umgekehrt?
    * @return
    */
   public long getNextChange() {
@@ -125,7 +125,7 @@ public abstract class TimeWindow {
   } 
 
   /**
-   * Was ist der Zeitpunkt des nächsten Wechsels offen nach geschlossen?
+   * Was ist der Zeitpunkt des nï¿½chsten Wechsels offen nach geschlossen?
    * @return
    */
   public long getNextClose() {
@@ -133,7 +133,7 @@ public abstract class TimeWindow {
   }
   
   /**
-   * Was ist der Zeitpunkt des nächsten Wechsels geschlossen nach offen?
+   * Was ist der Zeitpunkt des nï¿½chsten Wechsels geschlossen nach offen?
    * @return
    */
   public long getNextOpen() {

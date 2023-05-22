@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class CredentialsCache implements IPropertyChangeListener {
   // TODO property name is remoteCall specific
   private static final XynaPropertyString userNameProperty = new XynaPropertyString("xfmg.xfctrl.nodemgmt.remotecall.user", "XYNAADMIN")
                   .setDefaultDocumentation(DocumentationLanguage.EN, "Name of User to use for Remote Calls. Must be defined locally as well.")
-                  .setDefaultDocumentation(DocumentationLanguage.DE, "User-Name für Remote-Calls. (Muss auch lokal definiert sein)")
+                  .setDefaultDocumentation(DocumentationLanguage.DE, "User-Name fï¿½r Remote-Calls. (Muss auch lokal definiert sein)")
                   .setHidden(true);
 
   private static final XynaPropertyDuration minOffsetForSessionDeletion = new XynaPropertyDuration("xfmg.xfctrl.nodemgmt.interlink.sessioncache.deletion.minage", "5 s").
@@ -65,7 +65,7 @@ public class CredentialsCache implements IPropertyChangeListener {
   private Map<String, XynaUserCredentials> credsPerNode = new ConcurrentHashMap<String, XynaUserCredentials>();
   private Map<String, Session> sessionsPerNode = new ConcurrentHashMap<String, Session>();
 
-  //deprecated nur für externe verwendung. es soll das singleton verwendet werden!
+  //deprecated nur fï¿½r externe verwendung. es soll das singleton verwendet werden!
   @Deprecated
   public CredentialsCache() {
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getConfiguration().addPropertyChangeListener(this);
@@ -101,8 +101,8 @@ public class CredentialsCache implements IPropertyChangeListener {
     Session session = sessionsPerNode.get(nodeName);
     if (session != null && System.currentTimeMillis() - session.age >= minOffsetForSessionDeletion.getMillis()) {
       //nicht die session entfernen, wenn sie gerade erst neu gemacht wurde (das passiert, wenn mehrere threads grob gleichzeitig einen fehler sehen)
-      //TODO schöner wäre es, wenn stattdessen alle interlink-verwender einfach konsistenz die session-fehler behandeln, d.h. wenn das alles über
-      //einen gemeinsamen codepfad gehen würde
+      //TODO schï¿½ner wï¿½re es, wenn stattdessen alle interlink-verwender einfach konsistenz die session-fehler behandeln, d.h. wenn das alles ï¿½ber
+      //einen gemeinsamen codepfad gehen wï¿½rde
       sessionsPerNode.remove(nodeName);
     }
   }

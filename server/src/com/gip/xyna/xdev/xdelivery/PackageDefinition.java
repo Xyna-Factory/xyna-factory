@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class PackageDefinition {
   private HashSet<String> otherFilesToBeStored = new HashSet<String>();
 
   /**
-   * redundanzfreie menge der workflows, die bei installpackage explizit deployed werden müssen.
+   * redundanzfreie menge der workflows, die bei installpackage explizit deployed werden mï¿½ssen.
    */
   private Set<String> mainWorkflowsToBeDeployedOnInstallPackage = new HashSet<String>();
   
@@ -520,7 +520,7 @@ public class PackageDefinition {
 
   /**
    * @return true, falls das element das attribut {@link DeliveryItemConstants#IGNORE_DEPENDENCIES} mit dem 
-   * wert <code>true</code> enthält. 
+   * wert <code>true</code> enthï¿½lt. 
    */
   private boolean checkIgnoreDependencies(Element e) {
     String s = e.getAttribute(DeliveryItemConstants.IGNORE_DEPENDENCIES).trim();

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class TimeConstraintWindowStorable extends Storable<TimeConstraintWindowS
   private long id;
 
   // Index multiple weil eigentlich name+subId zusammen das Objekt eindeutig identifizieren. Separater
-  // unique PK ist eigentlich ein Workaround dafür, dass wir keine PKs über mehrere Spalten unterstützen.
+  // unique PK ist eigentlich ein Workaround dafï¿½r, dass wir keine PKs ï¿½ber mehrere Spalten unterstï¿½tzen.
   @Column(name = COL_NAME, index = IndexType.MULTIPLE)
   private String name;
 

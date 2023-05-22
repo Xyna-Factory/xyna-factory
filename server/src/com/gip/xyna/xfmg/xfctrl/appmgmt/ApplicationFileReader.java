@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ private static Logger logger = CentralFactoryLogging.getLogger(ApplicationFileRe
           applicationXml = handler.getApplicationXmlEntry();
 
           if (! checkBinaries ) {
-            //jars müssen nicht überprüft werden
+            //jars mï¿½ssen nicht ï¿½berprï¿½ft werden
             break;
           }
         } else if (zipEntry.getName().endsWith(".jar")) {

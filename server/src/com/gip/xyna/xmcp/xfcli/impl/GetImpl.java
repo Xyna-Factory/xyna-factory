@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public class GetImpl extends XynaCommandImplementation<Get> {
     }
     
     if( !payload.getShowDoc() && !payload.getVerbose() ) {
-      //altes Verhalten für Abwärtskompatibilität
+      //altes Verhalten fï¿½r Abwï¿½rtskompatibilitï¿½t
       if ( property.getValue() != null ) {
         writeToCommandLine(statusOutputStream, "Value of property '", payload.getKey(), "': ", property.getValue(), "\n");
       } else {

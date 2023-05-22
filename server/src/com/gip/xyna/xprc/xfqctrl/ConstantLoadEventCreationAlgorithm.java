@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class ConstantLoadEventCreationAlgorithm extends FrequenceControlledTaskE
             logger.debug("now firing event #" + eventsToFire);
           }
           if( smoothingWait <= 5) {
-            //keine glättende Wartezeit
+            //keine glï¿½ttende Wartezeit
             for (int i = 0; i < eventsToFire; i++) {
               controlledTask.eventTriggered(eventIdGenerator.incrementAndGet());
             }
@@ -96,7 +96,7 @@ public class ConstantLoadEventCreationAlgorithm extends FrequenceControlledTaskE
                 try {
                   Thread.sleep(smoothingWait);
                 } catch( InterruptedException e ) {
-                  //dann halt kürzer warten
+                  //dann halt kï¿½rzer warten
                 }
                 controlledTask.eventTriggered(eventIdGenerator.incrementAndGet());
               }

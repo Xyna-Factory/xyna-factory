@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import com.gip.xyna.xprc.xprcods.orderarchive.selectorder.OrderInstanceSelect;
 public interface OrderAPI {
 
   /**
-   * gibt liste aller gewählten aufträge zurück
+   * gibt liste aller gewï¿½hlten auftrï¿½ge zurï¿½ck
    */
   public OrderInstanceResult search(OrderInstanceSelect select, int maxRows) throws PersistenceLayerException;
 
@@ -46,7 +46,7 @@ public interface OrderAPI {
 
 
   /**
-   * liest auftrag aus orderdb und schreibt auftrag in orderarchive. auftrag wird aus db und backup gelöscht.
+   * liest auftrag aus orderdb und schreibt auftrag in orderarchive. auftrag wird aus db und backup gelï¿½scht.
    * @return 
    */
   public TwoConnectionBean archive(XynaOrderServerExtension order) throws PersistenceLayerException;

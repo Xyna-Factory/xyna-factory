@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class SynchronousResponseListener extends ResponseListener implements Syn
   @Override
   public void onError(XynaException[] e, OrderContext ctx) throws XNWH_RetryTransactionException {
     try {
-      xynaExceptions = e; //TODO durch Kopie schützen?
+      xynaExceptions = e; //TODO durch Kopie schï¿½tzen?
       if( baseRl != null ) {
         baseRl.onError(e, ctx);
       }

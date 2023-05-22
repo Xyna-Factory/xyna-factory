@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,9 @@ import com.gip.xyna.xprc.xprcods.orderarchive.OrderArchive.TwoConnectionBean;
 
 /**
  * wird im processing registriert, um code bei empfang eines auftragsergebnisses
- * auszuführen.
+ * auszufï¿½hren.
  * beispiel: eventlistener triggert einen auftrag und gibt synchron mittels eines
- * responselisteners eine antwort zurück (das connectionobjekt kann so behalten werden)
+ * responselisteners eine antwort zurï¿½ck (das connectionobjekt kann so behalten werden)
  */
 public abstract class ResponseListener implements Serializable {
 
@@ -50,14 +50,14 @@ public abstract class ResponseListener implements Serializable {
   
   /**
    * vom Processing bei einer Antwort aufgerufen.
-   * Über den OrderContext können offene Connections weiterbenutzt werden o.ä.
+   * ï¿½ber den OrderContext kï¿½nnen offene Connections weiterbenutzt werden o.ï¿½.
    * @param response
    * @param ctx
    */
   public abstract void onResponse(GeneralXynaObject response, OrderContext ctx) throws XNWH_RetryTransactionException;
   
   /**
-   * ruft standardmässig auf:
+   * ruft standardmï¿½ssig auf:
    * <code>onResponse(xo.getOutputPayload(), xo.getOrderContext());</code>
    * @param xo
    */
@@ -145,7 +145,7 @@ public abstract class ResponseListener implements Serializable {
   }
 
   /**
-   * wird vom Processing aufgerufen, falls die Prozessausführung in einem
+   * wird vom Processing aufgerufen, falls die Prozessausfï¿½hrung in einem
    * Fehler geendet hat.
    * @param e
    * @param ctx
@@ -214,7 +214,7 @@ public abstract class ResponseListener implements Serializable {
   }
   
   /**
-   * Führt das Runnable nach dem Commit/Close auf die HISTORY-Connection aus
+   * Fï¿½hrt das Runnable nach dem Commit/Close auf die HISTORY-Connection aus
    * @param runnable
    * @throws IllegalStateException wenn keine HISTORY-Connection vorhanden ist
    */

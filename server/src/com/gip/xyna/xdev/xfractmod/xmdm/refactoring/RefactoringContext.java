@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@ public class RefactoringContext {
           dependencies.addAll(dependencyRegister.getDependencies(refactoring.fqXmlNameOld, refactoring.type.getDependencySourceType(), revision, true));
           // new does not exist in most cases, only relevant for moveOperation
           dependencies.addAll(dependencyRegister.getDependencies(refactoring.fqXmlNameNew, refactoring.type.getDependencySourceType(), revision, true));
-          //unschön: dependencynode konstruktor ist protected. => workaround um den eigenen knoten ins set mit aufzunehmen (falls deployed). 
+          //unschï¿½n: dependencynode konstruktor ist protected. => workaround um den eigenen knoten ins set mit aufzunehmen (falls deployed). 
           DependencyNode ownNode =
               dependencyRegister.getDependencyNode(refactoring.fqXmlNameOld, DependencySourceType.WORKFLOW, revision);
           if (ownNode != null) {

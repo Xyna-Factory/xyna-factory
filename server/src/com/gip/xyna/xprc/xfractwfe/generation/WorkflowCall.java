@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xprc.xfractwfe.base.FractalProcessStep;
 
 /**
- * es gibt unterschiedliche ausprägungen: {@link WorkflowCallInService}, {@link WorkflowCallServiceReference}
+ * es gibt unterschiedliche ausprï¿½gungen: {@link WorkflowCallInService}, {@link WorkflowCallServiceReference}
  */
 public abstract class WorkflowCall extends Operation {
 
@@ -49,7 +49,7 @@ public abstract class WorkflowCall extends Operation {
 
 
   protected void getImports(Set<String> imports) {
-    //der referenzierte workflow wird hier nicht benötigt. das compile im generationbase wird für ihn separat aufgerufen
+    //der referenzierte workflow wird hier nicht benï¿½tigt. das compile im generationbase wird fï¿½r ihn separat aufgerufen
     imports.add(XynaFactory.class.getName());
     imports.add(FractalProcessStep.class.getName());
     for (AVariable v : wf.getInputVars()) {

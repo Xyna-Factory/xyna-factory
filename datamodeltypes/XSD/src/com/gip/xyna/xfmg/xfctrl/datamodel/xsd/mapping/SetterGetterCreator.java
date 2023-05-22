@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -551,7 +551,7 @@ public class SetterGetterCreator {
       
       //Fehlende typeName oder namespace aus any ableiten
       if( typeName == null || namespace == null ) {
-        //nur any ist gesetzt, daraus müssen typeName und namespace abgeleitet werden
+        //nur any ist gesetzt, daraus mï¿½ssen typeName und namespace abgeleitet werden
         if( tm == null ) {
           logger.warn("Could not determine type and namespace for "+field.getName()+": any="+any+", typeMapper="+tm);
         } else {
@@ -633,7 +633,7 @@ public class SetterGetterCreator {
   }
 
   /**
-   * Suche zur Laufzeit für dynamische Typen; z-B bei AnyType
+   * Suche zur Laufzeit fï¿½r dynamische Typen; z-B bei AnyType
    *
    */
   private static class TypeMapperForType {

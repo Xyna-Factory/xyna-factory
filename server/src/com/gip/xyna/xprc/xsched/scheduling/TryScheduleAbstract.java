@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
                                                           new BooleanBasedExecutionPipelineBuilder(),
                                                           ExecutionPipelineConfiguration.getDefaultExecutionConfiguration().buildPipeline(TryScheduleAbstract.this))
     .setDefaultDocumentation(DocumentationLanguage.EN, "If set to true running backups will not lead to conflicting lower urgency orders being scheduled before the backupping order.")
-    .setDefaultDocumentation(DocumentationLanguage.DE, "Wenn mit 'true' belegt wird ein laufendes Backup nicht dazu führen das weniger dringliche Aufträge welche die gleichen Ressourcen benötigen vorgezogen werden.");
+    .setDefaultDocumentation(DocumentationLanguage.DE, "Wenn mit 'true' belegt wird ein laufendes Backup nicht dazu fï¿½hren das weniger dringliche Auftrï¿½ge welche die gleichen Ressourcen benï¿½tigen vorgezogen werden.");
   
   private volatile Execution batchTimingCapVetoSchedule = new Batch( regularExecutionPipeline.get() );
     
@@ -117,9 +117,9 @@ public abstract class TryScheduleAbstract implements TrySchedule {
   
   
   /**
-   * Kümmert sich um ein einfaches uns sicheres Ausführen von Capacity- und Veto-Allozieren 
-   * und dem anschließenden Schedulen, so dass im Fehlerfall ordentlich aufgeräumt wird.
-   * Das Aufräumen geschieht im finally-Block, so das es sicher gegen Exceptions ist
+   * Kï¿½mmert sich um ein einfaches uns sicheres Ausfï¿½hren von Capacity- und Veto-Allozieren 
+   * und dem anschlieï¿½enden Schedulen, so dass im Fehlerfall ordentlich aufgerï¿½umt wird.
+   * Das Aufrï¿½umen geschieht im finally-Block, so das es sicher gegen Exceptions ist
    *
    * Reihenfolge kann dann einfach festgelegt werden: siehe oben
    * private Execution capVetoSchedule = new CapacityAllocation( new VetoAllocation( new Schedule() ) );
@@ -136,11 +136,11 @@ public abstract class TryScheduleAbstract implements TrySchedule {
       TryScheduleResult tsr = null;
       try {
         if( so.canBeScheduled() || subExecution == null ) {
-          //nur ausführen, wenn Order geschedult werden kann, letzte Execution (subExecution == null) muss trotzdem ausführen
+          //nur ausfï¿½hren, wenn Order geschedult werden kann, letzte Execution (subExecution == null) muss trotzdem ausfï¿½hren
           tsr = execute(so);
         }
         if( tsr == null ) {
-          //es ist kein Fehler aufgetreten, daher subExecution ausführen
+          //es ist kein Fehler aufgetreten, daher subExecution ausfï¿½hren
           if( subExecution != null ) {
             tsr = subExecution.tryExecute(so);
           }
@@ -151,7 +151,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
             //irgendwo ist eine Exception aufgetreten, deswegen ist tsr == null
             undo(so);
           } else if( tsr.needsUndo() ) {
-            //oder ein regulärer Fehler mit gesetztem tsr
+            //oder ein regulï¿½rer Fehler mit gesetztem tsr
             undo(so);
           } else {
             //Scheduling war erfolgreich
@@ -176,7 +176,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
   
   private class VetoAllocation extends Execution {
 
-    private boolean needsVetos; //TODO unschön, dass in einer nicht-auftragsabhängigen Klasse temporär Daten 
+    private boolean needsVetos; //TODO unschï¿½n, dass in einer nicht-auftragsabhï¿½ngigen Klasse temporï¿½r Daten 
     //zu einem Auftrag gespeichert werden. Ist aber derzeit kein Problem, da nur der Scheduler seriell eine Instanz
     //dieser Klasse verwendet.
     
@@ -189,7 +189,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
       List<String> vetos = so.getVetos();
       needsVetos = ! vetos.isEmpty();
       if( needsVetos ) {
-        needsVetos = so.getSchedulingData().isNeedsToAcquireVetosOnNextScheduling(); //TODO nötig?
+        needsVetos = so.getSchedulingData().isNeedsToAcquireVetosOnNextScheduling(); //TODO nï¿½tig?
       }
       if( needsVetos ) {
         //logger.debug( "VetoAllocation for xynaOrder "+so.getOrderId() );
@@ -229,7 +229,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
   
   private class CapacityAllocation extends Execution {
     
-    private boolean needsCapacities; //TODO unschön, dass in einer nicht-auftragsabhängigen Klasse temporär Daten 
+    private boolean needsCapacities; //TODO unschï¿½n, dass in einer nicht-auftragsabhï¿½ngigen Klasse temporï¿½r Daten 
     //zu einem Auftrag gespeichert werden. Ist aber derzeit kein Problem, da nur der Scheduler seriell eine Instanz
     //dieser Klasse verwendet.
     
@@ -239,7 +239,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
 
     @Override
     protected TryScheduleResult execute(SchedulingOrder so) {
-      needsCapacities = so.getSchedulingData().isNeedsToAcquireCapacitiesOnNextScheduling(); //TODO nötig?
+      needsCapacities = so.getSchedulingData().isNeedsToAcquireCapacitiesOnNextScheduling(); //TODO nï¿½tig?
       if( needsCapacities ) { 
         CapacityAllocationResult car = xynaScheduler.getCapacityManagement().allocateCapacities(so.getOrderInformation(), so.getSchedulingData() );
         if (! car.isAllocated()) {
@@ -267,7 +267,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
   
   private class TimeConstraint extends Execution {
 
-    private boolean needsToCheckTimeConstraint; //TODO unschön, dass in einer nicht-auftragsabhängigen Klasse temporär Daten 
+    private boolean needsToCheckTimeConstraint; //TODO unschï¿½n, dass in einer nicht-auftragsabhï¿½ngigen Klasse temporï¿½r Daten 
     //zu einem Auftrag gespeichert werden. Ist aber derzeit kein Problem, da nur der Scheduler seriell eine Instanz
     //dieser Klasse verwendet.
     
@@ -285,7 +285,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
         } else {
           /*
            * - falls timeout -> timeout setzen + return null
-           * - falls "soll später gescheduled werden" -> return "TimeConstraint + Remove" (oder TimeConstraint + Continue (falls einfach nochmal probiert werden soll))
+           * - falls "soll spï¿½ter gescheduled werden" -> return "TimeConstraint + Remove" (oder TimeConstraint + Continue (falls einfach nochmal probiert werden soll))
            * - TimeConstraint konnte nicht ausgewertet werden -> auch schedulelater?
            */
           if( tr.scheduleLater() ) {
@@ -316,7 +316,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
       BatchProcessManagement bpm = XynaFactory.getInstance().getProcessing().getBatchProcessManagement();
       BatchProcessMarker marker = so.getBatchProcessMarker();
       if(marker == null){
-        return null; //einfach überspringen, sollte so eh nicht aufgerufen werden
+        return null; //einfach ï¿½berspringen, sollte so eh nicht aufgerufen werden
       }
       TryScheduleResult tsr = bpm.tryScheduleBatch(so);
       if( tsr != null ) {
@@ -408,7 +408,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
 
     @Override
     protected void undo(SchedulingOrder so) {
-      //hier ist leider kein undo möglich
+      //hier ist leider kein undo mï¿½glich
     }
     
   }

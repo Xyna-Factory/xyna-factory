@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ public class SerialVersionIgnoringObjectInputStream extends ObjectInputStream {
       //weiter delegieren
     }
     
-    //FIXME classloader dürfen nicht lazy erstellt werden, was sie durch die mock factory hier aber werden!
+    //FIXME classloader dï¿½rfen nicht lazy erstellt werden, was sie durch die mock factory hier aber werden!
     ClassLoader cl =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
             .findClassLoaderByType(fqClassName, revision, ClassLoaderType.MDM, true);

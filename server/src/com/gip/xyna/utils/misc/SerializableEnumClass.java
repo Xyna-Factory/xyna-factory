@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class SerializableEnumClass<E extends Enum<E>> implements Serializable {
   }
   
   private void writeObject(ObjectOutputStream stream) throws IOException {
-    //Anlegen der benötigten Daten durch die Getter
+    //Anlegen der benï¿½tigten Daten durch die Getter
     getFqEnumClassName();
     getEnumConstantsAsStrings();
     getDocumentation();
@@ -85,7 +85,7 @@ public class SerializableEnumClass<E extends Enum<E>> implements Serializable {
       throws IOException, ClassNotFoundException {
     ois.defaultReadObject();
     try {
-      //FIXME nur über ClassLoaderDispatcher zu finden
+      //FIXME nur ï¿½ber ClassLoaderDispatcher zu finden
       enumClass = (Class<E>)Class.forName(fqEnumClassName);
     } catch( ClassNotFoundException e ) {
       Logger.getLogger(SerializableEnumClass.class).trace("", e );

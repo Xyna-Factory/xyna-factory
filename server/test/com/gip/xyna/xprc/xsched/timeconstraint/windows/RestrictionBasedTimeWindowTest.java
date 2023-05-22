@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
     private static final String RESTRICTION_1 = "[Hour=20;Minute=15;DayOfWeek=SAT][Hour=7;Minute=45]"; // Samstag Abend
   private static final String RESTRICTION_2 = "[Second=0;Minute=0;Hour=12:7][Hour=5]"; // Alle sieben Stunden ab 12 Uhr am Tag der Initialisierung
   private static final String RESTRICTION_3 = "[Second=0;Minute=0;Hour=12;Day=10-10L][Hour=8]"; // zwischem dem 10 und dem 10 letzten (in der Regel 10. bis 20.-21.)
-  private static final String RESTRICTION_4 = "[Second=0;Minute=0;Hour=12;Day=20W][Hour=3]"; // am Wochentag welcher dem 20. am nähesten is
+  private static final String RESTRICTION_4 = "[Second=0;Minute=0;Hour=12;Day=20W][Hour=3]"; // am Wochentag welcher dem 20. am nï¿½hesten is
   private static final String RESTRICTION_5 = "[Second=0;Minute=0;Hour=12;Day=2#MON;Month=JAN][Hour=8]"; // der 2. Montag im Januar
   private static final String RESTRICTION_6 = "[Second=0;Minute=0;Hour=12;Day=31][Hour=8]"; // immer am 31.
   private static final String RESTRICTION_7 = "[Second=0;Minute=0;Hour=12;Day=15;Month=JAN-MAR;Year=2013][Hour=8]"; // am 15. zwischen Januar und Februar 2013
@@ -82,7 +82,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
     assertTrue(nextClose.isAfter(nextOpen));
     assertEquals((7 * 60 * 60 * 1000) + (45 * 60 * 1000), nextClose.minus(nextOpen.getMillis()).getMillis());
     DateTime since = toDateTime(tw.getSince());
-    // letzte Schließung + 1 Woche - Dauer = nextOpen
+    // letzte Schlieï¿½ung + 1 Woche - Dauer = nextOpen
     assertEquals(since.plusWeeks(1).minus((7 * 60 * 60 * 1000) + (45 * 60 * 1000)), nextOpen);
     assertFalse(tw.isOpen());
     
@@ -670,7 +670,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
   
   
   public void testBehaviourOfSmallIncrementsInSavedTime() {
-    final String LOCAL_RESTRICTION_1 = "[Minute=30;Hour=:3][Hour=1]"; // um halb alle 3 Stunden für eine Stunde
+    final String LOCAL_RESTRICTION_1 = "[Minute=30;Hour=:3][Hour=1]"; // um halb alle 3 Stunden fï¿½r eine Stunde
     
     RestrictionBasedTimeWindowDefinition def = new RestrictionBasedTimeWindowDefinition(LOCAL_RESTRICTION_1, EUROPE_BERLIN, false);
     RestrictionBasedTimeWindowDefinition defDST = new RestrictionBasedTimeWindowDefinition(LOCAL_RESTRICTION_1, EUROPE_BERLIN, true);
@@ -705,7 +705,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
     assertEquals(tw.getSince() - (1000 * 60 * 30), twDST.getSince());
     
     
-    final String LOCAL_RESTRICTION_2 = "[Minute=55:30][Minute=5]"; // alle 30min für 5min
+    final String LOCAL_RESTRICTION_2 = "[Minute=55:30][Minute=5]"; // alle 30min fï¿½r 5min
     
     now = 1364687400000L; //2013-03-31T00:50:00.000+01:00
     
@@ -780,7 +780,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
     assertEquals(tw.getNextClose(), twDST.getNextClose());
     assertEquals(tw.getSince(), twDST.getSince());
     
-    final String LOCAL_RESTRICTION_2 = "[Minute=55:30][Minute=5]"; // alle 30min für 5min
+    final String LOCAL_RESTRICTION_2 = "[Minute=55:30][Minute=5]"; // alle 30min fï¿½r 5min
     
     def = new RestrictionBasedTimeWindowDefinition(LOCAL_RESTRICTION_2, EUROPE_BERLIN, false);
     defDST = new RestrictionBasedTimeWindowDefinition(LOCAL_RESTRICTION_2, EUROPE_BERLIN, true);
@@ -843,9 +843,9 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
   
   
   public void testLargeIncrements() {
-    final String LOCAL_RESTRICTION_1 = "[Minute=:90][Hour=1]"; // alle 90min für eine Stunde
-    final String LOCAL_RESTRICTION_2 = "[Second=:300][Minute=1]"; // alle 5min für eine Minute
-    final String LOCAL_RESTRICTION_3 = "[Second=:3660][Minute=1]"; // alle 61 Minute für eine Minute
+    final String LOCAL_RESTRICTION_1 = "[Minute=:90][Hour=1]"; // alle 90min fï¿½r eine Stunde
+    final String LOCAL_RESTRICTION_2 = "[Second=:300][Minute=1]"; // alle 5min fï¿½r eine Minute
+    final String LOCAL_RESTRICTION_3 = "[Second=:3660][Minute=1]"; // alle 61 Minute fï¿½r eine Minute
     
     final int ITERATIONS = 1000;
     
@@ -915,7 +915,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
   
   
   public void testCompositeIncrementsIncludingLarge() {
-    final String LOCAL_RESTRICTION_1 = "[Second=:300;Minute=:3][Second=15]"; // alle 300sec=5min und 3min für 15sec ==> alle 15min
+    final String LOCAL_RESTRICTION_1 = "[Second=:300;Minute=:3][Second=15]"; // alle 300sec=5min und 3min fï¿½r 15sec ==> alle 15min
     
     RestrictionBasedTimeWindowDefinition def = new RestrictionBasedTimeWindowDefinition(LOCAL_RESTRICTION_1, "UTC", false);
     RestrictionBasedTimeWindow tw = (RestrictionBasedTimeWindow) def.constructTimeWindow();
@@ -940,7 +940,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
     }
     
     
-    final String LOCAL_RESTRICTION_2 = "[Second=:600;Minute=1-9][Second=15]"; // alle 600sec=10min bei Minute 1 bis 9 ==> stündlich bei Minute 1-9 (je nach StartZeitpunkt)
+    final String LOCAL_RESTRICTION_2 = "[Second=:600;Minute=1-9][Second=15]"; // alle 600sec=10min bei Minute 1 bis 9 ==> stï¿½ndlich bei Minute 1-9 (je nach StartZeitpunkt)
     
     def = new RestrictionBasedTimeWindowDefinition(LOCAL_RESTRICTION_2, "UTC", false);
     tw = (RestrictionBasedTimeWindow) def.constructTimeWindow();
@@ -964,7 +964,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
     
     //final String LOCAL_RESTRICTION_3 = "[Second=10;Minute=:600][Second=5]"; // kann gelesen werden als: immer zur 10. sekunden, alle 10h
     // durch die 10h Angabe im Minuten-Feld bedeutet es allerdings: zur 10sekunde, zu einer dynamisch gebundenen min alle zehn Stunden ([Second=10;Minute=?;Hour=:10][Second=5])
-    final String LOCAL_RESTRICTION_3 = "[Millis=123;Second=:6000;Minute=:10][Second=20]"; // alle 100 min (eigentliche Minuten-Periode ist ein Bruchteil der Sekunden-Einschränkung) für 20 sec
+    final String LOCAL_RESTRICTION_3 = "[Millis=123;Second=:6000;Minute=:10][Second=20]"; // alle 100 min (eigentliche Minuten-Periode ist ein Bruchteil der Sekunden-Einschrï¿½nkung) fï¿½r 20 sec
     
     def = new RestrictionBasedTimeWindowDefinition(LOCAL_RESTRICTION_3, "UTC", false);
     tw = (RestrictionBasedTimeWindow) def.constructTimeWindow();
@@ -1013,7 +1013,7 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
       now = tw.getNextClose();
     }
     
-    final String LOCAL_RESTRICTION_5 = "[Minute=:240;Day=15W][Hour=3]"; // Alle Stunden an dem Wochentag welcher dem 15 am nähsten ist
+    final String LOCAL_RESTRICTION_5 = "[Minute=:240;Day=15W][Hour=3]"; // Alle Stunden an dem Wochentag welcher dem 15 am nï¿½hsten ist
     
     def = new RestrictionBasedTimeWindowDefinition(LOCAL_RESTRICTION_5, "UTC", false);
     tw = (RestrictionBasedTimeWindow) def.constructTimeWindow();
@@ -1131,12 +1131,12 @@ public class RestrictionBasedTimeWindowTest extends TestCase {
   public void testWindowsFromCronConversion() {
     List<CronConversionParameter> params = new ArrayList<RestrictionBasedTimeWindowTest.CronConversionParameter>();
     params.add(new CronConversionParameter(1000 * 60 * 15, EUROPE_BERLIN, false)); // alle 15 min
-    params.add(new CronConversionParameter(1000 * 60 * 60, EUROPE_BERLIN, false)); // Stündlich
+    params.add(new CronConversionParameter(1000 * 60 * 60, EUROPE_BERLIN, false)); // Stï¿½ndlich
     params.add(new CronConversionParameter(1000 * 60 * 90, EUROPE_BERLIN, false)); // alle 90 min
-    params.add(new CronConversionParameter(1000 * 60 * 60 * 24, EUROPE_BERLIN, false)); // täglich
-    params.add(new CronConversionParameter(1000 * 60 * 60 * 24, EUROPE_BERLIN, true)); // täglich
-    params.add(new CronConversionParameter(1000 * 60 * 60 * 24 * 7, EUROPE_BERLIN, false)); // wöchentlich
-    params.add(new CronConversionParameter(1000 * 60 * 60 * 24 * 7, EUROPE_BERLIN, true)); // wöchentlich
+    params.add(new CronConversionParameter(1000 * 60 * 60 * 24, EUROPE_BERLIN, false)); // tï¿½glich
+    params.add(new CronConversionParameter(1000 * 60 * 60 * 24, EUROPE_BERLIN, true)); // tï¿½glich
+    params.add(new CronConversionParameter(1000 * 60 * 60 * 24 * 7, EUROPE_BERLIN, false)); // wï¿½chentlich
+    params.add(new CronConversionParameter(1000 * 60 * 60 * 24 * 7, EUROPE_BERLIN, true)); // wï¿½chentlich
     
     final long INIT_DATE = 1381917600000L; // 2013-10-16T12:00:00.000+02:00
     final int ITERATIONS = 2000;

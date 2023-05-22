@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceBackup.BackupCause;
 
 
 /**
- * AcknowledgableObject das dafür sorgt, dass die Anzahl der laufenden Aufträge in der
- * BatchProcessRuntimeInformation nur hochgezählt und der Input als "used" markiert werden,
+ * AcknowledgableObject das dafï¿½r sorgt, dass die Anzahl der laufenden Auftrï¿½ge in der
+ * BatchProcessRuntimeInformation nur hochgezï¿½hlt und der Input als "used" markiert werden,
  * wenn der Slave gebackupt wurde.
  *
  */
@@ -76,7 +76,7 @@ public class SlaveBackupAck extends AbstractBackupAck {
 
   
   /**
-   * Connection bei Fehler im Planning schließen
+   * Connection bei Fehler im Planning schlieï¿½en
    */
   @Override
   public void handleErrorAtPlanning(XynaOrderServerExtension xose, Throwable throwable) {

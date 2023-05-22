@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import com.gip.xyna.coherence.coherencemachine.ObjectChangeEvent;
 public class ClusterMembers extends CoherencePayload {
 
   /**
-   * sollte immer einer zweierpotenz sein (aus performancegründen - naja nicht wirklich tragisch, aber kostet nix, dass
-   * so zu machen). die zahl dynamisch anzupassen ist gefährlich, weil man kollisionen von prioritäten bekommen könnte.
-   * (alter request wartet mit einer priorität die nach der änderung von {@link #STATIC_MOD_NUMBER} auch von einem
-   * anderen knoten als priorität angegeben werden könnte).
+   * sollte immer einer zweierpotenz sein (aus performancegrï¿½nden - naja nicht wirklich tragisch, aber kostet nix, dass
+   * so zu machen). die zahl dynamisch anzupassen ist gefï¿½hrlich, weil man kollisionen von prioritï¿½ten bekommen kï¿½nnte.
+   * (alter request wartet mit einer prioritï¿½t die nach der ï¿½nderung von {@link #STATIC_MOD_NUMBER} auch von einem
+   * anderen knoten als prioritï¿½t angegeben werden kï¿½nnte).
    */
   public static long STATIC_MOD_NUMBER = 256;
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public interface DatabaseLock {
   public void lock() throws LockFailedException;
   
   /**
-   * Holen des Locks mit Übergabe der zum Lock zu verwendenden Connection
+   * Holen des Locks mit ï¿½bergabe der zum Lock zu verwendenden Connection
    * @throws LockFailedException
    */
   public void lock(ODSConnection con) throws LockFailedException;
@@ -56,14 +56,14 @@ public interface DatabaseLock {
   public void rollback();
   
   /**
-   * Rückgabe des Locks
-   * @throws AlreadyUnlockedException falls erkannt werden konnte, dass das Lock bereits zurückgegeben wurde
+   * Rï¿½ckgabe des Locks
+   * @throws AlreadyUnlockedException falls erkannt werden konnte, dass das Lock bereits zurï¿½ckgegeben wurde
    */
   public void unlock() throws AlreadyUnlockedException;
 
   /**
-   * FIXME wird dies wirklich benötigt? Was soll es genau machen? 
-   * Wartende Statements können nicht abgebrochen werden
+   * FIXME wird dies wirklich benï¿½tigt? Was soll es genau machen? 
+   * Wartende Statements kï¿½nnen nicht abgebrochen werden
    */
   public void shutdown();
   

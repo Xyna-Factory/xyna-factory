@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
   protected static final String METHODNAME_START_ORDER_SYNC = "startOrderSynchronous";
 
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_DETACHED_CALL_GET_CHILD_ORDER_ID = DetachedCall.class.getDeclaredMethod(_METHODNAME_DETACHED_CALL_GET_CHILD_ORDER_ID_ORIG).getName();
     } catch (Exception e) {
@@ -380,7 +380,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
   }
   
   protected void generateJavaInternally(CodeBuffer cb, HashSet<String> importedClassesFqStrings) throws XPRC_MissingContextForNonstaticMethodCallException, XPRC_OperationUnknownException, XPRC_InvalidServiceIdException, XPRC_InvalidVariableIdException {
-    // TODO code in StepParallel etc ähnlich => extraktion von teilcode
+    // TODO code in StepParallel etc ï¿½hnlich => extraktion von teilcode
     ServiceIdentification s = getParentScope().identifyService(serviceId);
     
     if (isRemoteCall()) {
@@ -452,7 +452,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       throw new RuntimeException("unsupported");
     }
     
-    //gibt keine foreach-indizes, und retry ist hier nicht nötig
+    //gibt keine foreach-indizes, und retry ist hier nicht nï¿½tig
     return getIdx() + ".0";
   }
   
@@ -677,12 +677,12 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       return false; //immer richtig
     }
     /*
-     * manchmal könnte man hier auch false zurückgeben. nämlich wenn man weiß, dass im subworkflow in den compensationschritten (rekursiv) nichts passiert.
+     * manchmal kï¿½nnte man hier auch false zurï¿½ckgeben. nï¿½mlich wenn man weiï¿½, dass im subworkflow in den compensationschritten (rekursiv) nichts passiert.
      * achtung: wenn man das bereits beim deployment berechnet, darf das ergebnis nicht im generierten code des aufrufer-wfs stehen, weil
-     *  das nicht unbedingt aktuell gehalten wird, falls sich der subworkflow (oder rekursiv sub-sub-sub-workflow) ändert
+     *  das nicht unbedingt aktuell gehalten wird, falls sich der subworkflow (oder rekursiv sub-sub-sub-workflow) ï¿½ndert
      *  
-     * achtung: eine schlauere ermittlung führt zu häufigeren archivierungsvorgängen, und damit mit auditdaten zu häufigeren nicht-gebatchten
-     * orderarchive-commits. das kann in der summe zu schlechter performance führen. leider ist ein batching der vorgezogenen commits nicht so einfach
+     * achtung: eine schlauere ermittlung fï¿½hrt zu hï¿½ufigeren archivierungsvorgï¿½ngen, und damit mit auditdaten zu hï¿½ufigeren nicht-gebatchten
+     * orderarchive-commits. das kann in der summe zu schlechter performance fï¿½hren. leider ist ein batching der vorgezogenen commits nicht so einfach
      * zu realisieren (da muss man dann sehr aufpassen, keine daten zu verlieren).
      */
     return true;
@@ -932,7 +932,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
         cb.addLine(XynaOrderCreationParameter.class.getSimpleName() + " xocp = cxo.getOrCreateOrderInput(idOfInputSourceInWF, inputSourceName)");
       }
       
-      // set possible mi responses: nur die hier definierten sind für den MI bearbeiter erlaubt (retry geht nur, wenn man sich in einem catchblock mit retry-feature befindet)
+      // set possible mi responses: nur die hier definierten sind fï¿½r den MI bearbeiter erlaubt (retry geht nur, wenn man sich in einem catchblock mit retry-feature befindet)
       //TODO ist das so geschickt mit den MIs?
       if (isManualInteractionInvocation(s.getWF())) {
         cb.addLine(List.class.getSimpleName(), "<" + ManualInteractionResponse.class.getSimpleName(),
@@ -983,7 +983,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
         cb.addLine("subworkflow.setOrderInputCreationInstances(cxo.getAndRemoveOrderInputCreationInstances(idOfInputSourceInWF))");
       }
       
-      //subauftrag-revision bestimmen anhand von aktueller revision und destinationkey. destinationkey hat in einigen fällen aber noch keinen runtimecontext zugewiesen.
+      //subauftrag-revision bestimmen anhand von aktueller revision und destinationkey. destinationkey hat in einigen fï¿½llen aber noch keinen runtimecontext zugewiesen.
       //d.h. unterscheiden, ob dies der fall ist, oder nicht.
       //bei fehler die eigene revision verwenden
       cb.addLine("subworkflow.setRevision(getRevisionForOrderType(subworkflow.getDestinationKey()))");
@@ -994,7 +994,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       } else {
         cb.addLine("subworkflow.setParentOrder(cxo)");
       }
-      cb.addLine("if (!compensationRecursive()) {"); //wenn man hier bereits weiß, dass compensation eh rekursiv ausgeführt wird, stepcoords nicht setzen. dann wird beim archivieren schnell erkannt, dass man nichts aufräumen kann.
+      cb.addLine("if (!compensationRecursive()) {"); //wenn man hier bereits weiï¿½, dass compensation eh rekursiv ausgefï¿½hrt wird, stepcoords nicht setzen. dann wird beim archivieren schnell erkannt, dass man nichts aufrï¿½umen kann.
       cb.addLine("subworkflow.setStepCoordinates(getCoordinates())");
       cb.addLine("}");
       cb.addLine("subworkflow.setParentStepNo(", Step.METHODNAME_GET_N, "())");
@@ -1003,7 +1003,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       cb.addLine("if (cxo.getOrderContext() != null) {");
       cb.addLine("subworkflow.setNewOrderContext()");
       /*
-       TODO Soll ein detached gestarteter Workflow den LoggingDiagnosisContext vom startenden Workflow (entspricht Parent) übernehmen?
+       TODO Soll ein detached gestarteter Workflow den LoggingDiagnosisContext vom startenden Workflow (entspricht Parent) ï¿½bernehmen?
       if (isExecutionDetached()) {
         cb.addLine("subworkflow.getOrderContext().setLoggingDiagnosisContext( cxo.getOrderContext().getLoggingDiagnosisContext() ); ");
       }*/
@@ -1239,15 +1239,15 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
         cb.addLine("// perform compensation");
         cb.addLine(PATH_TO_XPRC_CTRL_EXECUTION, ".", METHODNAME_PROCESSING_COMPENSATE_ORDER_SYNC, "(subworkflow)");
       } else if (isRemoteCall()) {
-        //ntbd: remote compensate wird derzeit nicht unterstützt
+        //ntbd: remote compensate wird derzeit nicht unterstï¿½tzt
       } else {
         if (!ops.isStatic()) {
           /*
-           * kann in abgeleitetem objekt überschrieben sein. also zur laufzeit checken, was für ein typ die operation hat!
-           * wf soll nicht neu generiert werden müssen, wenn neue subklassen erzeugt werden
-           * => man muss zur laufzeit herausfinden können, wie methode x in klasse y implementiert ist.
+           * kann in abgeleitetem objekt ï¿½berschrieben sein. also zur laufzeit checken, was fï¿½r ein typ die operation hat!
+           * wf soll nicht neu generiert werden mï¿½ssen, wenn neue subklassen erzeugt werden
+           * => man muss zur laufzeit herausfinden kï¿½nnen, wie methode x in klasse y implementiert ist.
            * => das findet man heraus, indem man im datentyp nachschaut. xml ist ineffizient, deshalb 
-           *    entweder beim ondeployment direkt merken, oder später lazy nachladen
+           *    entweder beim ondeployment direkt merken, oder spï¿½ter lazy nachladen
            * => beim ondeployment ist am einfachsten!
            */
           VariableIdentification vi = getParentScope().identifyVariable(input.getVarIds()[0]);
@@ -1470,7 +1470,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
         cb.addListElement(indent+wrapInSingleXynaObject(indent, remoteDispatchingParameter.invokeVarIds, remoteDispatchingParameter.invokePaths, false));
         cb.addListElement(indent+wrapInSingleXynaObject(indent, input.getVarIds(), input.getPaths(), false));
       } else if (input.length() > 0) {
-        //kein remoteCall, alle Parameter normal übergeben
+        //kein remoteCall, alle Parameter normal ï¿½bergeben
         boolean skipFirstVar = !ops.isStatic() && service.service.getVariable() == null;
         String lvi = listVarIds("\n           ", input.getVarIds(), input.getPaths(), false, skipFirstVar, false);
         if( lvi.length() > 0 ) {
@@ -1533,7 +1533,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
           cb.addLine("startGenericStep.", METHODNAME_CLEAR_CONTEXT_VARIABLE, "()");
         }
         
-        // ggfs container auseinanderklamüsern
+        // ggfs container auseinanderklamï¿½sern
         if (ops instanceof WorkflowCallServiceReference) {
           if (compensateStep == null) {
             cb.addLine("subworkflow = xo");
@@ -1734,7 +1734,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       cb.addLine("String _toType_");
       cb.addLine("switch (successfulCastCnt) {");
       for (int i = 0; i < receiveVarIds.length; i++) {
-        cb.add("case " + i, " : "); //TODO unschöner code, um zu verhindern, dass da ein semikolon zuviel ist
+        cb.add("case " + i, " : "); //TODO unschï¿½ner code, um zu verhindern, dass da ein semikolon zuviel ist
         
         if (GenerationBase.isEmpty(receiveVarIds[i])) {
           cb.addLine("throw new ", RuntimeException.class.getName(), "(_ccex)"); //sollte nicht vorkommen, weil successfulCastCnt diesen wert nicht erreichen kann
@@ -1764,9 +1764,9 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
   
   @Override
   protected List<GenerationBase> getDependencies() {
-    //normalerweise muss man hier nicht den aufgerufenen workflow zurückgeben, weil er in einer servicereference auf der nächsthöheren stepserial-ebene referenziert wird
+    //normalerweise muss man hier nicht den aufgerufenen workflow zurï¿½ckgeben, weil er in einer servicereference auf der nï¿½chsthï¿½heren stepserial-ebene referenziert wird
     //es gab aber offenbar mal einen bug, wo die servicereference-objekte im xml nur innerhalb des function-objekts lagen. 
-    //es schadet auch nichts, die workflows hier auch zurückzugeben
+    //es schadet auch nichts, die workflows hier auch zurï¿½ckzugeben
     ServiceIdentification s;
     try {
       s = getParentScope().identifyService(serviceId);

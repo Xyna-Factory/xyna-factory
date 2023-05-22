@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,10 +43,10 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 /**
  * ClusterLockingInterface erzeugt mit {@link createLockIfNonexistent} eine DatabaseLock-Instanz.
  * 
- * Diese DatabaseLock erfüllt das {@link java.util.concurrent.locks.Lock}-Interface, jedoch kann 
+ * Diese DatabaseLock erfï¿½llt das {@link java.util.concurrent.locks.Lock}-Interface, jedoch kann 
  * im Konstruktor, bei setUseConnection() und bei lock() eine RuntimeException LockFailedException
  * geworfen werden, unlock() loggt dagegen Fehler nur.
- * In den Methoden setUseConnection() und lock() wird in Fehlerfällen blockiert und Retries probiert,
+ * In den Methoden setUseConnection() und lock() wird in Fehlerfï¿½llen blockiert und Retries probiert,
  * bis entweder die Operation geklappt hat oder der ClusterState nach DISCONNECTED_SLAVE wechselt. 
  * In letzterem Fall wird dann die LockFailedException geworfen.
  *
@@ -200,7 +200,7 @@ public class ClusterLockingInterface extends FunctionGroup {
     }
     DatabaseLock previousLock = locks.putIfAbsent(name, newLock);
     if (previousLock != null) {
-      // Das alte lock muss in dem Fall nicht gelöscht werden, weil die Objekte nur einen
+      // Das alte lock muss in dem Fall nicht gelï¿½scht werden, weil die Objekte nur einen
       // String enthalten und das persistObject im Konstruktor dann zu einem update wird.
       return previousLock;
     } else {

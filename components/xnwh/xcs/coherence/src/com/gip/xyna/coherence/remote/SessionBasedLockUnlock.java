@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ public class SessionBasedLockUnlock {
         controller.lock(objectId);
       } catch (Throwable e) {
         exception = e;
-        //TODO in diesem fall wirklich noch auf unlockbarrier warten? unittests für die exceptionfälle schreiben. dabei kann man cachecontroller ja entsprechend implementieren.
+        //TODO in diesem fall wirklich noch auf unlockbarrier warten? unittests fï¿½r die exceptionfï¿½lle schreiben. dabei kann man cachecontroller ja entsprechend implementieren.
       }
 
       lockedNotification.countDown();

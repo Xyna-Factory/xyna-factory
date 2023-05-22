@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.gip.xyna.xact.trigger.oracleaq.shared.OracleAQMessage;
 
 
 /**
- * Wird nicht mehr verwendet, nur noch zur Abwärtskomaptibilität: evtl. gibt es noch serialisierte
+ * Wird nicht mehr verwendet, nur noch zur Abwï¿½rtskomaptibilitï¿½t: evtl. gibt es noch serialisierte
  * Instanzen...
  * @deprecated
  */

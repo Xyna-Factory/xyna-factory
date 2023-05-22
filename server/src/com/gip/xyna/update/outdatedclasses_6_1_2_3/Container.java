@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ public class Container  extends XynaObject {
       return params;
     }
     else {
-      throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(name)); //wegen abwärtskompatibilität nicht direkt werfen
+      throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(name)); //wegen abwï¿½rtskompatibilitï¿½t nicht direkt werfen
     }
   }
 
@@ -171,7 +171,7 @@ public class Container  extends XynaObject {
           logger.info("Tried to generate XML representation of " + getClass().getSimpleName()
                           + " when one of the contained objects was null, result may be corrupted");
         }
-        xml.append("<Data/>\n"); //das ist in vielen fällen richtig
+        xml.append("<Data/>\n"); //das ist in vielen fï¿½llen richtig
       }
     }
     return xml.toString();
@@ -205,10 +205,10 @@ public class Container  extends XynaObject {
     s.push(Thread.currentThread().getStackTrace().length);
   }
   
-  //Container könnte ein Array mit componenttyp XynaObject enthalten - das ist dann nicht kompatibel mit (General)XynaObjectList-Elementen, die keine XynaObjects sind.
+  //Container kï¿½nnte ein Array mit componenttyp XynaObject enthalten - das ist dann nicht kompatibel mit (General)XynaObjectList-Elementen, die keine XynaObjects sind.
   private Object readResolve() throws ObjectStreamException {
     Stack<Integer> s = stackSize.get();
-    s.pop(); //aufräumen TODO eigtl bräuchte man hier nen finally bei der deserialisierung... 
+    s.pop(); //aufrï¿½umen TODO eigtl brï¿½uchte man hier nen finally bei der deserialisierung... 
     
     return readResolvePublic();
   }

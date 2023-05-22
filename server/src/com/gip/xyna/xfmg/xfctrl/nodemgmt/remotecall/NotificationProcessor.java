@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class NotificationProcessor implements Runnable {
     Execution(false), //Auftrag ist gerade in Bearbeitung
     Succeeded(true),  //Auftrag erfolgreich bearbeitet
     Failed(true),     //Auftrag nicht erfolgreich bearbeitet
-    Parked(true),     //Auftrag geparkt für Resume
+    Parked(true),     //Auftrag geparkt fï¿½r Resume
     Removed(true),    //Auftrag soll nicht mehr bearbeitet werden
   ;
     private boolean finalState;
@@ -82,7 +82,7 @@ public class NotificationProcessor implements Runnable {
           this.factoryNodeCaller.idle();
         }
       } catch (InterruptedException e) {
-        //ignorieren: Wer diesen Thread beenden möchte, sollte stopRunning() rufen
+        //ignorieren: Wer diesen Thread beenden mï¿½chte, sollte stopRunning() rufen
       } catch (Throwable t) {
         Department.handleThrowable(t);
         logger.error("Caught unexpected error in NotificationProcessor", t);
@@ -97,7 +97,7 @@ public class NotificationProcessor implements Runnable {
   }
   
   /*
-   * wird aufgerufen für
+   * wird aufgerufen fï¿½r
    * - StartOrder von NotificationProcessorthread
    * - AwaitConnectivity/AwaitApplicationAvailable => von NotificationProcessorthread
    * - AwaitOrder von Auftragsthread
@@ -107,15 +107,15 @@ public class NotificationProcessor implements Runnable {
     if( notification.getStatus().isFinalState() ) {
       return; //nichts zu tun (Fehler bei Succeeded oder Failed)
     }
-    if( notification.startExecution(nodeName) ) { //zustandsübergang
+    if( notification.startExecution(nodeName) ) { //zustandsï¿½bergang
       RemoteCallNotificationStatus status = notification.execute(fnc); //notification-typ-spezifisches execute (z.b. bei startorder der rmi-call)
       if( status == RemoteCallNotificationStatus.Execution ) {
         //bleibt in Bearbeitung, daher kein Notify 
       } else {
-        if( notification.changeStatusFromExecutingAndNotify(status) ) { //benachrichtigt einen auf notification.await wartenden thread (gibt es nur für startorder/awaitorder) 
+        if( notification.changeStatusFromExecutingAndNotify(status) ) { //benachrichtigt einen auf notification.await wartenden thread (gibt es nur fï¿½r startorder/awaitorder) 
            //ok
-          // im Falle einer Failed ausführung bei vorher pausiertem processor müssen wir jetzt pollen
-          fnc.retrieveOrders(); //Zustandsübergang des RemoteProcessors auf Awake
+          // im Falle einer Failed ausfï¿½hrung bei vorher pausiertem processor mï¿½ssen wir jetzt pollen
+          fnc.retrieveOrders(); //Zustandsï¿½bergang des RemoteProcessors auf Awake
         } else {
           //unerwartet
           notification.setStatusAndNotify(status); //trotzdem

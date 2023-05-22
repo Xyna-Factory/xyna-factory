@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,9 +80,9 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 public class XMLRefactoringUtils {
 
-  //TODO dran denken: das ändert nur xml im mdm ordner, nicht aber zb im orderarchive alte audit-daten. 
-  //es wird auch kein redeploy oder sowas durchgeführt. dazu müsste man in services bei schnittstellenänderungen
-  //die codesnippets löschen.
+  //TODO dran denken: das ï¿½ndert nur xml im mdm ordner, nicht aber zb im orderarchive alte audit-daten. 
+  //es wird auch kein redeploy oder sowas durchgefï¿½hrt. dazu mï¿½sste man in services bei schnittstellenï¿½nderungen
+  //die codesnippets lï¿½schen.
 
   private static final Logger logger = CentralFactoryLogging.getLogger(XMLRefactoringUtils.class);
 
@@ -167,9 +167,9 @@ public class XMLRefactoringUtils {
   protected static interface Work {
 
     /**
-     * dokument bearbeiten. kann geändert werden.
+     * dokument bearbeiten. kann geï¿½ndert werden.
      * @param doc
-     * @return was soll mit der datei geschehen? löschen, verschieben (wohin?), speichern
+     * @return was soll mit der datei geschehen? lï¿½schen, verschieben (wohin?), speichern
      */
     public DocumentOrder work(Document doc);
     
@@ -349,7 +349,7 @@ public class XMLRefactoringUtils {
   
   public static class XMOMObjectRefactoringResult {
     private String fqXmlNameOld;
-    protected String fqXmlNameNew; //null falls nicht geändert
+    protected String fqXmlNameNew; //null falls nicht geï¿½ndert
     private long revision;
     protected final List<LabelInformation> unmodifiedLabels = new ArrayList<LabelInformation>();
     protected final List<String> deactivatedOperationSnippets = new ArrayList<String>();
@@ -775,7 +775,7 @@ public class XMLRefactoringUtils {
           config.backup(fdo.file);
           XMLUtils.saveDom(fdo.file, fdo.doc);
           if (fdo.result != null && fdo.result.type == RefactoringTargetType.FILTER) {
-            //FIXME das ist nicht besonders schön. und der filename ist auch noch "nur" der simpleclassname. das passt alles nicht besonders schön
+            //FIXME das ist nicht besonders schï¿½n. und der filename ist auch noch "nur" der simpleclassname. das passt alles nicht besonders schï¿½n
             fdo.result.fqXmlNameOld = fdo.file.getName().substring(0, fdo.file.getName().lastIndexOf(".xml"));              
           }
         }
@@ -825,7 +825,7 @@ public class XMLRefactoringUtils {
     if (config.refactorInDeploymentDir) {
       //Additional Dependencies von Filtern beachten:
       dir = new File(RevisionManagement.getPathForRevision(PathType.FILTER, revision));
-      //Prüfen ob die Revision ein filter Verzeichnis hat
+      //Prï¿½fen ob die Revision ein filter Verzeichnis hat
       if(dir.exists()) {
         executeWorkOnXMLsRecursively(dir, xmlRefactoring, config, orders, null);
       }
@@ -994,7 +994,7 @@ public class XMLRefactoringUtils {
   private static class DiscoverOperationRenameTargets extends WorkUnit implements WorkFinalizer {
     
     private final OperationRefactoringElement baseOperation;
-    //enthält auch operations, die nicht refactored werden müssen, weil sie in einer disjunkten typ-hierarchie enthalten sind
+    //enthï¿½lt auch operations, die nicht refactored werden mï¿½ssen, weil sie in einer disjunkten typ-hierarchie enthalten sind
     private final List<OperationRefactoringElement> instanceOperationsWithSameName;
     //das sind die wirklich zu refactornden operations
     private final List<OperationRefactoringElement> operationsToBeRefactored;
@@ -1047,12 +1047,12 @@ public class XMLRefactoringUtils {
        *  |    / \
        *  E   F   G
        *  
-       * angenommen, es wird auf die operation von C refactor() aufgerufen, und die operation existiert in B und ist in F auch überschrieben.
+       * angenommen, es wird auf die operation von C refactor() aufgerufen, und die operation existiert in B und ist in F auch ï¿½berschrieben.
        * dann muss man erstmal die datentyp hierarchie in richtung A laufen, und dann alle davon abgeleiteten typen finden, die auch die operation enthalten
-       * bzw sie überschreiben.
+       * bzw sie ï¿½berschreiben.
        * 
        * achtung: es kann auch durchaus sein, dass eine gleichbenamte operation sowohl in der teilhierarchie von C als auch in D existiert, ohne dass 
-       * sie auch in A oder B definiert ist. dann muss natürlich beim refactoring von C NICHT auch die operation in D refactored werden!
+       * sie auch in A oder B definiert ist. dann muss natï¿½rlich beim refactoring von C NICHT auch die operation in D refactored werden!
        */
       
       operationsToBeRefactored.add(baseOperation);
@@ -1083,7 +1083,7 @@ public class XMLRefactoringUtils {
       }
             
       
-      // jetzt für alle kandidaten-operations überprüfen, ob sie von firstType abgeleitet sind
+      // jetzt fï¿½r alle kandidaten-operations ï¿½berprï¿½fen, ob sie von firstType abgeleitet sind
       for (OperationRefactoringElement op : instanceOperationsWithSameName) {
         //typ-hierarchie checken:
         String type = op.fqXmlNameOld;

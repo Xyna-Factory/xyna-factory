@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import com.gip.xyna.utils.timing.SleepCounter;
 
 
 /**
- * schnelle singlethreaded verarbeitung von objekten, die über eine art queue doppelt gebuffered werden.
+ * schnelle singlethreaded verarbeitung von objekten, die ï¿½ber eine art queue doppelt gebuffered werden.
  * 
  */
 //TODO mit lazy algorithm executor verheiraten?
@@ -249,7 +249,7 @@ public class QueueProcessor<T> implements Runnable {
         }        
         sleep.reset();
       } else {
-        copy.idx.set(0); //oben auf size gesetzt. nun wieder zurück auf 0 setzen
+        copy.idx.set(0); //oben auf size gesetzt. nun wieder zurï¿½ck auf 0 setzen
         try {
           sleep.sleep();
           if (shuttingDown) {

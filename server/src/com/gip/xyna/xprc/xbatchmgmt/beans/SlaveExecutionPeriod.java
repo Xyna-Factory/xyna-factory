@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ import com.gip.xyna.utils.timing.ExecutionPeriod.Type;
 /**
  * SlaveExecutionPeriod berechnet die wiederholten Startzeitpunkte der Slaves, damit die Slaves nicht 
  * mit maximaler Rate vom Scheduler gestartet werden, sondern mit einer vorgebbaren Rate, konfiguriert 
- * über den Kehrwert der Rate <code>interval</code>.
+ * ï¿½ber den Kehrwert der Rate <code>interval</code>.
  * <br>
- * Wie nun die Rate eingehalten wird und wie auf unvorhersehbare Verzögerungen reagiert wird, ist derzeit
- * über folgende Typen konfigurierbar:
+ * Wie nun die Rate eingehalten wird und wie auf unvorhersehbare Verzï¿½gerungen reagiert wird, ist derzeit
+ * ï¿½ber folgende Typen konfigurierbar:
  * 
  * <ul>
  * <li>FixedInterval  </li>
@@ -50,25 +50,25 @@ import com.gip.xyna.utils.timing.ExecutionPeriod.Type;
  * </li>
  * </ul>
  * FixedInterval nimmt <code>interval</code> immer als Mindestabstand zwischen zwei Startzeitpunkten, 
- * alle Verzögerungen addieren sich.<br>
- * FixedDate_* versucht die Slaves immer in einem festen Takt (konstanten Abstände zwischen den Startzeitpunkten)
- * nach dem Anfangszeitpunkt zu starten. Der Anfangszeitpunkt wird dabei durch das Öffnen des Zeitfensters oder 
- * den Start des Master vorgegeben. Bei einem sich mehrfach öffnenden Zeitfenster wird der Anfangszeitpunkt
- * immer wieder umgesetzt, dies kann dazu führen, dass der Takt nicht exakt fortgesetzt wird.
- * Da durch Verzögerungen im Scheduler (fehlende Capacities, geschlossene Zeitfenster, Factory-Neustart) 
- * die konstanten Abstände nicht immer eingehalten werden kann, muss noch eine Reaktion auf die 
- * Verzögerungen mitangegeben werden, dies ist die Angabe "*":
+ * alle Verzï¿½gerungen addieren sich.<br>
+ * FixedDate_* versucht die Slaves immer in einem festen Takt (konstanten Abstï¿½nde zwischen den Startzeitpunkten)
+ * nach dem Anfangszeitpunkt zu starten. Der Anfangszeitpunkt wird dabei durch das ï¿½ffnen des Zeitfensters oder 
+ * den Start des Master vorgegeben. Bei einem sich mehrfach ï¿½ffnenden Zeitfenster wird der Anfangszeitpunkt
+ * immer wieder umgesetzt, dies kann dazu fï¿½hren, dass der Takt nicht exakt fortgesetzt wird.
+ * Da durch Verzï¿½gerungen im Scheduler (fehlende Capacities, geschlossene Zeitfenster, Factory-Neustart) 
+ * die konstanten Abstï¿½nde nicht immer eingehalten werden kann, muss noch eine Reaktion auf die 
+ * Verzï¿½gerungen mitangegeben werden, dies ist die Angabe "*":
  * <ul>
  * <li>Von FixedDate_CatchUpInPast und FixedDate_CatchUpImmediately werden alle verpasste Startzeitpunkte
- *     nachgeholt, was bei längeren Ausfällen evtl. viel Last verursacht. Bei CatchUpInPast werden die 
- *     Startzeitpunkte so berechnet, als ob es keine Verzögerung gegeben hätte. Damit liegen sie in der 
+ *     nachgeholt, was bei lï¿½ngeren Ausfï¿½llen evtl. viel Last verursacht. Bei CatchUpInPast werden die 
+ *     Startzeitpunkte so berechnet, als ob es keine Verzï¿½gerung gegeben hï¿½tte. Damit liegen sie in der 
  *     Vergangenheit, und die Slaves werden daher evtl. mit ScheudlingTimeout abgebrochen.
  *     Bei CatchUpImmediately werden die Slaves direkt gestartet.</li>
  * <li>Von FixedDate_CatchUpNotTooLate wird der letzte verpasste Startzeitpunkt nachgeholt, wenn er nicht 
- *     zu lange zurückliegt. Der Schwellwert, was als "zu lange" gilt, kann daher noch als zusätzlicher 
+ *     zu lange zurï¿½ckliegt. Der Schwellwert, was als "zu lange" gilt, kann daher noch als zusï¿½tzlicher 
  *     Parameter angegeben werden, bei fehlender Angabe wird als Default das halbe Intervall genommen.</li>
- * <li>Von FixedDate_IgnoreAllMissed werden alle verpassten Startzeitpunkte ignoriert, der nächste Slave 
- *     wird erst wieder im normalen Takt ausgeführt.</li>
+ * <li>Von FixedDate_IgnoreAllMissed werden alle verpassten Startzeitpunkte ignoriert, der nï¿½chste Slave 
+ *     wird erst wieder im normalen Takt ausgefï¿½hrt.</li>
  * </ul>
  * 
  *
@@ -169,15 +169,15 @@ public class SlaveExecutionPeriod implements Serializable, StringSerializable<Sl
 
   /**
    * Initialiserung bzw. Reinitialiserung der ExecutionPeriod.
-   * Bei Reinitialisierung wird die ExecutionPeriod resettet, der neue Startzeitpunkt übernommen
+   * Bei Reinitialisierung wird die ExecutionPeriod resettet, der neue Startzeitpunkt ï¿½bernommen
    * und der Counter auf 1 gesetzt. 
    * <br>
-   * Der Counter wird auf 1 gesetzt, für das folgende Szenario: Das Zeitfenster öffnet sich wieder, nachemd bereits in 
-   * einer früherenPhase Slaves gestartet wurden. Nun wird der erste Slave direkt nach dem Öffnen gestartet, dies 
-   * entspricht bereits Counter 0. Danach wird der Timeconstraint für die nächste Wiederholung gesetzt, 
-   * der Counter muss dann bereits erhöht werden -&gt; Counter 1. Anders ausgedrückt: eigentlich hätte der Counter 
-   * auf 0 gesetzt werden müssen mit dem Wiederöffnen des Zeitfensters, dann wäre die neue Startzeit zu berechnen gewesen 
-   * und erst anch einem weiteren Scheduling hätte dann der Slave gestartet werden können. 
+   * Der Counter wird auf 1 gesetzt, fï¿½r das folgende Szenario: Das Zeitfenster ï¿½ffnet sich wieder, nachemd bereits in 
+   * einer frï¿½herenPhase Slaves gestartet wurden. Nun wird der erste Slave direkt nach dem ï¿½ffnen gestartet, dies 
+   * entspricht bereits Counter 0. Danach wird der Timeconstraint fï¿½r die nï¿½chste Wiederholung gesetzt, 
+   * der Counter muss dann bereits erhï¿½ht werden -&gt; Counter 1. Anders ausgedrï¿½ckt: eigentlich hï¿½tte der Counter 
+   * auf 0 gesetzt werden mï¿½ssen mit dem Wiederï¿½ffnen des Zeitfensters, dann wï¿½re die neue Startzeit zu berechnen gewesen 
+   * und erst anch einem weiteren Scheduling hï¿½tte dann der Slave gestartet werden kï¿½nnen. 
    * 
    */
   public void reInit( long start) {
@@ -192,7 +192,7 @@ public class SlaveExecutionPeriod implements Serializable, StringSerializable<Sl
   }
 
   /**
-   * Berechnung des nächsten Startzeitpunkts
+   * Berechnung des nï¿½chsten Startzeitpunkts
    * @param now
    * @return
    */
@@ -201,8 +201,8 @@ public class SlaveExecutionPeriod implements Serializable, StringSerializable<Sl
   }
 
   /**
-   * Nach jedem Slave-Start muss der Counter erhöht werden, damit die Berechnung des 
-   * nächsten Startzeitpunkts korrekt durchgeführt werden kann.
+   * Nach jedem Slave-Start muss der Counter erhï¿½ht werden, damit die Berechnung des 
+   * nï¿½chsten Startzeitpunkts korrekt durchgefï¿½hrt werden kann.
    */
   public void incrementCounter() {
     counter.getAndIncrement();

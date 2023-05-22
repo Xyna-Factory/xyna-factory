@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -343,7 +343,7 @@ public class ManagedSession extends Storable<ManagedSession> {
     state = cast.state;
     role = cast.role;
     currentPriviliges = cast.currentPriviliges;
-    priviligesLock = new ReentrantLock(); // FIXME potentiell böse!
+    priviligesLock = new ReentrantLock(); // FIXME potentiell bï¿½se!
     stateLock = new ReentrantLock();
     multipleSessionsAllowed = cast.multipleSessionsAllowed;
     forced = cast.forced;
@@ -360,7 +360,7 @@ public class ManagedSession extends Storable<ManagedSession> {
     newEntry.role = rs.getString("role");
     newEntry.currentPriviliges =
         (List<ASessionPrivilege>) newEntry.readBlobbedJavaObjectFromResultSet(rs, "currentPriviliges");
-    newEntry.priviligesLock = new ReentrantLock(); // FIXME potentiell böse!
+    newEntry.priviligesLock = new ReentrantLock(); // FIXME potentiell bï¿½se!
     newEntry.stateLock = new ReentrantLock();
     newEntry.multipleSessionsAllowed = rs.getBoolean("multipleSessionsAllowed");
     newEntry.forced = rs.getBoolean("forced");

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.List;
 
 
 /**
- * Formatierung für Tabellen bei CLI-Ausgaben
+ * Formatierung fï¿½r Tabellen bei CLI-Ausgaben
  * 
  * Zur Verwendung muss eine konkrete Subklasse erstellt werden, die die Methoden
  * - List&lt;List&lt;String&gt;&gt; getRows();
@@ -40,7 +40,7 @@ import java.util.List;
  *  Value1  | Value2
  *  
  * Der TableRowFormatter ist derzeit fest: MaxCellSizeTableRowFormatter
- * Mit diesem werden die Zellenbreiten an den längsten anzuzeigenden String angepasst. 
+ * Mit diesem werden die Zellenbreiten an den lï¿½ngsten anzuzeigenden String angepasst. 
  */
 public abstract class TableFormatter {
   private TableRowFormatter trf = new MaxCellSizeTableRowFormatter();

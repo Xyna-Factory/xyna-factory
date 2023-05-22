@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class InheritanceRuleCollection implements Serializable {
   //Map mit InheritanceRules. Als Key dient der jeweilige childFilter (z.B. *).
   private ConcurrentMap<String, InheritanceRule> inheritanceRules = new ConcurrentHashMap<String, InheritanceRule>();
   
-  //Cache für bereits ermittelte Regeln für eine Hierarchie von OrderTypes.
+  //Cache fï¿½r bereits ermittelte Regeln fï¿½r eine Hierarchie von OrderTypes.
   //Hier ist der Key die String-Darstellung einer konkreten Aufrufhierarchie (z.B. :OTA:OTB).
   private transient ConcurrentMap<String, InheritanceRule> preferredRulesCache = new ConcurrentHashMap<String, InheritanceRule>();
   
@@ -79,8 +79,8 @@ public class InheritanceRuleCollection implements Serializable {
   }
 
   /**
-   * Liefert die Regel mit der höchsten Precedence, die in der InheritanceRuleCollection enthalten ist
-   * und die zur übergebenen Aufrufhierarchie passt.
+   * Liefert die Regel mit der hï¿½chsten Precedence, die in der InheritanceRuleCollection enthalten ist
+   * und die zur ï¿½bergebenen Aufrufhierarchie passt.
    * @param childHierarchy
    * @return
    */
@@ -94,7 +94,7 @@ public class InheritanceRuleCollection implements Serializable {
       for (InheritanceRule rule : inheritanceRules.values()) {
         if (rule.matches(childHierarchy)) { //Regel muss zur aktuellen Aufrufhierarchie passen
           if (comparator.compare(rule, preferredRule) > 0) {
-            //Regel mit höherer Precedence gefunden
+            //Regel mit hï¿½herer Precedence gefunden
             preferredRule = rule;
           }
         }

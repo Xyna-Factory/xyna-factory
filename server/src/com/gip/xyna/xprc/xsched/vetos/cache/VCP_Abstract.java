@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,29 +128,29 @@ public abstract class VCP_Abstract extends VetoCacheProcessor {
       } else {
         freed.add(veto);
       }
-      //Hier muss folgendes beachtet werden: Beim Füllen der Listen hier geht die ursprüngliche Reihenfolge verloren.
-      //Dies ist in folgenden 3 Fällen interessant: (A: Veto wird von einem weiteren Auftrag benötigt; B: schneller Auftrag gibt Veto zurück, 
-      //C: schneller Auftrag gibt Veto zurück, ist aber zeitlich nicht mehr im Batch).
+      //Hier muss folgendes beachtet werden: Beim Fï¿½llen der Listen hier geht die ursprï¿½ngliche Reihenfolge verloren.
+      //Dies ist in folgenden 3 Fï¿½llen interessant: (A: Veto wird von einem weiteren Auftrag benï¿½tigt; B: schneller Auftrag gibt Veto zurï¿½ck, 
+      //C: schneller Auftrag gibt Veto zurï¿½ck, ist aber zeitlich nicht mehr im Batch).
       //Da die VetoCacheEntry wiederverwendet werden, enthalten die Listen dann aber auch die aktuellsten Daten.
       //Aus einer zeitlichen Reihenfolge schedule(A,1,s), free(A,1,f), schedule(B,3,s), schedule(A,2,s), free(B,3,f), schedule(C,4,s) 
-      //und verspätet free(C,4,f)
+      //und verspï¿½tet free(C,4,f)
       //wird ein Datensatz scheduled[(A,2,s), (A,2,s), (B,3,f), (C,4,f)], freed[(A,2,s), (B,3,f)]
       //Das Tripel (A,2,s) stellt dabei die Daten (<vetoName>,<orderId>,<status(scheduled,free)>) dar.
       //
-      //Ausgelagert in VetoCachePersistence muss dann aus dem scheduled/freed-Datensatz als nächstes bestimmt werden, 
-      //welche Daten in der DB zu speichern bzw. zu löschen sind. 
-      //Dazu werden die scheduled-Daten genauer angeschaut, nur die mit Status "s" werden fürs Speichern vorgesehen, 
-      //die free-Daten werden immer gelöscht.
+      //Ausgelagert in VetoCachePersistence muss dann aus dem scheduled/freed-Datensatz als nï¿½chstes bestimmt werden, 
+      //welche Daten in der DB zu speichern bzw. zu lï¿½schen sind. 
+      //Dazu werden die scheduled-Daten genauer angeschaut, nur die mit Status "s" werden fï¿½rs Speichern vorgesehen, 
+      //die free-Daten werden immer gelï¿½scht.
       //Damit werde obige Daten dann zu
       //persist[(A,2,s), (A,2,s)], delete[(A,2,s), (B,3,f)], reprocess[(B,3,f), (C,4,f)]
       //Bei der Persistierung muss dann beachtet werden, dass zuerst die Deletes und danach erst die Persists abgearbeitet werden, 
-      //da sonst A fehlen würde. 
-      //Die Reprocess-Einträge führen dann dazu, dass Vetos B und C mit dem nächsten Batch erneut gelöscht werden. 
+      //da sonst A fehlen wï¿½rde. 
+      //Die Reprocess-Eintrï¿½ge fï¿½hren dann dazu, dass Vetos B und C mit dem nï¿½chsten Batch erneut gelï¿½scht werden. 
     }
 
     public void persist(VetoCachePersistence persistence) {
-      //Eine schnelle OrderExecution kann Einträge in scheduled auf Status free setzen. Die noch erkannten
-      //Einträge werden hier noch als reprocess zurückgegeben.
+      //Eine schnelle OrderExecution kann Eintrï¿½ge in scheduled auf Status free setzen. Die noch erkannten
+      //Eintrï¿½ge werden hier noch als reprocess zurï¿½ckgegeben.
       if( persistence != null ) {
         reprocess = persistence.persist( scheduled, freed );
       }

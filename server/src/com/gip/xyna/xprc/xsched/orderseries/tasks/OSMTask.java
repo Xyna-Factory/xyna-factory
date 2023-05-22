@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,8 +67,8 @@ public abstract class OSMTask {
   public abstract String getCorrelationId();
   
   /*
-  Versuch, eine PriorityQueue zu verwenden: Problem Finish darf nicht Preschedule überholen, da sonst der 
-  Cache (osmCache und predecessorTrees) in Unordnung gerät (nicht schlimm, aber zuviel Anfragen in DB
+  Versuch, eine PriorityQueue zu verwenden: Problem Finish darf nicht Preschedule ï¿½berholen, da sonst der 
+  Cache (osmCache und predecessorTrees) in Unordnung gerï¿½t (nicht schlimm, aber zuviel Anfragen in DB
   sowie Leichen im Cache) 
 
   protected OSMTask(int priority, long creationTime) {

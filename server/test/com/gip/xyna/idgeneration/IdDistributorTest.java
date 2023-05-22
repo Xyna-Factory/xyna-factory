@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class IdDistributorTest extends TestCase {
 
 
       public long getNextBlockStart(IdDistributor iddistr, long time) {
-        //blöcke fangen immer bei durch 5 teilbaren zahlen an, und enden bei der nächsten durch 3 teilbaren zahl (weil blocksize=3)
+        //blï¿½cke fangen immer bei durch 5 teilbaren zahlen an, und enden bei der nï¿½chsten durch 3 teilbaren zahl (weil blocksize=3)
         return next.getAndAdd(5);
       }
     }, 3L);

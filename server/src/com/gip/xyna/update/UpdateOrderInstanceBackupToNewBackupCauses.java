@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class UpdateOrderInstanceBackupToNewBackupCauses extends UpdateJustVersio
                 if (OrderInstanceStatus.FINISHED == oid.getStatusAsEnum() ) {
                   oib.setBackupCause(BackupCause.FINISHED_SUBWF);
                 } else {
-                  // kann es sein, das Prüfung oben nicht vollständig ist? Selbst wenn, sollte dies kein Problem sein -
+                  // kann es sein, das Prï¿½fung oben nicht vollstï¿½ndig ist? Selbst wenn, sollte dies kein Problem sein -
                   // der Eintrag sollte
                   // nur falsch getaggt sein.
                   oib.setBackupCause(BackupCause.ACKNOWLEDGED);

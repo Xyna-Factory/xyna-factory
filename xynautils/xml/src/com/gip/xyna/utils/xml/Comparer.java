@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,8 +66,8 @@ public class Comparer {
    }
 
    /**
-    * überprüft xmlfragmente auf (un)gleichheit und gibt ein genauso
-    * strukturiertes xml zurück, welches als werte das ergebnis bzgl dem
+    * ï¿½berprï¿½ft xmlfragmente auf (un)gleichheit und gibt ein genauso
+    * strukturiertes xml zurï¿½ck, welches als werte das ergebnis bzgl dem
     * jeweiligen feld hat.
     * 
     * @param inputNodes
@@ -75,7 +75,7 @@ public class Comparer {
     * @return Node vom gleichen typ wie die Input-Nodes.
     * @throws Exception
     *               falls die fragmente strukturell nicht gleich sind wird eine
-    *               erklärende exception geworfen (unterschiedlicher namespace,
+    *               erklï¿½rende exception geworfen (unterschiedlicher namespace,
     *               unterschiedliche struktur etc)
     */
    public Node compareNodes(Node[] inputNodes) throws Exception {
@@ -153,9 +153,9 @@ public class Comparer {
           */
          // namespaces vergleichen?
       }
-      // rückgabe node befüllen
+      // rï¿½ckgabe node befï¿½llen
       if (resultNode.getNodeType() == Node.ELEMENT_NODE) {
-         // attribute hinzufügen
+         // attribute hinzufï¿½gen
          Iterator<String> it = attrDifferent.keySet().iterator();
          while (it.hasNext()) {
             String attrName = it.next();
@@ -171,7 +171,7 @@ public class Comparer {
                         attrDifferent.get(attrName) == null ? true : false));
          }
       }
-      // rekursion über kinder
+      // rekursion ï¿½ber kinder
       for (int i = 0; i < inputNodes[0].getChildNodes().getLength(); i++) {
          Node[] kids = new Node[inputNodes.length];
          for (int j = 0; j < inputNodes.length; j++) {
@@ -328,7 +328,7 @@ public class Comparer {
    private String getCompareIdentifier(boolean allEqual, boolean allDifferent)
          throws Exception {
       if (allEqual && allDifferent) {
-         return ""; // throw new Exception("Es können nicht alle Felder gleich
+         return ""; // throw new Exception("Es kï¿½nnen nicht alle Felder gleich
          // und verschieden sein");
       }
       if (allEqual) {

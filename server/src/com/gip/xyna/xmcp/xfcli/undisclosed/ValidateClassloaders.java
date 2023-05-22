@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class ValidateClassloaders implements CommandExecution {
   @Override
   public void execute(AllArgs allArgs, CommandLineWriter clw) throws Exception {
     /*
-     * für alle classloader checke, ob die bereits geladenen klassen alle mit dem aktuellen classloader geladen sind
+     * fï¿½r alle classloader checke, ob die bereits geladenen klassen alle mit dem aktuellen classloader geladen sind
      */
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
     cld.validateClassLoaders(clw);

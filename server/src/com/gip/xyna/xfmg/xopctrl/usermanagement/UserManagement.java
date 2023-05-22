@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
     USER_MANAGEMENT_EDIT_OWN(true, true),
     KILL_STUCK_PROCESS(false, true), WORKINGSET_MANAGEMENT(true, true), APPLICATION_MANAGEMENT(true, true),
     APPLICATION_ADMINISTRATION(true, true), 
-    TOPOLOGY_MODELLER(false, true) //derzeit nur vom RMI-Proxy geprüft, keine weitere Prüfung in der Factory
+    TOPOLOGY_MODELLER(false, true) //derzeit nur vom RMI-Proxy geprï¿½ft, keine weitere Prï¿½fung in der Factory
     ;
 
     private boolean usedInGUI; //gibt an, ob das Recht in der GUI verwendet wird
@@ -154,29 +154,29 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
   private static final String SRP_ONLY_STAR = "/\\*/";
   
   /*
-   *      / .* / steht für beliebige strings, die escaped werden (z.b. ordertypes, die punkte enthalten etc)
+   *      / .* / steht fï¿½r beliebige strings, die escaped werden (z.b. ordertypes, die punkte enthalten etc)
    *         dabei kann zwischen den slashes ein regularer ausdruck stehen.
    *         
    *      *       => '/' + RightScope.WILDCARD_PATTERN + '/'
-   *      / \\* / => bisher nur * unterstützt, später soll hier evtl die funktion auf / .* / erweitert werden. Deshalb steht hier im enum auch immer ein TODO
+   *      / \\* / => bisher nur * unterstï¿½tzt, spï¿½ter soll hier evtl die funktion auf / .* / erweitert werden. Deshalb steht hier im enum auch immer ein TODO
    */
   public enum ScopedRight {
     /**
-     * Rechtebereich, um Aufträge zu starten und CronLikeOrders zu verwalten, mit folgenden Teilen:
+     * Rechtebereich, um Auftrï¿½ge zu starten und CronLikeOrders zu verwalten, mit folgenden Teilen:
      * ordertype, applicationName und versionName
      */
     START_ORDER("xprc.xpce.StartOrder", new String[] {SRP_ANY_ESCAPED_STRING,SRP_ANY_ESCAPED_STRING,SRP_ANY_ESCAPED_STRING}),
     
     /**
      * Rechtebereich, um Time Controlled Orders (BatchProzesse) zu verwalten, mit folgenden Teilen:
-     * durchzuführende Aktion, ordertype des slaves, applicationName und versionName
+     * durchzufï¿½hrende Aktion, ordertype des slaves, applicationName und versionName
      */
     TIME_CONTROLLED_ORDER("xfmg.xfctrl.timeControlledOrders", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.enable + ", " + Action.disable + ", " + Action.kill + ", *]", SRP_ANY_ESCAPED_STRING,SRP_ANY_ESCAPED_STRING,SRP_ANY_ESCAPED_STRING}),
     
     /**
-     * Rechtebereich für XynaProperties, mit folgenden Teilen:
-     * durchzuführende Aktion (read: XynaProperties anzeigen, write: XynaProperties anlegen und ändern,
-     * insert: im Moment keine Funktion, delete: XynaProperties löschen oder *: alle Aktionen)
+     * Rechtebereich fï¿½r XynaProperties, mit folgenden Teilen:
+     * durchzufï¿½hrende Aktion (read: XynaProperties anzeigen, write: XynaProperties anlegen und ï¿½ndern,
+     * insert: im Moment keine Funktion, delete: XynaProperties lï¿½schen oder *: alle Aktionen)
      * und Name der XynaProperty
      */
     XYNA_PROPERTY("xfmg.xfctrl.XynaProperties", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete +", *]",SRP_ANY_ESCAPED_STRING}),
@@ -184,13 +184,13 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
     
     /**
      * Rechtebereich, um Applications anzuzeigen und zu verwalten, mit folgenden Teilen:
-     * durchzuführende Aktion, applicationName und versionName
+     * durchzufï¿½hrende Aktion, applicationName und versionName
      */
     APPLICATION("xfmg.xfctrl.ApplicationManagement", new String[] {"[" + Action.list + ", " + Action.start + ", " + Action.stop + ", " + Action.deploy + ", " + Action.write + ", " + Action.remove + ", " + Action.migrate + ", *]", SRP_ANY_ESCAPED_STRING, SRP_ANY_ESCAPED_STRING}),
     
     /**
      * Rechtebereich, um ApplicationDefinitions anzuzeigen und zu verwalten, mit folgenden Teilen:
-     * durchzuführende Aktion, workspaceName und applicationName
+     * durchzufï¿½hrende Aktion, workspaceName und applicationName
      */
     APPLICATION_DEFINITION("xfmg.xfctrl.ApplicationDefinitionManagement", new String[] {"[" + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]", SRP_ANY_ESCAPED_STRING, SRP_ANY_ESCAPED_STRING}),
     
@@ -198,7 +198,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
     
     /**
      * Zugriffsrechte der Datenmodellverwaltung.
-     * TODO: Der zweite Parameter schränkt den Namen der Datenmodelle ein.
+     * TODO: Der zweite Parameter schrï¿½nkt den Namen der Datenmodelle ein.
      */
     DATA_MODEL("xfmg.xfctrl.dataModels", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete +", *]",SRP_ONLY_STAR}),
     
@@ -211,8 +211,8 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
      * Lesezugriff auf die Deployment-Items.
      * 
      * TODO:
-     * Der zweite Parameter schränkt den Namen der Deployment-Items ein.
-     * Der dritte und vierte Parameter steht bei Runtime Applications für Application und Version. Bei Workspace wird nur der dritte Parameter verglichen.
+     * Der zweite Parameter schrï¿½nkt den Namen der Deployment-Items ein.
+     * Der dritte und vierte Parameter steht bei Runtime Applications fï¿½r Application und Version. Bei Workspace wird nur der dritte Parameter verglichen.
      */
     DEPLOYMENT_ITEM("xfmg.xfctrl.deploymentItems", new String[] {"[" + Action.read + ", *]",SRP_ONLY_STAR,SRP_ONLY_STAR,SRP_ONLY_STAR}),
 
@@ -221,8 +221,8 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
      * Die Zugriffsart generate erlaubt das benutzen einer Order Input Source, also das Generieren von Auftragseingabedaten.
      * 
      * TODO
-     * Der zweite Parameter schränkt den Namen der Order Input Sources ein.
-     * Der dritte und vierte Parameter steht bei Runtime Applications für Application und Version. Bei Workspace wird nur der dritte Parameter verglichen.
+     * Der zweite Parameter schrï¿½nkt den Namen der Order Input Sources ein.
+     * Der dritte und vierte Parameter steht bei Runtime Applications fï¿½r Application und Version. Bei Workspace wird nur der dritte Parameter verglichen.
      */
     ORDER_INPUT_SOURCE("xfmg.xfctrl.orderInputSources", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", " + Action.generate + ", *]",SRP_ONLY_STAR,SRP_ONLY_STAR,SRP_ONLY_STAR}),
     
@@ -230,8 +230,8 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
      * Zugriffsrechte der Cron Like Order-Verwaltung.
      * 
      * TODO
-     * Der zweite Parameter schränkt den Namen der Cron Like Orders ein.
-     * Der dritte und vierte Parameter steht bei Runtime Applications für Application und Version. Bei Workspace wird nur der dritte Parameter verglichen.
+     * Der zweite Parameter schrï¿½nkt den Namen der Cron Like Orders ein.
+     * Der dritte und vierte Parameter steht bei Runtime Applications fï¿½r Application und Version. Bei Workspace wird nur der dritte Parameter verglichen.
      */
     CRON_LIKE_ORDER("xfmg.xfctrl.cronLikeOrders", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ONLY_STAR,SRP_ONLY_STAR,SRP_ONLY_STAR}),
 
@@ -239,8 +239,8 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
      * Zugriffsrechte der Order Type-Verwaltung.
      * 
      * TODO
-     * Der zweite Parameter schränkt den Namen des Order Types ein.
-     * Der dritte und vierte Parameter steht bei Runtime Applications für Application und Version. Bei Workspace wird nur der dritte Parameter verglichen.
+     * Der zweite Parameter schrï¿½nkt den Namen des Order Types ein.
+     * Der dritte und vierte Parameter steht bei Runtime Applications fï¿½r Application und Version. Bei Workspace wird nur der dritte Parameter verglichen.
      */
     ORDER_TYPE("xfmg.xfctrl.orderTypes", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ONLY_STAR,SRP_ONLY_STAR,SRP_ONLY_STAR}),
 
@@ -248,7 +248,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
      * Zugriffsrechte der Capacity-Verwaltung.
      * 
      * TODO
-     * Der zweite Parameter schränkt den Namen der Capacities ein.
+     * Der zweite Parameter schrï¿½nkt den Namen der Capacities ein.
      */
     CAPACITY("xfmg.xfctrl.capacities", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ONLY_STAR}),
 
@@ -256,18 +256,18 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
      * Zugriffsrechte der Administrative Veto-Verwaltung.
      * 
      * TODO
-     * Der zweite Parameter schränkt den Namen der Administrative Vetos ein.
+     * Der zweite Parameter schrï¿½nkt den Namen der Administrative Vetos ein.
      */
     VETO("xfmg.xfctrl.administrativeVetos", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ONLY_STAR}),
     
     /**
-     * Rechtebereich, für den lokalen dateizugriff:
+     * Rechtebereich, fï¿½r den lokalen dateizugriff:
      * Zugriffsart, absoluter Pfad
      */
     FILE_ACCESS("base.fileaccess", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ANY_ESCAPED_STRING});
     
     
-    //FIXME beim Hinzufügen weiterer ScopedRights bitte auch in 
+    //FIXME beim Hinzufï¿½gen weiterer ScopedRights bitte auch in 
     //com.gip.xyna.xfmg.xfctrl.proxymgmt.ProxyRole.createDefaultRightScopeMap() eintragen
     
     
@@ -303,7 +303,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
   }
 
   /**
-   * Sichtbarkeitsrechte für GUI-Komponenten
+   * Sichtbarkeitsrechte fï¿½r GUI-Komponenten
    */
   public enum GuiRight {
     FACTORY_MANAGER("xmcp.xfm.factoryManager"),
@@ -333,7 +333,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
     read, write, insert, delete, list, start, stop, deploy, remove, migrate, generate,
     enable, disable, kill,
     
-    none; //für ProxyAccess als default nötg
+    none; //fï¿½r ProxyAccess als default nï¿½tg
   }
   
   public enum RecalculateHash {
@@ -552,7 +552,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
   
   /**
    * Liefert eine kommaseparierte Liste aller in der GUI verwendeten Rechte.
-   * Diese wird im WebService für die Kompatibilitätseigenschaft 'xuserman.right.guiSpecificRights' benötigt.
+   * Diese wird im WebService fï¿½r die Kompatibilitï¿½tseigenschaft 'xuserman.right.guiSpecificRights' benï¿½tigt.
    * @return
    */
   public static String getGuiSpecificRights() {
@@ -882,7 +882,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
       dualCloseConnection(defCon, hisCon);
     }
     
-    //Passworthistorie löschen
+    //Passworthistorie lï¿½schen
     deletePasswordHistory(id);
 
     // delete all user context values
@@ -1103,7 +1103,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
             return false;
           }
         } catch (XFMG_UserAuthenticationFailedException e) {
-          //evtl hat sich locked status geändert
+          //evtl hat sich locked status geï¿½ndert
           persistStorable(defCon, userToBeChanged);
           persistStorable(hisCon, userToBeChanged);
           throw e;
@@ -2603,7 +2603,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
           }
         }
 
-        //Sichtbarkeitsrechte für GUI
+        //Sichtbarkeitsrechte fï¿½r GUI
         for (GuiRight guiRight : GuiRight.values()) {
           Right predefinedRight = new Right(guiRight.getKey());
           if (!defCon.containsObject(predefinedRight)) {
@@ -2697,7 +2697,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
 
         predefinedRole.grantRight(right.toString());
       }
-      //Sichtbarkeitsrechte für GUI
+      //Sichtbarkeitsrechte fï¿½r GUI
       for (GuiRight guiRight : GuiRight.values()) {
         predefinedRole.grantRight(guiRight.getKey());
       }

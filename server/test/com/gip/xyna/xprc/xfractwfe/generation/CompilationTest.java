@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -277,10 +277,10 @@ public class CompilationTest extends TestCase {
     InMemoryCompilationSet s = new InMemoryCompilationSet(false, true, false);
     s.setClassDir("mydir1");
     /*
-     * compilereihenfolge richtet sich scheinbar danach, in welcher reihenfolge man die argumente an den compiler übergibt.
+     * compilereihenfolge richtet sich scheinbar danach, in welcher reihenfolge man die argumente an den compiler ï¿½bergibt.
      * bei test4 bricht er ab, deshalb wird 6 und 7 nicht mehr kompiliert.
      * 
-     * so einfach ist es nicht. es kommt auf die art von compilefehler an. bei schlimmeren fehlern wird schon früher abgebrochen und dann gar nichts kompiliert.
+     * so einfach ist es nicht. es kommt auf die art von compilefehler an. bei schlimmeren fehlern wird schon frï¿½her abgebrochen und dann gar nichts kompiliert.
      */
     s.addToCompile(new JavaSourceFromString("test.compilation.Test", CLASS_TEST1));
     s.addToCompile(new JavaSourceFromString("test.compilation.Test4", CLASS_TEST4)); //-> fehler

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ import com.gip.xyna.xprc.xpce.planning.Capacity;
 
 
 /**
- * schnittstelle für alles was mit classloading zu tun hat verwaltet classloaders für diverse objekte: - mdm datentypen
+ * schnittstelle fï¿½r alles was mit classloading zu tun hat verwaltet classloaders fï¿½r diverse objekte: - mdm datentypen
  * - workflows - filter - trigger - sharedlibraries - rmi
  */
 public class ClassLoaderDispatcher extends FunctionGroup {
@@ -172,7 +172,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
 
   private EnumMap<ClassLoaderType, ClassLoaderMap> classLoaderMap = new EnumMap<ClassLoaderType, ClassLoaderMap>(ClassLoaderType.class);
 
-  //Outdated Filter in einer eigenen Map halten, da diese zusätzlich eine parentRevision haben
+  //Outdated Filter in einer eigenen Map halten, da diese zusï¿½tzlich eine parentRevision haben
   private OutdatedFilterClassLoaderMap outdatedFilterClassLoader = new OutdatedFilterClassLoaderMap();
 
 
@@ -351,7 +351,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   }
 
   /**
-   * sucht auch in abhängigen anderen revisions, falls nicht in dieser gefunden 
+   * sucht auch in abhï¿½ngigen anderen revisions, falls nicht in dieser gefunden 
    */
   public Class<XynaProcess> loadWFClass(String fqClassName, Long revision) throws ClassNotFoundException {
     Class<XynaProcess> c = loadWFClassOwnRevision(fqClassName, revision);
@@ -389,7 +389,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   }
 
   /**
-   * sucht auch in abhängigen anderen revisions, falls nicht in dieser gefunden 
+   * sucht auch in abhï¿½ngigen anderen revisions, falls nicht in dieser gefunden 
    */
   public Class<XynaObject> loadMDMClass(String name, boolean createClassLoaderIfNotExisting, String originalXmlPath,
                                         String originalXmlName, Long revision) throws ClassNotFoundException {
@@ -400,7 +400,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
     }
     
     //FIXME performance: cache verwenden, der alle klassen aus dem dependencies-teilbaum schneller durchsuchbar hat
-    //      eine map name->classloader wäre z.b. gut
+    //      eine map name->classloader wï¿½re z.b. gut
     Set<Long> requirements = new HashSet<Long>();
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getDependenciesRecursivly(revision, requirements);
     for (long req : requirements) {
@@ -412,7 +412,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
     
     Long rootRevision = XynaOrderServerExtension.getThreadLocalRootRevision();
     if (rootRevision != null) {
-      //es läuft gerade eine deserialisierung, und es ist zusätzlicher revision kontext bekannt
+      //es lï¿½uft gerade eine deserialisierung, und es ist zusï¿½tzlicher revision kontext bekannt
       if (requirements.contains(rootRevision)) {
         return null; //bereits getestet
       }
@@ -577,14 +577,14 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   }
   
   /**
-   * sucht classloader in der entsprechenden map oder falls nicht gefunden über die revision-dependencies 
+   * sucht classloader in der entsprechenden map oder falls nicht gefunden ï¿½ber die revision-dependencies 
    */
   public <T extends ClassLoaderBase> T findClassLoaderByType(String fqClassName, Long revision, ClassLoaderType type, boolean allowDelegation) {
     return findClassLoaderByType(fqClassName, revision, null, type, allowDelegation);
   }
   
   /**
-   * sucht classloader in der entsprechenden map oder falls nicht gefunden über die revision-dependencies 
+   * sucht classloader in der entsprechenden map oder falls nicht gefunden ï¿½ber die revision-dependencies 
    */
   public <T extends ClassLoaderBase> T findClassLoaderByType(String fqClassName, Long revision, Long parentRevision, ClassLoaderType type, boolean allowDelegation) {
     if (allowDelegation && RuntimeContextDependencyManagement.getThreadLocalValueForDeserializationWithNewRevisions()) {
@@ -616,7 +616,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   private  <T extends ClassLoaderBase> T loadByThreadLocalRootOrderRevision(String fqClassName, ClassLoaderType type, Set<Long> revisionsAlreadyTested, Long parentRevision) {
     Long rootRevision = XynaOrderServerExtension.getThreadLocalRootRevision();
     if (rootRevision != null) {
-      //es läuft gerade eine deserialisierung, und es ist zusätzlicher revision kontext bekannt
+      //es lï¿½uft gerade eine deserialisierung, und es ist zusï¿½tzlicher revision kontext bekannt
       if (revisionsAlreadyTested.contains(rootRevision)) {
         return null; //bereits getestet
       }
@@ -1058,8 +1058,8 @@ public class ClassLoaderDispatcher extends FunctionGroup {
 
   /**
    * in dieser methode werden classloader (falls vorhanden) durch neue ersetzt. es sollten keine
-   * anderen classloader ausser dem übergebenen berührt werden (zb implizit durch deployment/instanziierung
-   * von zugehörigen mdmobjekten oder sowas).
+   * anderen classloader ausser dem ï¿½bergebenen berï¿½hrt werden (zb implizit durch deployment/instanziierung
+   * von zugehï¿½rigen mdmobjekten oder sowas).
    * die parent-classloader, registrierte urls und registrierte dependencies bleiben erhalten.
    */
   public void reloadClassLoaderByType(ClassLoaderType clt, String className, Long revision) throws XFMG_ClassLoaderNotFoundException {
@@ -1171,7 +1171,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   
   
   /**
-   * Über ClassLoaderBuilder kann ein neuer ClassLoader angelegt werden, falls er noch nicht existiert
+   * ï¿½ber ClassLoaderBuilder kann ein neuer ClassLoader angelegt werden, falls er noch nicht existiert
    */
   public interface ClassLoaderBuilder {
     
@@ -1204,7 +1204,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   }
 
   /**
-   * gibt classloader aus entsprechender map zurück 
+   * gibt classloader aus entsprechender map zurï¿½ck 
    */
   public ClassLoaderBase getClassLoaderByType(ClassLoaderType clt, String classLoaderName, Long revision,
                                               Long parentRevision) {
@@ -1254,7 +1254,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
       classLoaderMap.get(ClassLoaderType.RMI).cleanup(VersionManagement.REVISION_WORKINGSET);
     }
     
-    // rmi könnte eine beliebige mdm klasse erzeugen => immer redeploy!
+    // rmi kï¿½nnte eine beliebige mdm klasse erzeugen => immer redeploy!
     try {
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRMIManagement().redeployRMIImpls();
     } catch (XMCP_RMI_BINDING_ERROR e) {
@@ -1305,7 +1305,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   private void reloadSharedLibInternally(final String name, boolean reloadRMI,
                                          final MapWrapper<String, ClassLoaderBase> sharedLibClassLoaderForRevision,
                                          final Long revision, ClassLoaderSwitcher cls) throws XFMG_ClassLoaderRedeploymentException, XFMG_SHARED_LIB_NOT_FOUND, OrderEntryInterfacesCouldNotBeClosedException {
-    //während einem reloadSharedLib dürfen die Trigger und Filter nicht enabled werden
+    //wï¿½hrend einem reloadSharedLib dï¿½rfen die Trigger und Filter nicht enabled werden
     //daher hier die entsprechenden Methoden sperren
     Pair<Operation, Operation> failure =
                     CommandControl.wlock(CommandControl.Operation.SHAREDLIB_RELOAD,
@@ -1365,7 +1365,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   
   
   /**
-   * läd abhängige filter classloader auch neu
+   * lï¿½d abhï¿½ngige filter classloader auch neu
    */
   public void reloadTrigger(final String fqTriggerClassName, final String[] sharedLibs, final Long revision) throws XFMG_ClassLoaderRedeploymentException {
     
@@ -1373,7 +1373,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
     
     if (tcl != null) {
       
-      // alles locken während des reloads 
+      // alles locken wï¿½hrend des reloads 
       for (Lock lock : allLocksAsWriteLockInOrderForDeadLockSecurity) {
         lock.lock();
       }
@@ -1387,7 +1387,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
             if (logger.isDebugEnabled()) {
               logger.debug("new trigger classloader = " + newTcl + ", old trigger classloader = " + tclRemoved);
             }
-            // dependencies nach "oben" ändern sich nicht
+            // dependencies nach "oben" ï¿½ndern sich nicht
             newTcl.copyDependencies(tclRemoved, true);
             tclRemoved.closeFiles();
           }
@@ -1510,9 +1510,9 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   }
 
   /**
-   * in anderen classloader, die den übergebenen classloader als dependencyToReloadIfClassLoaderChanges eingetragen haben,
-   * den übergebenen classloader als dependency entfernen.
-   * d.h. anpassung der classloader von objekten, die von dem übergebenen classloader verwendet werden.
+   * in anderen classloader, die den ï¿½bergebenen classloader als dependencyToReloadIfClassLoaderChanges eingetragen haben,
+   * den ï¿½bergebenen classloader als dependency entfernen.
+   * d.h. anpassung der classloader von objekten, die von dem ï¿½bergebenen classloader verwendet werden.
    */
   private void removeFromAllDependenciesToReloadInOtherClassLoaders(String fqClassName, ClassLoaderType type,
                                                                     Long revision, boolean removeFromBackuppedDeps) {
@@ -1531,7 +1531,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
       for (MapWrapper<String, ClassLoaderBase> map : classLoaderMap.get(t).values()) {
         for (ClassLoaderBase clb : map.map.values()) {
           if (clb.getRevision().equals(revision)
-               || deps.contains(clb.getRevision()) //abhängige Revisions
+               || deps.contains(clb.getRevision()) //abhï¿½ngige Revisions
                || (parentRevision != null && parentRevision.equals(clb.getRevision()))) { //OutdatedFilter
             clb.removeDependencyToReloadIfThisClassLoaderIsRecreated(clId, type);
           }
@@ -1539,12 +1539,12 @@ public class ClassLoaderDispatcher extends FunctionGroup {
       }
     }
     
-    //TODO die OutdatedFilter müssten wahrscheinlich gar nicht durchsucht werden, da sie von niemandem
+    //TODO die OutdatedFilter mï¿½ssten wahrscheinlich gar nicht durchsucht werden, da sie von niemandem
     //verwendet werden und daher keine dependencies haben
     for (MapWrapper<String, FilterClassLoader> map : outdatedFilterClassLoader.values()) {
       for (FilterClassLoader clb : map.map.values()) {
         if (clb.getRevision().equals(revision) 
-             || deps.contains(clb.getRevision()) //abhängige Revisions
+             || deps.contains(clb.getRevision()) //abhï¿½ngige Revisions
              || (parentRevision != null && parentRevision.equals(clb.getRevision()))) {
           clb.removeDependencyToReloadIfThisClassLoaderIsRecreated(clId, type);
         }
@@ -1615,7 +1615,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
 
     @Override
     public void begin() throws XPRC_DeploymentHandlerException {
-      //FilterClassLoader wollen sich das Lock holen, was zu Deadlocks führen kann. Deshalb bereits hier holen
+      //FilterClassLoader wollen sich das Lock holen, was zu Deadlocks fï¿½hren kann. Deshalb bereits hier holen
       XynaFactory.getInstance().getActivation().getActivationTrigger().lockManagement();
     }
 
@@ -1711,8 +1711,8 @@ public class ClassLoaderDispatcher extends FunctionGroup {
           }
 
           if (!firstClassLoaderCreation) {
-            // dependencies nach "oben" ändern sich nicht
-            //ist nur für datentypen notwendig, weil der classloader oben entfernt und neu angelegt wurde
+            // dependencies nach "oben" ï¿½ndern sich nicht
+            //ist nur fï¿½r datentypen notwendig, weil der classloader oben entfernt und neu angelegt wurde
             newMDMClassloader.copyDependencies(existingClassloader, true);
           }
         } else {
@@ -1760,7 +1760,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
       if (!firstClassLoaderCreation || backupDepsRestored) {
         recreateDependencies(newClassloader, recreateSelf); //kopiert insbesondere auch den newclassloader, nicht nur die deps
       }
-      //dependencies entfernen, die beim "deployNew" wieder hinzugefügt werden. 
+      //dependencies entfernen, die beim "deployNew" wieder hinzugefï¿½gt werden. 
       removeFromAllDependenciesToReloadInOtherClassLoaders(object.getFqClassName(), newClassloader.getType(), object.getRevision(), false);
     }
 
@@ -1894,15 +1894,15 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   
   /*
    * 
-   * dependencies werden erst entfernt, und dann nach dem deployment wieder hinzugefügt, damit
-   * es während des deployments keine unnötigen classloader abhängigkeiten gibt, die eh durch das deployment
+   * dependencies werden erst entfernt, und dann nach dem deployment wieder hinzugefï¿½gt, damit
+   * es wï¿½hrend des deployments keine unnï¿½tigen classloader abhï¿½ngigkeiten gibt, die eh durch das deployment
    * bereits ausgetauscht+deployed werden.
    * 
-   * das entfernen passiert über removeFromAllDependenciesToReloadInOtherClassLoaders
+   * das entfernen passiert ï¿½ber removeFromAllDependenciesToReloadInOtherClassLoaders
    * 
    * usecase: deploying B. 
    * (pfeil bedeutet "x benutzt y")
-   * abhängigkeitsbaum vorher               nachher
+   * abhï¿½ngigkeitsbaum vorher               nachher
    * 
    *     A                                    A
    *     |                                    |
@@ -1924,7 +1924,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
         continue;
       }
       if (gb instanceof WF) {
-        // keine wf abhängigkeit, weil der wf übers processing aufgerufen wird
+        // keine wf abhï¿½ngigkeit, weil der wf ï¿½bers processing aufgerufen wird
       } else if (gb instanceof DOM) {
         DOM gbd = (DOM) gb;
         try {
@@ -1960,24 +1960,24 @@ public class ClassLoaderDispatcher extends FunctionGroup {
       return o.getDependenciesRecursively().getDependencies(false);
     }
     /*
-     * eigtl müssten die dependencies genügen, die beim classloading hinzugefügt werden.
+     * eigtl mï¿½ssten die dependencies genï¿½gen, die beim classloading hinzugefï¿½gt werden.
      * 
-     * leider genügen die nicht, sondern müssen um folgende dependencies erweitert werden:
-     * für jede methoden signatur (instanzmethode oder statische methode)
-     *   für alle inputs und outputs
-     *     abhängigkeit setzen, dass datentyp mit den methoden diese typen verwendet.
+     * leider genï¿½gen die nicht, sondern mï¿½ssen um folgende dependencies erweitert werden:
+     * fï¿½r jede methoden signatur (instanzmethode oder statische methode)
+     *   fï¿½r alle inputs und outputs
+     *     abhï¿½ngigkeit setzen, dass datentyp mit den methoden diese typen verwendet.
      * 
      * 
      * grund: beim verify von methode x mit argument (oder output) y passiert nicht automatisch ein classloading von y (mit classloader von x)
-     *        wenn das passieren würde, wäre alles gut.
+     *        wenn das passieren wï¿½rde, wï¿½re alles gut.
      *        
-     *        dadurch weiß der server nicht, dass y von x benutzt wird (classloading-technisch) und es passiert kein class-reloading von x
-     *        nachdem y neu erzeugt wurde. das wäre erstmal nicht kritisch - aber das verify ist offenbar dumm, und sieht dann zwei verschiedene
-     *        y, die vom gleichen x benutzt werden könnten und signalisiert deshalb einen verifyerror
+     *        dadurch weiï¿½ der server nicht, dass y von x benutzt wird (classloading-technisch) und es passiert kein class-reloading von x
+     *        nachdem y neu erzeugt wurde. das wï¿½re erstmal nicht kritisch - aber das verify ist offenbar dumm, und sieht dann zwei verschiedene
+     *        y, die vom gleichen x benutzt werden kï¿½nnten und signalisiert deshalb einen verifyerror
      *        
-     *        => es gibt verschiedene möglichkeiten dem server beizubringen, dass y von x benutzt wird:
-     *        1) wie hier: explizit abhängigkeiten setzen
-     *        2) dafür sorgen, dass classloader x das loadclass auf y aufruft
+     *        => es gibt verschiedene mï¿½glichkeiten dem server beizubringen, dass y von x benutzt wird:
+     *        1) wie hier: explizit abhï¿½ngigkeiten setzen
+     *        2) dafï¿½r sorgen, dass classloader x das loadclass auf y aufruft
      *           dazu muss im bytecode von x irgendwo eine methode von y aufgerufen werden (oder konstruktor)
      *           
      *  vgl https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-5.html
@@ -2003,7 +2003,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
       }
     }
     return ret;
-    //holzhammer methode von früher erzeugt viel zu viele abhängigkeiten: return o.getDependenciesRecursively().getDependencies(false);
+    //holzhammer methode von frï¿½her erzeugt viel zu viele abhï¿½ngigkeiten: return o.getDependenciesRecursively().getDependencies(false);
   }
 
   private class ClassLoaderDispatcherUndeploymentHandler implements UndeploymentHandler {
@@ -2090,7 +2090,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   }
 
   /**
-   * sucht auch in abhängigen anderen revisions, falls nicht in dieser gefunden 
+   * sucht auch in abhï¿½ngigen anderen revisions, falls nicht in dieser gefunden 
    */
   public ExceptionClassLoader getExceptionClassLoader(String fqClassName, Long revision, boolean allowDelegation)
                   throws XFMG_ExceptionClassLoaderNotFoundException {
@@ -2157,7 +2157,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
 
     Long rootRevision = XynaOrderServerExtension.getThreadLocalRootRevision();
     if (rootRevision != null) {
-      //es läuft gerade eine deserialisierung, und es ist zusätzlicher revision kontext bekannt
+      //es lï¿½uft gerade eine deserialisierung, und es ist zusï¿½tzlicher revision kontext bekannt
       if (requirements.contains(rootRevision)) {
         return null; //bereits getestet
       }
@@ -2354,8 +2354,8 @@ public class ClassLoaderDispatcher extends FunctionGroup {
 
 
   /**
-   * wenn ein classloader temporär entfernt wird (usecase: deploymentproblem), muss man sich
-   * für das nächste deployment die classloadingdeps merken, weil die verwendenden objekte
+   * wenn ein classloader temporï¿½r entfernt wird (usecase: deploymentproblem), muss man sich
+   * fï¿½r das nï¿½chste deployment die classloadingdeps merken, weil die verwendenden objekte
    * nicht neu deployed werden.
    *  
    * falls es den classloader nicht gibt, wird kein fehler geworfen
@@ -2508,7 +2508,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
       }
       //nun die menge der classloader die neu erstellt werden reduzieren, um duplikate aufrufe zu vermeiden und in der richtigen reihenfolge unzudeployen
       //plan: falls ein classloader A in den dependenciesToReload von classloader B enthalten ist, kann A aus der liste gestrichen werden,
-      //weil er beim handling der dependencies automatisch mit berücksichtigt wird
+      //weil er beim handling der dependencies automatisch mit berï¿½cksichtigt wird
       Graph<ClassLoaderID> g = new Graph<ClassLoaderID>(nodeMap.values());
       List<Node<ClassLoaderID>> roots = g.getRoots();
 
@@ -2566,7 +2566,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
             clb.deployDependencies(DeploymentMode.deployBackup); //backup, damit exceptions nicht als runtimeexceptions/error durchschlagen
           } catch (XFMG_ClassLoaderRedeploymentException e) {
             //erwartet, wenn man runtimecontextdependencies entfernt hat. ist hier nicht weiter zu behandeln, 
-            //weil später deswegen ein redeployment mit neuer codegenerierung etc durchgeführt wird.
+            //weil spï¿½ter deswegen ein redeployment mit neuer codegenerierung etc durchgefï¿½hrt wird.
             if (logger.isDebugEnabled()) {
               RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
               String rc;
@@ -2636,7 +2636,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   }
 
 
-  //aus abwärtskompatibilitätsgründen: xtf verwendet das
+  //aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden: xtf verwendet das
   public MDMClassLoader getMDMClassLoader(String fqClassName, Long revision) throws XFMG_MDMObjectClassLoaderNotFoundException {
     return getMDMClassLoader(fqClassName, revision, true);
   }
@@ -2664,7 +2664,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
     clw.writeLineToCommandLine("classloaderstats: erroneous=" + cnt.clCntError + ", closed=" + cnt.clCntClosed);
     clw.writeLineToCommandLine("loaded classes stats: ok=" + cnt.cntOK + ", notloaded=" + cnt.cntNotLoadedDeps + ", notclassloaderbase="
         + cnt.cntLoadedButNotBaseClassloader + ", erroneous=" + cnt.cntError + ", obsoleteXMOMStructureCache=" + cnt.cntXMOMStructureCacheRelic);
-    //TODO missing classloaders: also für wieviele objekte im deploymentitemmgmt gilt, dass sie deployed sind, es aber keinen classloader gibt
+    //TODO missing classloaders: also fï¿½r wieviele objekte im deploymentitemmgmt gilt, dass sie deployed sind, es aber keinen classloader gibt
   }
 
 
@@ -2810,7 +2810,7 @@ public class ClassLoaderDispatcher extends FunctionGroup {
   private void validateXMOMStorableStructureCache(CommandLineWriter clw, ClassLoaderBase clb,
                         String xmomFqXmlName, ValidationCount cnt, String superTypeName) {
     //classloader-referenzen in xmomstructure cache checken
-    if (superTypeName.equals(XMOMPersistenceManagement.STORABLE_BASE_CLASS)) { //TODO auch für tiefere ableitungshierarchien checken
+    if (superTypeName.equals(XMOMPersistenceManagement.STORABLE_BASE_CLASS)) { //TODO auch fï¿½r tiefere ableitungshierarchien checken
       XMOMStorableStructureInformation structuralInformation;
       try {
         structuralInformation = XMOMStorableStructureCache.getInstance(clb.getRevision()).getStructuralInformation(GenerationBase.transformNameForJava(xmomFqXmlName));

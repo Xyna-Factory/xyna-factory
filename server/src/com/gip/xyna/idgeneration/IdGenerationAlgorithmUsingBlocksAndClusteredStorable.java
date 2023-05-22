@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,12 +68,12 @@ import com.gip.xyna.xprc.xsched.Algorithm;
 
 
 /**
- * Dieser Algorithmus verwendet zur Id-Vergabe Blöcke der Länge blockSize. 
+ * Dieser Algorithmus verwendet zur Id-Vergabe Blï¿½cke der Lï¿½nge blockSize. 
  * Der jeweils letzte verwendete Block wird in der DB gespeichert, bevor die
  * erste Id aus dem Block vergeben wird. Dabei wird in GeneratedIDsStorable 
- * für den n.ten Block der Eintrag n*blockSize+1 gespeichert.
- * Im Cluster-Betrieb müssen die blockSize der beiden Knoten daher unbedingt
- * übereinstimmen, damit die Knoten einen belegten Block erkennen können.
+ * fï¿½r den n.ten Block der Eintrag n*blockSize+1 gespeichert.
+ * Im Cluster-Betrieb mï¿½ssen die blockSize der beiden Knoten daher unbedingt
+ * ï¿½bereinstimmen, damit die Knoten einen belegten Block erkennen kï¿½nnen.
  *
  */
 public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdGenerationAlgorithm {
@@ -240,7 +240,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
         ownGeneratedIDsStorable = createGeneratedIDsStorable(ownBinding, realm);
         // Ermittlung der LastStoredId
         if (maxLastStoredId == -1L) {
-          // bisher wurde nichts in die DB eingetragen -> komplette Initialisierung nötig
+          // bisher wurde nichts in die DB eingetragen -> komplette Initialisierung nï¿½tig
           long lastStoredId = isClustered ? createInitialLastStoredIdForCluster(con, realm) : 1L;
           ownGeneratedIDsStorable.setLastStoredId(lastStoredId);
         } else {
@@ -252,11 +252,11 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
         // eigenen Eintrag wiedergefunden
         if (ownGeneratedIDsStorable.isResultingFromShutdown()
                         && ownGeneratedIDsStorable.getLastStoredId() % blockSize != 0) {
-          // eigener Block ist bekanntermaßen nur teilweise gefüllt, daher weiter auffüllen
+          // eigener Block ist bekanntermaï¿½en nur teilweise gefï¿½llt, daher weiter auffï¿½llen
           long nextLastStoredId = ownGeneratedIDsStorable.getLastStoredId() + 1;
           ownGeneratedIDsStorable.setLastStoredId(nextLastStoredId);
         } else {
-          // Block ist bereits gefüllt (bzw. zu unbekanntem Anteil teilgefüllt),
+          // Block ist bereits gefï¿½llt (bzw. zu unbekanntem Anteil teilgefï¿½llt),
           // daher neuen Block beginnen
           long nextLastStoredId = calculateNextLastStoredId(maxLastStoredId);
           ownGeneratedIDsStorable.setLastStoredId(nextLastStoredId);
@@ -275,7 +275,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
 
 
     /**
-     * Update auf GeneratedIDsStorable, da nächster Block benötigt wird
+     * Update auf GeneratedIDsStorable, da nï¿½chster Block benï¿½tigt wird
      * @param con
      * @return
      */
@@ -288,7 +288,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
     }
 
     /**
-     * Berechnung der nächsten LastStoredId (n*blockSize+1) > maxLastStoredId
+     * Berechnung der nï¿½chsten LastStoredId (n*blockSize+1) > maxLastStoredId
      * @param maxLastStoredId
      * @return
      */
@@ -299,8 +299,8 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
     }
 
     /**
-     * Spezialbehandlung für die Initialisierung im Cluster-Modus, bei dem aufgrund  
-     * fehlender Datenbankeinträge kein ForUpdate-Lock geholt werden konnte. 
+     * Spezialbehandlung fï¿½r die Initialisierung im Cluster-Modus, bei dem aufgrund  
+     * fehlender Datenbankeintrï¿½ge kein ForUpdate-Lock geholt werden konnte. 
      * Hier muss verhindert werden, dass der andere Knoten zeitgleich seinen ersten Eintrag 
      * macht, da sonst beide die gleichen Ids vergeben
      * @param con
@@ -309,11 +309,11 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
      */
     private long createInitialLastStoredIdForCluster(ODSConnection con, String realm) throws PersistenceLayerException {
       //Idee A) ownGeneratedIDsStorable.setLastStoredId( (ownBinding-1)*blockSize+ 1);
-      //        verschwendet aber unter Umständen Ids (Anzahl (ownBinding-1)*blockSize)
+      //        verschwendet aber unter Umstï¿½nden Ids (Anzahl (ownBinding-1)*blockSize)
       //nicht implementiert
       //Idee B) Commit und nochmal for Update lesen 
-      //        Fälle: nur eigener Eintrag -> Ok
-      //               fremde Einträge mit anderer LastStoredId -> Ok
+      //        Fï¿½lle: nur eigener Eintrag -> Ok
+      //               fremde Eintrï¿½ge mit anderer LastStoredId -> Ok
       //               fremder Eintrag mit gleichem LastStoredId -> eigenen LastStoredId hochsetzen
       long lastStoredId = 1L; //Versuch mit erster vergebbarer Id
       ownGeneratedIDsStorable.setLastStoredId(lastStoredId);
@@ -326,7 +326,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
         //nur eigener Eintrag -> Ok
       } else {
         long maxLastStoredId = 1L;
-        int count = 0; //haben andere Einträge den gleichen LastStoredId?
+        int count = 0; //haben andere Eintrï¿½ge den gleichen LastStoredId?
         for (GeneratedIDsStorable gids : gidss) {
           if (gids.getBinding() == ownBinding) {
             ownGeneratedIDsStorable = gids;
@@ -340,7 +340,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
           }
         }
         if( count == 0 ) {
-          //alle anderen Einträge haben einen anderen Block gewählt -> OK
+          //alle anderen Eintrï¿½ge haben einen anderen Block gewï¿½hlt -> OK
         } else {
           //neuen Block beginnen
           lastStoredId = calculateNextLastStoredId(maxLastStoredId);
@@ -351,7 +351,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
 
     
     /**
-     * Lesen aller GeneratedIDs und auswerten: Maximale LastStoredId wird zurückgeben,
+     * Lesen aller GeneratedIDs und auswerten: Maximale LastStoredId wird zurï¿½ckgeben,
      * GeneratedIDsStorable zum eigenen Binding wird als Instanz-Attribut gespeichert 
      * locken der storables in der datenbank.
      */
@@ -359,7 +359,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
       long maxLastStoredId = -1L;
 
       if( isClustered ) {
-        //Lesen aller GeneratedIDs. durch das forupdate sind sie für andere knoten bis zum ende der transaktion gesperrt.
+        //Lesen aller GeneratedIDs. durch das forupdate sind sie fï¿½r andere knoten bis zum ende der transaktion gesperrt.
         List<GeneratedIDsStorable> gidss = con.query(loadAllGeneratedIDsForUpdateQueryForRealm, new Parameter(realm), -1);
 
         for( GeneratedIDsStorable gids : gidss ) {
@@ -378,7 +378,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
           maxLastStoredId = ownGeneratedIDsStorable.getLastStoredId();
         }
         catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-          //Eintrag existiert nicht, dies ist kein Fehler, die Rückgabe berücksichtigt dies
+          //Eintrag existiert nicht, dies ist kein Fehler, die Rï¿½ckgabe berï¿½cksichtigt dies
         }
       }
       return maxLastStoredId;
@@ -466,7 +466,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
 
   private class PreFetchIdBlockAlgorithm implements Algorithm {
     
-    //members synchronized über this
+    //members synchronized ï¿½ber this
     private Exception lastPrefetcherException;
     private long lastPrefetcherExceptionTimestamp;
     private long lastSuccessTimestamp;
@@ -481,7 +481,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
           synchronized (this) {
             currentPrefetchStartTimestamp = System.currentTimeMillis();
           }
-          //nextIdCounter ist nun invalid, weil die letzte zahl des blocks erreicht wurde => nächsten block finden
+          //nextIdCounter ist nun invalid, weil die letzte zahl des blocks erreicht wurde => nï¿½chsten block finden
 
           WarehouseRetryExecutableNoException<Long> wre = new WarehouseRetryExecutableNoException<Long>() {
 
@@ -639,10 +639,10 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
       }
 
       if (initMissing) {
-        //lazyinit noch nicht gelaufen. dann muss der aktuelle block ermittelt werden, nicht der nächste
+        //lazyinit noch nicht gelaufen. dann muss der aktuelle block ermittelt werden, nicht der nï¿½chste
         r = info.getCurrent();
       } else {
-        //nächsten block zurückgeben und den prefetcher asynchron den übernächsten block bestimmen lassen
+        //nï¿½chsten block zurï¿½ckgeben und den prefetcher asynchron den ï¿½bernï¿½chsten block bestimmen lassen
         info.nextPrefetchedId.set(-1);
         executor.requestExecution();
       }
@@ -752,7 +752,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
     IdInfo idInfo = getIdInfo(realm);
     long id = idInfo.idFromOtherNode.get();
     if (id == -1) {
-      idInfo.checkLastStoredFromOtherNode.set(true); //bitte regelmässig updaten
+      idInfo.checkLastStoredFromOtherNode.set(true); //bitte regelmï¿½ssig updaten
       executor.requestExecution();
       while (id == -1) {
         try {

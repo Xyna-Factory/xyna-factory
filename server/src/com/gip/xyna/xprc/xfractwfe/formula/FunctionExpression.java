@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -294,7 +294,7 @@ public class FunctionExpression extends Expression {
       if (depth >= 0) {
         VariableAccessPart p = getAccessPart(depth);
         if (p.getIndexDef() != null && !setterOfWholeList) {
-          //nach list casten, weil die definition immer ? extends <type> ist und damit unveränderlich.
+          //nach list casten, weil die definition immer ? extends <type> ist und damit unverï¿½nderlich.
           setter.insert(0, "((List)");
           setter.append(".").append(GenerationBase.buildGetter(p.getName())).append("()");
           setter.append(")");
@@ -315,7 +315,7 @@ public class FunctionExpression extends Expression {
       } else {
         /*
          * depth == 0 bedeutet, dass es um die rootvariable geht
-         * es könnte theoretisch auch sein, dass der cast um die rootvariable die indexdef hat. das ist aber derzeit nicht unterstützt 
+         * es kï¿½nnte theoretisch auch sein, dass der cast um die rootvariable die indexdef hat. das ist aber derzeit nicht unterstï¿½tzt 
          * und wird bei den transformationen der mappings (fillVars) verhindert
          * also
          * cast(%0%[i]).a.b.c  vs  cast(%0%)[i].a.b.c
@@ -323,7 +323,7 @@ public class FunctionExpression extends Expression {
         
         Expression indexDef = getRootVariable().getIndexDef();
         if (indexDef != null && !setterOfWholeList) {
-          //nach list casten, weil die definition immer ? extends <type> ist und damit unveränderlich.
+          //nach list casten, weil die definition immer ? extends <type> ist und damit unverï¿½nderlich.
           setter.insert(0, "((List)");
           setter.append(").set(");
           if (indexDef instanceof LiteralExpression) {
@@ -359,7 +359,7 @@ public class FunctionExpression extends Expression {
         Variable.buildGetterForOwnIndexAndAccessParts(localPart, withListAccess, getIndexDef(), parts, sb, uniqueId);
         return sb.toString();
       } else {
-        //depth endet vollständig im wrappedType
+        //depth endet vollstï¿½ndig im wrappedType
         return wrappedType.toJavaCodeGetter(depth, withListAccess, uniqueId);
       }
     }
@@ -392,11 +392,11 @@ public class FunctionExpression extends Expression {
        * typumwandlung auf den gecasteten typ
        * beispiel:
        * follow depth=-1 cast(%1%.x.y, resulttype).a.b
-       * -> wrappedtype hat noch accesspath, deshalb muss man nicht den resulttyp zurückgeben
+       * -> wrappedtype hat noch accesspath, deshalb muss man nicht den resulttyp zurï¿½ckgeben
        * follow depth=-1 cast(%1%, resulttype).a.b
        * -> wrappedtype wird zu resulttyp umgewandelt
        * 
-       * für depth>-1 analog.
+       * fï¿½r depth>-1 analog.
        */
       if (pathDepth < 0) {
         //-1 -> typ von rootvariable

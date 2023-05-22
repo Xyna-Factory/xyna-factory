@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,11 +142,11 @@ public class WorkspaceHelper {
           dataModelResult.addMessageGroup("Not existing workspaces", nonExist);
         }
         //toRemove = existing; //Existing entfernen 
-        toRemove = workspaces; //trotzdem versuchen alle zu entfernen, evtl. war ja DataModelSpecific unvollständig gespeichert
+        toRemove = workspaces; //trotzdem versuchen alle zu entfernen, evtl. war ja DataModelSpecific unvollstï¿½ndig gespeichert
         break;
       case Target:
         toAdd = nonExist;//NonExist anlegen
-        //existingWorkspaces enthält nun noch evtl. zu löschende Einträge
+        //existingWorkspaces enthï¿½lt nun noch evtl. zu lï¿½schende Eintrï¿½ge
         toRemove = new ArrayList<String>(existingWorkspaces);
         toRemove.removeAll(workspaces);
         break;
@@ -154,7 +154,7 @@ public class WorkspaceHelper {
         throw new IllegalArgumentException();
     }
     
-    //Workspaces hinzufügen
+    //Workspaces hinzufï¿½gen
     List<String> added = addWorkspacesInternal(toAdd);
     existingWorkspaces.addAll(added);
     
@@ -221,7 +221,7 @@ public class WorkspaceHelper {
           }
           removed.add(workspace);
         }
-        //TODO Fehler beim Löschen?
+        //TODO Fehler beim Lï¿½schen?
       }
     }
     if( ! removed.isEmpty() ) {
@@ -239,7 +239,7 @@ public class WorkspaceHelper {
       revision = revisionFor(workspace);
     } catch( XFMG_NoSuchRevision e ) {
       dataModelResult.warn("Workspace \""+workspace+"\" does not exist");
-      return true; //diesen Workspace überspringen
+      return true; //diesen Workspace ï¿½berspringen
     }
     
     try {
@@ -253,7 +253,7 @@ public class WorkspaceHelper {
   }
   
   public boolean removeFromWorkspace(long revision) throws XynaException {
-    //TODO wie ermitteln, ob noch in Verwendung? dies kann derzeit nicht geprüft werden!
+    //TODO wie ermitteln, ob noch in Verwendung? dies kann derzeit nicht geprï¿½ft werden!
     WorkflowEngine workflowEngine = XynaFactory.getInstance().getProcessing().getWorkflowEngine();
     
     EnumMap<XMOMType,List<String>> xmomObjects = new EnumMap<XMOMType,List<String>>(XMOMType.class);
@@ -284,7 +284,7 @@ public class WorkspaceHelper {
     Long toRevision = revisionFor(toWorkspace);
     if( toRevision == null ) {
       dataModelResult.warn("Workspace \""+toWorkspace+"\" does not exist");
-      return true; //diesen Workspace überspringen
+      return true; //diesen Workspace ï¿½berspringen
     }
 
     createBaseTypeIfNotExists(toRevision);

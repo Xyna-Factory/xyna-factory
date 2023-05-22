@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -211,7 +211,7 @@ public class Support4Eclipse extends FunctionGroup {
         if (!compressed) {
           jos.setLevel(Deflater.NO_COMPRESSION);
         }
-        //manifest erst nach der compressionänderung schreiben
+        //manifest erst nach der compressionï¿½nderung schreiben
         ZipEntry e = new ZipEntry(JarFile.MANIFEST_NAME);
         jos.putNextEntry(e);
         mf.write(new BufferedOutputStream(jos));
@@ -240,7 +240,7 @@ public class Support4Eclipse extends FunctionGroup {
       // Manifest-Version: 1.0
       // Ant-Version: Apache Ant 1.7.0
       // Created-By: 1.5.0-b64 (Sun Microsystems Inc.)
-      // Vendor: GIP SmartMercial GmbH
+      // Vendor: Xyna GmbH
       // Version: 2.3.0.0
       // Build-Date: 20090902_1515
 
@@ -263,7 +263,7 @@ public class Support4Eclipse extends FunctionGroup {
 
       // TODO make sure what fields have to be in here
       //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_TITLE.toString(), Constants.FACTORY_NAME);
-      //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_VENDOR.toString(), "GIP SmartMercial GmbH");
+      //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_VENDOR.toString(), "Xyna GmbH");
 
       logger.debug("Adding files to Xyna jar file.");
 
@@ -407,7 +407,7 @@ public class Support4Eclipse extends FunctionGroup {
   }
 
   /**
-   * erzeugt ein project template für die entwicklung im angegebenen verzeichnis
+   * erzeugt ein project template fï¿½r die entwicklung im angegebenen verzeichnis
    * @param projectLocationDirectory
    * @param paras
    * @param legacy false: abgespecktes eclipse projekt ohne deployment-ant kram und ohne mdm jar
@@ -418,10 +418,10 @@ public class Support4Eclipse extends FunctionGroup {
 
     //alle io probleme beim lesen sind wohl fehler mit dem templateimpl-zip, die werden als runtimeexceptions geworfen, weil davon ausgegangen wird,
     //dass die installation das korrekt initialisiert.
-    //alle io probleme beim schreiben können durch filesystem probleme verursacht sein (kein platz, keine rechte etc) und werden als checked exception propagiert
+    //alle io probleme beim schreiben kï¿½nnen durch filesystem probleme verursacht sein (kein platz, keine rechte etc) und werden als checked exception propagiert
 
-    //TODO refactoring: idee wie man die unterschiedlichen io exceptions zuordnen könnte: reader/writer überschreiben, so dass unterschiedliche exceptions geworfen werden,
-    //dann benötigt man nur jeweils einen catchblock
+    //TODO refactoring: idee wie man die unterschiedlichen io exceptions zuordnen kï¿½nnte: reader/writer ï¿½berschreiben, so dass unterschiedliche exceptions geworfen werden,
+    //dann benï¿½tigt man nur jeweils einen catchblock
 
     // unzip template
     File templateZip = TEMPLATEIMPL_NEW_FILE;

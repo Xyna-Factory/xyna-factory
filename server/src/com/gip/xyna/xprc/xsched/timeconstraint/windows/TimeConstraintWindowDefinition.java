@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -168,12 +168,12 @@ public class TimeConstraintWindowDefinition implements Serializable {
   }
   
   public static TimeConstraintWindowDefinition fromStorables(String name, List<TimeConstraintWindowStorable> storables) {
-    //Master suchen und storables prüfen, dass sie zum selben Zeitfenster gehören
+    //Master suchen und storables prï¿½fen, dass sie zum selben Zeitfenster gehï¿½ren
     TimeConstraintWindowStorable master = null;
     int size = storables.size();
     List<TimeWindowDefinition> definitions = new ArrayList<TimeWindowDefinition>(size);
     for( int i=0; i<storables.size(); ++i ) {
-      definitions.add(null); //Plätze vorbelegen
+      definitions.add(null); //Plï¿½tze vorbelegen
     }
     for( TimeConstraintWindowStorable tcws : storables ) {
       if( ! name.equals(tcws.getName()) ) {

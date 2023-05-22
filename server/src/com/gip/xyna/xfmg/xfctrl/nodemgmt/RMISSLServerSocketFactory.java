@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,10 +113,10 @@ public class RMISSLServerSocketFactory implements RMIServerSocketFactory {
         } else {
           s = super.accept();
         }
-        //TODO das timeout von oben ohne nachdenken zu verwenden ist nicht gut, weil verschiedene timeouts nicht ohne weiteres realisiert werden können
+        //TODO das timeout von oben ohne nachdenken zu verwenden ist nicht gut, weil verschiedene timeouts nicht ohne weiteres realisiert werden kï¿½nnen
         //siehe bug 23373 
         //problem ist grob, dass TCPEndpoint in der RMI-Infrastruktur equals auf sowohl ClientSocketFactory als auch ServerSocketFactory benutzt,
-        //verschiedene timeouts zusammen mit gleichem communicationport führt dann dazu, dass der Endpoint als unterschiedliche befunden wird
+        //verschiedene timeouts zusammen mit gleichem communicationport fï¿½hrt dann dazu, dass der Endpoint als unterschiedliche befunden wird
         //aber nicht ans Socket gebunden werden kann (Port already in use)
         
         //der timeout hier ist auch nicht "tragisch", weil sockettimeout an diesem socket gibt es ja nur, wenn der server also auf den client wartet.

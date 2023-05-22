@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,15 +46,15 @@ import com.gip.xyna.utils.xml.XMLDocument;
  * 
  * <p>
  * Features:
- * <p>Kodierung beliebig über setEncoding(...), zwei vordefinierte Konstanten UTF_8 und ISO_8859_1
- * <p>Protokoll http oder https möglich
+ * <p>Kodierung beliebig ï¿½ber setEncoding(...), zwei vordefinierte Konstanten UTF_8 und ISO_8859_1
+ * <p>Protokoll http oder https mï¿½glich
  * <p>SOAP-Version 1.1 oder 1.2<br>
  *
- * In den SOAPUtils kann man diverse hauptsächlich die HTTPConnection betreffende
- * Einstellungen vornehmen (SOAPConnector bündelt das). <br>
- * Verwendung in Verknüpfung mit SoapRequest und SoapResponse. Man erstellt zuerst
+ * In den SOAPUtils kann man diverse hauptsï¿½chlich die HTTPConnection betreffende
+ * Einstellungen vornehmen (SOAPConnector bï¿½ndelt das). <br>
+ * Verwendung in Verknï¿½pfung mit SoapRequest und SoapResponse. Man erstellt zuerst
  * einen SoapRequest, und ruft damit dann das soapUtils.sendSOAPMessage() auf. Man 
- * bekommt eine SoapResponse zurück, auf die man diverse Operationen anwenden kann:
+ * bekommt eine SoapResponse zurï¿½ck, auf die man diverse Operationen anwenden kann:
  * <p>Fehler-erkennung
  * <p>XML Parsing in entsprechende Objekte
  *
@@ -73,16 +73,16 @@ import com.gip.xyna.utils.xml.XMLDocument;
  * }<br>
  * </code><p>
  * 
- * Für die Benutzung von HTTPS muss das Server-Zertifikat authentifiziert sein.
+ * Fï¿½r die Benutzung von HTTPS muss das Server-Zertifikat authentifiziert sein.
  * Falls es dies nicht automatisch ist, muss ein keyStore eingerichtet werden
- * (beispielsweise über keytool  -import -v -alias gip -file gip.crt ) und im aufrufenden Programm muss
+ * (beispielsweise ï¿½ber keytool  -import -v -alias gip -file gip.crt ) und im aufrufenden Programm muss
  * vorher System.setProperty("javax.net.ssl.trustStore", "/afs/gip.local/home/USER/.keystore");
  * aufgerufen werden.
  *
  * verwendet log4j.
  *
  * TODO SOAP 1.2 nicht getestet
- * TODO SOAP-Header nur teilweise unterstützt
+ * TODO SOAP-Header nur teilweise unterstï¿½tzt
  */
 public class SOAPUtils extends SOAPConnector {
 
@@ -123,7 +123,7 @@ public class SOAPUtils extends SOAPConnector {
 
   /**
    * Erzeugen der SOAP-Nachricht aus einem XML-String, indem SoapEnvelope 
-   * drumrum gestülpt wird.<br>
+   * drumrum gestï¿½lpt wird.<br>
    * macht das gleiche wie <code>new SoapRequest(message).getAsXML();</code>
    * @param message valides xml
    * @return
@@ -134,7 +134,7 @@ public class SOAPUtils extends SOAPConnector {
       return new SoapRequest(message).getAsXML();
     } catch (Exception e) {
       //XML Parsing Fehler fangen und nicht werfen, weil sich sonst signatur
-      //ändert und abwärtskompatibilität verloren geht. statt dessen null zurück
+      //ï¿½ndert und abwï¿½rtskompatibilitï¿½t verloren geht. statt dessen null zurï¿½ck
       //geben
       return null;
     }
@@ -225,13 +225,13 @@ public class SOAPUtils extends SOAPConnector {
 
 
   /**
-   * Schneidet den SoapTeil der Message ab, nur der reine Body wird zurückgegeben
+   * Schneidet den SoapTeil der Message ab, nur der reine Body wird zurï¿½ckgegeben
    *
    * @param message
    * @return
    */
   public static String stripSOAPMessage(String message) { 
-    //TODO eigtl nicht mehr benötigt, da die Funktion in SoapResponse integriert ist
+    //TODO eigtl nicht mehr benï¿½tigt, da die Funktion in SoapResponse integriert ist
     String result = null;
     try {
       result =
@@ -342,7 +342,7 @@ public class SOAPUtils extends SOAPConnector {
   }
 
   /**
-   * öffnet httpconnection, schliesst sie aber nicht
+   * ï¿½ffnet httpconnection, schliesst sie aber nicht
    * setzt mime content-type auf denjenigen der eingestellten SOAPVersion, falls
    * nicht schon andersweitig gesetzt.
    * setzt soapaction nicht, falls soapversion = 1.2
@@ -363,7 +363,7 @@ public class SOAPUtils extends SOAPConnector {
     open();
     logger.debug("sending to " + getHttpCon().getURL().toString() + ": " + message);
 
-    // Message in ByteArray schreiben, um die Anzahl der Bytes zählen zu können
+    // Message in ByteArray schreiben, um die Anzahl der Bytes zï¿½hlen zu kï¿½nnen
     ByteArrayOutputStream messageBaos = new ByteArrayOutputStream();
     OutputStreamWriter osw =
       new OutputStreamWriter(messageBaos, encoding.getEncoding());

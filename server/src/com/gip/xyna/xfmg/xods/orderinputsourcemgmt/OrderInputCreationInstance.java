@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,14 +28,14 @@ import com.gip.xyna.xprc.XynaOrderCreationParameter;
 public interface OrderInputCreationInstance {
 
   /**
-   * @param generationContextId bei zusammengehörenden {@link OrderInputSource}s immer gleich. usecase: workflow referenziert mehrere
+   * @param generationContextId bei zusammengehï¿½renden {@link OrderInputSource}s immer gleich. usecase: workflow referenziert mehrere
    */
   public XynaOrderCreationParameter generate(long generationContextId, OptionalOISGenerateMetaInformation parameters) throws XynaException;
 
 
   /**
    * Benachrichtigung, dass Auftrag mit den vorher erstellten Daten erzeugt wurde.
-   * Wird aufgerufen, bevor der Auftrag dann dem Processing übergeben wird.
+   * Wird aufgerufen, bevor der Auftrag dann dem Processing ï¿½bergeben wird.
    * @throws XynaException falls der Auftrag nicht gestartet werden darf
    */
   public void notifyOnOrderStart() throws XynaException;

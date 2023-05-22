@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,14 +63,14 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
   private static final long serialVersionUID = -9035974834990277420L;
   private static final Logger logger = CentralFactoryLogging.getLogger(FractalProcessStep.class);
   
-  //das ist die zahl, die der ausführungsreihenfolge entspricht. 
+  //das ist die zahl, die der ausfï¿½hrungsreihenfolge entspricht. 
   private int i;
   protected T parentScope;
   protected XynaProcess parentProcess;
   
-  //erste dimension = von der processstep implementierung abhängige auswahl (zb bei parallel wird in
-  //der implementierung aus unterschiedlichen threads für alle i-s getchildren(i) aufgerufen, bei 
-  //choice hingegen nur für ein i). zweite dimension = sequentiell aufzurufende schritte für die 
+  //erste dimension = von der processstep implementierung abhï¿½ngige auswahl (zb bei parallel wird in
+  //der implementierung aus unterschiedlichen threads fï¿½r alle i-s getchildren(i) aufgerufen, bei 
+  //choice hingegen nur fï¿½r ein i). zweite dimension = sequentiell aufzurufende schritte fï¿½r die 
   //auswahl der ersten dimension
   private FractalProcessStep<?>[][] children; 
 
@@ -88,9 +88,9 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
   protected volatile long retryCounter = 0;
 
   /**
-   * aufräumen aller felder, die bei verwendung der instanz für einen neuen auftrag zurückgesetzt werden müssen.
-   * ACHTUNG: wird nicht für lazy erstellte steps, also z.b. steps innerhalb von for-eaches aufgerufen
-   *          weil diese steps nicht wiederverwendet werden können.
+   * aufrï¿½umen aller felder, die bei verwendung der instanz fï¿½r einen neuen auftrag zurï¿½ckgesetzt werden mï¿½ssen.
+   * ACHTUNG: wird nicht fï¿½r lazy erstellte steps, also z.b. steps innerhalb von for-eaches aufgerufen
+   *          weil diese steps nicht wiederverwendet werden kï¿½nnen.
    */
   protected void reinitialize() {
     hasBegunExecution = false;
@@ -141,7 +141,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
     }
     this.parentProcess = (XynaProcess)scope;
     
-    //kinder ermitteln, damit diese nicht zur laufzeit ermittelt werden müssen.
+    //kinder ermitteln, damit diese nicht zur laufzeit ermittelt werden mï¿½ssen.
     int l = getChildrenTypesLength();
     children = new FractalProcessStep[l][];
     for (int i = 0; i < l; i++) {
@@ -168,9 +168,9 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
 
 
   /**
-   * für i in (0..getChildrenTypesLength()-1) != null, ansonsten null.
+   * fï¿½r i in (0..getChildrenTypesLength()-1) != null, ansonsten null.
    */
-  protected abstract FractalProcessStep<?>[] getChildren(int i); //generics nicht T, weil der step selbst eine eigene scope sein könnte und dann ist parentscope != parentscope von children
+  protected abstract FractalProcessStep<?>[] getChildren(int i); //generics nicht T, weil der step selbst eine eigene scope sein kï¿½nnte und dann ist parentscope != parentscope von children
 
   protected abstract int getChildrenTypesLength();
 
@@ -223,7 +223,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
       if (!(e instanceof RetryException)) {
         parentProcess.errorHandler(this);
       }
-    } catch (RuntimeException f) { //bei einem fehler nicht den ursprünglichen fehler vergessen
+    } catch (RuntimeException f) { //bei einem fehler nicht den ursprï¿½nglichen fehler vergessen
       throw new RuntimeException(new Ex_ExceptionHandlingFailedException().initCauses(new Throwable[]{f, e}));
     } catch (Error t) {
       Department.handleThrowable(t);
@@ -238,7 +238,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
     // next step has begun its execution before and is not a java call it is e.g. a subworkflow call
     // or a parallel execution. In this case, the abortion exception needs to be thrown somewhere
     // down the stack.
-    //-> das ergibt aussagekräftigere stacktraces in der abortionexception
+    //-> das ergibt aussagekrï¿½ftigere stacktraces in der abortionexception
     if (!hasBegunExecution) {
       return false;
     }
@@ -303,7 +303,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
       exceptionCanBeCausedFromInterruptOrThreadstop = false;
       throw wtd;
     } finally {
-      //zuerst Abortion prüfen, damit diese eine Suspendierung überholen kann
+      //zuerst Abortion prï¿½fen, damit diese eine Suspendierung ï¿½berholen kann
       if (parentProcess.abortFailedThreads != null) {
         //wirft evtl. WorkflowThreadDeath und ersetzt damit geworfene Exception
         checkProcessShouldAbort();
@@ -311,7 +311,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
       if( exceptionCanBeCausedFromInterruptOrThreadstop ) {
         //wirft evtl. ProcessSuspendedException und ersetzt damit geworfene Exception
         try {
-          parentProcess.checkSuspendingAndThrowProcessSuspendedException(this,true); //TODO Throwable übergeben?
+          parentProcess.checkSuspendingAndThrowProcessSuspendedException(this,true); //TODO Throwable ï¿½bergeben?
         } catch (ProcessSuspendedException e) {
           lastUnhandledThrowableInformation = null; //hasError -> false. damit der step nicht als "fertig gelaufen" festgestellt wird
           throw e;
@@ -324,7 +324,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
     parentProcess.postHandler(this);
 
     if (parentProcess.isAttemptingSuspension()) {
-      // FIXME das ist nicht sicher. bessere lösung: beim setzen des attemptingSuspension-Flags gleich
+      // FIXME das ist nicht sicher. bessere lï¿½sung: beim setzen des attemptingSuspension-Flags gleich
       //       den SuspensionCause mitsetzen
       throw SuspendResumeManagement.suspendManualOrShutDown(null,null);
     }
@@ -386,12 +386,12 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
       compensate = hasBegunExecution; //Compensation immer vornehmen, da evtl. nicht alle Lanes fehlgeschlagen sind
     } else {
       compensateChildren();
-      //Compensation nur vornehmen, wenn dieser Step auch ausgeführt wurde
+      //Compensation nur vornehmen, wenn dieser Step auch ausgefï¿½hrt wurde
       compensate = hasExecutedSuccessfully && !hasEvaluatedToCaughtXynaException;
     }
     
     if (! compensate) {
-      hasCompensatedSuccessfully = true; //nicht nochmal alle kinder checken müssen!
+      hasCompensatedSuccessfully = true; //nicht nochmal alle kinder checken mï¿½ssen!
       return; //Step ist fehlgeschlagen, daher keine Compensation 
     }
     
@@ -403,9 +403,9 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
     }
     compensateInternally(); // modelliert
     
-    hasCompensatedSuccessfully = true; //nicht nochmal alle kinder checken müssen!
+    hasCompensatedSuccessfully = true; //nicht nochmal alle kinder checken mï¿½ssen!
 
-    //dieser code wird nur einmal ausgeführt, weil hasCompensatedSuccessfully = true.
+    //dieser code wird nur einmal ausgefï¿½hrt, weil hasCompensatedSuccessfully = true.
     // compensate handlers
     parentProcess.compensatePostHandler(this);
 
@@ -465,10 +465,10 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
 
   };
 
-  //TODO man sollte darüber nachdenken, den parent immer im konstruktor zu übergeben, weil das immer noch teuer ist
-  //wenn man große foreaches hat. Konstruktor ist aufwändig, kann nur einmal gemacht werden. Wegen transient muss
-  //ParentStep bei jeder Ausführung gesetzt werden.
-  private transient FractalProcessStep<?> parentStep = NULLSTEP; //cachen weil teuer. null ist ein gültiger wert
+  //TODO man sollte darï¿½ber nachdenken, den parent immer im konstruktor zu ï¿½bergeben, weil das immer noch teuer ist
+  //wenn man groï¿½e foreaches hat. Konstruktor ist aufwï¿½ndig, kann nur einmal gemacht werden. Wegen transient muss
+  //ParentStep bei jeder Ausfï¿½hrung gesetzt werden.
+  private transient FractalProcessStep<?> parentStep = NULLSTEP; //cachen weil teuer. null ist ein gï¿½ltiger wert
 
   /**
    * Setzen des ParentStep
@@ -482,10 +482,10 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
     if (parentStep != NULLSTEP) {
       return parentStep;
     }
-    //FIXME diese lazy-Ermittlung des parentStep ist sehr aufwändig und funktioniert nicht für die 
-    //Kinder eines ForEach-Steps. Für diese wurde nun setParentStep eingeführt. 
-    //Da diese Ermittlung hier so aufwändig ist, sollte sie ausgebaut werden, nachdem alle StepGeneratoren 
-    //das Setzen des ParentSteps durchführen.
+    //FIXME diese lazy-Ermittlung des parentStep ist sehr aufwï¿½ndig und funktioniert nicht fï¿½r die 
+    //Kinder eines ForEach-Steps. Fï¿½r diese wurde nun setParentStep eingefï¿½hrt. 
+    //Da diese Ermittlung hier so aufwï¿½ndig ist, sollte sie ausgebaut werden, nachdem alle StepGeneratoren 
+    //das Setzen des ParentSteps durchfï¿½hren.
     
     T parentScope = getParentScope();
     FractalProcessStep<?>[] allSteps = parentScope.getAllSteps();
@@ -740,7 +740,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
     while (!(step.getParentScope() instanceof XynaProcess)) {
       Scope s = step.getParentScope();
       if (!(s instanceof ForEachScope)) {
-        throw new RuntimeException(); //keine anderen scopes unterstützt
+        throw new RuntimeException(); //keine anderen scopes unterstï¿½tzt
       }
       ForEachScope fes = (ForEachScope) s;
       int idx = fes.getForEachIndex();
@@ -755,7 +755,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
   }
 
   /**
-   * eindeutige id in diesem workflow. berücksichtigt
+   * eindeutige id in diesem workflow. berï¿½cksichtigt
    * - step-id
    * - retries
    * - foreach
@@ -797,7 +797,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
       }
     }
 
-    //die revision in dem destinationkey, zu dem der destinationvalue im dispatcher ursprünglich gespeichert wurde, ist die gesuchte
+    //die revision in dem destinationkey, zu dem der destinationvalue im dispatcher ursprï¿½nglich gespeichert wurde, ist die gesuchte
     try {
       revision =
           rm.getRevision(XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaExecution()
@@ -822,7 +822,7 @@ public abstract class FractalProcessStep<T extends Scope> implements Step, Seria
     long rev = RevisionManagement.getRevisionByClass(clazz);
     if (rev == Integer.MAX_VALUE) {
       if (allowWorkflowImplementationOfServerInternalObjects.get()) {
-        //falls das später mal erlaubt werden soll, kann man das wohl so machen:
+        //falls das spï¿½ter mal erlaubt werden soll, kann man das wohl so machen:
         String fqXmlName = clazz.getAnnotation(XynaObjectAnnotation.class).fqXmlName(); 
         XynaOrderServerExtension xose = getProcess().getCorrelatedXynaOrder();
         Long rev2 = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()

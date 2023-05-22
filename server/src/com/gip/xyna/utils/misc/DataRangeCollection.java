@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,28 +32,28 @@ import com.gip.xyna.CentralFactoryLogging;
 
 /**
  * diese klasse pflegt eine menge von intervallen von longwerten, wobei eine teilmenge davon ausgezeichnet ist (z.b. zeitpunkte).
- * die bestimmung dieser teilmenge passiert über eine datasource, die im konstruktor übergegeben wird. 
+ * die bestimmung dieser teilmenge passiert ï¿½ber eine datasource, die im konstruktor ï¿½bergegeben wird. 
  * es wird sichergestellt, dass die datasource nie zweimal den gleichen wert abfragt.
  * damit funktioniert diese klasse als eine art cache.
  * 
- * den ausgezeichneten werten können auch noch values zugeordnet werden (int). diese haben dann immer gültigkeit bis zum nächsten ausgezeichneten wert. 
+ * den ausgezeichneten werten kï¿½nnen auch noch values zugeordnet werden (int). diese haben dann immer gï¿½ltigkeit bis zum nï¿½chsten ausgezeichneten wert. 
  * 
  * 
- * beispiel für verwendung: siehe unittests.
+ * beispiel fï¿½r verwendung: siehe unittests.
  * 
- * eine möglichkeit für die verwendung ist z.b. eine art versionscache. wenn man wissen möchte, welche versionsnummern es gibt, und die anfrage lazy gemacht wird,
+ * eine mï¿½glichkeit fï¿½r die verwendung ist z.b. eine art versionscache. wenn man wissen mï¿½chte, welche versionsnummern es gibt, und die anfrage lazy gemacht wird,
  * kann man sich hiermit merken, welche versions-ranges bereits abgefragt worden sind.
  */
 public class DataRangeCollection {
   
   private static final Logger logger = CentralFactoryLogging.getLogger(DataRangeCollection.class);
   
-  //TODO performance: binary search statt linearer suche in den ranges verwenden (insbesondere, wenn die anzahl der ranges größer wird)
+  //TODO performance: binary search statt linearer suche in den ranges verwenden (insbesondere, wenn die anzahl der ranges grï¿½ï¿½er wird)
 
   public interface DataSource {
 
     /**
-     * fügt alle datapoints zum set dazu, die zwischen start und end liegen
+     * fï¿½gt alle datapoints zum set dazu, die zwischen start und end liegen
      */
     void addDataPoints(long start, long end, Set<Long> datapoints);
 
@@ -65,7 +65,7 @@ public class DataRangeCollection {
     private long end;
     private long[] dataPoints;
     /*
-     * i-ter value ist der value für das i-te intervall zwischen datapoints.
+     * i-ter value ist der value fï¿½r das i-te intervall zwischen datapoints.
      * 0-ter value ist von start <-> datapoints[0]-1
      * 1-ter value gilt von datapoints[0] <-> datapoints[1]-1
      * ...
@@ -109,7 +109,7 @@ public class DataRangeCollection {
 
 
   /**
-   * mittels der datasource werden datapoints im gegebenen interval hinzugefügt
+   * mittels der datasource werden datapoints im gegebenen interval hinzugefï¿½gt
    */  
   public void insertDataPoints(final long start, final long end) {
     if (start > end) {
@@ -239,7 +239,7 @@ public class DataRangeCollection {
   private void handleMerge(long start, long end, List<Interval> touched) {
     handleExtension(start, end, touched.get(0), true, false); //nach links extenden
     handleExtension(start, end, touched.get(touched.size() - 1), false, true); //nach rechts extenden
-    List<Interval> interim = createInterim(touched); //zwischenstücke erzeugen
+    List<Interval> interim = createInterim(touched); //zwischenstï¿½cke erzeugen
     Interval mergedInterval = merge(start, end, touched, interim);
     int insertionIndex = parts.indexOf(touched.get(0));
     for (int i = 0; i < touched.size(); i++) {
@@ -252,7 +252,7 @@ public class DataRangeCollection {
   private Interval merge(long start, long end, List<Interval> touched, List<Interval> interim) {
     assert(interim.size() == touched.size() -1);
     Interval mergeRoot = touched.get(0);
-    //merge nach und nach jeweils ein interim mit dem nächsten touched interval. alles zusammen ergibt das große neue gemerg-te interval
+    //merge nach und nach jeweils ein interim mit dem nï¿½chsten touched interval. alles zusammen ergibt das groï¿½e neue gemerg-te interval
     for (int i = 1; i < touched.size(); i++) {
       mergeRoot.dataPoints = merge(mergeRoot.dataPoints, interim.get(i - 1).dataPoints);
       mergeRoot.values = mergeValues(mergeRoot.dataPoints.length + 1, mergeRoot.values, null);
@@ -271,7 +271,7 @@ public class DataRangeCollection {
       System.arraycopy(touched.get(i).values, 1, rest, 0, rest.length);
       mergeRoot.values = mergeValues(mergeRoot.values.length + touched.get(i).values.length - 1, mergeRoot.values, rest);
       if (touched.get(i).values[0] > 0) {
-        //ersten wert aus touched übernehmen
+        //ersten wert aus touched ï¿½bernehmen
         mergeRoot.values[mergeRoot.values.length - touched.get(i).values.length] = touched.get(i).values[0];
       }
     }
@@ -355,8 +355,8 @@ public class DataRangeCollection {
 
 
   /**
-   * fügt zum set die existierenden datapoints zwischen den beiden übergebenen punkten hinzu
-   * es wird nur unterstützt, dass start und end vollständig in einem existierenden intervall liegen.
+   * fï¿½gt zum set die existierenden datapoints zwischen den beiden ï¿½bergebenen punkten hinzu
+   * es wird nur unterstï¿½tzt, dass start und end vollstï¿½ndig in einem existierenden intervall liegen.
    * @param start
    * @param end
    * @param existingpoints
@@ -405,8 +405,8 @@ public class DataRangeCollection {
 
 
   /**
-   * falls noch kein intervall oder nur intervalle mit größeren werten existieren, wird ein intervall angelegt, welches nur diesen punkt enthält.
-   * falls bereits ein intervall mit kleineren werten als der übergebene punkt existiert, wird dieses erweitert bis zum übergebenen punkt.
+   * falls noch kein intervall oder nur intervalle mit grï¿½ï¿½eren werten existieren, wird ein intervall angelegt, welches nur diesen punkt enthï¿½lt.
+   * falls bereits ein intervall mit kleineren werten als der ï¿½bergebene punkt existiert, wird dieses erweitert bis zum ï¿½bergebenen punkt.
    * TODO motivieren, wieso das sinn macht 
    */
   public void updateInterval(long toDataPoint) {

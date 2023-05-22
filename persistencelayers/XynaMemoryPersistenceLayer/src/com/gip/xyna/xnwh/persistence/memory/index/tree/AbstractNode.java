@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public abstract class AbstractNode<E> {
   protected abstract void substituteChild(int position, AbstractNode<E> child);
   
   /**
-   * gibt position zurück, an der das kind eingefügt wurde
+   * gibt position zurï¿½ck, an der das kind eingefï¿½gt wurde
    */
   public int addChild(AbstractNode<E> child) {
     addChild(0, child);
@@ -167,7 +167,7 @@ public abstract class AbstractNode<E> {
   }
   
   /**
-   * gibt den transformierten knoten zurück
+   * gibt den transformierten knoten zurï¿½ck
    */
   public abstract AbstractNode<E> transform(NodeTypeTransformer<E> transformer);
   

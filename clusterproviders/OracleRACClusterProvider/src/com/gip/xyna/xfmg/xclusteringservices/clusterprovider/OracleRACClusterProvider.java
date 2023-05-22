@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,9 +68,9 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 
 /**
- * Cluster von Knoten, die über eine Oracle-Datenbank kommunizieren.<br>
- * Das createCluster legt eine Datenbank-Tabelle an, über die das Status-Management abgewickelt wird. Alle weiteren
- * hinzugefügten Knoten tragen sich in dieser Tabelle ein.
+ * Cluster von Knoten, die ï¿½ber eine Oracle-Datenbank kommunizieren.<br>
+ * Das createCluster legt eine Datenbank-Tabelle an, ï¿½ber die das Status-Management abgewickelt wird. Alle weiteren
+ * hinzugefï¿½gten Knoten tragen sich in dieser Tabelle ein.
  */
 public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfaceForClusterStateChanges, DBProblemHandler {
 
@@ -149,7 +149,7 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
         DBConnectionData.newDBConnectionData()
             .user(config.getUser()).password(config.getPassword()).url(config.getUrl())
             .connectTimeoutInSeconds(tsek) 
-            .socketTimeoutInSeconds(tsek * 4) //muss größer sein als RemoteInterfaceForClusterStateChangesImplAQ.DEQUEUE_TIMEOUT
+            .socketTimeoutInSeconds(tsek * 4) //muss grï¿½ï¿½er sein als RemoteInterfaceForClusterStateChangesImplAQ.DEQUEUE_TIMEOUT
             //.classLoaderToLoadDriver(OracleRACClusterProvider.class.getClassLoader()) only works for AppCL == URL_CL, no longer the case for >= Java9
             .build();
     try {
@@ -278,7 +278,7 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
       try {
         checkAndCreateTableClusterSetupRow(sqlUtils,true);
 
-        // es sollte schon Einträge geben (sonst Inkonsistenz):
+        // es sollte schon Eintrï¿½ge geben (sonst Inkonsistenz):
         
         ClusterSetupRowsForUpdate rows = new ClusterSetupRowsForUpdate(sqlUtils);
         int cnt = rows.size();
@@ -357,14 +357,14 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
         sqlUtils.closeConnection();
       }
     } catch( SQLRuntimeException e ) {
-      //dies hätte nun nicht passieren dürfen: eine unerwartete Exception ist bei der Benutzung der DB aufgetreten.
+      //dies hï¿½tte nun nicht passieren dï¿½rfen: eine unerwartete Exception ist bei der Benutzung der DB aufgetreten.
       throw new XFMG_ClusterInitializationException(TYPENAME, e);
     }
     
     initialized = true;
   }
 
-  //package private für Tests
+  //package private fï¿½r Tests
   void initStorable() throws PersistenceLayerException {
     ODSImpl.getInstance().registerStorable(OracleRACClusterProviderConfiguration.class);
   }
@@ -396,7 +396,7 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
         try {
           sqlUtils = interconnect.createSqlUtils("disconnect");
         } catch (DBNotReachableException e) {
-          //Es kann keine connection hergestellt werden. Das Retry wird innen drin schon durchgeführt.
+          //Es kann keine connection hergestellt werden. Das Retry wird innen drin schon durchgefï¿½hrt.
           //Hier kann nichts mehr getan werden.
           logger.warn("Failed to open connection while trying to shutdown", e);
           dbNotReachable();
@@ -614,7 +614,7 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
         try {
           Thread.sleep(RAC_RETRY_WAIT.getMillis());
         } catch (InterruptedException e) {
-          //dann halt kürzer warten
+          //dann halt kï¿½rzer warten
         }
       }
       
@@ -771,16 +771,16 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
     if( logger.isTraceEnabled() ) {
       logger.trace("join("+joinedBinding+"), ownBinding="+ config.getBinding()+", changeHandler="+changeHandler);
     }
-    //der andere Knoten möchte sich connecten, wird ihm das erlaubt?
-    //Diese Entscheidung kann länger dauern, daher in eigenem Thread
+    //der andere Knoten mï¿½chte sich connecten, wird ihm das erlaubt?
+    //Diese Entscheidung kann lï¿½nger dauern, daher in eigenem Thread
     new Thread( new Connector(Change.join), "RAC-Connector-join" ).start();
   }
   public void startup(SQLUtils sqlUtils, int startingBinding) {
     if( logger.isTraceEnabled() ) {
       logger.trace("startup"+startingBinding+"), ownBinding="+ config.getBinding()+", changeHandler="+changeHandler);
     }
-    //der andere Knoten möchte sich connecten, wird ihm das erlaubt?
-    //Diese Entscheidung kann länger dauern, daher in eigenem Thread
+    //der andere Knoten mï¿½chte sich connecten, wird ihm das erlaubt?
+    //Diese Entscheidung kann lï¿½nger dauern, daher in eigenem Thread
     new Thread( new Connector(Change.startup), "RAC-Connector-startup" ).start();
   }
   public void connect(SQLUtils sqlUtils, int connectingBinding) {
@@ -876,7 +876,7 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
               this.wait(500);
             }
           } catch (InterruptedException e) {
-            //Ignorieren, dann ist Wartezeit halt kürzer
+            //Ignorieren, dann ist Wartezeit halt kï¿½rzer
           }
         }
       }
@@ -999,7 +999,7 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
           }
         } else {
           logger.info("DB is not reachable");
-          //ansonsten kann hier nichts weiter getan werden, über die mit setException(...) gesetzte Exception 
+          //ansonsten kann hier nichts weiter getan werden, ï¿½ber die mit setException(...) gesetzte Exception 
           //sollte aber die Initialisierung abgebrochen werden
         }
       }
@@ -1025,8 +1025,8 @@ public class OracleRACClusterProvider implements ClusterProvider, RemoteInterfac
     
     //getState macht eine DB-Anfrage intern, d.h die DB wird auf jeden Fall gestestet.
     //getState hat hier den Vorteil, dass mehrere Threads gleichzeitig die Anfrage 
-    //starten können, ohne dass mehrere Connections gebraucht werden. Außerdem müssen die
-    //später (während der Wartezeit des ersten Threads) hinzukommenden Threads nicht mehr 
+    //starten kï¿½nnen, ohne dass mehrere Connections gebraucht werden. Auï¿½erdem mï¿½ssen die
+    //spï¿½ter (wï¿½hrend der Wartezeit des ersten Threads) hinzukommenden Threads nicht mehr 
     //ganz so lange warten.
     getState();
   }

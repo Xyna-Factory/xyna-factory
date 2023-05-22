@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public enum VetoManagementAlgorithmType implements DocumentedEnum {
 
   Storable( Documentation.
       en("Usage of veto storable only, legacy implementation").
-      de("Alleinige Speicherung als Veto-Storable, herkömmliche Implementierung").
+      de("Alleinige Speicherung als Veto-Storable, herkï¿½mmliche Implementierung").
       build()
       ) {
     @Override
@@ -168,7 +168,7 @@ public enum VetoManagementAlgorithmType implements DocumentedEnum {
       if( oldMode == ClusterMode.Clustered ) {
         VCP_Clustered vcpc = (VCP_Clustered)vcpOld;
         vcpc.close(); //RMI
-        vcpc.setReplicated(-1, -1); //evtl verbliebenes Latch lösen
+        vcpc.setReplicated(-1, -1); //evtl verbliebenes Latch lï¿½sen
       }
     }
     

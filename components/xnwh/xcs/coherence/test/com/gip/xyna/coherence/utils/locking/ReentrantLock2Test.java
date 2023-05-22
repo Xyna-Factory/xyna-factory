@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,14 +147,14 @@ public class ReentrantLock2Test extends TestCase {
 
     });
     t2.start();
-    latch0.await(); //anderer thread hat überprüft, dass er lock nicht hat
+    latch0.await(); //anderer thread hat ï¿½berprï¿½ft, dass er lock nicht hat
     Thread.sleep(300);
     assertTrue(lock.hasQueuedThreads());
     lock.unlock();
     latch1.await(); //anderer thread hat lock geholt
     assertFalse(lock.isHeldByCurrentThread());
     assertTrue(lock.isLocked());
-    latch2.countDown(); //anderer thread weiß bescheid, dass assertions ausgeführt wurden
+    latch2.countDown(); //anderer thread weiï¿½ bescheid, dass assertions ausgefï¿½hrt wurden
     latch3.await(); //anderer thread hat lock freigegeben
     assertFalse(lock.isLocked());
   }

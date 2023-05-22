@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -268,10 +268,10 @@ public class XynaObjectList<I extends XynaObject> extends XynaObject implements 
   private Object readResolve() throws ObjectStreamException {
     Stack<Integer> s = Container.stackSize.get();
     if (s != null && !s.isEmpty()) {
-      //hässlicher stack-size vergleich.
+      //hï¿½sslicher stack-size vergleich.
       if (Thread.currentThread().getStackTrace().length - s.peek() < 12) {
-        //liste ist teil von container -> wegen xynaobject-array-kompatibilität nicht hier ersetzen, sondern in container beim readresolve.
-        //wenn man hier bereits umwandeln würde, gibt es arraystoreexception im container, falls dort ein XynaObject[] gespeichert ist
+        //liste ist teil von container -> wegen xynaobject-array-kompatibilitï¿½t nicht hier ersetzen, sondern in container beim readresolve.
+        //wenn man hier bereits umwandeln wï¿½rde, gibt es arraystoreexception im container, falls dort ein XynaObject[] gespeichert ist
         return this;
       }
     }

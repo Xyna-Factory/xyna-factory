@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,37 +56,37 @@ import com.gip.xyna.xprc.xsched.scheduling.SchedulingOrder.WaitingCause;
 
 
 /**
- * AllOrdersList ist die Liste aller Aufträge im XynaScheduler. 
+ * AllOrdersList ist die Liste aller Auftrï¿½ge im XynaScheduler. 
  * 
- * Der SchedulerAlgorithm fragt regelmäßig nach den neuen Aufträgen und pflegt diese in einer 
- * eigenen Liste. Die eigene Liste ist auf Grund der anderen Sortierung nötig und hilfreich, 
+ * Der SchedulerAlgorithm fragt regelmï¿½ï¿½ig nach den neuen Auftrï¿½gen und pflegt diese in einer 
+ * eigenen Liste. Die eigene Liste ist auf Grund der anderen Sortierung nï¿½tig und hilfreich, 
  * um nicht immer wieder langdauernde synchronisierte Zugriffe zu haben.<br> 
  * 
  * Dies macht es jedoch auch erforderlich, dass geschedulte Orders entfernt werden. Dazu wird
- * jeder geschedulte Auftrage über {@link #removeOrder(SchedulingOrder)} aus der Liste aller 
- * Aufträge entfernt.<br> 
+ * jeder geschedulte Auftrage ï¿½ber {@link #removeOrder(SchedulingOrder)} aus der Liste aller 
+ * Auftrï¿½ge entfernt.<br> 
  * 
- * Da die interne Speicherung in AllOrdersList eine ConcurrentHashMap ist, können viele Operationen 
+ * Da die interne Speicherung in AllOrdersList eine ConcurrentHashMap ist, kï¿½nnen viele Operationen 
  * ohne Lock auskommen. Allerdings hat die ConcurrentHashMap den Nachteil, dass sie nicht mehr 
- * schrumpft, wenn sie zuviele Aufträge speichern musste.<br>
+ * schrumpft, wenn sie zuviele Auftrï¿½ge speichern musste.<br>
  * 
- * Zusätzlich zur Liste aller Aufträge wird noch eine weitere, kleinere Liste von SchedulingOrders 
+ * Zusï¿½tzlich zur Liste aller Auftrï¿½ge wird noch eine weitere, kleinere Liste von SchedulingOrders 
  * gepflegt, um einen OutOfMemory-Schutz zu haben. 
  * Dies ist die {@link com.gip.xyna.xprc.xsched.AllOrdersList.OOMProtectionList OOMProtectionList}
- * Über diese Liste werden XynaOrders in der SchedulingOrder gebackupt und restoret.<br> 
+ * ï¿½ber diese Liste werden XynaOrders in der SchedulingOrder gebackupt und restoret.<br> 
  * Dadurch, dass nur alte XynaOrders gebackupt und aus dem Speicher entfernt werden und wieder 
- * nachgeladene XynaOrders als neu gelten, ist gewährleistet, dass der Scheduler selten XynaOrders 
- * mehrfach nachladen muss. Mehrfaches Nachladen sollte nur passieren, wenn Aufträge langdauernd 
+ * nachgeladene XynaOrders als neu gelten, ist gewï¿½hrleistet, dass der Scheduler selten XynaOrders 
+ * mehrfach nachladen muss. Mehrfaches Nachladen sollte nur passieren, wenn Auftrï¿½ge langdauernd 
  * nicht geschedult werden und die OOMProtectionList sehr voll ist.<br> 
  * Das Kriterium, ob ein Auftrag in die OOMProtectionList gelangt, ist derzeit nur, ob er 
- * Parent-Aufträge hat, siehe {@link com.gip.xyna.xprc.xsched.scheduling.SchedulingOrder#isRelevantForOOMProtection() SchedulingOrder.isRelevantForOOMProtection()}.<br> 
+ * Parent-Auftrï¿½ge hat, siehe {@link com.gip.xyna.xprc.xsched.scheduling.SchedulingOrder#isRelevantForOOMProtection() SchedulingOrder.isRelevantForOOMProtection()}.<br> 
  *  
  * <br><br>
  * 
- * TODO Was wäre noch gut?<br> 
+ * TODO Was wï¿½re noch gut?<br> 
  * OOMProtectionList sollte keine LinkedList sein, sondern HashMap bzw LinkedHashMap, 
- * damit die remove-Operationen günstig durchgeführt werden können. 
- * Mit Umsetzung von Bug 13829 könnte OOMProtectionList eine einfache Erweiterung von LRUCache sein
+ * damit die remove-Operationen gï¿½nstig durchgefï¿½hrt werden kï¿½nnen. 
+ * Mit Umsetzung von Bug 13829 kï¿½nnte OOMProtectionList eine einfache Erweiterung von LRUCache sein
  * 
  * 
  */
@@ -95,26 +95,26 @@ public class AllOrdersList {
   private static Logger logger = CentralFactoryLogging.getLogger(AllOrdersList.class);
 
   private ConcurrentHashMap<Long,SchedulingOrder> allOrders;    //alle Orders
-  private OOMProtectionList oomOrders;           //für OOM-Schutz relevante SchedulingOrder
+  private OOMProtectionList oomOrders;           //fï¿½r OOM-Schutz relevante SchedulingOrder
   
-  private CanceledOrders canceledOrders;         //für gleichzeitiges Add- und CancelOrder: Cancel darf vor Add gerufen werden
+  private CanceledOrders canceledOrders;         //fï¿½r gleichzeitiges Add- und CancelOrder: Cancel darf vor Add gerufen werden
   
   private Scheduler<SchedulingOrder,SchedulerInformationBean> scheduler;
   
   /**
-   * Liste aller SchedulingOrders, die wegen OOM überwacht werden müssen.
+   * Liste aller SchedulingOrders, die wegen OOM ï¿½berwacht werden mï¿½ssen.
    * 
-   * {@link #add(SchedulingOrder) } überwacht, dass nicht mehr als maxOrders Aufträge in der Liste stehen.
-   * Überzählige werden gebackupt und aus der Liste entfernt. Dabei werden die ältesten Aufräge (vorne) 
-   * in der Liste entfernt, neue Aufträge werden hinten angehängt.
+   * {@link #add(SchedulingOrder) } ï¿½berwacht, dass nicht mehr als maxOrders Auftrï¿½ge in der Liste stehen.
+   * ï¿½berzï¿½hlige werden gebackupt und aus der Liste entfernt. Dabei werden die ï¿½ltesten Aufrï¿½ge (vorne) 
+   * in der Liste entfernt, neue Auftrï¿½ge werden hinten angehï¿½ngt.
    * 
-   * Geschedulte oder gecancelte Aufträge werden nicht direkt nach dem Schedulen oder beim Cancel aus der
-   * Liste entfernt, daher wächst die OOMProtectionList immer auf maxOrders an, bevor sie wieder stark 
-   * zusammenschrumpft, wenn im addOrder alle geschedulten oder gecancelten Aufträge entfernt werden.
+   * Geschedulte oder gecancelte Auftrï¿½ge werden nicht direkt nach dem Schedulen oder beim Cancel aus der
+   * Liste entfernt, daher wï¿½chst die OOMProtectionList immer auf maxOrders an, bevor sie wieder stark 
+   * zusammenschrumpft, wenn im addOrder alle geschedulten oder gecancelten Auftrï¿½ge entfernt werden.
    * 
-   * Grund dafür ist die höhere Effizienz einer vollständigen Iteration über die OOMProtectionList im 
+   * Grund dafï¿½r ist die hï¿½here Effizienz einer vollstï¿½ndigen Iteration ï¿½ber die OOMProtectionList im 
    * addOrder, welche nur alle maxOrders/10 bis maxOrders (also typischerweise 1000-10000) eingestellten 
-   * Aufträge auftritt im Vergleich zu einer Iteration bei jedem Cancel oder nach jedem Schedule-Vorgang.
+   * Auftrï¿½ge auftritt im Vergleich zu einer Iteration bei jedem Cancel oder nach jedem Schedule-Vorgang.
    *
    */
   private static class OOMProtectionList {
@@ -134,7 +134,7 @@ public class AllOrdersList {
     }
 
     /**
-     * Aufnahme der SchedulingOrder in die OOMProtectionList, wenn sie für den OOM-Schutz relevant ist
+     * Aufnahme der SchedulingOrder in die OOMProtectionList, wenn sie fï¿½r den OOM-Schutz relevant ist
      * @param so
      */
     public void add(SchedulingOrder so) {
@@ -150,8 +150,8 @@ public class AllOrdersList {
     }
 
     /**
-     * Liste ist zu lang geworden: Zuerst Aufräumen, danach Entfernen einiger Einträge 
-     * aus der OOMProtectionList, damit OOM-Schutz gewährleistet ist. XynaOrders werden 
+     * Liste ist zu lang geworden: Zuerst Aufrï¿½umen, danach Entfernen einiger Eintrï¿½ge 
+     * aus der OOMProtectionList, damit OOM-Schutz gewï¿½hrleistet ist. XynaOrders werden 
      * gebackupt und aus dem Speicher entfernt.
      */
     private void decreaseListSize() {
@@ -167,7 +167,7 @@ public class AllOrdersList {
       int cnt = 0;
       int i = 0;
       while (cnt < ordersToBackup && i++ < oomOrders.size()) {
-        SchedulingOrder so = oomOrders.remove();//holt ältesten Eintrag (vorne)
+        SchedulingOrder so = oomOrders.remove();//holt ï¿½ltesten Eintrag (vorne)
         synchronized (so) {
           if( so.isLocked() ) {
             continue; //dann halt anderen Auftrag aus dem Memory werfen
@@ -176,11 +176,11 @@ public class AllOrdersList {
         }
         try {
           if( so.canBeRemovedFromOOMProtection() ) {
-            //Auftrag läuft nun anscheinend doch schon. (Im Scheduler wird 
+            //Auftrag lï¿½uft nun anscheinend doch schon. (Im Scheduler wird 
             //...OrderInstanceStatus auf Running gesetzt)
             cnt++;
           } else {
-            if( so.backup() ) { //TODO batch-verarbeitung für die backups
+            if( so.backup() ) { //TODO batch-verarbeitung fï¿½r die backups
               //XynaOrder aus Memory entfernen: SchedulingOrder wird noch in anderen Listen gehalten
               so.removeXynaOrder();
               cnt++;
@@ -219,7 +219,7 @@ public class AllOrdersList {
   
   
   /**
-   * Für Tests
+   * Fï¿½r Tests
    * @param maxOrders
    */
   public AllOrdersList(int maxOrders) {
@@ -313,9 +313,9 @@ public class AllOrdersList {
 
     
     /**
-     * falls kein listener existiert, wird false zurückgegeben.
+     * falls kein listener existiert, wird false zurï¿½ckgegeben.
      * 
-     * ansonsten signalisiert der rückgabewert, ob der aufrufer den auftrag canceln muss.
+     * ansonsten signalisiert der rï¿½ckgabewert, ob der aufrufer den auftrag canceln muss.
      * beispiele:
      * 1. auftrag kann gecancelt werden, aber er wird vom scheduler gescheduled (resume) -> return false, listener.cancelsucceeded
      * 2. auftrag kann gecancelt werden, soll der aufrufer machen -> return true, listener.cancelsucceeded
@@ -421,7 +421,7 @@ public class AllOrdersList {
   }
   
   /**
-   * gibt den gecancelten auftrag zurück, falls er aus der liste entfernt wurde
+   * gibt den gecancelten auftrag zurï¿½ck, falls er aus der liste entfernt wurde
    */
   public XynaOrderServerExtension cancelOrder(Long orderId, ICancelResultListener listener, boolean cancelCompensationAndResumes, boolean ignoreResourcesWhenResuming) {
     canceledOrders.lock(orderId);
@@ -446,13 +446,13 @@ public class AllOrdersList {
         case AlreadyScheduled:
         case ResumeOrCompensate:
           //auftrag konnte nicht abgebrochen werden, war aber in der liste 
-          //in beiden fällen soll kein listener registriert werden.
+          //in beiden fï¿½llen soll kein listener registriert werden.
           if (listener != null) {
             listener.cancelFailed();
           }
           return null;
         case Aborted:
-          // auftrag konnte nicht entfernt werden, aber abgebrochen. das ist nur für den fall:
+          // auftrag konnte nicht entfernt werden, aber abgebrochen. das ist nur fï¿½r den fall:
           // er ist resuming und braucht resourcen und flag verbietet ihn zu entnehmen.
           if (listener != null) {
             listener.callCancelSucceededAndSetSuccessFlag();
@@ -482,9 +482,9 @@ public class AllOrdersList {
   public enum RemoveState {
     
     BeforeScheduling(true,true),   //Auftrag wartete im Scheduler und konnte daher abgebrochen werden
-    AlreadyScheduled(true,false),  //Auftrag wurde bereits ausgeführt
+    AlreadyScheduled(true,false),  //Auftrag wurde bereits ausgefï¿½hrt
     ResumeOrCompensate(true,false),//Resume- oder Compensate-Auftrag wird nicht abgebrochen
-    Aborted(true,true),            //Auftrag während eines Resumes; wurde nun abgebrochen, um nicht auf Caps oder Vetos zu warten
+    Aborted(true,true),            //Auftrag wï¿½hrend eines Resumes; wurde nun abgebrochen, um nicht auf Caps oder Vetos zu warten
     NotFound(false,false);         //unbekannter Auftrag
     
     private boolean knownToScheduler;
@@ -525,7 +525,7 @@ public class AllOrdersList {
    * und falls er nicht bereits gescheduled wurde.
    * wenn ignoreResourcesWhenResuming = false, dann soll der resuming auftrag im scheduler bleiben auch wenn removeResumes=true
    * 
-   * gibt die xynaorder zurück, falls abort erfolgreich, und true/false ob der auftrag entfernt wurde.
+   * gibt die xynaorder zurï¿½ck, falls abort erfolgreich, und true/false ob der auftrag entfernt wurde.
    */
   public Pair<XynaOrderServerExtension, RemoveState> removeOrder(long orderId, boolean removeCompensatingAndResumes, boolean ignoreResourcesWhenResuming) {
     SchedulingOrder so = allOrders.get(orderId);
@@ -540,8 +540,8 @@ public class AllOrdersList {
         return Pair.of(null, RemoveState.AlreadyScheduled);
       }
 
-      //Order nur entfernen, wenn man sicher ist, dass man das will. weil man hinterher nicht gut zurück kann
-      //Daher nun erst einige Prüfungen
+      //Order nur entfernen, wenn man sicher ist, dass man das will. weil man hinterher nicht gut zurï¿½ck kann
+      //Daher nun erst einige Prï¿½fungen
 
       //nun kann man threadsicher in die xynaorder reinschauen:
       XynaProcess process = xo.getExecutionProcessInstance();
@@ -557,7 +557,7 @@ public class AllOrdersList {
         if (!ignoreResourcesWhenResuming && isResuming ) {
           SchedulingData schedulingData = xo.getSchedulingData();
           if ( schedulingData.needsCapacities() || ! schedulingData.getVetos().isEmpty() ) {
-            //auftrag benötigt capacities oder vetos und diese sollen beim resume nicht ignoriert werden
+            //auftrag benï¿½tigt capacities oder vetos und diese sollen beim resume nicht ignoriert werden
             //abgebrochen soll der auftrag trotzdem werden!
             xo.abortResumingOrder(false, null); //TODO cause
             return Pair.of(xo, RemoveState.Aborted);
@@ -633,7 +633,7 @@ public class AllOrdersList {
   }
   
   /**
-   * AllOrders ist dafür veranwortlich, die XynaOrders fürs Scheduling zu liefern
+   * AllOrders ist dafï¿½r veranwortlich, die XynaOrders fï¿½rs Scheduling zu liefern
    * @param so
    * @return XynaOrderServerExtension, evtl. null, falls restore aus Orderbackup nicht klappt!
    */
@@ -685,7 +685,7 @@ public class AllOrdersList {
   public void timeoutOrder(SchedulingOrder so) {
     synchronized(so) {
       so.markAsTimedout();
-      //Reschedule trägt Auftrag evtl wieder in Scheduler ein, wenn SchedulingOrder außerhalb aufbewahrt wird
+      //Reschedule trï¿½gt Auftrag evtl wieder in Scheduler ein, wenn SchedulingOrder auï¿½erhalb aufbewahrt wird
       tryScheduleOrder( so, "timeoutOrder", false, false, true );
     }
   }
@@ -729,7 +729,7 @@ public class AllOrdersList {
       return false;
     } else if( so.isWaitingOrLocked() ) {
       if( so.isLocked() ) {
-        //SchedulingOrder ist gesperrt: daher keine weiteren Änderungen vornehmen sondern fürs Unlock vormerken.
+        //SchedulingOrder ist gesperrt: daher keine weiteren ï¿½nderungen vornehmen sondern fï¿½rs Unlock vormerken.
         if( addToScheduler ) {
           so.addLockAction(WaitingCause.Unlock_ReaddToScheduler);
         }
@@ -757,7 +757,7 @@ public class AllOrdersList {
           }
         }
       } else {
-        //Auftrag kann nicht regulär geschedult werden, deswegen Scheduler zum Aufräumen geben
+        //Auftrag kann nicht regulï¿½r geschedult werden, deswegen Scheduler zum Aufrï¿½umen geben
         rescheduleOrder(so);
       }
       return false;
@@ -778,7 +778,7 @@ public class AllOrdersList {
   
   private void addOrderToScheduler(SchedulingOrder so) {
     XynaOrderServerExtension xo = getXynaOrder(so); //hier schon holen, damit kein 
-    //.. Backup während newOrdersLock gelesen werden muss
+    //.. Backup wï¿½hrend newOrdersLock gelesen werden muss
     xo.setTransientFlag(TransientFlags.WasKnownToScheduler);
    // scheduler.putOrder(so); //FIXME blockierend einstellen
     scheduler.offerOrder(so);
@@ -809,7 +809,7 @@ public class AllOrdersList {
    * Update des OrderInstanceStatus sowohl in SchedulingOrder als auch im OrderArchive
    * TODO OrderArchive-Update fehlt noch! 
    * @param so
-   * @param orderInstanceStatus null ist erlaubt -&gt; keine Änderung
+   * @param orderInstanceStatus null ist erlaubt -&gt; keine ï¿½nderung
    */
   public void updateOrderStatus(SchedulingOrder so, OrderInstanceStatus orderInstanceStatus) {
     if( orderInstanceStatus == null ) {
@@ -853,7 +853,7 @@ public class AllOrdersList {
   public void deploymentFinished(Long orderId) {
     SchedulingOrder so = allOrders.get(orderId);
     if( so == null ) {
-      return; //Order nicht gefunden, sollte nicht auftreten können
+      return; //Order nicht gefunden, sollte nicht auftreten kï¿½nnen
     }
     synchronized (so) {
       so.waitIfLocked();
@@ -868,10 +868,10 @@ public class AllOrdersList {
     }
     int modified = 0;
     for( SchedulingOrder so : affected ) {
-      synchronized (so) { //gegen gleichzeitiges Schedulen geschützt
+      synchronized (so) { //gegen gleichzeitiges Schedulen geschï¿½tzt
         so.waitIfLocked();
         if( !so.canBeScheduled() ) {
-          continue; //zu spät, Auftrag kann nicht mehr geschedult werden
+          continue; //zu spï¿½t, Auftrag kann nicht mehr geschedult werden
         }
         SchedulingData sd = getXynaOrder(so).getSchedulingData();
         if( add ) {

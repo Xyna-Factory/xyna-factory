@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,12 +93,12 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
     //2) Jetzt erst darf Scheduler wissen, dass er RMI benutzen darf (ansonsten greift er auf falsche clusteredCapManagementInterfaceId zu )
     scheduler.setCapacityReservation( cmc.capacityReservation );
     if (!XynaFactory.getInstance().isStartingUp()) {
-      scheduler.notifyScheduler(); //noch ein notify, damit Scheduler auf jedem Fall einmal mit neuen CapacityReservation läuft
+      scheduler.notifyScheduler(); //noch ein notify, damit Scheduler auf jedem Fall einmal mit neuen CapacityReservation lï¿½uft
     }
     
     //Wie ist es mit Remote-Aufrufen, wenn CapacityReservation noch nicht im Scheduler ausgetauscht wurde?
-    //Nur communicateLocalDemand(...) relevant, alle anderen RMI-Methoden ändern nur Capacities
-    //communicateLocalDemand trägt bereits in neue CapacityReservation ein, so dass die Demands nicht verloren gehen.
+    //Nur communicateLocalDemand(...) relevant, alle anderen RMI-Methoden ï¿½ndern nur Capacities
+    //communicateLocalDemand trï¿½gt bereits in neue CapacityReservation ein, so dass die Demands nicht verloren gehen.
     return cmc;
   }
   
@@ -114,7 +114,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
   }
 
   /**
-   * Schließen der RMI-Verbindung: Abmelden der RMIInterface-Implementierung
+   * Schlieï¿½en der RMI-Verbindung: Abmelden der RMIInterface-Implementierung
    */
   private void closeRMI() {
     long temp = clusteredCapManagementInterfaceId;
@@ -142,9 +142,9 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
   }
   
   protected int transportReservedCaps(List<Reservations> reservations) {
-    //Die Reservierungen wurden ohne ManagementLock ermittelt und an diese Methode übergeben.
-    //Daher kann es sein, dass in der Zwischenzeit Änderungen in der DB erfolgt sind, die zu
-    //den übergebenen Reservierungen nicht kompatibel sind
+    //Die Reservierungen wurden ohne ManagementLock ermittelt und an diese Methode ï¿½bergeben.
+    //Daher kann es sein, dass in der Zwischenzeit ï¿½nderungen in der DB erfolgt sind, die zu
+    //den ï¿½bergebenen Reservierungen nicht kompatibel sind
     
     try {
       managementLock.lock();
@@ -265,11 +265,11 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
 
   protected void increaseCaps(ODSConnection defCon, CapacityStorables allCs,
                               String capName, int addCard) throws PersistenceLayerException {
-    //addCard Capacities werden hinzugefügt, dies ist immer möglich.
+    //addCard Capacities werden hinzugefï¿½gt, dies ist immer mï¿½glich.
     //Wie sollen diese nun verteilt werden? 
     //a) Knoten mit geringer Cardinality werden bevorzugt -> gerecht
     //b) neue Caps werden proportional zu den existierenden vergeben -> entspricht dem Bedarf
-    //c) gleichmäßig vergeben -> am einfachsten, deswegen verwendet
+    //c) gleichmï¿½ï¿½ig vergeben -> am einfachsten, deswegen verwendet
 
     int cardForeign = addCard / allCs.size(); // Cardinality der fremden Bindings
     int cardOwn = addCard - cardForeign * (allCs.size() - 1); // eigene Cardinality
@@ -296,8 +296,8 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
                               String capName, int removeCard) throws PersistenceLayerException,
       XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryChangeState,
       XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain, XPRC_ClusterStateChangedException {
-    //removeCard Capacities sollen entfernt werden, dies ist unter Umständen nicht möglich
-    //hier werden 3 Fälle unterschieden, alle erfordern einen anderen Algorithmus
+    //removeCard Capacities sollen entfernt werden, dies ist unter Umstï¿½nden nicht mï¿½glich
+    //hier werden 3 Fï¿½lle unterschieden, alle erfordern einen anderen Algorithmus
     //a) Cardinality kann lokal verringert werden
     //b) Capacity ist ACTIVE
     //c) Capacity ist DISABLED
@@ -334,12 +334,12 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
     //Capacities werden laufend neu vergeben, daher ist die genaue Anzahl der verwendeten 
     //Caps nie bekannt -> was nun?
     
-    //Alle Knoten müssen alle ihre Capacities des Typs capName abgeben, dann wird dies lokal ausgeglichen
-    //defCon.persistCollection(allCs); //SelectForUpdate-Lock zurückgeben
+    //Alle Knoten mï¿½ssen alle ihre Capacities des Typs capName abgeben, dann wird dies lokal ausgeglichen
+    //defCon.persistCollection(allCs); //SelectForUpdate-Lock zurï¿½ckgeben
     if( logger.isDebugEnabled() ) {
       logger.debug("current capacities: "+allCs);
     }
-    defCon.rollback(); //SelectForUpdate-Lock zurückgeben
+    defCon.rollback(); //SelectForUpdate-Lock zurï¿½ckgeben
     
     CapacityStorables allDecreasedCs = null;
     try {
@@ -348,7 +348,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
     } catch (InvalidIDException e) {
       handleInvalidIDException(e);
     } finally {
-      //In jedem Fall die Capacity-Verteilung aktualisieren, da sonst Capacities im Cache fehlen würden
+      //In jedem Fall die Capacity-Verteilung aktualisieren, da sonst Capacities im Cache fehlen wï¿½rden
       allDecreasedCs = new CapacityStorables(capacityStorableQueries.loadAllByNameForUpdate(defCon, capName), ownBinding );
       cache.refresh(allDecreasedCs);
     }
@@ -358,7 +358,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
     
     int free = cache.get(capName).getNumberOfAllFreeCaps();
     if( free >= removeCard ) {
-      //ok, es sind genügend freigeworden
+      //ok, es sind genï¿½gend freigeworden
       CapacityStorable own = allDecreasedCs.getOwn();
       own.setCardinality( own.getCardinality() - removeCard );
       
@@ -375,7 +375,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
   }
   
   public void moveAllFreeCapacitiesToBinding(String capName, int binding) throws RemoteException {
-    //alle freien Capacities müssen abgegeben werden
+    //alle freien Capacities mï¿½ssen abgegeben werden
     cacheLock.lock();
     try {
       ODSConnection defCon = ods.openConnection(ODSConnectionType.DEFAULT);
@@ -447,7 +447,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
       throw new XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain();
     }
 
-    //ok, es gibt genügend unbenutzte Capacities, diese nun entfernen
+    //ok, es gibt genï¿½gend unbenutzte Capacities, diese nun entfernen
     //wieviele Caps sollen von jedem Ci-Eintrag entfernt werden?
     int[] remCard = new int[size];
     
@@ -462,12 +462,12 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
     int toRemove = removeCard;
     while( toRemove > 0 ) {
       for( int r =0; r < size; ++r ) {
-        if( maxFree <= free[r] ) { //Vergabeschwelle berücksichtigen
+        if( maxFree <= free[r] ) { //Vergabeschwelle berï¿½cksichtigen
           if( remCard[r] < free[r] ) { //sind noch Caps frei?
             ++remCard[r]; //Cap verringern
             --toRemove;
             if( toRemove == 0 ) {
-              break; //genügend Caps gefunden
+              break; //genï¿½gend Caps gefunden
             }
           }
         }
@@ -491,7 +491,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
 
 
   public CapacityInformation getCapacityInformation(String capacityName) throws XPRC_ClusterStateChangedException {
-    managementLock.lock(); //throws LockFailedException ok, da Aufruf über CLI
+    managementLock.lock(); //throws LockFailedException ok, da Aufruf ï¿½ber CLI
     try {
       cacheLock.lock();
       try {
@@ -518,7 +518,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
         cacheLock.unlock();
       }
     } finally {
-      managementLock.unlock(); //throws AlreadyUnlockedException ok, da Aufruf über CLI
+      managementLock.unlock(); //throws AlreadyUnlockedException ok, da Aufruf ï¿½ber CLI
     }
   }
 
@@ -546,7 +546,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
         cacheLock.unlock();
       }
     } finally {
-      managementLock.unlock(); //throws AlreadyUnlockedException ok, da Aufruf über CLI
+      managementLock.unlock(); //throws AlreadyUnlockedException ok, da Aufruf ï¿½ber CLI
     }
 
   }
@@ -555,7 +555,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
   private void getManagementLockForExternalRequests() {
     while (true) {
       try {
-        managementLock.lock(); //throws LockFailedException ok, da Aufruf über CLI
+        managementLock.lock(); //throws LockFailedException ok, da Aufruf ï¿½ber CLI
         break;
       } catch (LockFailedException e) {
         logger.debug("Failed to obtain management lock (" + e.getMessage()
@@ -612,7 +612,7 @@ public class CMClustered extends CMAbstract implements ClusteredCapacityManageme
         cacheLock.unlock();
       }
     } finally {
-      managementLock.unlock(); //throws AlreadyUnlockedException ok, da Aufruf über CLI
+      managementLock.unlock(); //throws AlreadyUnlockedException ok, da Aufruf ï¿½ber CLI
     }
 
   }

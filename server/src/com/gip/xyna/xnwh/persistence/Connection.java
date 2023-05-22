@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
  */
 public interface Connection {
   /**
-   * übernimmt vorgenommene änderungen dieser transaktion und gibt locks wieder frei
+   * ï¿½bernimmt vorgenommene ï¿½nderungen dieser transaktion und gibt locks wieder frei
    * @throws PersistenceLayerException
    */
   public void commit() throws PersistenceLayerException;
   /**
-   * verwirft vorgenommene änderungen dieser transaktion und gibt locks wieder frei
+   * verwirft vorgenommene ï¿½nderungen dieser transaktion und gibt locks wieder frei
    * @throws PersistenceLayerException
    */
   public void rollback() throws PersistenceLayerException;
@@ -45,8 +45,8 @@ public interface Connection {
   public void closeConnection() throws PersistenceLayerException;
   
   /**
-   * insert+update von objekten. die objekte darin sollten  über annotations persistable und column
-   * konfiguriert sein. beim udpate werden immer alle spalten aktualisiert. möchte man nur einzelne
+   * insert+update von objekten. die objekte darin sollten  ï¿½ber annotations persistable und column
+   * konfiguriert sein. beim udpate werden immer alle spalten aktualisiert. mï¿½chte man nur einzelne
    * spalten aktualisieren muss man das mit {@link #executeDML(PreparedCommand, Parameter)} erledigen
    * @return true if the objected existed before and false otherwise
    * @see com.gip.xyna.xnwh.persistence.Column
@@ -61,7 +61,7 @@ public interface Connection {
   /**
    * 
    * @param cmd
-   * @param paras werden, anders als bei {@link #query(PreparedQuery, Parameter, int)}, direkt übernommen,
+   * @param paras werden, anders als bei {@link #query(PreparedQuery, Parameter, int)}, direkt ï¿½bernommen,
    *        d.h. es werden keine PersistenceLayer-spezifischen Anpassungen vorgenommen. 
    * @return
    * @throws PersistenceLayerException
@@ -72,26 +72,26 @@ public interface Connection {
    * 
    * @param query
    * @param parameter 
-   *        Anfragen verwenden " um Bereiche und \ um einzelne Zeichen zu Escapen. Bei Like-Anfragen müssen alle
+   *        Anfragen verwenden " um Bereiche und \ um einzelne Zeichen zu Escapen. Bei Like-Anfragen mï¿½ssen alle
    *        %, die nicht als Wildcards interpretiert werden sollen, escaped werden.
-   *        Alle unescapten % müssen durch PersistenceLayer-spezifische Wildcards ersetzt werden.
-   *        Außerdem müssen alle PersistenceLayer-spezifischen Steuerzeichen escaped werden.
-   *        zB. soll "name like '%baum"%"wald%'" oder "name like '%baum\%wald%'" die Zeichenfolge baum%wald treffen können.
-   * @param maxRows -1 für unbegrenzt. ansonsten gibt es maximal soviele elemente zurück
+   *        Alle unescapten % mï¿½ssen durch PersistenceLayer-spezifische Wildcards ersetzt werden.
+   *        Auï¿½erdem mï¿½ssen alle PersistenceLayer-spezifischen Steuerzeichen escaped werden.
+   *        zB. soll "name like '%baum"%"wald%'" oder "name like '%baum\%wald%'" die Zeichenfolge baum%wald treffen kï¿½nnen.
+   * @param maxRows -1 fï¿½r unbegrenzt. ansonsten gibt es maximal soviele elemente zurï¿½ck
    * @return
    * @throws PersistenceLayerException
    */
   public <E> List<E> query(PreparedQuery<E> query, Parameter parameter, int maxRows) throws PersistenceLayerException;
   public <E> List<E> query(PreparedQuery<E> query, Parameter parameter, int maxRows, ResultSetReader<? extends E> reader ) throws PersistenceLayerException;
 
-  //TODO:*querymethode, die nur die referenzen zurückgibt, falls möglich. d.h. ohne resultsetreader benutzung
+  //TODO:*querymethode, die nur die referenzen zurï¿½ckgibt, falls mï¿½glich. d.h. ohne resultsetreader benutzung
   //     *update-methode, die java-updates auf objekten definiert, die per query ausgesucht werden. das update wird dann "unten"
-  //        ausgeführt. vorteil: zb in clusterpersistencelayer braucht man nicht die gesamten objekte ändern, sondern kann die
+  //        ausgefï¿½hrt. vorteil: zb in clusterpersistencelayer braucht man nicht die gesamten objekte ï¿½ndern, sondern kann die
   //        transformationen speichern. in anderen persistencelayers kann man sie u.a. in sql-updates umwandeln oder
-  //        direkt ausführen
+  //        direkt ausfï¿½hren
   
   /**
-   * füllt das übergebene objekt über seine defaultquery und nimmt als parameter den primarykey der in dem übergebenen
+   * fï¿½llt das ï¿½bergebene objekt ï¿½ber seine defaultquery und nimmt als parameter den primarykey der in dem ï¿½bergebenen
    * objekt gesetzt sein muss
    * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY falls kein objekt mit dem primarykey gefunden wurde
    * @throws PersistenceLayerException bei sonstigen fehlern in der persistencelayer
@@ -110,12 +110,12 @@ public interface Connection {
   public <E> E queryOneRow(PreparedQuery<E> query, Parameter parameter) throws PersistenceLayerException;
 
   /**
-   * @return true, falls ein objekt mit dem gleichen PK wie das übergebene bereits existiert
+   * @return true, falls ein objekt mit dem gleichen PK wie das ï¿½bergebene bereits existiert
    */
   public <T extends Storable> boolean containsObject(T storable) throws PersistenceLayerException;
 
   /**
-   * führt ein upsert durch, d.h. vorhandene Zeilen (erkannt an id) werden geupdated, nicht vorhandene zeilen werden eingefügt
+   * fï¿½hrt ein upsert durch, d.h. vorhandene Zeilen (erkannt an id) werden geupdated, nicht vorhandene zeilen werden eingefï¿½gt
    * @param <T>
    * @param storableCollection
    * @throws PersistenceLayerException
@@ -141,7 +141,7 @@ public interface Connection {
   // public int executeDDL(String sqlString, Parameter paras) throws PersistenceLayerException;
 
   /**
-   * Hiermit können Transaction Properties an den PersistenceLayer durchgereicht werden. Diese werden je nach
+   * Hiermit kï¿½nnen Transaction Properties an den PersistenceLayer durchgereicht werden. Diese werden je nach
    * Implementierung des PersistenceLayers behandelt oder ignoriert.
    */
   public void setTransactionProperty(TransactionProperty property);

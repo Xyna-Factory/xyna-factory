@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * AdministrativeParallelLock ist eine {@link ParallelLock}-Implementation, bei der Lock-Objecte auch
- * administrativ gesperrt werden können. 
+ * administrativ gesperrt werden kï¿½nnen. 
  * Administrative bedeutet dabei, dass diese Lock-Objecte keine Locks tragen und daher auch von anderen 
- * Threads entfernt werden können. Für die auf eine normales Lock wartenden Threads ist es nicht unterscheidbar,
+ * Threads entfernt werden kï¿½nnen. Fï¿½r die auf eine normales Lock wartenden Threads ist es nicht unterscheidbar,
  * ob das Lock, an dem sie warten, administrative gesperrt ist oder nicht: sie werden auch vom Freigeben
  * des administrativen Locks geweckt.
  * 
@@ -120,7 +120,7 @@ public class AdministrativeParallelLock<T> implements ParallelLock<T> {
         return;
       } else {
         if( locked ) {
-          //Object gehört MultiLocker, daher am Latch warten
+          //Object gehï¿½rt MultiLocker, daher am Latch warten
           if( alreadyLocked ) {
             //Lock freigeben, damit anderer eine Chance hat
             parallelLock.unlock(object);
@@ -133,11 +133,11 @@ public class AdministrativeParallelLock<T> implements ParallelLock<T> {
             //weiter warten
           }
         } else {
-          //Object gehört anderem Locker, daher am parallelLock warten
+          //Object gehï¿½rt anderem Locker, daher am parallelLock warten
           if( alreadyLocked ) {
             //Lock erhalten, aber anderer hat Object in Map gesetzt und hat sein Lock nicht erhalten,
             //weil er zu langsam war. Daher nun nett sein und Lock freigeben, damit der andere 
-            //sein Lock erhält.
+            //sein Lock erhï¿½lt.
             parallelLock.unlock(object);
             alreadyLocked = false;
             Thread.yield(); //anderen Thread vorlassen
@@ -152,7 +152,7 @@ public class AdministrativeParallelLock<T> implements ParallelLock<T> {
   
   /**
    * @param waitForHashCollisions falls true, wird bei einer Hash-Kollision (anderes Objekt mit gleichem Hash ist gerade gelockt) auf das gelockte Objekt gewartet.
-   *   Das bedeutet, dass tryLock dann nicht sofort zurück kommt. 
+   *   Das bedeutet, dass tryLock dann nicht sofort zurï¿½ck kommt. 
    * @return 
    */
   public boolean tryLock(T object, boolean waitForHashCollisions) {

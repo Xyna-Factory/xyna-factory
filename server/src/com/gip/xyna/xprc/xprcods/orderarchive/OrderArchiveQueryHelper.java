@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ public final class OrderArchiveQueryHelper {
 
 
   /**
-   * ohne suspendierte aufträge mit monitoringlevel &gt;= 15, ggfs inkl suspendierter aufträge 
+   * ohne suspendierte auftrï¿½ge mit monitoringlevel &gt;= 15, ggfs inkl suspendierter auftrï¿½ge 
    * mit kleinerem monitoringlevel (dort kann man es nicht unterscheiden)<p>
-   * da eine query aufs orderarchive, werden typischerweise nur aufträge mit monitoringlevel &gt;= 10 angezeigt
+   * da eine query aufs orderarchive, werden typischerweise nur auftrï¿½ge mit monitoringlevel &gt;= 10 angezeigt
    */
   protected static String allActiveInstancesSQL = "select * from " + OrderInstanceDetails.TABLE_NAME
       + getWhereClauseStringBuilderForActiveInstancesFilter().toString() + " and ("

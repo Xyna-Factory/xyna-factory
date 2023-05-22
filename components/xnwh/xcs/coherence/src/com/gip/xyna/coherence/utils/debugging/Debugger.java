@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public final class Debugger {
 
   private static Debugger instance = new Debugger();
   private static final boolean enabled = true;
-  private static final boolean printNDC = true; //ndc an logmeldungen anhängen ist unabhängig von ndc-erzeugung in cachecontrollerimpl
+  private static final boolean printNDC = true; //ndc an logmeldungen anhï¿½ngen ist unabhï¿½ngig von ndc-erzeugung in cachecontrollerimpl
   private static final boolean printTimeStamps = false;
   private static final boolean printContext = false;
   private static final boolean forwardToLog4j = false;
@@ -179,7 +179,7 @@ public final class Debugger {
   
   public interface LogFilter {
     /**
-     * gibt true zurück, falls msg geloggt werden soll und false falls nicht.
+     * gibt true zurï¿½ck, falls msg geloggt werden soll und false falls nicht.
      */
     public boolean checkMessage(Logmessage msg);
   }

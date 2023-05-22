@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -400,7 +400,7 @@ public class CastAndNewCodeTest extends TestDeploymentItemBuildSetup {
 "        <Data ID=\"5\" Label=\"Base\" ReferenceName=\"Base\" ReferencePath=\"bg.test.xfl.newAndCast\" VariableName=\"base5\"/>"+
 "        <Target RefID=\"4\"/>"+
 "      </Output>"+
-"      <Mapping>%0%#cast(\"" + DT_SUB2_FQNAME +"\").aString~=\"Täst\"</Mapping>"+
+"      <Mapping>%0%#cast(\"" + DT_SUB2_FQNAME +"\").aString~=\"Tï¿½st\"</Mapping>"+
 "    </Mappings>"+
 "    <Data ID=\"4\" Label=\"Base\" ReferenceName=\"Base\" ReferencePath=\"bg.test.xfl.newAndCast\" VariableName=\"base\">"+
 "      <Source RefID=\"6\"/>"+

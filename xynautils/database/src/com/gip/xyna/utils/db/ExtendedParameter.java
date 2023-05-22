@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import com.gip.xyna.utils.db.types.Timestamp;
 import com.gip.xyna.utils.db.types.XMLType;
 
 /**
- * ExtendedParameter erweitert Parameter, so dass einige Datentypen verwendet werden können, die
- * nicht direkt verwendet werden können, sondern einen Änderung des SQL-String nötig machen.
+ * ExtendedParameter erweitert Parameter, so dass einige Datentypen verwendet werden kï¿½nnen, die
+ * nicht direkt verwendet werden kï¿½nnen, sondern einen ï¿½nderung des SQL-String nï¿½tig machen.
  * <p>
  * Aufruf-Beispiel:
  * <code><pre>
@@ -61,13 +61,13 @@ END;
  *   <li> Date
  *   <li> Timestamp
  * <ul>
- * unterstützt.
+ * unterstï¿½tzt.
  * <p>
  *
  * Timestamps werden in die DB als UTC eingetragen.
  *
- * Achtung bei der Übergabe von NULL: der Typ der NULL kann nicht erkannt werden, daher können die
- * nötigen Umwandlungen in prepareSQLString() dann nicht durchgeführt werden. Dies äußert sich evtl.
+ * Achtung bei der ï¿½bergabe von NULL: der Typ der NULL kann nicht erkannt werden, daher kï¿½nnen die
+ * nï¿½tigen Umwandlungen in prepareSQLString() dann nicht durchgefï¿½hrt werden. Dies ï¿½uï¿½ert sich evtl.
  * in einem Fehler "PLS-00306: Falsche Anzahl oder Typen von Argumenten in Aufruf von...".
  * Dies ist insbesondere beim Typ Boolean der Fall: Hier muss der BooleanWrapper verwendet werden,
  * wenn der einzutragende Boolean NULL sein kann. Beispiel:

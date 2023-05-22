@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
 
 
 /**
- * Beschränkung von Events direkt beim Trigger
+ * Beschrï¿½nkung von Events direkt beim Trigger
  */
 public class ReceiveControlAlgorithm {
 
@@ -40,7 +40,7 @@ public class ReceiveControlAlgorithm {
   private boolean rejectRequestsAfterMaxReceives = false;
 
   /**
-   * Darf ein Receive durchgeführt werden?
+   * Darf ein Receive durchgefï¿½hrt werden?
    * @return
    */
   public boolean canReceive() {
@@ -48,20 +48,20 @@ public class ReceiveControlAlgorithm {
       return true; //unbegrenzte Receives
     }
     if( currentActiveEvents.get() < maxReceives ) {
-      return true; //maxReceives ist nicht überschritten
+      return true; //maxReceives ist nicht ï¿½berschritten
     }
     
     if (rejectRequestsAfterMaxReceives) {
       return true; //darf gelesen werden, muss aber evtl. rejected werden
     } else {
-      return false; //kein autoreject, daher darf kein Receive durchgeführt werden
+      return false; //kein autoreject, daher darf kein Receive durchgefï¿½hrt werden
     }
   }
 
   /**
    * ReceiveControlAlgorithm wird benachrichtigt, dass ein Receive stattgefunden hat.
-   * Rückgabe ist, ob Event abgelehnt werden muss.
-   * @return null, wenn Event akzeptiert wird, ansonsten Begründung
+   * Rï¿½ckgabe ist, ob Event abgelehnt werden muss.
+   * @return null, wenn Event akzeptiert wird, ansonsten Begrï¿½ndung
    */
   public String notifyReceive() {
     long cnt = currentActiveEvents.incrementAndGet();
@@ -78,7 +78,7 @@ public class ReceiveControlAlgorithm {
     currentActiveEvents.decrementAndGet();
     long l = 0;
     while ((l = currentActiveEvents.get()) < 0) {
-      //das versteckt fehler, ist aber notwendig, damit die konfiguration von maxTriggerEvents möglich ist, während der trigger läuft.
+      //das versteckt fehler, ist aber notwendig, damit die konfiguration von maxTriggerEvents mï¿½glich ist, wï¿½hrend der trigger lï¿½uft.
       currentActiveEvents.compareAndSet(l, 0);
     }
   }
@@ -86,17 +86,17 @@ public class ReceiveControlAlgorithm {
   /**
    * bewirkt, dass {@link #notifyReceive()} erst wieder aufgerufen wird, wenn weniger als die angegebene zahl von 
    * events noch nicht verarbeitet wurde. <br>
-   * verarbeitet bedeutet, dass auf die zugehörige {@link TriggerConnection} die methode {@link TriggerConnection#close()}
+   * verarbeitet bedeutet, dass auf die zugehï¿½rige {@link TriggerConnection} die methode {@link TriggerConnection#close()}
    * aufgerufen wurde.<br>
    * dies geschieht automatisch am ende der methoden {@link EventListener#onProcessingRejected(String, TriggerConnection)}, {@link EventListener#onNoFilterFound(TriggerConnection)},
    * {@link ConnectionFilter#onError(XynaException[], com.gip.xyna.xprc.xpce.OrderContext)} und 
    * {@link ConnectionFilter#onResponse(GeneralXynaObject, com.gip.xyna.xprc.xpce.OrderContext)}.<br>
-   * kann auch manuell im filter aufgerufen werden, um die beschränkung für einen auftrag zu umgehen.
+   * kann auch manuell im filter aufgerufen werden, um die beschrï¿½nkung fï¿½r einen auftrag zu umgehen.
    * @param maxReceivesInParallel set to -1 to deactivate this feature. -1 also is the default. 0 means, the trigger doesnt produce any events.
    */
   public void setMaxReceivesInParallel(long maxReceivesInParallel) {
     if (maxReceives == -1) {
-      currentActiveEvents.set(0); //falls der trigger bereits im receive hängt, wird danach auf -1 runtergesetzt, das ist in decrementActiveEvents() abgefangen.
+      currentActiveEvents.set(0); //falls der trigger bereits im receive hï¿½ngt, wird danach auf -1 runtergesetzt, das ist in decrementActiveEvents() abgefangen.
     }
     maxReceives = maxReceivesInParallel;
   }

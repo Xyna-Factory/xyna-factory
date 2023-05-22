@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ public class CallserviceImpl extends XynaCommandImplementation<Callservice> {
     ExtendedPayload extendedPayload = new ExtendedPayload(payload);
     
     if(!RevisionManagement.REVISION_DEFAULT_WORKSPACE.equals(extendedPayload.getRevision())) {
-      //über ServiceDestination
+      //ï¿½ber ServiceDestination
       ServiceDestinationHelper sdh = new ServiceDestinationHelper(extendedPayload);
       DestinationKey destinationKey = sdh.prepareDestinationKey();
       CommandControl.Operation[] cmds =
@@ -97,7 +97,7 @@ public class CallserviceImpl extends XynaCommandImplementation<Callservice> {
         CommandControl.unlock(cmds, extendedPayload.getRevision());
       }
     } else {
-      //über Bau eines Workflows
+      //ï¿½ber Bau eines Workflows
       BuildWorkflowHelper bwh = new BuildWorkflowHelper(extendedPayload);
       bwh.createWorkflow();
       CommandControl.Operation[] ops =

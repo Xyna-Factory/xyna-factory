@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,12 +44,12 @@ public class OracleAQTriggerConnection extends TriggerConnection {
    * be closed by the trigger when the trigger is stopped
    */
   /*
-   Früher wurde responseQueue im Konstruktor gesetzt, responseConnection in einem Teil der Konstruktoren.
-   Dies ist nun nicht mehr nötig, die beiden Variablen werden immer null bleiben.
-   Die benötigten Information können nach Deserialisierung wieder aus dem Trigger entnommen werden,
+   Frï¿½her wurde responseQueue im Konstruktor gesetzt, responseConnection in einem Teil der Konstruktoren.
+   Dies ist nun nicht mehr nï¿½tig, die beiden Variablen werden immer null bleiben.
+   Die benï¿½tigten Information kï¿½nnen nach Deserialisierung wieder aus dem Trigger entnommen werden,
    der nun neu in der TriggerConnection wiederhergestellt wird.
   
-   Einziger Zweck von responseConnection und responseQueue ist nun noch die Abwärtskompatibilität: 
+   Einziger Zweck von responseConnection und responseQueue ist nun noch die Abwï¿½rtskompatibilitï¿½t: 
    Bereits serialisierte OracleAQTriggerConnections finden ihren Trigger nicht!
    */
   
@@ -269,7 +269,7 @@ public class OracleAQTriggerConnection extends TriggerConnection {
   public boolean isResponseConfigured() {
     OracleAQTrigger trigger = getTrigger();
     if( trigger == null ) {
-      return responseQueue != null; //Abwärtskompatinbilität!
+      return responseQueue != null; //Abwï¿½rtskompatinbilitï¿½t!
     } else {
       return trigger.isResponseConfigured();
     }

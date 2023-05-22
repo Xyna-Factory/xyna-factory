@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,8 +147,8 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
   /**
    * Escaped den String wie folgt:
    * - Backslash wird durch doppelt Backslash ersetzt
-   * - Anführungszeichen wird durch Backslash+Anführungszeichen ersetzt
-   * - String wird mit Anführungszeichen umgeben
+   * - Anfï¿½hrungszeichen wird durch Backslash+Anfï¿½hrungszeichen ersetzt
+   * - String wird mit Anfï¿½hrungszeichen umgeben
    * @param s
    * @return
    */
@@ -876,7 +876,7 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
   public static interface EscapeParams {
 
     /**
-     * Escaped den String für Like-Anfragen.
+     * Escaped den String fï¿½r Like-Anfragen.
      * @param s
      * @return
      */
@@ -913,12 +913,12 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
   }
   
   /**
-   * Wird von den PersistenceLayern verwendet. Für Like-Anfragen werden (unescapte) % durch eigene
+   * Wird von den PersistenceLayern verwendet. Fï¿½r Like-Anfragen werden (unescapte) % durch eigene
    * Wildcards ersetzt. Alle anderen Zeichen werden PersistenceLayer-spezifisch escaped. 
    * Equals-Anfragen werden nicht angepasst.
    * 
    * Verwandelt den param-String (angegeben in persistencelayer-neutralem Format) in das spezifische Format, was 
-   * der PersistenceLayer benötigt.
+   * der PersistenceLayer benï¿½tigt.
    * 
    * @param param
    * @param isLike
@@ -938,13 +938,13 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
     try {
       escapeParts = split(param);
     } catch (IllegalArgumentException ex) {
-      //falls der Parameter nicht aufgeteilt werden kann, dann ohne Anpassungen übernehmen
+      //falls der Parameter nicht aufgeteilt werden kann, dann ohne Anpassungen ï¿½bernehmen
       escapeParts.add(new EscapePart(param, EscapeState.ESCAPED));
     }
     
     for (EscapePart ep : escapeParts) {
       if (ep.getState() == EscapeState.ESCAPED) {
-        part.append(ep.getValue()); //escapte Anteile einfach übernehmen
+        part.append(ep.getValue()); //escapte Anteile einfach ï¿½bernehmen
       }
       
       if (ep.getState() == EscapeState.UNESCAPED) {
@@ -977,9 +977,9 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
 
 
   /**
-   * falls string null, wird null zurückgegeben
-   * falls string als literal escaped, wird inhalt zurückgegeben
-   * ansonsten wird der string direkt wieder zurückgegeben
+   * falls string null, wird null zurï¿½ckgegeben
+   * falls string als literal escaped, wird inhalt zurï¿½ckgegeben
+   * ansonsten wird der string direkt wieder zurï¿½ckgegeben
    */
   public static String getLiteral(String val) {
     if (val == null) {
@@ -1000,7 +1000,7 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
   
   /*public static void main(String... args) {
     OrderInstanceSelectParser oisp = new OrderInstanceSelectParser();
-    //System.out.println(oisp.convertIntoTokens("jdshak\\fhs%das OR öüßggfhds"));
+    //System.out.println(oisp.convertIntoTokens("jdshak\\fhs%das OR ï¿½ï¿½ï¿½ggfhds"));
     System.out.println(oisp.convertIntoTokens("a OR ass\"%b%\"sasa OR c AND !(aa OR bb)"));
   }*/
   

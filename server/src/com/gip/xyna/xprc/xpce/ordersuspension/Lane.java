@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.List;
 import com.gip.xyna.utils.StringUtils;
 
 /**
- * Lane besteht aus einer LaneId (Beispiel P1-3,P2-1). Über getLanePartsForParallelExecutors kann die Lane in einzelne LaneParts zerteilt werden,
+ * Lane besteht aus einer LaneId (Beispiel P1-3,P2-1). ï¿½ber getLanePartsForParallelExecutors kann die Lane in einzelne LaneParts zerteilt werden,
  * diese bestehen aus Paaren, die mit Minuszeichen verbunden sind (parallelExecutorId-taskId).
  * 
  * Eine Lane(Id) bezeichnet die Koordinate/Pfad eines Knotens in der Hierarchie von ParallelExecutors

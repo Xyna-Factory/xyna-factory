@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,10 +141,10 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
 
   /*
    * TODO zuordnungsregeln erweitern:
-   * - labels berücksichtigen (mit und ohne leerzeichen)
-   * - groß/kleinschreibung konfigurierbar
-   * - benutzer kann selbst ein mapping übergeben
-   * - parametrisierbarkeit dieser konfigurationsmöglichkeiten 
+   * - labels berï¿½cksichtigen (mit und ohne leerzeichen)
+   * - groï¿½/kleinschreibung konfigurierbar
+   * - benutzer kann selbst ein mapping ï¿½bergeben
+   * - parametrisierbarkeit dieser konfigurationsmï¿½glichkeiten 
    */
   //TODO reflection cachen
   public void fillXynaObject(GeneralXynaObject xo, JSONObject job, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels) {
@@ -284,7 +284,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
             }
             break;
           case ARRAY :
-            //TODO support für vorinstanziierte listenelemente
+            //TODO support fï¿½r vorinstanziierte listenelemente
             if (typeOfField == List.class) {
               if (genericType instanceof ParameterizedType) {
                 ParameterizedType pt = (ParameterizedType) genericType;

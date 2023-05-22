@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,9 @@ public interface TCMInterface extends Remote {
   
   /**
    * TimeWindow darf nicht mehr zum Schedulen verwendet werden
-   * Bei Force == false wird zuerst geprüft, ob TimeWindow noch in Verwendung ist;
+   * Bei Force == false wird zuerst geprï¿½ft, ob TimeWindow noch in Verwendung ist;
    * wenn ja, wird XPRC_Scheduler_TimeWindowStillUsedException geworfen
-   * Aus DB wird nicht gelöscht
+   * Aus DB wird nicht gelï¿½scht
    * @param name
    * @param force
    * @throws RemoteException

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ import com.gip.xyna.xprc.xsched.capacities.CapacityAllocationResult;
 public interface CapacityReservation {
   
   /**
-   * Reservieren einer Capacity für ein fremdes Binding. Die Capacity steht dann lokal nicht mehr zu Verfügung,
-   * ist aber noch nicht an den anderen Knoten übertragen.
+   * Reservieren einer Capacity fï¿½r ein fremdes Binding. Die Capacity steht dann lokal nicht mehr zu Verfï¿½gung,
+   * ist aber noch nicht an den anderen Knoten ï¿½bertragen.
    * @param binding
    * @param capacity
    * @return true, wenn Capacity reserviert werden konnte
@@ -39,8 +39,8 @@ public interface CapacityReservation {
   int reserveCap(int binding, Capacity capacity);
   
   /**
-   * Übertragen aller reservierten Capacities an die anderen Knoten
-   * @return Anzahl aller übertragenen Capacities
+   * ï¿½bertragen aller reservierten Capacities an die anderen Knoten
+   * @return Anzahl aller ï¿½bertragenen Capacities
    */
   public int transportReservedCaps();
   
@@ -72,14 +72,14 @@ public interface CapacityReservation {
 
   
   /**
-   * Ausgabe von ausführlichen Informationen
+   * Ausgabe von ausfï¿½hrlichen Informationen
    * @param sb
    * @param unsatisfiedOldCapacityDemands 
    */
   void listExtendedSchedulerInfo(StringBuilder sb, List<CapacityDemandForNode> unsatisfiedOldCapacityDemands);
 
   /**
-   * Capacity hat sich im Cache geändert
+   * Capacity hat sich im Cache geï¿½ndert
    * @param capName
    */
   void refreshCapacity(String capName);

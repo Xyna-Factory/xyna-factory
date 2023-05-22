@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public class MigrationSerialVersionIgnoringOrderInstanceBackup extends OrderInst
 
   /**
    * liest das backup derart, dass:<br>
-   * - in dem zurückgegebenen backup die revision auf "to" steht, falls vorher "from" drin stand<p>
+   * - in dem zurï¿½ckgegebenen backup die revision auf "to" steht, falls vorher "from" drin stand<p>
    * - beim deserialisieren die bestehende serialversionuid ignoriert wird (sondern die von rootRevision angenommen wird). falls rootRevision null ist, wird die von oib.getRevision verwendet<p>
    * @param from
    * @param to

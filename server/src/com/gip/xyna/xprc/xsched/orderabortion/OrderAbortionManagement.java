@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -241,7 +241,7 @@ public class OrderAbortionManagement extends FunctionGroup
       ExecutionDispatcher execDispatcher =
           XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaExecution()
               .getExecutionEngineDispatcher();
-      // Suche nach Aufträge die über callService aufgerufen wurden.
+      // Suche nach Auftrï¿½ge die ï¿½ber callService aufgerufen wurden.
       if (execDispatcher.containsServiceExecutionsFromOrder(orderId)) {
         if (logger.isDebugEnabled()) {
           logger.debug("aborting order " + orderId + " as service destination");
@@ -270,7 +270,7 @@ public class OrderAbortionManagement extends FunctionGroup
       }
 
       //6a. wir haben das auftragsobjekt
-      //könnte jetzt bereits suspended sein.
+      //kï¿½nnte jetzt bereits suspended sein.
       if (xo != null) {
         //nur bei rekursion der fall
         if (xo.getExecutionProcessInstance() != null) {
@@ -315,7 +315,7 @@ public class OrderAbortionManagement extends FunctionGroup
       }
     }
 
-    //8. order nicht abbrechen können -> aufräumen, aber erst beim anderen clusterknoten schauen falls vorhanden.
+    //8. order nicht abbrechen kï¿½nnen -> aufrï¿½umen, aber erst beim anderen clusterknoten schauen falls vorhanden.
     if (xo == null) {
       return false;
     } else {
@@ -332,7 +332,7 @@ public class OrderAbortionManagement extends FunctionGroup
 
   public boolean cleanupOrderRelicsForFamily(long rootOrderId, KillStuckProcessBean bean)
       throws PersistenceLayerException {
-    //TODO für bessere meldung in orderarchive history schauen: evtl war der auftrag schon archiviert?
+    //TODO fï¿½r bessere meldung in orderarchive history schauen: evtl war der auftrag schon archiviert?
     if (logger.isDebugEnabled()) {
       logger.debug("order " + rootOrderId + " not found in factory. trying to cleanup corresponding data.");
     }
@@ -342,7 +342,7 @@ public class OrderAbortionManagement extends FunctionGroup
     ordersInFamily.add(bean.getOrderIdToBeKilled());
     ODSConnection con = ODSImpl.getInstance().openConnection();
     try {
-      //checken, ob auftrag jung ist und orderarchive default aufräumen
+      //checken, ob auftrag jung ist und orderarchive default aufrï¿½umen
       if (queryFamily == null) {
         synchronized (this) { //doublecheckedpattern so (ohne volatile variable) ok, weil query mehrfach prepared werden darf
           if (queryFamily == null) {
@@ -388,12 +388,12 @@ public class OrderAbortionManagement extends FunctionGroup
         }
       }
 
-      //suspension causes aufräumen
+      //suspension causes aufrï¿½umen
       XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getSuspendResumeManagement().
         cleanupOrderFamily(rootOrderId, ordersInFamily, con);
       con.commit();
       
-      //orderbackup aufräumen
+      //orderbackup aufrï¿½umen
       PreparedQuery<OrderInstanceBackup> queryBackups =
           con.prepareQuery(new Query<OrderInstanceBackup>("select "+OrderInstanceBackup.COL_ID+" from " + OrderInstanceBackup.TABLE_NAME + " where "
               + OrderInstanceBackup.COL_ROOT_ID + " = ?", OrderInstanceBackup.getSelectiveReader()));
@@ -489,7 +489,7 @@ public class OrderAbortionManagement extends FunctionGroup
         return abortSuspendedWorkflowInternal(rootId, null, ignoreResourcesWhenResuming, false);
       }
 
-      //check über backup
+      //check ï¿½ber backup
       ODSConnection con = ODSImpl.getInstance().openConnection();
       try {
         if (queryRootOrderIdInOrderBackup == null) {
@@ -510,7 +510,7 @@ public class OrderAbortionManagement extends FunctionGroup
           rootId = result.getFirst();
           String backupCause = con.queryOneRow(getQueryBackupCause(con), new Parameter(rootId));
           if (backupCause != null && backupCause.equals(BackupCause.SUSPENSION.name())) {
-            //abortSuspendedWorkflow holt intern neue Connection. Übergeben der Connection ist wegen 
+            //abortSuspendedWorkflow holt intern neue Connection. ï¿½bergeben der Connection ist wegen 
             //"Lock-reihenfolge" nicht gut, vgl Kommentar in ResumeOrderJavaDestination
             con.closeConnection();
             suspended = abortSuspendedWorkflowInternal(rootId, null, ignoreResourcesWhenResuming, false);

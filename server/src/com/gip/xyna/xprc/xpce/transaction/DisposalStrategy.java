@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -246,7 +246,7 @@ public abstract class DisposalStrategy {
               break;
           }
         } catch (IllegalArgumentException e) {
-          // ntbd, methode wird z.b. auch für suspension zustandsübergänge aufgerufen, die interessieren uns nicht
+          // ntbd, methode wird z.b. auch fï¿½r suspension zustandsï¿½bergï¿½nge aufgerufen, die interessieren uns nicht
         }
       }
     }

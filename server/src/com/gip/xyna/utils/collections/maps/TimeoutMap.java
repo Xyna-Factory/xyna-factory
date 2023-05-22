@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.queues.SimpleDelayQueue;
 
 /**
- * TimeoutMap speichert wie eine Map, verliert die Einträge jedoch nach einem Timeout, 
+ * TimeoutMap speichert wie eine Map, verliert die Eintrï¿½ge jedoch nach einem Timeout, 
  * welches beim Eintragen gesetzt wird.
  * 
  * TODO Zugriffe auf timeouts und map sind nicht atomar, daher nicht richtig threadsafe!
@@ -43,7 +43,7 @@ public class TimeoutMap<K,V> implements Map<K,V> {
   }
   
   /**
-   * wird bei jeder Map-Operation gerufen, um alte Einträge zu entfernen
+   * wird bei jeder Map-Operation gerufen, um alte Eintrï¿½ge zu entfernen
    */
   private void removeOldEntries() {
     K key = timeouts.poll();
@@ -66,7 +66,7 @@ public class TimeoutMap<K,V> implements Map<K,V> {
     if( ! removed ) {
       return false;
     }
-    while( removed ) { //Mehrfacheinträge entfernen
+    while( removed ) { //Mehrfacheintrï¿½ge entfernen
       removed = timeouts.remove(key);
     }
     timeouts.add(key, timeToLive);
@@ -88,7 +88,7 @@ public class TimeoutMap<K,V> implements Map<K,V> {
   
   /**Stellt sicher, dass Eintrag eingetragen ist und Timeout aktuell ist
    * TODO nicht ganz richtig: anderer Thread 
-   * könnte währenddessen Timeout sehen und map anschließend leeren...
+   * kï¿½nnte wï¿½hrenddessen Timeout sehen und map anschlieï¿½end leeren...
    * @param key
    * @param value
    * @param timeToLive

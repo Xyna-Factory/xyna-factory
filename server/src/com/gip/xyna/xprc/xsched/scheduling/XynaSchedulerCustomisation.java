@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,19 +122,19 @@ public class XynaSchedulerCustomisation implements SchedulerCustomisation<Schedu
   
   
   private TryScheduleResult tryScheduleOrder(SchedulingOrder so) { 
-    synchronized (so) { //SchedulingOrder kann nicht mehr fremd durch AllOrders.remove etc. verändert werden
+    synchronized (so) { //SchedulingOrder kann nicht mehr fremd durch AllOrders.remove etc. verï¿½ndert werden
       if( so.isLocked() ) {
-        return TryScheduleResult.RETRY_NEXT; //Auftrag überspringen und Scheduling wiederholen
+        return TryScheduleResult.RETRY_NEXT; //Auftrag ï¿½berspringen und Scheduling wiederholen
       }
-      if( so.isWaitingOrLocked() ) { //locked sollte hier nicht auftreten können
-        return TryScheduleResult.CONTINUE; //Auftrag überspringen
+      if( so.isWaitingOrLocked() ) { //locked sollte hier nicht auftreten kï¿½nnen
+        return TryScheduleResult.CONTINUE; //Auftrag ï¿½berspringen
       }
       if( so.isMarkedAsRemove() ) {
         //XynaOrder wurde durch ein CancelOrder/Suspend/etc. im XynaScheduler entfernt
         return TryScheduleResult.DELETE;
       }
       if( so.isAlreadyScheduled() ) {
-        //XynaOrder wurde bereits geschedult, aber nicht aus der Liste gelöscht. 
+        //XynaOrder wurde bereits geschedult, aber nicht aus der Liste gelï¿½scht. 
         //Dies kann auftreten, wenn die SchedulingOrder in AllOrdersList.rescheduleOrder(..) gelangt
         logger.warn("Already scheduled "+so);
         return TryScheduleResult.DELETE;
@@ -160,7 +160,7 @@ public class XynaSchedulerCustomisation implements SchedulerCustomisation<Schedu
   
   private ScheduleResult switchTryScheduleResult( TryScheduleResult result, Urgency<SchedulingOrder> uo ) {
     SchedulingOrder so = uo.getOrder();
-    so.setTag(null); //bisherige Tags löschen
+    so.setTag(null); //bisherige Tags lï¿½schen
     switch (result.getType()) {
       case SCHEDULE :
         //Auftrag wurde geschedult
@@ -173,11 +173,11 @@ public class XynaSchedulerCustomisation implements SchedulerCustomisation<Schedu
         so.setTag(capName);
         if( maxDemandTried ) {
           //es werden keine weiteren SchedulingOrders versucht zu schedulen, 
-          //die diese Capacity ebenfalls benötigen. (SchedulingOrders müssen bereits getaggt sein) 
+          //die diese Capacity ebenfalls benï¿½tigen. (SchedulingOrders mï¿½ssen bereits getaggt sein) 
           return new TagScheduleResult(capName, true);
         } else {
-          //obwohl bekannt ist, dass die Capacity nicht mehr verfügbar ist, müssen trotzdem weitere
-          //Aufträge geschedult werden, um dem anderen Knoten den Bedarf melden zu können
+          //obwohl bekannt ist, dass die Capacity nicht mehr verfï¿½gbar ist, mï¿½ssen trotzdem weitere
+          //Auftrï¿½ge geschedult werden, um dem anderen Knoten den Bedarf melden zu kï¿½nnen
           return new TagScheduleResult(capName, false);
         }
       case VETO :
@@ -205,10 +205,10 @@ public class XynaSchedulerCustomisation implements SchedulerCustomisation<Schedu
       case PAUSE:
         return new TagScheduleResult("paused", true);
       case CONTINUE :
-        //Auftrag soll aus irgendeinem Grund übersprungen werden
+        //Auftrag soll aus irgendeinem Grund ï¿½bersprungen werden
         break;
       case RETRY_NEXT :
-        notifyScheduler(); //sicherstellen, dass es einen nächsten Schedulerlauf gibt
+        notifyScheduler(); //sicherstellen, dass es einen nï¿½chsten Schedulerlauf gibt
         return ScheduleResult.Continue;
       case REORDER :
         return ScheduleResult.Reorder;
@@ -226,7 +226,7 @@ public class XynaSchedulerCustomisation implements SchedulerCustomisation<Schedu
   }
 
   public void postparation() {
-    //Caps fuer andere Knoten reservieren, eigenen Bedarf melden und Capacities übertragen
+    //Caps fuer andere Knoten reservieren, eigenen Bedarf melden und Capacities ï¿½bertragen
     xscCapacities.capacityReservation(informationBuilder.getSchedulerInformationBean());
 
     xscCapacities.setUnsatisfiedForeignDemand(informationBuilder.getSchedulerInformationBean());

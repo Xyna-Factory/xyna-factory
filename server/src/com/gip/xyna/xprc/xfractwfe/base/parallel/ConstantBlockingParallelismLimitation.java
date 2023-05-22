@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import com.gip.xyna.xprc.xpce.ordersuspension.ProcessSuspendedException;
 
 
 /**
- * usecase: die aufträge haben kapazitäten, man will aber auf eine geringere anzahl als die kardinalität der kapazität beschränken.
- * dann benötigt man hier trotzdem, dass die aufträge die die kapazitäten beim suspend nicht freigeben, später wieder
+ * usecase: die auftrï¿½ge haben kapazitï¿½ten, man will aber auf eine geringere anzahl als die kardinalitï¿½t der kapazitï¿½t beschrï¿½nken.
+ * dann benï¿½tigt man hier trotzdem, dass die auftrï¿½ge die die kapazitï¿½ten beim suspend nicht freigeben, spï¿½ter wieder
  * gestartet werden, damit es nicht zu deadlocks kommt
  * deadlocksituation:
- *  - alle (limitierten) lanes der parallelität sind durch aufträge verstopft, die im scheduler auf kapazität warten
- * - alle aufträge, die die kapazität haben, kommen nicht durch die parallelität durch
+ *  - alle (limitierten) lanes der parallelitï¿½t sind durch auftrï¿½ge verstopft, die im scheduler auf kapazitï¿½t warten
+ * - alle auftrï¿½ge, die die kapazitï¿½t haben, kommen nicht durch die parallelitï¿½t durch
  */
 public class ConstantBlockingParallelismLimitation extends AbstractBlockingParallelismLimitation {
 
@@ -46,7 +46,7 @@ public class ConstantBlockingParallelismLimitation extends AbstractBlockingParal
 
   @Override
   public boolean shouldLaneBeBlocked(ProcessSuspendedException suspendedException) {
-    //FIXME wenn die aufträge keine capacities brauchen, sperrt man unnützerweise lanes!
+    //FIXME wenn die auftrï¿½ge keine capacities brauchen, sperrt man unnï¿½tzerweise lanes!
     return ! suspendedException.getSuspensionCause().needToFreeCapacities();
   }
 

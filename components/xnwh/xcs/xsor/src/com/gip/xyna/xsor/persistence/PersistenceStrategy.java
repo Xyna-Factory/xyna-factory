@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import com.gip.xyna.xsor.protocol.XSORPayload;
 
 
 /**
- * Schnittstelle zur Persistierung der in der Kohärenz gehaltenen Daten
- * Die Methoden werden alle synchron aufgerufen. falls asynchrone Persistierung gewünscht ist, muss 
- * die Implementierung der {@link PersistenceStrategy} sich selbst darum kümmern.
+ * Schnittstelle zur Persistierung der in der Kohï¿½renz gehaltenen Daten
+ * Die Methoden werden alle synchron aufgerufen. falls asynchrone Persistierung gewï¿½nscht ist, muss 
+ * die Implementierung der {@link PersistenceStrategy} sich selbst darum kï¿½mmern.
  */
 public interface PersistenceStrategy {
 
@@ -63,9 +63,9 @@ public interface PersistenceStrategy {
 
 
   /**
-   * das übergebene objekt wird vom aufrufer nicht weiterverwendet, kann also 
-   * beliebig lange gehalten werden, ohne davon ausgehen zu müssen, dass
-   * es von jemand anderem geändert wird.
+   * das ï¿½bergebene objekt wird vom aufrufer nicht weiterverwendet, kann also 
+   * beliebig lange gehalten werden, ohne davon ausgehen zu mï¿½ssen, dass
+   * es von jemand anderem geï¿½ndert wird.
    */
   public void createObject(XSORPayload xsorPayload, long releaseTime, long modificationTime) throws PersistenceException;
 

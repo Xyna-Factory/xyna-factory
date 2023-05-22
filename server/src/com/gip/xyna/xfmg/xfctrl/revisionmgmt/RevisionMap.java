@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import com.gip.xyna.utils.collections.WrappedMap;
 
 /**
  * RevisionMap ist eine Map vond Revision auf eine &lt;V&gt;-Instanz.
- * Sie hat nicht nur die üblichen Map-Zugriffe, sondern vor allem eine getOrCreate-Methode,
+ * Sie hat nicht nur die ï¿½blichen Map-Zugriffe, sondern vor allem eine getOrCreate-Methode,
  * mit der neue &lt;V&gt;-Instanzen erstellt werden.
- * Dazu dient die Implementierung des ValueCreator-Interfaces, die im Konstruktor übergeben werden muss.
+ * Dazu dient die Implementierung des ValueCreator-Interfaces, die im Konstruktor ï¿½bergeben werden muss.
  * 
  * TODO Es fehlt eine automatische Benachrichtigung, wenn die Revision aus dem RevisionManagement entfernt wird.
  * 

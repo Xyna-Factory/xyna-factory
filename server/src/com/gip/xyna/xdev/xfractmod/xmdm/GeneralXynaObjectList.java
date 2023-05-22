@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -520,7 +520,7 @@ public class GeneralXynaObjectList<I extends GeneralXynaObject> implements Gener
         return false;
       }
       if (!xol.getContainedFQTypeName().equals(otherList.getContainedFQTypeName())) {
-        //xml ist dann anders. und für audits muss dann der contained typ mit in die audits aufgenommen werden (insbesondere wenn liste leer ist)
+        //xml ist dann anders. und fï¿½r audits muss dann der contained typ mit in die audits aufgenommen werden (insbesondere wenn liste leer ist)
         return false;
       }
       for (int i = 0; i < l.size(); i++) {
@@ -555,7 +555,7 @@ public class GeneralXynaObjectList<I extends GeneralXynaObject> implements Gener
       if (onlyContent) {
         appendValues(xml, varName, version, cache, l);
       } else {
-        // zusätzliches Data element drumrumwrappen, welches IsList=true enthält
+        // zusï¿½tzliches Data element drumrumwrappen, welches IsList=true enthï¿½lt
 
         xml.append("<Data " + GenerationBase.ATT.REFERENCEPATH + "=\"").append(originalXmlPath)
             .append("\" " + GenerationBase.ATT.REFERENCENAME + "=\"").append(originalXmlName)

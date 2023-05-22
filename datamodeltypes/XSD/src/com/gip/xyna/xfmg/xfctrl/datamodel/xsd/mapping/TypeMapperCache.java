@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,12 +57,12 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 
 
 /**
- * TypeMapperCache erzeugt und sammelt alle TypeMapper, die zu einem Target gehören.
+ * TypeMapperCache erzeugt und sammelt alle TypeMapper, die zu einem Target gehï¿½ren.
  * 
- * Im Konstruktor wird eine Collection aller zum Target gehörenden TypeMappingEntries 
- * übergeben und daraus alle TypeMapper gebaut. 
+ * Im Konstruktor wird eine Collection aller zum Target gehï¿½renden TypeMappingEntries 
+ * ï¿½bergeben und daraus alle TypeMapper gebaut. 
  * 
- * Folgende Methoden können dann verwendet werden:
+ * Folgende Methoden kï¿½nnen dann verwendet werden:
  * <ul>
  * <li> {@link #createXynaObjectForRootElement(Element)} ein </li>
  * </ul>
@@ -221,7 +221,7 @@ public class TypeMapperCache {
   }
 
   /**
-   * Erzeugt ein XynaObject für das übergebene RootElement
+   * Erzeugt ein XynaObject fï¿½r das ï¿½bergebene RootElement
    * @param element
    * @return
    * @throws XynaObjectCreationException
@@ -233,7 +233,7 @@ public class TypeMapperCache {
   }
   
   private TypeMapper getTypeMapperForRootElement(Element element) throws XynaObjectCreationException {
-    //RootElemente müssen eindeutigen FQName haben
+    //RootElemente mï¿½ssen eindeutigen FQName haben
     FQName name = new FQName( element.getNamespaceURI(), element.getLocalName());
     TypeMapper typeMapper = rootElementTypeMappers.get(name);
     if( typeMapper != null ) {
@@ -259,8 +259,8 @@ public class TypeMapperCache {
   }
 
   /**
-   * Erzeugt ein XML für das übergebene XynaObject 
-   * Falls im XSD mehrere RootElemente für diesen Typ möglich sind, muss der RootElementName angegeben werden.
+   * Erzeugt ein XML fï¿½r das ï¿½bergebene XynaObject 
+   * Falls im XSD mehrere RootElemente fï¿½r diesen Typ mï¿½glich sind, muss der RootElementName angegeben werden.
    * @param xo
    * @return
    * @throws XmlCreationException 
@@ -291,7 +291,7 @@ public class TypeMapperCache {
       
       Element root = typeMapper.fillXmlElement(xmlContext, xmlContext.createElement(true, rootElement), xo);
       
-      //Namespaces definieren und ans Root-Element anhängen
+      //Namespaces definieren und ans Root-Element anhï¿½ngen
       xmlContext.appendNamespaces(root);
       
       doc.appendChild( root );
@@ -309,7 +309,7 @@ public class TypeMapperCache {
     boolean rootElementsExists = typeMapper.getRootElements() != null && typeMapper.getRootElements().size() > 0;
     if( rootElementsExists ) {
       if( rootElementName != null ) {
-        //Versuchen, den übergebenen rootElementName zu finden
+        //Versuchen, den ï¿½bergebenen rootElementName zu finden
         for( FQName root : typeMapper.getRootElements() ) {
           if( root.getName().equals(rootElementName) ) {
             return root;

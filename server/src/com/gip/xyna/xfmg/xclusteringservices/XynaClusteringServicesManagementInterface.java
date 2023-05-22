@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ public interface XynaClusteringServicesManagementInterface {
 
 
   /**
-   * für jeden unterstützten clustertype (z.B. oracle RAC, direct RMI-communication, etc) ein string, der beschreibt,
+   * fï¿½r jeden unterstï¿½tzten clustertype (z.B. oracle RAC, direct RMI-communication, etc) ein string, der beschreibt,
    * welche parameter {@link #joinCluster(String, String[], String)} und
    * {@link #setupNewCluster(String, String[], String)} haben.
    */
@@ -85,9 +85,9 @@ public interface XynaClusteringServicesManagementInterface {
   // public long getClusterStateHash(long clusterId) throws XFMG_UnknownClusterInstanceIDException;
 
   /**
-   * @param clusterType im verzeichnis server/clusterproviders muss ein unterverzeichnis mit dem übergebenen namen
+   * @param clusterType im verzeichnis server/clusterproviders muss ein unterverzeichnis mit dem ï¿½bergebenen namen
    *          existieren und darin ein jar-file, welches eine klasse {@link Constants#CLUSTER_PROVIDER_BASE_PACKAGE}
-   *          /&lt;clusterType&gt; enthält.
+   *          /&lt;clusterType&gt; enthï¿½lt.
    */
   public void registerClusterProvider(String clusterType) throws XFMG_ClusterProviderFilesNotFoundException,
       PersistenceLayerException;
@@ -104,7 +104,7 @@ public interface XynaClusteringServicesManagementInterface {
   public Set<Clustered> listClusterableComponents();
 
   /**
-   * @throws XFMG_ClusterComponentConfigurationException falls früher bereits configured war, und clustered den fehler bei enableCluster wirft
+   * @throws XFMG_ClusterComponentConfigurationException falls frï¿½her bereits configured war, und clustered den fehler bei enableCluster wirft
    */
   public void registerClusterableComponent(Clustered clusterableComponent) throws XFMG_ClusterComponentConfigurationException;
 

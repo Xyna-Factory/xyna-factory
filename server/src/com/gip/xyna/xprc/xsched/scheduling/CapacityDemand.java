@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,11 +120,11 @@ public class CapacityDemand implements Serializable {
       int add = demand;
       //if( count+add > maxDemand ) {
       //  add = maxDemand-count;
-      //} doch ruhig mehr fordern, damit es in jedm Fall reicht. Sonst wäre folgendes möglich:
-      //3 Caps vorhanden, 2 auf A, 1 auf B. Knoten B möchte mit hoher Urgency Auftrag mit 2 Caps schedulen,
-      //Knoten A einen Auftrag mit niedriger Urgency. Was passiert? A erfüllt zuerst die Forderung von B und 
+      //} doch ruhig mehr fordern, damit es in jedm Fall reicht. Sonst wï¿½re folgendes mï¿½glich:
+      //3 Caps vorhanden, 2 auf A, 1 auf B. Knoten B mï¿½chte mit hoher Urgency Auftrag mit 2 Caps schedulen,
+      //Knoten A einen Auftrag mit niedriger Urgency. Was passiert? A erfï¿½llt zuerst die Forderung von B und 
       //gibt eine Cap an B ab und fordert dann maximal 1 Cap von B. B kann nun schedulen und gibt eine Cap 
-      //an A zurück. Nun fehlt A noch eine Cap, die er jedoch nicht mehr fordert, da er den gleichen Bedarf 
+      //an A zurï¿½ck. Nun fehlt A noch eine Cap, die er jedoch nicht mehr fordert, da er den gleichen Bedarf 
       //bereits geschickt hat.
       if( add > 0 ) {
         sumUrgencies += 1.0*add*urgency;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class ConfigureordercontextmappingImpl extends XynaCommandImplementation<
 
   public void execute(OutputStream statusOutputStream, Configureordercontextmapping payload) throws XynaException {
     
-    // Prüfung, ob Application/Version existiert
+    // Prï¿½fung, ob Application/Version existiert
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     RuntimeContext runtimeContext = RevisionManagement.getRuntimeContext(payload.getApplicationName(), payload.getVersionName(), payload.getWorkspaceName());
     Long revision = revisionManagement.getRevision(runtimeContext);

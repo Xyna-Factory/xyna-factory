@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,7 +157,7 @@ public class VCP_Clustered extends VCP_Abstract {
     boolean failed = false;
     if( response.isFailed() ) {
       //FIXME was nun? 
-      //Sollte eigentlich nicht auftreten außer bei disconnect
+      //Sollte eigentlich nicht auftreten auï¿½er bei disconnect
       logger.warn( "VetoResponse is failed " + response );
       failed = true;
     } else if( currentRequest.getId() != response.getId() ) {
@@ -202,7 +202,7 @@ public class VCP_Clustered extends VCP_Abstract {
     List<Pair<VetoRequestEntry,VetoResponseEntry>> combi = new ArrayList<Pair<VetoRequestEntry,VetoResponseEntry>>();
     Iterator<VetoRequestEntry> reqIter = request.getEntries().iterator();
     Iterator<VetoResponseEntry> respIter = response.getResponses().iterator();
-    while( reqIter.hasNext() && respIter.hasNext() ) { //TODO Länge prüfen, Namen prüfen
+    while( reqIter.hasNext() && respIter.hasNext() ) { //TODO Lï¿½nge prï¿½fen, Namen prï¿½fen
       combi.add( Pair.of(reqIter.next(), respIter.next() ) );
       
     }
@@ -227,10 +227,10 @@ public class VCP_Clustered extends VCP_Abstract {
       case ADMIN: //administratives Veto muss gleich in DB eingetragen werden
         next =  State.Scheduled;
         break;
-      case LOCAL: //anderer Knoten erhält Veto
+      case LOCAL: //anderer Knoten erhï¿½lt Veto
         next =  State.Remote;
         break;
-      case REMOTE: //Knoten erhält Veto
+      case REMOTE: //Knoten erhï¿½lt Veto
         next =  State.Local;
         break;
       case UNUSED: // Veto wird nicht mehr verwendet
@@ -263,16 +263,16 @@ public class VCP_Clustered extends VCP_Abstract {
   }
 
   public boolean isVetoPreferred(long ownUrgency, VetoCacheEntry veto) {
-    //Über Long.bitCount(ownUrgency) % 2 wird eine möglichst "zufällige" Zahl 0 oder 1 auf beiden Knoten gleich
+    //ï¿½ber Long.bitCount(ownUrgency) % 2 wird eine mï¿½glichst "zufï¿½llige" Zahl 0 oder 1 auf beiden Knoten gleich
     //ermittelt und mit ownBinding verglichen, diese ergibt dann nur auf einem Knoten true.
-    //ownUrgency % 2 ergibt häufig 0, wenn die Auftragsstartzeit nur sekundengenau angegeben wurde.
+    //ownUrgency % 2 ergibt hï¿½ufig 0, wenn die Auftragsstartzeit nur sekundengenau angegeben wurde.
     return ownBinding % 2 == Long.bitCount(ownUrgency) % 2;
   }
 
   
   @Override
   protected boolean processRemote(VetoCacheEntry veto) {
-    //nicht bearbeiten, muss über RMI geschehen
+    //nicht bearbeiten, muss ï¿½ber RMI geschehen
     return false; 
   }
   @Override
@@ -361,8 +361,8 @@ public class VCP_Clustered extends VCP_Abstract {
     //Bearbeitung der VetoResponses vom anderen Knoten als Antwort auf die eigenen Requests
     VetoCacheEntry veto = vetoCache.get(requestResponse.getSecond().getName());
     if( veto == null ) {
-      return; //sollte eigentlich nicht auftreten, dass veto während der Remote-Kommunikation verschwindet
-      //aber besser gegen NPE schützen. Ein Reprocess hilft hier auch nicht mehr, da das veto nicht mehr existiert
+      return; //sollte eigentlich nicht auftreten, dass veto wï¿½hrend der Remote-Kommunikation verschwindet
+      //aber besser gegen NPE schï¿½tzen. Ein Reprocess hilft hier auch nicht mehr, da das veto nicht mehr existiert
     }
     VetoRequestEntry requestEntry = requestResponse.getFirst();
     VetoResponseEntry responseEntry = requestResponse.getSecond();

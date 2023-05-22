@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
   public abstract AVariable removeMemberVar(int index);
   
   /**
-   * reihenfolge: membervars von oberklasse zuerst. (je höher in hierarchie, desto früher werden die vars angegeben).
+   * reihenfolge: membervars von oberklasse zuerst. (je hï¿½her in hierarchie, desto frï¿½her werden die vars angegeben).
    * bei gleicher hierarchiestufe gilt die reihenfolge aus dem jeweiligen xml. 
    */
   public abstract List<AVariable> getAllMemberVarsIncludingInherited();
@@ -128,11 +128,11 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
   }
     
   private Set<GenerationBase> getSubTypesInternally(GenerationBaseCache parseAdditionalCache, boolean resolveFromGlobalCache) {
-    //dependencyregister bemühen. das mag zu beginn nicht vollständig sein, aber zu dem zeitpunkt sind die subtypen dann halt noch nicht bekannt. ok
+    //dependencyregister bemï¿½hen. das mag zu beginn nicht vollstï¿½ndig sein, aber zu dem zeitpunkt sind die subtypen dann halt noch nicht bekannt. ok
 
     Set<GenerationBase> ret = new HashSet<GenerationBase>();
 
-    //FIXME performance!!!! eigtl wäre es hier schön, wenn man die xmomdatabase verwenden könnte. man benötigt aber die informationen aus dem deployed ordner
+    //FIXME performance!!!! eigtl wï¿½re es hier schï¿½n, wenn man die xmomdatabase verwenden kï¿½nnte. man benï¿½tigt aber die informationen aus dem deployed ordner
     Set<DependencyNode> dependencies =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDependencyRegister()
             .getDependencies(getOriginalFqName(), getDependencySourceType(), revision, false);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,10 +62,10 @@ public class BatchProcessSelectParser extends DefaultSelectionParser<BatchProces
         case CONSTANT_INPUT :
           bps.selectConstantInput();
           break;
-        default : //nicht unterstützt
+        default : //nicht unterstï¿½tzt
       }
     } catch (IllegalArgumentException e) {
-      //hier werden einige spalten in der gui selektiert, für die selektion serverseitig nicht unterstützt ist
+      //hier werden einige spalten in der gui selektiert, fï¿½r die selektion serverseitig nicht unterstï¿½tzt ist
     }
   }
     

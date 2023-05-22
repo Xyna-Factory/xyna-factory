@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -215,7 +215,7 @@ public class XMOMAccess {
     final RepositoryTransaction transaction = repositoryAccess.beginTransaction("XMOMAccess initialization");
     try {
       List<RepositoryItemModification> modifiedFiles = null;
-      //nur die Verzeichnise für XMOMAccess auschecken/updaten, damit beim CodeAcces die Files noch als modified erkannt werden
+      //nur die Verzeichnise fï¿½r XMOMAccess auschecken/updaten, damit beim CodeAcces die Files noch als modified erkannt werden
       try {
         if (!new File(repositoryAccess.getLocalRepository()).exists()) {
           transaction.checkout(new String[] {""}, repositoryAccess.getHeadVersion(), RecursionDepth.TARGET_ONLY);
@@ -256,7 +256,7 @@ public class XMOMAccess {
     }
     
     //xmls auf aktuelle XMOM Version updaten
-    //TODO für Performence-Verbesserung beim Einchecken die xml-Version merken (z.B. in componentes.xml)
+    //TODO fï¿½r Performence-Verbesserung beim Einchecken die xml-Version merken (z.B. in componentes.xml)
     try {
       Updater.getInstance().updateMdm(revision);
     }
@@ -310,8 +310,8 @@ public class XMOMAccess {
   
   
   private static class TransactionTask {
-    private List<String> toAdd; //Pfade im Repository für Dateien, die hinzugefügt werden sollen
-    private List<String> toDelete; //Pfade im Repository für Dateien, die gelöscht werden sollen
+    private List<String> toAdd; //Pfade im Repository fï¿½r Dateien, die hinzugefï¿½gt werden sollen
+    private List<String> toDelete; //Pfade im Repository fï¿½r Dateien, die gelï¿½scht werden sollen
     private StringBuilder commitMsg;
     
     private TransactionTask() {
@@ -349,7 +349,7 @@ public class XMOMAccess {
   public void handleProjectEvents(Collection<? extends ProjectCreationOrChangeEvent> events, String commitMsg) {
     TransactionTask transactionTask = new TransactionTask();
 
-    //Änderungen für alle Events im lokalen Repository durchführen
+    //ï¿½nderungen fï¿½r alle Events im lokalen Repository durchfï¿½hren
     for (ProjectCreationOrChangeEvent event : events) {
       switch (event.getType()) {
         case XMOM_DELETE:
@@ -386,7 +386,7 @@ public class XMOMAccess {
       }
     }
     
-    //Änderunen einchecken
+    //ï¿½nderunen einchecken
     commit(transactionTask, commitMsg);
   }
 
@@ -455,7 +455,7 @@ public class XMOMAccess {
   
   
   /**
-   * Erstellt, ändert und löscht die XMOM xmls im lokalen Repository
+   * Erstellt, ï¿½ndert und lï¿½scht die XMOM xmls im lokalen Repository
    * @param event
    * @param transactionTask
    */
@@ -470,7 +470,7 @@ public class XMOMAccess {
         //xmls ins lokale Repository kopieren
         copyFileToLocalRepository(Component.xmom, fileName, transactionTask);
         
-        //service jars hinzufügen (falls nicht im CodeAccess)
+        //service jars hinzufï¿½gen (falls nicht im CodeAccess)
         if (event.getXMOMType() != null && event.getXMOMType().equals(XMOMType.DATATYPE)) {
           changeServiceGroup(fqXmlName, transactionTask, false);
         }
@@ -481,12 +481,12 @@ public class XMOMAccess {
         //xmls ins lokale Repository kopieren
         copyFileToLocalRepository(Component.xmom, fileName, transactionTask);
         
-        //neue service jars hinzufügen (falls nicht im CodeAccess)
+        //neue service jars hinzufï¿½gen (falls nicht im CodeAccess)
         if (event.getXMOMType() != null && event.getXMOMType().equals(XMOMType.DATATYPE)) {
           changeServiceGroup(fqXmlName, transactionTask, false);
         }
         
-        //zu löschende xmls und service jars bestimmen
+        //zu lï¿½schende xmls und service jars bestimmen
         String oldFqXmlName = ((XMOMMovementEvent) event).getOldFqName();
         String oldFileName = convertFqNameToFileName(oldFqXmlName);
         transactionTask.delete(Component.xmom.getRepositorySubFolder(oldFileName));
@@ -498,7 +498,7 @@ public class XMOMAccess {
         commitMsg.append(oldFqXmlName).append("' moved to ").append(fqXmlName).append(".");
         break;
       case XMOM_DELETE:
-        //zu löschende xmls und service jars bestimmen
+        //zu lï¿½schende xmls und service jars bestimmen
         transactionTask.delete(Component.xmom.getRepositorySubFolder(fileName));
         
         if (event.getXMOMType() != null && event.getXMOMType().equals(XMOMType.DATATYPE)) {
@@ -531,7 +531,7 @@ public class XMOMAccess {
     if (firstCreation) {
       String appConfig = getAbsoluteAppConfigFileName(applicationName);
       if (new File(appConfig).exists()) {
-        //FIXME einen eindeutigen Namen für das xml generieren, statt abzubrechen
+        //FIXME einen eindeutigen Namen fï¿½r das xml generieren, statt abzubrechen
         throw new RuntimeException("Application configuration xml already exists");
       }
     }
@@ -582,7 +582,7 @@ public class XMOMAccess {
   
   
   /**
-   * Löscht das Application_<applicationName>.xml
+   * Lï¿½scht das Application_<applicationName>.xml
    * @param applicationName
    */
   private void deleteApplicationConfiguration(String applicationName, TransactionTask transactionTask) {
@@ -639,7 +639,7 @@ public class XMOMAccess {
   }
   
   /**
-   * Commitet die Änderungen aus transactionTask
+   * Commitet die ï¿½nderungen aus transactionTask
    * @param transactionTask
    * @param commitMsg falls nicht gesetzt, wird die commitMsg aus dem TransactionTask verwendet
    */
@@ -650,13 +650,13 @@ public class XMOMAccess {
       repositoryTransaction.setTransactionProperty("force", true);
       Set<String> toCommit = new HashSet<String>();
       
-      //Lock, damit nicht ein anderer Thread die gerade geaddeten oder gelöschten Files commitet
+      //Lock, damit nicht ein anderer Thread die gerade geaddeten oder gelï¿½schten Files commitet
       repositoryLock.lock();
       try {
         if (transactionTask.getToAdd().size() > 0) {
           toCommit.addAll(transactionTask.getToAdd());
           
-          //die noch nicht versionierten Files (und ihre unversionierten parents) müssen geaddet werden
+          //die noch nicht versionierten Files (und ihre unversionierten parents) mï¿½ssen geaddet werden
           List<String> unversioned = getUnversionedFiles(repositoryTransaction, transactionTask.getToAdd());
           if (unversioned.size() > 0) {
             List<RepositoryItemModification> modified = repositoryTransaction.add(unversioned.toArray(new String[unversioned.size()]), RecursionDepth.FULL_RECURSION);
@@ -664,7 +664,7 @@ public class XMOMAccess {
           }
         }
         if (transactionTask.getToDelete().size() > 0) {
-          //überprüfen, ob File noch existiert (könnte evtl. inzwischen gelöscht worden sein)
+          //ï¿½berprï¿½fen, ob File noch existiert (kï¿½nnte evtl. inzwischen gelï¿½scht worden sein)
           Iterator<String> it = transactionTask.getToDelete().iterator();
           while(it.hasNext()) {
             File f = new File(repositoryAccess.getLocalRepository() + Constants.fileSeparator + it.next());
@@ -707,7 +707,7 @@ public class XMOMAccess {
           }
         }
       } catch (XDEV_RepositoryAccessException e) {
-        //svn status schlägt fehl, wenn das Parent-Verzeichnis noch nicht versioniert ist
+        //svn status schlï¿½gt fehl, wenn das Parent-Verzeichnis noch nicht versioniert ist
         unversioned.add(file);
       }
     }

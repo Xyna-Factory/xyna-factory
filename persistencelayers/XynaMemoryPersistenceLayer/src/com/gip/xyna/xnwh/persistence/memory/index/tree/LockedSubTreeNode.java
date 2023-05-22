@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ import java.util.concurrent.locks.ReadWriteLock;
  *</pre>
  * 
  * falls A ein {@link LockedSubTree} ist und B, C sind {@link LockedSubTreeNode}'s, dann ist zum zeitpunkt, wo
- * änderungen an B und C durchgeführt werden, das readlock von A bereits geholt. die writelocks werden dann nun ggfs von
+ * ï¿½nderungen an B und C durchgefï¿½hrt werden, das readlock von A bereits geholt. die writelocks werden dann nun ggfs von
  * A geholt, wenn das readwritelock das entsprechende ist.<br>
- * ist nützlich, wenn locken teuer ist - zb bei coherence, wo beim locken ein netzwerkzugriff passieren muss.
+ * ist nï¿½tzlich, wenn locken teuer ist - zb bei coherence, wo beim locken ein netzwerkzugriff passieren muss.
  */
 public class LockedSubTreeNode<E extends Comparable<E>> extends LockedOrderedNode<E> {
 

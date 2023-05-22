@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression.Visitor;
 /**
  * pfad bzgl datenmodell.
  * 
- * path-variable ist der default-pfad für den audit etc
+ * path-variable ist der default-pfad fï¿½r den audit etc
  */
 public final class Path implements Serializable {
 
@@ -123,7 +123,7 @@ public final class Path implements Serializable {
   }
 
 
-  //TODO cache reduzieren auf die objekte, die man wirklich benötigt
+  //TODO cache reduzieren auf die objekte, die man wirklich benï¿½tigt
   private static final Cache<String, DOM> dataModelCache = new Cache<String, DOM>(new CacheEntryCreation<String, DOM>() {
 
     public DOM create(String fqDataModelName) {
@@ -155,10 +155,10 @@ public final class Path implements Serializable {
 
 
   /**
-   * erstellt ein pfad-objekt, passend zu dem xfl-path, bezogen auf das datenmodell. das pfad-objekt enthält
+   * erstellt ein pfad-objekt, passend zu dem xfl-path, bezogen auf das datenmodell. das pfad-objekt enthï¿½lt
    * ggfs die OID, die sich aus den OID-bestandteilen, die im datenmodell angegeben sind, zusammensetzt.
    * 
-   * falls der pfad im datenmodell nicht aufgelöst werden kann oder das datenmodell null ist, wird der pfad 1:1 übernommen
+   * falls der pfad im datenmodell nicht aufgelï¿½st werden kann oder das datenmodell null ist, wird der pfad 1:1 ï¿½bernommen
    */
   public static Path createPath(String xflVariablePath, String fqDataModelName) throws XPRC_InvalidPackageNameException,
       XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException,
@@ -175,9 +175,9 @@ public final class Path implements Serializable {
     ModelledExpression expression = ModelledExpression.parse(new XMOMVariableIdentification(), xflVariablePath);
 
     /*
-     * am dom entlang hangeln und für jeden schritt aus dem datenmodell entsprechend OID auslesen
+     * am dom entlang hangeln und fï¿½r jeden schritt aus dem datenmodell entsprechend OID auslesen
      * 
-     * index-informationen werden im syntax ".<index>" angefügt (nicht [<index>] wie es bei XFL ist)
+     * index-informationen werden im syntax ".<index>" angefï¿½gt (nicht [<index>] wie es bei XFL ist)
      * 
      */
     DataModelManagement dmm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDataModelManagement();
@@ -189,8 +189,8 @@ public final class Path implements Serializable {
 
 
   /**
-   * gibt die datamodel-infos zurück, die an im datenmodell an der stelle, die durch den pfad beschrieben ist, angegeben sind. 
-   * gibt null zurück, falls der pfad im datenmodell nicht aufgelöst werden kann.
+   * gibt die datamodel-infos zurï¿½ck, die an im datenmodell an der stelle, die durch den pfad beschrieben ist, angegeben sind. 
+   * gibt null zurï¿½ck, falls der pfad im datenmodell nicht aufgelï¿½st werden kann.
    */
   public static DataModelInformation getDataModelInfoForPath(String xflVariablePath, String fqDataModelName)
       throws XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException,

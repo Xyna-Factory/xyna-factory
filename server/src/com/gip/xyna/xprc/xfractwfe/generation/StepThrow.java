@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ public class StepThrow extends Step {
     // this is the interesting part: the exception is built up using the correct parameters
     /*
      * positiver nebeneffekt: hier wird der stacktrace neu erstellt.
-     * negative nebeneffekt: erst exception erstellen, dann in mapping anpassen, dann werfen, führt nicht zu einem stacktrace von "weiter vorne" im workflow.
+     * negative nebeneffekt: erst exception erstellen, dann in mapping anpassen, dann werfen, fï¿½hrt nicht zu einem stacktrace von "weiter vorne" im workflow.
      * TODO: mit exception stacktraces korrekt umgehen.
      * vgl auch TODOs in XOUtils (ObjectVersionBase.equals/hashcode)
      */
@@ -125,7 +125,7 @@ public class StepThrow extends Step {
                  "(\"There is no exception code defined for this exception!\")");
       cb.addLine("}");
     } else {
-      //FIXME das clone führt zu hässlichem stacktrace. der fängt dann immer mit clone() an, wo man sich fragt "wieso?"
+      //FIXME das clone fï¿½hrt zu hï¿½sslichem stacktrace. der fï¿½ngt dann immer mit clone() an, wo man sich fragt "wieso?"
       cb.addLine(targetExceptionVariable.variable.getClassName(importedClassesFqStrings) + " newException = "
                       + targetExceptionVariable.getScopeGetter(getParentScope())
                       + targetExceptionVariable.variable.getVarName() + ".cloneWithoutCause()");
@@ -133,7 +133,7 @@ public class StepThrow extends Step {
 
     if (isIncludeCause()) {
       //TODO besser zur generierungszeit schon berechnen, welcher step der catch-step ist. das muss man nicht erst zur laufzeit berechnen.
-      //das hat auch den vorteil, dass man nicht über die xynaexceptioninformationthrowable gehen muss.
+      //das hat auch den vorteil, dass man nicht ï¿½ber die xynaexceptioninformationthrowable gehen muss.
       cb.addLB();
       cb.addLine(FractalProcessStep.class.getSimpleName() + " parent = ", METHODNAME_GET_PARENT_STEP, "()");
       cb.addLine("while (parent != null) {");

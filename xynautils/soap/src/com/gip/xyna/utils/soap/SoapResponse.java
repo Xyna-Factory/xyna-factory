@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ public class SoapResponse {
   }
 
   /**
-   * gibt Fehler zurück, oder falls kein Fehler aufgetreten ist: null.
+   * gibt Fehler zurï¿½ck, oder falls kein Fehler aufgetreten ist: null.
    * @return
    */
   public Exception getError() {
@@ -147,7 +147,7 @@ public class SoapResponse {
   }
 
   /**
-   * gibt -1 zurück, falls keine httpConnection offen ist, oder eien IOException aufgetreten ist
+   * gibt -1 zurï¿½ck, falls keine httpConnection offen ist, oder eien IOException aufgetreten ist
    * @return
    */
   public int getHttpResponseCode() {

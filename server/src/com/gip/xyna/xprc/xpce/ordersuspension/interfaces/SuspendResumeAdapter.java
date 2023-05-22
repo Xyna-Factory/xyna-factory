@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public interface SuspendResumeAdapter<C,O> {
   void rescheduleOrder(O order);
 
   /**
-   * Supendieren des Auftrags, indem dieser gebackupt wird //FIXME aufräumen?
+   * Supendieren des Auftrags, indem dieser gebackupt wird //FIXME aufrï¿½umen?
    * @param order
    * @param rootOrderSuspension
    * @param suspensionCause
@@ -138,7 +138,7 @@ public interface SuspendResumeAdapter<C,O> {
 
   /**
    * Eintragen der RootOrderSuspension in den XynaProcess, damit eine Suspendierung vom Root beginnend 
-   * ausgeführt werden kann.
+   * ausgefï¿½hrt werden kann.
    * @param rootSRInformation
    * @param rootOrderSuspension
    * @return true, wenn Suspendierung begonnen wurde
@@ -146,7 +146,7 @@ public interface SuspendResumeAdapter<C,O> {
   boolean suspendInExecution(RootSRInformation<O> rootSRInformation, RootOrderSuspension rootOrderSuspension);
   
   /**
-   * Ssupendierung aller Kindaufträge im Scheduler und Eintragen der ResumeTargets in RootOrderSuspension
+   * Ssupendierung aller Kindauftrï¿½ge im Scheduler und Eintragen der ResumeTargets in RootOrderSuspension
    * @param rootSRInformation
    * @param rootOrderSuspension
    * @return
@@ -154,14 +154,14 @@ public interface SuspendResumeAdapter<C,O> {
   boolean suspendInScheduler(RootSRInformation<O> rootSRInformation, RootOrderSuspension rootOrderSuspension);
 
   /**
-   * Resume mehrerer Root-Aufträge mit Retries
+   * Resume mehrerer Root-Auftrï¿½ge mit Retries
    * @param rootOrderSuspensions
    * @return
    */
   List<Triple<RootOrderSuspension, String, PersistenceLayerException>> resumeRootOrdersWithRetries(List<RootOrderSuspension> rootOrderSuspensions);
 
   /**
-   * Schickt Interrupts an alle ausführenden Threads
+   * Schickt Interrupts an alle ausfï¿½hrenden Threads
    * @param rootSRInformation
    * @param rootOrderSuspension
    * @param stopForcefully
@@ -169,7 +169,7 @@ public interface SuspendResumeAdapter<C,O> {
   void interruptProcess(RootSRInformation<O> rootSRInformation, RootOrderSuspension rootOrderSuspension, boolean stopForcefully);
 
   /**
-   * Wartet, bis RootOrders im OrderBackup zugänglich sind
+   * Wartet, bis RootOrders im OrderBackup zugï¿½nglich sind
    * @param retry
    * @param rootId
    * @return

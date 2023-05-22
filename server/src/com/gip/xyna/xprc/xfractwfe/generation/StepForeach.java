@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class StepForeach extends Step {
 
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     // ParallelExecutionStep
     try {
       METHODNAME_GET_FRACTAL_WF_PARALLEL_EXECUTOR = ParallelExecutionStep.class.getDeclaredMethod(_METHODNAME_GET_FRACTAL_WF_PARALLEL_EXECUTOR_ORIG).getName();
@@ -170,7 +170,7 @@ public class StepForeach extends Step {
   private ScopeStep childScope;
   private boolean parallelExecution;
   private LimitType limitType;
-  private String limit; //wert aus limit attribut. falls LimitType=Capacity, wird es überschrieben mit dem ordertype des sub-workflows
+  private String limit; //wert aus limit attribut. falls LimitType=Capacity, wird es ï¿½berschrieben mit dem ordertype des sub-workflows
   private String label;
   
   private final static String VARNAME_fractalWorkflowParallelExecutor = "fractWfParallelExecutor";
@@ -536,7 +536,7 @@ public class StepForeach extends Step {
 
   protected void appendExecuteInternally(CodeBuffer cb, HashSet<String> importedClassesFqStrings) throws XPRC_InvalidVariableIdException, XPRC_InvalidServiceIdException, XPRC_OperationUnknownException {
     cb.addLine("public void ", METHODNAME_EXECUTE_INTERNALLY, "() throws ", XynaException.class.getSimpleName(), " {");
-    //Ausführung der childSteps
+    //Ausfï¿½hrung der childSteps
     if (parallelExecution) {
       cb.addLine(ParallelismLimitation.class.getSimpleName()," limitation = ", limitType.construct(limit) );
       cb.addLine("prepareChildSteps()");
@@ -873,7 +873,7 @@ public class StepForeach extends Step {
   }
   
   /*
-   *  inputs sind die listenwertigen variablen weiter oben im workflow, über die synchron iteriert wird, d.h. ihre kardinalitäten müssen identisch sein.
+   *  inputs sind die listenwertigen variablen weiter oben im workflow, ï¿½ber die synchron iteriert wird, d.h. ihre kardinalitï¿½ten mï¿½ssen identisch sein.
    */
   public void addInput(AVariable inputVar) {
     if (inputVarsSingle == null) {

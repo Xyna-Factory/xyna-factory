@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,12 +96,12 @@ public class DependencyRegister extends FunctionGroup {
    * die darin enthaltenen DependencyNodes sind die gleichen Objektinstanzen wie die in der Map, d.h. man kann sich
    * an den Objekten entlanghangeln, wenn man eine DependencyNode hat und muss nicht immer wieder im DependenyRegister nachfragen.
    * 
-   * die keys sind leere objekte ohne sets von benutzen/abhängigen objekten
+   * die keys sind leere objekte ohne sets von benutzen/abhï¿½ngigen objekten
    */
   private ConcurrentMapWithObjectRemovalSupport<Long, RemovalConcurrentMap<DependencyNode, DependencyNode>> setOfAllNodes;
   {
     //init methode kann die variable bereits initialisiert haben
-    //andere komponenten greifen auf dependencyregister zu, init() wurde aber noch nicht ausgeführt wegen abhängigkeiten
+    //andere komponenten greifen auf dependencyregister zu, init() wurde aber noch nicht ausgefï¿½hrt wegen abhï¿½ngigkeiten
     if (setOfAllNodes == null) {
       setOfAllNodes = new SetOfAllNodes<Long>();
     }
@@ -189,8 +189,8 @@ public class DependencyRegister extends FunctionGroup {
 
   static {
     try {
-      // alle klassen die einen deploymenthandler definieren müssen hier rein! schliesslich sollen diese auch schon
-      // aufgerufen werden, wenn die workflows der wfdb geladen werden. d.h. beim serverstart müssen die deployment
+      // alle klassen die einen deploymenthandler definieren mï¿½ssen hier rein! schliesslich sollen diese auch schon
+      // aufgerufen werden, wenn die workflows der wfdb geladen werden. d.h. beim serverstart mï¿½ssen die deployment
       // handler bereits definiert worden sein, bevor die workflows deployed werden.
       addDependencies(DependencyRegister.class, new ArrayList<XynaFactoryPath>(Arrays.asList(new XynaFactoryPath[] {
                       new XynaFactoryPath(XynaProcessing.class, XynaFractalWorkflowEngine.class,
@@ -363,8 +363,8 @@ public class DependencyRegister extends FunctionGroup {
 
 
   /**
-   * Entfernt eine Abhängikeit zwischen usedNode und noMoreUsedBy.
-   * Falls noMoreUsedBy keine weiteren Abhängikeiten hat, wird er aus setOfAllNodes entfernt
+   * Entfernt eine Abhï¿½ngikeit zwischen usedNode und noMoreUsedBy.
+   * Falls noMoreUsedBy keine weiteren Abhï¿½ngikeiten hat, wird er aus setOfAllNodes entfernt
    * @param usedNode
    * @param noMoreUsedBy
    * @return
@@ -394,7 +394,7 @@ public class DependencyRegister extends FunctionGroup {
   }
 
   /**
-   * Entfernt einen DependencyNode und alle seine Abhängigkeiten
+   * Entfernt einen DependencyNode und alle seine Abhï¿½ngigkeiten
    * @param name
    * @param type
    * @param revision
@@ -421,7 +421,7 @@ public class DependencyRegister extends FunctionGroup {
         return;
       }
       
-      //vorwärts und rückwärts referenzen aus dep-register entfernen
+      //vorwï¿½rts und rï¿½ckwï¿½rts referenzen aus dep-register entfernen
       for (DependencyNode dependent : removed.getDependentNodes()) {
         dependent.removeUsedNode(removed);
       }
@@ -434,7 +434,7 @@ public class DependencyRegister extends FunctionGroup {
   }
 
   /**
-   * Entfernt oldNode und überträgt alle Abhängigkeiten auf newNode.
+   * Entfernt oldNode und ï¿½bertrï¿½gt alle Abhï¿½ngigkeiten auf newNode.
    * @param oldNode
    * @param newNode
    * @param revision
@@ -455,7 +455,7 @@ public class DependencyRegister extends FunctionGroup {
       //neuen Node eintragen, falls nicht vorhanden
       DependencyNode added = getDependencyNodeLazy(newNode);
       
-      //vorwärts und rückwärts referenzen aus dep-register übertragen
+      //vorwï¿½rts und rï¿½ckwï¿½rts referenzen aus dep-register ï¿½bertragen
       for (DependencyNode dependent : removed.getDependentNodes()) {
         dependent.removeUsedNode(removed);
         dependent.addUsedNode(added);
@@ -474,7 +474,7 @@ public class DependencyRegister extends FunctionGroup {
   
   
   /**
-   * Tauscht den DependencyNode des fqClassNames mit dem für den xmlName aus
+   * Tauscht den DependencyNode des fqClassNames mit dem fï¿½r den xmlName aus
    * @param fqClassName
    * @param xmlName
    * @param revision
@@ -487,8 +487,8 @@ public class DependencyRegister extends FunctionGroup {
   }
   
   /**
-   * wenn sich vorwärtsreferenzen (wen benutze ich) ändern, will man die alten ändern und die neuen eintragen.
-   * die rückwärtsreferenzen ändern sich dadurch nicht (wer benutzt mich).
+   * wenn sich vorwï¿½rtsreferenzen (wen benutze ich) ï¿½ndern, will man die alten ï¿½ndern und die neuen eintragen.
+   * die rï¿½ckwï¿½rtsreferenzen ï¿½ndern sich dadurch nicht (wer benutzt mich).
    */
   void removeMyUsedObjects(DependencyNode toBeRemoved) {
     if (toBeRemoved == null) {
@@ -640,7 +640,7 @@ public class DependencyRegister extends FunctionGroup {
 
 
   /**
-   * dependencies aus additional dependencies zu using node hinzufügen  
+   * dependencies aus additional dependencies zu using node hinzufï¿½gen  
    */
   void addDependenciesForAdditionalDependencies(AdditionalDependencyContainer container, DependencySourceType usingNodeType,
                                                 String usingNodeName, Long revision) {
@@ -800,7 +800,7 @@ public class DependencyRegister extends FunctionGroup {
 
 
   /**
-   * aus den used nodes der übergebenen node werden alle nodes entfernt,
+   * aus den used nodes der ï¿½bergebenen node werden alle nodes entfernt,
    * die in einer der entfernten revisions liegen und ersetzt durch existiertende nodes in der richtigen revision.
    */
   public void updateRevisionInUsedNodes(DependencyNode dependencyNode, Set<Long> removedRevisions) {
@@ -860,19 +860,19 @@ public class DependencyRegister extends FunctionGroup {
           default :
             continue;
         }
-        if (!dn.getRevision().equals(newRev)) { //notwendig, weil parentRevision nicht die revision sein muss, in der sich abhängigkeiten geändert haben (sondern ein parent davon)
+        if (!dn.getRevision().equals(newRev)) { //notwendig, weil parentRevision nicht die revision sein muss, in der sich abhï¿½ngigkeiten geï¿½ndert haben (sondern ein parent davon)
           if (dependencyNode.removeUsedNode(dn)) {
             dn.removeDependentNode(dependencyNode);
 
             if (newRev == null) {
-              //unerwartet, hätte eigtl vom aufrufer bereits erkannt werden müssen. jetzt kann man aber schlecht nen rollback durchführen. also nur loggen
+              //unerwartet, hï¿½tte eigtl vom aufrufer bereits erkannt werden mï¿½ssen. jetzt kann man aber schlecht nen rollback durchfï¿½hren. also nur loggen
               logger.warn("Could not replace dependency of " + dependencyNode.getUniqueName() + " to " + dn.getUniqueName()
                   + " with changed revision (" + dn.getRevision() + " -> ?)");
               continue;
             }
             DependencyNode dnNewRev = getDependencyNode(dn.getUniqueName(), dn.getType(), newRev);
             if (dnNewRev == null) {
-              //unerwartet, hätte eigtl vom aufrufer bereits erkannt werden müssen. jetzt kann man aber schlecht nen rollback durchführen. also nur loggen
+              //unerwartet, hï¿½tte eigtl vom aufrufer bereits erkannt werden mï¿½ssen. jetzt kann man aber schlecht nen rollback durchfï¿½hren. also nur loggen
               logger.warn("Could not replace dependency of " + dependencyNode.getUniqueName() + " to " + dn.getUniqueName()
                   + " with changed revision (" + dn.getRevision() + " -> " + newRev + ")");
               continue;

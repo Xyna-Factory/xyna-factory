@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 package com.gip.xyna.utils.db.types;
 
 /**
- * Basis für beliebige Objekte, die in der DB als String gespeichert werden können.
- * Über dieses Interface ist das Eintragen in Parameter möglich.
+ * Basis fï¿½r beliebige Objekte, die in der DB als String gespeichert werden kï¿½nnen.
+ * ï¿½ber dieses Interface ist das Eintragen in Parameter mï¿½glich.
  *
  * @param <T>
  */
@@ -33,7 +33,7 @@ public interface StringSerializable<T> {
   
   /**
    * Lesen des Strings und Konversion in ein neues Objekt
-   * (eigentlich sollte diese Methode static sein, dies lässt sich jedoch nicht im Interface vorschreiben)
+   * (eigentlich sollte diese Methode static sein, dies lï¿½sst sich jedoch nicht im Interface vorschreiben)
    * @param string
    * @return
    */

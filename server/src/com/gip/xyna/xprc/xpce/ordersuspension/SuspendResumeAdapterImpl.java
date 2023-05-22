@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,7 +169,7 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
       
       if( isRootOrder ) {
         if( backup) { 
-          //Auftrag ist Hauptauftrag: Er und seine Kinder müssen nun gebackupt werden
+          //Auftrag ist Hauptauftrag: Er und seine Kinder mï¿½ssen nun gebackupt werden
           SRHelper.backupXynaOrder(con, order);
         }
       } else {
@@ -301,7 +301,7 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
       if( parentStep instanceof ParallelExecutionStep ) {
         ParallelExecutionStep<?> parent = (ParallelExecutionStep<?>) parentStep;
         added = srInformation.addParallelExecutor( parent.getFractalWorkflowParallelExecutor() );
-        //wenn added == false, wurden die PEs bereits hinzugefügt, muss nicht doppelt gemacht werden
+        //wenn added == false, wurden die PEs bereits hinzugefï¿½gt, muss nicht doppelt gemacht werden
       }
       parentStep = parentStep.getParentStep();
     }
@@ -339,15 +339,15 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
     AllOrdersList allOrders = XynaFactory.getInstance().getProcessing().getXynaScheduler().getAllOrdersList();
     for( XynaOrderServerExtension order : SRHelper.getRootOrder(rootSRInformation).getOrderAndChildrenRecursively() ) {
       if( ! order.hasParentOrder() ) {
-        continue; //RootAufträge sollen nicht aus Scheduler geworfen werden
+        continue; //RootAuftrï¿½ge sollen nicht aus Scheduler geworfen werden
       }
       //TODO hier kann nicht erkannt werden, wo sich die XynaOrder befindet. transient volatile OrderInstanceStatus 
-      //     in XynaOrderServerExtension wäre gut!
+      //     in XynaOrderServerExtension wï¿½re gut!
       //Order befindet sich in evtl. Scheduler, TimeConstraintManagement etc. 
       SchedulingOrder so = allOrders.getSchedulingOrder(order.getId());
       if( so == null ) {
         continue; //Ist wohl doch schon in der Execution oder noch im Planning. 
-        //Execution: wird dort suspendiert; Planning: muss später erneut probiert werden 
+        //Execution: wird dort suspendiert; Planning: muss spï¿½ter erneut probiert werden 
       }
       boolean removed = false;
       synchronized (so) {
@@ -355,10 +355,10 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
         removed = so.markAsRemoved();
       }
       if( ! removed ) {
-        continue; //Auftrag ist zwar noch in AllOrdersList, aber bereits in der Ausführung, wird dort suspendiert
+        continue; //Auftrag ist zwar noch in AllOrdersList, aber bereits in der Ausfï¿½hrung, wird dort suspendiert
       }
       allOrders.removeOrder(order.getId());
-      //Auftrag wurde aus Scheduler entfernt. Nun muss dafür ein ResumeTarget angelegt werden
+      //Auftrag wurde aus Scheduler entfernt. Nun muss dafï¿½r ein ResumeTarget angelegt werden
       ResumeTarget resumeTarget = new ResumeTarget(rootSRInformation.getRootId(), order.getParentOrder().getId(), order.getParentLaneId() );
       
       
@@ -380,10 +380,10 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
     try {
       wre.execute(undoSuspension);
     } catch (PersistenceLayerException e) {
-      //Unerwartet, da UndoSuspension intern alle PersistenceLayerException fängt. Probleme mit dem Öffnen der Con?
+      //Unerwartet, da UndoSuspension intern alle PersistenceLayerException fï¿½ngt. Probleme mit dem ï¿½ffnen der Con?
       logger.warn("Unexpected PersistenceLayerException in undoSuspensions", e);
       
-      //FIXME was nun? alles als failed zurückgeben? noch nicht behandelte + aktuell behandelten
+      //FIXME was nun? alles als failed zurï¿½ckgeben? noch nicht behandelte + aktuell behandelten
       //->Retry
     }
     
@@ -391,7 +391,7 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
     if( undoSuspension.numberToRetry() > 0 ) {
       List<RootOrderSuspension> resumesToRetry = undoSuspension.getResumesToRetry();
       while( ! resumesToRetry.isEmpty() ) {
-        //nächster Retry:
+        //nï¿½chster Retry:
         UndoSuspension retry = new UndoSuspension(resumesToRetry,false);
         try {
           wre.execute(retry);
@@ -403,17 +403,17 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
         if( resumesToRetry.size() == retry.numberToRetry() ) {
           //Anzahl der Retries wird nicht weniger
           logger.warn("undo Suspensions failed, number of resumes to retry "+resumesToRetry.size()+" does not decrease");
-          //Die Retries haben nicht geholfen, daher als Failed zählen
+          //Die Retries haben nicht geholfen, daher als Failed zï¿½hlen
           undoSuspension.addRetriesAsFailed( retry );
           break;
         } else {
-          //Fehler zur GesamtListe hinzufügen, nächste ResumesToRetry setzen und kurz warten
+          //Fehler zur GesamtListe hinzufï¿½gen, nï¿½chste ResumesToRetry setzen und kurz warten
           undoSuspension.addFailed( retry );
           resumesToRetry = retry.getResumesToRetry();
           try {
             Thread.sleep(50);
           } catch (InterruptedException e) {
-            //dann halt kürzer warten
+            //dann halt kï¿½rzer warten
           }
         }
       }
@@ -434,7 +434,7 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
   
   public void injectMI(XynaOrderServerExtension order, RootOrderSuspension rootOrderSuspension, ODSConnection con) {
     if( order.hasParentOrder() ) {
-      return; //nur für RootOrder relevant!
+      return; //nur fï¿½r RootOrder relevant!
     }
     logger.debug("Inject MI to order "+order);
     ManualInteractionData manualInteractionData = rootOrderSuspension.getManualInteractionData();
@@ -462,11 +462,11 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
       throw new RuntimeException(e);
     }
     if( accessible ) {
-      //OrderBackup sollte nun zugänglich sein, daher normaler retry
+      //OrderBackup sollte nun zugï¿½nglich sein, daher normaler retry
       return retry;
     } else {
-      //OrderBackup könnte schon längst wieder erreichbar sein, das wurde allerdings nicht festgestellt.
-      //daher überwachter Retry
+      //OrderBackup kï¿½nnte schon lï¿½ngst wieder erreichbar sein, das wurde allerdings nicht festgestellt.
+      //daher ï¿½berwachter Retry
       if( retry >= 3 ) {
         throw new RuntimeException("OrderBackup with different BootCountID, Retry Limit 3 reached.");
       } else {
@@ -567,7 +567,7 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
   
 
   /**
-   * Weitergehende Anpassungen an die Factory, die über das hinausgehen, was der SRAdapterImpl macht
+   * Weitergehende Anpassungen an die Factory, die ï¿½ber das hinausgehen, was der SRAdapterImpl macht
    *
    */
   private static class SRHelper {
@@ -582,7 +582,7 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
       }
 
       if( oib.getBootCntId() != XynaFactory.getInstance().getBootCntId()) {
-        //unerwartete BootCntId, so darf Auftrag nicht resumt werden, da Auftrag noch nicht vollständig 
+        //unerwartete BootCntId, so darf Auftrag nicht resumt werden, da Auftrag noch nicht vollstï¿½ndig 
         //migriert ist durch OrderMigration im Cluster oder beim Startup.
         throw new OrderBackupNotAccessibleException();
       }
@@ -679,7 +679,7 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
     }
 
     public static void backupXynaOrder(ODSConnection con, XynaOrderServerExtension rootOrder) throws PersistenceLayerException {
-      //Backup komplett schreiben, also auch für alle Kinder, die berites fertig gelaufen sind
+      //Backup komplett schreiben, also auch fï¿½r alle Kinder, die berites fertig gelaufen sind
       List<XynaOrderServerExtension> allOrders = rootOrder.getOrderAndChildrenRecursively();
       for ( XynaOrderServerExtension xose : allOrders ) {
         if (xose.needsToBeBackupedOnSuspensionOfParent()) {
@@ -718,7 +718,7 @@ public class SuspendResumeAdapterImpl implements SuspendResumeAdapter<ODSConnect
 
       //Auftrag wird nun resumt und damit wieder in den Scheduler eingestellt. Dort wird er dann abgebrochen.
       XynaFactory.getInstance().getProcessing().getXynaScheduler().abortOrder(orderId, 10 * 60 * 1000, ignoreResourcesWhenResuming); //FIXME timeout konfigurierbar
-      //TODO cause übergeben
+      //TODO cause ï¿½bergeben
 
       Pair<ResumeResult, String> result = doResume.resume(con);
       con.commit();

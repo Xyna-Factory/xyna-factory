@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -203,7 +203,7 @@ public class GrepCommand implements Runnable {
   // 7654[0-2] | 765[0-3][0-9] | 76[0-4][0-9]{2} | 7[0-5][0-9]{3} | [1-6][0,9]{4} | [0-9]{1,4} 
   // for params NMPR
   // NMP[0-(R-1)] | NM[0-(P-1)][0-9]{1} | N[0-(M-1)][0-9]{2} | [1-(N-1)][0-9]{3} | [0-9]{1,3}
-  // falls eine stelle == 0 ist, entfällt die alternative, die (Stelle-1) rechnet
+  // falls eine stelle == 0 ist, entfï¿½llt die alternative, die (Stelle-1) rechnet
   // beispiel: 1000
   // [0-9]{1,3}
   private static String parseSmaller(Object param) throws SQLException {
@@ -217,11 +217,11 @@ public class GrepCommand implements Runnable {
       //TODO wieso das?
       number = number.substring(1);
     } else {
-     /*TODO support für negative zahlen
+     /*TODO support fï¿½r negative zahlen
        first = false;
       builder.append("-[0-9]*");*/
     }
-    number = String.valueOf(Long.parseLong(number)); //führende nullen entfernen
+    number = String.valueOf(Long.parseLong(number)); //fï¿½hrende nullen entfernen
     
     Pattern numberPat = Pattern.compile("^[0-9]+$");
     Matcher numberMat = numberPat.matcher(number);
@@ -289,7 +289,7 @@ public class GrepCommand implements Runnable {
   // NNN[(N+1)-9] | NN[(N+1)-9][0-9] | N[N+1-9][0-9]{2,} | [N+1-9][0-9]{3,} | [1-9][0-9]{4,}
   // 1939
   // 194[0-9] | 19[4-9][0-9]{1,} | 20[0-9]{2,} | [1-9][0-9]{3,} | [1-9][0-9]{4,}
-  // wenn 9 ansteht dann nimm die ganze restliche Zahl +1 und häng nen weiteres [0-9] an
+  // wenn 9 ansteht dann nimm die ganze restliche Zahl +1 und hï¿½ng nen weiteres [0-9] an
   // 9999 => 1000[0-9]|100[0-9]{1,}|10[0-9]{2,}|1[0-9]{3,}|[1-9][0-9]{4,}
   private static String parseGreater(Object param) throws SQLException {
     StringBuilder builder = new StringBuilder();
@@ -300,7 +300,7 @@ public class GrepCommand implements Runnable {
     if (number.startsWith("-")) {
       number = number.substring(1);
     }
-    number = String.valueOf(Long.parseLong(number)); //führende nullen entfernen
+    number = String.valueOf(Long.parseLong(number)); //fï¿½hrende nullen entfernen
     Pattern numberPat = Pattern.compile("^[0-9]+$");
     Matcher numberMat = numberPat.matcher(number);
     if (!numberMat.find()) {

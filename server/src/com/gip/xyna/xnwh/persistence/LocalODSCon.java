@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 package com.gip.xyna.xnwh.persistence;
 
 /**
- * LocalODSCon kapselt eine übergebene Connection, die null sein kann, und stellt in diesem Fall 
- * eine eigene lokale ODSConnection zu Verfügung. 
+ * LocalODSCon kapselt eine ï¿½bergebene Connection, die null sein kann, und stellt in diesem Fall 
+ * eine eigene lokale ODSConnection zu Verfï¿½gung. 
  * Beispiel:
  * <pre>
  * public void store( Storable s, ODSConnection con ) throws PersistenceLayerException {
@@ -75,7 +75,7 @@ public class LocalODSCon {
   }
   
   /**
-   * Liefert die Connection, dabei sind 3 Fälle möglich: a) null, b) lokale Connection 
+   * Liefert die Connection, dabei sind 3 Fï¿½lle mï¿½glich: a) null, b) lokale Connection 
    * und c) externe Connection je nach Konstruktion des LocalODSCon.
    * @return
    */
@@ -84,7 +84,7 @@ public class LocalODSCon {
   }
   
   /**
-   * Ist Connection lokal geöffnet worden?
+   * Ist Connection lokal geï¿½ffnet worden?
    * @return
    */
   public boolean isLocal() {
@@ -92,7 +92,7 @@ public class LocalODSCon {
   }
   
   /**
-   * Commit bei lokaler Connection, externe Connection bleibt unverändert
+   * Commit bei lokaler Connection, externe Connection bleibt unverï¿½ndert
    * @throws PersistenceLayerException
    */
   public void commitIfLocal() throws PersistenceLayerException {
@@ -102,7 +102,7 @@ public class LocalODSCon {
   }
   
   /**
-   * Rollback bei lokaler Connection, externe Connection bleibt unverändert
+   * Rollback bei lokaler Connection, externe Connection bleibt unverï¿½ndert
    * @throws PersistenceLayerException
    */
   public void rollbackIfLocal() throws PersistenceLayerException {
@@ -132,7 +132,7 @@ public class LocalODSCon {
   }
   
   /**
-   * Schließen der lokalen Connection, externe Connection bleibt unverändert
+   * Schlieï¿½en der lokalen Connection, externe Connection bleibt unverï¿½ndert
    * @throws PersistenceLayerException
    */
   public void close() throws PersistenceLayerException {
@@ -148,7 +148,7 @@ public class LocalODSCon {
   }
 
   /**
-   * LocalODSCon hat sicher eine Connection != null. Falls con null ist, wird eine neue DEFAULT-Connection lokal geöffnet
+   * LocalODSCon hat sicher eine Connection != null. Falls con null ist, wird eine neue DEFAULT-Connection lokal geï¿½ffnet
    * @param con
    * @return
    */
@@ -161,7 +161,7 @@ public class LocalODSCon {
   }
   
   /**
-   * LocalODSCon hat sicher eine Connection != null. Falls con null ist, wird eine neue HISTORY-Connection lokal geöffnet
+   * LocalODSCon hat sicher eine Connection != null. Falls con null ist, wird eine neue HISTORY-Connection lokal geï¿½ffnet
    * @param con
    * @return
    */

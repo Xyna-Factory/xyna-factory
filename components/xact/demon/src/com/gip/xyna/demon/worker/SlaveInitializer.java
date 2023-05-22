@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Über die Methoden dieses Interfaces werden die Slave-Threads mit ihrem Werkzeug <Tool> ausgestattet.
+ * ï¿½ber die Methoden dieses Interfaces werden die Slave-Threads mit ihrem Werkzeug <Tool> ausgestattet.
  *
  * @param <Tool>
  */
 public interface SlaveInitializer<Tool> {
 
   /**
-   * Liefert ein neues Werkzeug für den Slave "number"
+   * Liefert ein neues Werkzeug fï¿½r den Slave "number"
    * @param number
    * @return
    */
@@ -48,12 +48,12 @@ public interface SlaveInitializer<Tool> {
   public String getThreadNamePrefix();
 
   /**
-   * SlaveInitializer wird ab nun benötigt und sollte daher fertig initialisiert sein
+   * SlaveInitializer wird ab nun benï¿½tigt und sollte daher fertig initialisiert sein
    */
   public void initialize();
 
   /**
-   * SlaveInitializer wird ab nun nicht mehr benötigt und kann daher Ressourcen freigeben
+   * SlaveInitializer wird ab nun nicht mehr benï¿½tigt und kann daher Ressourcen freigeben
    */
   public void terminate();
 

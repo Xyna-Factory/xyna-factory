@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.ListIterator;
 
 
 /**
- * LinkedList, die selbst überwacht, ob sie geordnet ist. Über isOrdered() kann abgefragt werden, ob sie 
+ * LinkedList, die selbst ï¿½berwacht, ob sie geordnet ist. ï¿½ber isOrdered() kann abgefragt werden, ob sie 
  * noch geordnet ist und mit order() wieder sortiert werden.
  */
 public class OrderedLinkedList<E extends Comparable<E> > extends AbstractList<E> {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,10 +179,10 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
     while (true) {
       tableWriteLock.lock();
       try {
-        //gibt keine uncommitteten rowdatas zurück
+        //gibt keine uncommitteten rowdatas zurï¿½ck
         X rd = getDataInterface().get(pl, storable.getPrimaryKey());
         if (rd == null) {
-          //falls andere uncommittete transaktion das rowlock bereits erstellt hat, wird dies hier erkannt und zurückgegeben.
+          //falls andere uncommittete transaktion das rowlock bereits erstellt hat, wird dies hier erkannt und zurï¿½ckgegeben.
           //ansosnten wird es neu erstellt.
           rl = getDataInterface().putUncommitted(pl, storable);
         } else {
@@ -227,9 +227,9 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
 
   public void commitInsertAfterLock(PersistenceLayer pl, X newRowData, T storable,
                                     Map<ColumnDeclaration, AtomicBulkUpdate> indexUpdates) {
-    //muss checken, ob es ein uncommitted lock gibt und dieses in die neuen rowdatas übernehmen.
+    //muss checken, ob es ein uncommitted lock gibt und dieses in die neuen rowdatas ï¿½bernehmen.
     
-    //FIXME kann das objekt bereits existieren (konfliktierendes anderes insert)?! dann benötigt man hier ein indexupdate
+    //FIXME kann das objekt bereits existieren (konfliktierendes anderes insert)?! dann benï¿½tigt man hier ein indexupdate
     Lock writeLock = getTableLock().writeLock();
     writeLock.lock();
     try {
@@ -297,7 +297,7 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
   public <E> QueryResult<E> query(PersistenceLayer pl, PreparedQueryForMemory<E> query, Parameter p, ResultSetReader<? extends E> rsr, int maxRows,
                                   boolean forUpdate) throws PersistenceLayerException {
 
-    //kann eigentlich nicht null zurückgeben, da selbst generierte klasse dafür verantwortlich ist
+    //kann eigentlich nicht null zurï¿½ckgeben, da selbst generierte klasse dafï¿½r verantwortlich ist
     IMemoryBaseResultSet rs = getResultSet(query, p, forUpdate, maxRows);
     
     List<E> result = new ArrayList<E>();
@@ -307,7 +307,7 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
       while (rs.next() && cnt < maxRows) {
         cnt++;
         E e = rsr.read(rs);
-        if (e != null) { //non-null elemente kommen insbesondere durch den factory-warehouse cursor. aber null-elemente zurückzugeben macht nie sinn!
+        if (e != null) { //non-null elemente kommen insbesondere durch den factory-warehouse cursor. aber null-elemente zurï¿½ckzugeben macht nie sinn!
           result.add(e);
         }
       }
@@ -316,7 +316,7 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
       throw new XNWH_GeneralPersistenceLayerException("Error executing resultsetreader", e);
     } finally {
       rs.unlockReadLocks(); //jetzt erst freigeben, um sicherzustellen, dass die evaluierung der whereclause konsistent 
-      //zusammen mit der rückgabe der objekte ist
+      //zusammen mit der rï¿½ckgabe der objekte ist
       if (!executedSuccessfully) {
         rs.unlockWriteLocks();
       }
@@ -442,7 +442,7 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
 
 
   /**
-   * muss von aussen synchronisiert werden über tablelock
+   * muss von aussen synchronisiert werden ï¿½ber tablelock
    */
   public Collection<X> getAllRowDatas(PersistenceLayer pl) {
     return getDataInterface().values(pl);
@@ -450,7 +450,7 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
 
 
   /**
-   * muss von aussen synchronisiert werden über tablelock
+   * muss von aussen synchronisiert werden ï¿½ber tablelock
    */
   public Iterator<X> iterator(PersistenceLayer pl) {
     Collection<X> col = getDataInterface().values(pl);
@@ -487,7 +487,7 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
         Storable<?> s = toBeRemovedIterator.next();
         Object pk = s.getPrimaryKey();
         if (commit) {
-          //kein temporary lock notwendig, weil keine daten kaputt/inkonsistent gehen können.
+          //kein temporary lock notwendig, weil keine daten kaputt/inkonsistent gehen kï¿½nnen.
           X removedRowData;
           final Lock writeLock = getTableLock().writeLock();
           writeLock.lock();
@@ -499,9 +499,9 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
           if (removedRowData != null) {
             removedRowData.deleted();
             /*
-             * eigtl darf das nicht null sein, weil man sich durch locks dagegen schützt, dass ein anderer thread das objekt bereits entfernt hat.
-             * ausnahme: während einer laufenden transaktion kann ein removetable aufgerufen werden. (usecase: updates, die storables migrieren, vgl bug 18497)
-             * für die ist es aber ok, die entfernten objekte einfach zu ignorieren
+             * eigtl darf das nicht null sein, weil man sich durch locks dagegen schï¿½tzt, dass ein anderer thread das objekt bereits entfernt hat.
+             * ausnahme: wï¿½hrend einer laufenden transaktion kann ein removetable aufgerufen werden. (usecase: updates, die storables migrieren, vgl bug 18497)
+             * fï¿½r die ist es aber ok, die entfernten objekte einfach zu ignorieren
              */
             for (Entry<ColumnDeclaration, AtomicBulkUpdate> e : indexUpdates.entrySet()) {
               AtomicBulkUpdate nextUpdate = e.getValue();

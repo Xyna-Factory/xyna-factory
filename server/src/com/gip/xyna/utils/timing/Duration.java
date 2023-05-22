@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,15 +36,15 @@ import com.gip.xyna.utils.misc.StringSplitter.SplitApply;
 /**
  * Duration ist eine immutable Klasse zur Speicherung einer Zeitdauer unter Angabe eines Betrags und einer Einheit.
  * Duration ist StringSerializable, mit einer lesbaren Darstellung als "10 s", "55 ms", "3 min" etc.
- * Mögliche Einheiten sind {Tag "d", Stunde "h", Minute "min", Sekunde "s", Milli- "ms", Mikro- "µs" und Nanosekunde "ns"}
- * Diese Einheiten ergeben sich aus der vollständigen Abdeckung der Konstanten aus {@link java.util.concurrent.TimeUnit TimeUnit}.
- * Eine Kombination "4 min 30 s" ist nicht möglich!
+ * Mï¿½gliche Einheiten sind {Tag "d", Stunde "h", Minute "min", Sekunde "s", Milli- "ms", Mikro- "ï¿½s" und Nanosekunde "ns"}
+ * Diese Einheiten ergeben sich aus der vollstï¿½ndigen Abdeckung der Konstanten aus {@link java.util.concurrent.TimeUnit TimeUnit}.
+ * Eine Kombination "4 min 30 s" ist nicht mï¿½glich!
  * 
- * Equals und Hash berücksichtigen nur die Zeit in Millisekunden, d.h. "60 s" und "1 min" sind gleich.
+ * Equals und Hash berï¿½cksichtigen nur die Zeit in Millisekunden, d.h. "60 s" und "1 min" sind gleich.
  */
 public class Duration implements StringSerializable<Duration>, Serializable {
   private static final long serialVersionUID = 1L;
-  private static final String P_STRING = "(\\d+)\\s*(d|h|min|s|ms|µs|ns|)";
+  private static final String P_STRING = "(\\d+)\\s*(d|h|min|s|ms|ï¿½s|ns|)";
   private static final StringSplitter splitter = new StringSplitter(P_STRING);
   private static final Pattern PATTERN = Pattern.compile(P_STRING);
    
@@ -62,9 +62,9 @@ public class Duration implements StringSerializable<Duration>, Serializable {
     NAMES = Collections.unmodifiableMap(names);
   }
   private static final TimeUnit[] UNITSIZE = new TimeUnit[TimeUnit.values().length];
-  static { //komische Befüllung, da Java 1.5 keine MINUTES, HOURS und DAYS kennt
+  static { //komische Befï¿½llung, da Java 1.5 keine MINUTES, HOURS und DAYS kennt
     addUnit( UNITSIZE, 0, "ns");
-    addUnit( UNITSIZE, 1, "µs");
+    addUnit( UNITSIZE, 1, "ï¿½s");
     addUnit( UNITSIZE, 2, "ms");
     addUnit( UNITSIZE, 3, "s"); 
     addUnit( UNITSIZE, 4, "min"); 
@@ -97,7 +97,7 @@ public class Duration implements StringSerializable<Duration>, Serializable {
     switch( unit ) {
       case SECONDS: return "s";
       case MILLISECONDS: return "ms";
-      case MICROSECONDS: return "µs";
+      case MICROSECONDS: return "ï¿½s";
       case NANOSECONDS: return "ns";
       default: //MINUTES, HOURS und DAYS in Java 1.5 nicht bekannt
         String name = unit.name();
@@ -217,7 +217,7 @@ public class Duration implements StringSerializable<Duration>, Serializable {
 
   public static Duration valueOfSum(String string) {
     List<Pair<String, Duration>> list = splitter.splitAndApply(string, new SplitToDuration() );
-    //Separatoren werden nicht erwartet, diese führen unten zu einer IllegalArgumentException 
+    //Separatoren werden nicht erwartet, diese fï¿½hren unten zu einer IllegalArgumentException 
     
     long millis = 0;
     long nanos =0;
@@ -280,7 +280,7 @@ public class Duration implements StringSerializable<Duration>, Serializable {
       } else if( "ms".equals(unit) ) {
         return TimeUnit.MILLISECONDS;
       } else {
-        //seltener Rest über Map
+        //seltener Rest ï¿½ber Map
         for( Map.Entry<TimeUnit,String> entry : UNITS.entrySet() ) {
           if( entry.getValue().equals(unit) ) {
             return entry.getKey();
@@ -320,7 +320,7 @@ public class Duration implements StringSerializable<Duration>, Serializable {
   }
 
   /**
-   * Konvertiert Duration in andere Einheit. Achtung: bei Konversion in größere Einheit kann Präzisionsverlust auftreten!
+   * Konvertiert Duration in andere Einheit. Achtung: bei Konversion in grï¿½ï¿½ere Einheit kann Prï¿½zisionsverlust auftreten!
    * @param unit
    * @return Duration mit andere Einheit
    */

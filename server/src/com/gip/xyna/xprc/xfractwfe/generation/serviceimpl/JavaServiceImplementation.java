@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
 
 /**
- * wie sieht der generierte code aus, der für die eclipse projekte generiert wird
+ * wie sieht der generierte code aus, der fï¿½r die eclipse projekte generiert wird
  */
 public class JavaServiceImplementation {
 
@@ -192,7 +192,7 @@ public class JavaServiceImplementation {
         }
       }
 
-      //helpermethode für konstruktoren
+      //helpermethode fï¿½r konstruktoren
       cb.addLine("private static Map<String, Object> setImpls(Map<String, Object> map, ", dom.getFqClassName(), " o) {");
       if (!dom.isAbstract()) {
         boolean first = true;
@@ -226,14 +226,14 @@ public class JavaServiceImplementation {
       }
       for (InterfaceVersion version : dom.getVersionsOfOperations(true)) {
         if (!dom.hasSuperTypeWithJavaImpl(true, version)) {
-          //impl ist hier definiert, wurde aber evtl in einem sub-typ instanziiert und über die map hierher delegiert
+          //impl ist hier definiert, wurde aber evtl in einem sub-typ instanziiert und ï¿½ber die map hierher delegiert
           cb.addLine("this.", getVarNameNonstaticOperationImplInstance(version), " = (", getProjectNonStaticImplFQClassName(version),
                      ") implMap.get(\"", version.getNameCompatibleWithCurrentVersion(), "\")");
         }
       }
       cb.addLine("}").addLB();
 
-      //konstruktor 2b: für abwärtskompatibilität bezüglich generiertem code <= version 5.1.3
+      //konstruktor 2b: fï¿½r abwï¿½rtskompatibilitï¿½t bezï¿½glich generiertem code <= version 5.1.3
       cb.addLine("public ", getDelegationImplSimpleClassName(), "(", getProjectNonStaticImplFQClassName(InterfaceVersion.BASE), " o) {");
       cb.addLine("this(o == null ? null : ((", getSuperProxySimpleClassName(InterfaceVersion.BASE), /*protected methode in gleichem package*/
                  ") o).getInstanceVar(), o == null ? new HashMap<String, Object>() : new HashMap<String, Object>(",
@@ -257,7 +257,7 @@ public class JavaServiceImplementation {
     } 
 
     if (hasStaticOperationImpl) {
-      //FIXME falls abstrakt, werden die nie aufgerufen. das ist für den eclipse user verwirrend
+      //FIXME falls abstrakt, werden die nie aufgerufen. das ist fï¿½r den eclipse user verwirrend
       cb.addLine("public void onDeployment() throws ", XynaException.class.getSimpleName(), " {");
       for (InterfaceVersion version : versions) {
         cb.addLine(getVarNameStaticOperationImplInstance(version), ".onDeployment()");
@@ -354,7 +354,7 @@ public class JavaServiceImplementation {
       cb.addLine(getProjectNonStaticImplFQClassName(InterfaceVersion.BASE), " implclone = (",
                  getProjectNonStaticImplFQClassName(InterfaceVersion.BASE), ") cloneMethod.invoke(",
                  getVarNameNonstaticOperationImplInstance(InterfaceVersion.BASE), ")");
-      cb.addLine("return new ", getDelegationImplSimpleClassName(), "(implclone)"); //TODO das ist aber unschön, diesen konstruktor aufzurufen, der steht oben als "nur aus abwärtskompatibilität" markiert.
+      cb.addLine("return new ", getDelegationImplSimpleClassName(), "(implclone)"); //TODO das ist aber unschï¿½n, diesen konstruktor aufzurufen, der steht oben als "nur aus abwï¿½rtskompatibilitï¿½t" markiert.
       cb.addLine("} catch (", IllegalAccessException.class.getName(), " e) {");
       cb.addLine("} catch (", InvocationTargetException.class.getName(), " e) {");
       cb.addLine("}"); //end try      
@@ -543,7 +543,7 @@ public class JavaServiceImplementation {
         continue;
       }
       cb.add(" {").addLB();
-      //methode kann in den fällen, wo sie als workflow oder codesnippet implementiert ist, nicht weggelassen oder abstrakt gemacht werden
+      //methode kann in den fï¿½llen, wo sie als workflow oder codesnippet implementiert ist, nicht weggelassen oder abstrakt gemacht werden
       //weil die impl-instanz noch instanziierbar sein muss
       if (operation instanceof WorkflowCall) {
         cb.addLine("// Implemented as workflow!");
@@ -560,7 +560,7 @@ public class JavaServiceImplementation {
   }
 
   /**
-   * gibt zurück, ob die beiden versionen gleich behandelt werden sollen. typischerfall der nicht-identität ist, dass
+   * gibt zurï¿½ck, ob die beiden versionen gleich behandelt werden sollen. typischerfall der nicht-identitï¿½t ist, dass
    * die eine operation keine versionsangabe hat, und die andere die currentversion ist. 
    */
   private boolean isSameVersion(InterfaceVersion v1, InterfaceVersion v2) {
@@ -580,7 +580,7 @@ public class JavaServiceImplementation {
 
 
   public String createProjectNonStaticImplCode() {
-    //auch erzeugen, wenn es keine operations gibt! z.b. leitet sshnetconfconnection von sshconnection nur deshalb ab, um nicht modellierte operations zu überschreiben
+    //auch erzeugen, wenn es keine operations gibt! z.b. leitet sshnetconfconnection von sshconnection nur deshalb ab, um nicht modellierte operations zu ï¿½berschreiben
 
     HashSet<String> implDontImport = new HashSet<String>();
     HashSet<String> importedClasses = new HashSet<String>();
@@ -643,7 +643,7 @@ public class JavaServiceImplementation {
 
 
   public String createSuperProxyCode() {
-    //auch erzeugen, wenn es keine operations gibt! z.b. leitet sshnetconfconnection von sshconnection nur deshalb ab, um nicht modellierte operations zu überschreiben
+    //auch erzeugen, wenn es keine operations gibt! z.b. leitet sshnetconfconnection von sshconnection nur deshalb ab, um nicht modellierte operations zu ï¿½berschreiben
 
     HashSet<String> implDontImport = new HashSet<String>();
     HashSet<String> importedClasses = new HashSet<String>();
@@ -685,7 +685,7 @@ public class JavaServiceImplementation {
     cb.addLine("}").addLB();
 
     if (dom.hasSuperTypeWithInstanceMethods(version)) {
-      //TODO variable nicht generieren, wenn sie nicht benötigt werden (also es gibt nur final und abstract methoden im supertype)
+      //TODO variable nicht generieren, wenn sie nicht benï¿½tigt werden (also es gibt nur final und abstract methoden im supertype)
       cb.addLine("private final ", dom.getSuperClassGenerationObject().getSimpleClassName(), " ",
                  SUPER_PROXY_INTERNALSUPERCALL_DELEGATION_VARNAME, " = new ", dom.getSuperClassGenerationObject().getSimpleClassName(),
                  "() {");
@@ -710,7 +710,7 @@ public class JavaServiceImplementation {
           returnNothing(cb, operationInformation.getOperation().getOutputVars() );
         } else {
           if (operationInformation.isNotAbstractInJavaServiceImpl()) {
-            //super delegation. nur, wenn es auch eine javaimplementierung obendrüber gibt
+            //super delegation. nur, wenn es auch eine javaimplementierung obendrï¿½ber gibt
             if (operationInformation.getOperation().getOutputVars() != null
                 && operationInformation.getOperation().getOutputVars().size() > 0) {
               cb.add("return ");
@@ -728,7 +728,7 @@ public class JavaServiceImplementation {
         cb.addLine("}").addLB();
       }
 
-      //clone methode überschreiben, falls abstrakt in supertype
+      //clone methode ï¿½berschreiben, falls abstrakt in supertype
       if (dom.getSuperClassGenerationObject().isAbstract()) {
         cb.addLine("public ", dom.getSuperClassGenerationObject().getSimpleClassName(), " clone(boolean deep) {");
         cb.addLine("return null");
@@ -777,7 +777,7 @@ public class JavaServiceImplementation {
           cb.addLine("}").addLB();
         }
 
-        //delegation für finale methoden einfach an die instanz-Variable, da muss man nichts beachten, weil sie lokal nicht überschrieben sein können
+        //delegation fï¿½r finale methoden einfach an die instanz-Variable, da muss man nichts beachten, weil sie lokal nicht ï¿½berschrieben sein kï¿½nnen
         if (operationInformation.isFinal()) {
           cb.add("public final ");
           operationInformation.getOperation().createMethodSignature(cb, false, importedClassesFullyQualified,
@@ -793,7 +793,7 @@ public class JavaServiceImplementation {
           cb.addLine("}").addLB();
         } else if (!operationInformation.isAbstract()) {
           //weder abstrakt noch final 
-          //-> methode muss über spezielle delegation den super-aufruf machen, damit evtl eine workflow implementierung aufgerufen werden kann
+          //-> methode muss ï¿½ber spezielle delegation den super-aufruf machen, damit evtl eine workflow implementierung aufgerufen werden kann
           String methodReferenceVarName = "method_" + operationInformation.getOperation().getNameWithoutVersion() + "_InternalSuperCallProxy";
           cb.addLine("private transient ", Method.class.getName(), " ", methodReferenceVarName).addLB();
 
@@ -805,8 +805,8 @@ public class JavaServiceImplementation {
           operationInformation.getOperation().createMethodSignature(cb, false, importedClassesFullyQualified,
                                                                     operationInformation.getOperation().getNameWithoutVersion());
           cb.add(" {").addLB();
-          //reflection, weil methode im datentyp private ist (sichtbar wäre blöd, weil verwirrend für den benutzer). 
-          //Außerdem ist eine höhere Sichtbarkeit schlecht, weil die Methoden dann nicht gezielt aufgerufen werden können (wegen dynamic dispatch)
+          //reflection, weil methode im datentyp private ist (sichtbar wï¿½re blï¿½d, weil verwirrend fï¿½r den benutzer). 
+          //Auï¿½erdem ist eine hï¿½here Sichtbarkeit schlecht, weil die Methoden dann nicht gezielt aufgerufen werden kï¿½nnen (wegen dynamic dispatch)
           cb.addLine("if (", methodReferenceVarName, " == null) {");
           cb.addLine(Method.class.getName(), " temp;");
           cb.addLine("try {");
@@ -815,8 +815,8 @@ public class JavaServiceImplementation {
           //erster Parameter oberklassen typ
           cb.addListElement(dom.getSuperClassGenerationObject().getSimpleClassName() + ".class");
 
-          //TODO mehr unterstützung von special purpose inputvars, falls man die mit dieser technologie erweitern möchte
-          //     vgl auch unten die parameter übergabe ans invoke
+          //TODO mehr unterstï¿½tzung von special purpose inputvars, falls man die mit dieser technologie erweitern mï¿½chte
+          //     vgl auch unten die parameter ï¿½bergabe ans invoke
           //spezial parameter:
           if (operationInformation.getOperation() instanceof JavaOperation) {
             JavaOperation jo = (JavaOperation) operationInformation.getOperation();
@@ -833,7 +833,7 @@ public class JavaServiceImplementation {
             }
           }
           cb.add(")").addLB();
-          //TODO mehr informationen bei den runtimeexceptions übergeben
+          //TODO mehr informationen bei den runtimeexceptions ï¿½bergeben
           cb.addLine("} catch (", SecurityException.class.getSimpleName(), " e) {");
           cb.addLine("throw new ", RuntimeException.class.getSimpleName(), "(e)");
           cb.addLine("} catch (", NoSuchMethodException.class.getSimpleName(), " e) {");
@@ -898,7 +898,7 @@ public class JavaServiceImplementation {
 
   private void returnNothing(CodeBuffer cb, List<AVariable> outputVars) {
     if (outputVars == null || outputVars.size() == 0 ) {
-      return; //keine Rückgabe
+      return; //keine Rï¿½ckgabe
     }
     if( outputVars.size() > 1 ) {
       cb.addLine("return null");  //Container
@@ -906,7 +906,7 @@ public class JavaServiceImplementation {
     }
     AVariable out = outputVars.get(0);
     if( out.isJavaBaseType() && ! out.getJavaTypeEnum().isObject() ) {
-      //kein Object, daher kein null möglich
+      //kein Object, daher kein null mï¿½glich
       cb.addLine("return "+out.getJavaTypeEnum().getDefaultConstructor());
     } else {
       //Object, daher null erlaubt
@@ -946,7 +946,7 @@ public class JavaServiceImplementation {
 
     cb.addLB(2);
     cb.addLine("/**");
-    //FIXME kommentare müssen als ein ganzer string zum codebuffer geaddet werden, damit keine semikolons generiert werden
+    //FIXME kommentare mï¿½ssen als ein ganzer string zum codebuffer geaddet werden, damit keine semikolons generiert werden
     cb.addLine(" * " + GenerationBase.escapeForCodeGenUsageInComment(dom.getDocumentation()));
     cb.addLine(" */");
     cb.addLine("public interface ", staticOps ? getInterfaceStaticSimpleClassName() : getInterfaceNonStaticSimpleClassName(), " {");
@@ -958,7 +958,7 @@ public class JavaServiceImplementation {
         continue;
       }
       if (!staticOps && operationInformation.isFinalInSuperType()) {
-        //hier nicht überschreibbar
+        //hier nicht ï¿½berschreibbar
         continue;
       }
       if (!operationInformation.isImplementedHere()) {
@@ -972,7 +972,7 @@ public class JavaServiceImplementation {
 
       String documentation = getDocumentation(operation);
       cb.addLine("/**");
-      //FIXME kommentare müssen als ein ganzer string zum codebuffer geaddet werden, damit keine semikolons generiert werden
+      //FIXME kommentare mï¿½ssen als ein ganzer string zum codebuffer geaddet werden, damit keine semikolons generiert werden
       cb.addLine(" * " + GenerationBase.escapeForCodeGenUsageInComment(documentation) + "<p>");
       cb.addLine(" * Defined in {@link " + operationInformation.getDefiningType().getFqClassName() + "}<br>");
       if (operation.isFinal()) {
@@ -999,7 +999,7 @@ public class JavaServiceImplementation {
         cb.addLine(" * eventSource.listenOnAbortEvents(myServiceStepEventHandler);");
         cb.addLine(" * </pre>");
       }
-      //TODO javadoc für die variablen
+      //TODO javadoc fï¿½r die variablen
       cb.addLine(" */");
       cb.add("public ");
       operation.createMethodSignature(cb, false, importedClassesFullyQualified, operation.getNameWithoutVersion());
@@ -1011,7 +1011,7 @@ public class JavaServiceImplementation {
 
 
   /**
-   * falls lokal keine dokumentation definiert ist, die aus oberklasse übernehmen
+   * falls lokal keine dokumentation definiert ist, die aus oberklasse ï¿½bernehmen
    */
   private String getDocumentation(Operation operation) {
     String documentation = operation.getDocumentation();
@@ -1034,11 +1034,11 @@ public class JavaServiceImplementation {
 
 
   /**
-   * erstellt temporären superklassen code falls vorhanden, um nicht abhängig von kram im deployten superklassen code zu sein
+   * erstellt temporï¿½ren superklassen code falls vorhanden, um nicht abhï¿½ngig von kram im deployten superklassen code zu sein
    * (z.b. abstract methoden)
    * 
-   * code ist anders aufgebaut, als der echte superklassen code, er enthält z.b. keine informationen über weitere superklassen.
-   * benötigt werden nur konstruktor und korrekte methodensignaturen
+   * code ist anders aufgebaut, als der echte superklassen code, er enthï¿½lt z.b. keine informationen ï¿½ber weitere superklassen.
+   * benï¿½tigt werden nur konstruktor und korrekte methodensignaturen
    */
   public String createSuperProjectNonStaticImplCode() {
     if (!dom.hasSuperTypeWithInstanceMethods(null)) {
@@ -1105,11 +1105,11 @@ public class JavaServiceImplementation {
 
 
   /**
-   * erstellt temporären superklassen code falls vorhanden, um nicht abhängig von kram im deployten superklassen code zu sein
+   * erstellt temporï¿½ren superklassen code falls vorhanden, um nicht abhï¿½ngig von kram im deployten superklassen code zu sein
    * (z.b. abstract methoden)
    * 
-   * code ist anders aufgebaut, als der echte superklassen code, er enthält z.b. keine informationen über weitere superklassen.
-   * benötigt werden nur konstruktoren
+   * code ist anders aufgebaut, als der echte superklassen code, er enthï¿½lt z.b. keine informationen ï¿½ber weitere superklassen.
+   * benï¿½tigt werden nur konstruktoren
    */
   public String createSuperDelegationImplCode() {
     if (!dom.hasSuperTypeWithInstanceMethods(null)) {
@@ -1170,7 +1170,7 @@ public class JavaServiceImplementation {
       cb.addLine(v, "= null");
     }
     cb.addLine("}").addLB();
-    //methoden werden nicht benötigt, weil es keine super-aufrufe in der delegationimpl klasse gibt
+    //methoden werden nicht benï¿½tigt, weil es keine super-aufrufe in der delegationimpl klasse gibt
     cb.addLine("}");
 
     return cb.toString();

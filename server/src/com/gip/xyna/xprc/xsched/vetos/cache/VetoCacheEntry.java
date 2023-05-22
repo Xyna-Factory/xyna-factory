@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class VetoCacheEntry {
   private volatile long urgency;               //Thread(VCP, S, andere); volatile nur auf Verdacht
   private volatile WaitingOrder waitingOrder;  //Thread(VCP, S); volatile nur auf Verdacht
   private boolean keepUsable; //Thread(S). Veto wurde im Status "usable" angetroffen, aber nicht geschedult. 
-  //Da es im aktuellen Schedulerlauf fast benötigt worden ist, soll es bis zum nächsten Schedulinglauf 
+  //Da es im aktuellen Schedulerlauf fast benï¿½tigt worden ist, soll es bis zum nï¿½chsten Schedulinglauf 
   //"usable" bleiben
   private volatile boolean replicated; //Thread(VCP), volatile nur auf Verdacht
   
@@ -170,8 +170,8 @@ public class VetoCacheEntry {
         if( this.vetoInformation.getUsingOrderId().equals(vetoInformation.getUsingOrderId() ) ) {
           //Auftrag hat Veto bereits belegt, dies ist erlaubt
           if(  this.vetoInformation.getBinding() != vetoInformation.getBinding() ) {
-            this.vetoInformation = vetoInformation; //korrigiert Binding (nach Übernahme vom andern Knoten, bei Restart)
-            compareAndSetState(State.Used, State.Scheduled); //nochmal speichern, da Binding geändert
+            this.vetoInformation = vetoInformation; //korrigiert Binding (nach ï¿½bernahme vom andern Knoten, bei Restart)
+            compareAndSetState(State.Used, State.Scheduled); //nochmal speichern, da Binding geï¿½ndert
           }
           return true;
         }
@@ -229,7 +229,7 @@ public class VetoCacheEntry {
   public boolean free() {
     //wird von beliebigen Threads verwendet!
     if( compareAndSetState(State.Used, State.Free) ) {
-      //häufigster Fall
+      //hï¿½ufigster Fall
       this.urgency = Long.MIN_VALUE;
       return true;
     } else {
@@ -240,19 +240,19 @@ public class VetoCacheEntry {
         this.urgency = Long.MIN_VALUE;
         return true;
       }
-      //ungültiger Aufruf: Veto kann nicht freigegeben werden
+      //ungï¿½ltiger Aufruf: Veto kann nicht freigegeben werden
       return false;
     }
   }
   
   public boolean remoteFree() {
-    //wird von remote-Thread gerufen, analog zu free() müssen mehrere States untersucht werden
+    //wird von remote-Thread gerufen, analog zu free() mï¿½ssen mehrere States untersucht werden
     if( compareAndSetState(State.Scheduled, State.Free) || 
         compareAndSetState(State.Used, State.Free) ) {
       this.urgency = Long.MIN_VALUE;
       return true;
     } else {
-      //ungültiger Aufruf: Veto kann nicht freigegeben werden
+      //ungï¿½ltiger Aufruf: Veto kann nicht freigegeben werden
       return false;
     }
   }
@@ -262,10 +262,10 @@ public class VetoCacheEntry {
     if( waitingOrder == null ) {
       return false;
     }
-    //hier gibt es keine Aktualitätsprüfung, falls der wartende Auftrag nicht mehr existieren sollte.
-    //D.h das Veto macht unnötige Übergänge Removing -> Local -> Usable -> Unused -> Removing -> None 
+    //hier gibt es keine Aktualitï¿½tsprï¿½fung, falls der wartende Auftrag nicht mehr existieren sollte.
+    //D.h das Veto macht unnï¿½tige ï¿½bergï¿½nge Removing -> Local -> Usable -> Unused -> Removing -> None 
     //statt Removing -> None. 
-    //Im Cluster kommt dann noch unnötige Cluster-Kommunikation hinzu:
+    //Im Cluster kommt dann noch unnï¿½tige Cluster-Kommunikation hinzu:
     return waitingOrder.isWaiting();
   }
   
@@ -306,12 +306,12 @@ public class VetoCacheEntry {
     public void update(long urgency, long currentSchedulingRun) {
       //wird im Scheduler-Thread aufgerufen (beliebiger State)
       if( currentSchedulingRun > this.schedulingRun) {
-        //waiting wurde in früherem Schedulinglauf gesetzt, ist daher evtl. veraltet und kann neu gesetzt werden
+        //waiting wurde in frï¿½herem Schedulinglauf gesetzt, ist daher evtl. veraltet und kann neu gesetzt werden
         this.schedulingRun = currentSchedulingRun;
         this.urgency = urgency;
         this.count = 1;
       } else {
-        //waiting wurde in gleichem Schedulinglauf gesetzt, daher ist bereits höchste urgency eingetragen
+        //waiting wurde in gleichem Schedulinglauf gesetzt, daher ist bereits hï¿½chste urgency eingetragen
         this.count++;
       }
     }

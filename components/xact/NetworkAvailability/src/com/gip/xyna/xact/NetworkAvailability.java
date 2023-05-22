@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -229,7 +229,7 @@ public class NetworkAvailability {
             wait(Math.max(1, lastSentTime.get() + timeoutMs - System.currentTimeMillis()));
           }
         }
-        //solange bis eine bedingung davon nicht mehr erfüllt ist: d.h. entweder timeout ist abgelaufen oder receive wurde empfangen
+        //solange bis eine bedingung davon nicht mehr erfï¿½llt ist: d.h. entweder timeout ist abgelaufen oder receive wurde empfangen
       } while (waitForReceive && System.currentTimeMillis() < lastSentTime.get() + timeoutMs);
     }
 
@@ -246,7 +246,7 @@ public class NetworkAvailability {
   public interface FactoryChecker {
 
     /**
-     * gibt true zurück, falls factory verfügbar. ansonsten false.
+     * gibt true zurï¿½ck, falls factory verfï¿½gbar. ansonsten false.
      */
     public boolean check() throws InterruptedException;
   }
@@ -375,7 +375,7 @@ public class NetworkAvailability {
 
   private void changeState(final NetworkState newState) {
     if (state != newState) {
-      //asynchron ausführen, damit nicht das versenden weiterer pakete verzögert wird.
+      //asynchron ausfï¿½hren, damit nicht das versenden weiterer pakete verzï¿½gert wird.
       executorThread.execute(new Runnable() {
 
         public void run() {
@@ -394,7 +394,7 @@ public class NetworkAvailability {
 
 
   private void checkState() {
-    //alle alten einträge entfernen
+    //alle alten eintrï¿½ge entfernen
     long min = System.currentTimeMillis() - analysisIntervalLength;
     removeOldEntries(min);
 

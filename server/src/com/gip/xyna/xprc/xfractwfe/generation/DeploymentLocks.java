@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class DeploymentLocks {
   private static class DeploymentLockCompound extends ObjectWithRemovalSupport {
 
     public static final int PERMITS = 100000;
-    private final Semaphore semaphore = new Semaphore(PERMITS, true); //fair, weil sonst das "writelock" ewig warten könnte
+    private final Semaphore semaphore = new Semaphore(PERMITS, true); //fair, weil sonst das "writelock" ewig warten kï¿½nnte
     private final DeploymentReadLock readLock;
     private final DeploymentWriteLock writeLock;
     protected String reason;
@@ -256,7 +256,7 @@ public class DeploymentLocks {
   }
 
   /**
-   * passiert immer mit dem gleichen thread als das zugehörige readlock.
+   * passiert immer mit dem gleichen thread als das zugehï¿½rige readlock.
    * TODO: fehler werfen, wenn unlock mit einem anderen thread passiert
    */
   public static void readUnlock(final String uniqueName, DependencySourceType type, final Long revision) {
@@ -301,7 +301,7 @@ public class DeploymentLocks {
   }
   
   /**
-   * passiert evtl mit einem anderen thread als das zugehörige writelock
+   * passiert evtl mit einem anderen thread als das zugehï¿½rige writelock
    */
   public static void writeUnlock(final String uniqueName, DependencySourceType type, final Long revision) {
     doForLockCompound(uniqueName, type, revision, new ValueProcessor<DeploymentLockCompound, Void>() {

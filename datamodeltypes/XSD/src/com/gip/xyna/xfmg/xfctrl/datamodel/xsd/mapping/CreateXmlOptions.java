@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public class CreateXmlOptions {
       label("Root Element Name").
       documentation(Documentation.
                     en("Root Element Name, only needed if no standard Root Element Name from XSD exists").
-                    de("Name des RootElements, nur nötig, wenn es keinen Standard-RootElement-Name aus dem XSD gibt").
+                    de("Name des RootElements, nur nï¿½tig, wenn es keinen Standard-RootElement-Name aus dem XSD gibt").
                     build()).
       build();
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public class CMUnsupported implements CapacityManagementInterface {
     CMAbstract.internalCheckAllocate( orderInformation, schedulingData, this, logger );
     
     if( ! schedulingData.needsCapacities() ) {
-      //Aufträge, die keine Caps brauchen, sollen laufen dürfen, damit Server korrekt heruntergefahren werden kann
+      //Auftrï¿½ge, die keine Caps brauchen, sollen laufen dï¿½rfen, damit Server korrekt heruntergefahren werden kann
       schedulingData.setHasAcquiredCapacities(true);
       return CapacityAllocationResult.SUCCESS;
     } else {
@@ -97,8 +97,8 @@ public class CMUnsupported implements CapacityManagementInterface {
   }
   
   public boolean forceFreeCapacities(long orderId) {
-    //Vollständig implementiert, damit vergebene Caps auch im Fehlerfall korrekt zurückgegeben 
-    //werden können und der Cache somit valide bleibt
+    //Vollstï¿½ndig implementiert, damit vergebene Caps auch im Fehlerfall korrekt zurï¿½ckgegeben 
+    //werden kï¿½nnen und der Cache somit valide bleibt
     return CMAbstract.internalForceFreeCapacities(orderId, cache, logger);
   }
 
@@ -108,20 +108,20 @@ public class CMUnsupported implements CapacityManagementInterface {
   }
 
   public boolean freeTransferableCapacities(XynaOrderServerExtension xo) {
-    //Vollständig implementiert, damit vergebene Caps auch im Fehlerfall korrekt zurückgegeben 
-    //werden können und der Cache somit valide bleibt
+    //Vollstï¿½ndig implementiert, damit vergebene Caps auch im Fehlerfall korrekt zurï¿½ckgegeben 
+    //werden kï¿½nnen und der Cache somit valide bleibt
     return CMAbstract.internalFreeCapacities(xo, cache, logger, true, false);
   }
   
   public boolean freeCapacities(XynaOrderServerExtension xo) {
-    //Vollständig implementiert, damit vergebene Caps auch im Fehlerfall korrekt zurückgegeben 
-    //werden können und der Cache somit valide bleibt
+    //Vollstï¿½ndig implementiert, damit vergebene Caps auch im Fehlerfall korrekt zurï¿½ckgegeben 
+    //werden kï¿½nnen und der Cache somit valide bleibt
     return CMAbstract.internalFreeCapacities(xo, cache, logger, false, false);
   }
 
   public void undoAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
-    //Vollständig implementiert, damit vergebene Caps auch im Fehlerfall korrekt zurückgegeben 
-    //werden können und der Cache somit valide bleibt
+    //Vollstï¿½ndig implementiert, damit vergebene Caps auch im Fehlerfall korrekt zurï¿½ckgegeben 
+    //werden kï¿½nnen und der Cache somit valide bleibt
     CMAbstract.internalFreeCapacities(orderInformation, schedulingData, cache, logger, false, true);
   }
 

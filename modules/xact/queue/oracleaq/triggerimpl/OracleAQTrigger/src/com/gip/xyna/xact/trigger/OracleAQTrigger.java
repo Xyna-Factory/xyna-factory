@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,9 +99,9 @@ public class OracleAQTrigger extends EventListener<OracleAQTriggerConnection, Or
       //Umtragen der DB-Connection, auf der das Dequeue-Commit erfolgen soll ins AcknowledgeableObject
       OracleAQTriggerAcknowledgeableObject ack = new OracleAQTriggerAcknowledgeableObject(tc,tc.getSqlUtils());
       ctx.set(OrderContextServerExtension.ACKNOWLEDGABLE_OBJECT_KEY, ack );
-      tc.setSqlUtils(null); //werden von nun an nicht mehr in der OracleAQTriggerConnection benötigt
+      tc.setSqlUtils(null); //werden von nun an nicht mehr in der OracleAQTriggerConnection benï¿½tigt
     } else {
-      //Dequeue-Commit kann hier erfolgen, Rückgabe der Connection an den Pool
+      //Dequeue-Commit kann hier erfolgen, Rï¿½ckgabe der Connection an den Pool
       try {
         tc.commit();
       } finally {
@@ -112,8 +112,8 @@ public class OracleAQTrigger extends EventListener<OracleAQTriggerConnection, Or
   }
 
   /**
-   * ermöglicht es dem Trigger zu reagieren, wenn Filter verantwortlich ist, aber keine XynaOrder startet
-   * nicht abstract aufgrund von Abwärtskompatibilität
+   * ermï¿½glicht es dem Trigger zu reagieren, wenn Filter verantwortlich ist, aber keine XynaOrder startet
+   * nicht abstract aufgrund von Abwï¿½rtskompatibilitï¿½t
    * @param tc
    */
   @Override
@@ -125,8 +125,8 @@ public class OracleAQTrigger extends EventListener<OracleAQTriggerConnection, Or
   }
 
   /**
-   * ermöglicht es dem Trigger zu reagieren, wenn Filter mit unerwarteten Exceptions fehlschlägt
-   * nicht abstract aufgrund von Abwärtskompatibilität
+   * ermï¿½glicht es dem Trigger zu reagieren, wenn Filter mit unerwarteten Exceptions fehlschlï¿½gt
+   * nicht abstract aufgrund von Abwï¿½rtskompatibilitï¿½t
    * @param tc
    * @param connectionFilter
    * @param cause
@@ -234,7 +234,7 @@ public class OracleAQTrigger extends EventListener<OracleAQTriggerConnection, Or
         try {
           Thread.sleep(startParameter.getAutoReconnectRetryInterval());
         } catch (InterruptedException e1) {
-          //dann halt kürzer warten
+          //dann halt kï¿½rzer warten
         }
       } else {
         disableTrigger();
@@ -393,7 +393,7 @@ public class OracleAQTrigger extends EventListener<OracleAQTriggerConnection, Or
           logger.info("Going to close database connection for schema = " + queueData.getDbSchema()
                       + ", jdbc url = " + queueData.getJdbcUrl());
         }
-        //Pools schließen
+        //Pools schlieï¿½en
         requestConnectionPool.close();
         if( responseConnectionPool != null ) {
           responseConnectionPool.close();

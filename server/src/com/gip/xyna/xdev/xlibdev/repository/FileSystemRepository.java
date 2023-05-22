@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -227,7 +227,7 @@ public class FileSystemRepository implements Repository {
       state = 2;
     } finally {
       if (state == 0) {
-        //FIXME führt dazu, dass das erneute erste einfügen CREATE nicht korrekt erkennt
+        //FIXME fï¿½hrt dazu, dass das erneute erste einfï¿½gen CREATE nicht korrekt erkennt
         revs.put(revision, new Revision(revision, System.currentTimeMillis(), ObjectChange.ERROR));
       } else if (state == 1) {
         revs.put(revision, new Revision(revision, System.currentTimeMillis(), ObjectChange.ERROR));
@@ -252,7 +252,7 @@ public class FileSystemRepository implements Repository {
     }
     long current = getStoredRevision(revs, revision);
     if (current == -1 || revs.get(current).getChange() == ObjectChange.DELETED) {
-      //ntbd: ist bereits gelöscht
+      //ntbd: ist bereits gelï¿½scht
       return;
     }
     Revision r =  writeToHistory(revision, fileNameWithRelativePath, ObjectChange.DELETED, comment);
@@ -380,14 +380,14 @@ public class FileSystemRepository implements Repository {
   }
 
   /**
-   * gibt das größte r zurück, was in der revisions-map ist, welches noch kleinergleich revision ist.  
-   * gibt -1 zurück, falls kein solches r existiert.
+   * gibt das grï¿½ï¿½te r zurï¿½ck, was in der revisions-map ist, welches noch kleinergleich revision ist.  
+   * gibt -1 zurï¿½ck, falls kein solches r existiert.
    */
   private long getStoredRevision(Map<Long, Revision> revisions, long revision) {
     if (revisions.containsKey(revision)) {
       return revision;
     }
-    //in unsortierter liste nach nächstkleinerer id suchen
+    //in unsortierter liste nach nï¿½chstkleinerer id suchen
     long revlower = -1;
     for (long l : revisions.keySet()) {
       if (l > revlower && l < revision) {
@@ -416,22 +416,22 @@ public class FileSystemRepository implements Repository {
 
 
   public void cleanupEarlierThan(long timestampMillis) throws Ex_FileAccessException {
-    //suche zu löschende files/revisions
+    //suche zu lï¿½schende files/revisions
     Map<String, Set<Long>> deletionMap = new HashMap<String, Set<Long>>();
     for (Entry<String, Map<Long, Revision>> e : revisionMap.entrySet()) {
       Set<Long> delete = new HashSet<Long>();
       String filename = e.getKey();
       Map<Long, Revision> m = e.getValue();
-      //sammle alle revisions, deren timestamp < x ist. merke den höchsten dieser timestamps separat, 
-      //weil der darf nicht entfernt werden, weil er ja am ende des zeitintervalls gültig ist
-      //wenn der letzte eintrag hingegen ein lösch-eintrag ist, darf er auch entfernt werdne.
+      //sammle alle revisions, deren timestamp < x ist. merke den hï¿½chsten dieser timestamps separat, 
+      //weil der darf nicht entfernt werden, weil er ja am ende des zeitintervalls gï¿½ltig ist
+      //wenn der letzte eintrag hingegen ein lï¿½sch-eintrag ist, darf er auch entfernt werdne.
       long max = -1;
       Revision maxRev = null;
       for (Entry<Long, Revision> el : m.entrySet()) {
         Revision rev = el.getValue();
         long ts = rev.getTimestamp();
         if (ts < max) {
-          //revision gefunden, die älter als das aktuelle max ist. die kann also entfernt werden
+          //revision gefunden, die ï¿½lter als das aktuelle max ist. die kann also entfernt werden
           delete.add(rev.getRev());
         } else if (ts > max && ts < timestampMillis) {
           //revision gefunden, die entfernt werden kann, solange sie nicht selbst die maximale (<timestampMillis) ist.
@@ -460,14 +460,14 @@ public class FileSystemRepository implements Repository {
     }
 
     if (deletionMap.size() > 0) {
-      //lösche aus history-file
+      //lï¿½sche aus history-file
       deleteFromHistory(deletionMap);
 
-      //lösche files
+      //lï¿½sche files
       for (Entry<String, Set<Long>> e : deletionMap.entrySet()) {
         for (Long rev : e.getValue()) {
           File f = getFileInRevision(e.getKey(), rev);
-          if (f.exists()) { //könnte auch ein deletion-eintrag in der history sein, dann gibt es dazu kein file
+          if (f.exists()) { //kï¿½nnte auch ein deletion-eintrag in der history sein, dann gibt es dazu kein file
             if (!f.delete()) {
               logger.info("Could not delete " + f.getAbsolutePath());
             } else if (logger.isDebugEnabled()) {
@@ -483,7 +483,7 @@ public class FileSystemRepository implements Repository {
   private synchronized void deleteFromHistory(Map<String, Set<Long>> deletionMap) throws Ex_FileAccessException {
     /*
      * move history -> history.old
-     * copy zeilenweise und lasse zu löschende einträge weg.
+     * copy zeilenweise und lasse zu lï¿½schende eintrï¿½ge weg.
      */
     if (historyWriter != null) {
       try {
@@ -508,15 +508,15 @@ public class FileSystemRepository implements Repository {
           try {
             Pair<String, Revision> r = parseLine(line);
             if (r == null) {
-              //ungültige zeile ignorieren
+              //ungï¿½ltige zeile ignorieren
               continue;
             }
             Set<Long> revs = deletionMap.get(r.getFirst());
             if (revs != null && revs.contains(r.getSecond().getRev())) {
-              //zeile nicht wieder rausschreiben, weil gelöscht
+              //zeile nicht wieder rausschreiben, weil gelï¿½scht
               continue;
             }
-            //alle nicht gelöschten zeilen wieder zurückschreiben
+            //alle nicht gelï¿½schten zeilen wieder zurï¿½ckschreiben
             historyWriter.write(line);
             historyWriter.write('\n');
           } catch (RuntimeException e) {

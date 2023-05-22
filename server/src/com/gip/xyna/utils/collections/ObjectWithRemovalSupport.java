@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public abstract class ObjectWithRemovalSupport {
 
   /**
    * @return true, falls object von niemandem mehr in benutzung ist und deshalb entfernt werden kann.
-   *  es wird sichergestellt, dass nach dem entfernen nichts mehr geändert wird
+   *  es wird sichergestellt, dass nach dem entfernen nichts mehr geï¿½ndert wird
    */
   // 0 -> -1 return true, != 0 -> return false
   boolean markForDeletion() {
@@ -81,13 +81,13 @@ public abstract class ObjectWithRemovalSupport {
   }
 
   /**
-   * Wird ggfs mehrfach aufgerufen. Objekt wird nur aus Map entfernt, wenn diese Methode true zurück gibt.
+   * Wird ggfs mehrfach aufgerufen. Objekt wird nur aus Map entfernt, wenn diese Methode true zurï¿½ck gibt.
    */
   protected abstract boolean shouldBeDeleted();
 
 
   protected void onDeletion() {
-    //kann überschrieben werden
+    //kann ï¿½berschrieben werden
   }
 
 }

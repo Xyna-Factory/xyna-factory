@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.concurrent.Semaphore;
 
 
 /**
- * bietet im vergleich zu reentrantlock die möglichkeit, auch intern von einem anderen thread unlocken zu lassen
+ * bietet im vergleich zu reentrantlock die mï¿½glichkeit, auch intern von einem anderen thread unlocken zu lassen
  * (deadlockerkennung und sowas)
  */
 

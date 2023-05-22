@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ public enum XynaCode {
          "XYNA-00001",
          "Es wurde bereits eine Fehlernachricht zum Fehlercode %%0 in der Sprache %%1 gecacht."),
    /**
-    * Zu viele Parameter für die Fehlernachricht.
+    * Zu viele Parameter fï¿½r die Fehlernachricht.
     */
    TOO_MANY_PARAS("XYNA-00002",
-         "Es wurden zuviele Parameter übergeben (max 10)"),
+         "Es wurden zuviele Parameter ï¿½bergeben (max 10)"),
    /**
-    * Keine Nachricht für den Fehlercode gespeichert.
+    * Keine Nachricht fï¿½r den Fehlercode gespeichert.
     */
    NO_MSG_FOR_CODE("XYNA-00003",
          "Es wurde keine Fehlernachricht zum Fehlercode %%0 gefunden.");

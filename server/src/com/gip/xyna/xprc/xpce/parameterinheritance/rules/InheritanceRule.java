@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@ import com.gip.xyna.xprc.xpce.ordersuspension.SuspensionBackupMode;
 
 
 /**
- * Basisklasse für Parameter-Vererbungsregeln mit verschiedenen Werten.
+ * Basisklasse fï¿½r Parameter-Vererbungsregeln mit verschiedenen Werten.
  * <br>
  * InheritanceRule ist immutable.
  * <br>
- * Die Erstellung einer InheritanceRule läuft über einen Builder, 
- * z.B. für die Regel: alle Kinder sollen mit Precedence 150 mit dem MonitoringLevel 15 laufen
+ * Die Erstellung einer InheritanceRule lï¿½uft ï¿½ber einen Builder, 
+ * z.B. fï¿½r die Regel: alle Kinder sollen mit Precedence 150 mit dem MonitoringLevel 15 laufen
  * <pre>
  * InheritanceRule.createMonitoringLevelRule("15").
  *   childFilter("*").
@@ -47,9 +47,9 @@ public abstract class InheritanceRule implements Serializable {
   
   private static final long serialVersionUID = 1L;
 
-  private int precedence = 0; //Priorität der Regel
+  private int precedence = 0; //Prioritï¿½t der Regel
   
-  //Filter auf welche Kindaufträge die Regel angewendet werden soll
+  //Filter auf welche Kindauftrï¿½ge die Regel angewendet werden soll
   //Leerstring bzw. null wenn die Regel auf den eigenen Auftrag/OrderType angewendet werden soll
   private String childFilter = "";
   private Pattern childFilterPattern;
@@ -70,7 +70,7 @@ public abstract class InheritanceRule implements Serializable {
   
   /**
    * Liefert den Wert der Regel, wie er bei der Definition angegeben wurde.
-   * Zum Beispiel wird für XynaProperties der Name zurückgeliefert (und nicht der Wert der XynaProperty).
+   * Zum Beispiel wird fï¿½r XynaProperties der Name zurï¿½ckgeliefert (und nicht der Wert der XynaProperty).
    * @return
    */
   public abstract String getUnevaluatedValue();
@@ -88,17 +88,17 @@ public abstract class InheritanceRule implements Serializable {
   }
   
   /**
-   * Überprüft, ob die Regel zu einer childHierarchy passt.
+   * ï¿½berprï¿½ft, ob die Regel zu einer childHierarchy passt.
    * @param childHierarchy
-   * @return true, wenn die Regel für die childHierarchy gilt.
+   * @return true, wenn die Regel fï¿½r die childHierarchy gilt.
    */
   public boolean matches(String childHierarchy) {
     if (childHierarchy == null || childHierarchy.length() == 0) {
-      //Die Regel soll für den eigenen Auftrag gelten.
+      //Die Regel soll fï¿½r den eigenen Auftrag gelten.
       //Dies ist der Fall, wenn childFilterPattern null ist.
       return childFilterPattern == null;
     } else {
-      //Die Regel soll für eine Hierarchie von Kindaufträgen gelten.
+      //Die Regel soll fï¿½r eine Hierarchie von Kindauftrï¿½gen gelten.
       //Daher darf childFilterPattern nicht null sein.
       if (childFilterPattern == null) {
         return false;
@@ -137,8 +137,8 @@ public abstract class InheritanceRule implements Serializable {
   }
 
   /**
-   * Erzeugt einen Builder für eine InheritanceRule, die für das Monitoringlevel verwendet werden kann.
-   * @param value Wert für das Monitoringlevel oder Name einer XynaProperty, deren Wert als
+   * Erzeugt einen Builder fï¿½r eine InheritanceRule, die fï¿½r das Monitoringlevel verwendet werden kann.
+   * @param value Wert fï¿½r das Monitoringlevel oder Name einer XynaProperty, deren Wert als
    * Monitoringlevel verwendet werden soll
    * @return
    * @throws XPRC_INVALID_MONITORING_TYPE 
@@ -150,7 +150,7 @@ public abstract class InheritanceRule implements Serializable {
     try {
       intValue = Integer.valueOf(value);
     } catch (NumberFormatException e) {
-      //ok, MonitoringLevel wird über eine XynaProperty definiert
+      //ok, MonitoringLevel wird ï¿½ber eine XynaProperty definiert
     }
     
     if (intValue != null && intValue >= 0) {
@@ -160,7 +160,7 @@ public abstract class InheritanceRule implements Serializable {
       }
       builder.rule = new IntegerInheritanceRule(intValue);
     } else {
-      //Monitoringlevel dynamisch über eine XynaProperty setzen
+      //Monitoringlevel dynamisch ï¿½ber eine XynaProperty setzen
       if (value == null || (intValue != null && intValue < 0)) {
         //es soll das Default-Monitoringlevel verwendet werden
         value = XynaProperty.XYNA_DEFAULT_MONITORING_LEVEL.getPropertyName();
@@ -190,11 +190,11 @@ public abstract class InheritanceRule implements Serializable {
     
     public Builder childFilter(String childFilter) {
       if (childFilter == null || childFilter.length() == 0) {
-        //Regel soll für den Auftrag selbst gelten
+        //Regel soll fï¿½r den Auftrag selbst gelten
         rule.childFilter = "";
         rule.childFilterPattern = null;
       } else {
-        //Regel soll für Kindaufträge gelten
+        //Regel soll fï¿½r Kindauftrï¿½ge gelten
         rule.childFilter = childFilter;
         
         String regex = buildRegEx(childFilter);
@@ -258,7 +258,7 @@ public abstract class InheritanceRule implements Serializable {
   public static class ChildFilterComparator implements Comparator<InheritanceRule> {
 
     public int compare(InheritanceRule o1, InheritanceRule o2) {
-      //Regeln für eigenen Auftrag nach vorne sortieren
+      //Regeln fï¿½r eigenen Auftrag nach vorne sortieren
       if (o1.getChildFilter().length() == 0) {
         return o2.getChildFilter().length() == 0 ? 0 : -1;
       }
@@ -266,7 +266,7 @@ public abstract class InheritanceRule implements Serializable {
         return 1;
       }
       
-      //Regeln für Kindaufträge alphabetisch sortieren
+      //Regeln fï¿½r Kindauftrï¿½ge alphabetisch sortieren
       return o1.getChildFilter().compareTo(o2.getChildFilter());
     }
   }

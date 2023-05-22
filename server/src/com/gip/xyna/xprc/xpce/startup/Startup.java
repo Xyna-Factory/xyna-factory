@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ public class Startup extends FunctionGroup {
       @Override
       public void onResponse(GeneralXynaObject response, OrderContext ctx) {
         logger.debug("startup workflow finished execution successfully");
-        // TODO: Fabrikstatus/Processingstatus auf "initialized" o.ä. setzen?
+        // TODO: Fabrikstatus/Processingstatus auf "initialized" o.ï¿½. setzen?
       }
     }, ctx);
 

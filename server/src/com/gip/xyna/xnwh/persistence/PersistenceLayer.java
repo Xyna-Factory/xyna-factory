@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,14 @@ import java.io.Reader;
 public interface PersistenceLayer {
   
   /**
-   * Gibt eine Connection zurück, die spezifisch zu dem PersistenceLayer ist. Kann intern zb über eine HashMap&lt;args, ConPool&gt;
+   * Gibt eine Connection zurï¿½ck, die spezifisch zu dem PersistenceLayer ist. Kann intern zb ï¿½ber eine HashMap&lt;args, ConPool&gt;
    * gepoolt werden, so dass gleichartige Verbindungen aus dem gleichen Pool kommen.
    */
   public PersistenceLayerConnection getConnection() throws PersistenceLayerException;
   
   /**
-   * wie {@link #getConnection()}, aber verwendet die innere Connection von der übergebenen Connection (aus dem gleichen Pool!)
-   * Achtung: Die innere connection wird dann nicht beim close geschlossen - sondern nur beim close der connection, die die innere connection geöffnet hat.
+   * wie {@link #getConnection()}, aber verwendet die innere Connection von der ï¿½bergebenen Connection (aus dem gleichen Pool!)
+   * Achtung: Die innere connection wird dann nicht beim close geschlossen - sondern nur beim close der connection, die die innere connection geï¿½ffnet hat.
    */
   public PersistenceLayerConnection getConnection(PersistenceLayerConnection shareConnectionPool) throws PersistenceLayerException;
   
@@ -43,23 +43,23 @@ public interface PersistenceLayer {
   public String getInformation();
   
   /**
-   * spezialinformationen abfragen, über interne datenhaltung etc 
+   * spezialinformationen abfragen, ï¿½ber interne datenhaltung etc 
    */
   public Reader getExtendedInformation(String[] args);
   
   /**
-   * Welche Parameter frisst die init Methode? für jeden Parameter einen beschreibenden String
+   * Welche Parameter frisst die init Methode? fï¿½r jeden Parameter einen beschreibenden String
    */
   public String[] getParameterInformation();
 
   /**
-   * gibt true zurück, falls beide PersistenceLayer auf den gleichen Tabellen arbeiten, und dadurch zb Locks in dem einen
-   * PersistenceLayer mit Locks vom anderen kollidieren können.
+   * gibt true zurï¿½ck, falls beide PersistenceLayer auf den gleichen Tabellen arbeiten, und dadurch zb Locks in dem einen
+   * PersistenceLayer mit Locks vom anderen kollidieren kï¿½nnen.
    */
   public boolean describesSamePhysicalTables(PersistenceLayer plc);
 
   /**
-   * gibt true zurück, falls beide PersistenceLayer den gleichen ConnectionPool verwenden
+   * gibt true zurï¿½ck, falls beide PersistenceLayer den gleichen ConnectionPool verwenden
    */
   public boolean usesSameConnectionPool(PersistenceLayer plc);
 

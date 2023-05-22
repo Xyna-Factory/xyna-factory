@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public enum ClusterState {
   CONNECTED(false, true),
   
   /**
-   * wie disconnected, nur dass man zusätzlich weiss, dass seit startup noch nie connected gewesen ist.
+   * wie disconnected, nur dass man zusï¿½tzlich weiss, dass seit startup noch nie connected gewesen ist.
    */
   NEVER_CONNECTED(true, true), //TODO wirklich stable?
 
@@ -105,7 +105,7 @@ public enum ClusterState {
   }
   
   /**
-   * Liegt ein stabiler Zustand vor? Ohne äußere Einwirkung wird sich der Zustand nicht ändern.
+   * Liegt ein stabiler Zustand vor? Ohne ï¿½uï¿½ere Einwirkung wird sich der Zustand nicht ï¿½ndern.
    * @return
    */
   public boolean isStable() {

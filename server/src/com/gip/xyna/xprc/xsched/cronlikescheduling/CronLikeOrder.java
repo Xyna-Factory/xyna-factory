@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,8 +209,8 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
 
   private final ResponseListener defaultCountingResponseListener = new ResponseListener() {
     //achtung: bei refactoring aufpassen: derzeit ist der responselistener das einzige erkennungsmerkmal, um in einem gespawnten
-    //         auftrag um erkennen zu können, dass der auftrag ein cron-auftrag ist. das wurde zumindest von Projekten
-    //         mal angefragt um es zu verwenden. idee: temporäre lösung -> aber nachfragen ist besser.
+    //         auftrag um erkennen zu kï¿½nnen, dass der auftrag ein cron-auftrag ist. das wurde zumindest von Projekten
+    //         mal angefragt um es zu verwenden. idee: temporï¿½re lï¿½sung -> aber nachfragen ist besser.
 
     private static final long serialVersionUID = -4378782170450674992L;
 
@@ -294,7 +294,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
   private boolean removeOnShutdown = false;
   
   @Column(name = COL_REVISION)
-  private Long revision; //das ist die revision, in der der cron "läuft". von hier aus muss ordertype und inputparas auflösbar sein
+  private Long revision; //das ist die revision, in der der cron "lï¿½uft". von hier aus muss ordertype und inputparas auflï¿½sbar sein
   
   @Column(name = COL_LABEL)
   private String label;
@@ -347,12 +347,12 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
 
   
   /**
-   * enthält die id des verursachenden auftrags. z.b. wenn ein cronauftrag aus einem wait-schritt in einem wf
+   * enthï¿½lt die id des verursachenden auftrags. z.b. wenn ein cronauftrag aus einem wait-schritt in einem wf
    * resultiert, wird die id des wf-auftrags als root id vergeben.
    * 
    * wenn es keinen solchen auftrag gibt, hat dieses feld den wert <code>null</code>.
    * 
-   * bei der migration ändern nur cronlikeorders ihr binding, wenn ihre rootorderid ungleich <code>null</code> ist.
+   * bei der migration ï¿½ndern nur cronlikeorders ihr binding, wenn ihre rootorderid ungleich <code>null</code> ist.
    */
   @Column(name = COL_ASSIGNED_ROOT_ORDER_ID)
   private Long rootOrderId; 
@@ -468,9 +468,9 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
   private static void readCreationParametersPreferByteArray(ResultSet rs, CronLikeOrder order) throws SQLException {
     /*
      * falls das objekt deserialisiert werden muss und nicht gerade bereits als objekt vorliegt (memory-pl), preferieren wir das auslesen
-     * als byte[]. grund: falls auf xml-pl konfiguriert, wird bereits beim registerstorable der mem-cache befüllt und dazu alle daten 
+     * als byte[]. grund: falls auf xml-pl konfiguriert, wird bereits beim registerstorable der mem-cache befï¿½llt und dazu alle daten 
      * ausgelesen. zu dem zeitpunkt ist aber beim serverstart die workflowdb noch nicht initialisiert und deshalb kann man da die
-     * deserialisierung noch nicht durchführen.
+     * deserialisierung noch nicht durchfï¿½hren.
      */
     Object o = order.readBlobbedJavaObjectFromResultSet(rs, COL_CREATION_PARAMTER, String.valueOf(order.id), true);
     if (o != null) {
@@ -560,7 +560,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
         //Einmal-Crons werden mit der Startzeit in den CronLikeScheduler eingestellt
         nextExecutionTime = clocp.getStartTime();
       } else {
-        //für die Berechnung der Ausführungszeitpunkte werden Zeitfenster verwendet, daher hier
+        //fï¿½r die Berechnung der Ausfï¿½hrungszeitpunkte werden Zeitfenster verwendet, daher hier
         //die TimeWindowDefinition erstellen
         createTimeWindowDefinition();
         
@@ -570,10 +570,10 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
         } else {
           long now;
           if (clocp.executeImmediately()) {
-            //es soll für den (schon vergangenen) Startzeitpunkt auch ein Auftrag gestartet werden
+            //es soll fï¿½r den (schon vergangenen) Startzeitpunkt auch ein Auftrag gestartet werden
             now = clocp.getStartTime()-1;
           } else {
-            //der nächste Ausführungszeitpunkt soll ab dem aktuellen Zeitpunkt berechnet werden
+            //der nï¿½chste Ausfï¿½hrungszeitpunkt soll ab dem aktuellen Zeitpunkt berechnet werden
             now = System.currentTimeMillis();
           }
           nextExecutionTime = calculateNextExecutionTime(now);
@@ -666,7 +666,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
   /**
    * Erzeugt eine TimeWindowDefinition aus interval bzw. calendarDefinition
    * sowie startTime, timeZone und considerdaylightsaving dieser CronLikeOrder.
-   * Dabei wird eine bereits bestehende TimeWindowDefinition überschrieben.
+   * Dabei wird eine bereits bestehende TimeWindowDefinition ï¿½berschrieben.
    */
   private void createTimeWindowDefinition() {
     String rule = getCreationParameters().getCalendarDefinition();
@@ -711,7 +711,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
       if (creationParameterSerialized != null) {
         try {
           creationParameter = (CronLikeOrderCreationParameter) deserializeByColName(COL_CREATION_PARAMTER, new ByteArrayInputStream(creationParameterSerialized));
-          creationParameterSerialized = null; //bei fehler später nochmal probieren (?)
+          creationParameterSerialized = null; //bei fehler spï¿½ter nochmal probieren (?)
         } catch (IOException e) {
           throw new RuntimeException("CronLikeOrderCreationParameters could not be deserialized", e);
         }
@@ -728,7 +728,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
     return OnErrorAction.valueOf(onerror);
   }
 
-  public String getOnerror() { //für memory-pl
+  public String getOnerror() { //fï¿½r memory-pl
     return onerror;
   }
 
@@ -859,7 +859,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
     boolean isUsingDST = (useDST == null) ? this.considerdaylightsaving : useDST;
     long finalInterval = (interval == null) ? this.interval : interval;
     boolean isIntervalQualifyingForDST = CronLikeOrderCreationParameter.verifyIntervalQualifiesForDST(finalInterval);
-    //für calendarDefinition findet die DST-Überprüfung erst beim Anlegen des Zeitfensters statt
+    //fï¿½r calendarDefinition findet die DST-ï¿½berprï¿½fung erst beim Anlegen des Zeitfensters statt
 
     if (isUsingDST && !isDSTSupported) {
       throw new XPRC_InvalidCronLikeOrderParametersException("Failed to modify Cron Like Order because of inconsistent state. Considering DST is only supported for time zones that actually use it.");
@@ -879,11 +879,11 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
     }
     if (destination != null && destination.getOrderType().length() > 0) {
       this.ordertype = destination.getOrderType();
-      //der RuntimeContext kann bei modifycron nicht geändert werden, hierzu muss copycronlikeorders verwendet werden
+      //der RuntimeContext kann bei modifycron nicht geï¿½ndert werden, hierzu muss copycronlikeorders verwendet werden
       destination.setRuntimeContext(this.getRuntimeContext());
       creationParameter.setDestinationKey(destination);
     }
-    if (payload != null) { //ACHTUNG: payload null-en geht damit nicht. es muss in diesem fall ein leerer container übergeben werden.
+    if (payload != null) { //ACHTUNG: payload null-en geht damit nicht. es muss in diesem fall ein leerer container ï¿½bergeben werden.
       creationParameter.setInputPayload(payload);
       if (creationParameter instanceof RemoteCronLikeOrderCreationParameter) {
         //setinputpayload hat nur xml gesetzt
@@ -970,7 +970,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
   
   
   /**
-   * Berechnet den nächsten Ausführungszeitpunkt nach 'now'.
+   * Berechnet den nï¿½chsten Ausfï¿½hrungszeitpunkt nach 'now'.
    * @param now
    * @return
    */
@@ -981,7 +981,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
   }
 
   /**
-   * Setzt die nextExecutionTime auf den nächsten Ausführungszeitpunkt
+   * Setzt die nextExecutionTime auf den nï¿½chsten Ausfï¿½hrungszeitpunkt
    * ab der aktuellen Zeit.
    */
   protected void calculateNextFutureExecutionTime() {
@@ -1164,7 +1164,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
       try {
         clo = super.read(rs);
       } catch(SQLException e) {
-        // es werden alle SQLException gefangen, um einen Serverstart gewährleisten zukönnen (#14279). 
+        // es werden alle SQLException gefangen, um einen Serverstart gewï¿½hrleisten zukï¿½nnen (#14279). 
         Long id = rs.getLong(COL_ID);
         failedIds.add(id);
         clo = new CronLikeOrder(id);

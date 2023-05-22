@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,12 +124,12 @@ public class DataModelTypeImpl implements DataModelType {
     }
     
     
-    //Prüfen, ob DatenModelle angelegt werden dürfen
+    //Prï¿½fen, ob DatenModelle angelegt werden dï¿½rfen
     try {
       List<DataModel> allExistingDataModels = dataModelStorage.listDataModels(dataModelTypeName);
       Pair<Boolean, List<String>> importAllowed = tr069Import.checkImportAllowed( allExistingDataModels );
       if( importAllowed.getFirst() ) {
-        //DatenModelle dürfen angelegt werden, evtl müssen bestehende gelöscht werden
+        //DatenModelle dï¿½rfen angelegt werden, evtl mï¿½ssen bestehende gelï¿½scht werden
         if( ! isEmpty(importAllowed.getSecond()) ) {
           dataModelResult.infoAlreadyExisting(importAllowed.getSecond());
         }

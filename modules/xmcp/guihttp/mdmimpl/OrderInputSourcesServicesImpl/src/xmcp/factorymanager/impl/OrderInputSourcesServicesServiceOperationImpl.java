@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -454,7 +454,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
   }
   
   /**
-   * Überprüft, ob die Output Parameter des erzeugenden Workflow zu den Inputparameter des aufzurufenden Workflow passen.
+   * ï¿½berprï¿½ft, ob die Output Parameter des erzeugenden Workflow zu den Inputparameter des aufzurufenden Workflow passen.
    * @param generatingWorkflow
    * @param executionWorkflow
    * @return
@@ -477,13 +477,13 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
   }
   
   /**
-   * Überprüft, ob das aufzurufende OperationInterface zu dem aufrufenden OperationInterface passt.
+   * ï¿½berprï¿½ft, ob das aufzurufende OperationInterface zu dem aufrufenden OperationInterface passt.
    * @param caller
    * @param interfaceToCall
    * @return
    */
   private boolean mayCall(OperationInterface caller, OperationInterface interfaceToCall) {
-    //nun kann der caller noch den zusätzlichen xprc.xpce.OrderCreationParameter parameter haben, den man beim vergleich ignorieren muss
+    //nun kann der caller noch den zusï¿½tzlichen xprc.xpce.OrderCreationParameter parameter haben, den man beim vergleich ignorieren muss
 
     List<TypeInterface> input = new ArrayList<>();
     for (TypeInterface ti : caller.getOutput()) {

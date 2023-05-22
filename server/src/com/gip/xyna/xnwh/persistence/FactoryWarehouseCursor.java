@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public final class FactoryWarehouseCursor<T> {
 
 
   /**
-   * Anlegen des FactoryWarehouseCursor mit batchSize=1 für foreach-Aufruf
+   * Anlegen des FactoryWarehouseCursor mit batchSize=1 fï¿½r foreach-Aufruf
    * @param connection
    * @param sqlStatement
    * @param parameter
@@ -104,9 +104,9 @@ public final class FactoryWarehouseCursor<T> {
 
 
   /**
-   * Liefert den nächsten Batch (leer, falls keine Daten eine leere Menge falls n
-   * @return Batch (leer, falls keine Daten mehr gelesen werden können
-   * @throws PersistenceLayerException falls während des Lesens eine Exception auftrat
+   * Liefert den nï¿½chsten Batch (leer, falls keine Daten eine leere Menge falls n
+   * @return Batch (leer, falls keine Daten mehr gelesen werden kï¿½nnen
+   * @throws PersistenceLayerException falls wï¿½hrend des Lesens eine Exception auftrat
    */
   public List<T> getRemainingCacheOrNextIfEmpty() throws PersistenceLayerException {
     startInnerThread();
@@ -121,7 +121,7 @@ public final class FactoryWarehouseCursor<T> {
   }
  
   /**
-   * Schließt den Cursor: es werden keine weiteren Daten gelesen
+   * Schlieï¿½t den Cursor: es werden keine weiteren Daten gelesen
    */
   public void close() {
     queryExecutor.close();
@@ -129,11 +129,11 @@ public final class FactoryWarehouseCursor<T> {
 
 
   /**
-   * Einfacher Zugriff auf die Daten in einer foreach-Schleife. Achtung: Während der 
+   * Einfacher Zugriff auf die Daten in einer foreach-Schleife. Achtung: Wï¿½hrend der 
    * Iteration kann keine PersistenceLayerException geworfen werden. Daher muss diese
-   * nach der Iteration über {@link #checkForExceptions()} ermittelt werden
+   * nach der Iteration ï¿½ber {@link #checkForExceptions()} ermittelt werden
    * @param batchSize
-   * @throws PersistenceLayerException bitte {@link #checkForExceptions()} prüfen!
+   * @throws PersistenceLayerException bitte {@link #checkForExceptions()} prï¿½fen!
    */
   public Iterable<List<T>> batched( final int batchSize) throws PersistenceLayerException {
     if( batchSize <= 0 ) {
@@ -148,11 +148,11 @@ public final class FactoryWarehouseCursor<T> {
   }
  
   /**
-   * Einfacher Zugriff auf die Daten in einer foreach-Schleife. Achtung: Während der 
+   * Einfacher Zugriff auf die Daten in einer foreach-Schleife. Achtung: Wï¿½hrend der 
    * Iteration kann keine PersistenceLayerException geworfen werden. Daher muss diese
-   * nach der Iteration über {@link #checkForExceptions()} ermittelt werden
+   * nach der Iteration ï¿½ber {@link #checkForExceptions()} ermittelt werden
    * @return Iterable&lt;List&lt;T&gt;&gt;
-   * @throws PersistenceLayerException bitte {@link #checkForExceptions()} prüfen!
+   * @throws PersistenceLayerException bitte {@link #checkForExceptions()} prï¿½fen!
    */
   public Iterable<T> separated() throws PersistenceLayerException {
     return new Iterable<T>() {
@@ -164,7 +164,7 @@ public final class FactoryWarehouseCursor<T> {
   }
   
   /**
-   * Wirft die während der Ausführung der Query im Hilfsthread gefangene Exception.
+   * Wirft die wï¿½hrend der Ausfï¿½hrung der Query im Hilfsthread gefangene Exception.
    */
   public void checkForExceptions() throws PersistenceLayerException, RuntimeException {
     queryExecutor.rethrowLastThrowable();
@@ -249,7 +249,7 @@ public final class FactoryWarehouseCursor<T> {
 
   
   /**
-   * Lesen des nächsten Datensatz aus der Queue
+   * Lesen des nï¿½chsten Datensatz aus der Queue
    * @return
    */
   private T getNext() {
@@ -275,7 +275,7 @@ public final class FactoryWarehouseCursor<T> {
   }
   
   /**
-   * Lesen des nächsten Batches
+   * Lesen des nï¿½chsten Batches
    * @param batchSize
    * @return
    */
@@ -316,7 +316,7 @@ public final class FactoryWarehouseCursor<T> {
   
  
   /**
-   * Ausführung der Query: Runnable, um in einem Extra-Thread zu laufen
+   * Ausfï¿½hrung der Query: Runnable, um in einem Extra-Thread zu laufen
    *
    * @param <T>
    */
@@ -351,7 +351,7 @@ public final class FactoryWarehouseCursor<T> {
     }
 
     /**
-     * Weiterwerfen der beim Ausführen der Query aufgetretenen Exception. Falls keine Exception auftrat, ist dies eine NOP.
+     * Weiterwerfen der beim Ausfï¿½hren der Query aufgetretenen Exception. Falls keine Exception auftrat, ist dies eine NOP.
      */
     public void rethrowLastThrowable() throws PersistenceLayerException {
       if (lastThrowable != null) {
@@ -373,7 +373,7 @@ public final class FactoryWarehouseCursor<T> {
 
     
     /** 
-     * Ausführen der Query in eigenem Thread
+     * Ausfï¿½hren der Query in eigenem Thread
      */
     public void run() {
       closed.set(false);

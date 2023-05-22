@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,20 +38,20 @@ import com.gip.xyna.xprc.xsched.OrderSeriesManagement;
 
 
 /**
- * Kapselt alle Informationen und Logik zur Zugehörigkeit des Parentauftrags zu einer Auftragsserie.
- * Der größte Teil dieser Daten hier wird nicht mehr benötigt, da er durch 
+ * Kapselt alle Informationen und Logik zur Zugehï¿½rigkeit des Parentauftrags zu einer Auftragsserie.
+ * Der grï¿½ï¿½te Teil dieser Daten hier wird nicht mehr benï¿½tigt, da er durch 
  * {@link com.gip.xyna.xprc.xsched.orderseries.SeriesInformationStorable SeriesInformationStorable} 
  * gespeichert wird.
- * Leider kann hier an der Klasse wenig geändert werden, da:
+ * Leider kann hier an der Klasse wenig geï¿½ndert werden, da:
  * <ul>
- * <li>diese Klasse die veröffentlichte Schnittstelle für die Projekte, welche Auftragsserien 
- * verwenden, ist. Diese verwenden noch die alte Übergabe der Serien in Form von XynaOrder-Bündeln 
- * (Huckepack-Aufträge). Dies soll aber abgelöst werden durch Einzelaufträge mit angepasster 
+ * <li>diese Klasse die verï¿½ffentlichte Schnittstelle fï¿½r die Projekte, welche Auftragsserien 
+ * verwenden, ist. Diese verwenden noch die alte ï¿½bergabe der Serien in Form von XynaOrder-Bï¿½ndeln 
+ * (Huckepack-Auftrï¿½ge). Dies soll aber abgelï¿½st werden durch Einzelauftrï¿½ge mit angepasster 
  * SeriesInformation.</li>
- * <li>frühere Serienaufträge mit dieser SeriesInformation serialisiert im OrderInstanceBackup stehen.
- * Leider ist es nicht möglich, diese während eines Updates zu migrieren, da dafür die ClassLoader 
- * fehlen. Daher können die SeriesInformation erst zur Laufzeit migriert werden (siehe 
- * {@link com.gip.xyna.xprc.xsched.orderseries.OrderSeriesSeparator OrderSeriesSeparator}) und müssen 
+ * <li>frï¿½here Serienauftrï¿½ge mit dieser SeriesInformation serialisiert im OrderInstanceBackup stehen.
+ * Leider ist es nicht mï¿½glich, diese wï¿½hrend eines Updates zu migrieren, da dafï¿½r die ClassLoader 
+ * fehlen. Daher kï¿½nnen die SeriesInformation erst zur Laufzeit migriert werden (siehe 
+ * {@link com.gip.xyna.xprc.xsched.orderseries.OrderSeriesSeparator OrderSeriesSeparator}) und mï¿½ssen 
  * zuvor noch auf die alte Weise deserialisiert werden.</li>
  * </ul> 
  */
@@ -85,17 +85,17 @@ public class SeriesInformation implements Serializable {
   private AtomicBoolean finishedPreSucAquisition = new AtomicBoolean(false);
   // ist auftrag vom scheduler beendet wurden?
   private AtomicBoolean finishedFlag = new AtomicBoolean(false);
-  // hat scheduler bei beendigung fehlerflag übergeben?
+  // hat scheduler bei beendigung fehlerflag ï¿½bergeben?
   @SuppressWarnings("unused")
   private boolean hadError = false;
-  // userdefined: soll auftrag bei fehler (oder cancel) folgeaufträge canceln?
+  // userdefined: soll auftrag bei fehler (oder cancel) folgeauftrï¿½ge canceln?
   private boolean autoCancel = true;
   // wurde festgestellt, dass dieser auftrag als nachfolger eines fehlgeschlagenen auftrags mit autocancelflag gecancelt
   // werden soll? (gesetzt vom prescheduler beim connecten)
   @SuppressWarnings("unused")
   private boolean inheritedCancel = false;
 
-  //neue Speicherung der Predecessor/Successor-Abhängigkeiten
+  //neue Speicherung der Predecessor/Successor-Abhï¿½ngigkeiten
   private String correlationId;
   private ArrayList<String> predecessorsCorrIds = new ArrayList<String>();
   private ArrayList<String> successorsCorrIds = new ArrayList<String>();
@@ -119,7 +119,7 @@ public class SeriesInformation implements Serializable {
     copy.predecessors = copyOfList( si.predecessors );
     copy.successors = copyOfList( si.successors );
     
-    copy.finishedFlag = new AtomicBoolean(si.finishedFlag.get()); //nötig?
+    copy.finishedFlag = new AtomicBoolean(si.finishedFlag.get()); //nï¿½tig?
 
     copy.autoCancel = si.autoCancel;
     copy.correlationId = si.correlationId;
@@ -144,7 +144,7 @@ public class SeriesInformation implements Serializable {
   }
 
   /**
-   * Eindeutiger Name der Auftrags, zu dem dieses SeriesInformation-Objekt gehört
+   * Eindeutiger Name der Auftrags, zu dem dieses SeriesInformation-Objekt gehï¿½rt
    * @param correlationId
    * @throws IllegalArgumentException wenn correlationId==null
    */
@@ -156,7 +156,7 @@ public class SeriesInformation implements Serializable {
   }
   
   /**
-   * Hinzufügen des Serienbezugs: Wer ist Predecessor, wer Successor?
+   * Hinzufï¿½gen des Serienbezugs: Wer ist Predecessor, wer Successor?
    * @param predecessorsCorrIds
    * @param successorsCorrIds
    */
@@ -165,7 +165,7 @@ public class SeriesInformation implements Serializable {
     this.successorsCorrIds.addAll( successorsCorrIds );
   }
   /**
-   * Hinzufügen des Serienbezugs: Wer ist Predecessor, wer Successor?
+   * Hinzufï¿½gen des Serienbezugs: Wer ist Predecessor, wer Successor?
    * @param predecessorsCorrIds
    * @param successorsCorrIds
    */
@@ -209,7 +209,7 @@ public class SeriesInformation implements Serializable {
   }
 
   /**
-   * falls auftrag schiefgeht, werden nachfolge aufträge auch abgebrochen. default = true.
+   * falls auftrag schiefgeht, werden nachfolge auftrï¿½ge auch abgebrochen. default = true.
    * @return the autoCancel
    */
   public boolean isAutoCancel() {
@@ -217,7 +217,7 @@ public class SeriesInformation implements Serializable {
   }
 
   /**
-   * falls auftrag schiefgeht, werden nachfolge aufträge auch abgebrochen. default = true
+   * falls auftrag schiefgeht, werden nachfolge auftrï¿½ge auch abgebrochen. default = true
    * @param autoCancel the autoCancel to set
    */
   public void setAutoCancel(boolean autoCancel) {
@@ -240,7 +240,7 @@ public class SeriesInformation implements Serializable {
   
   
   /**
-   * hängt dieses objekt an die übergebene xynaorder und cached orderseriesmanagement
+   * hï¿½ngt dieses objekt an die ï¿½bergebene xynaorder und cached orderseriesmanagement
    * (deprecated)
    * @param parent
    */
@@ -352,10 +352,10 @@ public class SeriesInformation implements Serializable {
 
 
   /**
-   * referenzen von vorgängern und nachfolgern reparieren
+   * referenzen von vorgï¿½ngern und nachfolgern reparieren
    */
   private void fixReferencesForNewParent() {
-    if (predecessors != null) { //kann null sein, wenn das object beim deserialisieren noch nicht vollständig geladen ist
+    if (predecessors != null) { //kann null sein, wenn das object beim deserialisieren noch nicht vollstï¿½ndig geladen ist
       synchronized (predecessors) {
         for (XynaOrder pre : predecessors) {
           if (pre.getSeriesInformation() != null && pre.getSeriesInformation().successors != null) {
@@ -408,7 +408,7 @@ public class SeriesInformation implements Serializable {
 
   
   public void checkReferences(Collection<XynaOrderServerExtension> orders) {
-    // alle nachfolger und vorgänger durch elemente aus der liste austauschen, falls darin vorhanden
+    // alle nachfolger und vorgï¿½nger durch elemente aus der liste austauschen, falls darin vorhanden
     logger.debug("updating series references");
     synchronized (predecessors) {
       for (int i = 0; i<predecessors.size(); i++) {

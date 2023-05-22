@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 /**
- * XMOMLoader lädt XMOM-Objekte und Verwaltet die geparsten GenerationBase-Objekte, 
- * so dass diese nicht mehrfach geparst werden müssen.
+ * XMOMLoader lï¿½dt XMOM-Objekte und Verwaltet die geparsten GenerationBase-Objekte, 
+ * so dass diese nicht mehrfach geparst werden mï¿½ssen.
  *
  */
 public class XMOMLoader {
@@ -68,10 +68,10 @@ public class XMOMLoader {
    */
   public GenerationBaseObject load(FQName fqName, String xml) throws XynaException {
     /*
-     * falls das objekt im commoncache bereits existiert, können auch andere xmomobjekte referenzen darauf haben.
+     * falls das objekt im commoncache bereits existiert, kï¿½nnen auch andere xmomobjekte referenzen darauf haben.
      * alle referenzen sollen auch geupdated werden.
      * 
-     * => auf das bestehende gb objekt erneut parsexml aufrufen mit dem übergebenen xml
+     * => auf das bestehende gb objekt erneut parsexml aufrufen mit dem ï¿½bergebenen xml
      */
     GenerationBase.XMLSourceAbstraction inputSource = new GenerationBase.FactoryManagedRevisionXMLSource() {
       
@@ -98,7 +98,7 @@ public class XMOMLoader {
       
     };
     GenerationBase gb = GenerationBase.getOrCreateInstance(fqName.getFqName(), new GenerationBaseCache(), fqName.getRevision(), inputSource);
-    //für dieses objekt das gegebene xml verwenden, andere objekte falls notwendig aus saved laden
+    //fï¿½r dieses objekt das gegebene xml verwenden, andere objekte falls notwendig aus saved laden
     gb.setXMLInputSource(inputSource);
     gb.resetState();
     gb.parseGeneration(false, false);

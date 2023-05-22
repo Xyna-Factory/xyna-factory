@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,13 +34,13 @@ import java.lang.annotation.Target;
 public @interface XSORPayloadInformation {
 
   /**
-   * clusterweit unique id für diese klasse (wird fürs dispatching an das korrekte {@link XSORMemory} im interconnect verwendet)
+   * clusterweit unique id fï¿½r diese klasse (wird fï¿½rs dispatching an das korrekte {@link XSORMemory} im interconnect verwendet)
    */
   public int uniqueId();
 
 
   /**
-   * bytearray länge einer instanz dieses types, vgl. {@link XSORPayload#copyIntoByteArray(byte[], int)
+   * bytearray lï¿½nge einer instanz dieses types, vgl. {@link XSORPayload#copyIntoByteArray(byte[], int)
    */
   public int recordSize();
 }

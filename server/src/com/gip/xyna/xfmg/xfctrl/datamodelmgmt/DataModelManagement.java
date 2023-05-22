@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -226,7 +226,7 @@ public class DataModelManagement extends FunctionGroup {
 
   
   /**
-   * Lädt die Klasse "fqClassName" für einen DataModelType vom Typ "type"
+   * Lï¿½dt die Klasse "fqClassName" fï¿½r einen DataModelType vom Typ "type"
    */
   private DataModelType loadDataModelType(String type, String fqClassName) throws XynaException {
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
@@ -314,7 +314,7 @@ public class DataModelManagement extends FunctionGroup {
       return false;
     }
     
-    //Files zu den übergebenen FileIds zugänglich machen
+    //Files zu den ï¿½bergebenen FileIds zugï¿½nglich machen
     File tmpDir;
     try {
       tmpDir = copyFiles( parameters.getFileIds(), parameters.getDataModelType() );
@@ -324,7 +324,7 @@ public class DataModelManagement extends FunctionGroup {
     }      
     
     try {
-      //Import durchführen
+      //Import durchfï¿½hren
       dmt.importDataModel(dataModelResult, dataModelStorage, paramMap, combineFiles(parameters.getFiles(),tmpDir) );
       return dataModelResult.isSucceeded();
     } finally {
@@ -464,13 +464,13 @@ public class DataModelManagement extends FunctionGroup {
   
   
   public List<File> getMDMFiles(String fqName) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    //TODO für MIB und TR069, nicht für XSD...
+    //TODO fï¿½r MIB und TR069, nicht fï¿½r XSD...
     String savedMdmDir = 
         RevisionManagement.getPathForRevision(PathType.XMOM, RevisionManagement.REVISION_DATAMODEL, false);
     
     List<File> files = dataModelStorage.readFiles(savedMdmDir, fqName);
     if( files == null || files.isEmpty() ) {
-      //TODO Für bestehende MIB-Datenmodelle auf alte Weise lesen
+      //TODO Fï¿½r bestehende MIB-Datenmodelle auf alte Weise lesen
       DataModel dms = dataModelStorage.readDataModel(fqName);
       if( dms.getBaseType().getFqName().equals("xdnc.model.mib.MIBBaseModel") ) {
         files = new ArrayList<File>();
@@ -638,7 +638,7 @@ public class DataModelManagement extends FunctionGroup {
       }
     }
     
-    //zugehörige XMOM xmls speichern
+    //zugehï¿½rige XMOM xmls speichern
     saveZipEntries(dataModelResult, fileName);
   }
   
@@ -714,7 +714,7 @@ public class DataModelManagement extends FunctionGroup {
   }
   
   /**
-   * Speichert die Dateien aus dem zip-File im rev_datamodel-Verzeichnis (für importierte Datenmodelle)
+   * Speichert die Dateien aus dem zip-File im rev_datamodel-Verzeichnis (fï¿½r importierte Datenmodelle)
    * @param dataModelResult
    * @param zipFileName
    * @param importedDataModelPaths Pfade der importierten Datenmodelle
@@ -779,8 +779,8 @@ public class DataModelManagement extends FunctionGroup {
   }
 
   public void removeWorkspace(Workspace workspace) throws PersistenceLayerException {
-    //Workspace wird entfernt, daher alle Datenmodell-Einträge zu diesem Workspace entfernen
-    //TODO Suche nach key-Prefix "%0%.workspaces" ist nur richtig für XSD. Für MIB und TR069 ist das derzeit nicht nötig.
+    //Workspace wird entfernt, daher alle Datenmodell-Eintrï¿½ge zu diesem Workspace entfernen
+    //TODO Suche nach key-Prefix "%0%.workspaces" ist nur richtig fï¿½r XSD. Fï¿½r MIB und TR069 ist das derzeit nicht nï¿½tig.
     List<String> fqNames = dataModelStorage.deleteDataModelSpecifics("%0%.workspaces", workspace.getName() );
     logger.info( "Removed workspace \""+workspace.getName()+"\" from datamodels "+fqNames);
   }

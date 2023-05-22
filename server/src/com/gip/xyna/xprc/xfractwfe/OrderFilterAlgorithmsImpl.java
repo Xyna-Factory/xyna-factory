@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,12 +52,12 @@ import com.gip.xyna.xprc.xsched.cronlikescheduling.CronLikeOrderStartUnderlyingO
 
 /**
  * singleton.
- * aufträge filtern anhand von angegebenen {@link OrderFilter}.
+ * auftrï¿½ge filtern anhand von angegebenen {@link OrderFilter}.
  * beim registrieren des ersten {@link OrderFilter} werden die normalen algorithmen gegen diesen ausgetauscht.
- * beim deregistrieren des letzten {@link OrderFilter} werden die algorithmen wieder zurückgetauscht.
+ * beim deregistrieren des letzten {@link OrderFilter} werden die algorithmen wieder zurï¿½ckgetauscht.
  *
- * beim deregistrieren eines filters werden alle aufträge, die nicht mehr von filtern rausgefiltert werden, fortgesetzt.
- * d.h. aufträge bleiben so lange angehalten, bis es keinen filter mehr gibt, der sie rausfiltert.
+ * beim deregistrieren eines filters werden alle auftrï¿½ge, die nicht mehr von filtern rausgefiltert werden, fortgesetzt.
+ * d.h. auftrï¿½ge bleiben so lange angehalten, bis es keinen filter mehr gibt, der sie rausfiltert.
  */
 public class OrderFilterAlgorithmsImpl
     implements
@@ -66,7 +66,7 @@ public class OrderFilterAlgorithmsImpl
       PreSchedulerAddOrderAlgorithm {
 
   /**
-   * es können mehrere filter registriert werden. aufträge können von mehreren filtern angenommen werden
+   * es kï¿½nnen mehrere filter registriert werden. auftrï¿½ge kï¿½nnen von mehreren filtern angenommen werden
    */
   public static interface OrderFilter {
 
@@ -187,10 +187,10 @@ public class OrderFilterAlgorithmsImpl
 
   public void checkOrderReadyForProcessing(XynaOrderServerExtension xo, DispatcherType type) throws XynaException {
     boolean resume;
-    Set<OrderFilter> filterThatHeldOrderAtSomeTime = new HashSet<OrderFilter>(); //OrderFilter müssen nicht unbedingt equals/hashcode überschreiben, geht auch ohne
+    Set<OrderFilter> filterThatHeldOrderAtSomeTime = new HashSet<OrderFilter>(); //OrderFilter mï¿½ssen nicht unbedingt equals/hashcode ï¿½berschreiben, geht auch ohne
     do {
       resume = true;
-      //Die Liste der Filter kann sich während des Wartens ändern...
+      //Die Liste der Filter kann sich wï¿½hrend des Wartens ï¿½ndern...
       List<OrderFilter> activeFilters = new ArrayList<OrderFilter>();
       for (OrderFilter of : filter.keySet()) {
         if (of.filterForCheckOrderReadyForProcessing(xo, type)) {
@@ -241,7 +241,7 @@ public class OrderFilterAlgorithmsImpl
       XNWH_RetryTransactionException {
 
     boolean resume = true;
-    Set<OrderFilter> filterCopy = filter.keySet(); //könnte sich während des wartens ändern...
+    Set<OrderFilter> filterCopy = filter.keySet(); //kï¿½nnte sich wï¿½hrend des wartens ï¿½ndern...
     for (OrderFilter of : filterCopy) {
       if (of.filterForAddOrderToScheduler(xo)) {
         ordersHeldAtPreScheduler.add(xo, of);
@@ -260,7 +260,7 @@ public class OrderFilterAlgorithmsImpl
 
   public void startUnderlyingOrder(CronLikeOrder cronLikeOrder, CronLikeOrderCreationParameter clocp, ResponseListener rl) {
     boolean resume = true;
-    Set<OrderFilter> filterCopy = filter.keySet(); //könnte sich während des wartens ändern...
+    Set<OrderFilter> filterCopy = filter.keySet(); //kï¿½nnte sich wï¿½hrend des wartens ï¿½ndern...
     for (OrderFilter of : filterCopy) {
       if (of.startUnderlyingOrder(cronLikeOrder, clocp, rl)) {
         cronLikeOrders.add(new CronParameter(cronLikeOrder, rl, clocp), of);
@@ -305,7 +305,7 @@ public class OrderFilterAlgorithmsImpl
       filter.put(of, true);
     }
 
-    //m-to-n mappings aktualisieren für hier angehaltene aufträge
+    //m-to-n mappings aktualisieren fï¿½r hier angehaltene auftrï¿½ge
 
     //processoren: nochmal checken, weil neuer filter da ist
     synchronized (pillow) {
@@ -357,7 +357,7 @@ public class OrderFilterAlgorithmsImpl
 
 
   private void resumeOrders(OrderFilter of) {
-    //an den processoren wartende aufträge fortsetzen
+    //an den processoren wartende auftrï¿½ge fortsetzen
     //funktioniert automatisch, weil der filter nicht mehr registriert ist
     synchronized (pillow) {
       pillow.notifyAll();
@@ -366,7 +366,7 @@ public class OrderFilterAlgorithmsImpl
     //crons fortsetzen
     createUnstartedCronLikeOrders(of);
 
-    //suspendierte aufträge resumen
+    //suspendierte auftrï¿½ge resumen
     resumeSuspendedOrders(of);
   }
 
@@ -374,7 +374,7 @@ public class OrderFilterAlgorithmsImpl
   private void resumeSuspendedOrders(OrderFilter of) {
     List<XynaOrderServerExtension> resumeTargets = new ArrayList<XynaOrderServerExtension>();
     
-    //davor schützen, dass neue filter sich gleichzeitig eintragen
+    //davor schï¿½tzen, dass neue filter sich gleichzeitig eintragen
     synchronized (ordersHeldAtPreScheduler) {
       Set<XynaOrderServerExtension> orders = ordersHeldAtPreScheduler.getKeys(of);
       if (orders != null) {

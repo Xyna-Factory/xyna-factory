@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ public class XynaFactoryMock implements XynaFactoryBase {
 im Test?
 
 
-beides hinterlässt viele Einträge in storage/persistence/persistencelayerinstance.xml
+beides hinterlï¿½sst viele Eintrï¿½ge in storage/persistence/persistencelayerinstance.xml
         
         */
       }
@@ -148,7 +148,7 @@ beides hinterlässt viele Einträge in storage/persistence/persistencelayerinstanc
     
     System.setProperty("exceptions.storage","Exceptions.xml");
     
-    //FutureExecution wird immer benötigt
+    //FutureExecution wird immer benï¿½tigt
     futureExecution = new FutureExecution("Mock");
     XynaFactory.setInstance( this );
     init();

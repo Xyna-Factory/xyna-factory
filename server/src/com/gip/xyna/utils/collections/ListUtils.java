@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -177,7 +177,7 @@ public class ListUtils {
       } 
       boolean oiu = oldIndexUsed;
       if( entry == null ) {
-        index = in.indexOf(entry); //TODO NPE möglich
+        index = in.indexOf(entry); //TODO NPE mï¿½glich
       } else {
         index = indexOf(entry);
       }
@@ -223,7 +223,7 @@ public class ListUtils {
     public Transfer<E> from(List<? extends E> from) {
       this.from = (List<E>) from;
       if( entry == null ) {
-        index = from.indexOf(entry); //TODO NPE möglich
+        index = from.indexOf(entry); //TODO NPE mï¿½glich
       } else {
         index = indexOf(this.from, entry);
       }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,8 +81,8 @@ public class CounterMap<K> extends WrappedMap<K, AtomicInteger> {
   }
   
   /**
-   * Gibt analog zu entrySet() alle Einträge der Map aus, nun aber in einer Liste sortiert nach dem Count.
-   * Über die zurückgegebene Liste kann der Zählerstand geändert werden! 
+   * Gibt analog zu entrySet() alle Eintrï¿½ge der Map aus, nun aber in einer Liste sortiert nach dem Count.
+   * ï¿½ber die zurï¿½ckgegebene Liste kann der Zï¿½hlerstand geï¿½ndert werden! 
    * @param descending
    * @return
    */

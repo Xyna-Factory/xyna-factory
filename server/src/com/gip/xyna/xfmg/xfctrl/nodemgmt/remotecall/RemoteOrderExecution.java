@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class RemoteOrderExecution {
     this.orderExecution = node.getInterFactoryLink().<RemoteOrderExcecutionLinkProfile>getProfile(InterFactoryLinkProfileIdentifier.OrderExecution);
     this.infrastructure = node.getInterFactoryLink().<InfrastructureLinkProfile>getProfile(InterFactoryLinkProfileIdentifier.Infrastructure);
     startOrderCounter = new AtomicInteger(0);
-    this.connected = true; //geraten, aber richtiger Test wäre zu Aufwändig
+    this.connected = true; //geraten, aber richtiger Test wï¿½re zu Aufwï¿½ndig
     this.identifier = identifier;
   }
   

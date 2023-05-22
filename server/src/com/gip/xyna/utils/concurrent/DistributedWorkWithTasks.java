@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@ import com.gip.xyna.utils.exceptions.XynaException;
 
 
 /**
- * liste von auszuführenden tasks, die in beliebiger reihenfolge ausgeführt werden dürfen.
- * beliebig viele threads können sich an der arbeit beteiligen. auch rekursion möglich (ein thread kann ein anderes task
- * ausführen, während er bereits an einem arbeitet).
+ * liste von auszufï¿½hrenden tasks, die in beliebiger reihenfolge ausgefï¿½hrt werden dï¿½rfen.
+ * beliebig viele threads kï¿½nnen sich an der arbeit beteiligen. auch rekursion mï¿½glich (ein thread kann ein anderes task
+ * ausfï¿½hren, wï¿½hrend er bereits an einem arbeitet).
  * bei rekursion darf der rekursions-aufruf von {@link #executeAndWaitForCompletion()} nicht warten, sondern muss nach
- * getaner arbeit sofort zurückkehren.
+ * getaner arbeit sofort zurï¿½ckkehren.
  * 
- * falls die ausführung eines tasks einen fehler hat, merkt dies nur der eine thread. für die anderen threads sieht es so
- * aus als wäre das task erfolgreich ausgeführt.
+ * falls die ausfï¿½hrung eines tasks einen fehler hat, merkt dies nur der eine thread. fï¿½r die anderen threads sieht es so
+ * aus als wï¿½re das task erfolgreich ausgefï¿½hrt.
  * 
  * zwei verwendungsmuster.
  * entweder:

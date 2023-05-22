@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Dieses Interface gibt dem Demon die auszuführende Arbeit an.
+ * Dieses Interface gibt dem Demon die auszufï¿½hrende Arbeit an.
  * 
- * Über den DemonStatus wird der Status über SNMP zugänglich.
+ * ï¿½ber den DemonStatus wird der Status ï¿½ber SNMP zugï¿½nglich.
  */
 public interface DemonWorker extends Runnable {
 
@@ -35,7 +35,7 @@ public interface DemonWorker extends Runnable {
   public void run();
   
   /**
-   * Stop der Auftragsannahme, angefangene Arbeiten dürfen fortgesetzt werden
+   * Stop der Auftragsannahme, angefangene Arbeiten dï¿½rfen fortgesetzt werden
    */
   public void terminate();
 
@@ -52,7 +52,7 @@ public interface DemonWorker extends Runnable {
   public void logStatus(Logger statusLogger);
 
   /**
-   * Übergibt den DemonSnmpConfigurator, mit dem weitere Ausgaben über SNMP eingerichtet werden können.
+   * ï¿½bergibt den DemonSnmpConfigurator, mit dem weitere Ausgaben ï¿½ber SNMP eingerichtet werden kï¿½nnen.
    * @param demonSnmpConfigurator
    */
   public void configureDemonSnmp(DemonSnmpConfigurator demonSnmpConfigurator);

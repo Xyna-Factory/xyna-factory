@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,9 +62,9 @@ public class ClusterInfoStorable extends Storable<ClusterInfoStorable> {
   }
   
   public ClusterInfoStorable(Storable<?> s, long releaseTime, long modificationTime) {
-    //unschön, aber ausreichend
-    //alternative wäre eine spalte für den PK und eine für den tablename, was dazu führt, dass man einen zweispaltigen in der tabelle hat.
-    //das unterstützen wir in den persistencelayers derzeit nicht.
+    //unschï¿½n, aber ausreichend
+    //alternative wï¿½re eine spalte fï¿½r den PK und eine fï¿½r den tablename, was dazu fï¿½hrt, dass man einen zweispaltigen in der tabelle hat.
+    //das unterstï¿½tzen wir in den persistencelayers derzeit nicht.
     primaryKey = getPkForStorablePk(s);
     this.releaseTime = releaseTime;
     this.modificationTime = modificationTime;

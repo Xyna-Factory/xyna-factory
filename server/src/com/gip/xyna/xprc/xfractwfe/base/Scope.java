@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public interface Scope {
   void setInputVars(GeneralXynaObject o) throws XynaException;
 
   /**
-   * wieviel InputVars werden benötigt?
+   * wieviel InputVars werden benï¿½tigt?
    */
   int getNeededInputVarsCount();
   
@@ -46,13 +46,13 @@ public interface Scope {
 
   /**
    * alle steps des aktuellen scopes inkl aller steps der verschachtelten scopes. 
-   * bei paralleler ausführung von threads ist hier nicht sichergestellt, dass alle 
-   * steps zurückgegeben werden, da diese evtl erst dynamisch erzeugt werden (for-each).
+   * bei paralleler ausfï¿½hrung von threads ist hier nicht sichergestellt, dass alle 
+   * steps zurï¿½ckgegeben werden, da diese evtl erst dynamisch erzeugt werden (for-each).
    */
   FractalProcessStep<?>[] getAllSteps();
 
   /**
-   * alle steps die nicht zu einer verschachtelten scope gehören
+   * alle steps die nicht zu einer verschachtelten scope gehï¿½ren
    */
   FractalProcessStep<?>[] getAllLocalSteps();
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ public class EventListenerThread<J extends StartParameter, TC extends TriggerCon
       // the priority later if required
       if (!running) {
         //trigger wurde bereits gestopped
-        child.rejected(); //TODO cause übergeben?
+        child.rejected(); //TODO cause ï¿½bergeben?
       } else {
         try {
           XynaExecutor.getInstance().executeRunnableWithUnprioritizedPlanningThreadpool(child);

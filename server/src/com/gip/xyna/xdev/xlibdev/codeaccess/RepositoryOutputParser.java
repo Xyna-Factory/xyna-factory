@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ public class RepositoryOutputParser {
                   .append("){2}")
                   .append("([^")
                   .append(Constants.FILE_SEPARATOR)
-                  .append("]+)($|") //$ = ende, wenn z.b. eine teil-componente gelöscht wird
+                  .append("]+)($|") //$ = ende, wenn z.b. eine teil-componente gelï¿½scht wird
                   .append(Constants.FILE_SEPARATOR)
                   .append("src")
                   .append(Constants.FILE_SEPARATOR)
@@ -139,7 +139,7 @@ public class RepositoryOutputParser {
 
   
   /**
-   * aggregiert änderungen an files zu änderungen an xyna components 
+   * aggregiert ï¿½nderungen an files zu ï¿½nderungen an xyna components 
    */
   public List<ComponentCodeChange> parseModifiedComponents(List<RepositoryItemModification> modifiedFiles) {
     Map<String, EnumMap<ComponentType, ComponentCodeChange>> changes = new HashMap<String, EnumMap<ComponentType, ComponentCodeChange>>();

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class Right extends Storable<Right> {
 
 
  public Right() {
-   // Leerer Konstruktor für Storable und einige PersistenceLayer benötigt
+   // Leerer Konstruktor fï¿½r Storable und einige PersistenceLayer benï¿½tigt
  }
 
 

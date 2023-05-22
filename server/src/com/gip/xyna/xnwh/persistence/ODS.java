@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ public interface ODS extends ODSAdministration {
 
 
   /**
-   * requests über diese connection gehen an alle konfigurierten persistenzschichten, deren type gleich dem
-   * übergebenen ist.
+   * requests ï¿½ber diese connection gehen an alle konfigurierten persistenzschichten, deren type gleich dem
+   * ï¿½bergebenen ist.
    */
   public ODSConnection openConnection(ODSConnectionType conType);
 

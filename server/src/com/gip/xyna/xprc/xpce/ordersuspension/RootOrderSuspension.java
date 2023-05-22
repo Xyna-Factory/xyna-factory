@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,25 +35,25 @@ import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause;
  * also in der umgekehrten Richtung wie die normalen Suspendierungen.<br>
  * <br>
  * Zum Suspendieren wird eine RootOrderSuspension-Instanz wird dabei in die RootProcessData-Instanz
- * des zu suspendierenden Auftrags eingetragen. Daraufhin führen alle ausgeführten Steps im 
+ * des zu suspendierenden Auftrags eingetragen. Daraufhin fï¿½hren alle ausgefï¿½hrten Steps im 
  * gesamten Auftrag die Methoden {@link #shouldSuspend()} und {@link #suspend(ResumeTarget)} auf. 
  * <br>
- * Über die Methode {@link #setSuspended(Long)} werden alle suspendierten Subworkflows gemeldet,
+ * ï¿½ber die Methode {@link #setSuspended(Long)} werden alle suspendierten Subworkflows gemeldet,
  * bei der Suspendierung des Root-XynaProcess wird der Status auf "Suspended" gewechselt und das 
- * CountDownLatch "suspensionLatch" gelöst.
+ * CountDownLatch "suspensionLatch" gelï¿½st.
  * <br>
- * Über {@link #awaitSuspension()}, {@link #awaitSuspension(long)} und 
- * {@link #awaitSuspension(long, TimeUnit)} kann auf die erfolgreiche Durchführung der 
+ * ï¿½ber {@link #awaitSuspension()}, {@link #awaitSuspension(long)} und 
+ * {@link #awaitSuspension(long, TimeUnit)} kann auf die erfolgreiche Durchfï¿½hrung der 
  * Suspendierung samt OrderBackup gewartet werden.
  * <br>
  * Falls die Suspendierung abgebrochen werden soll, muss die Methode {@link #undoSuspension()} 
- * aufgerufen werden. Diese sorgt dafür, dass {@link #shouldSuspend()} und {@link #suspend(ResumeTarget)}
- * keine weiteren Suspendierungen durchführen. Es wird ein CountDownLatch "resumeLatch" gestartet, 
- * welches dafür sorgt, dass {@link #setSuspended(Long)} warten muss. Nun können über 
- * {@link #getResumeTargets()} die bereits suspendierten Lanes ausgegeben werden (und dann außerhalb 
- * für das Resume in die SRInformations eingetragen werden). Über {@link #continueResume()} wird dann 
- * das Latch "resumeLatch" gelöst, die Suspendierungen können fortgesetzt werden. Diese sehen dann 
- * die Resumes, der Auftrag läuft also weiter.
+ * aufgerufen werden. Diese sorgt dafï¿½r, dass {@link #shouldSuspend()} und {@link #suspend(ResumeTarget)}
+ * keine weiteren Suspendierungen durchfï¿½hren. Es wird ein CountDownLatch "resumeLatch" gestartet, 
+ * welches dafï¿½r sorgt, dass {@link #setSuspended(Long)} warten muss. Nun kï¿½nnen ï¿½ber 
+ * {@link #getResumeTargets()} die bereits suspendierten Lanes ausgegeben werden (und dann auï¿½erhalb 
+ * fï¿½r das Resume in die SRInformations eingetragen werden). ï¿½ber {@link #continueResume()} wird dann 
+ * das Latch "resumeLatch" gelï¿½st, die Suspendierungen kï¿½nnen fortgesetzt werden. Diese sehen dann 
+ * die Resumes, der Auftrag lï¿½uft also weiter.
  */
 public class RootOrderSuspension {
 
@@ -96,11 +96,11 @@ public class RootOrderSuspension {
 
   public enum State {
     Suspending,     //es werden weitere ProcessSuspendedExceptions geworfen und ResumeTargets gesammelt
-    RootSuspending, //Suspendierung ist bis zum Root propagiert, nun fehlt hauptsächlich Backup der RootOrder
+    RootSuspending, //Suspendierung ist bis zum Root propagiert, nun fehlt hauptsï¿½chlich Backup der RootOrder
     Suspended,      //RootOrder wurde suspendiert, Backup ist geschrieben -> fertig
     
     Resuming,   //wegen Undo werden alle ResumeTargets wieder eingestellt, daher darf keine Suspendierung 
-                //vorgenommen werden, um möglichst einfach das Resume zu starten
+                //vorgenommen werden, um mï¿½glichst einfach das Resume zu starten
     Resumed,    //Auftrag ist Resumed -> fertig
     
   }
@@ -115,7 +115,7 @@ public class RootOrderSuspension {
   }
   
   /**
-   * Von FractalProcessStep via XynaProcess und RootProcessData vor jeder Ausführung gerufen.
+   * Von FractalProcessStep via XynaProcess und RootProcessData vor jeder Ausfï¿½hrung gerufen.
    * @return
    */
   public boolean shouldSuspend() {
@@ -123,7 +123,7 @@ public class RootOrderSuspension {
   }
   
   /**
-   * Von FractalProcessStep via XynaProcess und RootProcessData vor jeder Ausführung gerufen.
+   * Von FractalProcessStep via XynaProcess und RootProcessData vor jeder Ausfï¿½hrung gerufen.
    * Wirft die ProcessSuspendedException
    * @param resumeTarget
    */
@@ -140,7 +140,7 @@ public class RootOrderSuspension {
                 resumeTargets = new ArrayList<ResumeTarget>();
               }
               resumeTargets.add(resumeTarget);
-              //ProcessSuspendedException für SuspendResumeManagement.handleSuspensionEvent(..)
+              //ProcessSuspendedException fï¿½r SuspendResumeManagement.handleSuspensionEvent(..)
               return new ProcessSuspendedException(suspensionCause);
             } else {
               break; //retry
@@ -176,7 +176,7 @@ public class RootOrderSuspension {
           return false;
         case Resuming:
         case Resumed:
-          //Resume soll ausgeführt werden
+          //Resume soll ausgefï¿½hrt werden
           return false;
       }
     }
@@ -234,7 +234,7 @@ public class RootOrderSuspension {
 
   
   /**
-   * Von XynaProcess via RootProcessData beim Fangen der ProcessSuspendedException vor der Ausführung 
+   * Von XynaProcess via RootProcessData beim Fangen der ProcessSuspendedException vor der Ausfï¿½hrung 
    * der eigentlichen Suspendierung gerufen.
    * @param orderId suspendierter Auftrag
    */
@@ -266,7 +266,7 @@ public class RootOrderSuspension {
         }
         break;
       case Resumed:
-        //Suspendierung kann immer noch auftreten, nachdem Suspendierung rückgängig gemacht wurde
+        //Suspendierung kann immer noch auftreten, nachdem Suspendierung rï¿½ckgï¿½ngig gemacht wurde
         break;
       default:
         logger.warn("Unexpected state "+localState+" for "+this);
@@ -297,7 +297,7 @@ public class RootOrderSuspension {
   
   /**
    * Abbruch der Suspendierung: Status ist nun Resuming -&gt; keine neuen Suspendierungen;
-   * CountDownLatch hält aktuelle Supendierungen auf.
+   * CountDownLatch hï¿½lt aktuelle Supendierungen auf.
    * @return aktueller Status
    */
   public State undoSuspension() {
@@ -312,7 +312,7 @@ public class RootOrderSuspension {
             break; //Retry
           }
         case Suspended:
-          return state; //zu spät, ist bereits suspendiert 
+          return state; //zu spï¿½t, ist bereits suspendiert 
         default:
           logger.warn("Unexpected state "+localState+" for "+this); 
           return state;
@@ -354,16 +354,16 @@ public class RootOrderSuspension {
 
   /**
    * Fortsetzen der wartenden Suspendierungen, dabei werden auch die zuvor 
-   * eingestellten Resumes berücksichtigt.
+   * eingestellten Resumes berï¿½cksichtigt.
    */
   public void continueResume() {
     while( true ) { 
       State localState = state;
       switch( localState ) {
         case Suspended:
-          return; //zu spät, war bereits suspendiert
+          return; //zu spï¿½t, war bereits suspendiert
         case Resumed:
-          return; //zu spät, war bereits resumed
+          return; //zu spï¿½t, war bereits resumed
         case Resuming:
         case Suspending:
         case RootSuspending:

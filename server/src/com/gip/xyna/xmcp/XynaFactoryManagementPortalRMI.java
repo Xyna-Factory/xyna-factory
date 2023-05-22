@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public interface XynaFactoryManagementPortalRMI extends Remote {
   @ProxyAccess(right = ProxyRight.PUBLIC)
   public List<SerializablePair<String, Boolean>> listTimeZones() throws RemoteException;
   
-  //orderinputgenerators: search geht über das allgemeine search
+  //orderinputgenerators: search geht ï¿½ber das allgemeine search
   
   @ProxyAccess(right = ProxyRight.ORDER_INPUT_SOURCE, action=Action.insert, checks=1)
   public void createOrderInputSource(XynaCredentials credentials, OrderInputSourceStorable inputSource) throws RemoteException;

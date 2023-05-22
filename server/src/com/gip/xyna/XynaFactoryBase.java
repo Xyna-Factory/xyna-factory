@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ public interface XynaFactoryBase extends XynaFactoryPortal {
 
 
   /**
-   * Prüft, ob Factory beendet werden kann und ruft dann über XynaFactoryCommandLineInterface den Shutdown auf
-   * Factory fährt bereits herunter -&gt; shutdown() kehrt sofort zurück
+   * Prï¿½ft, ob Factory beendet werden kann und ruft dann ï¿½ber XynaFactoryCommandLineInterface den Shutdown auf
+   * Factory fï¿½hrt bereits herunter -&gt; shutdown() kehrt sofort zurï¿½ck
    * Factory ist noch beim Hochfahren -&gt; shutdown() wartet bis Factory hochgefahren ist
    */
   public void shutdown();
@@ -90,9 +90,9 @@ public interface XynaFactoryBase extends XynaFactoryPortal {
   public int getBootCount();
 
   /**
-   * verhindert, dass der server runterfährt, solange man das lock hält.
-   * ist ein "readlock", d.h. mehrere threads können das shutdown parallel verhindern.
-   * @return gibt true zurück, falls die sperrung gegen shutdown erfolgreich war und false, falls bereits das shutdown am laufen ist
+   * verhindert, dass der server runterfï¿½hrt, solange man das lock hï¿½lt.
+   * ist ein "readlock", d.h. mehrere threads kï¿½nnen das shutdown parallel verhindern.
+   * @return gibt true zurï¿½ck, falls die sperrung gegen shutdown erfolgreich war und false, falls bereits das shutdown am laufen ist
    */
   public boolean lockShutdown(String cause);
 

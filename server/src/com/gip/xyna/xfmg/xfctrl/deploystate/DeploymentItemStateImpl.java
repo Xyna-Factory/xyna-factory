@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,9 +126,9 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   private Optional<SerializableExceptionInformation> buildError;
   private final Map<DeploymentLocation, Set<DeploymentItemState>> callSites;
   private ConcurrentMap<DeploymentLocation, ConcurrentMapWithObjectRemovalSupport<String, CallerSetWithRemovalSupport>> callSitesPerOperation;
-  private File savedImplJar; //gespeichertes ImplJar für Services (null, falls es nicht verwendet wird)
+  private File savedImplJar; //gespeichertes ImplJar fï¿½r Services (null, falls es nicht verwendet wird)
   private boolean useDeployedImplJar; //wird das ImplJar vom deployten Service verwendet?
-  private ServiceImplInconsistency deployedServiceChangedInconsistency; //ImplInconsistency durch Service-Änderungen (wird beim deployen von saved übernommen)
+  private ServiceImplInconsistency deployedServiceChangedInconsistency; //ImplInconsistency durch Service-ï¿½nderungen (wird beim deployen von saved ï¿½bernommen)
   private String label;
   private volatile CachedStateReport cachedReport;
 
@@ -271,7 +271,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   
   
   private void cleanCallSites() {
-    //beim ändern von runtimecontextdependencies werden callsites nicht aufgeräumt
+    //beim ï¿½ndern von runtimecontextdependencies werden callsites nicht aufgerï¿½umt
     if (callSitesDirty) {
       RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
       cleanCallSitesInternally(rcdm, DeploymentLocation.DEPLOYED);
@@ -1015,7 +1015,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   /**
    * Bestehen Inkonsistenzen wegen einem veralteten ImplJar?
    * @param location
-   * @param onlyInterfaceChangeInconsistencies es werden nur die Inkonsistenzen, die wegen einer Änderung am Service auftreten beachtet
+   * @param onlyInterfaceChangeInconsistencies es werden nur die Inkonsistenzen, die wegen einer ï¿½nderung am Service auftreten beachtet
    * @return
    */
   public boolean hasServiceImplInconsistencies(DeploymentLocation location, boolean onlyInterfaceChangeInconsistencies) {
@@ -1027,7 +1027,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   }
   
   /**
-   * Ermittelt, ob eine Inkonsistenz wegen Änderungen am Service besteht, d.h. ob das ImplJar veraltet ist.
+   * Ermittelt, ob eine Inkonsistenz wegen ï¿½nderungen am Service besteht, d.h. ob das ImplJar veraltet ist.
    * @param location
    * @return
    */
@@ -1066,9 +1066,9 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
 
 
   /**
-   * Ermittelt, ob eine Inkonsistenz besteht, weil lastModified jünger als das ImplJar ist.
+   * Ermittelt, ob eine Inkonsistenz besteht, weil lastModified jï¿½nger als das ImplJar ist.
    * @param lastModified
-   * @param interfaceChangeInconsistencies true, falls sich die Inkonsistenz auf eine Service-Änderung bezieht;
+   * @param interfaceChangeInconsistencies true, falls sich die Inkonsistenz auf eine Service-ï¿½nderung bezieht;
    *          false, falls sich die Inkonsistenz auf ein verwendetes Objekt bezieht
    * @return
    */
@@ -1106,21 +1106,21 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
       return incs;
     }
     
-    //Inkonsistenz aufgrund eigener Änderungen
+    //Inkonsistenz aufgrund eigener ï¿½nderungen
     ServiceImplInconsistency interfaceInc = getServiceInterfaceChangeInconsistency(location);
     
     if (interfaceInc != null) {
       incs.add(interfaceInc);
       
       if (interfaceInc.getType() == ServiceImplInconsistencyState.SAVED_MISSING_JAR || interfaceInc.getType() == ServiceImplInconsistencyState.DEPLOYED_MISSING_JAR) {
-        //jar existiert nicht -> abhängige Objekte gar nicht mehr untersuchen
+        //jar existiert nicht -> abhï¿½ngige Objekte gar nicht mehr untersuchen
         return incs;
       }
     }
     
 
     if (XynaProperty.SUPPRESS_USED_OBJECT_IMPL_INCONSISTENCIES.get()) {
-      //Inkonsistenzen aufgrund Änderungen von verwendeten Objekten
+      //Inkonsistenzen aufgrund ï¿½nderungen von verwendeten Objekten
       Set<DeploymentItemState> usedItems = new HashSet<DeploymentItemState>();
       getPublishedInterfacesRecursively(usedItems, location);
       usedItems.remove(this);
@@ -1196,7 +1196,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   }
   
   /**
-   * Übernimmt die Inkonsistenz wegen einer Änderung am Service vom Saved-Stand nach Deployed.
+   * ï¿½bernimmt die Inkonsistenz wegen einer ï¿½nderung am Service vom Saved-Stand nach Deployed.
    */
   private void transferSavedServiceImplInconsistencyToDeployed() {
     if (applicationItem) {
@@ -1716,7 +1716,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   }
 
 
-  public void check() { //für debugzwecke
+  public void check() { //fï¿½r debugzwecke
     RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     for (Entry<DeploymentLocation, Set<DeploymentItemInterface>> e : interfaceEmployment.entrySet()) {
       for (DeploymentItemInterface dii : e.getValue()) {

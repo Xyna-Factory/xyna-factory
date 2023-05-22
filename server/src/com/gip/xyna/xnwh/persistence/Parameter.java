@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class Parameter {
   public static final Parameter EMPTY_PARAMETER = new Parameter();
 
   /**
-   * TODO unterstützt keine null werte. dabei aufpassen, dass dieses feature nicht irgendwo verwendet wird.
+   * TODO unterstï¿½tzt keine null werte. dabei aufpassen, dass dieses feature nicht irgendwo verwendet wird.
    */
   public Parameter(Object... params) {
     List<Object> paraList = new ArrayList<Object>(params.length * 2);
@@ -64,7 +64,7 @@ public class Parameter {
 
 
   /**
-   * i-ten parameter zurückgeben
+   * i-ten parameter zurï¿½ckgeben
    */
   public Object get(int i) {
     return params[i];

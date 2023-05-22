@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ import com.gip.xyna.xmcp.exceptions.XMCP_RMI_BINDING_ERROR;
 
 
 /**
- * kapselt funktionalität bzgl rmi-schnittstellen. z.b. class-reloading support.
+ * kapselt funktionalitï¿½t bzgl rmi-schnittstellen. z.b. class-reloading support.
  */
 public class RMIManagement extends FunctionGroup implements Serializable {
 
@@ -238,7 +238,7 @@ public class RMIManagement extends FunctionGroup implements Serializable {
     private Map<String,Registry> cachedRegistries = new HashMap<String,Registry>();
     
     /**
-     * im get-Fall kann timeout nicht mehr berücksichtigt werden
+     * im get-Fall kann timeout nicht mehr berï¿½cksichtigt werden
      * @param hostname
      * @param port
      * @param timeout
@@ -278,7 +278,7 @@ public class RMIManagement extends FunctionGroup implements Serializable {
       } catch (RemoteException e) {
         try {
           //Es ist nicht sonderlich sinnvoll, die eigene Registry als RemoteRegistry zu holen.
-          //Aber wenn sie nicht über den RegistryCache erzeugt wurde, kann sie so wenigstens noch verfügbar gemacht werden.
+          //Aber wenn sie nicht ï¿½ber den RegistryCache erzeugt wurde, kann sie so wenigstens noch verfï¿½gbar gemacht werden.
           r = LocateRegistry.getRegistry(hostname, port, csf );
         } catch (RemoteException e1) {
           throw new XMCP_RMI_BINDING_ERROR(hostname+":"+port, e1);
@@ -374,7 +374,7 @@ public class RMIManagement extends FunctionGroup implements Serializable {
 
     /**
      * macht unbind (falls notwendig) und unexportObject
-     * gibt true zurück, falls erfolgreich
+     * gibt true zurï¿½ck, falls erfolgreich
      */
     public boolean unregister(boolean force) {
       if (!registered) {        
@@ -430,13 +430,13 @@ public class RMIManagement extends FunctionGroup implements Serializable {
       try {
         Remote stub;
         synchronized (RMIManagement.class) {
-          //sorgt dafür, dass im tcpendpoint innerhalb des erzeugten stubs der richtige hostname
-          // (falls man rmi über verschiedene interfaces anbieten möchte) steht.
+          //sorgt dafï¿½r, dass im tcpendpoint innerhalb des erzeugten stubs der richtige hostname
+          // (falls man rmi ï¿½ber verschiedene interfaces anbieten mï¿½chte) steht.
           //vergleiche http://download.oracle.com/javase/1.5.0/docs/guide/rmi/relnotes.html
           // oder openjdk implementierung von exportObject (TCPEndpoint.getLocalEndpoint(...)
           
           RMIHostnameSetter rmiHS = new RMIHostnameSetter();
-          //FIXME klären, ob die property fürs exportObject benötigt wird oder fürs bind, und entpsrechend das tryfinally bauen
+          //FIXME klï¿½ren, ob die property fï¿½rs exportObject benï¿½tigt wird oder fï¿½rs bind, und entpsrechend das tryfinally bauen
           
           try {
             rmiHS.setHostname(hostname);
@@ -506,19 +506,19 @@ public class RMIManagement extends FunctionGroup implements Serializable {
     /**
      * wird aufgerufen, nachdem per reflection ein neues remote impl objekt erstellt wurde Achtung: hier kann man nicht
      * casten nach T, weil eventuell mit anderem classloader geladen. typischerweise ruft man hier
-     * {@link InitializableRemoteInterface#init(Object...)} auf mit den objekten die den gewünschten kontext enthalten.
+     * {@link InitializableRemoteInterface#init(Object...)} auf mit den objekten die den gewï¿½nschten kontext enthalten.
      */
     public void init(InitializableRemoteInterface rmiImpl);
 
     /**
-     * Rückgabe eines ClassLoaderBuilder, falls spezieller RMI-ClassLoader benötigt wird.
+     * Rï¿½ckgabe eines ClassLoaderBuilder, falls spezieller RMI-ClassLoader benï¿½tigt wird.
      * Ansonsten ist null erlaubt.
-     * TODO Erfordert Änderungen an Bestandscode
+     * TODO Erfordert ï¿½nderungen an Bestandscode
      */
     //public ClassLoaderBuilder getClassLoaderBuilder();
     
     /**
-     * wird benutzt um per reflection ein neues remote impl objekt zu erstellen, wenn es zb aus classloading gründen neu
+     * wird benutzt um per reflection ein neues remote impl objekt zu erstellen, wenn es zb aus classloading grï¿½nden neu
      * erstellt werden muss.
      */
     public String getFQClassName();
@@ -549,14 +549,14 @@ public class RMIManagement extends FunctionGroup implements Serializable {
           .getOrCreateClassLoaderByType(ClassLoaderType.RMI, -1L, clb );
       
       if( cl instanceof RegisteringClassLoader ) {
-        //dafür sorgen, dass die klasse vom rmiclassloader beachtet wird.
+        //dafï¿½r sorgen, dass die klasse vom rmiclassloader beachtet wird.
         ((RegisteringClassLoader)cl).register( factory.getFQClassName() );
       }
 
       try {
         return (Class<T>) cl.loadClass(factory.getFQClassName());
       } catch (ClassNotFoundException e) {
-        throw new RuntimeException("rmi class could not be loaded", e); //das kann unter normalen umständen nicht passieren
+        throw new RuntimeException("rmi class could not be loaded", e); //das kann unter normalen umstï¿½nden nicht passieren
       }
     }
     
@@ -676,7 +676,7 @@ public class RMIManagement extends FunctionGroup implements Serializable {
   }
   
   /**
-   * Erzeugen einer Registry: im get-Fall kann timeout nicht mehr berücksichtigt werden
+   * Erzeugen einer Registry: im get-Fall kann timeout nicht mehr berï¿½cksichtigt werden
    * @param hostname
    * @param port
    * @param timeout
@@ -690,7 +690,7 @@ public class RMIManagement extends FunctionGroup implements Serializable {
   /**
    * SystemProperty "java.rmi.server.hostname" muss gesetzt sein, 
    * damit die Endpoints richtig initialisiert werden. Falls diese nicht richtig initialisiert werden,
-   * lernen sie bei der ersten Verwendung ihren lokalen Namen. Dieser weicht jedoch evtl vom gewünschten Namen ab.
+   * lernen sie bei der ersten Verwendung ihren lokalen Namen. Dieser weicht jedoch evtl vom gewï¿½nschten Namen ab.
    * Dies ist aber nicht schlimm, da die ServerSocketFactory den richtigen Host kennt.
    * 
    * Siehe sun.rmi.transport.tcp.TCPEndpoint.setLocalHost(...)

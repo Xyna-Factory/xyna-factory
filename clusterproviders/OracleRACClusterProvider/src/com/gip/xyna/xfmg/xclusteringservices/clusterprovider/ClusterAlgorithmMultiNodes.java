@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import com.gip.xyna.xfmg.xclusteringservices.ClusterState;
 
 /**
  *
- * FIXME vollständig implementieren!
+ * FIXME vollstï¿½ndig implementieren!
  */
 public class ClusterAlgorithmMultiNodes extends ClusterAlgorithmAbstract {
 
@@ -34,7 +34,7 @@ public class ClusterAlgorithmMultiNodes extends ClusterAlgorithmAbstract {
   }
 
   public ClusterState join(SQLUtils sqlUtils, ClusterSetupRowsForUpdate rows, int newBinding, RemoteInterfaceForClusterStateChangesImplAQ interconnect) {
-    //Es gibt schon mehrere Einträge in ClusterSetupRowsForUpdate
+    //Es gibt schon mehrere Eintrï¿½ge in ClusterSetupRowsForUpdate
     //diese sollten schon CONNECTED sein TODO RAC-Cluster >2 Nodes: dies muss doch nicht so sein? 
     
     throw new UnsupportedOperationException("Multi-node is not implemented");
@@ -61,7 +61,7 @@ public class ClusterAlgorithmMultiNodes extends ClusterAlgorithmAbstract {
   }
   
   public ClusterState leaveCluster(SQLUtils sqlUtils, ClusterSetupRowsForUpdate rows) {
-    // Falls es mehr als 2 Cluster-Knoten gibt, muss der State nicht geändert werden, die anderen
+    // Falls es mehr als 2 Cluster-Knoten gibt, muss der State nicht geï¿½ndert werden, die anderen
     // bleiben einfach CONNECTED.
 
     //eigenen Eintrag entfernen

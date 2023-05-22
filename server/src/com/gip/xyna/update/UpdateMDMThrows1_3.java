@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 /**
- *  1.2 workflows und datentypen erhalten ein throw-xynaexception tag für abwärtskompatibilität. zukünftig werden throws genau definiert sein.
+ *  1.2 workflows und datentypen erhalten ein throw-xynaexception tag fï¿½r abwï¿½rtskompatibilitï¿½t. zukï¿½nftig werden throws genau definiert sein.
  */
 public class UpdateMDMThrows1_3 extends MDMUpdate {
 
@@ -77,7 +77,7 @@ public class UpdateMDMThrows1_3 extends MDMUpdate {
             nextElement = XMLUtils.getNextElementSibling(outputElement);
           }
           
-          //nun wird das throws element tatsächlich angefügt
+          //nun wird das throws element tatsï¿½chlich angefï¿½gt
           if (nextElement == null) {
             operation.appendChild(throwsElement);
           } else {

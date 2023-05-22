@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,7 +164,7 @@ public class MoveOperationWork extends BaseWorkCollection<OperationRefactoringEl
         }
       }
 
-      //falls newtype => hinzufügen
+      //falls newtype => hinzufï¿½gen
       if (newFqXmlNames.contains(fqXmlName)) {
         List<Element> serviceElements = XMLUtils.getChildElementsByName(typeInformationCarrier, GenerationBase.EL.SERVICE);
         for (Element serviceElement : serviceElements) {
@@ -249,7 +249,7 @@ public class MoveOperationWork extends BaseWorkCollection<OperationRefactoringEl
   }
   
   
-  //referenzen fixen: service einfügen falls noch nicht vorhanden und dann funktionsaufruf auf neues serviceobjekt zeigen lassen.
+  //referenzen fixen: service einfï¿½gen falls noch nicht vorhanden und dann funktionsaufruf auf neues serviceobjekt zeigen lassen.
   protected class RewriteOperationInvocations extends WorkUnit {
 
     protected RewriteOperationInvocations() {
@@ -272,8 +272,8 @@ public class MoveOperationWork extends BaseWorkCollection<OperationRefactoringEl
         String referenceName = servicerefElement.getAttribute(GenerationBase.ATT.REFERENCENAME);
         String fqServiceGroupName = referencePath + "." + referenceName;
         if (oldFqServiceGroupNames.contains(fqServiceGroupName)) {
-          // checken, wie oft benutzt. falls nur mit der gesuchten operation benutzt, kann man ihn ändern.
-          // falls gesuchte operation UND andere, dann so lassen und neue service-ref einfügen.
+          // checken, wie oft benutzt. falls nur mit der gesuchten operation benutzt, kann man ihn ï¿½ndern.
+          // falls gesuchte operation UND andere, dann so lassen und neue service-ref einfï¿½gen.
           // falls nur andere operations => nichts machen.
           String serviceId = servicerefElement.getAttribute(GenerationBase.ATT.ID);
           // nun erstmal alle operations bestimmen, die von den servicerefs aufgerufen werden

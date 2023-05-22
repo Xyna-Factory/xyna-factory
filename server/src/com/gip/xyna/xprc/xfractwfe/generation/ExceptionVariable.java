@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ public class ExceptionVariable extends AVariable {
     String cn = GenerationBase.getSimpleNameFromFQName(getFQClassName());
     setClassName(cn);
 
-    //stimmt zufällig: die nicht-mdm-, sondern basis-exception-typen sind hiermit gemeint: xynaexception, xynaexceptionbase, exception
+    //stimmt zufï¿½llig: die nicht-mdm-, sondern basis-exception-typen sind hiermit gemeint: xynaexception, xynaexceptionbase, exception
     isJavaBaseType = GenerationBase.isReservedServerObjectByFqClassName(getFQClassName());
     if (isJavaBaseType) {
       javaType = PrimitiveType.createOrNull(cn);

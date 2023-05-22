@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
   public interface ParallelismLimitation<S extends Step> {
 
     /**
-     * Übergabe des ParallelExecutor zur Verwendung im ParallelismLimitationAlgorithm
+     * ï¿½bergabe des ParallelExecutor zur Verwendung im ParallelismLimitationAlgorithm
      * @param parallelExecutor
      */
     void setParallelExecutor(ParallelExecutor parallelExecutor);
@@ -146,7 +146,7 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
     void addTaskToParallelExecutor(SuspendableParallelTask<S> taskToResume);
 
     /**
-     * Wartet, bis Limitation != 0 ist (es dürfen wieder Tasks ausgeführt werden)
+     * Wartet, bis Limitation != 0 ist (es dï¿½rfen wieder Tasks ausgefï¿½hrt werden)
      * @return true: !=0; false: Abbruch des Wartens
      */
     boolean awaitLimitationNotZero();
@@ -224,21 +224,21 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
 
     ++executionCount;
     
-    //Starten des ParallelExecutor und auf vollständige Bearbeitung warten
+    //Starten des ParallelExecutor und auf vollstï¿½ndige Bearbeitung warten
     do {
       //gleichzeitige Resumes verweigern
       //es kann gerade wieder ein Resume gestartet worden sein
       waitForParallelExecutor();
     } while (!resumeHandler.denyResumes()); 
 
-    //1) //Evtl. konnten normale Aufträge nicht bearbeitet werden, weil keine Threads mehr laufen durften. 
-    //Die zugehörigen LaneIds werden nun für den nächsten Start des ParallelExecutors gespeichert 
+    //1) //Evtl. konnten normale Auftrï¿½ge nicht bearbeitet werden, weil keine Threads mehr laufen durften. 
+    //Die zugehï¿½rigen LaneIds werden nun fï¿½r den nï¿½chsten Start des ParallelExecutors gespeichert 
     data.changeLowPriorityTasksToUntreated(parallelExecutor, SuspendableParallelTask.PRIORITY_RESUME);
 
     //noch einmal warten, damit auch die letzten Resumes fertig sind
     waitForParallelExecutor();
     
-    //nun läuft kein Auftrag mehr
+    //nun lï¿½uft kein Auftrag mehr
     
     //2) Falls Suspendierungen vorliegen, wird eine SuspendedException geworfen.
     if( data.hasSuspendedTasks() ) {
@@ -264,7 +264,7 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
     
   }
 
-  //von tests überschrieben
+  //von tests ï¿½berschrieben
   protected void handleParallelExecutorFinished() {
     XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getSuspendResumeManagement().handleParallelExecutorFinished(orderId, this);
   }
@@ -303,7 +303,7 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
         executeAgain = true;
       } else {
         if( parallelExecutor.size() != 0 && parallelExecutor.hasExecutableTasks() ) {
-          //es gibt noch Tasks, die ausgeführt werden müssen
+          //es gibt noch Tasks, die ausgefï¿½hrt werden mï¿½ssen
           if( logger.isDebugEnabled() ) {
             logger.debug("parallelismLimitation="+parallelismLimitation );
           }
@@ -353,8 +353,8 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
       logger.debug("handleSuspensions("+data+")" );
     }
     
-    //Zuerst müssen Suspendierungen behandelt werden: Falls Suspendierungen vorliegen, wird eine SuspendedException
-    //geworfen. Die gefangenen Exception bleiben gespeichert, bis alle Lanes komplett ausgeführt worden sind
+    //Zuerst mï¿½ssen Suspendierungen behandelt werden: Falls Suspendierungen vorliegen, wird eine SuspendedException
+    //geworfen. Die gefangenen Exception bleiben gespeichert, bis alle Lanes komplett ausgefï¿½hrt worden sind
     if( data.hasSuspendedTasks() ) {
       SuspensionCause sc = data.combinedSuspensionCauses();
       ProcessSuspendedException suspendedException = new ProcessSuspendedException(sc);
@@ -450,7 +450,7 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
   }
   
   /**
-   * Zum Testen überschreibbar
+   * Zum Testen ï¿½berschreibbar
    */
   protected void handleProcessSuspendedException(ProcessSuspendedException suspendedException, long orderId, S step) {
     if( step instanceof FractalProcessStep<?> ) {
@@ -495,7 +495,7 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
         try {
           Thread.sleep(3);
         } catch (InterruptedException e) {
-          //dann halt kürzer warten
+          //dann halt kï¿½rzer warten
         }
       }
       if( taskToResume.isSuspended() ) {
@@ -576,7 +576,7 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
         parallelExecutor.execute();
       } catch( RejectedExecutionException e ) {
         if( parallelExecutor.isExecuting() ) {
-          //ignorieren, der Task wird noch ausgeführt werden
+          //ignorieren, der Task wird noch ausgefï¿½hrt werden
         } else {
           //hier nicht warten. weil weiter oben im stack locks gehalten werden
           return ResumeState.ParallelExecutorOverloaded;
@@ -614,7 +614,7 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
  
   
   /**
-   * Abbrechen der weiteren Task-ausführung, nur Resumes sind noch zulässig
+   * Abbrechen der weiteren Task-ausfï¿½hrung, nur Resumes sind noch zulï¿½ssig
    */
   public void cancel() {
     this.priorityThreshold = SuspendableParallelTask.PRIORITY_RESUME;
@@ -631,9 +631,9 @@ public class FractalWorkflowParallelExecutor<S extends Step> implements Resumabl
 
   
   /**
-   * Mitteilung, welche threads hängen.
+   * Mitteilung, welche threads hï¿½ngen.
    * @param hangingThreads
-   * @return mainthread, falls mainthread hängt
+   * @return mainthread, falls mainthread hï¿½ngt
    */
   public Thread isMainThreadHanging(Set<Thread> hangingThreads) {
     if( parallelExecutor.isExecuting() ) {

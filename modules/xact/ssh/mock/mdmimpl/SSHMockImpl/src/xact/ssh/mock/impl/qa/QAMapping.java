@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,7 +135,7 @@ public class QAMapping extends QAWrapper {
     for( Pair<String,String> map : data.getMappings() ) {
       String replace = map.getSecond();
       if( replace == null ) {
-        //jede Zeile, in der map.getFirst() steht, muss gelöscht werden
+        //jede Zeile, in der map.getFirst() steht, muss gelï¿½scht werden
         StringBuilder newResponse = new StringBuilder();
         String sep = "";
         for( String line : string.split( "\n") ) {

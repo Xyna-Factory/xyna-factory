@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,10 +100,10 @@ public class CapacityManagement extends FunctionGroup
       Clustered {
 
   /**
-   * Reaktion auf Capacity-Probleme (Cap existiert nicht, Cap liegt nicht in der benötigten Cardinality vor)
+   * Reaktion auf Capacity-Probleme (Cap existiert nicht, Cap liegt nicht in der benï¿½tigten Cardinality vor)
    */
   public enum CapacityProblemReaction {
-    Wait,         //Auftrag wartet, bis Cap-Problem gelöst ist
+    Wait,         //Auftrag wartet, bis Cap-Problem gelï¿½st ist
     Fail,         //Auftrag mit Exception abbrechen
     Schedule;    //trotzdem schedulen
   }
@@ -113,12 +113,12 @@ public class CapacityManagement extends FunctionGroup
   public static final String MANAGEMENT_LOCK_NAME = DEFAULT_NAME + "-lock";
 
   /**
-   * Cache, auf dem gescheduled wird, um nicht ständig auf den PersistenceLayer zugreifen zu müssen
+   * Cache, auf dem gescheduled wird, um nicht stï¿½ndig auf den PersistenceLayer zugreifen zu mï¿½ssen
    */
   private final CapacityCache cache = new CapacityCache();
 
   /**
-   * Sicherung gegen Änderungen an Capacity-Namen, Anzahl etc.
+   * Sicherung gegen ï¿½nderungen an Capacity-Namen, Anzahl etc.
    */
   private DatabaseLock managementLock;
 
@@ -145,10 +145,10 @@ public class CapacityManagement extends FunctionGroup
       return true; //immer bereit
     }
     public void onChange(ClusterState newState) {
-      //Dieser ClusterStateChangeHandler muss fast nichts machen, da alle wichtigen Übergänge 
+      //Dieser ClusterStateChangeHandler muss fast nichts machen, da alle wichtigen ï¿½bergï¿½nge 
       //vom CMClusterStateChangeHandler erledigt werden, da dieser die wesentlich genaueren 
-      //Statusübergänge des StorableClusterContext beobachtet.
-      //Lediglich der Übergang nach CONNECTED muss beobachtet werden, da hier das Setzen des 
+      //Statusï¿½bergï¿½nge des StorableClusterContext beobachtet.
+      //Lediglich der ï¿½bergang nach CONNECTED muss beobachtet werden, da hier das Setzen des 
       //CMAlgorithm erst erfolgen darf, wenn beide ClusterContext im Zustand CONNECTED sind
       if( newState == ClusterState.CONNECTED ) {
         cmAlgorithmBuilder.tryClustered();
@@ -221,7 +221,7 @@ public class CapacityManagement extends FunctionGroup
         logger.info("Shutting down in " + delay + " ms");
       }
       
-      shutDownInitialized = true; //keine weiteren ClusterState-Übergänge zulassen
+      shutDownInitialized = true; //keine weiteren ClusterState-ï¿½bergï¿½nge zulassen
       shutdownTimer.schedule(new TimerTask() {
         @Override
         public void run() {
@@ -611,7 +611,7 @@ public class CapacityManagement extends FunctionGroup
     }
 
     public synchronized void tryClustered() {
-      //Wunsch ist, dass CMClustered eingerichtet werden soll. Dies ist nur möglich,
+      //Wunsch ist, dass CMClustered eingerichtet werden soll. Dies ist nur mï¿½glich,
       //wenn beide ClusterContext auf CONNECTED stehen
       boolean rmiConnected = rmiClusterContext.getClusterState() == ClusterState.CONNECTED;
       boolean storableConnected = storableClusterContext.getClusterState() == ClusterState.CONNECTED;
@@ -761,9 +761,9 @@ public class CapacityManagement extends FunctionGroup
 
         case NO_CLUSTER :
           // FIXME SPS prio3: Es handelt sich offenbar um den Vorgang, dass der Cluster verlassen wird.
-          //                  * Wenn man vorher SINGLE war, nimmt man die Kapazitäten mit und verwendet dafür dann wieder
+          //                  * Wenn man vorher SINGLE war, nimmt man die Kapazitï¿½ten mit und verwendet dafï¿½r dann wieder
           //                    das default-Binding
-          //                  * In allen anderen Fällen werden die Kapazitäten dem Cluster zugeschrieben und auf die anderen
+          //                  * In allen anderen Fï¿½llen werden die Kapazitï¿½ten dem Cluster zugeschrieben und auf die anderen
           //                    Knoten aufgeteilt
           cmAlgorithmBuilder.unsupported(CMUnsupported.Cause.UnconsideredClusterStateChange);
           break;
@@ -794,13 +794,13 @@ public class CapacityManagement extends FunctionGroup
     private void createCluster(ClusterState newState) {
       switch( newState ) {
         case SINGLE: //createCluster
-          //Umtragen der bisher lokal konfigurierten Kapazitäten
+          //Umtragen der bisher lokal konfigurierten Kapazitï¿½ten
           updateAllCapStorablesWithoutManagementLock( 
             UpdateAllCapacityStorables.changeBinding(capacityStorableQueries, 0, ownBinding) );
           cmAlgorithmBuilder.local();
           break;
         case CONNECTED: //joinCluster
-          //Ergänzen der bisherigen Caps für das eigene Binding
+          //Ergï¿½nzen der bisherigen Caps fï¿½r das eigene Binding
           updateAllCapStorablesWithoutManagementLock( 
             UpdateAllCapacityStorables.addCapsForBinding(capacityStorableQueries,ownBinding) );
           cmAlgorithmBuilder.tryClustered();
@@ -814,22 +814,22 @@ public class CapacityManagement extends FunctionGroup
     private void reconnect(ClusterState oldState) {
       switch (oldState) {
         case SINGLE :
-          //cache ist immer noch gültig
+          //cache ist immer noch gï¿½ltig
           break;
         case DISCONNECTED_MASTER :
-          //cache ist immer noch gültig
+          //cache ist immer noch gï¿½ltig
           break;
         case DISCONNECTED_SLAVE :
-          // FIXME SPS prio5: cache neu lesen. Das ist erst mal nicht so wichtig, weil bei SLAVE zunächst sowieso die komplette
+          // FIXME SPS prio5: cache neu lesen. Das ist erst mal nicht so wichtig, weil bei SLAVE zunï¿½chst sowieso die komplette
           //                  factory runtergefahren wird. Beim restart wird dann sowieso der Cache gelesen.
           // FIXME SPS prio5: Problem, wenn Caps noch im Cache benutzt sind. Auch das kann nur passieren, wenn die Maschine
           //                  nicht komplett heruntergefahren wird.
           break;
         case DISCONNECTED :
-          //cache ist immer noch gültig
+          //cache ist immer noch gï¿½ltig
           break;
         case STARTING :
-          //cache ist immer noch gültig
+          //cache ist immer noch gï¿½ltig
           break;
         default :
           throw new RuntimeException(oldState + " is no disconnected state");
@@ -840,24 +840,24 @@ public class CapacityManagement extends FunctionGroup
     private void disconnect(ClusterState newState) {
       switch (newState) {
         case SINGLE :
-          //Caps dürfen alle benutzt werden, daher dem eigenen Binding zuschlagen. Hier ist kein Timeout nötig,
+          //Caps dï¿½rfen alle benutzt werden, daher dem eigenen Binding zuschlagen. Hier ist kein Timeout nï¿½tig,
           //weil der letzte andere Knoten offenbar gesittet den Cluster verlassen hat.
           updateAllCapStorablesWithoutManagementLock( UpdateAllCapacityStorables.forOwnUsage(capacityStorableQueries,ownBinding) );
           cmAlgorithmBuilder.local();
           break;
         case DISCONNECTED_MASTER :
-          //Caps dürfen alle benutzt werden, daher dem eigenen Binding zuschlagen.
+          //Caps dï¿½rfen alle benutzt werden, daher dem eigenen Binding zuschlagen.
           //Das darf erst nach dem Timeout geschehen, der auch abgewartet wird, 
-          //bevor Aufträge der anderen Knoten gestartet werden.
+          //bevor Auftrï¿½ge der anderen Knoten gestartet werden.
           startTaskForCapacityAdoption();
           cmAlgorithmBuilder.local();
           break;
         case DISCONNECTED_SLAVE :
-          //Caps dürfen nicht mehr vergeben werden, Management-Operationen sind Unsupported
+          //Caps dï¿½rfen nicht mehr vergeben werden, Management-Operationen sind Unsupported
           cmAlgorithmBuilder.unsupported(CMUnsupported.Cause.DisconnectedSlave);
           break;
         case DISCONNECTED :
-          //Caps können weiter wie bisher verwendet werden, allerdings ist kein Transfer möglich
+          //Caps kï¿½nnen weiter wie bisher verwendet werden, allerdings ist kein Transfer mï¿½glich
           cmAlgorithmBuilder.local();
           break;
         default :
@@ -891,7 +891,7 @@ public class CapacityManagement extends FunctionGroup
   private void updateAllCapStorablesWithoutManagementLock(final UpdateAllCapacityStorables updateAllCapacityStorables) {
     List<CapacityStorable> allCapacities = null;
     // hier wird kein managementLock geholt, weil diese Methode nur aufgerufen wird, wenn entweder nach SINGLE oder nach
-    // DISCONNECTED_MASTER übergegangen wird. In diesen Fällen ist man aber eh der einzige, der auf die Daten zugreifen
+    // DISCONNECTED_MASTER ï¿½bergegangen wird. In diesen Fï¿½llen ist man aber eh der einzige, der auf die Daten zugreifen
     // darf.
     cache.getLock().lock();
     try {
@@ -924,10 +924,10 @@ public class CapacityManagement extends FunctionGroup
                        + " failed due to database problems: " + ctcbe.getMessage(), ctcbe);
         }
       } catch (PersistenceLayerException ple) {
-        //es sollte nur ein simples SelectForUpdate und anschließend ein Update durchgeführt werden.
+        //es sollte nur ein simples SelectForUpdate und anschlieï¿½end ein Update durchgefï¿½hrt werden.
         //beides sollte nie Anlass zu einer PersistenceLayerException geben, daher muss ein schwerwiegender 
         //Fehler aufgetreten sein. 
-        //Auch die Art des Fehlers deutet nicht daruaf hin, dass es ein temporäres Problem ist oder die 
+        //Auch die Art des Fehlers deutet nicht daruaf hin, dass es ein temporï¿½res Problem ist oder die 
         //Wiederholung ist ebenfalls gescheitert.
         //Daher nun Abbruch
         logger.error("updateAllCapStorables " + updateAllCapacityStorables.getClass().getSimpleName()
@@ -936,11 +936,11 @@ public class CapacityManagement extends FunctionGroup
             
       if( allCapacities != null ) {
         //allCapacities konnte korrekt gelesen werden, daher nun cache neu bauen
-        //Refresh des Caches durch Übergabe aller CapacityStorables
-        //kein Aufrufe von refresh für einzelne Bindings, damit auch gelöschte entfernt werden
+        //Refresh des Caches durch ï¿½bergabe aller CapacityStorables
+        //kein Aufrufe von refresh fï¿½r einzelne Bindings, damit auch gelï¿½schte entfernt werden
         cache.refresh(allCapacities, ownBinding);
-        //nachdem sich nun der Cache geändert hat, sollte der Scheduler benachrichtigt werden, da neue 
-        //freie Caps hinzugekommen sein könnten. 
+        //nachdem sich nun der Cache geï¿½ndert hat, sollte der Scheduler benachrichtigt werden, da neue 
+        //freie Caps hinzugekommen sein kï¿½nnten. 
         if (!XynaFactory.getInstance().isStartingUp()) {
           XynaFactory.getInstance().getProcessing().getXynaScheduler().notifyScheduler();
         }
@@ -972,7 +972,7 @@ public class CapacityManagement extends FunctionGroup
   }
 
 
-  //räumt sich automatisch auf
+  //rï¿½umt sich automatisch auf
   private Map<CapacityChangeListener, Boolean> capacityChangedListeners =
       new WeakHashMap<CapacityChangeListener, Boolean>();
 

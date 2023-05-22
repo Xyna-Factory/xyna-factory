@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -605,7 +605,7 @@ public class XSORClusterProvider implements ClusterProvider {
 
           @Override
           public void execute() {
-            //führt dazu, dass automatisch versucht wird nach startup zu gehen, wenn das 
+            //fï¿½hrt dazu, dass automatisch versucht wird nach startup zu gehen, wenn das 
             //deployment fertig ist. danach je nach availability des anderen knoten nach connected/disconnected/sync, etc
             clusterManagement.changeState(com.gip.xyna.cluster.ClusterState.STARTUP);
           }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public interface UpdaterInterface {
 
   public Version getVersionOfLastSuccessfulUpdate() throws XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException;
   
-  public Version getFactoryVersion() throws XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException; //throws exception nur aus abwärtskompatibilitätsgründen
+  public Version getFactoryVersion() throws XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException; //throws exception nur aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden
 
   public Version getXMOMVersion() throws XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException;
 

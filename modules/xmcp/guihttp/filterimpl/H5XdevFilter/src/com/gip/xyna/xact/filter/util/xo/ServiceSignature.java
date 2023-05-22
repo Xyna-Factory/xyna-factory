@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ public class ServiceSignature extends RuntimeContextDependendAction {
 
     /*TODO: Service Groups unterstuetzen:
        - ja mit DOM.getOrCreateIinstance sollte das entsprechend gehen
-       - also für service groups
+       - also fï¿½r service groups
        - die einzelnen services sind dann darin abzufragen
        - also das xml zu einer servicegroup entspricht einem DOM
        - und darin sind dann viele services enthalten*/

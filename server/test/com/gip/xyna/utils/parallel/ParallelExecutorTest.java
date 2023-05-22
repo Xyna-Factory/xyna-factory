@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,10 +66,10 @@ public class ParallelExecutorTest extends TestCase {
 
     assertEquals( 2, executor.size() );
     
-    executor.setPriorityThreshold( 10 ); //nur Task 2 ist höher
+    executor.setPriorityThreshold( 10 ); //nur Task 2 ist hï¿½her
     executeAndAwait(executor);
     assertEquals( 1, executor.size() );
-    assertFalse(executedFirst.get()); //nicht ausgeführt!
+    assertFalse(executedFirst.get()); //nicht ausgefï¿½hrt!
     assertTrue(executedSecond.get());
     
     executor.setPriorityThreshold( 0 );
@@ -102,7 +102,7 @@ public class ParallelExecutorTest extends TestCase {
     executeAndAwait(executor);
     
     assertEquals( 6, usage.getCurrentlyExecutingTasks() ); //ein Thread mehr als im ThreadPool ... 
-    assertEquals( 5, usage.getActiveCount() );             //...vorhanden führt Tasks aus 
+    assertEquals( 5, usage.getActiveCount() );             //...vorhanden fï¿½hrt Tasks aus 
     
     assertEquals( 0, executor.size() );
     for (int i = 0; i < length; i++) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -149,7 +149,7 @@ public class CodeAccessManagement extends FunctionGroup {
                               ".filter(" + WhiteListFilter.IDENTIFIER + "(" + Boolean.FALSE.toString() + "))" +
                               "." +  TerminalStreamOperation.allMatch.toString() + "()")
         .setDefaultDocumentation(DocumentationLanguage.EN, "See 'xynafactory.sh explainclassmapfilters' for a syntax definition")
-        .setDefaultDocumentation(DocumentationLanguage.DE, "Siehe 'xynafactory.sh explainclassmapfilters' für die Syntax-Definition");
+        .setDefaultDocumentation(DocumentationLanguage.DE, "Siehe 'xynafactory.sh explainclassmapfilters' fï¿½r die Syntax-Definition");
     } catch (ParsingException e) {
       logger.warn("Could not initialize global CodeAccesFilter");
     }
@@ -181,10 +181,10 @@ public class CodeAccessManagement extends FunctionGroup {
         ca.restoreBuildFailures(failures);
       } catch (XDEV_CodeAccessInitializationException e) {
         logger.warn("could not initialize code access instance for revision " + cais.getRevision(), e);
-        //FIXME disabled merken, damit man später manuell erneut versuchen kann zu enablen!
+        //FIXME disabled merken, damit man spï¿½ter manuell erneut versuchen kann zu enablen!
       } catch (RuntimeException e) {
         logger.warn("could not initialize code access instance for revision " + cais.getRevision(), e);
-        //FIXME disabled merken, damit man später manuell erneut versuchen kann zu enablen!
+        //FIXME disabled merken, damit man spï¿½ter manuell erneut versuchen kann zu enablen!
       }
     }
     
@@ -266,8 +266,8 @@ public class CodeAccessManagement extends FunctionGroup {
         ca.handleProjectEvents(events);
       }
       
-      //für bestimmte Events (XMOM Änderungen, RuntimeContext Dependency Änderungen) müssen auch die
-      //abhängigen RuntimeContexte (mit CodeAccess) benachrichtigt werden, damit diese das mdm.jar aktualisieren
+      //fï¿½r bestimmte Events (XMOM ï¿½nderungen, RuntimeContext Dependency ï¿½nderungen) mï¿½ssen auch die
+      //abhï¿½ngigen RuntimeContexte (mit CodeAccess) benachrichtigt werden, damit diese das mdm.jar aktualisieren
       List<ProjectCreationOrChangeEvent> depEvents = new ArrayList<ProjectCreationOrChangeProvider.ProjectCreationOrChangeEvent>();
       for (ProjectCreationOrChangeEvent event : events) {
         if (event.getType().equals(EventType.XMOM_MODIFICATION)

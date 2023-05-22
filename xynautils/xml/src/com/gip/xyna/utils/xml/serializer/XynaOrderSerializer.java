@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,8 +59,8 @@ public class XynaOrderSerializer implements XMLSerializer {
   private XynaHeader_ctype xh;
 
 
-  // Konstruktoren nehmen XynaHeader anstelle von XynaOrder, weil die XynaOrder überschrieben sein kann
-  // und sich die damit generierten Klassen evtl unterscheiden können
+  // Konstruktoren nehmen XynaHeader anstelle von XynaOrder, weil die XynaOrder ï¿½berschrieben sein kann
+  // und sich die damit generierten Klassen evtl unterscheiden kï¿½nnen
   public XynaOrderSerializer(XynaHeader_ctype xh, String payloadAsXMLString) throws Exception {
     this.payloadAsXMLString = payloadAsXMLString;
     this.xh = xh;
@@ -75,12 +75,12 @@ public class XynaOrderSerializer implements XMLSerializer {
     NodeList xol = doc.getChildrenByTagName("XynaOrder", NS_XCOM);
     if (xol.getLength() < 1) {
       xol = doc.getChildNodes();
-      throw new Exception("XynaOrder hat ungültiges Format (XynaOrder Element nicht gefunden): " + xynaOrderAsXMLString);
+      throw new Exception("XynaOrder hat ungï¿½ltiges Format (XynaOrder Element nicht gefunden): " + xynaOrderAsXMLString);
     }
     // elemente der kinder raussuchen    
     ArrayList<Node> childElements = XMLUtils.getChildrenByType((XMLElement)xol.item(0), Node.ELEMENT_NODE);
     if (childElements.size() < 2) {
-      throw new Exception("XynaOrder hat ungültiges Format (Fehlende Payload): " + xynaOrderAsXMLString);
+      throw new Exception("XynaOrder hat ungï¿½ltiges Format (Fehlende Payload): " + xynaOrderAsXMLString);
     }
     XMLElement payload = (XMLElement)childElements.get(1);
     payloadAsXMLString = XMLUtils.getXMLElementAsString(payload);
@@ -138,7 +138,7 @@ public class XynaOrderSerializer implements XMLSerializer {
     XMLUtils.addAttributeIfNotNullOrEmpty(xhEl, STATUS, xh.getStatus());
     xoEl.appendChild(xhEl);
 
-    // wichtig, damit namespace-prefixes stimmen. (payload könnte ansonsten gleiche prefixes benutzen)
+    // wichtig, damit namespace-prefixes stimmen. (payload kï¿½nnte ansonsten gleiche prefixes benutzen)
     XMLElement payloadEl = XMLUtils.parseAndImport(payloadAsXMLString, doc);
     if (payloadEl == null) {
       throw new Exception("XML der Payload darf nicht leer sein.");

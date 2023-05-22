@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
 
 /**
- * kapselt die informationen über die svn änderungen an einer xyna komponente
+ * kapselt die informationen ï¿½ber die svn ï¿½nderungen an einer xyna komponente
  */
 public class ComponentCodeChange implements Serializable {
 
@@ -58,7 +58,7 @@ public class ComponentCodeChange implements Serializable {
   private final String componentName;
   private final ComponentType compType;
   private ModificationType modType;
-  protected List<ComponentCodeChange> changedSubComponent = new ArrayList<ComponentCodeChange>(); //bei shared libs die infos zu den geänderten sharedlib jars (ohne .jar endung)
+  protected List<ComponentCodeChange> changedSubComponent = new ArrayList<ComponentCodeChange>(); //bei shared libs die infos zu den geï¿½nderten sharedlib jars (ohne .jar endung)
   private List<RepositoryItemModification> modifiedJavaFiles = new ArrayList<RepositoryItemModification>();
   private List<FileUpdate> modifiedJars = new ArrayList<FileUpdate>();
 
@@ -124,7 +124,7 @@ public class ComponentCodeChange implements Serializable {
 
 
   /**
-   * pfad ab Komponententyp (trigger/filter, etc) innerhalb des lokal ausgecheckten svn, der folgende kinder enthält:
+   * pfad ab Komponententyp (trigger/filter, etc) innerhalb des lokal ausgecheckten svn, der folgende kinder enthï¿½lt:
    * - src
    * - lib
    * etc. 

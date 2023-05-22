@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,18 +28,18 @@ import com.gip.xyna.Department;
 import com.gip.xyna.utils.concurrent.ReusableCountDownLatch;
 
 /**
- * Führt einen eventuell langlaufenden Algorithmus in einem eigenen Thread solange nacheinander aus, bis
- * keine Requests mehr kommen, dass er ausgeführt werden soll. Dann schläft der Thread, bis neue Requests
+ * Fï¿½hrt einen eventuell langlaufenden Algorithmus in einem eigenen Thread solange nacheinander aus, bis
+ * keine Requests mehr kommen, dass er ausgefï¿½hrt werden soll. Dann schlï¿½ft der Thread, bis neue Requests
  * kommen.
- * Der Algorithmus wird nicht so oft ausgeführt wie die Anzahl der Requests, sondern die Ausführung ist zeitlich 
+ * Der Algorithmus wird nicht so oft ausgefï¿½hrt wie die Anzahl der Requests, sondern die Ausfï¿½hrung ist zeitlich 
  * an die Requests gebunden.
- * D.h. nach jedem Request läuft der Algorithmus mindestens einmal vollständig durch, aber nicht unbedingt zweimal.
+ * D.h. nach jedem Request lï¿½uft der Algorithmus mindestens einmal vollstï¿½ndig durch, aber nicht unbedingt zweimal.
  * 
- * Der Algorithmus kann zur Laufzeit ausgetauscht werden, was dazu führt, dass baldmöglichst zum anderen Algorithmus gewechselt wird.
+ * Der Algorithmus kann zur Laufzeit ausgetauscht werden, was dazu fï¿½hrt, dass baldmï¿½glichst zum anderen Algorithmus gewechselt wird.
  * 
  * Man kann konfigurieren, dass der Algorithmus periodisch aufgerufen wird, auch wenn kein normaler Request ankommt.
  * 
- * Es wird nicht garantiert, dass der Algorithm nicht läuft, wenn keine Requests kommen (vgl spurious wakeups. könnte man ändern...)
+ * Es wird nicht garantiert, dass der Algorithm nicht lï¿½uft, wenn keine Requests kommen (vgl spurious wakeups. kï¿½nnte man ï¿½ndern...)
  */
 public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
 
@@ -76,7 +76,7 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
   }
 
   /**
-   * stoppt thread gracefully, d.h. er läuft seine jetzige schleife zuende und beendet sich danach.
+   * stoppt thread gracefully, d.h. er lï¿½uft seine jetzige schleife zuende und beendet sich danach.
    */
   public void stopThread() {
     threadMayRun = false;
@@ -85,7 +85,7 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
 
 
   /**
-   * thread schläft solange bis er durch unPause aufgeweckt wird
+   * thread schlï¿½ft solange bis er durch unPause aufgeweckt wird
    */
   public void pauseExecution() {
     //TODO schleife unterbrechen!?
@@ -101,12 +101,12 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
 
 
   /**
-   * ausführung fordern. ausführung sofern nicht bereits laufend.
-   * @return true, falls ausführung direkt beginnt. false falls nicht, weil z.B. noch laufend.
+   * ausfï¿½hrung fordern. ausfï¿½hrung sofern nicht bereits laufend.
+   * @return true, falls ausfï¿½hrung direkt beginnt. false falls nicht, weil z.B. noch laufend.
    */
   public boolean requestExecution() {
     if( notifiedCount.getAndIncrement() == 0 ) {
-      //interrupted thread, so dass er erneut läuft
+      //interrupted thread, so dass er erneut lï¿½uft
       synchronized (sleepLock) {
         if (threadIsAsleep && !isPaused) {
           sleepLock.notify(); //schlafenden thread interrupten
@@ -119,14 +119,14 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
       }
       return false;
     } else {
-      // ansonsten läuft er noch... => signalisierung, dass er nochmal laufen soll
+      // ansonsten lï¿½uft er noch... => signalisierung, dass er nochmal laufen soll
       return false;
     }
     
   }
 
   /**
-   * Achtung: kehrt evtl. nach einer bereits laufenden Ausführung zurück
+   * Achtung: kehrt evtl. nach einer bereits laufenden Ausfï¿½hrung zurï¿½ck
    * @throws InterruptedException
    */
   public void awaitExecution() throws InterruptedException {
@@ -136,7 +136,7 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
   }
   
   /**
-   * Achtung: kehrt evtl. nach einer bereits laufenden Ausführung zurück
+   * Achtung: kehrt evtl. nach einer bereits laufenden Ausfï¿½hrung zurï¿½ck
    * @throws InterruptedException
    */
   public boolean awaitExecution(long timeout, TimeUnit unit) throws InterruptedException {
@@ -184,7 +184,7 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
   /**
    * kann nur einmal gestartet werden. falls der thread noch existiert, macht dieser aufruf nichts.
    * falls algorithm null ist, wird versucht der alte algorithm zu benutzen. falls keiner vorhanden, wird ein fehler geworfen.
-   * Setzt Runnable initialization, der dirket nach dem Start des Thread einmal ausgeführt wird
+   * Setzt Runnable initialization, der dirket nach dem Start des Thread einmal ausgefï¿½hrt wird
    * @param initialization
    * @param algorithm
    */
@@ -195,7 +195,7 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
 
 
   /**
-   * falls der alte algorithmus noch am laufen ist, wird er noch fertig ausgeführt und erst der nächste durchlauf
+   * falls der alte algorithmus noch am laufen ist, wird er noch fertig ausgefï¿½hrt und erst der nï¿½chste durchlauf
    * passiert mit dem neuen algorithmus
    */
   public void changeAlgorithm(ALG algorithm) {
@@ -208,9 +208,9 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
           sleepLock.notify(); //schlafenden thread interrupten
           algorithmChangeRequested = false;
         } else { //TODO isPaused ??
-          //entweder am laufen => ok, wird unterbrochen und läuft dann mit neuem gleich nochmal
-          //oder kurz vorher => läuft mit neuem algorithmus los und wird dann unterbrochen, geht aber nicht schlafen und läuft dann nochmal
-          //oder danach => läuft direkt nochmal mit neuem algorithmus, wird unterbrochen, und geht dann nochmal nicht schlafen
+          //entweder am laufen => ok, wird unterbrochen und lï¿½uft dann mit neuem gleich nochmal
+          //oder kurz vorher => lï¿½uft mit neuem algorithmus los und wird dann unterbrochen, geht aber nicht schlafen und lï¿½uft dann nochmal
+          //oder danach => lï¿½uft direkt nochmal mit neuem algorithmus, wird unterbrochen, und geht dann nochmal nicht schlafen
           algorithmChangeRequested = true;
           loopsWithoutSleep = Math.max(2, loopsWithoutSleep);
         }
@@ -229,7 +229,7 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
       algorithm.exec();
       
       awaitExecution.countDown();
-      notifiedCount.getAndDecrement(); //runtersetzen, damit keine weitere Ausführung passiert ausser requestExecution() gerufen
+      notifiedCount.getAndDecrement(); //runtersetzen, damit keine weitere Ausfï¿½hrung passiert ausser requestExecution() gerufen
     }
     if (algorithmChangeRequested) {
       algorithmChangeRequested = false;

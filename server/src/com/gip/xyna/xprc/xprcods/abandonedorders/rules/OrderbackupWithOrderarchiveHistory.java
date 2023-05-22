@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ public class OrderbackupWithOrderarchiveHistory extends AbandonedOrderDetectionR
   public List<AbandonedOrderDetails> detect(int maxrows) throws PersistenceLayerException {
     // Orderbackup und Orderarchive HISTORY existieren
     // UND
-    // Für die rootOrderId zu einem Eintrag in orderbackup gibt es einen Eintrag in orderarchive HISTORY
+    // Fï¿½r die rootOrderId zu einem Eintrag in orderbackup gibt es einen Eintrag in orderarchive HISTORY
 
     int targetBinding = new OrderInstanceBackup().getLocalBinding(ODSConnectionType.DEFAULT);
     List<AbandonedOrderDetails> result = new ArrayList<AbandonedOrderDetails>();

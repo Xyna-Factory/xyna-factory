@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -301,10 +301,10 @@ public class ManualInteractions {
   private static SearchRequestBean createMiSearchRequestBean(TableInfo tableInfo) {
     SearchRequestBean srb = new SearchRequestBean();
     srb.setArchiveIdentifier(ArchiveIdentifier.miarchive);
-    // Limit deaktiviert, damit das Filtern über den TableHelper korrekt funktioniert
+    // Limit deaktiviert, damit das Filtern ï¿½ber den TableHelper korrekt funktioniert
     //srb.setMaxRows(tableInfo.getLimit());
     srb.setSelection(selectAllForManualInteractionEntry());
-    // Filter deaktiviert, damit das Filtern über den TableHelper korrekt funktioniert.
+    // Filter deaktiviert, damit das Filtern ï¿½ber den TableHelper korrekt funktioniert.
     /*
     Map<String, String> filter = new HashMap<>();
     tableInfo.getColumns().stream().filter(tc -> 

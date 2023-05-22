@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import com.gip.xyna.xfmg.Constants;
 
 
 /**
- * Wrapper für sun.misc.BASE64Encoder und BASE64Decoder, da diese deprecated sind und Compiler-Warnungne produzieren.
- * Hier tritt die Warnung nur einmal auf. Außerdem könnte hier eine alternative Implementierung eingebunden werden.
+ * Wrapper fï¿½r sun.misc.BASE64Encoder und BASE64Decoder, da diese deprecated sind und Compiler-Warnungne produzieren.
+ * Hier tritt die Warnung nur einmal auf. Auï¿½erdem kï¿½nnte hier eine alternative Implementierung eingebunden werden.
  * 
  */
 public class Base64 {

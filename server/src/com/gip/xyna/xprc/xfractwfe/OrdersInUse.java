@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,12 +55,12 @@ public class OrdersInUse implements Serializable{
 
   public enum FillingMode {
     OnlyIds, //nur die orderIds werden gesetzt
-    EasyInfos, //alle Informationen die leicht bestimmt werden können, werden gesetzt
+    EasyInfos, //alle Informationen die leicht bestimmt werden kï¿½nnen, werden gesetzt
     Complete //es werden alle Informationen bestimmt (z.B. orderType aus XynaOrder im OrderBackup)
   }
   
   private FillingMode fillingMode; //gibt an wie viele Information in den Maps enthalten sind
-  private final Map<Long, OrderInfo> rootOrders = new HashMap<Long, OrderInfo>(); //laufende Root-Aufträge (ohne Batch Prozess Master)
+  private final Map<Long, OrderInfo> rootOrders = new HashMap<Long, OrderInfo>(); //laufende Root-Auftrï¿½ge (ohne Batch Prozess Master)
   private final Map<Long, OrderInfo> crons = new HashMap<Long, OrderInfo>();
   private final Map<Long, OrderInfo> batchProcesses = new HashMap<Long, OrderInfo>();
   private final Map<Long, OrderInfo> frequencyControlledTasks = new HashMap<Long, OrderInfo>();
@@ -209,7 +209,7 @@ public class OrdersInUse implements Serializable{
   
 
   /**
-   * Trägt eine neue XynaOrder ein, falls es ein Root-Auftrag ist und kein Batch Prozess Master
+   * Trï¿½gt eine neue XynaOrder ein, falls es ein Root-Auftrag ist und kein Batch Prozess Master
    * @param oi
    * @param binding
    */
@@ -227,7 +227,7 @@ public class OrdersInUse implements Serializable{
   }
 
   /**
-   * Trägt eine neue XynaOrder ein, falls noch nicht vorhanden und
+   * Trï¿½gt eine neue XynaOrder ein, falls noch nicht vorhanden und
    * es ein Root-Auftrag ist und kein Batch Prozess Master.
    * @param oib
    */
@@ -251,7 +251,7 @@ public class OrdersInUse implements Serializable{
   }
 
   /**
-   * Trägt einen Batch Prozess ein
+   * Trï¿½gt einen Batch Prozess ein
    * @param batchProcess
    * @param binding
    */
@@ -267,7 +267,7 @@ public class OrdersInUse implements Serializable{
   }
   
   /**
-   * Trägt eine Cron Like Order ein
+   * Trï¿½gt eine Cron Like Order ein
    * @param clo
    */
   public void addCron(CronLikeOrder clo) {
@@ -281,7 +281,7 @@ public class OrdersInUse implements Serializable{
   }
   
   /**
-   * Trägt einen FrequencyControlledTask ein
+   * Trï¿½gt einen FrequencyControlledTask ein
    * @param id
    * @param orderType
    * @param binding
@@ -290,7 +290,7 @@ public class OrdersInUse implements Serializable{
     OrderInfo order = null;
     if (fillingMode != FillingMode.OnlyIds) {
       if (frequencyControlledTasks.containsKey(id)) {
-        // weiteren OrderType hinzufügen
+        // weiteren OrderType hinzufï¿½gen
         order = frequencyControlledTasks.get(id);
         order.addOrderType(orderType);
       } else {

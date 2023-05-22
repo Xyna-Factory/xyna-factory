@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package com.gip.xyna.utils.misc.io;
  * Factory, um auf leicht austauschbare Weise verschiedene FileTransfers zu
  * bauen.
  * 
- * Geplant ist Upload über FTP, SCP und HTTP. TODO SCP, HTTP, Erzeugung über
+ * Geplant ist Upload ï¿½ber FTP, SCP und HTTP. TODO SCP, HTTP, Erzeugung ï¿½ber
  * Property
  * 
  */

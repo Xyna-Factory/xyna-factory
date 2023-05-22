@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.DomainType;
 
 
 /**
- * http (reverse) proxy schickt client zertifikat als payload an xyna. z.b. könnte das der apache machen.
+ * http (reverse) proxy schickt client zertifikat als payload an xyna. z.b. kï¿½nnte das der apache machen.
  * vgl https://tomcat.apache.org/tomcat-8.5-doc/api/org/apache/catalina/valves/SSLValve.html (beschreibung, wie das im tomcat terminiert)
  * 
  * beispiel request:
@@ -73,7 +73,7 @@ Connection: Keep-Alive
  * Response wenn kein Zert vorhanden:
  * {}
  * 
- * Response bei ungültigem Zert:
+ * Response bei ungï¿½ltigem Zert:
  * <Error-Response>
  * 
  */

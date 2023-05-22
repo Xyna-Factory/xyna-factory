@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
 
 /**
- * Hält alle TypeMapperCaches für eine Revision. 
+ * Hï¿½lt alle TypeMapperCaches fï¿½r eine Revision. 
  * Ist XynaObjectDeploymentListener, um bei Undeploy eines Datentyps den gesamten betroffenen TypeMapperCache zu entfernen.
  *
  */

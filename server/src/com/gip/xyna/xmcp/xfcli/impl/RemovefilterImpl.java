@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class RemovefilterImpl extends XynaCommandImplementation<Removefilter> {
     
     CommandControl.tryLock(CommandControl.Operation.FILTER_REMOVE, revision);
     try {
-      //Filter für spätere Status-Ausgabe suchen
+      //Filter fï¿½r spï¿½tere Status-Ausgabe suchen
       XynaActivationTrigger xat = XynaFactory.getInstance().getActivation().getActivationTrigger();
       Filter filter = xat.getFilter(revision, payload.getFilterName(), false);
       

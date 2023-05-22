@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 
 
 
-//FIXME duplicate code, ist auch im scriptexecutorservice so ähnlich
+//FIXME duplicate code, ist auch im scriptexecutorservice so ï¿½hnlich
 public class ProcessUtil {
 
   // Das kill Programm liegt bei SunOS z.B. unter /usr/bin/kill (der Default),
@@ -167,7 +167,7 @@ public class ProcessUtil {
       }
 
       try {
-        Thread.sleep(200 / maxCnt * cnt); //durchschnittlich 100ms warten, am anfang weniger, später mehr
+        Thread.sleep(200 / maxCnt * cnt); //durchschnittlich 100ms warten, am anfang weniger, spï¿½ter mehr
       } catch (InterruptedException ex) {
       }
     }

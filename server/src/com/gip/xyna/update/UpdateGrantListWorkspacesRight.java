@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class UpdateGrantListWorkspacesRight extends UpdateJustVersion {
     try {
       ODSConnection c = ods.openConnection(ODSConnectionType.HISTORY);
       try {
-        //neu benötigte Rechte den bereits vorhanden Rollen zuweisen
+        //neu benï¿½tigte Rechte den bereits vorhanden Rollen zuweisen
         Collection<Role> roles = c.loadCollection(Role.class);
         for (Role role : roles) {
           if (role.getAlias() != null && !role.getAlias().equals("")) {

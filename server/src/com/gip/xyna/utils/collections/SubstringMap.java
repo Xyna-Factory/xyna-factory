@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,27 +47,27 @@ import com.gip.xyna.utils.misc.ReusableIndexProvider;
 /**
  * performantes nachschlagen von: welche strings haben x als substring
  * 
- * dabei wird ein hash-index aufgebaut, der in seiner größe beschränkt ist. diese größe kann angegeben werden.
+ * dabei wird ein hash-index aufgebaut, der in seiner grï¿½ï¿½e beschrï¿½nkt ist. diese grï¿½ï¿½e kann angegeben werden.
  * 
- * beispiel: wird der string "hallo welt" in die map eingefügt, gibt es in der internen datenhaltung folgende indizes:
+ * beispiel: wird der string "hallo welt" in die map eingefï¿½gt, gibt es in der internen datenhaltung folgende indizes:
  * "hal" -&gt; "hallo welt"
  * "all" -&gt; "hallo welt"
  * "llo" -&gt; "hallo welt"
  * ...
  * "elt" -&gt; "hallo welt"
- * das gleiche für alle 2buchstabige und 1buchstabige substrings.
+ * das gleiche fï¿½r alle 2buchstabige und 1buchstabige substrings.
  * 
- * damit dieser index nicht zu groß wird, werden die keys gehashed und per modulo in ein "kleines" array gepackt (hashcodemap)
+ * damit dieser index nicht zu groï¿½ wird, werden die keys gehashed und per modulo in ein "kleines" array gepackt (hashcodemap)
  * 
  * hash("hal")%1000 -&gt; "hallo welt"
  * hash("all")%1000 -&gt; "hallo welt"
  * ...
  * 
  * beim nachschlagen der superstrings zu einem substring kann man dann schnell alle kandidaten herausfinden.
- * die kandidaten sind aber keine echten treffer, in der datenhaltung können nun auch strings enthalten sein, die nur durch eine hash-kollision/modulo-kollision
+ * die kandidaten sind aber keine echten treffer, in der datenhaltung kï¿½nnen nun auch strings enthalten sein, die nur durch eine hash-kollision/modulo-kollision
  * an der gleichen array-position gelandet sind.
  * 
- * deshalb schnittmenge von kandidatenmengen bilden und auf das hoffentlich kleine ergebnis für die kandidaten nochmal "contains" zur validierung nutzen.
+ * deshalb schnittmenge von kandidatenmengen bilden und auf das hoffentlich kleine ergebnis fï¿½r die kandidaten nochmal "contains" zur validierung nutzen.
  * 
  * beispiel:
  * getSuperStrings("allo")
@@ -91,7 +91,7 @@ public class SubstringMap {
    *                       10000/50000     80 MB     30 MB
    *                       
    * Was lernen wir?
-   *  Kleinere keymaxlen -> weniger speicher (aber natürlich auch langsameres getSuperStrings())
+   *  Kleinere keymaxlen -> weniger speicher (aber natï¿½rlich auch langsameres getSuperStrings())
    *  Speicherverbrauch schwankt dadurch um etwa Faktor 2-3
    *  
    * 
@@ -103,10 +103,10 @@ public class SubstringMap {
    */
   private static final int maxSubstrings = 30;
   /*
-   * wenn das verbleibende ergebnis set so klein ist, nicht mehr mit dem nächsten set schnittmenge bilden, 
+   * wenn das verbleibende ergebnis set so klein ist, nicht mehr mit dem nï¿½chsten set schnittmenge bilden, 
    * sondern alle verbleibenden elemente per "contains" validieren.
    * 
-   * bei sehr langen strings ist ein kleinerer cutoff besser. bei sehr kurzen strings darf er auch höher sein.
+   * bei sehr langen strings ist ein kleinerer cutoff besser. bei sehr kurzen strings darf er auch hï¿½her sein.
    */
   private static final int cutoff = 100; //mit len=50 getestet, dass sogar cutoff=300 noch gut ist.
 
@@ -163,7 +163,7 @@ public class SubstringMap {
       }
       idx = -idx - 1;
       if (idx == size) {
-        //hinten anhängen
+        //hinten anhï¿½ngen
       } else {
         //verschieben
         System.arraycopy(arr, idx, arr, idx + 1, size - idx);
@@ -211,8 +211,8 @@ public class SubstringMap {
   private final ReadWriteLock rwl = new ReentrantReadWriteLock();
 
   private final boolean casesensitive;
-  private final float mapGrowthFactor;//>1 -> höher=map wächst schneller=>add() ist durchschnittlich schneller
-  private final float mapResizeThreshhold; //0.5-1 -> niedriger=map wächst häufiger => add ist langsamer, aber dafür ist 
+  private final float mapGrowthFactor;//>1 -> hï¿½her=map wï¿½chst schneller=>add() ist durchschnittlich schneller
+  private final float mapResizeThreshhold; //0.5-1 -> niedriger=map wï¿½chst hï¿½ufiger => add ist langsamer, aber dafï¿½r ist 
   private final int maximumListLengthForMapGrowth; //>100
   private final int maximumListLengthForKeyMaxLenGrowth;//> maximumListLengthForMapGrowth*1.5
 
@@ -228,8 +228,8 @@ public class SubstringMap {
     private final int keymaxlen;
     private final HashCodeMap<UniqueSortedIntList> map;
     /*
-     * summe der länge der listen in der hashcodemap. falls die sehr groß im vergleich zu der größe der map ist, muss entweder 
-     * die map vergrößert oder keymaxlen erhöht werden.
+     * summe der lï¿½nge der listen in der hashcodemap. falls die sehr groï¿½ im vergleich zu der grï¿½ï¿½e der map ist, muss entweder 
+     * die map vergrï¿½ï¿½ert oder keymaxlen erhï¿½ht werden.
      * falls sie sehr klein ist, dann andersherum.
      */
     private int valuecnt = 0;
@@ -260,15 +260,15 @@ public class SubstringMap {
   /**
    * 
    * @param casesensitive Falls nein, findet getSuperStrings("asd") auch "xxASdxx"
-   * @param keymaxlen Bestimmt, was die maximale gespeicherte Länge von Substrings ist. Je größer, desto mehr Speicherverbrauch, 
+   * @param keymaxlen Bestimmt, was die maximale gespeicherte Lï¿½nge von Substrings ist. Je grï¿½ï¿½er, desto mehr Speicherverbrauch, 
    *        aber desto schneller die Suche
-   * @param mapGrowthFactor Wenn die interne Map vergrößert wird, dann mit diesem Faktor
-   * @param mapResizeThreshhold Die interne Map wird vergrößert, wenn sie um mapResizeThreshhold gefüllt ist
-   * @param maximumListLengthForMapGrowth Die interne Map wird nur vergrößert, wenn die durchschnittliche Länge der Substring-Listen 
+   * @param mapGrowthFactor Wenn die interne Map vergrï¿½ï¿½ert wird, dann mit diesem Faktor
+   * @param mapResizeThreshhold Die interne Map wird vergrï¿½ï¿½ert, wenn sie um mapResizeThreshhold gefï¿½llt ist
+   * @param maximumListLengthForMapGrowth Die interne Map wird nur vergrï¿½ï¿½ert, wenn die durchschnittliche Lï¿½nge der Substring-Listen 
    *        darin mindestens so lang wie maximumListLengthForMapGrowth sind
-   * @param maximumListLengthForKeyMaxLenGrowth keymaxlen wird erhöht, wenn die interne Map nicht mehr wächst, aber wegen Hashkollisionen 
-   *        oder mangelnder Substring-Diversität trotzdem die durchschnittliche Länge der darin enthaltenen Substring-Listen über diesen Wert wächst. 
-   * @param initialSize initiale Größe der internen Map
+   * @param maximumListLengthForKeyMaxLenGrowth keymaxlen wird erhï¿½ht, wenn die interne Map nicht mehr wï¿½chst, aber wegen Hashkollisionen 
+   *        oder mangelnder Substring-Diversitï¿½t trotzdem die durchschnittliche Lï¿½nge der darin enthaltenen Substring-Listen ï¿½ber diesen Wert wï¿½chst. 
+   * @param initialSize initiale Grï¿½ï¿½e der internen Map
    */
   public SubstringMap(boolean casesensitive, int keymaxlen, float mapGrowthFactor, float mapResizeThreshhold,
                       int maximumListLengthForMapGrowth, int maximumListLengthForKeyMaxLenGrowth, int initialSize) {
@@ -372,7 +372,7 @@ public class SubstringMap {
 
 
   /**
-   * Erzeugt Map mit initialen sinnvoll gesetzten Parametern für keymaxlen und initialsize der Map. Diese werden anhand der übergebenen Parametern
+   * Erzeugt Map mit initialen sinnvoll gesetzten Parametern fï¿½r keymaxlen und initialsize der Map. Diese werden anhand der ï¿½bergebenen Parametern
    * berechnet.
    * @param casesensitive
    * @param numberOfStrings
@@ -562,14 +562,14 @@ public class SubstringMap {
 
 
     private void slowDownAdd(List<Integer> processed, List<Integer> durations) {
-      //was tun, wenn die verarbeitung andauernd langsamer ist, als das neue hinzufügen von objekten. dann wird man hier nie fertig.
-      //idee: queue verschieben: neue map "veröffentlichen", und bei "getSuperStrings" dann die Objekte aus der queue zusätzlich berücksichtigen
-      //andere idee: das hinzufügen langsamer machen, indem man ein kleines offset erzeugt, welches das add verlangsamt und diesem thread das aufholen erlaubt.
+      //was tun, wenn die verarbeitung andauernd langsamer ist, als das neue hinzufï¿½gen von objekten. dann wird man hier nie fertig.
+      //idee: queue verschieben: neue map "verï¿½ffentlichen", und bei "getSuperStrings" dann die Objekte aus der queue zusï¿½tzlich berï¿½cksichtigen
+      //andere idee: das hinzufï¿½gen langsamer machen, indem man ein kleines offset erzeugt, welches das add verlangsamt und diesem thread das aufholen erlaubt.
       if (processed.size() <= 2) {
         return;
       }
       if (processed.get(processed.size() - 1) * 1.25 > processed.get(processed.size() - 2)) {
-        //nicht mindestens 25% abgenommen -> add verzögern
+        //nicht mindestens 25% abgenommen -> add verzï¿½gern
         int processedCnt = 0;
         int duration = 0;
         for (int i = 0; i < processed.size() - 1; i++) {
@@ -592,7 +592,7 @@ public class SubstringMap {
               + processed.get(processed.size() - 1) + ")");
         }
       } else {
-        //verzögerung hat ausgereicht, dann kann man wieder etwas weniger verzögern
+        //verzï¿½gerung hat ausgereicht, dann kann man wieder etwas weniger verzï¿½gern
         slowdownInterval *= 1.3;
         if (logger.isTraceEnabled()) {
           logger.trace("slowdown: " + slowdownMS + " / " + slowdownInterval);
@@ -673,18 +673,18 @@ public class SubstringMap {
 
 
     private void increaseKeyMaxLen() {
-      //alle substrings der länge keymaxvals+1 hinzufügen
-      //wenn gleichzeitig ein anderer thread add() aufruft, wird schlimmstenfalls die arbeit doppelt durchgeführt
+      //alle substrings der lï¿½nge keymaxvals+1 hinzufï¿½gen
+      //wenn gleichzeitig ein anderer thread add() aufruft, wird schlimmstenfalls die arbeit doppelt durchgefï¿½hrt
 
       InnerMap mnew = new InnerMap(newKeyMaxLen, map.innermap.map.capacity());
 
-      //alle entries auf höhere keymaxlen erweitern
+      //alle entries auf hï¿½here keymaxlen erweitern
       List<Entry<Integer, String>> addList;
       synchronized (map.entries) {
         addList = new ArrayList<Entry<Integer, String>>(map.entries.entrySet());
       }
 
-      //map clonen (enthält ggfs ein paar einträge, die gequeued sind, egal...
+      //map clonen (enthï¿½lt ggfs ein paar eintrï¿½ge, die gequeued sind, egal...
       map.rwl.readLock().lock();
       try {
         HashCodeMap<UniqueSortedIntList> hcmold = map.innermap.map;
@@ -780,7 +780,7 @@ public class SubstringMap {
 
 
   /**
-   * vergleichsweise teuer (im vergleich zum hinzufügen zu einer normalen map), damit das getSuperStrings() performant ist
+   * vergleichsweise teuer (im vergleich zum hinzufï¿½gen zu einer normalen map), damit das getSuperStrings() performant ist
    */
   public void add(final String value) {
     int len = value.length();
@@ -822,7 +822,7 @@ public class SubstringMap {
             putSingle(c, idxAsInt);
             continue;
           }
-          //hier kein continue, weitere einzelne zeichen sollen als key in der allgemeinen map auch verfügbar sein
+          //hier kein continue, weitere einzelne zeichen sollen als key in der allgemeinen map auch verfï¿½gbar sein
         }
         String substr = valueForKeyCreation.substring(start, start + substringlen);
         put(substr, idxAsInt, m);
@@ -876,9 +876,9 @@ public class SubstringMap {
       if (s.size > lbefore) {
         m.valuecnt++;
         /*
-         * große map -> mehr speicherverbrauch, aber kleinere listen pro bucket
-         * deshalb map dann größer machen, wenn sie recht voll ist und die listen groß sind
-         * falls die listen groß werden, aber die map nicht voll wird, dann muss/kann keymaxlen erhöht werden.
+         * groï¿½e map -> mehr speicherverbrauch, aber kleinere listen pro bucket
+         * deshalb map dann grï¿½ï¿½er machen, wenn sie recht voll ist und die listen groï¿½ sind
+         * falls die listen groï¿½ werden, aber die map nicht voll wird, dann muss/kann keymaxlen erhï¿½ht werden.
          */
         int ms = m.map.size();
         int vms = m.valuecnt / ms;
@@ -989,7 +989,7 @@ public class SubstringMap {
 
 
   /**
-   * ermittelt alle vorher zur map hinzugefügten strings, die part als substring enthalten
+   * ermittelt alle vorher zur map hinzugefï¿½gten strings, die part als substring enthalten
    */
   public List<String> getSuperStrings(String part) {
     int len = part.length();
@@ -1004,7 +1004,7 @@ public class SubstringMap {
       if (len == 1) {
         char c = part.charAt(0);
         if (c >= charMin && c <= charMax) {
-          //muss nicht validiert werden. allein dieser fall ist meist die zusätzliche datenhaltung wert, die für das getSingle benötigt wird
+          //muss nicht validiert werden. allein dieser fall ist meist die zusï¿½tzliche datenhaltung wert, die fï¿½r das getSingle benï¿½tigt wird
           return getStrings(getSingle(part.charAt(0)));
         }
         return validate(getStrings(get(part, innermap)), part);
@@ -1183,8 +1183,8 @@ public class SubstringMap {
 
 
   /**
-   * fügt alle werte hinzu, aber macht nur ein resize auf die optimale datenhaltungsgröße
-   * anstatt mehrfacher sequentieller resizes bei iterativen hinzufügen
+   * fï¿½gt alle werte hinzu, aber macht nur ein resize auf die optimale datenhaltungsgrï¿½ï¿½e
+   * anstatt mehrfacher sequentieller resizes bei iterativen hinzufï¿½gen
    * @param  maxWaitForRunningResizeInMilliseconds wie lange soll maximal auf ein bereits laufendes resize gewartet werden
    */
   public void addAll(final List<String> vals, int maxWaitForRunningResizeInMilliseconds) {
@@ -1206,7 +1206,7 @@ public class SubstringMap {
         if (maxWaitForRunningResizeInMilliseconds > 0) {
           long timeout = System.currentTimeMillis() + maxWaitForRunningResizeInMilliseconds;
           while (asynchronousResizeRunning && System.currentTimeMillis() - timeout > 0) {
-            rwl.writeLock().unlock(); //lock freigeben, während man wartet
+            rwl.writeLock().unlock(); //lock freigeben, wï¿½hrend man wartet
             try {
               try {
                 Thread.sleep(50);

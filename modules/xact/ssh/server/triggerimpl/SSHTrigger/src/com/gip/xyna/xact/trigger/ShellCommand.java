@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -202,7 +202,7 @@ public class ShellCommand implements Command, SessionAware, SSHConnection {
         try {
           Thread.sleep(10);
         } catch (InterruptedException e) {
-          //dann halt sofort zurück
+          //dann halt sofort zurï¿½ck
           return sb.toString();
         }
       }
@@ -221,7 +221,7 @@ public class ShellCommand implements Command, SessionAware, SSHConnection {
         try {
           Thread.sleep(10);
         } catch (InterruptedException e) {
-          //dann halt sofort zurück
+          //dann halt sofort zurï¿½ck
           return sb.toString();
         }
       }
@@ -268,7 +268,7 @@ public class ShellCommand implements Command, SessionAware, SSHConnection {
       }
       break;
     case 127: //Delete
-      outWriter.write("\u0008 \u0008");//Backspace, mit Leerzeichen überschreiben und nochmal Backspace
+      outWriter.write("\u0008 \u0008");//Backspace, mit Leerzeichen ï¿½berschreiben und nochmal Backspace
       outWriter.flush();
       if( sb.length() > 0 ) {
         sb.deleteCharAt(sb.length()-1);

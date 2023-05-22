@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class ParallelLockTestHelper {
       
       System.err.println( (end-start) );
       
-      Assert.assertTrue( "Lock is exclusive", (end-start) < 500 ); // ungefähr 50, durch Sicherung im lockInOtherThread
+      Assert.assertTrue( "Lock is exclusive", (end-start) < 500 ); // ungefï¿½hr 50, durch Sicherung im lockInOtherThread
     } finally {
       pl.unlock( lock2 );
     }

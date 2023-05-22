@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -234,7 +234,7 @@ public abstract class AGenerationTestTemplate<T extends GenerationBase> extends 
 
 
   private void findPathToXSD() {
-    // Achtung: unsaubere lösung. funktioniert nur auf hudson und lokal. auf dem hudson ist keine installation,
+    // Achtung: unsaubere lï¿½sung. funktioniert nur auf hudson und lokal. auf dem hudson ist keine installation,
     // deshalb liegt das xsd dort in einem anderen verzeichnis.
     if (!new File("resources").exists()) {
       if (new File("../_Interfaces/XMDM.xsd").exists()) {
@@ -247,7 +247,7 @@ public abstract class AGenerationTestTemplate<T extends GenerationBase> extends 
 
 
   private void findPathToLibs() {
-    // Achtung: unsaubere lösung. funktioniert nur auf hudson und lokal. auf dem hudson ist keine installation,
+    // Achtung: unsaubere lï¿½sung. funktioniert nur auf hudson und lokal. auf dem hudson ist keine installation,
     // deshalb liegen die libs dort wo anders
     if (!new File("lib").exists()) {
       Constants.LIB_DIR = "../../localbuild/server/" + Constants.LIB_DIR;

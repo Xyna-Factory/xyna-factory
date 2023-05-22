@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import com.gip.xyna.CentralFactoryLogging;
 
 /**
  * MultiTimeWindow fasst mehrere {@link TimeWindow}-Implementierungen zusammen, um damit 
- * komplexere Zeitfenster zu ermöglichen.
+ * komplexere Zeitfenster zu ermï¿½glichen.
  * Das MultiTimeWindow gilt als offen, wenn mindestens eines der Zeitfenster offen ist.
- * Da sich die zusammengefassten Zeitfenster überlappen können, sind die berechnete Zeitpunkte 
- * des nächsten Öffnens und Schließens evtl. nicht richtig. In diesem Fall wird in TimeWindowData
+ * Da sich die zusammengefassten Zeitfenster ï¿½berlappen kï¿½nnen, sind die berechnete Zeitpunkte 
+ * des nï¿½chsten ï¿½ffnens und Schlieï¿½ens evtl. nicht richtig. In diesem Fall wird in TimeWindowData
  * das Flag onlyEstimated gesetzt.
  */
 public class MultiTimeWindow extends TimeWindow {
@@ -73,7 +73,7 @@ public class MultiTimeWindow extends TimeWindow {
     long since;
     boolean estimated = false;
     if( isOpen ) {
-      //derzeit offen -> nextClose muss geschätzt werden, daraus dann nextOpen berechnen
+      //derzeit offen -> nextClose muss geschï¿½tzt werden, daraus dann nextOpen berechnen
       nextClose = getNextClose(getMaxNextCloseForOpen(data));
       if( nextClose < 0 ) {
         estimated = true;
@@ -88,7 +88,7 @@ public class MultiTimeWindow extends TimeWindow {
       recalculateAll( data, nextClose );
       nextOpen = getMinNextOpen(data);
     } else {
-      //derzeit geschlossen -> nextOpen ist einfach ermittelbar, daraus dann nextClose schätzen
+      //derzeit geschlossen -> nextOpen ist einfach ermittelbar, daraus dann nextClose schï¿½tzen
       nextOpen = getMinNextOpen(data);
       nextClose = getNextClose(nextOpen);
       since = getMaxSince(data);
@@ -109,14 +109,14 @@ public class MultiTimeWindow extends TimeWindow {
   }
 
   /**
-   * Achtung: wenn nextClose nur geschätzt wird, ist Ausgabe negativ
+   * Achtung: wenn nextClose nur geschï¿½tzt wird, ist Ausgabe negativ
    * @param now
    * @return
    */
   private long getNextClose(long now) {
     //Zeitfenster ist nur geschlossen, wenn alle Sub-Zeitfenster geschlossen sind. 
-    //Aufgrund von Überlappungen der Offen-Phasen muss hier iterativ nach dem 
-    //nächsten Schließen gesucht werden
+    //Aufgrund von ï¿½berlappungen der Offen-Phasen muss hier iterativ nach dem 
+    //nï¿½chsten Schlieï¿½en gesucht werden
     long estimatedNextClose = now;
     ArrayList<TimeWindowData> data = new ArrayList<TimeWindowData>();
     for( int i=0; i<10; ++i ) { //FIXME Grenze konfigurieren, hilft gegen Endlosschleife
@@ -134,14 +134,14 @@ public class MultiTimeWindow extends TimeWindow {
   }
   
   /**
-   * Achtung: wenn since nur geschätzt wird, ist Ausgabe negativ
+   * Achtung: wenn since nur geschï¿½tzt wird, ist Ausgabe negativ
    * @param now
    * @return
    */
   private long getOpenSince(long now) {
     //Zeitfenster ist offen, wenn mindestens ein Sub-Zeitfenster offen ist. 
-    //Aufgrund von Überlappungen der Offen-Phasen muss hier iterativ nach dem 
-    //esten Öffnen gesucht werden
+    //Aufgrund von ï¿½berlappungen der Offen-Phasen muss hier iterativ nach dem 
+    //esten ï¿½ffnen gesucht werden
     long estimatedOpenSince = now;
     ArrayList<TimeWindowData> data = new ArrayList<TimeWindowData>();
     for( int i=0; i<10; ++i ) { //FIXME Grenze konfigurieren, hilft gegen Endlosschleife
@@ -156,7 +156,7 @@ public class MultiTimeWindow extends TimeWindow {
         //alle Zeitfenster starten gleichzeitig: openSince ist gefunden
         return openSince;
       } else {
-        //zu diesem Zeitpunkt gibt es bereits offene Zeitfenster: nach früherem OpenSince weitersuchen
+        //zu diesem Zeitpunkt gibt es bereits offene Zeitfenster: nach frï¿½herem OpenSince weitersuchen
         estimatedOpenSince = openSince;
       }
     }
@@ -225,13 +225,13 @@ public class MultiTimeWindow extends TimeWindow {
     public MultiTimeWindowDefinition(ArrayList<TimeWindow> timeWindows) {
       definitions = new ArrayList<TimeWindowDefinition>();
       for( TimeWindow tw : timeWindows ) {
-        definitions.add(tw.getDefinition()); //FIXME prüfen, dass kein MultiTimeWindow
+        definitions.add(tw.getDefinition()); //FIXME prï¿½fen, dass kein MultiTimeWindow
       }
     }
     
     public static MultiTimeWindowDefinition construct(List<? extends TimeWindowDefinition> timeWindowDefinitions) {
       MultiTimeWindowDefinition multi = new MultiTimeWindowDefinition();
-    //FIXME prüfen, dass kein MultiTimeWindowDefinition in timeWindowDefinitions enthalten
+    //FIXME prï¿½fen, dass kein MultiTimeWindowDefinition in timeWindowDefinitions enthalten
       multi.definitions = new ArrayList<TimeWindowDefinition>(timeWindowDefinitions);
       return multi;
     }

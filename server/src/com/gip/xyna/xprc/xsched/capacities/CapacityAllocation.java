@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class CapacityAllocation {
     this.capName = cap.getCapName();
     if( previouslyAllocated != null ) {
       this.demand = Math.max(0, cap.getCardinality()-previouslyAllocated); //sollte nicht negativ werden, 
-      //überzählige Caps werden nicht freigegeben
+      //ï¿½berzï¿½hlige Caps werden nicht freigegeben
     } else {
       this.demand = cap.getCardinality();
     }
@@ -82,7 +82,7 @@ public class CapacityAllocation {
 
   public CapacityAllocationResult checkAllocationPossible() {
     if( skipCheckAndAllocation ) {
-      return null; //Check überpringen, wird als erfolgreich gewertet
+      return null; //Check ï¿½berpringen, wird als erfolgreich gewertet
     }
     if( capacityEntry.isDisabled() ) {
       if (logger.isDebugEnabled()) {
@@ -122,7 +122,7 @@ public class CapacityAllocation {
 
   public void allocate(OrderInformation orderInformation, boolean transferable) {
     if( skipCheckAndAllocation ) {
-      return; //Allocation überpringen
+      return; //Allocation ï¿½berpringen
     }
     capacityEntry.allocate( demand, orderInformation, transferable);
   }

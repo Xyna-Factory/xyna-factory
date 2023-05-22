@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ import com.gip.xyna.xprc.exceptions.XPRC_InputGeneratorInitializationException;
 public abstract class InputGenerator {
   
   protected volatile String lastInputId; //letzte vergebene Id
-  protected List<String> reusableInputIds; //Inputs die erneut vergeben werden können, weil zugehöriger Slave nicht gestartet wurde
-  protected Long revision; //Revision, in der der BatchProcess läuft
+  protected List<String> reusableInputIds; //Inputs die erneut vergeben werden kï¿½nnen, weil zugehï¿½riger Slave nicht gestartet wurde
+  protected Long revision; //Revision, in der der BatchProcess lï¿½uft
   protected int maximumInputs;
   
   public InputGenerator(int maximumInputs, Long revision) {

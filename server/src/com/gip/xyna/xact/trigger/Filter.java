@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class Filter implements Serializable {
   private final String[] sharedLibs;
   private final String description;
   private final Long revision;
-  private final String triggerName; //für den fall, dass trigger null ist
+  private final String triggerName; //fï¿½r den fall, dass trigger null ist
 
 
   public Filter(String name, Long revision, File[] jarFiles, String fqFilterClassName, Trigger t, String triggerName, String[] sharedLibs,
@@ -101,7 +101,7 @@ public class Filter implements Serializable {
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
         .removeFilterClassLoader(fqFilterClassName, revision);
     
-    //zugehörige OutdatedFilterClassLoader entfernen
+    //zugehï¿½rige OutdatedFilterClassLoader entfernen
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
         .removeOutdatedFilterClassLoaders(fqFilterClassName, revision);
   }
@@ -142,7 +142,7 @@ public class Filter implements Serializable {
         fcl.addJarFile(f.getPath());
       } catch (Ex_FileAccessException e) {
         if (parentRevision != null) { //OutdatedFilter
-          //beim Erstellen des "ursrpünglichen" Filters, muss das jar noch vorhanden gewesen sein
+          //beim Erstellen des "ursrpï¿½nglichen" Filters, muss das jar noch vorhanden gewesen sein
           throw new RuntimeException("Library of outdated filter could not be found", e);
         }
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
@@ -164,7 +164,7 @@ public class Filter implements Serializable {
   public void validate(Filter oldFilter) throws XACT_WrongTriggerException, XACT_FilterImplClassNotFoundException,
       XFMG_SHARED_LIB_NOT_FOUND, XACT_LibOfFilterImplNotFoundException, XACT_DuplicateFilterDefinitionException {
     if (oldFilter == null) {
-      //alter wird nicht überschrieben. check, ob bereits gleicher fqclassname - filter existiert.
+      //alter wird nicht ï¿½berschrieben. check, ob bereits gleicher fqclassname - filter existiert.
       try {
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
             .getFilterClassLoader(fqFilterClassName, revision, false);
@@ -180,7 +180,7 @@ public class Filter implements Serializable {
       FilterClassLoader fcl = getClassLoader(null);
       Class<ConnectionFilter<?>> c = (Class<ConnectionFilter<?>>) fcl.loadClass(fqFilterClassName);
       try {
-        c.getGenericSuperclass(); //versucht die triggerconnection über den classloader zu laden
+        c.getGenericSuperclass(); //versucht die triggerconnection ï¿½ber den classloader zu laden
       } catch (TypeNotPresentException e) {
         throw new XACT_WrongTriggerException(trigger.getTriggerName(), e);
       }

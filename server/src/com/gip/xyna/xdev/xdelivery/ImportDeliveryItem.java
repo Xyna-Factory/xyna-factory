@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -434,7 +434,7 @@ public class ImportDeliveryItem {
           .addTrigger(triggerName, jarFiles.toArray(new File[0]), fqClassName, sharedLibs.toArray(new String[0]));
     } catch (XACT_IncompatibleTriggerImplException e1) {
       // wenn das nicht klappt, war wohl das archiv kaputt oder es wird versucht auf einem system zu importieren, wo die
-      // schnittstelle von triggern sich geändert hat
+      // schnittstelle von triggern sich geï¿½ndert hat
       throw new RuntimeException(e1);
     } catch (XACT_TriggerImplClassNotFoundException e1) {
       // wenn das nicht klappt, war wohl das archiv kaputt
@@ -640,7 +640,7 @@ public class ImportDeliveryItem {
           throw new RuntimeException(e1);
         } catch (XACT_IncompatibleFilterImplException e1) {
           // wenn das nicht klappt, war wohl das archiv kaputt oder es wird versucht auf einem system zu importieren, wo
-          // die schnittstelle von filtern sich geändert hat
+          // die schnittstelle von filtern sich geï¿½ndert hat
           throw new RuntimeException(e1);
         } catch (XFMG_SHARED_LIB_NOT_FOUND e1) {
           // archiv kaputt oder vorher vorhandener trigger fehlerhaft?
@@ -1231,7 +1231,7 @@ public class ImportDeliveryItem {
         }*/
       }
     }
-    //return Pair.of(dependentPresentOrders, orderIds); Aufträge in Suspendierung werden nicht benötigt
+    //return Pair.of(dependentPresentOrders, orderIds); Auftrï¿½ge in Suspendierung werden nicht benï¿½tigt
     
     return dependentPresentOrders; 
   }

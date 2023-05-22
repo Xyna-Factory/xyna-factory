@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public abstract class IdentifiedVariables {
   }
   
   /**
-   * Führt Neuberechnung der Inputs und Outputs durch
+   * Fï¿½hrt Neuberechnung der Inputs und Outputs durch
    */
   public abstract void identify();
 

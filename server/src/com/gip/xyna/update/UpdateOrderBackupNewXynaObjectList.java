@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -273,7 +273,7 @@ public class UpdateOrderBackupNewXynaObjectList extends UpdateJustVersion {
   @Override
   protected void update() throws XynaException {
 
-    //xynaobjectlist wurde geändert, indem es nun von generalxynaobjectlist ableitet, anstatt eine eigene implementierung zu haben
+    //xynaobjectlist wurde geï¿½ndert, indem es nun von generalxynaobjectlist ableitet, anstatt eine eigene implementierung zu haben
     //mit folgendem mapping werden deserialisierte xynaobjectlisten mit dem classdescriptor der alten liste deserialisiert.
     SerialVersionIgnoringObjectInputStream.addClassDescriptorMapping("com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList",
                                                                      XynaObjectList.class);
@@ -284,11 +284,11 @@ public class UpdateOrderBackupNewXynaObjectList extends UpdateJustVersion {
     //leider hat verwendung von readResolve nicht funktioniert, weil:
     //1. XynaObjectList ist kein XynaObject mehr, aber alte Container-Objekte sind als XynaObject[] serialisiert worden
     //2. Workaround: XynaObjectList erst nach ReadResolve von Container umwandeln
-    //2a. Dafür muss man wissen, wann Container deserialisiert werden
-    //2b. Dafür bekam Container readObject
+    //2a. Dafï¿½r muss man wissen, wann Container deserialisiert werden
+    //2b. Dafï¿½r bekam Container readObject
     //2c. Deshalb war Container.readObject im Stack beim deserialisieren
-    //2d. Deshalb wurde der falsche Classloader für Container-Inhalte verwendet (resolveClassLoader verwendet den letzten Classloader im Stack, der =! null ist)
-    //3. Workaround: Classloader von Container ändern -> schwer
+    //2d. Deshalb wurde der falsche Classloader fï¿½r Container-Inhalte verwendet (resolveClassLoader verwendet den letzten Classloader im Stack, der =! null ist)
+    //3. Workaround: Classloader von Container ï¿½ndern -> schwer
     //4. -> Also Objekte nicht per readResolve transformieren, sondern in eigener Transformation
     UpdateRewriteOrderBackupAndCronLikeOrders.addTransformation(transformContainerAndList);
   }

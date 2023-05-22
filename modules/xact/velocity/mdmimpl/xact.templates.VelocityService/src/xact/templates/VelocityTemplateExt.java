@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ import java.io.StringReader;
 
 
 /* VelocityTemplateExt ueberschreibt VelocityTemplate, so das VelocityTemplate.toString zum Erzeugen einer aussagekraeftigen Fehlermeldung
- * - z.B. fürs Log und in der Benutzeroberfläche verwendet werden kann- 
+ * - z.B. fï¿½rs Log und in der Benutzeroberflï¿½che verwendet werden kann- 
  */
 public class VelocityTemplateExt extends VelocityTemplate {
-  private String cause; //Grund für die Exception
+  private String cause; //Grund fï¿½r die Exception
   private String additionalInfo; //zusaetze Informationen, z.B. die verwendeten Daten
   
   

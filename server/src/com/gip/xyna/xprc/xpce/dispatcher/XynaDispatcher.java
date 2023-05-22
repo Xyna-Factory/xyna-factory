@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public abstract class XynaDispatcher extends FunctionGroup {
   private static Set<String> predefinedDestinationValueFqNames = new TreeSet<String>();
   
   /**
-   * Speicher für Initialisierung in PlanningDispatcher, ExecutionDispatcher, CleanupDispatcher
+   * Speicher fï¿½r Initialisierung in PlanningDispatcher, ExecutionDispatcher, CleanupDispatcher
    */
   protected static final HashMap<DestinationKey, DestinationValue[]> allDestinations = new HashMap<DestinationKey, DestinationValue[] >();
   protected static final int INDEX_PLANNING = 0;
@@ -298,7 +298,7 @@ public abstract class XynaDispatcher extends FunctionGroup {
     }
   }
 
-  //ACHTUNG, es wird z.b. im orderinputsourcemanamgement davon ausgegangen, dass hier immer die gleichen instanzen zurückgegeben werden
+  //ACHTUNG, es wird z.b. im orderinputsourcemanamgement davon ausgegangen, dass hier immer die gleichen instanzen zurï¿½ckgegeben werden
   public DestinationValue getDestination(DestinationKey dk) throws XPRC_DESTINATION_NOT_FOUND {
     return getDestinationInternal(dk, true).getSecond();
   }
@@ -337,7 +337,7 @@ public abstract class XynaDispatcher extends FunctionGroup {
       if (result != null) {
         return Pair.of(dk.getRuntimeContext(), result);
       } else if (followRuntimeContextDependencies) {
-        //in den abhängigen Revisions suchen
+        //in den abhï¿½ngigen Revisions suchen
         RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
         Long revision = revMgmt.getRevision(dk.getRuntimeContext());
         Set<Long> dependencies = new HashSet<Long>();
@@ -422,9 +422,9 @@ public abstract class XynaDispatcher extends FunctionGroup {
             String originalFqName = getOriginalFqName(dv.getFQName(), dv.resolveRevision(dk));
   
             //Falls der Workflow bisher nicht deployed war, existieren im DependecyRegister evtl.
-            //Einträge mit dem fqClassName z.B. falls setDestination ausgeführt worden ist, 
+            //Eintrï¿½ge mit dem fqClassName z.B. falls setDestination ausgefï¿½hrt worden ist, 
             //bevor der Workflow deployed wurde.
-            //Dann muss jetzt in allen Abhängigkeiten der fqClassName durch den originalFqName
+            //Dann muss jetzt in allen Abhï¿½ngigkeiten der fqClassName durch den originalFqName
             //ersetzt werden.
             Set<Long> revisions = rtCtxDepMgmt.getAllRevisionsDefiningXMOMObject(originalFqName, parentRev);
             
@@ -454,7 +454,7 @@ public abstract class XynaDispatcher extends FunctionGroup {
   /**
    * Bestimmt dem originalFqName zum fqClassName. Kann der originalFqName nicht
    * bestimmt werden, weil der Workflow noch nicht deployed ist, wird der fqClassName
-   * zurückgegeben.
+   * zurï¿½ckgegeben.
    * @param fqClassName
    * @param revision
    * @return
@@ -472,7 +472,7 @@ public abstract class XynaDispatcher extends FunctionGroup {
   
   /**
    * speichert nicht im file
-   * @return gibt true zurück, wenn der eintrag gesetzt wurde und false, falls overwrite = false war und der
+   * @return gibt true zurï¿½ck, wenn der eintrag gesetzt wurde und false, falls overwrite = false war und der
    *         destinationkey bereits belegt war.
    */
   public boolean setDestination(DestinationKey dk, DestinationValue dv, boolean overwrite) {
@@ -489,7 +489,7 @@ public abstract class XynaDispatcher extends FunctionGroup {
 
   /**
    * speichert im file, falls die destination nicht bereits schon mit dem gleichen destinationvalue vorhanden ist
-   * @return gibt zurück, ob in file gespeichert wurde
+   * @return gibt zurï¿½ck, ob in file gespeichert wurde
    */
   public boolean setCustomDestination(DestinationKey dk, DestinationValue dv) throws PersistenceLayerException {     
     return setDestination(dk, dv, true, true) == DESTINATION_RESULT.OK;
@@ -808,9 +808,9 @@ public abstract class XynaDispatcher extends FunctionGroup {
             String originalFqName = getOriginalFqName(dv.getFQName(), aRevisions);
 
             //Falls der Workflow bisher nicht deployed war, existieren im DependecyRegister evtl.
-            //Einträge mit dem fqClassName z.B. falls setDestination ausgeführt worden ist, 
+            //Eintrï¿½ge mit dem fqClassName z.B. falls setDestination ausgefï¿½hrt worden ist, 
             //bevor der Workflow deployed wurde.
-            //Dann muss jetzt in allen Abhängigkeiten der fqClassName durch den originalFqName
+            //Dann muss jetzt in allen Abhï¿½ngigkeiten der fqClassName durch den originalFqName
             //ersetzt werden.
             try {
               Long parentRev = revMgmt.getRevision(dk.getRuntimeContext());

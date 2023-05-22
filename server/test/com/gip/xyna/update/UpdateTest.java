@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class UpdateTest extends TestCase {
     u1.addAllowedVersionRangeForUpdate(new Version("1.3.alpha7.k10"), new Version("2.1.beta4.5555"));
     u1.addAllowedVersionRangeForUpdate(new Version("141.3.alpha70.1"), new Version("141.3.alpha700.4"));
 
-    //updates sollten nicht funktionieren für folgende "currentVersions":
+    //updates sollten nicht funktionieren fï¿½r folgende "currentVersions":
     Version[] notInRange =
         new Version[] {new Version("1.3.alpha6.r1"), new Version("1.2.1.1"), new Version("a.4.4.4"),
             new Version("1.3.alpha7.k9"), new Version("2.1.beta4.55554"), new Version("2.1.beta30.14"),

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@ import com.gip.xyna.utils.snmp.SnmpAccessData;
 
 
 /**
- * DemonProperties verwaltet die im Demon benötigten Properties und kann 
- * auch für weitere Konfigurationen verwendet werden.
+ * DemonProperties verwaltet die im Demon benï¿½tigten Properties und kann 
+ * auch fï¿½r weitere Konfigurationen verwendet werden.
  * 
  * Die Initialisierung erfolgt mit der Methode {@code readProperties}
- * entweder über das Lesen einer Datei oder das Übernehmen von 
+ * entweder ï¿½ber das Lesen einer Datei oder das ï¿½bernehmen von 
  * bestehenden Properties.
  * 
  * Die Properties "start.time", "build.date" und "build.version" werden
@@ -88,7 +88,7 @@ public class DemonProperties {
   }
 
   /**
-   * Wiederverwendung der übergebenen Properties 
+   * Wiederverwendung der ï¿½bergebenen Properties 
    * @param properties
    */
   public static void readProperties( Properties properties ) {

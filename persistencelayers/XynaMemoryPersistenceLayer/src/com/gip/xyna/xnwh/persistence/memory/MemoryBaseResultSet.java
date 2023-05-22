@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import com.gip.xyna.xnwh.persistence.Storable;
 
 
 /**
- * muss die methoden implementieren, die für resultsetreader zur verfügung stehen sollen. TODO performance: in
+ * muss die methoden implementieren, die fï¿½r resultsetreader zur verfï¿½gung stehen sollen. TODO performance: in
  * verbindung mit preparedquerycomponent: erst bei resultset.next() weiteriterieren, und nicht zuerst die gesamte liste
  * durchlaufen.
  */

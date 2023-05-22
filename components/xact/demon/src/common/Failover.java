@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ public class Failover {
     this.source=failoverSource;
   }
 
-  /* Soll ein Connect zur Primären Instanz (Rückgabewert==false) oder zur
-   * Failover-Instanz (Rückgabewert=true) durchgeführt werden.
+  /* Soll ein Connect zur Primï¿½ren Instanz (Rï¿½ckgabewert==false) oder zur
+   * Failover-Instanz (Rï¿½ckgabewert=true) durchgefï¿½hrt werden.
    */
   public boolean isFailover() {
     return failoverstate==FAILOVER;
@@ -72,9 +72,9 @@ public class Failover {
     return ret;
   }
 
-  /* Diese Funktion sollte an einer strategisch günstigen Stelle eingabut werden. Its der Rückgabewert true,
-   * sollte ein Reconnect  durchgeführt werden . IsFailover gibt dann zurück, zu welcher Instanz das Connect
-   * durchgeführt werden soll. */
+  /* Diese Funktion sollte an einer strategisch gï¿½nstigen Stelle eingabut werden. Its der Rï¿½ckgabewert true,
+   * sollte ein Reconnect  durchgefï¿½hrt werden . IsFailover gibt dann zurï¿½ck, zu welcher Instanz das Connect
+   * durchgefï¿½hrt werden soll. */
   public synchronized boolean signalFailover() {
     boolean ret=false;
     try{

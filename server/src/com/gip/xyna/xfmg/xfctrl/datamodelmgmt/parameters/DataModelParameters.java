@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class DataModelParameters implements Serializable{
     this.dataModelVersion = dataModelVersion;
   }
 
-  //konstruktor aus abwärtskompatibilitätsgründen xtf
+  //konstruktor aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden xtf
   public DataModelParameters(String dataModelType, String dataModelName) {
     this.dataModelType = dataModelType;
     this.dataModelName = dataModelName;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,8 @@ public class OracleAQTriggerAcknowledgeableObject extends AbstractConnectionAwar
       throws XPRC_OrderEntryCouldNotBeAcknowledgedException {
     if (triggerConnection == null) {
       //sollte nur auftreten, wenn OracleAQTriggerAcknowledgeableObject deserialisiert wurde und die 
-      //transiente TriggerConnection nun fehlt. Backup sollte in diesem Fall eigentlich nicht nötig sein,
-      //schadet aber auch nicht außer etwas Mehraufwand für die DB.
+      //transiente TriggerConnection nun fehlt. Backup sollte in diesem Fall eigentlich nicht nï¿½tig sein,
+      //schadet aber auch nicht auï¿½er etwas Mehraufwand fï¿½r die DB.
       try {
         backup(xose);
       } catch (PersistenceLayerException e) {
@@ -80,7 +80,7 @@ public class OracleAQTriggerAcknowledgeableObject extends AbstractConnectionAwar
       if( getConnection() != null) {
         instrumentConForTriggerCon(getConnection());
         backup(xose);
-        //Das Commit der TriggerCon geschieht nachträglich, wenn die getConnection() committed wird.
+        //Das Commit der TriggerCon geschieht nachtrï¿½glich, wenn die getConnection() committed wird.
       } else {
         try {
           backup(xose);
@@ -154,7 +154,7 @@ public class OracleAQTriggerAcknowledgeableObject extends AbstractConnectionAwar
   }
 
   /**
-   * Übertragen des Commit/Rollback/Close von der ODSConnection auf die TriggerConnection
+   * ï¿½bertragen des Commit/Rollback/Close von der ODSConnection auf die TriggerConnection
    * @param odsConnection 
    * @param finishedTriggerConnection
    */

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ public class RemoteCallHelper {
   /**
    * Starten des Auftrags auf Remote-Seite.
    * Entweder Warten bis zur Notification oder bei Nichterreichbarkeit bis zum Resume.
-   * Nach Resume muss ein weiterer startRemoteOrder ausgeführt werden.
+   * Nach Resume muss ein weiterer startRemoteOrder ausgefï¿½hrt werden.
    * @param resumed
    * @param startTimeStamp
    * @param target
@@ -141,7 +141,7 @@ public class RemoteCallHelper {
       GeneralXynaObject input) throws XynaException {
     
     if( resumed ) {
-      //Prüfen, ob Auftrag nicht zulange gewartet hat und daher beendet werden muss
+      //Prï¿½fen, ob Auftrag nicht zulange gewartet hat und daher beendet werden muss
       //TODO ersteinmal nicht vorgesehen, da keine generischen Timeouts definiert sind
     }
     
@@ -207,8 +207,8 @@ public class RemoteCallHelper {
 
   /**
    * Warten, dass Auftrag auf Remote-Seite bearbeitet wird:
-   * Entweder bis Notification eintrifft oder ein Suspend ausgeführt wird.
-   * Nach Resume kann ein weiterer awaitOrder ausgeführt werden.
+   * Entweder bis Notification eintrifft oder ein Suspend ausgefï¿½hrt wird.
+   * Nach Resume kann ein weiterer awaitOrder ausgefï¿½hrt werden.
    * @param target
    * @param startTimeStamp
    * @param remoteOrderId
@@ -221,8 +221,8 @@ public class RemoteCallHelper {
     long suspensionTimeout = 600000L; //TODO 
     
     if( ! suspend ) {
-      //wenn nicht gleich eine Suspendierung erfolgt ist nun ein Backup nötig, 
-      //damit RemoteOrderId, StartTimeStamp und FactoryNode nicht verloren gehen können
+      //wenn nicht gleich eine Suspendierung erfolgt ist nun ein Backup nï¿½tig, 
+      //damit RemoteOrderId, StartTimeStamp und FactoryNode nicht verloren gehen kï¿½nnen
       
       InheritanceRule r = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getParameterInheritanceManagement()
           .getPreferredBackupWhenRemoteCallRule(correlatedXynaOrder);

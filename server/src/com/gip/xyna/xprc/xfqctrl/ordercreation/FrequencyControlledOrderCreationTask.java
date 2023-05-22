@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ public class FrequencyControlledOrderCreationTask extends FrequencyControlledTas
 
     FrequencyControlledOrderInputSourceUsingTask(FrequencyControlledOrderInputSourceUsingTaskCreationParameter creationParameter,
                                                  FrequenceControlledTaskEventAlgorithm eventAlgorithm) throws XynaException {
-      //die ordercreationparameter müssen vorher initialisiert werden, weil z.b. für die zugehörigen ordertypes statechangelistener registriert werden
+      //die ordercreationparameter mï¿½ssen vorher initialisiert werden, weil z.b. fï¿½r die zugehï¿½rigen ordertypes statechangelistener registriert werden
       super(prepare(creationParameter), eventAlgorithm);
       this.orderInputSourceIds = creationParameter.getOrderInputSourceIds();
       this.role = creationParameter.getTransientCreationRole();
@@ -254,10 +254,10 @@ public class FrequencyControlledOrderCreationTask extends FrequencyControlledTas
         try {
           FrequencyControlledOrderCreationTask.super.eventTriggered(eventId);
         } finally {
-          latch.countDown(); //nächsten event starten
+          latch.countDown(); //nï¿½chsten event starten
         }
         try {
-          XynaOrderCreationParameter xocp = getNextOrderCreationParameter(eventidx); //evtl überschrieben
+          XynaOrderCreationParameter xocp = getNextOrderCreationParameter(eventidx); //evtl ï¿½berschrieben
           OrderContextServerExtension ctx = xpctrl.createAndPrepareOrderAndContext(xocp, orderId);
           xpctrl.startOrder(ctx.getXynaOrder(), new OrderCreationResponseListener(FrequencyControlledOrderCreationTask.this), ctx);
         } catch (Throwable t) {
@@ -408,7 +408,7 @@ public class FrequencyControlledOrderCreationTask extends FrequencyControlledTas
         try {
           newStatus = OrderInstanceStatus.fromString(newState);
         } catch( IllegalArgumentException e ) {
-          return; //nicht zuständig für diesen Statuswechsel, evtl. OrderInstanceCompensationStatus oder OrderInstanceSuspensionStatus
+          return; //nicht zustï¿½ndig fï¿½r diesen Statuswechsel, evtl. OrderInstanceCompensationStatus oder OrderInstanceSuspensionStatus
         }
         if (OrderInstanceStatus.SCHEDULING == newStatus) {
           if (mapOrderIdToWasWaiting.putIfAbsent(orderId, Boolean.TRUE) == null) {
@@ -423,7 +423,7 @@ public class FrequencyControlledOrderCreationTask extends FrequencyControlledTas
             updateWaiting(currentlyWaiting, now);
           }
           
-          // remember the start time (nur das erste mal, wo er hier vorbei kommt. später kann das nochmal passieren wegen resume)
+          // remember the start time (nur das erste mal, wo er hier vorbei kommt. spï¿½ter kann das nochmal passieren wegen resume)
           mapEventIdToExecutionStartTime.putIfAbsent(eventId, now);
           
         } else if (newStatus.isFinished() || newStatus.isFailed()) {

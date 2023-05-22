@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,9 +50,9 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 /**
  * 
  *
- * Richtiger Wege über DOMImplementationRegistry hat Probleme mit ClassLoading:
+ * Richtiger Wege ï¿½ber DOMImplementationRegistry hat Probleme mit ClassLoading:
  * DOMImplementationRegistry kennt xercesImpl nicht, da diese mit anderem ClassLoader geladen 
- * wurde. Daher müssen die benötigten Objekte direkt instantiiert werden
+ * wurde. Daher mï¿½ssen die benï¿½tigten Objekte direkt instantiiert werden
  */
 public class XercesUtils {
   
@@ -96,7 +96,7 @@ public class XercesUtils {
   }
   
   public static DOMImplementationLS getDOMImplementationLS() {
-    //richtiger Weg wäre über 
+    //richtiger Weg wï¿½re ï¿½ber 
     //DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
     //return (DOMImplementationLS)registry.getDOMImplementation("LS","3.0");
     //dies klappt wegen ClassLoadingProblemen jedoch nicht

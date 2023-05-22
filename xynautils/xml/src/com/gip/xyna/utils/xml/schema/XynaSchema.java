@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ import org.w3c.dom.Node;
 public class XynaSchema extends XynaSchemaNode {
 
    /**
-    * Konstanten für die interne Verwendung beim XSD-Generieren.
+    * Konstanten fï¿½r die interne Verwendung beim XSD-Generieren.
     */
    private static final String TARGETNS = "targetNamespace";
    private static final String ELEMENTFORMDEFAULT = "elementFormDefault";
@@ -145,7 +145,7 @@ public class XynaSchema extends XynaSchemaNode {
     * 
     * @param name
     * @param namespace
-    *              NS vom Type. keine Angabe ist äquivalent zum TargetNS.
+    *              NS vom Type. keine Angabe ist ï¿½quivalent zum TargetNS.
     * @param typeName
     * @return
     * @throws Exception
@@ -158,7 +158,7 @@ public class XynaSchema extends XynaSchemaNode {
                   .get(i);
             if (brother.getName() != null && brother.getName().equals(name)) {
                throw new Exception(
-                     "Rootelemente müssen unterschiedliche Namen haben.");
+                     "Rootelemente mï¿½ssen unterschiedliche Namen haben.");
             }
          }
       }
@@ -170,7 +170,7 @@ public class XynaSchema extends XynaSchemaNode {
    }
 
    /**
-    * entweder nur ordnungsgebendes Element oder type später setzen
+    * entweder nur ordnungsgebendes Element oder type spï¿½ter setzen
     * 
     * @param name
     * @return
@@ -233,7 +233,7 @@ public class XynaSchema extends XynaSchemaNode {
          importElement.setAttribute(ATT_SCHEMALOC, loc);
          importElement.setAttribute(ATT_NAMESPACE, ns);
          schemaElement.appendChild(importElement);
-         // abkürzung
+         // abkï¿½rzung
          String sns = createShortNS(ns);
          String num = "";
          int i = 0;
@@ -256,8 +256,8 @@ public class XynaSchema extends XynaSchemaNode {
 
    public void importFragmentAsChild(XynaSchemaFragment frag) throws Exception {
       if (frag.getNode() instanceof XynaSchema) {
-         // Kind-Elemente anhängen ?
-         throw new Exception("nicht unterstützt."); // TODO
+         // Kind-Elemente anhï¿½ngen ?
+         throw new Exception("nicht unterstï¿½tzt."); // TODO
       } else if (frag.getNode() instanceof XynaSchemaAttribute
             || frag.getNode() instanceof XynaSchemaElement
             || frag.getNode() instanceof XynaSchemaComplexType) {

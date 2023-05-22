@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,12 +120,12 @@ public class DomOrExceptionSubtypes extends RuntimeContextDependendAction {
       gb.parseGeneration(true /*deployed*/, false, false);
 
       List<GenerationBase> subTypes = new ArrayList<>(Util.getSubTypes(fqn, commonCache, rootRev));
-      subTypes.add(gb); //Obertyp soll auch zurück gegeben und sortiert werden
+      subTypes.add(gb); //Obertyp soll auch zurï¿½ck gegeben und sortiert werden
       subTypes.sort((gb1,gb2) -> gb1.getOriginalFqName().compareToIgnoreCase(gb2.getOriginalFqName())); //Subtypen sortieren
       
       for (GenerationBase subType : subTypes) {
         if (!isReachable(subType, rootRev)) {
-          //keine subtypen zurückgeben, die in der revision nicht erreichbar sind
+          //keine subtypen zurï¿½ckgeben, die in der revision nicht erreichbar sind
           continue;
         }
         write(jb, subType, rootRev);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,18 +104,18 @@ import com.gip.xyna.xprc.xsched.timeconstraint.TimeConstraintManagement;
 
 
 /**
- * verwaltung von aufträgen die sich vor der ausführung befinden. ein interner thread bestimmt
- * die nächsten auszuführenden aufträge anhand von priorität, FIFO, capacities, serien-abhängigkeiten.
+ * verwaltung von auftrï¿½gen die sich vor der ausfï¿½hrung befinden. ein interner thread bestimmt
+ * die nï¿½chsten auszufï¿½hrenden auftrï¿½ge anhand von prioritï¿½t, FIFO, capacities, serien-abhï¿½ngigkeiten.
  * 
  * konfiguriert kann werden: 
- * 1. der algorithmus, wie aufträge durchsucht werden (map? list? linkedlist? iterator oder for-schleife? etc)
- * 2. der vergleichsoperator (comparator), der bestimmt, in welcher reihenfolge aufträge durchsucht werden
- * 3. der algorithmus, der bestimmt, ob ein bestimmter auftrag startbar ist, oder ob eine kapazität
+ * 1. der algorithmus, wie auftrï¿½ge durchsucht werden (map? list? linkedlist? iterator oder for-schleife? etc)
+ * 2. der vergleichsoperator (comparator), der bestimmt, in welcher reihenfolge auftrï¿½ge durchsucht werden
+ * 3. der algorithmus, der bestimmt, ob ein bestimmter auftrag startbar ist, oder ob eine kapazitï¿½t
  *    etc ihn daran hindert, ob er gecancelt wurde etc. (TrySchedule)
  *    
  * 1. benutzt 2. und 3.
  *    
- * ausserdem gibt es eigene threads für die verwaltung von auftrag-timeouts und cancellistener-timeouts.
+ * ausserdem gibt es eigene threads fï¿½r die verwaltung von auftrag-timeouts und cancellistener-timeouts.
  */
 public class XynaScheduler extends Section {
 
@@ -133,7 +133,7 @@ public class XynaScheduler extends Section {
 
   private OrderSeriesManagement orderSeriesManagement;
   private CronLikeScheduler cronLikeScheduler;
-  CapacityManagement capacityManagement; //package private für tests
+  CapacityManagement capacityManagement; //package private fï¿½r tests
   private VetoManagement vetoManagement;
   private TimeConstraintManagement timeConstraintManagement;
   private PreScheduler preScheduler;  
@@ -228,7 +228,7 @@ public class XynaScheduler extends Section {
    
     //Scheduler ggf. pausieren
     if (Constants.PAUSE_SCHEDULER_AT_STARTUP) {
-      pauseSchedulingManually(); //Scheduler soll über die CLI wieder fortgesetzt werden können 
+      pauseSchedulingManually(); //Scheduler soll ï¿½ber die CLI wieder fortgesetzt werden kï¿½nnen 
     }
     
     // add dependency for used XynaProperties
@@ -483,10 +483,10 @@ public class XynaScheduler extends Section {
 
     public SchedulingOrder transform(SchedulingOrder from) {
       if( from.isMarkedAsRemove() ) {
-        return null; //diese Aufträge sind entfernt worden (Cancel, Suspend, etc) und daher hier uninteressant
+        return null; //diese Auftrï¿½ge sind entfernt worden (Cancel, Suspend, etc) und daher hier uninteressant
       }
       if( from.isAlreadyScheduled() ) {
-        return null; //diese Aufträge sind bereits gelaufen und daher hier uninteressant
+        return null; //diese Auftrï¿½ge sind bereits gelaufen und daher hier uninteressant
       }
       XynaOrderServerExtension xynaOrder = allOrders.getXynaOrder(from);
       if (xynaOrder == null) {
@@ -660,7 +660,7 @@ public class XynaScheduler extends Section {
     }
     // TODO validate schedulerbean
     
-    //Muss Backup und Acknowledge durchgeführt werden?
+    //Muss Backup und Acknowledge durchgefï¿½hrt werden?
     boolean hasToBeAcknowledged = xo.getOrderContext() != null && xo.getOrderContext().hasAck();
     if (logger.isDebugEnabled()) {
       logger.debug("Adding to scheduler: " + xo.getId() +" hasToBeAcknowledged="+hasToBeAcknowledged);
@@ -722,24 +722,24 @@ public class XynaScheduler extends Section {
         orderSeriesManagement.separateSeries(xo,con,hasToBeAcknowledged);
       }
 
-      //falls cleanup nach einem fehler im acknowledge (o.ä.) dazu führt, dass der auftrag weitere statusupdates in einer anderen connection schreibt, muss
+      //falls cleanup nach einem fehler im acknowledge (o.ï¿½.) dazu fï¿½hrt, dass der auftrag weitere statusupdates in einer anderen connection schreibt, muss
       //dieses statusupdate vorher committed sein. (vgl bug 15144)
       try {
         OrderStatus orderStatus = XynaFactory.getInstance().getProcessing().getOrderStatus();
         orderStatus.changeMasterWorkflowStatus(xo, OrderInstanceStatus.SCHEDULING, exceptionsAreHandledWithOrderCleanup ? null : con);
       } catch( Throwable t ) {
         Department.handleThrowable(t);
-        //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhängen
+        //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhï¿½ngen
         logger.warn("Could not write orderinstance status "+OrderInstanceStatus.SCHEDULING+" for "+xo, t);
       }
-      //TODO besser erst, wenn Auftrag tatsächlich geschedult wird, nicht bei wartenden?
+      //TODO besser erst, wenn Auftrag tatsï¿½chlich geschedult wird, nicht bei wartenden?
 
       boolean isCanceled = allOrders.isCanceled(xo);
       if (isCanceled) {
         XynaOrderExecutor.cancelOrder(xo);
       } else {
         addOrderIntoAllOrdersEtc(con, xo);
-        //Nun zum Schluss das Acknowledge, welches das Commit auf der evtl. verwendeten AckConnection ausführt.
+        //Nun zum Schluss das Acknowledge, welches das Commit auf der evtl. verwendeten AckConnection ausfï¿½hrt.
         //Dies darf erst nach dem addOrder(...) geschehen, damit das ExecuteAfterCommit-Runnable gesetzt ist.
         if (hasToBeAcknowledged) {
           xo.getOrderContext().setAckConnection(con);
@@ -763,7 +763,7 @@ public class XynaScheduler extends Section {
   
   private void addOrderIntoAllOrdersEtc(ODSConnection con, XynaOrderServerExtension xo) {
     if (con != null) {
-      //Priorität ist so angepasst: 
+      //Prioritï¿½t ist so angepasst: 
       // 1) nach AfterCommit-Handler aus Acknowledge-Object 
       // 2) vor dem Start der CronLikeOrder
       con.executeAfterCommit(new AddOrderIntoAllOrdersEtc(xo), Thread.MIN_PRIORITY+1); 
@@ -778,7 +778,7 @@ public class XynaScheduler extends Section {
     boolean wasNeverScheduled = xo.wasNeverScheduled();
     if( wasNeverScheduled ) {
       if( getTimeConstraintManagement().hasToWaitForStartTime(xo.getSchedulingData()) ) {
-       //Auftrag muss auf Startzeit warten //NICE schöner wäre xo.getTimeConstraint() != null...
+       //Auftrag muss auf Startzeit warten //NICE schï¿½ner wï¿½re xo.getTimeConstraint() != null...
         waitingCauses.add(WaitingCause.StartTime);
       }
       if( xo.isInOrderSeries() ) {
@@ -797,7 +797,7 @@ public class XynaScheduler extends Section {
     
     if( wasNeverScheduled ) {
       timeConstraintManagement.addWaitingOrder( so, true );
-      //Eintragen in TimeConstraintManagement und OrderSeriesManagement, ändert evtl. WaitingCause in der SchedulingOrder
+      //Eintragen in TimeConstraintManagement und OrderSeriesManagement, ï¿½ndert evtl. WaitingCause in der SchedulingOrder
       orderSeriesManagement.addWaitingOrder( so );
       //in BatchProcessManagement eintragen 
       getBatchProcessManagement().addWaitingOrder( so );
@@ -808,7 +808,7 @@ public class XynaScheduler extends Section {
       xo.setDeploymentCounterCountDownDone();
     }
     
-    //Eintragen in Scheduler nach Prüfung, ob lauffähig
+    //Eintragen in Scheduler nach Prï¿½fung, ob lauffï¿½hig
     allOrders.scheduleOrder(so);
   }
 
@@ -838,7 +838,7 @@ public class XynaScheduler extends Section {
    * some time later.
    * 
    * @param orderid
-   * @param maxAbortInFuture was für eine haltbarkeit hat der Abort-request, falls der auftrag nicht gefunden wird? (in relativen ms)
+   * @param maxAbortInFuture was fï¿½r eine haltbarkeit hat der Abort-request, falls der auftrag nicht gefunden wird? (in relativen ms)
    * @param ignoreResourcesWhenResuming
    * @return true, if the order could be canceled immediately and false otherwise
    */
@@ -876,8 +876,8 @@ public class XynaScheduler extends Section {
 
   /**
    * @return true, falls cancel/abort bereits erfolgreich
-   * ACHTUNG: listener=null -&gt; der zurückgegebene boolean wert stimmt nicht unbedingt.
-   * nämlich für den fall, dass der abzubrechende auftrag resuming ist und ignoreResourcesWhenResuming=false 
+   * ACHTUNG: listener=null -&gt; der zurï¿½ckgegebene boolean wert stimmt nicht unbedingt.
+   * nï¿½mlich fï¿½r den fall, dass der abzubrechende auftrag resuming ist und ignoreResourcesWhenResuming=false 
    */
   public boolean cancelAbortOrder(Long orderId, ICancelResultListener listener, boolean cancelCompensationsAndResumes,
                              boolean ignoreResourcesWhenResuming) {
@@ -907,14 +907,14 @@ public class XynaScheduler extends Section {
 
 
   /**
-   * 1. scheduler anhalten (pause-aufträge müssen noch laufen dürfen!)
-   *   (implementierung durch austausch des scheduler algorithmus, der nur noch suspendaufträge durchlässt)
-   * 2. aufträge die bald einen timeout haben mit fehler beantworten
-   * 3. Laufende workflows dürfen zu ende laufen. Dazu müssen Subworkflows weiterhin
+   * 1. scheduler anhalten (pause-auftrï¿½ge mï¿½ssen noch laufen dï¿½rfen!)
+   *   (implementierung durch austausch des scheduler algorithmus, der nur noch suspendauftrï¿½ge durchlï¿½sst)
+   * 2. auftrï¿½ge die bald einen timeout haben mit fehler beantworten
+   * 3. Laufende workflows dï¿½rfen zu ende laufen. Dazu mï¿½ssen Subworkflows weiterhin
    *    gestartet werden. <br>
    *    
-   * Diese Methode ist für die interne Verwendung gedacht.
-   * Für CLI Aufrufe verwende {@link #pauseSchedulingManually()}.
+   * Diese Methode ist fï¿½r die interne Verwendung gedacht.
+   * Fï¿½r CLI Aufrufe verwende {@link #pauseSchedulingManually()}.
    * 
    * Bessere Doku bei {@link #pauseScheduling(boolean, boolean)}
    */
@@ -924,12 +924,12 @@ public class XynaScheduler extends Section {
 
   /**
    * Scheduler anhalten (implementierung durch austausch des scheduler algorithmus).
-   * Der pauseCnt wird hochgezählt.<br>
+   * Der pauseCnt wird hochgezï¿½hlt.<br>
    * 
-   * Diese Methode ist für die interne Verwendung gedacht.
-   * Für CLI Aufrufe verwende {@link #pauseSchedulingManually()}.
+   * Diese Methode ist fï¿½r die interne Verwendung gedacht.
+   * Fï¿½r CLI Aufrufe verwende {@link #pauseSchedulingManually()}.
    * 
-   * @param changeTimeoutOffset wenn true: aufträge die bald einen timeout haben mit fehler beantworten
+   * @param changeTimeoutOffset wenn true: auftrï¿½ge die bald einen timeout haben mit fehler beantworten
    * @param forShutdown wenn true: nur SuspendAllOrders darf noch laufen, ansonsten nur Cancel und Timeout
    */
   public void pauseScheduling(boolean changeTimeoutOffset, boolean forShutdown) {
@@ -939,15 +939,15 @@ public class XynaScheduler extends Section {
   
   /**
    * Scheduler anhalten. Das manuallyPaused-Flag wird auf true gesetzt.<br>
-   * Diese Methode ist für den CLI-Aufruf gedacht.
-   * Für interne Aufrufe verwende {@link #pauseScheduling(boolean)}.
+   * Diese Methode ist fï¿½r den CLI-Aufruf gedacht.
+   * Fï¿½r interne Aufrufe verwende {@link #pauseScheduling(boolean)}.
    */
   public void pauseSchedulingManually() {
     pauseScheduling(false, false, true);
   }
   
-  private final AtomicInteger pauseCnt = new AtomicInteger(0); //für internes Pausieren (z.B. chackForActiveOrders)
-  private boolean manuallyPaused = false; //für CLI
+  private final AtomicInteger pauseCnt = new AtomicInteger(0); //fï¿½r internes Pausieren (z.B. chackForActiveOrders)
+  private boolean manuallyPaused = false; //fï¿½r CLI
   
   
   private void pauseScheduling(boolean changeTimeoutOffset, boolean forShutdown, boolean manually) {
@@ -972,8 +972,8 @@ public class XynaScheduler extends Section {
 
   /**
    * Resumes normal scheduling by setting the original scheduling algorithm.
-   * Der pauseCnt wird heruntergezählt. Diese Methode ist für die interne Verwendung
-   * gedacht. Für CLI Aufrufe verwende {@link #resumeSchedulingManually()}.
+   * Der pauseCnt wird heruntergezï¿½hlt. Diese Methode ist fï¿½r die interne Verwendung
+   * gedacht. Fï¿½r CLI Aufrufe verwende {@link #resumeSchedulingManually()}.
    */
   public void resumeScheduling() {
     resumeScheduling(false);
@@ -982,8 +982,8 @@ public class XynaScheduler extends Section {
   /**
    * Resumes normal scheduling by setting the original scheduling algorithm.<br>
    * 
-   * Das manuallyPaused-Flag wird auf false gesetzt. Diese Methode ist für den CLI-Aufruf
-   * gedacht. Für interne Aufrufe verwende {@link #resumeScheduling()}.
+   * Das manuallyPaused-Flag wird auf false gesetzt. Diese Methode ist fï¿½r den CLI-Aufruf
+   * gedacht. Fï¿½r interne Aufrufe verwende {@link #resumeScheduling()}.
    * 
    * @return true, wenn resumed werden konnte; false, wenn der Scheduler noch durch eine
    * interne Anwendung pausiert ist
@@ -996,13 +996,13 @@ public class XynaScheduler extends Section {
   private boolean resumeScheduling(boolean manually) {
     synchronized (pauseCnt) {
       if (manually) {
-        //falls über CLI aufgerufen, das manuallyPaused-Flag umsetzen
+        //falls ï¿½ber CLI aufgerufen, das manuallyPaused-Flag umsetzen
         manuallyPaused = false;
         if (0 != pauseCnt.get()) {
           return false;
         }
       } else {
-        //falls intern aufgerufen, den pauseCnt runterzählen
+        //falls intern aufgerufen, den pauseCnt runterzï¿½hlen
         int cnt = pauseCnt.decrementAndGet();
         if( cnt < 0 ) {
           logger.warn("Scheduler pauseCnt is lower than zero: "+cnt);
@@ -1013,7 +1013,7 @@ public class XynaScheduler extends Section {
           return false; 
         }
       }
-      //resume ausführen
+      //resume ausfï¿½hren
       trySchedule.useType(TryScheduleImpl.Type.Normal);
       notifyScheduler();
       return true;
@@ -1097,7 +1097,7 @@ public class XynaScheduler extends Section {
         so.replaceSchedulingData(schedulingData);
       }
       
-      //Durch Ändern von Startzeitpunkt und Priority hat sich Urgency geändert, daher neu berechnen
+      //Durch ï¿½ndern von Startzeitpunkt und Priority hat sich Urgency geï¿½ndert, daher neu berechnen
       if( startTimeReached ) {
         allOrders.startTimeReached(so, true); 
       } else {

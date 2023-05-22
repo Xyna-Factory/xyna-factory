@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class BatchProcessCustomizationStorable extends Storable<BatchProcessCust
   public static ResultSetReader<Long> idReader = new BatchProcessCustomizationStorableIdReader();
   
   public static final String COL_BATCH_PROCESS_ID = "batchProcessId"; //ID des Batch Processes
-  public static final String COL_COUNTER0 = "counter0"; //Erstes Custom-Feld, für die freie Verwendung durch Komponenten.
+  public static final String COL_COUNTER0 = "counter0"; //Erstes Custom-Feld, fï¿½r die freie Verwendung durch Komponenten.
   public static final String COL_COUNTER1 = "counter1";
   public static final String COL_COUNTER2 = "counter2";
   public static final String COL_COUNTER3 = "counter3";
@@ -58,7 +58,7 @@ public class BatchProcessCustomizationStorable extends Storable<BatchProcessCust
   private long batchProcessId;//ID des Batch Processes
 
   @Column(name = COL_COUNTER0)
-  private Double counter0; //Erstes Counter-Feld, für die freie Verwendung durch Komponenten.
+  private Double counter0; //Erstes Counter-Feld, fï¿½r die freie Verwendung durch Komponenten.
   @Column(name = COL_COUNTER1)
   private Double counter1;
   @Column(name = COL_COUNTER2)
@@ -169,9 +169,9 @@ public class BatchProcessCustomizationStorable extends Storable<BatchProcessCust
           return value; //Initalisierung: (null + 1 => 1)
         } else {
           if( value == null ) {
-            return old; //keine Änderung: (1 + null => 1);
+            return old; //keine ï¿½nderung: (1 + null => 1);
           } else {
-            return new Double(old.doubleValue()+value.doubleValue()); //Änderung: (1 + 2 => 3)
+            return new Double(old.doubleValue()+value.doubleValue()); //ï¿½nderung: (1 + 2 => 3)
           }
         }
       }

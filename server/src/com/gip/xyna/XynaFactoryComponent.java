@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ public abstract class XynaFactoryComponent {
     }
     dependencies.put(clazz, pathes);
     //FIXME: was ist, wenn mehrere components von der gleichen klasse abgeleitet sind,
-    //und hier die abgeleitete klasse übergeben wird. beispiel xynadispatcher
+    //und hier die abgeleitete klasse ï¿½bergeben wird. beispiel xynadispatcher
   }
 
 

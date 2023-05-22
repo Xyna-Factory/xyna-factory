@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public class Telnet {
   }
   
   /**
-   * Login für normales Telnet auf Port 23
+   * Login fï¿½r normales Telnet auf Port 23
    * @param username
    * @param password
    */
@@ -140,7 +140,7 @@ public class Telnet {
   }
   
   /**
-   * Ausführen eines Kommandos und Rückgabe der Antwort 
+   * Ausfï¿½hren eines Kommandos und Rï¿½ckgabe der Antwort 
    * @param cmd
    * @return Antwot des Kommandos
    */
@@ -154,7 +154,7 @@ public class Telnet {
   }
 
   /**
-   * Rückgabe des aktuellen Prompts
+   * Rï¿½ckgabe des aktuellen Prompts
    * @return
    */
   public String getFullPrompt() throws SocketTimeoutException,

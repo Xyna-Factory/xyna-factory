@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public class XOUtils {
   /**
    * @return {@link #VARNAME_NOTFOUND} falls objekt nicht in varnames gefunden
    * @throws InvalidObjectPathException falls dem pfad nicht gefolgt werden kann
-   * @throws NullPointerException falls der pfad zwar gültig scheint, aber das objekt null ist 
+   * @throws NullPointerException falls der pfad zwar gï¿½ltig scheint, aber das objekt null ist 
    */
   public static Object getIfNameIsInVarNames(String[] varNames, Object[] vars, String path) throws InvalidObjectPathException {
     boolean isPath = false;
@@ -108,7 +108,7 @@ public class XOUtils {
       if (ret instanceof XynaObject) {
         return ((XynaObject) ret).get(childPath);
       }
-      //FIXME: nur aus abwärtskompatibilitätsgründen so verschachtelt
+      //FIXME: nur aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden so verschachtelt
       throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(path));
     }
     return ret;
@@ -407,11 +407,11 @@ public class XOUtils {
 
   }
 
-  //version ist jeweils das ende des gültigkeitsintervalls
+  //version ist jeweils das ende des gï¿½ltigkeitsintervalls
   public static class Version<T> implements Comparable<Version<T>>, Serializable {
 
     private static final long serialVersionUID = 1L;
-    //dieses objekt ist gültig gewesen bis versionOfNextObject-1
+    //dieses objekt ist gï¿½ltig gewesen bis versionOfNextObject-1
     private final long versionOfNextObject;
     public final T object;
 
@@ -455,7 +455,7 @@ public class XOUtils {
 
 
     public void add(T t) {
-      //synchronized, damit die liste sortiert nach version bleibt. ansonsten kann es passieren, dass eine neuere version vor eine ältere kommt.
+      //synchronized, damit die liste sortiert nach version bleibt. ansonsten kann es passieren, dass eine neuere version vor eine ï¿½ltere kommt.
       synchronized (this) {
         long version = XOUtils.nextVersion();
         versions.add(new Version<T>(version, t));
@@ -468,7 +468,7 @@ public class XOUtils {
         return null;
       }
       int idx;
-      synchronized (this) { //nicht gleichzeitig liste ändern
+      synchronized (this) { //nicht gleichzeitig liste ï¿½ndern
         idx = Collections.binarySearch(versions, new Version<T>(version, null));
       }
       /*
@@ -481,15 +481,15 @@ public class XOUtils {
        * current member valid 13-now
        */
       if (idx == -versions.size() - 1) {
-        //einfügeposition ganz hinten > current member ist aktueller wert
+        //einfï¿½geposition ganz hinten > current member ist aktueller wert
         return null;
       }
       if (idx < 0) {
         return versions.get(-idx - 1);
       }
-      idx++; //getVersion(7) muss C zurückgeben
+      idx++; //getVersion(7) muss C zurï¿½ckgeben
       if (idx >= versions.size()) {
-        //getVersion(13) muss null zurückgeben
+        //getVersion(13) muss null zurï¿½ckgeben
         return null;
       }
       return versions.get(idx);
@@ -497,7 +497,7 @@ public class XOUtils {
 
 
     /**
-     * gibt die versionen des objekts zurück, die zwischen den beiden angegebenen versionen (inklusive start und end) gültig waren.
+     * gibt die versionen des objekts zurï¿½ck, die zwischen den beiden angegebenen versionen (inklusive start und end) gï¿½ltig waren.
      */
     public Version<T>[] getVersions(long rev1, long rev2) {
       /*
@@ -521,7 +521,7 @@ public class XOUtils {
       }
       
       int idx1, idx2;
-      synchronized (this) { //nicht gleichzeitig liste ändern
+      synchronized (this) { //nicht gleichzeitig liste ï¿½ndern
         idx1 = Collections.binarySearch(versions, new Version<T>(rev1, null));
         idx2 = Collections.binarySearch(versions, new Version<T>(rev2, null));
       }
@@ -560,7 +560,7 @@ public class XOUtils {
       /*
        * in   private static void addChanges(final GeneralXynaObject value, long rev1, long rev2,
                           final IdentityHashMap<GeneralXynaObject, DataRangeCollection> changeSets, Set<Long> changes) {
-                          wird auf Long.MAX_VALUE überprüft, damit hier keine endlosrekursion passiert.
+                          wird auf Long.MAX_VALUE ï¿½berprï¿½ft, damit hier keine endlosrekursion passiert.
        */
       xo.collectChanges(0, Long.MAX_VALUE, new IdentityHashMap<GeneralXynaObject, DataRangeCollection>(), set);
       List<Long> list = new ArrayList<>(set);
@@ -570,9 +570,9 @@ public class XOUtils {
     }
   }
   
-  //kann auch für listen von simpletypes aufgerufen werden
+  //kann auch fï¿½r listen von simpletypes aufgerufen werden
   /*
-   * sammle alle versionen zwischen rev1 und rev2, in der sich das objekt geändert hat
+   * sammle alle versionen zwischen rev1 und rev2, in der sich das objekt geï¿½ndert hat
    * 
    * Versionen
    * (A, 3)
@@ -580,15 +580,15 @@ public class XOUtils {
    * (C, 15)
    * (D, 16)
    * 
-   * addChangesFor 3, 3 => fügt 3 hinzu
-   * addChangesFor 3, 9 => fügt 3 hinzu
-   * addChangesFor 3, 10 => fügt 3, 10 hinzu
+   * addChangesFor 3, 3 => fï¿½gt 3 hinzu
+   * addChangesFor 3, 9 => fï¿½gt 3 hinzu
+   * addChangesFor 3, 10 => fï¿½gt 3, 10 hinzu
    * 
    */
   public static <T> void addChangesForSimpleMember(VersionedObject<T> oldVersionsOfMember, long rev1, long rev2, Set<Long> changes) {
     if (oldVersionsOfMember != null) {
-      //ohne das -1 würde (3,3) im obigen beispiel nur version B liefern, weil A ja nur bis 2 gültig war.
-      //aber: bei abfrage nach (16,16) darf 15 nicht zurückgegeben werden
+      //ohne das -1 wï¿½rde (3,3) im obigen beispiel nur version B liefern, weil A ja nur bis 2 gï¿½ltig war.
+      //aber: bei abfrage nach (16,16) darf 15 nicht zurï¿½ckgegeben werden
       Version<T>[] versions = oldVersionsOfMember.getVersions(rev1 - 1, rev2);
       for (int i = 0; i < versions.length; i++) {
         Version<T> v = versions[i];
@@ -609,30 +609,30 @@ public class XOUtils {
   }
   
   /**
-   * sammle alle gültigkeitsintervalle von current und von alten versionen) zwischen rev1 und rev2 (jeweils inklusive).
-   * füge alle gültigkeitsintervallgrenzen (also versionen, wo sich eine änderung ergeben hat = start von intervall) zu changes hinzu
-   *   dabei soll sowohl rev1 als auch rev2 als change festgestellt werden können (falls dort eine grenze liegt)
+   * sammle alle gï¿½ltigkeitsintervalle von current und von alten versionen) zwischen rev1 und rev2 (jeweils inklusive).
+   * fï¿½ge alle gï¿½ltigkeitsintervallgrenzen (also versionen, wo sich eine ï¿½nderung ergeben hat = start von intervall) zu changes hinzu
+   *   dabei soll sowohl rev1 als auch rev2 als change festgestellt werden kï¿½nnen (falls dort eine grenze liegt)
    */
   static <T> List<Triple<T, Long, Long>> getIntervalsOfAllVersions(T current, VersionedObject<T> vo, long rev1, long rev2,
                                                                   Set<Long> changes) {
     if (vo == null) {
       return Collections.singletonList(Triple.of(current, rev1, rev2));
     } else {
-      Version<T>[] versions = vo.getVersions(rev1 - 1, rev2); //rev-1, damit man ein bei rev1-1 endendes intervall finden kann, und dann rev1 als change hinzufügen
+      Version<T>[] versions = vo.getVersions(rev1 - 1, rev2); //rev-1, damit man ein bei rev1-1 endendes intervall finden kann, und dann rev1 als change hinzufï¿½gen
       List<Triple<T, Long, Long>> ret = new ArrayList<>(versions.length + 1);
       for (int i = 0; i < versions.length; i++) {
         Version<T> v = versions[i];
         if (v.versionOfNextObject <= rev2) {
           changes.add(v.versionOfNextObject);
-        } //ansonsten war die änderung erst nach rev2. für das objekt muss trotzdem noch die rekursion durchgeführt werden, weil es ja bei rev2 bereits gültig war.
+        } //ansonsten war die ï¿½nderung erst nach rev2. fï¿½r das objekt muss trotzdem noch die rekursion durchgefï¿½hrt werden, weil es ja bei rev2 bereits gï¿½ltig war.
 
         //komplexwertig rekursion:
-        //für jede in dem intervall gültige version checken, was für changes es in den members gibt
-        //dieses objekt ist nur bis zur nächsten version gültig, d.h. man muss in der rekursion auch nur changes bis dort ermitteln.        
+        //fï¿½r jede in dem intervall gï¿½ltige version checken, was fï¿½r changes es in den members gibt
+        //dieses objekt ist nur bis zur nï¿½chsten version gï¿½ltig, d.h. man muss in der rekursion auch nur changes bis dort ermitteln.        
         long versionValidEnd = Math.min(v.versionOfNextObject - 1, rev2);
         if (i == 0 && v.versionOfNextObject == rev1) {
           //nicht zu weit nach links verschieben, sonst ist end < start
-          //wenn ein intervall genau bei rev1 beginnt, wird bei der nächsten iteration das ensprechende intervall geadded
+          //wenn ein intervall genau bei rev1 beginnt, wird bei der nï¿½chsten iteration das ensprechende intervall geadded
           continue;
         }
         long versionValidStart;
@@ -653,7 +653,7 @@ public class XOUtils {
         latestVersion = rev1;
       }
       if (latestVersion <= rev2) {
-        //current version (bzgl zeitpunkt des aufrufs der methode, inzwischen kann current version anders sein) ist zu rev2 noch gültig
+        //current version (bzgl zeitpunkt des aufrufs der methode, inzwischen kann current version anders sein) ist zu rev2 noch gï¿½ltig
         long versionValidEnd = rev2;
         long versionValidStart = Math.max(latestVersion, rev1);
 
@@ -703,12 +703,12 @@ public class XOUtils {
     }
     //eigentliche rekursion auf die membervariable. bei zyklen passiert hier kein stackoverflow, weil dann die datapoints bereits gesetzt sind
     cs.insertDataPoints(rev1, rev2);
-    //bei der rekursion gefundene datapoints zum set hinzufügen
+    //bei der rekursion gefundene datapoints zum set hinzufï¿½gen
     cs.collectExistingDataPoints(rev1, rev2, changes);
   }
   
 
-  //häufigster usecase ist add. für den muss man nicht die liste clonen, sondern kann sich einfach nur die zugehörige größe der liste merken. falls dann später elemente hinzugefügt werden, sieht man die einfach nicht.
+  //hï¿½ufigster usecase ist add. fï¿½r den muss man nicht die liste clonen, sondern kann sich einfach nur die zugehï¿½rige grï¿½ï¿½e der liste merken. falls dann spï¿½ter elemente hinzugefï¿½gt werden, sieht man die einfach nicht.
   public static class ListWithConstantSize<T> extends AbstractList<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -730,7 +730,7 @@ public class XOUtils {
     }
   }
 
-  public static class VersionedList<T> extends AbstractList<T> implements Serializable { //TODO RandomAccess kann man leider nicht dranschreiben, weil xynaobjekte nicht nur randomaccess listen enthalten müssen
+  public static class VersionedList<T> extends AbstractList<T> implements Serializable { //TODO RandomAccess kann man leider nicht dranschreiben, weil xynaobjekte nicht nur randomaccess listen enthalten mï¿½ssen
 
     private static final long serialVersionUID = 1L;
     
@@ -799,7 +799,7 @@ public class XOUtils {
     }
 
 
-    //sublist+iteratoren haben potientielle changes als folge -> abstractlist implementiert die derart, dass die änderungen auf add/remove zurückgeführt werden
+    //sublist+iteratoren haben potientielle changes als folge -> abstractlist implementiert die derart, dass die ï¿½nderungen auf add/remove zurï¿½ckgefï¿½hrt werden
 
     //changes, add only
 

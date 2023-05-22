@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Interface für mehrere geplante Klassen, die eine Datei hochladen sollen
+ * Interface fï¿½r mehrere geplante Klassen, die eine Datei hochladen sollen
  */
 public interface FileTransfer {
 
@@ -48,7 +48,7 @@ public interface FileTransfer {
    public int upload(String filename, InputStream content) throws IOException;
 
    /**
-    * Löschen einer Datei auf dem Server
+    * Lï¿½schen einer Datei auf dem Server
     * 
     * @param name
     * @return
@@ -57,7 +57,7 @@ public interface FileTransfer {
    public boolean delete(String name) throws IOException;
 
    /**
-    * Schließen der Verbindung
+    * Schlieï¿½en der Verbindung
     */
    public void close();
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class UpdateConfigureAbandonedOrdersPersistenceLayerToXmlShell extends Up
         if (targetXmlShellPlID == -1) {
           targetXmlShellPlID = bean.getPersistenceLayerInstanceID();
         }
-        // trotzdem noch weitersuchen, um zu prüfen, ob die config evtl schon OK ist
+        // trotzdem noch weitersuchen, um zu prï¿½fen, ob die config evtl schon OK ist
         if (targetXmlShellPlID == existingPlId) {
           logger.debug("Abandoned orders have already been configured properly");
           return;

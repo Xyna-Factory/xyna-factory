@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,18 +31,18 @@ public class BatchProcessInput implements Serializable{
   private static final long serialVersionUID = 1L;
 
   private String label; //Bezeichnung des Batch Processes 
-  private String component; //Die zugehörige Komponente, z.B. XDNC.XFwMgmt
-  private RemoteXynaOrderCreationParameter masterOrder; //XynaOrderCreationParameter des Masters (enthält die TimeConstraints) 
+  private String component; //Die zugehï¿½rige Komponente, z.B. XDNC.XFwMgmt
+  private RemoteXynaOrderCreationParameter masterOrder; //XynaOrderCreationParameter des Masters (enthï¿½lt die TimeConstraints) 
   private String slaveOrderType; //OrderType der Slaves
   private AbsRelTime slaveOrderExecTimeout; //OrderExecutionTimeout der Slaves 
   private AbsRelTime slaveWorkflowExecTimeout; //WorkflowExecutionTimeout der Slaves 
   private TimeConstraint slaveTimeConstraint; //TimeConstraint der Slaves 
-  private InputGeneratorData inputGeneratorData; //Daten für den Input Generator
+  private InputGeneratorData inputGeneratorData; //Daten fï¿½r den Input Generator
   private SlaveExecutionPeriod slaveExecutionPeriod; //Wiederholungen ser Slave-Starts
   private int maxParallelism; // maximale Anzahl an Slaves, die gleichzeitig eingestellt werden
   private boolean paused; //true, wenn der BatchProcess im pausierten Zustand gestartet werden soll
-  private TimeWindowDefinition timeWindowDefinition; //wenn Zeitfenster nur für den BatchProcess angelegt wird, wird hier die Definition übergeben
-  private String guiRepresentationData; //beliebiger String, zur freien Verwendung für den WebService
+  private TimeWindowDefinition timeWindowDefinition; //wenn Zeitfenster nur fï¿½r den BatchProcess angelegt wird, wird hier die Definition ï¿½bergeben
+  private String guiRepresentationData; //beliebiger String, zur freien Verwendung fï¿½r den WebService
   
   
   public RemoteXynaOrderCreationParameter getMasterOrder() {

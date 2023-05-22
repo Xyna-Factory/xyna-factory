@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ interface InternalStaticObjectIDs {
 
 
   /**
-   * shared objekt, dass die liste aller knoten im cluster hält.
+   * shared objekt, dass die liste aller knoten im cluster hï¿½lt.
    */
   public static final long ID_IDGEN = 0;
 
@@ -38,14 +38,14 @@ interface InternalStaticObjectIDs {
   public static final long ID_CLUSTER_MEMBERS = 1;
 
   /**
-   * shared object mit payload {@link GlobalLockPayload}, über dessen update-trigger an andere knoten die information
+   * shared object mit payload {@link GlobalLockPayload}, ï¿½ber dessen update-trigger an andere knoten die information
    * verbreitet wird, dass das globale lock gesetzt werden muss
    * @see {@link #globalLock}
    */
   static final long ID_GLOBAL_LOCK = 2;
 
   /**
-   * shared object mit payload {@link GlobalLockPayload}, über dessen update-trigger an andere knoten die information
+   * shared object mit payload {@link GlobalLockPayload}, ï¿½ber dessen update-trigger an andere knoten die information
    * verbreitet wird, dass das globale unlock-lock gesetzt werden muss
    * @see {@link #globalUnlockLock}
    */
@@ -68,7 +68,7 @@ interface InternalStaticObjectIDs {
   static final long ID_GLOBAL_UNLOCK_LOCK_T = 5;
 
   /**
-   * shared object mit payload {@link GlobalLockPayload}, über dessen update-trigger an andere knoten die information
+   * shared object mit payload {@link GlobalLockPayload}, ï¿½ber dessen update-trigger an andere knoten die information
    * verbreitet wird, dass das globale special-lock gesetzt werden muss
    * @see {@link #specialLock}
    */
@@ -76,7 +76,7 @@ interface InternalStaticObjectIDs {
 
 
   /**
-   * shared object, welches gelockt wird, wenn ein objekt mit einer von außen vorgegebenen ID erstellt werden soll.
+   * shared object, welches gelockt wird, wenn ein objekt mit einer von auï¿½en vorgegebenen ID erstellt werden soll.
    */
   static final long ID_GLOBAL_STATIC_OBJECT_CREATION_LOCK = 7;
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,8 +111,8 @@ public class SQLUtils {
     }
    
    /**
-    * Cachet das PreparedStatement zur späteren Wiederverwendung Achtung: nicht
-    * für Callable-Statements verwendbar
+    * Cachet das PreparedStatement zur spï¿½teren Wiederverwendung Achtung: nicht
+    * fï¿½r Callable-Statements verwendbar
     * 
     * @param sql
     */
@@ -212,7 +212,7 @@ public class SQLUtils {
 
 
    /**
-    * Ausführung einer DML-Statements (Insert, Update, Delete)
+    * Ausfï¿½hrung einer DML-Statements (Insert, Update, Delete)
     * 
     * @param stmt
     * @return
@@ -223,7 +223,7 @@ public class SQLUtils {
    }
 
    /**
-    * Ausführung einer Query
+    * Ausfï¿½hrung einer Query
     * 
     * @param stmt
     * @return
@@ -252,7 +252,7 @@ public class SQLUtils {
    }
 
    /**
-    * Lesen der ersten Zeile des ResultSets und Ausführung der
+    * Lesen der ersten Zeile des ResultSets und Ausfï¿½hrung der
     * resultSetReaderFunction
     * 
     * @param rs
@@ -292,7 +292,7 @@ public class SQLUtils {
    }
 
    /**
-    * Lesen des ResultSets und Ausführung der resultSetReaderFunction für jede
+    * Lesen des ResultSets und Ausfï¿½hrung der resultSetReaderFunction fï¿½r jede
     * Zeile
     * 
     * @param rs
@@ -313,7 +313,7 @@ public class SQLUtils {
    }
 
    /**
-    * Schließen des ResultSets und des PreparedStatements
+    * Schlieï¿½en des ResultSets und des PreparedStatements
     * 
     * @param rs
     * @param stmt
@@ -327,7 +327,7 @@ public class SQLUtils {
       }
       if (stmt != null) {
          if (statementCache == null || (!statementCache.contains(stmt))) {
-            // Statement nur schließen, wenn Stament nicht dem Cache gehört
+            // Statement nur schlieï¿½en, wenn Stament nicht dem Cache gehï¿½rt
             try {
                stmt.close();
             } catch (SQLException e) {
@@ -370,7 +370,7 @@ public class SQLUtils {
 
 
   /**
-   * @deprecated diese methode soll nur ermöglichen, dass closeconnection nicht immer markConnection aufruft.
+   * @deprecated diese methode soll nur ermï¿½glichen, dass closeconnection nicht immer markConnection aufruft.
    * @param markConnection bestimmt ob markConnection aufgerufen wird
    * @return
    */
@@ -397,7 +397,7 @@ public class SQLUtils {
 
 
   /**
-   * Schließen der Connection
+   * Schlieï¿½en der Connection
    * @return false, wenn Exception auftrat oder Connection null ist
    */
   public boolean closeConnection() {
@@ -443,11 +443,11 @@ public class SQLUtils {
    }
 
    /**
-    * Kapselung für ein Select, welches einen einzigen Integer zurückliefert
+    * Kapselung fï¿½r ein Select, welches einen einzigen Integer zurï¿½ckliefert
     * 
     * @param sql
     * @param params
-    *           Parameter, die dem PreparedStatement übergeben werden sollen
+    *           Parameter, die dem PreparedStatement ï¿½bergeben werden sollen
     * @return Integer, null bei Lesefehler
     */
    public Integer queryInt(String sql, Parameter params) {
@@ -471,12 +471,12 @@ public class SQLUtils {
    }
 
    /**
-    * Kapselung für ein Select, welches eine einzige Zeile zurückliefert
+    * Kapselung fï¿½r ein Select, welches eine einzige Zeile zurï¿½ckliefert
     * 
     * @param sql
     * @param params
-    *           Parameter, die dem PreparedStatement übergeben werden sollen
-    * @return Rückgabe des resultSetReader, null bei Lesefehler
+    *           Parameter, die dem PreparedStatement ï¿½bergeben werden sollen
+    * @return Rï¿½ckgabe des resultSetReader, null bei Lesefehler
     */
    public <T> T queryOneRow(String sql, Parameter params,
          ResultSetReader<T> resultSetReader) {
@@ -498,11 +498,11 @@ public class SQLUtils {
    }
 
    /**
-    * Kapselung für ein Select, welches eine einzige Zeile zurückliefert
+    * Kapselung fï¿½r ein Select, welches eine einzige Zeile zurï¿½ckliefert
     * 
     * @param sql
     * @param params
-    *           Parameter, die dem PreparedStatement übergeben werden sollen
+    *           Parameter, die dem PreparedStatement ï¿½bergeben werden sollen
     * @return Boolean, null oder false bei Lesefehler
     */
    public Boolean queryOneRow(String sql, Parameter params,
@@ -525,12 +525,12 @@ public class SQLUtils {
    }
 
    /**
-    * Kapselung für ein Select, welches mehrere Zeilen zurückliefert
+    * Kapselung fï¿½r ein Select, welches mehrere Zeilen zurï¿½ckliefert
     * 
     * @param sql
     * @param params
-    *           Parameter, die dem PreparedStatement übergeben werden sollen
-    * @return ArrayList mit Rückgaben des resultSetReader, null bei Lesefehler
+    *           Parameter, die dem PreparedStatement ï¿½bergeben werden sollen
+    * @return ArrayList mit Rï¿½ckgaben des resultSetReader, null bei Lesefehler
     */
    public <T> ArrayList<T> query(String sql, Parameter params,
          ResultSetReader<T> resultSetReader) {
@@ -552,12 +552,12 @@ public class SQLUtils {
    }
 
    /**
-    * Kapselung für ein Select, welches mehrere Zeilen zurückliefert, für jede
+    * Kapselung fï¿½r ein Select, welches mehrere Zeilen zurï¿½ckliefert, fï¿½r jede
     * Zeile wird die ResultSetReaderFunction aufgerufen
     * 
     * @param sql
     * @param params
-    *           Parameter, die dem PreparedStatement übergeben werden sollen
+    *           Parameter, die dem PreparedStatement ï¿½bergeben werden sollen
     * @return Anzahl der gelesenen Zeile, null bei Lesefehler
     */
    public Integer query(String sql, Parameter params,
@@ -580,11 +580,11 @@ public class SQLUtils {
    }
 
    /**
-    * Kapselung für ein DML-Statement (Insert, Update, Delete)
+    * Kapselung fï¿½r ein DML-Statement (Insert, Update, Delete)
     * 
     * @param sql
     * @param params
-    *           Parameter, die dem PreparedStatement übergeben werden sollen
+    *           Parameter, die dem PreparedStatement ï¿½bergeben werden sollen
     * @return Anzahl der betroffenen Zeilen, -1 bei Fehler, -2 bei
     *         UniqueConstraintViolation
     */
@@ -612,10 +612,10 @@ public class SQLUtils {
    * kapselt DML-Statements, die mehrfach mit unterschiedlichen
    * Parametern ausgefuehrt werden sollen. 
    * @return Falls ein Fehler aufgetreten ist, wird ein Array der Groesse 
-   * 1 zurueckgegeben, welches den Fehlercode -2 (für UniqueConstraintViolation), -1 bei sonstigen Fehlern
+   * 1 zurueckgegeben, welches den Fehlercode -2 (fï¿½r UniqueConstraintViolation), -1 bei sonstigen Fehlern
    * enthaelt. Ohne Fehler wird ein Array der Groesse entsprechend der Anzahl der uebergebenen
    * Parameter zurueckgegeben, wobei jeder Eintrag das Ergebnis der entsprechenden
-   * Operation enthält (Anzahl der modifizierten Zeilen).
+   * Operation enthï¿½lt (Anzahl der modifizierten Zeilen).
    */
   public int[] executeDMLBatch(String sql, Parameter... params) {
     PreparedStatement stmt = null;
@@ -641,12 +641,12 @@ public class SQLUtils {
 
 
    /**
-    * Kapselung für ein DDL-Statement
+    * Kapselung fï¿½r ein DDL-Statement
     * 
     * @param sql
     * @param params
-    *           Parameter, die dem PreparedStatement übergeben werden sollen
-    * @return true bei erfolgreicher Ausführung
+    *           Parameter, die dem PreparedStatement ï¿½bergeben werden sollen
+    * @return true bei erfolgreicher Ausfï¿½hrung
     */
    public boolean executeDDL(String sql, Parameter params) {
       PreparedStatement stmt = null;
@@ -665,12 +665,12 @@ public class SQLUtils {
    }
 
    /**
-    * Kapselung für einen Aufruf einer Stored-Prozedure/Function
+    * Kapselung fï¿½r einen Aufruf einer Stored-Prozedure/Function
     * 
     * @param sql
     * @param params
-    *           Array der dem PreparedStatement zu übergebenden Parameter
-    * @return true bei erfolgreicher Ausführung (keine Exception)
+    *           Array der dem PreparedStatement zu ï¿½bergebenden Parameter
+    * @return true bei erfolgreicher Ausfï¿½hrung (keine Exception)
     */
    public boolean executeCall(String sql, Parameter params) {
       if( ! sql.trim().startsWith("{") ) {
@@ -681,7 +681,7 @@ public class SQLUtils {
    }
    
   /**
-   * Kapselung für einen Aufruf eines Code-Blocks
+   * Kapselung fï¿½r einen Aufruf eines Code-Blocks
    * @param sql
    * @param params
    * @return
@@ -733,7 +733,7 @@ public class SQLUtils {
 
   private void registerOutputParameter(CallableStatement stmt, int i, OutputParam<?> output) throws SQLException {
      stmt.registerOutParameter(i, output.getSQLType());
-     if (output.get() != null) { // für IN-OUT-Parameter
+     if (output.get() != null) { // fï¿½r IN-OUT-Parameter
        stmt.setObject(i, output.get());
      }
    }
@@ -765,7 +765,7 @@ public class SQLUtils {
 
    
    /**
-    * Rückgabe der zuletzt aufgetretenen SQLException, null falls keine
+    * Rï¿½ckgabe der zuletzt aufgetretenen SQLException, null falls keine
     * Exception auftrat
     * 
     * @return
@@ -775,8 +775,8 @@ public class SQLUtils {
    }
    
    /**
-    * Setzen der LastException in Sonderfällen: Exception ist außerhalb der SQLUtils 
-    * aufgetreten, soll aber intern sein, z.B. für LogLastException 
+    * Setzen der LastException in Sonderfï¿½llen: Exception ist auï¿½erhalb der SQLUtils 
+    * aufgetreten, soll aber intern sein, z.B. fï¿½r LogLastException 
     * @param exception
     */
    public void setLastException(SQLException exception) {
@@ -808,7 +808,7 @@ public class SQLUtils {
    } 
    
    /**
-    * Sollen bei einem Query Null-Elemente in der Liste zurückgegeben werden, falls der ResultSetReader Null-Elemente erzeugt?
+    * Sollen bei einem Query Null-Elemente in der Liste zurï¿½ckgegeben werden, falls der ResultSetReader Null-Elemente erzeugt?
     */
    public void setIncludeResultSetReaderNullElements(boolean includeResultSetReaderNullElements) {
      this.includeResultSetReaderNullElements = includeResultSetReaderNullElements;

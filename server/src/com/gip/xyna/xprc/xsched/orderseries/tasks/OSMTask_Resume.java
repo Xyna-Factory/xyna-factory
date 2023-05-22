@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,15 +41,15 @@ import com.gip.xyna.xprc.xsched.orderseries.SeriesInformationStorable.OrderStatu
 /**
  * OSMTask_Resume:
  * <br>
- * Im OrderBackupHelperProcessAbstract gerufen, um für gebackupte Sereinaufträge erneut zu 
- * untersuchen, ob diese starten können. In der Zwischenzeit (während des Backups) könnten 
- * unter Umständen Predecessoren gelaufen sein, ohne dass diese ihren Successor starten konnten.
+ * Im OrderBackupHelperProcessAbstract gerufen, um fï¿½r gebackupte Sereinauftrï¿½ge erneut zu 
+ * untersuchen, ob diese starten kï¿½nnen. In der Zwischenzeit (wï¿½hrend des Backups) kï¿½nnten 
+ * unter Umstï¿½nden Predecessoren gelaufen sein, ohne dass diese ihren Successor starten konnten.
  * Im Grunde muss hier genau das gleiche gemacht werden wie bei 
  * {@link com.gip.xyna.xprc.xsched.orderseries.tasks.OSMTask_Preschedule OSMTask_Preschedule},
- * allerdings wird hier zusätzlich vorher für jeden bekannten Predecessor überprüft, ob dieser nicht
+ * allerdings wird hier zusï¿½tzlich vorher fï¿½r jeden bekannten Predecessor ï¿½berprï¿½ft, ob dieser nicht
  * mittlerweile fertig ist. Dies hilft bei dem Fehler, dass der Server gecrasht ist und nicht alle
- * Daten über fertige Aufträge in SeriesInformationStorable eintragen konnte.
- * Leider ist häufig das OrderArchive so konfiguriert, dass diese Information nicht mehr nachträglich 
+ * Daten ï¿½ber fertige Auftrï¿½ge in SeriesInformationStorable eintragen konnte.
+ * Leider ist hï¿½ufig das OrderArchive so konfiguriert, dass diese Information nicht mehr nachtrï¿½glich 
  * beschafft werden kann. In diesem Fall muss der Serienauftrag manuell gestartet werden.
  *
  */
@@ -101,7 +101,7 @@ public class OSMTask_Resume extends OSMTask {
           checkTreeNodeBinding( preTree, sisPre );
           if( ! sisPre.getOrderStatus().isFinished() ) {
             //Predecessor ist noch nicht fertig. Dies ist wahrscheinlich korrekt, allerdings sollte
-            //dies jetzt hier geprüft werden. Es besteht nämlich die Möglichkeit, dass der Update 
+            //dies jetzt hier geprï¿½ft werden. Es besteht nï¿½mlich die Mï¿½glichkeit, dass der Update 
             //des SeriesInformationStorable vor dem Resume nicht mehr geklappt hat, da der eigene oder 
             //der fremde Knoten gecrasht war.
             checkFinished(sisPre);
@@ -150,15 +150,15 @@ public class OSMTask_Resume extends OSMTask {
         logger.warn("OrderInstance status "+status+" unexpected for id="+sisPre.getId());
       }
       //Falls der Auftrag doch bereits gelaufen sein sollte, hat dies die Konsequenz, dass 
-      //die Nachfolge-Aufträge nie automatisch starten und daher manuell gestartet werden müssen.
+      //die Nachfolge-Auftrï¿½ge nie automatisch starten und daher manuell gestartet werden mï¿½ssen.
     } else {
       switch( mws ) {
         case CANCELED:
           if( sisPre.getOrderStatus() != OrderStatus.CANCELING ) {
             sisPre.setOrderStatus(OrderStatus.CANCELED);
           } else {
-            //hier könnte selten ein Fehler entstehen, wenn OrderStatus CANCELING ist, der
-            //Auftrag bereits gecancelt ist, alle Vorgänger bereits fertig sind und diese 
+            //hier kï¿½nnte selten ein Fehler entstehen, wenn OrderStatus CANCELING ist, der
+            //Auftrag bereits gecancelt ist, alle Vorgï¿½nger bereits fertig sind und diese 
             //Information kurz vor dem Crash nicht mehr in sisPre geschrieben werden konnte.
           }
           break;

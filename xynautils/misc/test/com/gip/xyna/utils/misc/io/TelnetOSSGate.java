@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class TelnetOSSGate {
                                                             // abwarten
       t.write(""); // Enter anstatt zu warten
 
-      t.readUntil(new StringCondition("> "), 10000); // Login für OSSGate
+      t.readUntil(new StringCondition("> "), 10000); // Login fï¿½r OSSGate
 
       // Zweite Anmeldung
       cmd = in.readLine();
@@ -101,7 +101,7 @@ public class TelnetOSSGate {
             t.write(CONTROL_B);
             t.readUntil(new StringCondition("?"), 10000);
             t.exec(cmd.substring(6));
-            continue; // verhindert zweite Ausführung
+            continue; // verhindert zweite Ausfï¿½hrung
          }
          t.exec(cmd);
       }

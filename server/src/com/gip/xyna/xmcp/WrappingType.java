@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package com.gip.xyna.xmcp;
 public enum WrappingType {
   
   /**
-   * nur für xmomobjekte: ruft einfach toXML()
+   * nur fï¿½r xmomobjekte: ruft einfach toXML()
    */
   XML,
   /**
@@ -35,7 +35,7 @@ public enum WrappingType {
    */
   ORIGINAL,
   /**
-   * ist nur bei exceptions möglich.
+   * ist nur bei exceptions mï¿½glich.
    * bei exceptions nur classname, message, stacktraceinfo.
    */
   SIMPLE;

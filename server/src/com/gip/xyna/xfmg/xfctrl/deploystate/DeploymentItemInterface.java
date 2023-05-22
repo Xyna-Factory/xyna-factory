@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ public interface DeploymentItemInterface {
   public static interface MatchableInterface extends DeploymentItemInterface {
     
     /**
-     * Im Gegensatz zu equals wird hier auf Kompatibilität überprüft, nicht auf Identität.
+     * Im Gegensatz zu equals wird hier auf Kompatibilitï¿½t ï¿½berprï¿½ft, nicht auf Identitï¿½t.
      * Beispiel: Operation X matches Y, auch wenn die OutputTypen oder InputTypen von einander abgeleitet sind
      * 
-     * Achtung: Bei A.matches(B) wird überprüft, ob B mit der Definition von A kompatibel ist, nicht andersherum.
+     * Achtung: Bei A.matches(B) wird ï¿½berprï¿½ft, ob B mit der Definition von A kompatibel ist, nicht andersherum.
      */
     public boolean matches(DeploymentItemInterface other);
     

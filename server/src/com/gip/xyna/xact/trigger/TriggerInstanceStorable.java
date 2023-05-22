@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,11 +76,11 @@ public class TriggerInstanceStorable extends Storable<TriggerInstanceStorable> {
   @Column(name = COLUMN_TRIGGER_NAME, size=50)
   private String triggerName;
   @Column(name = COLUMN_START_PARAMETER, size=500)
-  private final StringSerializableList<String> startParameter = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
-  // hier wird § noch als Separator verwendet!
+  private final StringSerializableList<String> startParameter = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?ï¿½$%&!", ':');
+  // hier wird ï¿½ noch als Separator verwendet!
   //suche das erste "freie" separator zeichen, dass nicht bereits in den eigentlichen startparametern benutzt wird
-  //ausnahme: abwärtskompatibilität. früher gab es nur den doppelpunkt. den konnte man aber auch weglassen 
-  //wenn man den wert manuell im persistencelayer geändert hat (zb im xml) und es hatte trotzdem funktioniert,
+  //ausnahme: abwï¿½rtskompatibilitï¿½t. frï¿½her gab es nur den doppelpunkt. den konnte man aber auch weglassen 
+  //wenn man den wert manuell im persistencelayer geï¿½ndert hat (zb im xml) und es hatte trotzdem funktioniert,
 
   @Column(name = COLUMN_DESCPRIPTION, size=1000)
   private String description;

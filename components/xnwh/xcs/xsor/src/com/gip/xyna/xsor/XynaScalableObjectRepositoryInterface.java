@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,13 +38,13 @@ public interface XynaScalableObjectRepositoryInterface {
   
   
   /**
-   * Sucht nach den Suchkriterien unter Berücksichtigung.
+   * Sucht nach den Suchkriterien unter Berï¿½cksichtigung.
    * 
    * @param searchRequest beschreibt die unparametrisierte Suche in DisjunktiverNormaleForm.
-   * @param searchParameter enthält die Parameter der Suchanfrage.
-   * @param maxResults maximale Menge an gefundenen Objekten, die zurückgegeben werden. Es werden nur dann weniger als maxResults
-   *                   Objekte zurückgegeben, wenn nicht mehr Objekte gefunden wurden.
-   * @param lockResults falls true, werden alle zurückgegebenen Objekte gelockt
+   * @param searchParameter enthï¿½lt die Parameter der Suchanfrage.
+   * @param maxResults maximale Menge an gefundenen Objekten, die zurï¿½ckgegeben werden. Es werden nur dann weniger als maxResults
+   *                   Objekte zurï¿½ckgegeben, wenn nicht mehr Objekte gefunden wurden.
+   * @param lockResults falls true, werden alle zurï¿½ckgegebenen Objekte gelockt
    * @param strictlyCoherent 
    * @return Liste der gefundenen Objekte.
    */
@@ -64,7 +64,7 @@ public interface XynaScalableObjectRepositoryInterface {
   public void endTransaction(TransactionContext transactionContext, boolean strictlyCoherent) throws RemoteProcessExecutionTimeoutException, CollisionWithRemoteRequestException, ActionNotAllowedInClusterStateException;
   
   /**
-   * initialisierung für diesen objekt-typ und laden der vorhandenen daten aus dem backingstore
+   * initialisierung fï¿½r diesen objekt-typ und laden der vorhandenen daten aus dem backingstore
    */
   public void initializeTable(String tableName, Class<? extends XSORPayload> clazz, int maxTableSize) throws PersistenceException;
   

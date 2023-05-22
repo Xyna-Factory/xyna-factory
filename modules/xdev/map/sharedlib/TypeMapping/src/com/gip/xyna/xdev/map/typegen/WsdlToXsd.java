@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ public class WsdlToXsd {
       flattenSchemaLocations(root);
       
       
-      //Namespaces definieren und ans Root-Element anhängen
+      //Namespaces definieren und ans Root-Element anhï¿½ngen
       for( Map.Entry<String,String> entry : namespaces.entrySet() ) {
         if( entry.getKey().length() <= 0 ) {
           root.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", entry.getValue() );          

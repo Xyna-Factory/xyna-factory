@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ import com.gip.xyna.xprc.xsched.timeconstraint.windows.TimeConstraintWindowStora
 
 
 /**
- * TimeConstraintManagementSteps ist eine Sammlung von kleinen Hilfsklassen für das TimeConstraintManagement,
- * damit das Hinzufügen, Ändern und Löschen von TimeContraintWindows sicher durchgeführt werden kann und 
- * im Fehlerfall die nötigen Kompensationen durchgeführt werden.
+ * TimeConstraintManagementSteps ist eine Sammlung von kleinen Hilfsklassen fï¿½r das TimeConstraintManagement,
+ * damit das Hinzufï¿½gen, ï¿½ndern und Lï¿½schen von TimeContraintWindows sicher durchgefï¿½hrt werden kann und 
+ * im Fehlerfall die nï¿½tigen Kompensationen durchgefï¿½hrt werden.
  *
  */
 public class TimeConstraintManagementSteps {
@@ -205,7 +205,7 @@ public class TimeConstraintManagementSteps {
       if( existingInDB ) {
         //Dies ist hier kein Rollback:
         //Wenn wider Erwarten ein TimeWindow nur in der DB und nicht auch im TimeConstraintManagement
-        //existiert, wird dieses nun im TimeConstraintManagement ergänzt.
+        //existiert, wird dieses nun im TimeConstraintManagement ergï¿½nzt.
         tcmLocal.activateTimeWindow(name);
       }
       if( timeWindow.isPersistent() ) {

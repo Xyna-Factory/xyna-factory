@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,10 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Kapselt den Zugriff auf eine RMI Instanz. Bietet Möglichkeiten für Fallback auf zweite
- * Instanz, falls eine Instanz nicht erreichbar ist über URLChooser Interface. Zwei einfache Implementierungen davon
- * stehen über statische Methoden zur Verfügung. 
- * TODO ssl unterstützung 
+ * Kapselt den Zugriff auf eine RMI Instanz. Bietet Mï¿½glichkeiten fï¿½r Fallback auf zweite
+ * Instanz, falls eine Instanz nicht erreichbar ist ï¿½ber URLChooser Interface. Zwei einfache Implementierungen davon
+ * stehen ï¿½ber statische Methoden zur Verfï¿½gung. 
+ * TODO ssl unterstï¿½tzung 
  */
 public class GenericRMIAdapter<T extends Remote> {
 
@@ -50,14 +50,14 @@ public class GenericRMIAdapter<T extends Remote> {
   public interface URLChooser {
 
     /**
-     * gibt null zurück, falls keine weitere url vorhanden ist. urls müssen folgende form haben: &lt;name&gt; oder
+     * gibt null zurï¿½ck, falls keine weitere url vorhanden ist. urls mï¿½ssen folgende form haben: &lt;name&gt; oder
      * "//&lt;host&gt;:&lt;port&gt;/&lt;name&gt;", falls zb rmi port nicht default port (1099)
-     * @return nächste url oder null
+     * @return nï¿½chste url oder null
      */
     public String nextUrl();
 
     /**
-     * falls nextUrl null zurückgibt, weil alle urls durchlaufen wurden, kann hiermit wieder von vorne angefangen werden.
+     * falls nextUrl null zurï¿½ckgibt, weil alle urls durchlaufen wurden, kann hiermit wieder von vorne angefangen werden.
      */
     public void initialize();
   }
@@ -176,7 +176,7 @@ public class GenericRMIAdapter<T extends Remote> {
 
     public String nextUrl() {
       if (lastTryCounter == 0 || lastTryCounter == tries) {
-        //nächste url bestimmen
+        //nï¿½chste url bestimmen
 
         lastUrlIdx++;
         if (lastUrlIdx >= urls.length) {
@@ -220,7 +220,7 @@ public class GenericRMIAdapter<T extends Remote> {
 
   /**
    * der urlchooser versucht pro url die mit "retries" angegebene zahl von versuchen sich zu verbinden. falls ohne
-   * erfolg, wird die nächste url probiert. die reihenfolge der versuche ist entweder sequentiell oder zufällig, wobei
+   * erfolg, wird die nï¿½chste url probiert. die reihenfolge der versuche ist entweder sequentiell oder zufï¿½llig, wobei
    * keine url doppelt probiert wird (bis auf die retries).
    * @return
    */
@@ -229,7 +229,7 @@ public class GenericRMIAdapter<T extends Remote> {
   }
 
 
-  //TODO factory für multiple urls wo man hostname+port tupels angibt.
+  //TODO factory fï¿½r multiple urls wo man hostname+port tupels angibt.
   //TODO validierung der urls
 
   private URLChooser urlChooser;
@@ -252,7 +252,7 @@ public class GenericRMIAdapter<T extends Remote> {
 
 
   /**
-   * benutzt den singleurlchooser, urls müssen folgende form haben: &lt;name&gt; oder
+   * benutzt den singleurlchooser, urls mï¿½ssen folgende form haben: &lt;name&gt; oder
    * "//&lt;host&gt;:&lt;port&gt;/&lt;name&gt;", falls zb rmi port nicht default port (1099)
    */
   public GenericRMIAdapter(String url) throws RMIConnectionFailureException {
@@ -269,7 +269,7 @@ public class GenericRMIAdapter<T extends Remote> {
 
   /**
    * classloader festlegen, der verwendet wird, um die remoteklassen beim connect zu laden.
-   * ersatz für die typische verwendung von
+   * ersatz fï¿½r die typische verwendung von
    * <code>
    * setContextClassloader()
    * connectToRMI()
@@ -354,7 +354,7 @@ public class GenericRMIAdapter<T extends Remote> {
   }
 
   /**
-   * beim nächsten aufruf von getRmiInterface wird reconnect durchgeführt 
+   * beim nï¿½chsten aufruf von getRmiInterface wird reconnect durchgefï¿½hrt 
    */
   public void reconnectOnNextTry() {
     rmiChannel = null;

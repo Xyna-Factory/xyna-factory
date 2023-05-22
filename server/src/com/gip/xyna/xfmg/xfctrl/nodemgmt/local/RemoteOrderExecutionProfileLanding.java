@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public class RemoteOrderExecutionProfileLanding implements InitializableRemoteIn
   }
   
   /*
-   * gib orderid zurück oder fehler, wenn auftrag fehlerhaft war (nicht gestartet/fehler im planning).
+   * gib orderid zurï¿½ck oder fehler, wenn auftrag fehlerhaft war (nicht gestartet/fehler im planning).
    */
   public OrderExecutionResponse createOrder(XynaCredentials credentials, String identifier, 
       final RemoteCallXynaOrderCreationParameter creationParameter, final TransactionMode mode) throws RemoteException {

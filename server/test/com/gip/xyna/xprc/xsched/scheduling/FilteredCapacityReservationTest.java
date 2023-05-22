@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ public class FilteredCapacityReservationTest extends TestCase {
         }
         return actualDemand + " <-> " + expectedDemand;
       } finally {
-        actualDemand = null; //Demand wurde geprüft, daher leeren, um weiteren communicateDemand-Aufruf zu erlauben
+        actualDemand = null; //Demand wurde geprï¿½ft, daher leeren, um weiteren communicateDemand-Aufruf zu erlauben
       }
     }
 
@@ -158,7 +158,7 @@ public class FilteredCapacityReservationTest extends TestCase {
         }
         return actualDemand + " <-> " + expectedDemand;
       } finally {
-        actualDemand = null; //Demand wurde geprüft, daher leeren, um weiteren communicateDemand-Aufruf zu erlauben
+        actualDemand = null; //Demand wurde geprï¿½ft, daher leeren, um weiteren communicateDemand-Aufruf zu erlauben
       }
     }
 
@@ -204,7 +204,7 @@ public class FilteredCapacityReservationTest extends TestCase {
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(demand) );
     
-    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geändert
+    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geï¿½ndert
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
   }
@@ -218,7 +218,7 @@ public class FilteredCapacityReservationTest extends TestCase {
     Assert.assertEquals("", cm.expectDemand(demand) ); //wird geschickt, damit bei unlock anderer 
     //Knoten sofort den Bedarf kennt  
     
-    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geändert
+    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geï¿½ndert
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
   }
@@ -231,7 +231,7 @@ public class FilteredCapacityReservationTest extends TestCase {
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(demand) );
 
-    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geändert
+    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geï¿½ndert
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
   }
@@ -244,7 +244,7 @@ public class FilteredCapacityReservationTest extends TestCase {
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(demand) );
 
-    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geändert
+    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geï¿½ndert
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
   }
@@ -259,16 +259,16 @@ public class FilteredCapacityReservationTest extends TestCase {
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(demand) );
     
-    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geändert
+    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geï¿½ndert
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
     
-    //Bedarf ändert sich
+    //Bedarf ï¿½ndert sich
     List<CapacityDemand> demand2 = createDemandList(createDemand("AAA",20));
     addOwnDemand(fcr, demand2);
     Assert.assertEquals("", cm.expectDemand(demand2) );
     
-    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geändert
+    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geï¿½ndert
     addOwnDemand(fcr, demand2);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
   }
@@ -282,7 +282,7 @@ public class FilteredCapacityReservationTest extends TestCase {
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(demand) );
     
-    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geändert
+    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geï¿½ndert
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
     
@@ -291,7 +291,7 @@ public class FilteredCapacityReservationTest extends TestCase {
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
     
-    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geändert
+    //zweite Bedarfsmeldung wird ignoriert, da Bedarf nicht geï¿½ndert
     addOwnDemand(fcr, demand);
     Assert.assertEquals("", cm.expectDemand(createDemandList()) );
    

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,7 +260,7 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
         FileUtils.deleteAllBut(tempClassFolder, new FileFilter() {
 
           public boolean accept(File pathname) {
-            //alles ausser den additionalLibs löschen
+            //alles ausser den additionalLibs lï¿½schen
             if (pathname.isFile()) {
               for (Pair<String, String> filenameFilecontentPair : result.getFilesForGeneratedAdditionalLib()) {
                 String simpleName = filenameFilecontentPair.getFirst();
@@ -268,7 +268,7 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
                   simpleName = simpleName.substring(0, simpleName.length() - ".java".length());
                 }
                 simpleName = GenerationBase.getSimpleNameFromFQName(simpleName);
-                //innere klassen berücksichtigen, aber aufpassen, dass man nicht auch projekt-impl-klassen behält
+                //innere klassen berï¿½cksichtigen, aber aufpassen, dass man nicht auch projekt-impl-klassen behï¿½lt
                 //    in dieser form gibt es keine doppeltdeutigkeiten
                 if (pathname.getName().matches("^" + Pattern.quote(simpleName) + "(\\$.*)?\\.class$")) {
                   return true;

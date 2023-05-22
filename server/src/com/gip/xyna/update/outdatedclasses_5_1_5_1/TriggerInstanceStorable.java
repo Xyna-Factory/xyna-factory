@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ public class TriggerInstanceStorable extends Storable<TriggerInstanceStorable> {
   }
   
   private static final char[] POSSIBLESEPARATORCHARS =
-      new char[] {':', '|', '/', ';', '\\', '@', '-', '_', '.', '+', '#', '=', '[', ']', '?', '§', '$', '%', '&', '!'};
+      new char[] {':', '|', '/', ';', '\\', '@', '-', '_', '.', '+', '#', '=', '[', ']', '?', 'ï¿½', '$', '%', '&', '!'};
 
 
   /**
@@ -215,8 +215,8 @@ public class TriggerInstanceStorable extends Storable<TriggerInstanceStorable> {
   public static String[] getStartParameterArray(String startParameterString) {
     ArrayList<String> paras = new ArrayList<String>();
     //trennzeichen ist das letzte zeichen.
-    //ausnahme: abwärtskompatibilität. früher gab es nur den doppelpunkt. den konnte man aber auch weglassen 
-    //wenn man den wert manuell im persistencelayer geändert hat (zb im xml) und es hatte trotzdem funktioniert,
+    //ausnahme: abwï¿½rtskompatibilitï¿½t. frï¿½her gab es nur den doppelpunkt. den konnte man aber auch weglassen 
+    //wenn man den wert manuell im persistencelayer geï¿½ndert hat (zb im xml) und es hatte trotzdem funktioniert,
     String splitRegex = startParameterString.substring(startParameterString.length()-1, startParameterString.length());
     boolean validChar = false;
     for (char c : POSSIBLESEPARATORCHARS) {
@@ -228,7 +228,7 @@ public class TriggerInstanceStorable extends Storable<TriggerInstanceStorable> {
     if (validChar) {
       splitRegex = "\\" + splitRegex; //kann in regexp ein funktionales zeichen sein, also escapen
     } else {
-      splitRegex = ":"; //abwärtskompatibel
+      splitRegex = ":"; //abwï¿½rtskompatibel
     }
     String[] parts = startParameterString.split(splitRegex);
     for (String part : parts) {

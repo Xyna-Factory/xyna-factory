@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ public class ClusterPLLogger {
     String pkAsString;
     if (pk.getClass().isArray() && pk.getClass().getComponentType() == byte.class) {
       pkAsString = Arrays.toString((byte[])pk);
-      //TODO andere arrays unterstützen
+      //TODO andere arrays unterstï¿½tzen
     } else {
       pkAsString = String.valueOf(pk);
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import com.gip.xyna.utils.db.SQLUtils;
 /**
  * Hilfsfunktionen zum Dequeue/Enqueue, zum Einrichten einer Queue und zum Bau eines Package.
  * Alle Funktionen machen kein Transactionhandling.
- * Auch das Auswerten von SQLExceptions muss extern durchgeführt werden. 
+ * Auch das Auswerten von SQLExceptions muss extern durchgefï¿½hrt werden. 
  *
  */
 public class PLSQLExecUtils {  
@@ -99,8 +99,8 @@ public class PLSQLExecUtils {
                              boolean usePLSQLPackage) {
     Parameter param = new Parameter();
     if( usePLSQLPackage ) {
-      //leider stimmt Reihenfolge im Package nicht mit direkt verwendbarer Reihenfolge überein.
-      //Package-Deklaration kann wegen Abwärtskompatibilität nicht geändert werden
+      //leider stimmt Reihenfolge im Package nicht mit direkt verwendbarer Reihenfolge ï¿½berein.
+      //Package-Deklaration kann wegen Abwï¿½rtskompatibilitï¿½t nicht geï¿½ndert werden
       param.addParameter(enqueueOptions.getQueueName());
       param.addParameter(message.getCorrelationID());
       param.addParameter(message.getText());
@@ -136,8 +136,8 @@ public class PLSQLExecUtils {
     OutputParam<Integer> priority = OutputParamFactory.createInteger();
     Parameter param = new Parameter();
     if( usePLSQLPackage ) {
-      //leider stimmt Reihenfolge im Package nicht mit direkt verwendbarer Reihenfolge überein.
-      //Package-Deklaration kann wegen Abwärtskompatibilität nicht geändert werden
+      //leider stimmt Reihenfolge im Package nicht mit direkt verwendbarer Reihenfolge ï¿½berein.
+      //Package-Deklaration kann wegen Abwï¿½rtskompatibilitï¿½t nicht geï¿½ndert werden
       param.addParameter(dequeueOptions.getQueueName());
       param.addParameter(dequeueOptions.getTimeout());
       param.addParameter(corrId);

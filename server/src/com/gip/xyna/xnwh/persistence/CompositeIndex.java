@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,14 @@ public @interface CompositeIndex {
   public IndexTypeComposite type();
   
   /**
-   * beschreibt die zu indizierenden spalten oder den ausdruck darüber. leerzeichen sind nicht notwendig.
+   * beschreibt die zu indizierenden spalten oder den ausdruck darï¿½ber. leerzeichen sind nicht notwendig.
    * 
    * syntax: spaltennamen so wie sie in {@link Column} angegeben werden
    * value := &lt;spalte&gt; [, &lt;spalte&gt;]* | MAX(&lt;spalte&gt; [, &lt;spalte&gt;]* )
    * 
-   * Beispiel für Abfragen der art
+   * Beispiel fï¿½r Abfragen der art
    * "where superpoolid = ? AND binding = ? AND expirationtime &lt; ? AND reservationtime &lt; ?", wobei die
-   * beiden zeiten den gleichen parameter haben müssen.
+   * beiden zeiten den gleichen parameter haben mï¿½ssen.
    * 
    * value := "superpoolid,binding,MAX(expirationtime,reservationtime)"
    * 

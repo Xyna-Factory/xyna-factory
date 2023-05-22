@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class ThreadPoolUsageStrategyDependingOnCaller implements ThreadPoolUsage
     this.threeQuarterMax = (executor.getMaximumPoolSize() * 3) / 4;
     this.watchedPropertyNames.put(null, XynaProperty.THREADPOOL_PLANNING_MAXTHREADS.getPropertyName());
     
-    //TODO mit PropertyChangeListener in XynaProperty unnötig!
+    //TODO mit PropertyChangeListener in XynaProperty unnï¿½tig!
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
     fExec.addTask(ThreadPoolUsageStrategyDependingOnCaller.class,"ThreadPoolUsageStrategyDependingOnCaller").
       after(Configuration.class).
@@ -142,11 +142,11 @@ public class ThreadPoolUsageStrategyDependingOnCaller implements ThreadPoolUsage
 
 
   /**
-   * TODO mit PropertyChangeListener in XynaProperty unnötig!
+   * TODO mit PropertyChangeListener in XynaProperty unnï¿½tig!
    */
   private void registerPropertyChangeListener() {
     if( ! configurationInitialized ) {
-      return; //noch nicht ausführen
+      return; //noch nicht ausfï¿½hren
     }
     //mehrfaches Registrieren gibt Warnungen, daher erst deregistrieren
     Configuration configuration =
@@ -167,7 +167,7 @@ public class ThreadPoolUsageStrategyDependingOnCaller implements ThreadPoolUsage
     switch(lang) {
       case DE:
         return "Maximale Anzahl an Threads in Planning-ThreadPool, die durch die Quelle '"
-          +caller+"' eingestellt werden dürfen.";
+          +caller+"' eingestellt werden dï¿½rfen.";
      case EN:
        return "Maximum number of thread in planning thread pool, for source '"+caller+"'.";
     }

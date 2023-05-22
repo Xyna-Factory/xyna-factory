@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +25,20 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * TimeUtils sind Hilfsfunktionen, die zum Übertragen von Date und Timestamp 
+ * TimeUtils sind Hilfsfunktionen, die zum ï¿½bertragen von Date und Timestamp 
  * in die DB verwendet werden.
  * 
- * Bei Timestamps wurde darauf geachtet, dass die Zeiten in UTC übertragen 
- * und auch so gespeichert werden. Dies ist nun unabhängig davon, ob der 
+ * Bei Timestamps wurde darauf geachtet, dass die Zeiten in UTC ï¿½bertragen 
+ * und auch so gespeichert werden. Dies ist nun unabhï¿½ngig davon, ob der 
  * Timestamp-Typ in der DB nun TIMESTAMP, TIMESTAMP WITH TIME ZONE oder 
  * TIMESTAMP WITH LOCAL TIME ZONE ist. Auch beim Auslesen aus der DB wird 
  * davon ausgegangen, dass der Timestamp in UTC gespeichert ist.
  * 
  * Dabei wird jedoch ein keliner Fehler durch das Gleichsetzen von UTC mit 
- * GMT gemacht, der jedoch vernachlässigbar ist. {@link http://java.sun.com/j2se/1.5.0/docs/api/java/util/Date.html}
+ * GMT gemacht, der jedoch vernachlï¿½ssigbar ist. {@link http://java.sun.com/j2se/1.5.0/docs/api/java/util/Date.html}
  * 
- * Bei Date wird keine derartige Zeitzonenüberprüfung durchgeführt, da DATE
- * nicht für die Verwendung von Zeitzonen gedacht ist.
+ * Bei Date wird keine derartige Zeitzonenï¿½berprï¿½fung durchgefï¿½hrt, da DATE
+ * nicht fï¿½r die Verwendung von Zeitzonen gedacht ist.
  * 
  * TimeUtils wird von ExtendedParameter, ResultSetUtils und Timestamp verwendet.
  */
@@ -50,7 +50,7 @@ public class TimeUtils {
   public static final String FORMAT_JAVA_DATE       = "yyyy.MM.dd HH:mm:ss";
 
   /**
-   * Parsen des übergebenen Date-Strings
+   * Parsen des ï¿½bergebenen Date-Strings
    * @param withMilli
    * @param string
    * @return
@@ -87,7 +87,7 @@ public class TimeUtils {
 
   /**
    * Umwandlung in DB: String in Timestamp
-   * Format so gewählt, dass Angabe "UTC" der SimpleDateFormat-Ausgabe verstanden wird
+   * Format so gewï¿½hlt, dass Angabe "UTC" der SimpleDateFormat-Ausgabe verstanden wird
    * @param paramName
    * @return
    */
@@ -110,7 +110,7 @@ public class TimeUtils {
   }
   
   /**
-   * @return benutztes DateFormat für Date
+   * @return benutztes DateFormat fï¿½r Date
    */
   public static DateFormat getDateFormatter() {
     SimpleDateFormat dateFormatter = new SimpleDateFormat( FORMAT_JAVA_DATE );
@@ -119,7 +119,7 @@ public class TimeUtils {
   }
   
   /**
-   * @return benutztes DateFormat für Timestamp
+   * @return benutztes DateFormat fï¿½r Timestamp
    */
   public static DateFormat getTimestampFormatter() {
     SimpleDateFormat timestampFormatter = new SimpleDateFormat( FORMAT_JAVA_TIMESTAMP );

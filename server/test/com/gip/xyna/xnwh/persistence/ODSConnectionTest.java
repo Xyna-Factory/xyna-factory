@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -396,7 +396,7 @@ public class ODSConnectionTest extends TestCase {
       catch (InterruptedException e) {
         fail(e.getMessage());
       }
-      // jetzt geht auch das schreiben, deshalb hat die nächste abfrage den aktuellen wert
+      // jetzt geht auch das schreiben, deshalb hat die nï¿½chste abfrage den aktuellen wert
 
       final OrderInstance w = new OrderInstance(7l);
       Thread t = new Thread() {

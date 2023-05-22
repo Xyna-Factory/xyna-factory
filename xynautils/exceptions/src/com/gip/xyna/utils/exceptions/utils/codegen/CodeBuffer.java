@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,13 +61,13 @@ public class CodeBuffer {
   }
 
   /**
-   * erhöht intendation um 1, falls zeile mit { endet.
+   * erhï¿½ht intendation um 1, falls zeile mit { endet.
    * verringert intendation um 1, falls zeile mit } beginnt.
-   * hängt semikolon an, falls zeile nicht mit einem der zeichen "//", "/*", "*" 
+   * hï¿½ngt semikolon an, falls zeile nicht mit einem der zeichen "//", "/*", "*" 
    * beginnt oder mit einem der zeichen "{", "}", ";", "," endet.
    * 
    * mehrere strings werden einfach verkettet, dann zeilenende. 
-   *   verhält sich also genauso wie mehrfaches add(..) und dann addLB().
+   *   verhï¿½lt sich also genauso wie mehrfaches add(..) und dann addLB().
    * @param s
    * @return
    */
@@ -100,10 +100,10 @@ public class CodeBuffer {
   /**
    * verringert die intendation um 1, falls der string mit "}" beginnt, und dies entweder der erste methodenaufruf auf den codebuffer ist
    * oder der vorherige methodenaufruf einer mit zeilenumbruch (addLine, addLB) gewesen ist.
-   * erhöht die intendation um 1, falls der string mit "{" endet und danach ein zeilenumbruch folgt.
-   * fügt intendation nur an, falls dies entweder der erste methodenaufruf auf den codebuffer ist
+   * erhï¿½ht die intendation um 1, falls der string mit "{" endet und danach ein zeilenumbruch folgt.
+   * fï¿½gt intendation nur an, falls dies entweder der erste methodenaufruf auf den codebuffer ist
    * oder der vorherige methodenaufruf einer mit zeilenumbruch (addLine, addLB) gewesen ist.
-   * fügt semikolon nur an, falls die zeile nicht mit einem der zeichen "}", "{", ",", ";" endet und falls danach ein zeilenumbruch folgt
+   * fï¿½gt semikolon nur an, falls die zeile nicht mit einem der zeichen "}", "{", ",", ";" endet und falls danach ein zeilenumbruch folgt
    * @param s
    * @return
    */
@@ -127,7 +127,7 @@ public class CodeBuffer {
   }
   
   /**
-   * fügt "<content of s escaped>" ein, d.h. es werden anführungszeichen um den string gewrappt, und alle sonderzeichen
+   * fï¿½gt "<content of s escaped>" ein, d.h. es werden anfï¿½hrungszeichen um den string gewrappt, und alle sonderzeichen
    * im string behandelt, damit der entstehende code sinnvoll ist.
    */
   public CodeBuffer addString(String s) {
@@ -158,8 +158,8 @@ public class CodeBuffer {
   /**
    * kommaseparierte listen erstellen.
    * 
-   * fügt die intendation nur an, falls vorher ein zeilenumbruch hinzugefügt wurde (addLine, addLB).
-   * fügt ein ", " an, falls der nächste codebufferpart wieder ein listenelement ist.
+   * fï¿½gt die intendation nur an, falls vorher ein zeilenumbruch hinzugefï¿½gt wurde (addLine, addLB).
+   * fï¿½gt ein ", " an, falls der nï¿½chste codebufferpart wieder ein listenelement ist.
    * 
    * @param s
    */
@@ -257,7 +257,7 @@ public class CodeBuffer {
   public void setGIPSourceHeader(String departmentName) {
     header =   "/*\n"
              + " * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n"
-             + " * Copyright 2022 GIP SmartMercial GmbH, Germany\n"
+             + " * Copyright 2023 Xyna GmbH, Germany\n"
              + " *\n"
              + " * Licensed under the Apache License, Version 2.0 (the \"License\");\n"
              + " * you may not use this file except in compliance with the License.\n"

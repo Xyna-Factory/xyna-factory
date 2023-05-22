@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class UpdateRefactorLibraryTags1_7 extends MDMUpdate {
   @Override
   protected void update(Document doc) throws XynaException {
     Element root = doc.getDocumentElement();
-    //Prüfen ob Datentype mit Service-Operationen
+    //Prï¿½fen ob Datentype mit Service-Operationen
     // die (shared-)libraries aller Operationen sammeln
     // entsprechend als XML-Liste neu schreiben 
     Set<String> libs = new HashSet<String>();

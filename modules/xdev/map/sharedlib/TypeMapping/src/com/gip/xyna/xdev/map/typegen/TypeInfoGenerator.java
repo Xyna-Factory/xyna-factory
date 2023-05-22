@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,22 +48,22 @@ import com.gip.xyna.xdev.map.types.TypeInfoMember;
 
 
 /**
- * TypeInfoGenerator erzeugt eine List&lt;TypeInfo> für alle Datentypen aus dem XSD.
- * Dazu müssen die RootElemente aus dem XSD an {@link TypeInfoGenerator#addRootLevelElement(XSElementDeclaration)}
- * übergeben werden.
- * Anschließend können die XMOM-Daten über {@link TypeInfoGenerator#createXMOMData(XmomDataCreator)}
- * in den TypeInfos ergänzt werden.
+ * TypeInfoGenerator erzeugt eine List&lt;TypeInfo> fï¿½r alle Datentypen aus dem XSD.
+ * Dazu mï¿½ssen die RootElemente aus dem XSD an {@link TypeInfoGenerator#addRootLevelElement(XSElementDeclaration)}
+ * ï¿½bergeben werden.
+ * Anschlieï¿½end kï¿½nnen die XMOM-Daten ï¿½ber {@link TypeInfoGenerator#createXMOMData(XmomDataCreator)}
+ * in den TypeInfos ergï¿½nzt werden.
  * 
  * Bekannte Bugs:
  * 1) eine model group (d.h. choice/sequence/all) kann maxOccurs > 1 haben
- * 2) Eine Choice mit Ableitungen eines BasisTypes könnte schön in ein einziges Basistype-Objekt gesteckt werden 
+ * 2) Eine Choice mit Ableitungen eines BasisTypes kï¿½nnte schï¿½n in ein einziges Basistype-Objekt gesteckt werden 
  * 
  */
 public class TypeInfoGenerator {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(TypeInfoGenerator.class);
   
-  //Schutz vor Endlos-Rekursion durch Zirkel-Abhaengigkeiten für ComplexTypes
+  //Schutz vor Endlos-Rekursion durch Zirkel-Abhaengigkeiten fï¿½r ComplexTypes
   private final Map<XSComplexTypeDefinition,TypeInfo> processedTypes = new HashMap<XSComplexTypeDefinition,TypeInfo>();
   private final Map<FQName,TypeInfo> namedTypes = new HashMap<FQName,TypeInfo>();
   //alle erzeugten TypeInfos
@@ -77,10 +77,10 @@ public class TypeInfoGenerator {
   /**
    * wird nur mit XSD-Elementen auf Root-Ebene aufgerufen
    *
-   * Erzeugt Typeinfo für das übergebene Toplevel-Element und gleichzeitig alle rekursiv abhängigen Typen.
+   * Erzeugt Typeinfo fï¿½r das ï¿½bergebene Toplevel-Element und gleichzeitig alle rekursiv abhï¿½ngigen Typen.
    *
    * Rekursion wie folgt: 
-   * (generateType steht für eine der drei Methoden generate{Simple,Complex,AnonymousComplex}Type)
+   * (generateType steht fï¿½r eine der drei Methoden generate{Simple,Complex,AnonymousComplex}Type)
    * generateType -> addTypeContext -> generateType oder
    *                                -> addChild -> generateType
    * @param el
@@ -156,7 +156,7 @@ public class TypeInfoGenerator {
     typeInfo = new TypeInfo( Type.Complex, name);
     allTypeInfos.add(typeInfo);
     
-    //Cachen, damit Referenzen aufgelöst werden können
+    //Cachen, damit Referenzen aufgelï¿½st werden kï¿½nnen
     processedTypes.put(complexType, typeInfo);
     namedTypes.put(name, typeInfo);
     addTypeContext(typeInfo, complexType);
@@ -176,13 +176,13 @@ public class TypeInfoGenerator {
   private TypeInfo generateAnonymousComplexType(XSComplexTypeDefinition complexType, FQName name) {
     TypeInfo typeInfo = new TypeInfo( Type.Anonymous, name);    
     
-    //Cachen, damit Referenzen aufgelöst werden können
+    //Cachen, damit Referenzen aufgelï¿½st werden kï¿½nnen
     processedTypes.put(complexType, typeInfo);
     addTypeContext(typeInfo, complexType);
     
-    //Leider können AnonymousComplexType mehrfach auftreten mit gleicher Definition, 
+    //Leider kï¿½nnen AnonymousComplexType mehrfach auftreten mit gleicher Definition, 
     //werden aber nicht als doppelt erkannt.
-    //Dies muss nun hier umständlich nachgeholt werden
+    //Dies muss nun hier umstï¿½ndlich nachgeholt werden
     for( TypeInfo at : allTypeInfos ) {
       if( at.equals(typeInfo) ) {
         if( logger.isDebugEnabled() ) {
@@ -228,7 +228,7 @@ public class TypeInfoGenerator {
       if (baseType != null) {
         baseTypeParticle = ((XSComplexTypeDefinition) baseType).getParticle();
       }
-      if (baseTypeParticle != particle) { //könnte zum basetype gehören
+      if (baseTypeParticle != particle) { //kï¿½nnte zum basetype gehï¿½ren
         addChild(typeInfo, particle, baseTypeParticle);
       }
     }
@@ -238,7 +238,7 @@ public class TypeInfoGenerator {
     for (int i = 0; i < attributes.getLength(); i++) {
       XSObject attribute = attributes.item(i);
       
-      //Attribut könnte evtl doppelt sein, da die vom baseType geerbten Attribute hier nochmal gefunden werden
+      //Attribut kï¿½nnte evtl doppelt sein, da die vom baseType geerbten Attribute hier nochmal gefunden werden
       if (baseType instanceof XSComplexTypeDefinition) {
         boolean attributeAlreadyDefined = false;
         XSComplexTypeDefinition baseTypeTD = (XSComplexTypeDefinition) baseType;
@@ -339,14 +339,14 @@ public class TypeInfoGenerator {
       logger.warn(group + " has maxOccurs "+particle.getMaxOccurs());
     }
 
-    //List aller tatsächlichen Kinder erstellen
+    //List aller tatsï¿½chlichen Kinder erstellen
     List<XSParticle> children = new ArrayList<XSParticle>();
     XSObjectList childCandidates = group.getParticles();
     if (childCandidates != null) {
       for (int i = 0; i < childCandidates.getLength(); i++) {
         XSObject o = childCandidates.item(i);
         if (o instanceof XSParticle) {
-          if (o != baseTypeParticle) { //könnte zum basetype gehören
+          if (o != baseTypeParticle) { //kï¿½nnte zum basetype gehï¿½ren
             children.add( (XSParticle) o );
           }
         } else {
@@ -440,7 +440,7 @@ public class TypeInfoGenerator {
     }
     
     //nun VariablenNamen anpassen, damit diese eindeutig sind
-    //Eindeutigkeit muss auch bei Ableitungen gewährleistet sein, daher zuerst Basistypen suchen 
+    //Eindeutigkeit muss auch bei Ableitungen gewï¿½hrleistet sein, daher zuerst Basistypen suchen 
     HashMap<TypeInfo, HashSet<String>> baseVarNames = new HashMap<TypeInfo, HashSet<String>>();
     for( TypeInfo typeInfo : allTypeInfos ) {
       if( typeInfo.hasBaseType() ) {
@@ -464,11 +464,11 @@ public class TypeInfoGenerator {
       //von BaseType VarNames erben
       allVarNames.addAll( createUniqueVarNames(xmomDataCreator, baseVarNames,typeInfo.getBaseType()));
     }
-    //eigene VarNames eindeutig machen und ergänzen
+    //eigene VarNames eindeutig machen und ergï¿½nzen
     for( TypeInfoMember tim : typeInfo.getMembers() ) {
       tim.createVarNameAndLabel(allVarNames, xmomDataCreator);
     }
-    //allVarNames cachen, da evtl. für weitere Ableitungen relevant
+    //allVarNames cachen, da evtl. fï¿½r weitere Ableitungen relevant
     if( baseVarNames.containsKey(typeInfo) ) {
       baseVarNames.put(typeInfo,allVarNames);
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,8 +47,8 @@ public class EncoderBuilder {
   private static boolean odsUsed;
 
   public static XynaPropertyBoolean USE_DATABASE = new XynaPropertyBoolean("xact.dhcp.client.use_optionsv4_table", false)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Modul DHCPClient liest Tabelle optionsv4 für DHCP-Encodings "+
-                                                         "(ansonsten werden Default-Einträge verwendet).")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Modul DHCPClient liest Tabelle optionsv4 fï¿½r DHCP-Encodings "+
+                                                         "(ansonsten werden Default-Eintrï¿½ge verwendet).")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Module DHCPClient reads table optionsv4 for DHCP-encodings "+
                                                          "(otherwise default entries will be used).");
   

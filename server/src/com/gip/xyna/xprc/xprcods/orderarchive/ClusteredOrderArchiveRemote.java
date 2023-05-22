@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class ClusteredOrderArchiveRemote extends LocalRemote implements Clustere
 
 
   /**
-   * Audit-Daten in den zrückgelieferten OrderInstanceDetails dürfen nicht verwendet werden.
+   * Audit-Daten in den zrï¿½ckgelieferten OrderInstanceDetails dï¿½rfen nicht verwendet werden.
    * Ansonsten muss addRMIInterface ersetz werden mit addRMIInterfaceWithClassReloading.
    * @param id
    */

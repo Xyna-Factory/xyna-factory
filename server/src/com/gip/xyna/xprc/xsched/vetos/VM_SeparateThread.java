@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,9 +77,9 @@ public class VM_SeparateThread implements VetoManagementInterface {
       vces.add(veto);
       if( veto != null ) {
         //TODO bei allen Vetos als wartend eintragen? oder nur beim ersten? 
-        //Eintragen als wartend ist nötig, damit nicht niedrig-priorisierter Auftrag Veto erhält
+        //Eintragen als wartend ist nï¿½tig, damit nicht niedrig-priorisierter Auftrag Veto erhï¿½lt
         
-        //Zur geforderten Fairnis ist es wahrscheinlich ausreichend, dies beim ersten Veto zu prüfen
+        //Zur geforderten Fairnis ist es wahrscheinlich ausreichend, dies beim ersten Veto zu prï¿½fen
         var = vetoCache.checkAllocation(veto, orderInformation, urgency);
         if( var != null ) {
           return var;
@@ -87,7 +87,7 @@ public class VM_SeparateThread implements VetoManagementInterface {
       }
     }
     
-    //2) Vetos neu anlegen und gleich prüfen
+    //2) Vetos neu anlegen und gleich prï¿½fen
     for( int i=0; i<vetoNames.size(); ++i ) {
       if( vces.get(i) == null ) {
         VetoCacheEntry veto = vetoCache.getOrCreate(vetoNames.get(i), urgency);
@@ -101,7 +101,7 @@ public class VM_SeparateThread implements VetoManagementInterface {
     
     if( var != null ) {
       //Beim Anlegen der Vetos in Schritt 2) wurde festgestellt, dass nicht geschedult werden kann
-      //a) Im Cluster wurden Vetos im Zustand "New" angelegt, diese müssen vom VetoCacheProcessor abgeklärt werden
+      //a) Im Cluster wurden Vetos im Zustand "New" angelegt, diese mï¿½ssen vom VetoCacheProcessor abgeklï¿½rt werden
       vetoCache.notifyProcessor();
       //b) in der Zeit von 1) bis 2) wurde konkurrierend ein Veto angelegt, entweder AdminVeto oder im Cluster
       return var;
@@ -173,7 +173,7 @@ public class VM_SeparateThread implements VetoManagementInterface {
     //  return freeVetos(vetos, orderId);
     //}
     //freeVetosForced wird nur selten (bei killprocess) aufgerufen, 
-    //deswegen teure Suche immer durchführen.
+    //deswegen teure Suche immer durchfï¿½hren.
     List<VetoInformation> vis = vetoCache.listVetosUsedByOrderId(orderId);
     vetos = CollectionUtils.transform(vis, VetoInformation.extractName );
     return freeVetos(vetos, orderId);

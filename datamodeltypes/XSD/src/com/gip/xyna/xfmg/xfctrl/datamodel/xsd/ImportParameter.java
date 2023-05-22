@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class ImportParameter implements GenerationParameter {
       label("Overwrite Data Model").
       documentation(Documentation.
                     en("Overwrites existing data model").
-                    de("Überschreiben des bereits existierend Datenmodells").
+                    de("ï¿½berschreiben des bereits existierend Datenmodells").
                     build()).
       defaultValue(defaults.getOverwriteModel()).build();
   
@@ -79,7 +79,7 @@ public class ImportParameter implements GenerationParameter {
       label("Overwrite Data Types").
       documentation(Documentation.
                     en("Overwrites existing data types").
-                    de("Überschreiben bereits existierender Datentypen").
+                    de("ï¿½berschreiben bereits existierender Datentypen").
                     build()).
       defaultValue(defaults.getOverwriteTypes()).build();
   
@@ -119,7 +119,7 @@ public class ImportParameter implements GenerationParameter {
                      de("definierte SimpleTypes werden eigene Objekte").
                      build() ),
     includeHiddenTypes(Documentation.en("include types not accesible from root elements").
-                      de("inkludiere auch Typen, die nicht über Root-Elemente erreichbar sind").
+                      de("inkludiere auch Typen, die nicht ï¿½ber Root-Elemente erreichbar sind").
                       build() ),
     ;
 
@@ -204,7 +204,7 @@ public class ImportParameter implements GenerationParameter {
       label("Workspace Mode").
       documentation(Documentation.
                     en("Change mode of workspace list").
-                    de("Änderungsmodus der Workspace-Liste").
+                    de("ï¿½nderungsmodus der Workspace-Liste").
                     build()).
       defaultValue(WorkspaceChangeMode.Target).
       build();
@@ -214,7 +214,7 @@ public class ImportParameter implements GenerationParameter {
              de("Zielkonfiguration der Workspaces").
              build() ), 
     Add(Documentation.en("workspaces will be added").
-             de("Workspaces werden hinzugefügt").
+             de("Workspaces werden hinzugefï¿½gt").
              build()), 
     Remove(Documentation.en("workspaces will be removed").
                   de("Workspaces werden entfernt").

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,16 +64,16 @@ public class RMIClusterProviderTools {
   
   
   /**
-   * führt das übergebene runnable für alle registrierten cluster members und für localImpl aus. falls verbindung nicht
+   * fï¿½hrt das ï¿½bergebene runnable fï¿½r alle registrierten cluster members und fï¿½r localImpl aus. falls verbindung nicht
    * hergestellt werden kann, wird changeClusterState(DISCONNECTED) aufgerufen, und der entsprechende knoten wird
-   * übersprungen. es wird kein fehler geworfen.
+   * ï¿½bersprungen. es wird kein fehler geworfen.
    * @param <R> result type
    * @param <I> remote interface
    * @param <E> exception type
    * @param clusterInstance auf welcher cluster instanz
    * @param rmiInterfaceId welches bei der clusterinstanz registrierte rmi interface
-   * @param runnable auszuführendes runnable
-   * @param localImpl null falls nicht lokal ausgeführt werden soll
+   * @param runnable auszufï¿½hrendes runnable
+   * @param localImpl null falls nicht lokal ausgefï¿½hrt werden soll
    * @throws E
    * @throws InvalidIDException
    */
@@ -88,16 +88,16 @@ public class RMIClusterProviderTools {
   }
   
   /**
-   * führt das übergebene runnable für alle registrierten cluster members und für localImpl aus. falls verbindung nicht
+   * fï¿½hrt das ï¿½bergebene runnable fï¿½r alle registrierten cluster members und fï¿½r localImpl aus. falls verbindung nicht
    * hergestellt werden kann, wird changeClusterState(DISCONNECTED) aufgerufen, und der entsprechende knoten wird
-   * übersprungen. es wird kein fehler geworfen.
+   * ï¿½bersprungen. es wird kein fehler geworfen.
    * @param <R> result type
    * @param <I> remote interface
    * @param <E> exception type
    * @param clusterInstance auf welcher cluster instanz
    * @param rmiInterfaceId welches bei der clusterinstanz registrierte rmi interface
-   * @param runnable auszuführendes runnable
-   * @param localImpl null falls nicht lokal ausgeführt werden soll
+   * @param runnable auszufï¿½hrendes runnable
+   * @param localImpl null falls nicht lokal ausgefï¿½hrt werden soll
    * @param connectionFailureValue wird im Fehlerfall (RemoteException, RMIConnectionDownException) in die ResultListe eingetragen
    * @throws E
    * @throws InvalidIDException

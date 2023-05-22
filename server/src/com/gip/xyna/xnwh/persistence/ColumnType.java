@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@ package com.gip.xyna.xnwh.persistence;
 
 /**
  * beschreibt den typ von in storable definierten spalten, bzw das mapping zwischen java-type und dem type in der
- * persistence-schicht (implementierungsabhängig).
+ * persistence-schicht (implementierungsabhï¿½ngig).
  */
 public enum ColumnType {
   INHERIT_FROM_JAVA,
   BLOBBED_JAVAOBJECT, //wird in db geschrieben, indem value in einen objectoutputstream geschrieben wird  
-  BYTEARRAY; //wird direkt binär in db geschrieben.
+  BYTEARRAY; //wird direkt binï¿½r in db geschrieben.
 }

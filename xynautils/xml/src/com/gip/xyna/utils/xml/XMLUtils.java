@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,8 +159,8 @@ public class XMLUtils {
 
   /**
    * inhalt des tags als string, inklusive kindelementen falls vorhanden mitsamt
-   * tags. muss nicht unbedingt ein gültiges xml ergeben, weil mehrere kindelemente
-   * vorhanden sein können
+   * tags. muss nicht unbedingt ein gï¿½ltiges xml ergeben, weil mehrere kindelemente
+   * vorhanden sein kï¿½nnen
    * @param el
    * @return
    */

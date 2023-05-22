@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ public class WorkspaceManagement extends FunctionGroup{
 
   private static Map<Long, WorkspaceBlackListXynaProperties> clearWorkspaceBlackListProperties;
   
-  //Namen, die nicht für Workspaces verwendet werden dürfen:
+  //Namen, die nicht fï¿½r Workspaces verwendet werden dï¿½rfen:
   // "workingset" verboten wegen XynaProperty "xact.snmp.service.engineid.currentvalue.<workingset>.readonly"
   private static Set<String> illegalWorkspaceNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[]{"workingset"})));
 
@@ -135,7 +135,7 @@ public class WorkspaceManagement extends FunctionGroup{
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
     fExec.addTask(WorkspaceManagement.class, "WorkspaceManagement.initAll").
           after(RevisionManagement.class).
-          after(WorkflowDatabase.FUTURE_EXECUTION_ID). //für createWorkspace nötig
+          after(WorkflowDatabase.FUTURE_EXECUTION_ID). //fï¿½r createWorkspace nï¿½tig
           execAsync( new Runnable() { public void run() { initAll();} });
   }
   
@@ -215,7 +215,7 @@ public class WorkspaceManagement extends FunctionGroup{
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     WorkspaceInformation wsi = new WorkspaceInformation(workspace);
     
-    //RepositoryAccess über CodeAccess bzw. XMOMAccess bestimmen
+    //RepositoryAccess ï¿½ber CodeAccess bzw. XMOMAccess bestimmen
     Long revision = revisionManagement.getRevision(workspace);
     RepositoryAccess repositoryAccess = null;
     CodeAccess codeAccess = XynaFactory.getInstance().getXynaDevelopment().getXynaLibraryDevelopment().getCodeAccessManagement().getCodeAccessInstance(revision);
@@ -252,7 +252,7 @@ public class WorkspaceManagement extends FunctionGroup{
         
         for (RuntimeContextProblem problem : problems) {
           if (problem.causeErrorStatus()) {
-            //es gibt mindestens ein Problem, das zum Zustand ERROR führt
+            //es gibt mindestens ein Problem, das zum Zustand ERROR fï¿½hrt
             state = WorkspaceState.ERROR;
             break;
           }
@@ -260,7 +260,7 @@ public class WorkspaceManagement extends FunctionGroup{
       }
     } else {
       //wenn die gui den state wissen will, fragt sie auch immer die problems mit an
-      //TODO für andere ist das nicht transparent
+      //TODO fï¿½r andere ist das nicht transparent
       state = WorkspaceState.OK; //eigtl unknown
     }
     
@@ -307,7 +307,7 @@ public class WorkspaceManagement extends FunctionGroup{
       //neues Revision-Verzeichnis anlegen
       RevisionManagement.createNewRevisionDirectory(revision);
       
-      //Basis-Applications als Requirements hinzufügen,
+      //Basis-Applications als Requirements hinzufï¿½gen,
       //falls keine Basis-Application existiert, werden die Factory Komponenten aus dem
       //Default-Workspace kopiert
       ApplicationManagementImpl applicationManagement =
@@ -321,14 +321,14 @@ public class WorkspaceManagement extends FunctionGroup{
         rcdMgmt.modifyDependencies(workspace, new ArrayList<RuntimeDependencyContext>(Collections.singletonList(basicApp)), null, true, true);
       }
       
-      //Workspace-abhängige XynaProperties anlegen
+      //Workspace-abhï¿½ngige XynaProperties anlegen
       createWorkspaceDependentXynaProperties(workspace, revision);
       
       if (result.getResult() == null) {
         result.setResult(Result.Success);
       }
       
-      //Multi-User-Event für RuntimeContext Änderung
+      //Multi-User-Event fï¿½r RuntimeContext ï¿½nderung
       Publisher publisher = new Publisher(user);
       publisher.publishRuntimeContextCreate(workspace);
     } catch (Throwable e) {
@@ -366,7 +366,7 @@ public class WorkspaceManagement extends FunctionGroup{
   /**
    * Kopiert die Factory Komponenten aus dem saved-Verzeichnis des Default-Workspaces in das
    * saved-Verzeichnis der angegeben Revision.
-   * Außerdem werden die SharedLibs deployt.
+   * Auï¿½erdem werden die SharedLibs deployt.
    * @param revision
    * @throws XynaException
    * @throws IOException
@@ -374,9 +374,9 @@ public class WorkspaceManagement extends FunctionGroup{
    */
   private void copyFactoryComponents(Long revision, CreateWorkspaceResult result) {
     ArrayList<File> filesToCopy = new ArrayList<File>(); //xmls, die kopiert werden
-    Map<String, String> xmoms = new HashMap<String, String>(); //xmoms (mit type), die in XMOMDatabase registriert werden müssen
-    Set<String> sharedLibs = new HashSet<String>(); //SharedLibs, die von Factory Komponenten verwendet werden und daher kopiert werden müssen
-    List<String> services = new ArrayList<String>(); //Services, die zusätzliche jars verwenden
+    Map<String, String> xmoms = new HashMap<String, String>(); //xmoms (mit type), die in XMOMDatabase registriert werden mï¿½ssen
+    Set<String> sharedLibs = new HashSet<String>(); //SharedLibs, die von Factory Komponenten verwendet werden und daher kopiert werden mï¿½ssen
+    List<String> services = new ArrayList<String>(); //Services, die zusï¿½tzliche jars verwenden
 
     //alle MDM Files suchen (im saved-Verzeichnis)
     String savedMdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, RevisionManagement.REVISION_DEFAULT_WORKSPACE, false);
@@ -405,7 +405,7 @@ public class WorkspaceManagement extends FunctionGroup{
         filesToCopy.add(file);
         xmoms.put(originalFqName, rootTagName);
         
-        //für Services müssen evtl. noch Jars und SharedLibs kopiert werden
+        //fï¿½r Services mï¿½ssen evtl. noch Jars und SharedLibs kopiert werden
         if (rootTagName.equals(GenerationBase.EL.DATATYPE)) {
           try {
             DOM dom = DOM.generateUncachedInstance(originalFqName, false, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
@@ -496,7 +496,7 @@ public class WorkspaceManagement extends FunctionGroup{
         continue;
       }
       
-      //für SharedLibs gibt es kein automatisches Deployment, daher hier manuell deployen
+      //fï¿½r SharedLibs gibt es kein automatisches Deployment, daher hier manuell deployen
       try {
         SharedLibDeploymentAlgorithm.deploySharedLib(s, targetRevision, new EmptyRepositoryEvent());
       } catch (XynaException e) {
@@ -508,16 +508,16 @@ public class WorkspaceManagement extends FunctionGroup{
   }
   
   /**
-   * Legt die workspace-abhängigen XynaProperties an
+   * Legt die workspace-abhï¿½ngigen XynaProperties an
    * und kopiert die entsprechenden Werte aus dem Default-Workspace
    */
   private void createWorkspaceDependentXynaProperties(Workspace workspace, Long revision) throws PersistenceLayerException{
-    //BlackList-XynaProperties für ClearWorkspace
+    //BlackList-XynaProperties fï¿½r ClearWorkspace
     WorkspaceBlackListXynaProperties blackList = new WorkspaceBlackListXynaProperties(workspace.getName());
     blackList.registerPropertiesDependency(DEFAULT_NAME);
     clearWorkspaceBlackListProperties.put(revision, blackList);
     
-    //excludedSubtypesOf-Properties für buildApplicationVersion
+    //excludedSubtypesOf-Properties fï¿½r buildApplicationVersion
     ApplicationManagementImpl applicationManagement =
                     (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
                         .getApplicationManagement();
@@ -544,7 +544,7 @@ public class WorkspaceManagement extends FunctionGroup{
       }
       
       try {
-        //Überprüfung, dass der Workspace nicht von einem anderen RuntimeContext referenziert wird
+        //ï¿½berprï¿½fung, dass der Workspace nicht von einem anderen RuntimeContext referenziert wird
         RuntimeContextDependencyManagement rcdMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
         if (rcdMgmt.isReferenced(workspace)) {
           throw new XFMG_RuntimeContextStillReferencedException(workspace.toString());
@@ -558,7 +558,7 @@ public class WorkspaceManagement extends FunctionGroup{
           }
         }
         
-        //Behandlung laufender Aufträge
+        //Behandlung laufender Auftrï¿½ge
         revisionManagement.handleRunningOrders(revision, params.isForce());
         
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDataModelManagement().removeWorkspace(workspace);
@@ -611,16 +611,16 @@ public class WorkspaceManagement extends FunctionGroup{
         //OrderInputSources entfernen
         removeOrderInputSources(revision);
         
-        //workspace-abhängige XynaProperties deregistrieren
+        //workspace-abhï¿½ngige XynaProperties deregistrieren
         unregisterWorkspaceDependentXynaProperties(revision);
         
-        //RuntimeContext Dependencies löschen
+        //RuntimeContext Dependencies lï¿½schen
         rcdMgmt.deleteRuntimeContext(workspace);
         
-        //Revision-Verzeichnis (teilweise) löschen
+        //Revision-Verzeichnis (teilweise) lï¿½schen
         RevisionManagement.removeRevisionFolder(revision, params.keepForAudits());
         
-        //XMOMVersion-Eintrag löschen
+        //XMOMVersion-Eintrag lï¿½schen
         if (!params.keepForAudits()) {
           if (logger.isDebugEnabled()) {
             logger.debug("Delete xmomversion for revision " + revision);
@@ -628,7 +628,7 @@ public class WorkspaceManagement extends FunctionGroup{
           revisionManagement.deleteRevision(revision);
         }
         
-        //Multi-User-Event für RuntimeContext Änderung
+        //Multi-User-Event fï¿½r RuntimeContext ï¿½nderung
         Publisher publisher = new Publisher(params.getUser());
         publisher.publishRuntimeContextDelete(workspace);
       } finally {
@@ -741,16 +741,16 @@ public class WorkspaceManagement extends FunctionGroup{
   }
   
   /**
-   * Deregistriert die workspace-abhängigen XynaProperties (clearWorkspace-BlackList und excludeSubTypesOf für buildApplicationVersion)
+   * Deregistriert die workspace-abhï¿½ngigen XynaProperties (clearWorkspace-BlackList und excludeSubTypesOf fï¿½r buildApplicationVersion)
    */
   private void unregisterWorkspaceDependentXynaProperties(Long revision) throws PersistenceLayerException{
-    //BlackList-XynaProperties für ClearWorkspace
+    //BlackList-XynaProperties fï¿½r ClearWorkspace
     WorkspaceBlackListXynaProperties removed = clearWorkspaceBlackListProperties.remove(revision);
     if (removed != null) {
       removed.unregisterProperties();
     }
     
-    //excludeSubtypesOf-Properties für buildApplicationVersion
+    //excludeSubtypesOf-Properties fï¿½r buildApplicationVersion
     ApplicationManagementImpl applicationManagement =
                     (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
                         .getApplicationManagement();

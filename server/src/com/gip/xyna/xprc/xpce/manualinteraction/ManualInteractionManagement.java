@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -215,7 +215,7 @@ public class ManualInteractionManagement extends FunctionGroup
        before(XynaClusteringServicesManagement.class).
        execAsync( new Runnable() { public void run() { initStorables(); }});
     
-    fExec.addTask(FUTURE_EXECUTION_ID, "ManualInteractionInitializer"). //FIXME nötig?
+    fExec.addTask(FUTURE_EXECUTION_ID, "ManualInteractionInitializer"). //FIXME nï¿½tig?
       after(SuspendResumeManagement.class).
       before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).
       execAsync( new Runnable() { public void run() { initialize(); }});
@@ -356,7 +356,7 @@ public class ManualInteractionManagement extends FunctionGroup
 
         public ProcessManualInteractionResult executeAndCommit(ODSConnection con) throws PersistenceLayerException,
             XPRC_ResumeFailedException, XPRC_IllegalManualInteractionResponse {
-          // lokal prüfen, ob binding für lokalen node
+          // lokal prï¿½fen, ob binding fï¿½r lokalen node
           try {
             con.queryOneRowForUpdate(entry);
           } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -425,8 +425,8 @@ public class ManualInteractionManagement extends FunctionGroup
         throw new XPRC_ResumeFailedException(Long.toString(id));
 
       } else {
-        // anderer Clusterknoten ist offensichtlich verantwortlich, aber nicht mehr verfügbar
-        // FIXME 1. bessere Fehlermeldung und 2. bessere Aufspaltung der Fälle in unterschiedliche Fehlermeldungen!
+        // anderer Clusterknoten ist offensichtlich verantwortlich, aber nicht mehr verfï¿½gbar
+        // FIXME 1. bessere Fehlermeldung und 2. bessere Aufspaltung der Fï¿½lle in unterschiedliche Fehlermeldungen!
         logger.info("Remote node not connected and the migrating of the binding is running now for manual interaction with the id" + id);
         throw new XPRC_ResumeFailedException(Long.toString(id));
       }
@@ -593,7 +593,7 @@ public class ManualInteractionManagement extends FunctionGroup
         try {
           if (objectsClassLoader != XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
               .getMDMClassLoader(result.getClass().getName(), existingEntry.getRevision(), true)) {
-            //passiert zb wenn MIEntries auf memory konfiguriert sind, und während der 
+            //passiert zb wenn MIEntries auf memory konfiguriert sind, und wï¿½hrend der 
             //mientry im memory PL wartet, der entsprechende mdm typ neu deployed wird 
             if (logger.isDebugEnabled()) {
               logger.debug("wrong classloader: " + result.getClass().getClassLoader());
@@ -654,7 +654,7 @@ public class ManualInteractionManagement extends FunctionGroup
         orderInstance = result.getResult().get(0);
       } else {
         //ntbd: objekt nicht in db vorhanden, weil monitoringlevel nicht hoch genug.
-        //TODO ähnlich wie bei updatestatus machen, dass monitoring level verglichen wird? 
+        //TODO ï¿½hnlich wie bei updatestatus machen, dass monitoring level verglichen wird? 
       }      
       if (orderInstance != null) {
         oldStatus = orderInstance.getStatusAsString();
@@ -662,7 +662,7 @@ public class ManualInteractionManagement extends FunctionGroup
       } else {
         oldStatus = OrderInstanceStatus.RUNNING.getName();
         entry.setCorrelatedOrderIsMonitored(false);
-        //falls kein monitoringlevel für mi gesetzt ist, gibts hier nichts bessres
+        //falls kein monitoringlevel fï¿½r mi gesetzt ist, gibts hier nichts bessres
         //die listener sollten aber benachrichtigt werden, dass der status nicht mehr mi ist.
       }
 
@@ -681,7 +681,7 @@ public class ManualInteractionManagement extends FunctionGroup
 
   private GeneralXynaObject recreateWithAppropriateClassLoader(GeneralXynaObject object, long targetRevision) {
     try {
-      // Unter Umständen wurde das XynaObject mit dem falschen Classloader erzeugt. Bei Bedarf mit korrektem ClassLoader
+      // Unter Umstï¿½nden wurde das XynaObject mit dem falschen Classloader erzeugt. Bei Bedarf mit korrektem ClassLoader
       // neu erzeugen, um ClassCastExceptions zu vermeiden.
       GeneralXynaObject result = XynaObject.generalFromXml(object.toXml(), targetRevision);
       return result;

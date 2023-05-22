@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 
 /**
- * verwaltung von logischen namen für komponenten des netzwerks, in das die fabrik eingebunden ist.
+ * verwaltung von logischen namen fï¿½r komponenten des netzwerks, in das die fabrik eingebunden ist.
  * es gibt:
  * netzwerk
  *  - computer
@@ -82,17 +82,17 @@ public class NetworkConfigurationManagement extends FunctionGroup {
     if (logger.isTraceEnabled()) {
       logger.trace("Executing " + NetworkConfigurationManagement.class.getSimpleName() + ".init()");
       /*
-       * TODO konfiguration der caches, weil ansonsten änderungen /etc/hosts oder ähnliches nicht direkt wirksam werden.
+       * TODO konfiguration der caches, weil ansonsten ï¿½nderungen /etc/hosts oder ï¿½hnliches nicht direkt wirksam werden.
        * dazu gibt es die java-properties:
-       *  networkaddress.cache.ttl bzw (abwärtskompatibilität java 1.5?): sun.net.inetaddr.ttl
+       *  networkaddress.cache.ttl bzw (abwï¿½rtskompatibilitï¿½t java 1.5?): sun.net.inetaddr.ttl
        *  und
        *  networkaddress.cache.negative.ttl bzw. sun.net.inetaddr.negative.ttl
        *  
-       *  mit den werten (-1=cache hält FOREVER, 0 = kein cache, x = x sekunden lang cachen)
+       *  mit den werten (-1=cache hï¿½lt FOREVER, 0 = kein cache, x = x sekunden lang cachen)
        *  
-       *  achtung: auf 0 setzen ist gefährlich, weil dann sehr viele dns requests durchgeführt werden. vermutlich ist ein wert im minuten bereich besser
+       *  achtung: auf 0 setzen ist gefï¿½hrlich, weil dann sehr viele dns requests durchgefï¿½hrt werden. vermutlich ist ein wert im minuten bereich besser
        *  
-       *  die settermethoden der werte können nicht ohne einschränkungen zur laufzeit verwendet werden, also entweder 
+       *  die settermethoden der werte kï¿½nnen nicht ohne einschrï¿½nkungen zur laufzeit verwendet werden, also entweder 
        *  beim serverstart setzen oder per reflection umsetzen:
        * beispielcode:  
        *  
@@ -198,7 +198,7 @@ public class NetworkConfigurationManagement extends FunctionGroup {
 
 
   public InternetAddressBean getInternetAddress(String id, DependencyNode user) {
-    //TODO für den user automatisch eine abhängigkeit im dependencyregister anlegen, dass er die id verwendet.
+    //TODO fï¿½r den user automatisch eine abhï¿½ngigkeit im dependencyregister anlegen, dass er die id verwendet.
     return addressCache.get(id);
   }
 

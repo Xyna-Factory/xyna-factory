@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public final class MemoryRowLock {
    * <ul>
    * <li>alle spalten einer zeilen sind in sich konsistent, d.h. zwei udpates auf verschiedene spalten und ein select
    * auf eine zeile kommen sich nicht gegenseitig in die quere.</li>
-   * <li>die evaluierung von whereclauses ist konsistent mit der rückgabe von objekten.</li>
+   * <li>die evaluierung von whereclauses ist konsistent mit der rï¿½ckgabe von objekten.</li>
    * </ul>
    * <br> dieses lock heisst temporary, weil es nur innerhalb eines transaktionsschritts
    * wirkt.
@@ -53,8 +53,8 @@ public final class MemoryRowLock {
 
   /**
    * exklusives lock, dass von "select for updates", normalen updates oder deletes betroffene zeilen lockt. dieses lock
-   * wird bei normalen selects nicht überprüft, d.h. diese funktionieren weiter. das lock heisst sustained, weil es über
-   * einen transaktionsschritt hinaus anhält.
+   * wird bei normalen selects nicht ï¿½berprï¿½ft, d.h. diese funktionieren weiter. das lock heisst sustained, weil es ï¿½ber
+   * einen transaktionsschritt hinaus anhï¿½lt.
    */
   public LockWithUnderlyingData sustainedLock() {
     return sustainedLock;

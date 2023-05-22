@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import com.gip.xyna.utils.db.WrappedConnection;
 
 /**
  * WrappedConnection, bei der alle Aufrufe, die etwas mit SQL-Strings zu tun haben, 
- * zuerst die abstrakte Methode "lastSQL(String sql)" ausführen und "rollback" und "commit" zuerst 
- * "lastCommitOrRollback(boolean commit)" ausführen. Damit kann beispielsweise ein besonderes Logging
+ * zuerst die abstrakte Methode "lastSQL(String sql)" ausfï¿½hren und "rollback" und "commit" zuerst 
+ * "lastCommitOrRollback(boolean commit)" ausfï¿½hren. Damit kann beispielsweise ein besonderes Logging
  * verwendet werden.
  */
 public abstract class SQLInstrumentedWrappedConnection extends WrappedConnection {

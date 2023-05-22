@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -297,8 +297,8 @@ public class ListsysteminfoImpl extends XynaCommandImplementation<Listsysteminfo
 
   private static String printMemInfo(MemoryUsage usage, String name, String type, boolean asPrettyTable,
                                      NumberFormat numberFormat) {
-    //Beachte: summe über used/committed der pools ergibt used/committed gesamt
-    //         für max/init ist dies nicht so!
+    //Beachte: summe ï¿½ber used/committed der pools ergibt used/committed gesamt
+    //         fï¿½r max/init ist dies nicht so!
     if (asPrettyTable) {
       String usageKb = numberFormat.format(Long.valueOf(usage.getUsed() / 1024));
       String committedKb = numberFormat.format(Long.valueOf(usage.getCommitted() / 1024));

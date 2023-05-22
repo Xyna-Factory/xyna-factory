@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -248,7 +248,7 @@ public class VetoCacheClusterTest extends TestCase {
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
     /*
-     //schnellere Ausführung auf 1
+     //schnellere Ausfï¿½hrung auf 1
     logger.debug("Step 4");
     vm.schedule(37, to2);
     assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
@@ -270,7 +270,7 @@ public class VetoCacheClusterTest extends TestCase {
     assertEquals("[V]-P[]-1", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
    
-    logger.debug("Step 7"); //ändert nichts
+    logger.debug("Step 7"); //ï¿½ndert nichts
     vm.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Compare: V, 37, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
@@ -479,7 +479,7 @@ public class VetoCacheClusterTest extends TestCase {
     assertEquals("{AV=VetoCacheEntry(Used: VetoInformation(AV: test), null)}", vm2.showVetoPersistence() );
     
     
-    logger.debug("Step 2"); //Dokumentation ändern
+    logger.debug("Step 2"); //Dokumentation ï¿½ndern
     AdministrativeVeto avc = new AdministrativeVeto("AV", "changed");
     vm.setDocumentationOfAdministrativeVetoInOwnThread(avc);
     sleep(20);
@@ -524,7 +524,7 @@ public class VetoCacheClusterTest extends TestCase {
     
     
     
-    logger.debug("Step 3"); //Administratives Veto löschen
+    logger.debug("Step 3"); //Administratives Veto lï¿½schen
     vm.freeAdministrativeVetoInOwnThread(av);
     sleep(20);
     assertEquals("{AV=VetoCacheEntry(Free: VetoInformation(AV: changed), null)}", vm.showVetoCache() );
@@ -824,7 +824,7 @@ public class VetoCacheClusterTest extends TestCase {
 
 
   /*
-   * FIXME Test kann so nicht stimmen: in allocate werden zuerst die Vetos überprüft. Dabei fällt bei Schedule to2 auf, 
+   * FIXME Test kann so nicht stimmen: in allocate werden zuerst die Vetos ï¿½berprï¿½ft. Dabei fï¿½llt bei Schedule to2 auf, 
    * dass Veto V bereits vergeben ist. Damit wird Z 
     */
   public void test_Allocate_Two() throws XynaException {
@@ -984,7 +984,7 @@ public class VetoCacheClusterTest extends TestCase {
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
-    logger.debug("Step 5"); //aufräumen
+    logger.debug("Step 5"); //aufrï¿½umen
     vm.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Local: V, 123, WaitingOrder(123, count=1))}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
@@ -1033,7 +1033,7 @@ public class VetoCacheClusterTest extends TestCase {
       assertEquals("[V]-P[]-0", vm.showVetoQueue() );
       assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
-      logger.debug("Step 8");  //Free durchführen
+      logger.debug("Step 8");  //Free durchfï¿½hren
       vm.executeVetoCacheProcessor();
       assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
@@ -1088,7 +1088,7 @@ public class VetoCacheClusterTest extends TestCase {
       assertEquals("[V, V]-P[]-0", vm.showVetoQueue() );
       assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
-      logger.debug("Step 8");  //Free durchführen
+      logger.debug("Step 8");  //Free durchfï¿½hren
       vm.executeVetoCacheProcessor();
       assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Remote: V, 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class UpdateRights extends UpdateJustVersion {
       try {
         //die neue Rechte werden automatisch bei der UserManagement-Initialisierung angelegt
         
-        //Rechtezuweisung der Rollen ändern
+        //Rechtezuweisung der Rollen ï¿½ndern
         Collection<Role> roles = c.loadCollection(Role.class);
         for (Role role : roles) {
           Set<String> newScopedRights = new HashSet<String>();
@@ -113,7 +113,7 @@ public class UpdateRights extends UpdateJustVersion {
         }
         c.persistCollection(roles);
         
-        //alte Rechte löschen
+        //alte Rechte lï¿½schen
         List<Right> rightsToDelete = new ArrayList<Right>();
         rightsToDelete.add(new Right("BATCH_PROCESS_VIEW"));
         rightsToDelete.add(new Right("BATCH_PROCESS_MANAGEMENT"));

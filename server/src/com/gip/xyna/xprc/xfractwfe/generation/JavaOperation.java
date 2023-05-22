@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,12 +179,12 @@ public class JavaOperation extends Operation {
 
 
   protected void generateJavaImplementation(CodeBuffer cb, Set<String> importedClassesFqStrings) {
-    // FIXME: damit klassen vom compiler kompiliert werden, muss ihre benutzung erkannt werden können.
+    // FIXME: damit klassen vom compiler kompiliert werden, muss ihre benutzung erkannt werden kï¿½nnen.
     // wenn aber output ein container ist, und die klassen ggfs im code nirgendwo referenziert werden, werden
     // sie auch nicht kompiliert:
     // workaround fuer fehlende imports, wenn ein container zurueckgegeben wird
     // und impl "return null" ist und typen nicht als import definiert sind
-    // ist das die beste loesung? der compiler könnte die klassen-verwendung ja auch durchaus wegoptimieren
+    // ist das die beste loesung? der compiler kï¿½nnte die klassen-verwendung ja auch durchaus wegoptimieren
     if (getOutputVars().size() > 1) {
       int cnt = 0;
       for (AVariable outputVar : getOutputVars()) {
@@ -218,7 +218,7 @@ public class JavaOperation extends Operation {
       // stub generation from code access uses this atm
       cb.addLine("throw new ", RuntimeException.class.getName(), "(\"Class was generated as stub.\")");
     } else if (implementedInJavaLib() && !getParent().libraryExists()) {
-      //zustand beim ersten speichern von der gui aus -> soll kompilieren. TODO über irgendein flag steuern, ob das
+      //zustand beim ersten speichern von der gui aus -> soll kompilieren. TODO ï¿½ber irgendein flag steuern, ob das
       //hier eine runtimeexception zur laufzeit oder zur deployzeit wirft.
       cb.addLine("throw new ", RuntimeException.class.getName(),
                  "(\"Operation is implemented as java library call, but library is not defined in xml.\")");
@@ -319,7 +319,7 @@ public class JavaOperation extends Operation {
   }
 
 
-  //TODO diese methode rät derzeit, ob in java implementiert ist (werden soll), anhand des generierten codes.
+  //TODO diese methode rï¿½t derzeit, ob in java implementiert ist (werden soll), anhand des generierten codes.
   public boolean implementedInJavaLib() {
     if (isAbstract()) {
       return false;

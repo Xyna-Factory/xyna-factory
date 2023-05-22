@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,20 +28,20 @@ import com.gip.xyna.CentralFactoryLogging;
 
 /**
  * IncrementableCountDownLatch funktioniert analog zu CountDownLatch, der Counter kann allerdings 
- * noch inkrementiert werden, solange der Latch noch nicht gelöst wurde.
+ * noch inkrementiert werden, solange der Latch noch nicht gelï¿½st wurde.
  * Eigenschaften:
  * <ul>
- * <li>Beim {@link #countDown()} wird der Counter um 1 verringert, der Latch wird gelöst, sobald der
+ * <li>Beim {@link #countDown()} wird der Counter um 1 verringert, der Latch wird gelï¿½st, sobald der
  *     Counter <code>&lt;=0</code> ist.</li>
- * <li>Solange der Latch noch nicht gelöst wurde, geben <code>countDown()</code> und {@link #increment()} 
- *     <code>true</code> zurück, danach <code>false</code>.</li>
+ * <li>Solange der Latch noch nicht gelï¿½st wurde, geben <code>countDown()</code> und {@link #increment()} 
+ *     <code>true</code> zurï¿½ck, danach <code>false</code>.</li>
  * <li>Das Verhalten von <code>countDown()</code> und <code>increment()</code> ist unsymmetrisch: 
- *     nur <code>countDown()</code> löst den Latch aus, <code>increment()</code> löst den Latch nicht,
+ *     nur <code>countDown()</code> lï¿½st den Latch aus, <code>increment()</code> lï¿½st den Latch nicht,
  *     wenn der Counter positiv wird.</li>
- * <li>Der Counter wird einfach weiter inkrementiert bzw. runtergezählt, auch wenn das Latch ausgelöst 
+ * <li>Der Counter wird einfach weiter inkrementiert bzw. runtergezï¿½hlt, auch wenn das Latch ausgelï¿½st 
  *     wurde.</li>
- * <li>Mit {@link #onRelease()} steht eine Methode zu Verfügung, die in abgeleiteten Klassen beliebig
- *     überschrieben werden kann. Sie wird genau einmal aufgerufen, wenn der Latch gelöst wird.</li>
+ * <li>Mit {@link #onRelease()} steht eine Methode zu Verfï¿½gung, die in abgeleiteten Klassen beliebig
+ *     ï¿½berschrieben werden kann. Sie wird genau einmal aufgerufen, wenn der Latch gelï¿½st wird.</li>
  * </ul>
  */
 public class IncrementableCountDownLatch {
@@ -68,29 +68,29 @@ public class IncrementableCountDownLatch {
   }
 
   /**
-   * Wartet blockierend auf das Lösen des Latchs
+   * Wartet blockierend auf das Lï¿½sen des Latchs
    * @throws InterruptedException
    */
   public void await() throws InterruptedException {
     increment(); //evtl. ist Counter bereits auf 0, daher mit ...
-    countDown(); //... countDown evtl. den Latch auslösen
+    countDown(); //... countDown evtl. den Latch auslï¿½sen
     cdl.await();
   }
   
   /**
-   * Wartet blockierend auf das Lösen des Latchs, solange Timeout nicht erreicht wurde
+   * Wartet blockierend auf das Lï¿½sen des Latchs, solange Timeout nicht erreicht wurde
    * @throws InterruptedException
    */
   public boolean await(long timeout, TimeUnit unit) 
       throws InterruptedException {
     increment(); //evtl. ist Counter bereits auf 0, daher mit ...
-    countDown(); //... countDown evtl. den Latch auslösen
+    countDown(); //... countDown evtl. den Latch auslï¿½sen
     return cdl.await(timeout,unit);
   }
 
   /**
    * Inkrementieren des Counters
-   * @return false, wenn Latch bereits gelöst wurde 
+   * @return false, wenn Latch bereits gelï¿½st wurde 
    */
   public boolean increment() {
     int cnt = counter.incrementAndGet();
@@ -101,8 +101,8 @@ public class IncrementableCountDownLatch {
   }
 
   /**
-   * herunterzählem des Counters, evtl. Lösen des Latch
-   * @return false, wenn Latch bereits zuvor gelöst wurde
+   * herunterzï¿½hlem des Counters, evtl. Lï¿½sen des Latch
+   * @return false, wenn Latch bereits zuvor gelï¿½st wurde
    */
   public boolean countDown() {
     int c = counter.decrementAndGet();
@@ -112,7 +112,7 @@ public class IncrementableCountDownLatch {
     if( c <= 0 ) {
       return release();
     } else {
-      return ! released; //CountDown war möglich, Latch kann aber zuvor bereits gelöst worden sein
+      return ! released; //CountDown war mï¿½glich, Latch kann aber zuvor bereits gelï¿½st worden sein
     }
   }
 
@@ -134,7 +134,7 @@ public class IncrementableCountDownLatch {
 
 
   /**
-   * Rückgabe des aktuellen Counter-Standes
+   * Rï¿½ckgabe des aktuellen Counter-Standes
    * @return
    */
   public int getCount() {
@@ -143,8 +143,8 @@ public class IncrementableCountDownLatch {
   
   
   /**
-   * onRelease() wird genau einmal aufgerufen, nachdem der Latch gelöst wird.
-   * Kann in abgeleiteten Klassen beliebig überschrieben werden.
+   * onRelease() wird genau einmal aufgerufen, nachdem der Latch gelï¿½st wird.
+   * Kann in abgeleiteten Klassen beliebig ï¿½berschrieben werden.
    * Das Werfen eines Fehlers verhindert nicht das release().
    */
   protected void onRelease() {

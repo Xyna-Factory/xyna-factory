@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class SuspensionCause_Multiple extends SuspensionCause {
       laneIds.addAll( scm.laneIds );
       if (scm.counterMap != null) {
         //FIXME da die map transient ist, ist es zu erwarten, dass sie hier null ist, nachdem deserialisiert wurde.
-        //da die einträge aus der map nur zu debugzwecken existieren, ist das erstmal nicht weiter schlimm
+        //da die eintrï¿½ge aus der map nur zu debugzwecken existieren, ist das erstmal nicht weiter schlimm
         counterMap.add( scm.counterMap );
       }
     } else {

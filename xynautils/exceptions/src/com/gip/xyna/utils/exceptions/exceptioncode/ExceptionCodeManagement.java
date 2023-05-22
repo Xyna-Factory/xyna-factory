@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ public class ExceptionCodeManagement {
    * @param pattern
    * @param start
    * @param length
-   * @param padding formatierte länge von zahlen.
+   * @param padding formatierte lï¿½nge von zahlen.
    * @throws CodeGroupUnknownException falls die angegeben code gruppe nicht existiert
    * @throws InvalidPatternException falls syntax des pattern nicht geparst werden kann
    * @throws OverlappingCodePatternException falls die angegebenen start+length parameter mit einer existierenden code gruppe kollidieren
@@ -132,7 +132,7 @@ public class ExceptionCodeManagement {
   }
   
   /**
-   * gibt pattern zurück, falls kein overlap gefunden wurde
+   * gibt pattern zurï¿½ck, falls kein overlap gefunden wurde
    * @throws OverlappingCodePatternException
    * @throws InvalidPatternException 
    */
@@ -141,7 +141,7 @@ public class ExceptionCodeManagement {
     for (Map.Entry<String, CodeGroup> entry : codeGroups.entrySet()) {
       for (Pattern oldPattern : entry.getValue().patterns) {
         if (oldPattern.padding == p.padding && oldPattern.prefix.equals(p.prefix) && oldPattern.suffix.equals(p.suffix)) {
-          //codes sehen ähnlich aus: wie siehts mit den bereichen aus?
+          //codes sehen ï¿½hnlich aus: wie siehts mit den bereichen aus?
           //1. ist startIndex von p innerhalb des intervalls von oldPattern?
           if (p.startIndex >= oldPattern.startIndex && p.startIndex <= oldPattern.endIndex) {
             throw new OverlappingCodePatternException(codeGroupName, entry.getKey());
@@ -150,7 +150,7 @@ public class ExceptionCodeManagement {
           if (p.endIndex >= oldPattern.startIndex && p.endIndex <= oldPattern.endIndex) {
             throw new OverlappingCodePatternException(codeGroupName, entry.getKey());
           }
-          //3. jetzt kann höchstens noch passieren, dass das oldPattern vollständig im neuen enthalten ist
+          //3. jetzt kann hï¿½chstens noch passieren, dass das oldPattern vollstï¿½ndig im neuen enthalten ist
           if (oldPattern.startIndex >= p.startIndex && oldPattern.startIndex <= p.endIndex) {
             throw new OverlappingCodePatternException(codeGroupName, entry.getKey());
           }

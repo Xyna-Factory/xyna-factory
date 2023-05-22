@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import com.gip.xyna.utils.db.exception.DBUtilsException;
 
 /**
  * ConnectionFactory zum Bauen und Markieren von Connections
- * Die Connections sollten markiert werden, um in der DB prüfen zu können,
- * wer welche Connection geöffnet hat.
+ * Die Connections sollten markiert werden, um in der DB prï¿½fen zu kï¿½nnen,
+ * wer welche Connection geï¿½ffnet hat.
  */
 public class ConnectionFactory {
 
@@ -87,7 +87,7 @@ public class ConnectionFactory {
   
   /**
    * @param connectString (Beispiel user/passwd@localhost:1521:xynadb)
-   * Auch die Falschschreibung user/passwd@localhost:1521/xynadb ist zulässig
+   * Auch die Falschschreibung user/passwd@localhost:1521/xynadb ist zulï¿½ssig
    * @param clientInfo
    * @return
    */
@@ -118,8 +118,8 @@ public class ConnectionFactory {
       ps.setQueryTimeout(10);
       ps.execute();
     } catch(Throwable t){
-      //Ein Fehler hier ist wenig schön, da die Connection nicht markiert ist, 
-      //aber da kein Logger vorhanden ist, wird der Fehler unterdrückt, damit 
+      //Ein Fehler hier ist wenig schï¿½n, da die Connection nicht markiert ist, 
+      //aber da kein Logger vorhanden ist, wird der Fehler unterdrï¿½ckt, damit 
       //die eigentliche Bearbeitung fortgesetzt werden kann
     }
     finally {
@@ -128,7 +128,7 @@ public class ConnectionFactory {
   }
   
   /**
-   * @deprecated diese methode ist absichtlich nicht public und gibt es nur aus abwärtskompatibilitätsgründen, um zu erlauben, dass man
+   * @deprecated diese methode ist absichtlich nicht public und gibt es nur aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden, um zu erlauben, dass man
    * in den sql utils beim close connection nicht immer das markConnection aufruft.
    * @param connection
    * @param markConnection
@@ -141,7 +141,7 @@ public class ConnectionFactory {
     try {
       closed = connection.isClosed();
     } catch (Throwable t) {
-      //Fehler hier wird unterdrückt, da schlecht behandelbar, 
+      //Fehler hier wird unterdrï¿½ckt, da schlecht behandelbar, 
       //wenn wirklich ein schwerwiegender Fehler auftritt, wird 
       //unten ein DBUtilsException geworfen.
     }
@@ -166,7 +166,7 @@ public class ConnectionFactory {
     try {
       closed = sqlUtils.getConnection().isClosed();
     } catch( Throwable t ) {
-      //Fehler hier wird unterdrückt, da schlecht behandelbar, 
+      //Fehler hier wird unterdrï¿½ckt, da schlecht behandelbar, 
       //wenn wirklich ein schwerwiegender Fehler auftritt, wird 
       //unten ein DBUtilsException geworfen.
     }

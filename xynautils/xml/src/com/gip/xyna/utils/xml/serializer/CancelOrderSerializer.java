@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class CancelOrderSerializer implements XMLSerializer {
         el = (XMLElement)ca.item(0);
         CancelAttributes catt = new CancelAttributes();      
         co.setCancelAttributes(catt);        
-        //keine nullpointerexception laut api muss getattribute leeren string zurückgeben, falls es nicht vorhanden ist
+        //keine nullpointerexception laut api muss getattribute leeren string zurï¿½ckgeben, falls es nicht vorhanden ist
         catt.set_this(el.getAttribute(THIS).equalsIgnoreCase("true")); 
         //logger.debug("this = " + catt.is_this());
         catt.setAll(el.getAttribute(ALL).equalsIgnoreCase("true"));
@@ -96,7 +96,7 @@ public class CancelOrderSerializer implements XMLSerializer {
       XMLUtils.addAttributeIfNotNullOrEmpty(xsEl, "StatusReferenceNumber", co.getXynaStatus().getStatusReferenceNumber());
       XMLUtils.addAttributeIfNotNullOrEmpty(xsEl, "Information", co.getXynaStatus().getInformation());
     } else {
-      throw new Exception("CancelOrder kann nicht in XML umgewandelt werden, da CancelAttributes und XynaStatus nicht beide null sein dürfen.");
+      throw new Exception("CancelOrder kann nicht in XML umgewandelt werden, da CancelAttributes und XynaStatus nicht beide null sein dï¿½rfen.");
     }
     //toString
     StringWriter sw = new StringWriter();

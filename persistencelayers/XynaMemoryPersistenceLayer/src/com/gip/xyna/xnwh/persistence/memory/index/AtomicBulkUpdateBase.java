@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ public abstract class AtomicBulkUpdateBase<E extends Comparable<E>, F> implement
 
 
     /*
-     * adds gehen immer auf den darauffolgenden knoten => reihenfolge muss immer so sein, dass adds bei gleichen keys später kommen.
-     * das gleiche gilt für update-adds.
+     * adds gehen immer auf den darauffolgenden knoten => reihenfolge muss immer so sein, dass adds bei gleichen keys spï¿½ter kommen.
+     * das gleiche gilt fï¿½r update-adds.
      * => reihenfolge:
      * 'remove a' < 'add a' < 'remove b' < 'add b'
      */
@@ -162,7 +162,7 @@ public abstract class AtomicBulkUpdateBase<E extends Comparable<E>, F> implement
   }
 
 
-  //TODO F-Finder anstatt f direkt? ggfs kann man f nicht über die object-identity finden?
+  //TODO F-Finder anstatt f direkt? ggfs kann man f nicht ï¿½ber die object-identity finden?
   public void remove(E e, F f) {
     actions.add(new AtomicRemoveAction(e, f));
   }

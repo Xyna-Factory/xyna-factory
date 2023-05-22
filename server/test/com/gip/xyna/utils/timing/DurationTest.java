@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public class DurationTest extends TestCase {
   
   public void testConvertJava15() {
     if( TimeUnit.values().length != 4 ) {
-      return; //Java15 hat 4 Einträge in TimeUnit und kennt MINUTES, HOURS und DAYS nicht
+      return; //Java15 hat 4 Eintrï¿½ge in TimeUnit und kennt MINUTES, HOURS und DAYS nicht
     }
     
     Duration d1 = Duration.valueOf("1 min");
@@ -77,7 +77,7 @@ public class DurationTest extends TestCase {
   
   public void testConvertJava16() {
     if( TimeUnit.values().length == 4 ) {
-      return; //Java15 hat 4 Einträge in TimeUnit
+      return; //Java15 hat 4 Eintrï¿½ge in TimeUnit
     }
     TimeUnit MINUTES = Duration.unitOf("min", null);
     TimeUnit HOURS = Duration.unitOf("h", null);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -280,7 +280,7 @@ public class EmailUtils {
 
       int maxLength = 14;
       if (password.length() > maxLength) {
-         throw new Exception("Kennwort darf höchstens " + maxLength
+         throw new Exception("Kennwort darf hï¿½chstens " + maxLength
                + " Zeichen lang sein.");
       }
 
@@ -327,12 +327,12 @@ public class EmailUtils {
       if (identicalChars > 0 && oldPassword.length() > 0) {
          if (oldPassword.equals(newPassword))
             throw new Exception(
-                  "Altes und neues Kennwort dürfen nicht übereinstimmen.");
+                  "Altes und neues Kennwort dï¿½rfen nicht ï¿½bereinstimmen.");
 
          for (int i = 0; i < oldPassword.length() - identicalChars; i++) {
             String idChars = oldPassword.substring(i, i + identicalChars);
             if (newPassword.indexOf(idChars) >= 0) {
-               throw new Exception("Das neue Kennwort enthält mehr als "
+               throw new Exception("Das neue Kennwort enthï¿½lt mehr als "
                      + idChars.length()
                      + " aufeinanderfolgende Zeichen des alten Kennworts.");
             }

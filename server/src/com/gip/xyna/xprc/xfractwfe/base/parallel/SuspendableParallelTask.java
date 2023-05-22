@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,7 +123,7 @@ public class SuspendableParallelTask<S extends Step> implements ParallelTask, Se
     if( state == State.Suspended ) {
       suspensionCause = (SuspensionCause)((SerializableClassloadedObject) s.readObject()).getObject();
     }
-    priority = PRIORITY_NORMAL; //nach der Ausführung zurücksetzen
+    priority = PRIORITY_NORMAL; //nach der Ausfï¿½hrung zurï¿½cksetzen
   }
 
   private void writeObject(ObjectOutputStream s) throws IOException {

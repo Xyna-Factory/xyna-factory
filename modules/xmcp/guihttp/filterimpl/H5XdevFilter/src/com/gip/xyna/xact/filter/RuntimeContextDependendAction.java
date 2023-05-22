@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 
 /**
- * Basis für alle FilterActions, die wahlweise mit und ohne rtc aufgerufen werden können
+ * Basis fï¿½r alle FilterActions, die wahlweise mit und ohne rtc aufgerufen werden kï¿½nnen
  *
  */
 public abstract class RuntimeContextDependendAction extends H5xFilterAction {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ import com.gip.xyna.xfmg.Constants;
 
 
 /**
- * CommandLineWriter hilft, einfacher den OutputStream zu befüllen und auch den ReturnCode am Ende besser 
- * übergeben zu können
- * TODO "extends OutputStream" ist ein dummer Trick, der fürs erste viel Refactoring-Aufwand erspart, 
+ * CommandLineWriter hilft, einfacher den OutputStream zu befï¿½llen und auch den ReturnCode am Ende besser 
+ * ï¿½bergeben zu kï¿½nnen
+ * TODO "extends OutputStream" ist ein dummer Trick, der fï¿½rs erste viel Refactoring-Aufwand erspart, 
  *       aber augebaut werden sollte
  */
 public class CommandLineWriter extends OutputStream {

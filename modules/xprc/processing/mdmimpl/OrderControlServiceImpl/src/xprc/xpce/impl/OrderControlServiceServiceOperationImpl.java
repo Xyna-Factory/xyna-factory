@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,18 +115,18 @@ public class OrderControlServiceServiceOperationImpl implements ExtendedDeployme
   @Override
   public SchedulerInformation createSchedulerInformation(XynaOrderServerExtension correlatedXynaOrder) {
     //Im MasterWorkflowPreScheduler.xynaPlanning() sind bereits alle SchedulingData gesetzt bis auf die Capacities.
-    //Daher können fast alle Daten direkt geholt werden.
+    //Daher kï¿½nnen fast alle Daten direkt geholt werden.
     SchedulerInformation schedulerInformation = convertSchedulingData(correlatedXynaOrder.getSchedulingData());
     
-    //Das Planning ist für das Setzen der Capacities zuständig, daher werden hier nun die 
+    //Das Planning ist fï¿½r das Setzen der Capacities zustï¿½ndig, daher werden hier nun die 
     //Capacities aus der CapacityMappingDatabase geholt.
     List<com.gip.xyna.xprc.xpce.planning.Capacity> capacities =
         XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getCapacityMappingDatabase()
             .getCapacities(correlatedXynaOrder.getDestinationKey());
     schedulerInformation.setCapacities(createCapacityList(capacities));
     
-    //Aus dem Filter können derzeit keine Capacities und Vetos übertragen werden, daher werden hier nun auch 
-    //keine konfigurierten Capacities überschrieben.
+    //Aus dem Filter kï¿½nnen derzeit keine Capacities und Vetos ï¿½bertragen werden, daher werden hier nun auch 
+    //keine konfigurierten Capacities ï¿½berschrieben.
     
     if( logger.isDebugEnabled() ) {
       logger.debug( "createSchedulerInformation " + schedulerInformation);
@@ -185,14 +185,14 @@ public class OrderControlServiceServiceOperationImpl implements ExtendedDeployme
                 XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive().deleteFromOrderArchive(correlatedXynaOrder.getId());
               } catch (Throwable t) {
                 Department.handleThrowable(t);
-                //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhängen
+                //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhï¿½ngen
                 logger.warn("Could not delete orderinstance for " + correlatedXynaOrder, t);
               }
             } else if (oldML < 10 && newML >= 10) {
               if (correlatedXynaOrder.getExecutionProcessInstance() != null) {
-                //zu spät - es kann kein eintrag angelegt werden.
+                //zu spï¿½t - es kann kein eintrag angelegt werden.
                 logger.warn("Can not change monitoringlevel of order already running in workflow.");
-                //zurücksetzen
+                //zurï¿½cksetzen
                 correlatedXynaOrder.setMonitoringLevel(oldML);
               } else {
                 //orderarchiveeintrag jetzt anlegen!
@@ -214,7 +214,7 @@ public class OrderControlServiceServiceOperationImpl implements ExtendedDeployme
       orderStatus.changeMasterWorkflowStatus(xo, orderInstanceStatus, null);
     } catch (Throwable t) {
       Department.handleThrowable(t);
-      //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhängen
+      //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhï¿½ngen
       logger.warn("Could not write orderinstance status " + orderInstanceStatus + " for " + xo, t);
     }
   }

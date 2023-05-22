@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.InMemoryCompilationSet.TargetKind;
 
 /*
- * unterstützt dynamische output verzeichnisse für die classfiles, indem man im javasourcefromstring target das outputdir angibt.
+ * unterstï¿½tzt dynamische output verzeichnisse fï¿½r die classfiles, indem man im javasourcefromstring target das outputdir angibt.
  * falls es nirgendwo angegeben wird, wird das outputdir vom compilationset verwendet
  */
 class CompilationFileManager extends ForwardingJavaFileManager<JavaFileManager> {
@@ -84,7 +84,7 @@ class CompilationFileManager extends ForwardingJavaFileManager<JavaFileManager> 
 
   @Override
   public JavaFileObject getJavaFileForInput(Location location, String className, Kind kind) throws IOException {
-    //TODO müsste man hier eigtl den source auch zurückgeben, wenn className eine innere klasse davon ist?! bei tests wurde dieser methode allerdings nie aufgerufen!
+    //TODO mï¿½sste man hier eigtl den source auch zurï¿½ckgeben, wenn className eine innere klasse davon ist?! bei tests wurde dieser methode allerdings nie aufgerufen!
     JavaFileObject jfo = imcs.compilationTargets.get(className);
     if (jfo != null) {
       if (kind == Kind.SOURCE) {
@@ -136,7 +136,7 @@ class CompilationFileManager extends ForwardingJavaFileManager<JavaFileManager> 
           if (idx == -1) {
             imcs.success.add(className);
             
-            //entferne classfiles von inneren klassen von früheren compiles             
+            //entferne classfiles von inneren klassen von frï¿½heren compiles             
             if (ret == null) {
               ret = super.getJavaFileForOutput(location, className, kind, sibling);
             }
@@ -199,13 +199,13 @@ class CompilationFileManager extends ForwardingJavaFileManager<JavaFileManager> 
 
   @Override
   public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse) throws IOException {
-    Iterable<JavaFileObject> normal = super.list(location, packageName, kinds, recurse); //-> gibt liste von classfiles zurück - inkl innerer klassen
+    Iterable<JavaFileObject> normal = super.list(location, packageName, kinds, recurse); //-> gibt liste von classfiles zurï¿½ck - inkl innerer klassen
     normal = appendAdditionalFiles(normal, packageName, recurse);
     if (!kinds.contains(Kind.SOURCE)) {
       return normal;
     }
 
-    //idee: falls objekt als class gefunden wird, trotzdem nur als source zurückgeben, wenn es ein compilationtarget ist. 
+    //idee: falls objekt als class gefunden wird, trotzdem nur als source zurï¿½ckgeben, wenn es ein compilationtarget ist. 
     List<JavaFileObject> list = new ArrayList<JavaFileObject>(); //JavaFileObject hat keine equals-methode
     String pn = packageName + ".";
     for (JavaFileObject fileSystemObject : normal) {

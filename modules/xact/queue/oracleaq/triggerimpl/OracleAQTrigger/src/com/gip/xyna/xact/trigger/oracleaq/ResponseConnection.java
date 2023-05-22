@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import com.gip.xyna.xact.trigger.oracleaq.shared.SQLUtilsCreator.SQLRuntimeExcep
  * @deprecated wird allerdings noch verwendet in Filtern:
  * ResponseMessage rm = tc.buildResponseMessage(correlationId, response);
  * tc.getResponseConnection().enqueue(rm);
- * sollte abgelöst werden durch tc.sendResponse( correlationId, response );
+ * sollte abgelï¿½st werden durch tc.sendResponse( correlationId, response );
  */
 public class ResponseConnection implements Serializable {
 

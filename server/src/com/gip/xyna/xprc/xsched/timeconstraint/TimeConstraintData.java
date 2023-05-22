@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class TimeConstraintData implements Serializable {
   private String windowName;
   private boolean recalculatedForWindow;
   private transient boolean schedulingTimeoutMonitored; //TODO transient hilft, dass SchedulingTimeout nach einer OrderMigration klappt. Dies sollte besser realisiert werden!
-  private long windowIsOpenSince; //Timestamp, seit dem das zugehörige Zeitfenster offen ist
+  private long windowIsOpenSince; //Timestamp, seit dem das zugehï¿½rige Zeitfenster offen ist
   
   
   public TimeConstraintData(long entranceTimestamp, TimeConstraint definition) {

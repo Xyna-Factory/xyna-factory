@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,20 +26,20 @@ import com.gip.xyna.utils.collections.HashCodeMap;
 /**
  * HashParallelReentrantLock ist ein Lock, das aus mehreren parallelen ReentrantLocks besteht.
  * Es wird automatisch eines der parallelen Locks verwendet, dieses wird anhand des 
- * übergebenen Objects ausgesucht. Ziel ist, dass konkurrierende Operationen mit dem Object 
+ * ï¿½bergebenen Objects ausgesucht. Ziel ist, dass konkurrierende Operationen mit dem Object 
  * verhindert werden, gleichzeitig aber Operationen mit anderen Objects erlaubt sind.
  * <br><br>
- * Damit kann die Wirkungsweise auch so verstandenen werden, dass das übergebene Object gelockt
+ * Damit kann die Wirkungsweise auch so verstandenen werden, dass das ï¿½bergebene Object gelockt
  * wird. Damit sind konkurrierende Zugriffe auf das gleiche Objekt ausgeschlossen, Zugriffe auf 
- * andere Objekte aber wahrscheinlich möglich.
+ * andere Objekte aber wahrscheinlich mï¿½glich.
  * <br>
  * <ul>
- * <li>Der Grad der Parallelität kann im Konstruktor eingestellt werden, Default ist 32.
- * Je höher die Parallelität ist, desto eher können verschiedenen Objects parallel bearbeitet 
- * werden, der Speicherverbrauch wächst allerdings linear an.</li>
- * <li>Zur Ermittelung des Locks wird der hashCode des übergebenen Objects verwendet. Diese muss
- * hinreichnend gut sein, damit die gelockten Objects unterschieden werden können und die 
- * Parallelität erhalten bleibt.</li>
+ * <li>Der Grad der Parallelitï¿½t kann im Konstruktor eingestellt werden, Default ist 32.
+ * Je hï¿½her die Parallelitï¿½t ist, desto eher kï¿½nnen verschiedenen Objects parallel bearbeitet 
+ * werden, der Speicherverbrauch wï¿½chst allerdings linear an.</li>
+ * <li>Zur Ermittelung des Locks wird der hashCode des ï¿½bergebenen Objects verwendet. Diese muss
+ * hinreichnend gut sein, damit die gelockten Objects unterschieden werden kï¿½nnen und die 
+ * Parallelitï¿½t erhalten bleibt.</li>
  * <li>Methoden
  * </ul>
  * <ul>
@@ -72,14 +72,14 @@ public class HashParallelReentrantLock<T> implements ParallelLock<T> {
   private HashCodeMap<ReentrantLock> locks;
   
   /**
-   * Anlegen des HashParallelReentrantLock mit Parallelität 32
+   * Anlegen des HashParallelReentrantLock mit Parallelitï¿½t 32
    */
   public HashParallelReentrantLock() {
     this(32);
   }
   
   /**
-   * Anlegen des HashParallelReentrantLock mit angegebener Parallelität
+   * Anlegen des HashParallelReentrantLock mit angegebener Parallelitï¿½t
    * @param parallel
    */
   public HashParallelReentrantLock(int parallel) {
@@ -92,7 +92,7 @@ public class HashParallelReentrantLock<T> implements ParallelLock<T> {
   }
   
   /**
-   * Lock des zum übergebenen Object passenden Locks (entspricht dem Locken dieses Objects) 
+   * Lock des zum ï¿½bergebenen Object passenden Locks (entspricht dem Locken dieses Objects) 
    * @param object
    * @throws NullPointerException wenn object null ist
    */
@@ -101,17 +101,17 @@ public class HashParallelReentrantLock<T> implements ParallelLock<T> {
   }
   
   /**
-   * Unlock des zum übergebenen Object passenden Locks (entspricht dem Unlocken dieses Objects) 
+   * Unlock des zum ï¿½bergebenen Object passenden Locks (entspricht dem Unlocken dieses Objects) 
    * @param object
    * @throws NullPointerException wenn object null ist
-   * @throws IllegalMonitorStateException wenn der aktulle Thread nicht dieses Lock hält
+   * @throws IllegalMonitorStateException wenn der aktulle Thread nicht dieses Lock hï¿½lt
    */
   public void unlock(T object) {
     locks.get(object).unlock();
   }
   
   /**
-   * TryLock des zum übergebenen Object passenden Locks (entspricht dem Locken dieses Objects) 
+   * TryLock des zum ï¿½bergebenen Object passenden Locks (entspricht dem Locken dieses Objects) 
    * @param object
    * @return
    */
@@ -121,8 +121,8 @@ public class HashParallelReentrantLock<T> implements ParallelLock<T> {
   
   
   /**
-   * Lockt alle zugrundeliegenden Locks, Freigabe über {@link #unlockAll}. 
-   * Dies kann länger dauern, bis alle Locks von anderen Threads freigegeben wurden
+   * Lockt alle zugrundeliegenden Locks, Freigabe ï¿½ber {@link #unlockAll}. 
+   * Dies kann lï¿½nger dauern, bis alle Locks von anderen Threads freigegeben wurden
    */
   public void lockAll() {
     boolean[] locked = new boolean[locks.size()]; //mit false korrekt belegt
@@ -153,7 +153,7 @@ public class HashParallelReentrantLock<T> implements ParallelLock<T> {
     int unlocked = -1;
     for( int l=0; l<locks.size(); ++l ) {
       if( locked[l] ) {
-        continue; //breits in einem der früheren Versuche gelockt
+        continue; //breits in einem der frï¿½heren Versuche gelockt
       }
       if( locks.get(l).tryLock() ) {
         locked[l] = true;

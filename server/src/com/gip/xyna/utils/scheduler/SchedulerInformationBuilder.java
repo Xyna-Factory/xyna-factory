@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package com.gip.xyna.utils.scheduler;
 
 
 /**
- * Soll Daten sammeln, die während eines Schedulerlaufs anfallen.
- * Scheduler kann dann über getSchedulerInformation() dann die Daten herausgeben.
+ * Soll Daten sammeln, die wï¿½hrend eines Schedulerlaufs anfallen.
+ * Scheduler kann dann ï¿½ber getSchedulerInformation() dann die Daten herausgeben.
  * 
  *
  */
@@ -37,8 +37,8 @@ public interface SchedulerInformationBuilder<I> {
   long timestamp(Timestamp timestamp);
 
   /**
-   * Am Ende jedes SchedulingLaufs gerufen, um Daten zwischenzuspeichern und über getSchedulerInformation()
-   * ausgeben zu können. 
+   * Am Ende jedes SchedulingLaufs gerufen, um Daten zwischenzuspeichern und ï¿½ber getSchedulerInformation()
+   * ausgeben zu kï¿½nnen. 
    */
   I build();
 

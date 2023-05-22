@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public class TryScheduleImpl implements TrySchedule {
         // Therefore subworkflow orders have to pass.
         return tryScheduleInternal(so);
       } else {
-        //alle anderen Aufträge überspringen
+        //alle anderen Auftrï¿½ge ï¿½berspringen
         return TryScheduleResult.CONTINUE;
       }
     }
@@ -123,7 +123,7 @@ public class TryScheduleImpl implements TrySchedule {
         //Auftrag hat Fehler Cancel, Timeout etc und soll daher beendet werden
         return tryScheduleInternal(so);
       } else if( so.getDestinationKey().equals(XynaDispatcher.DESTINATION_KEY_SUSPEND_ALL) ) {
-        //Aufräumauftrag soll laufen
+        //Aufrï¿½umauftrag soll laufen
         return tryScheduleInternal(so);
       } else {
         //kein anderer Auftrag soll laufen

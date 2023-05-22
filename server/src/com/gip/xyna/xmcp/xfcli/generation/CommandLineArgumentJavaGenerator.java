@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class CommandLineArgumentJavaGenerator {
   private static final String XYNA_COMMAND_IMPLEMENTATION_SIMPLE_CLASS_NAME = XynaCommandImplementation.class.getSimpleName();*/
   
   /*
-   * FIXME dependencies aufräumen: derzeit ist das problem, dass beim bauen des cliclassgenerator.jars das xynafactory.jar
+   * FIXME dependencies aufrï¿½umen: derzeit ist das problem, dass beim bauen des cliclassgenerator.jars das xynafactory.jar
    * noch nicht existiert, dabei aber klassen daraus verwendet werden (s.o.)
    */
   
@@ -201,7 +201,7 @@ public class CommandLineArgumentJavaGenerator {
 
   }
 
-  //copy&paste von FileUtils. aber aus classpathgründen hier dupliziert.
+  //copy&paste von FileUtils. aber aus classpathgrï¿½nden hier dupliziert.
   private static void writeStringToFile(String content, File f) throws IOException {
     if (!f.exists()) {
       if (f.getParentFile() != null) {

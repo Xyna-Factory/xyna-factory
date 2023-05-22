@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public interface AtomicBulkUpdate<E extends Comparable<E>, F> {
   void update(E oldKey, E newKey, F f);
 
   /**
-   * achtung, bulk commit funktioniert nur für daten, die bereits "gemerged" sind.
+   * achtung, bulk commit funktioniert nur fï¿½r daten, die bereits "gemerged" sind.
    * d.h. die reihenfolge der bulk-teile muss vertauschbar sein (bis auf remove/add, die werden automatisch in die richtige reihenfolge gebracht) 
    */  
   void commit();

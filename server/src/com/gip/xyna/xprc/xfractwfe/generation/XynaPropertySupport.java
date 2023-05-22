@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -160,7 +160,7 @@ class XynaPropertySupport {
           if (name != null) {
             createInstanceName(usedInstanceNames);
           } else {
-            return; //unvollständig, daher nicht weiter probieren
+            return; //unvollstï¿½ndig, daher nicht weiter probieren
           }
         }
         if (c.getVarName().equals("value")) {
@@ -345,7 +345,7 @@ class XynaPropertySupport {
 
   public void generateJavaReadWriteObject(CodeBuffer cb, boolean read) {
     if( ! read ) {
-      return; //nichts zu tun für write
+      return; //nichts zu tun fï¿½r write
     }
     if (xynaPropertyData == null) {
       return; //nichts zu tun

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -371,7 +371,7 @@ public class CopyOperation extends ModifyOperationBase<CopyJson> {
 
     insertion.wrapWhenNeeded(modification.getObject()); // Hinzufuegen von fuer Insert evtl. benoetigten Wrapper-Schritten
     insertion.inferWhere(object); // Feststellen wohin inserted wird, dies ist leider nicht eindeutig
-    insertion.inferPossibleContent(); // Überlegen was im Content stehen könnte, dies ist leider nicht eindeutig
+    insertion.inferPossibleContent(); // ï¿½berlegen was im Content stehen kï¿½nnte, dies ist leider nicht eindeutig
 
     if (isOperationInSelf(relativeToObject)) {
       throw new UnsupportedOperationException(UnsupportedOperationException.COPY_OPERATION,

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,10 +55,10 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmomType;
  * (C)       <namespace>:<RootElementName>:'_root'           <------>            <XynaObject FQClassName>:'_root'
  *
  *
- * für toXML benötigt man die reihenfolge der elemente und die information, ob man den wert
+ * fï¿½r toXML benï¿½tigt man die reihenfolge der elemente und die information, ob man den wert
  * als attribut oder element schreiben muss. dazu gibt es noch folgendes mapping:
  * (D)      <namespace>:<XSDTypeName>:<MemberVar-/Attribute-Name>:<index>('a'|'e')     <------->      <XynaObject FQClassName>:<MemberVarName>:'xml'
- *   dabei steht a für attribute, e für element.
+ *   dabei steht a fï¿½r attribute, e fï¿½r element.
  */
 public class TypeMappingEntryHelper {
 
@@ -219,7 +219,7 @@ public class TypeMappingEntryHelper {
    * Wiederherstellen eines TypeInfo aus den typeMappingEntries
    * 
    * TODO diese Wiederherstellung gelingt nur teilweise, da wichtige Daten nicht in den TypeMappingEntries 
-   * gehalten werden, sondern aus den XynaObjecten stammen müssen.
+   * gehalten werden, sondern aus den XynaObjecten stammen mï¿½ssen.
    *
    * @param typeMappingEntries
    * @return

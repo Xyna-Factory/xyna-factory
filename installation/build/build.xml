@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@
 			<doctitle>
 				<![CDATA[<h1>Xyna Factory API</h1>]]></doctitle>
 		<bottom>
-			<![CDATA[<i>Copyright 2022 GIP SmartMercial GmbH, Germany</i>]]></bottom>
+			<![CDATA[<i>Copyright 2023 Xyna GmbH, Germany</i>]]></bottom>
 </javadoc>
 <jar destfile="${build.dir}/server/lib/xynafactory-javadoc.jar" basedir="${build.dir}/doc/api"/>
 <delete dir="${build.dir}/doc/api">

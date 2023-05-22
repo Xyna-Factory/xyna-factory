@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * RandomizingBlockingQueue ist eine Queue, aus der Elemente in einer zufälligen Reihenfolge gezogen werden können.
- * - offer(element) trägt dabei die Elemente ein, null ist nicht erlaubt
- * - poll oder take entfernen ein zufälliges Element aus der Queue und geben dieses zurück;
+ * RandomizingBlockingQueue ist eine Queue, aus der Elemente in einer zufï¿½lligen Reihenfolge gezogen werden kï¿½nnen.
+ * - offer(element) trï¿½gt dabei die Elemente ein, null ist nicht erlaubt
+ * - poll oder take entfernen ein zufï¿½lliges Element aus der Queue und geben dieses zurï¿½ck;
  *   das Verhalten unterscheidet sich bei leerer Collection:
  *   a) poll() liefert null, wenn die Queue leer ist
  *   b) take() oder poll(timeout, unit) blockieren, bis wieder ein Element in die Queue eingetragen wurde

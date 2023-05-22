@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -154,7 +154,7 @@ public class UpdateCreateXMOMRepository extends UpdateJustVersion {
       
       Set<String> allNames = new HashSet<String>(e.getValue());
       if (rc instanceof Workspace) {
-        allNames.addAll(reservedServerObjectXmlNames); //für die reservierten objekte auch checken, weil die nicht in der wfdatabase stehen (müssen)
+        allNames.addAll(reservedServerObjectXmlNames); //fï¿½r die reservierten objekte auch checken, weil die nicht in der wfdatabase stehen (mï¿½ssen)
       }
       try {
         for (String fqName : allNames) {
@@ -179,7 +179,7 @@ public class UpdateCreateXMOMRepository extends UpdateJustVersion {
           } catch (FileNotFoundException e1) {
             logger.warn("Could not access file " + xmlFile + ".");
           }
-          if (list.size() >= 100) { //Nicht zuviele Files gleichzeitig geöffnet haben
+          if (list.size() >= 100) { //Nicht zuviele Files gleichzeitig geï¿½ffnet haben
             saveList(fsr, list);
             list.clear();
           }

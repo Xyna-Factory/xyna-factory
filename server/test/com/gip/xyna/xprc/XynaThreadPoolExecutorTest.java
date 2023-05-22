@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,9 +209,9 @@ public class XynaThreadPoolExecutorTest extends TestCase {
     tpe.awaitTermination(150, TimeUnit.MILLISECONDS);
     
     assertEquals( 0, rehi_tpe.rejectedCnt.get() ); //RejectedExecutionHandler hat nichts zu tun, ...
-    assertEquals( 1, rehi_run.rejectedCnt.get() );  //... da RejectableRunnable sich um reject kümmern muss
+    assertEquals( 1, rehi_run.rejectedCnt.get() );  //... da RejectableRunnable sich um reject kï¿½mmern muss
     assertEquals( 3, execCnt.get() );
-    assertEquals( r1, rehi_run.rejectedList.get(0) ); //erstes (ältestes) Runnable wird verworfen
+    assertEquals( r1, rehi_run.rejectedList.get(0) ); //erstes (ï¿½ltestes) Runnable wird verworfen
     
   }
 

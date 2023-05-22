@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import com.gip.xyna.utils.db.types.StringSerializable;
 
 
 /**
- * Implementierungen von CollectionUtils.Transformation für Transformationen 
+ * Implementierungen von CollectionUtils.Transformation fï¿½r Transformationen 
  * zwischen String und anderen Datentypen.
  * <br>
  * Aufruf:
@@ -34,7 +34,7 @@ import com.gip.xyna.utils.db.types.StringSerializable;
  * <li>trafo = StringTransformation.toValue(Example.class);</li>
  * </ul>
  * <br>
- * vollständiges Beispiel:
+ * vollstï¿½ndiges Beispiel:
  * <pre>
  *  List&lt;String&gt; from = Arrays.asList("1","2","3");
  *  List&lt;Integer&gt; intList = CollectionUtils.transform(from, StringTransformation.toValue(Integer.class) );

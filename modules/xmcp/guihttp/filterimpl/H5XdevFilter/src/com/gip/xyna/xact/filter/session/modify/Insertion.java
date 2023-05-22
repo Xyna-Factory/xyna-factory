@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -395,7 +395,7 @@ public class Insertion {
       }
     } else {
       insideObject = relativeToObject.getParent();
-      // übergeordnetes Objekt finden
+      // ï¿½bergeordnetes Objekt finden
       // TODO reicht das?
     }
     
@@ -628,7 +628,7 @@ public class Insertion {
       default:
         break;
     }
-    return new UpdateResponseJson(insideObject);//TODO für parent bei transfer ebenso?
+    return new UpdateResponseJson(insideObject);//TODO fï¿½r parent bei transfer ebenso?
   }
   
   private <T> void process(Process process, ObjectAdapter<T> oa, GBBaseObject object, GBSubObject parent) {

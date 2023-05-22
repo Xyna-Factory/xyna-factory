@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class ActionHandler {
 
     switch (existingObject.getStateWithCheck(clusterMemberChangeInfo)) {
       case SHARED :
-        //requesting cluster node kommt als zusätzlicher shared node dazu.
+        //requesting cluster node kommt als zusï¿½tzlicher shared node dazu.
         existingObject.getDirectoryData().addSharingClusterNode(action.getRequestingClusterNodeID());
         break;
       case INVALID :

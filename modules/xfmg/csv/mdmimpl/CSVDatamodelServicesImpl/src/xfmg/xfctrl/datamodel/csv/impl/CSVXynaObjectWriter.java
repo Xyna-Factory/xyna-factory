@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,14 +44,14 @@ import xfmg.xfctrl.datamodel.csv.parameter.StringTransformation;
 
 
 /*
- * TODO: support für abgeleitete typen: dann muss man spalten für alle abgeleiteten typen erzeugen
- *       dafür z.b. erstmal alle objekte durchlaufen und schauen, welche subtypen verwendet werden. spalten für theoretisch vorhandene subtypen braucht man meist nicht.
- *       (aber einen usecase gibt es dafür auch: nämlich das manuelle editieren der objekte in excel - ggfs will man subtypen verwenden, die es vorher nicht gab)
+ * TODO: support fï¿½r abgeleitete typen: dann muss man spalten fï¿½r alle abgeleiteten typen erzeugen
+ *       dafï¿½r z.b. erstmal alle objekte durchlaufen und schauen, welche subtypen verwendet werden. spalten fï¿½r theoretisch vorhandene subtypen braucht man meist nicht.
+ *       (aber einen usecase gibt es dafï¿½r auch: nï¿½mlich das manuelle editieren der objekte in excel - ggfs will man subtypen verwenden, die es vorher nicht gab)
  */
 public class CSVXynaObjectWriter {
 
   /*
-   * schreibt eine "box" (mehrere zeilen, die zum gleichen listenobjekt bzw zum root gehören)
+   * schreibt eine "box" (mehrere zeilen, die zum gleichen listenobjekt bzw zum root gehï¿½ren)
    * beispiel:
    *    meta                        member1       list1.m1       list1.m2        list1.sublist.m1        list1.sublist.m2       list2.m1
    * 1 root=X                        123            
@@ -70,16 +70,16 @@ public class CSVXynaObjectWriter {
    * 2) list1          (pathElements={"list1"})
    * 3) list1.sublist  (pathElements={"list1", "sublist"})
    * 4) list2          (pathElements={"list2"})
-   * auf diesen wird jeweils in einer schleife über die entsprechenden listen writeLineContent() aufgerufen.
+   * auf diesen wird jeweils in einer schleife ï¿½ber die entsprechenden listen writeLineContent() aufgerufen.
    * 
    */
   static class CSVLineBoxWriter {
 
-    private final List<XmomField> xmomFields; //spalten der zeilen, die zu dieser box gehören
+    private final List<XmomField> xmomFields; //spalten der zeilen, die zu dieser box gehï¿½ren
 
-    private int startColumnIdx; //index der ersten spalte von der box (ohne metacolumn mitzuzählen)
+    private int startColumnIdx; //index der ersten spalte von der box (ohne metacolumn mitzuzï¿½hlen)
     private final SortedMap<XmomListField, CSVLineBoxWriter> subBoxes;
-    private final String[] pathElements; //null falls root, ansonsten membervar-names, die zu dem listenobjekt führen (ohne indizes)
+    private final String[] pathElements; //null falls root, ansonsten membervar-names, die zu dem listenobjekt fï¿½hren (ohne indizes)
 
 
     public CSVLineBoxWriter(List<XmomField> xmomFields, SortedMap<XmomListField, CSVLineBoxWriter> subBoxes, XmomListField parent) {

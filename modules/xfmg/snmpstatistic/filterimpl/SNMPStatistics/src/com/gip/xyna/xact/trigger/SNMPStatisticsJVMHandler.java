@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class SNMPStatisticsJVMHandler  extends AbstractSNMPStatisticsHandler {
   private static final Logger logger = CentralFactoryLogging.getLogger(SNMPStatisticsHandler.class);
 
   private static final OID base = new OID("1.3.6.1.4.1.28747.1.11.4.2"); // TODO aus konstanten zusammenbauen -
-  // konstanten für departments etc anlegen.
+  // konstanten fï¿½r departments etc anlegen.
 
   private final static Runtime runtime = Runtime.getRuntime();
   

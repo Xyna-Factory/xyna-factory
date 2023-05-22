@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import com.gip.xyna.utils.collections.Pair;
 
 /**
  * CompensatingStack ist ein einfaches Hilfsmittel, um mehrere Operationen nacheinander 
- * ausführen zu können und nach einem Fehler alle bereits ausgeführten Operationen kompensieren
- * zu können. 
+ * ausfï¿½hren zu kï¿½nnen und nach einem Fehler alle bereits ausgefï¿½hrten Operationen kompensieren
+ * zu kï¿½nnen. 
  * <br>
  * Beispiel
  * <pre>
@@ -60,15 +60,15 @@ import com.gip.xyna.utils.collections.Pair;
      }
   }
  </pre>
- * Die Klasse DoThreeOps müsste nicht implementiert werden, der CompensatingStack ist auch direkt verwendbar.
- * Wichtig ist allerdings, dass die einzelnen Operationen das Interface {@link CompensatableStep} erfüllen.
+ * Die Klasse DoThreeOps mï¿½sste nicht implementiert werden, der CompensatingStack ist auch direkt verwendbar.
+ * Wichtig ist allerdings, dass die einzelnen Operationen das Interface {@link CompensatableStep} erfï¿½llen.
  */
 public class CompensatingStack {
   
  
   /**
    * Damit ein Schritt kompensierbar ist, muss die compensate()-Methode implementiert werden. Diese
-   * darf beliebige Exceptions werfen, die dann währende der Kompensation gesammelt werden
+   * darf beliebige Exceptions werfen, die dann wï¿½hrende der Kompensation gesammelt werden
    *
    */
   public interface CompensatableStep {
@@ -84,7 +84,7 @@ public class CompensatingStack {
   }
   
   /**
-   * Eintragen des CompensatableStep, damit Kompensation ausgeführt werden kann
+   * Eintragen des CompensatableStep, damit Kompensation ausgefï¿½hrt werden kann
    * @param step
    */
   public void addStep(CompensatableStep step) {
@@ -92,7 +92,7 @@ public class CompensatingStack {
   }
   
   /**
-   * Markierung, dass alle Operationen erfolgreich waren, demzufolge keine Kompensation nötig ist
+   * Markierung, dass alle Operationen erfolgreich waren, demzufolge keine Kompensation nï¿½tig ist
    */
   public void success() {
     compensationNeeded = false;
@@ -100,7 +100,7 @@ public class CompensatingStack {
   }
   
   /**
-   * Führt die Kompensation aus. Alle dabei auftretenden Exceptions werden gesammelt
+   * Fï¿½hrt die Kompensation aus. Alle dabei auftretenden Exceptions werden gesammelt
    */
   public void compensate() {
     if( ! compensationNeeded ) {
@@ -117,7 +117,7 @@ public class CompensatingStack {
   }
 
   /**
-   * Hinzufügen einer weiteren Exception, die beim Kompensieren aufgetreten ist
+   * Hinzufï¿½gen einer weiteren Exception, die beim Kompensieren aufgetreten ist
    * @param comment
    * @param e
    */
@@ -129,14 +129,14 @@ public class CompensatingStack {
   }
   
   /**
-   * @return Sind Exceptions während der Kompensation aufgetreten?
+   * @return Sind Exceptions wï¿½hrend der Kompensation aufgetreten?
    */
   public boolean hasCompensationExceptions() {
     return compensationExceptions != null && ! compensationExceptions.isEmpty();
   }
   
   /**
-   * Ausgabe aller während der Kompensation aufgetretenen Exceptions
+   * Ausgabe aller wï¿½hrend der Kompensation aufgetretenen Exceptions
    * @return
    */
   public List<Pair<String,Exception>> getCompensationExceptions() {

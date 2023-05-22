@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,12 +68,12 @@ public class HTTPTriggerTest {
           } 
           final URL url = new URL("http", "localhost", 4251, file);
           HttpURLConnection httpConn = (HttpURLConnection)url.openConnection(); 
-          // Connection für Input und Output einrichten
+          // Connection fï¿½r Input und Output einrichten
           httpConn.setDoInput(true);
           httpConn.setDoOutput(true);
           // kein Cache, da dynamische Daten
           httpConn.setUseCaches(false);
-          // Angaben zur Übertragung (siehe http://www.ietf.org/rfc/rfc2068.txt)
+          // Angaben zur ï¿½bertragung (siehe http://www.ietf.org/rfc/rfc2068.txt)
           httpConn.setRequestMethod("GET");
           httpConn.getOutputStream().write("TEST".getBytes());
           httpConn.getOutputStream().flush();

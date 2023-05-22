@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public interface OSMRemoteInterface extends Remote {
     Later,    //Operation muss wiederholt werden
     Cancel,   //Auftrag muss abgebrochen werden (Predecessor mit AutoCancel)
     Success,  //Auftrag ist erfolgreich
-    Running;  //Aufrag läuft gerade
+    Running;  //Aufrag lï¿½uft gerade
   }
   
   /**

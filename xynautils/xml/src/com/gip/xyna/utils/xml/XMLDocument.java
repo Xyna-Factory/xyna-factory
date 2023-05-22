@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -251,7 +251,7 @@ public class XMLDocument {
     *              names of the attributes
     * @param values
     *              values of the attributes
-    * @deprecated keine richten Tag-Daten möglich
+    * @deprecated keine richten Tag-Daten mï¿½glich
     */
    public void addElement(String tag, String[] attributes, String[] values) {
       buffer.append(indent);

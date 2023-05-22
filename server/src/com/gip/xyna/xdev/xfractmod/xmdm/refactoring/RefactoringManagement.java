@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -546,7 +546,7 @@ public class RefactoringManagement extends FunctionGroup {
     for (XMOMObjectRefactoringResult object : resultSaved.getRefactoredObjects()) {
       switch (object.refactoringType) {
         case CHANGE : // TODO values are currently only placeholders until the gui knows/decides what it want's to receive
-                      // [10:20:25] *SomeGUI-Person*: Solange man keine eingeschränkten Updates machen kann, ist mir die Nachricht erstmal egal.
+                      // [10:20:25] *SomeGUI-Person*: Solange man keine eingeschrï¿½nkten Updates machen kann, ist mir die Nachricht erstmal egal.
           updateList.add(SerializablePair.of(object.fqXmlNameOld, MODIFIED));
           break;
         case MOVE :
@@ -577,7 +577,7 @@ public class RefactoringManagement extends FunctionGroup {
   private void checkExistenceInSavedDir(String fqXmlNameNew, String fqXmlNameOld, XMOMType type, Long revision) throws XDEV_RefactoringFault {
     String fileLocationOfXmlNameForSaving = GenerationBase.getFileLocationOfXmlNameForSaving(fqXmlNameNew, revision);
     if (checkTarget.get() && new File(fileLocationOfXmlNameForSaving + ".xml").exists() && !fqXmlNameNew.equals(fqXmlNameOld)) {
-      //wenn name gleich ist, ist hoffentlich das label unterschiedlich - falls nicht, wird das erst später abgefangen.
+      //wenn name gleich ist, ist hoffentlich das label unterschiedlich - falls nicht, wird das erst spï¿½ter abgefangen.
       //eigtl sollte das aber die gui bereits abfangen.
       throw new XDEV_RefactoringFault(fqXmlNameOld, type.toString(), RefactoringType.MOVE.toString(),
                                       new RuntimeException("target already exists"));
@@ -595,9 +595,9 @@ public class RefactoringManagement extends FunctionGroup {
 
     //0. serviceLibFolder wiederherstellen
     //1. verschobene objekte wieder herstellen
-    //2. geänderte objekte redeployen
+    //2. geï¿½nderte objekte redeployen
     //3. config von verschobenen objekten wieder herstellen
-    //4. neu hinzugefügte objekte undeployen
+    //4. neu hinzugefï¿½gte objekte undeployen
 
     //0.
     for (XMOMObjectRefactoringResult refactored : resultDeployed.getRefactoredObjects()) {
@@ -950,7 +950,7 @@ public class RefactoringManagement extends FunctionGroup {
       progress.setStartedUpdateApplicationEntries(true);
 
       // ApplicationEntries anpassen; Rollback needed
-      // Vor dem Löschen der alten XMOM Objekte machen, sonst kann nicht mehr
+      // Vor dem Lï¿½schen der alten XMOM Objekte machen, sonst kann nicht mehr
       // rausgefunden werden in welchen Applications die Objekte waren
       for (XMLRefactoringUtils.XMOMObjectRefactoringResult moved : result.moved()) {
         try {
@@ -965,7 +965,7 @@ public class RefactoringManagement extends FunctionGroup {
       progress.setStartedDeleteXMOMObjects(true);
 
       // Delete XMOM Objects; Rollback needed
-      // TODO rollback für den fall, dass mehrere workflows moved wurden (erstmal
+      // TODO rollback fï¿½r den fall, dass mehrere workflows moved wurden (erstmal
       // nicht der fall)
       for (XMLRefactoringUtils.XMOMObjectRefactoringResult moved : result.moved()) {
         if (moved.getType().hasCorrespondingGenerationBaseRepresentation()) {
@@ -1158,7 +1158,7 @@ public class RefactoringManagement extends FunctionGroup {
 
 
   /**
-   * hilfsklasse für das rollback des refactoring des deployment dirs
+   * hilfsklasse fï¿½r das rollback des refactoring des deployment dirs
    */
   private static class RefactorDeploymentDirProgress {
 
@@ -1374,8 +1374,8 @@ public class RefactoringManagement extends FunctionGroup {
       }
       progress.copyConfigurationDone();
    
-      //es können noch subworkflows von laufenden aufträgen gestartet werden, das macht aber nichts.
-      //weil wir pausieren den scheduler nur, weil wir verhindern wollen, dass nach dem "isInUse"-check noch aufträge
+      //es kï¿½nnen noch subworkflows von laufenden auftrï¿½gen gestartet werden, das macht aber nichts.
+      //weil wir pausieren den scheduler nur, weil wir verhindern wollen, dass nach dem "isInUse"-check noch auftrï¿½ge
       //gestartet werden. zu dem zeitpunkt sind aber die parent-workflows bereits refactored deployed und
       //rufen den workflow nicht mehr auf.
       //folglich kann der refactorte workflow nur als mainworkflow gestartet werden
@@ -1383,7 +1383,7 @@ public class RefactoringManagement extends FunctionGroup {
       try {
         for (XMLRefactoringUtils.XMOMObjectRefactoringResult moved : result.moved()) {
           if (moved.getFqXmlNameNew().equals(moved.getFqXmlNameOld())) {
-            //usecase: labeländerung bei workflows
+            //usecase: labelï¿½nderung bei workflows
             continue;
           }
           try {
@@ -1422,7 +1422,7 @@ public class RefactoringManagement extends FunctionGroup {
 
     } finally {
       if (!progress.isFinished()) {
-        //rollback: möglichst den ursprünglichen zustand wieder herstellen
+        //rollback: mï¿½glichst den ursprï¿½nglichen zustand wieder herstellen
 
         //xmls umgekehrt refactorn immer, auch wenn der schritt selbst einen fehler hat:
         if (logger.isInfoEnabled()) {
@@ -1431,9 +1431,9 @@ public class RefactoringManagement extends FunctionGroup {
         config.rollbackFileChanges();
 
         if (progress.isCopyConfigurationDone()) {
-          //TODO dann gab es wohl einen fehler beim undeploy. ein redeployment würde unter umständen gut tun?
+          //TODO dann gab es wohl einen fehler beim undeploy. ein redeployment wï¿½rde unter umstï¿½nden gut tun?
 
-          //config muss nicht (zurück-)kopiert werden, weil das undeploy nicht durchgeführt wurde!
+          //config muss nicht (zurï¿½ck-)kopiert werden, weil das undeploy nicht durchgefï¿½hrt wurde!
         }
 
         if (progress.hasRedeployChangedStarted()) {
@@ -1483,10 +1483,10 @@ public class RefactoringManagement extends FunctionGroup {
 
           if (progress.isDeployMovedDone()) {
             try {
-              //undeploy des geänderten workflows. wenn das deploy geklappt hat, dann auch das undeploy!
+              //undeploy des geï¿½nderten workflows. wenn das deploy geklappt hat, dann auch das undeploy!
               for (XMLRefactoringUtils.XMOMObjectRefactoringResult moved : result.moved()) {
                 if (moved.getFqXmlNameNew().equals(moved.getFqXmlNameOld())) {
-                  //usecase: labeländerung bei workflows
+                  //usecase: labelï¿½nderung bei workflows
                   continue;
                 }
                 try {
@@ -1640,9 +1640,9 @@ public class RefactoringManagement extends FunctionGroup {
 
 
   /**
-   * - application-zugehörigkeit des workflows refactorn
-   * - konfiguration, die am default-ordertype hängt, umhängen
-   * - alle custom-ordertypes, die auf den workflow zeigen, umhängen
+   * - application-zugehï¿½rigkeit des workflows refactorn
+   * - konfiguration, die am default-ordertype hï¿½ngt, umhï¿½ngen
+   * - alle custom-ordertypes, die auf den workflow zeigen, umhï¿½ngen
    * - alle crons, die den default-ordertype verwenden umziehen 
    * - inputsources
    */
@@ -1669,7 +1669,7 @@ public class RefactoringManagement extends FunctionGroup {
     copyOrderTypeConfigForWorkflow(fqClassNameOld, fqClassNameNew, result, revision);
 
     //4. crons umkonfigurieren, die auf den default-ordertype zeigen
-    //   andere crons sind durch die umzieherei von ordertype-configs bereits berücksichtigt
+    //   andere crons sind durch die umzieherei von ordertype-configs bereits berï¿½cksichtigt
     changeOrderTypesOfCrons(fqClassNameOld, fqClassNameNew, result, revision);
     
     refactorOrderInputSources(DependencySourceType.ORDERTYPE, fqClassNameOld, fqClassNameNew, result, revision);
@@ -1713,7 +1713,7 @@ public class RefactoringManagement extends FunctionGroup {
           try {
             con.queryOneRowForUpdate(cloToSave);
           } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-            // offensichtlich ist CLO schon ausgeführt wurden? Jedenfalls ist nichts zu tun.
+            // offensichtlich ist CLO schon ausgefï¿½hrt wurden? Jedenfalls ist nichts zu tun.
             con.executeAfterCommit(new Runnable() {
 
               public void run() {
@@ -1724,10 +1724,10 @@ public class RefactoringManagement extends FunctionGroup {
               logger.debug("cron like order " + cronLikeOrderId
                   + " could not be changed because it has already been executed.");
             }
-            continue; //nächste clo
+            continue; //nï¿½chste clo
           }
 
-          //double check, falls inzwischen geändert...
+          //double check, falls inzwischen geï¿½ndert...
           if (cloToSave.getCreationParameters().getOrderType().equals(fqClassNameOld)) {
             cloToSave.getCreationParameters().setOrderType(fqClassNameNew);
             if (cloToSave.getLabel().equals(fqClassNameOld)) {
@@ -1747,7 +1747,7 @@ public class RefactoringManagement extends FunctionGroup {
 
             });
           } else {
-            //speichern schadet nichts. müsste man nicht machen. kommt aber so selten vor, dass hier extra code nicht lohnt
+            //speichern schadet nichts. mï¿½sste man nicht machen. kommt aber so selten vor, dass hier extra code nicht lohnt
           }
 
           con.persistObject(cloToSave);
@@ -1756,7 +1756,7 @@ public class RefactoringManagement extends FunctionGroup {
         //batch commit
         con.commit();
 
-        //geänderte clos wieder aktivieren
+        //geï¿½nderte clos wieder aktivieren
         crs.tryAddNewOrders(changedOrders);
       }
     } finally {
@@ -1831,9 +1831,9 @@ public class RefactoringManagement extends FunctionGroup {
 
 
     if (destinationExecution != null && destinationExecution.getFQName().equals(fqClassNameOld)) {
-      //ist also der defaultordertype für den workflow und der workflow ist kein planning-workflow
-      //wenn der workflow ein planningworkflow ist, hat der zugehörige defaultordertype keine konfiguration
-      //TODO das ist unsicher, man könnte natürlich auch komisch konfiguriert haben
+      //ist also der defaultordertype fï¿½r den workflow und der workflow ist kein planning-workflow
+      //wenn der workflow ein planningworkflow ist, hat der zugehï¿½rige defaultordertype keine konfiguration
+      //TODO das ist unsicher, man kï¿½nnte natï¿½rlich auch komisch konfiguriert haben
 
       OrdertypeManagement orderTypeManagement =
           XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getOrderTypeManagement();
@@ -1854,7 +1854,7 @@ public class RefactoringManagement extends FunctionGroup {
         return;
       }
     }
-    //else der defaultordertype wird für irgendwas anderes verwendet. dann braucht man auch nichts umzuziehen.
+    //else der defaultordertype wird fï¿½r irgendwas anderes verwendet. dann braucht man auch nichts umzuziehen.
   }
 
 
@@ -1883,7 +1883,7 @@ public class RefactoringManagement extends FunctionGroup {
       } catch (XFMG_FailedToRemoveObjectFromApplicationBecauseHasDependentObjects e) {
         throw new RuntimeException(e);
       } catch (XFMG_ObjectNotFoundException e) {
-        //ok, wurde inzwischen gelöscht
+        //ok, wurde inzwischen gelï¿½scht
       }
     }
 

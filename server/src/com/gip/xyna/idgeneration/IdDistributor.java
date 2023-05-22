@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,13 @@ import com.gip.xyna.utils.timing.SleepCounter;
 
 
 /**
- * vergabe von ids, die in blöcken mit konstanter größe angeordnet sind. 
+ * vergabe von ids, die in blï¿½cken mit konstanter grï¿½ï¿½e angeordnet sind. 
  * 
- * blöcke sind immer an die blockgröße angepasst, d.h. blöcke enden immer mit einer zahl, die modulo 
- * blockgröße == -1 ist.
+ * blï¿½cke sind immer an die blockgrï¿½ï¿½e angepasst, d.h. blï¿½cke enden immer mit einer zahl, die modulo 
+ * blockgrï¿½ï¿½e == -1 ist.
  * 
- * falls ein block abgearbeitet wurde, ist die im konstruktor übergeben idsource dafür verantwortlich,
- * den startpunkt des nächsten blocks zu liefern.
+ * falls ein block abgearbeitet wurde, ist die im konstruktor ï¿½bergeben idsource dafï¿½r verantwortlich,
+ * den startpunkt des nï¿½chsten blocks zu liefern.
  * 
  * klasse ist threadsafe, d.h. es ist keine weitere synchronisierung notwendig. 
  * 
@@ -61,7 +61,7 @@ public class IdDistributor {
   private static class Block {
 
     public final AtomicLong nextId;
-    private final long blockEnd; //letzte gültige id des blocks
+    private final long blockEnd; //letzte gï¿½ltige id des blocks
 
 
     public Block(long nextId, long blockEnd) {
@@ -85,21 +85,21 @@ public class IdDistributor {
 
 
   /**
-   * setzt die aktuelle id auf den gewünschten wert und gibt die vorherige zurück
+   * setzt die aktuelle id auf den gewï¿½nschten wert und gibt die vorherige zurï¿½ck
    */
   public long getAndSet(long newId, long blockEnd) {
     Block oldBlock = block.getAndSet(new Block(newId, blockEnd));
     return oldBlock.nextId.getAndSet(Integer.MIN_VALUE);
-    //TODO das ist etwas unschön, aber irgendwie sollte verhindert werden, dass noch gültige ids gezogen werden,ein thread
+    //TODO das ist etwas unschï¿½n, aber irgendwie sollte verhindert werden, dass noch gï¿½ltige ids gezogen werden,ein thread
     //noch den alten block hat
   }
 
 
   /**
-   * ändert nichts an der aktuellen id, gibt eins weniger als die nächste id aus.
+   * ï¿½ndert nichts an der aktuellen id, gibt eins weniger als die nï¿½chste id aus.
    */
   public long getCurrent() {
-    return block.get().nextId.get() - 1; //get() ist die nächste id. die nächste kann außerhalb des blocks liegen - die aktuelle ist eine zurück. wenn gerade ein blockwechsel war, ist es trotzdem nicht per se falsch
+    return block.get().nextId.get() - 1; //get() ist die nï¿½chste id. die nï¿½chste kann auï¿½erhalb des blocks liegen - die aktuelle ist eine zurï¿½ck. wenn gerade ein blockwechsel war, ist es trotzdem nicht per se falsch
   }
 
 
@@ -110,11 +110,11 @@ public class IdDistributor {
   
 
   /**
-   * erhöht die id um eins und gibt die vorherige id zurück. falls das blockende erreicht ist, wird der nächste block begonnen 
+   * erhï¿½ht die id um eins und gibt die vorherige id zurï¿½ck. falls das blockende erreicht ist, wird der nï¿½chste block begonnen 
    */
   public long getNext() {
     /*
-     * Anforderungen bzgl Synchronizität
+     * Anforderungen bzgl Synchronizitï¿½t
      * - Bei Blockende nicht weiterlesen
      * - Bei Blockende darauf warten, dass ein Thread die prefetchedid holt
      * - Achtung: Thread kann Fehler beim Prefetch haben -> Anderer Thread muss PrefetchedId holen
@@ -123,14 +123,14 @@ public class IdDistributor {
     long blockEndLocal = currentBlock.blockEnd;
     long result = currentBlock.nextId.getAndIncrement();
     if (result > blockEndLocal) {
-      long startTime = System.currentTimeMillis(); //für ordentliche berechnung des timeouts
+      long startTime = System.currentTimeMillis(); //fï¿½r ordentliche berechnung des timeouts
       SleepCounter sleepCnt = null;
       while (result > blockEndLocal) {
-        //der thread, der die id holt, die 1 zu hoch ist, ist der zuständige
+        //der thread, der die id holt, die 1 zu hoch ist, ist der zustï¿½ndige
         if (result == blockEndLocal + 1 && 
             block.get() == currentBlock) {
-          //dieser thread soll die nächste id vom prefetcher holen. falls er einen timeout hat, 
-          //wird blockEnd hochgezählt, damit der nächste thread seine aufgabe übernimmt.
+          //dieser thread soll die nï¿½chste id vom prefetcher holen. falls er einen timeout hat, 
+          //wird blockEnd hochgezï¿½hlt, damit der nï¿½chste thread seine aufgabe ï¿½bernimmt.
           boolean success = false;
           try {
             long next = source.getNextBlockStart(this, startTime);
@@ -143,7 +143,7 @@ public class IdDistributor {
           } finally {
             if (!success) {
               /*
-               * nächster thread soll die rolle übernehmen. blockEnd wird hochgesetzt, und nextId wird wieder auf blockEnd 
+               * nï¿½chster thread soll die rolle ï¿½bernehmen. blockEnd wird hochgesetzt, und nextId wird wieder auf blockEnd 
                * gesetzt, damit es genau wieder einen thread gibt, der eine id hat, die eins zu hoch ist
                */
 

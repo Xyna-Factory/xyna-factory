@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -262,7 +262,7 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
               "Maximum amount of characters a tablename may not exceed.");
   
   /**
-   * beim ausprobieren von stark deadlock-anfälligen stores war 1 ausreichend - 3 ist auf nummer sicher.
+   * beim ausprobieren von stark deadlock-anfï¿½lligen stores war 1 ausreichend - 3 ist auf nummer sicher.
    * 
    * bei oracle ist das problem scheinbar nicht aufgetreten, sondern nur bei mysql.
    */
@@ -286,7 +286,7 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
 
 
   /**
-   * für die factory initialisierung genutzt
+   * fï¿½r die factory initialisierung genutzt
    */
   private XMOMPersistenceManagement(String cause) throws PersistenceLayerException {
     super(cause);
@@ -315,9 +315,9 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
 
   @Override
   protected void init() throws XynaException {
-    //prio: muss vor "deploy_new" durchgeführt werden, weil dort die storables registriert werden
-    //      muss nach "undeploy_old" ausgeführt werden, damit beim deregistrieren (z.b. in persistencelayers)
-    //        die alte structure verwendet wird (storable könnte sich strukturell geändert haben)
+    //prio: muss vor "deploy_new" durchgefï¿½hrt werden, weil dort die storables registriert werden
+    //      muss nach "undeploy_old" ausgefï¿½hrt werden, damit beim deregistrieren (z.b. in persistencelayers)
+    //        die alte structure verwendet wird (storable kï¿½nnte sich strukturell geï¿½ndert haben)
     XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
     .addDeploymentHandler(DeploymentHandling.PRIORITY_WORKFLOW_DATABASE, new StructureCacheRegistrator());
     
@@ -393,10 +393,10 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
     
     /*
      * rekursion zu subtypen, basistypen und referenzen passiert beim registrieren => deshalb kann man aus der liste
-     * alle subtypen rausschmeissen und alle storables, die von anderen storables in der liste über referenzen
+     * alle subtypen rausschmeissen und alle storables, die von anderen storables in der liste ï¿½ber referenzen
      * erreichbar sind.
      * 
-     * dazu erstelle einen gerichteten graph, der alle storables enthält. die kanten sind beziehungen "hat subtype X" und "hat im expansiven baum eine referenz auf X".
+     * dazu erstelle einen gerichteten graph, der alle storables enthï¿½lt. die kanten sind beziehungen "hat subtype X" und "hat im expansiven baum eine referenz auf X".
      * 
      */
     private Map<StorableNode, Node<StorableNode>> graphData;
@@ -691,7 +691,7 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
         gbc = null;
         graphData = null;
         for (DOM dom : domsThatCacheSubtypes) {
-          dom.setCacheSubTypes(false); //eventuell werden die instanzen noch irgendwo weiterverwendet, wo sich die subtypen ändern können
+          dom.setCacheSubTypes(false); //eventuell werden die instanzen noch irgendwo weiterverwendet, wo sich die subtypen ï¿½ndern kï¿½nnen
         }
         domsThatCacheSubtypes = null;
       }
@@ -742,13 +742,13 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
       set = new InMemoryCompilationSet(false, false, false, TargetKind.MEMORY);
       gbc = new GenerationBaseCache();
       graphData = new HashMap<>();
-      domsThatCacheSubtypes = Collections.newSetFromMap(new IdentityHashMap<>()); //identityhashset statt normalem hashset, damit nicht irrtümlich objekte aus unterschiedlichen gb-caches vergessen gehen
+      domsThatCacheSubtypes = Collections.newSetFromMap(new IdentityHashMap<>()); //identityhashset statt normalem hashset, damit nicht irrtï¿½mlich objekte aus unterschiedlichen gb-caches vergessen gehen
     }
   }
 
 
-  //FIXME beim redeployment können sich strukturen geändert haben. dann würde man eigtl alle alten konfigurationen entfernen wollen?!
-  //      also sowas ähnliches wie beim undeployment.
+  //FIXME beim redeployment kï¿½nnen sich strukturen geï¿½ndert haben. dann wï¿½rde man eigtl alle alten konfigurationen entfernen wollen?!
+  //      also sowas ï¿½hnliches wie beim undeployment.
   //      vielleicht in generationbase vor dem copy xml eine stelle einbauen, wo auf basis des alten xmls noch kram passiert??
 
   private static class StructureCacheUnregistrator implements UndeploymentHandler {

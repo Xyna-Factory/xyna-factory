@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,8 +125,8 @@ public class VersionManagement extends FunctionGroup {
   
 
   /**
-   * Ermittelt die Revision für eine Version einer Application. Falls nur der Applicationsname gegeben ist, wird die höchste Revision (== neuste Version)
-   * zurückgeliefert.
+   * Ermittelt die Revision fï¿½r eine Version einer Application. Falls nur der Applicationsname gegeben ist, wird die hï¿½chste Revision (== neuste Version)
+   * zurï¿½ckgeliefert.
    * 
    */
   @Deprecated

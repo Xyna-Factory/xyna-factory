@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class StorableCodeBuilder {
   
   
   /**
-   * erstellt public static inner class die ein zu dem datentypen passendes storable beschreibt und zugehörige kompatibilitäts-resultsetreader  
+   * erstellt public static inner class die ein zu dem datentypen passendes storable beschreibt und zugehï¿½rige kompatibilitï¿½ts-resultsetreader  
    */
   public void generateStorableCode() throws PersistenceLayerException {
     //List of all used tablenames with their paths. The inner Array must have length 2 with the following attributes:
@@ -103,7 +103,7 @@ public class StorableCodeBuilder {
     usedTableNames.add(Pair.of(tableName, path));
     
     String storableClassName = getSimpleClassNameForStorable(currentStructure, tableName);
-    //!!!!!!!!!!! ACHTUNG! absichtlich "+" konkateniert, ansonsten wird am ende ein semikolon angehängt 
+    //!!!!!!!!!!! ACHTUNG! absichtlich "+" konkateniert, ansonsten wird am ende ein semikolon angehï¿½ngt 
     if (!currentStructure.hasSuper()) {
       cb.addLine("@" + Persistable.class.getName() + "(tableName = " + storableClassName + ".TABLE_NAME, primaryKey = "
                       + storableClassName + ".COLUMN_PK)");
@@ -176,7 +176,7 @@ public class StorableCodeBuilder {
         sizeInfo = ", size = " + restrictions.<MaxLengthRestriction>getRestriction(RestrictionType.MAX_LENGTH).getLimit();
       }
       
-      //!!!!!!!!!!! ACHTUNG! absichtlich "+" konkateniert, ansonsten wird am ende ein semikolon angehängt
+      //!!!!!!!!!!! ACHTUNG! absichtlich "+" konkateniert, ansonsten wird am ende ein semikolon angehï¿½ngt
       cb.addLine("@" + Column.class.getName() + "(name = COL_" + column.getColumnName().toUpperCase() + typeInfo + indexInfo + sizeInfo + ")");
       cb.addLine("public ", column.getClassName(), " ", column.getColumnName()).addLB(2);
       //getter
@@ -236,7 +236,7 @@ public class StorableCodeBuilder {
     cb.addLine("}").addLB(2);
 
     String localDomClassName = XynaObject.class.getSimpleName();
-    //reader für datentypen
+    //reader fï¿½r datentypen
     cb.addLine("public static final ", ResultSetReader.class.getName(), "<", localDomClassName, "> ",
                DOM.READER_FOR_DATATYPE, " = new ", ResultSetReader.class.getName(), "<", localDomClassName, ">() {");
     cb.addLB();
@@ -245,10 +245,10 @@ public class StorableCodeBuilder {
     if (currentStructure.isAbstract()) {
       cb.addLine("return null");
     } else {
-      //falls flattened, müssen hier die kindobjekte mit erzeugt werden
+      //falls flattened, mï¿½ssen hier die kindobjekte mit erzeugt werden
       createTypesRecursively(cb, rootXMOMStorable, currentStructure, storableClassName, path, new AtomicInteger(0));
   
-      //für foreignKey ist hier nichts zu tun
+      //fï¿½r foreignKey ist hier nichts zu tun
       cb.addLine("return result0");
     }
     cb.addLine("}");
@@ -351,7 +351,7 @@ public class StorableCodeBuilder {
       cb.addLine(storableClassName, " result = this");    // TODO  remove this line and change generation in fillStorableRecursively to operate on this instead of result
       fillStorableRecursively(cb, rootXMOMStorable, currentStructure, path, path);
       if (rootXMOMStorable.usesHistorization() &&
-          currentStructure instanceof XMOMStorableStructureInformation && // expansive typen übernehmen histo-info einfach "über" parentUid
+          currentStructure instanceof XMOMStorableStructureInformation && // expansive typen ï¿½bernehmen histo-info einfach "ï¿½ber" parentUid
           !currentStructure.hasSuper()) {
         StorableColumnInformation declaredUniqueIdColumn = rootXMOMStorable.getSuperRootStorableInformation().getColInfoByPersistenceType(PersistenceTypeInformation.UNIQUE_IDENTIFIER);
         cb.addLine("try {");
@@ -419,7 +419,7 @@ public class StorableCodeBuilder {
         if (column.getStorableVariableType() == StorableVariableType.REFERENCE) {
           continue;
         } else if (column.isList()) {
-          //expansiv -> kein flattening über listenwertige komplexe member hinweg
+          //expansiv -> kein flattening ï¿½ber listenwertige komplexe member hinweg
           continue;
         } else {
           //expansiv -> extra tabelle
@@ -458,7 +458,7 @@ public class StorableCodeBuilder {
         cb.addLine("throw new ", RuntimeException.class.getName(),"(xe)");
         cb.addLine("}");
       } else if (column.getType() == VarType.REFERENCE_FORWARD_FK) {
-        //für die fks nichts zu tun, die foreignkeys können nicht gesetzt werden, weil man das parentobjekt hier nicht kennt.             
+        //fï¿½r die fks nichts zu tun, die foreignkeys kï¿½nnen nicht gesetzt werden, weil man das parentobjekt hier nicht kennt.             
         //pk von expandierten objekten wird auch separat gesetzt 
       } else {
         // TODO childpath, basePath ? 
@@ -569,7 +569,7 @@ public class StorableCodeBuilder {
   
   
   /**
-   * getter der form .getX().getY() für den relativen pfad von fullPath relativ zu basePath. 
+   * getter der form .getX().getY() fï¿½r den relativen pfad von fullPath relativ zu basePath. 
    */
   static String createGetterForRelativePath(String fullPath, String basePath) {
     StringBuilder getter = new StringBuilder();

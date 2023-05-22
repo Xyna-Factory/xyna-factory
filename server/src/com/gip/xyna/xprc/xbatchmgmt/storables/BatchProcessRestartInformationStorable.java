@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,16 +48,16 @@ public class BatchProcessRestartInformationStorable extends Storable<BatchProces
   public static final String COL_INPUT_GENERATOR_TYPE = "inputGeneratorType"; //Typ des Input-Generators
   public static final String COL_CONSTANT_INPUT = "constantInput"; //XML-Darstellung des Inputs, den der konstante InputGenerator liefern soll
   public static final String COL_INPUT_STORABLE = "inputStorable"; //XMOM Storable, das die Input-Daten liefert
-  public static final String COL_INPUT_QUERY = "inputQuery"; //benutzerdefinierte QueryCondition für Input-Daten
+  public static final String COL_INPUT_QUERY = "inputQuery"; //benutzerdefinierte QueryCondition fï¿½r Input-Daten
   public static final String COL_INPUT_SORT_CRITERIA = "inputSortCriteria"; //Sortierkriterien
-  public static final String COL_TOTAL = "total"; //Gesamtzahl der zu startenden Subaufträge
-  public static final String COL_MASTER_SCHEDULING_DATA = "masterSchedulingData"; //SchedulingData für den Master
-  public static final String COL_SLAVE_ORDER_EXEC_TIMEOUT = "slaveOrderExecTimeout"; //OrderExecutionTimeout der zu startenden Subaufträge
-  public static final String COL_SLAVE_WORKFLOW_EXEC_TIMEOUT = "slaveWorkflowExecTimeout"; //WorkflowExecutionTimeout der zu startenden Subaufträge
-  public static final String COL_SLAVE_TIME_CONSTRAINT = "slaveTimeConstraint"; //TimeConstraint der zu startenden Subaufträge
-  public static final String COL_MAX_PARALLELISM = "maxParallelism"; //maximale Anzahl an gleichzeitig gestarteten Subaufträgen
+  public static final String COL_TOTAL = "total"; //Gesamtzahl der zu startenden Subauftrï¿½ge
+  public static final String COL_MASTER_SCHEDULING_DATA = "masterSchedulingData"; //SchedulingData fï¿½r den Master
+  public static final String COL_SLAVE_ORDER_EXEC_TIMEOUT = "slaveOrderExecTimeout"; //OrderExecutionTimeout der zu startenden Subauftrï¿½ge
+  public static final String COL_SLAVE_WORKFLOW_EXEC_TIMEOUT = "slaveWorkflowExecTimeout"; //WorkflowExecutionTimeout der zu startenden Subauftrï¿½ge
+  public static final String COL_SLAVE_TIME_CONSTRAINT = "slaveTimeConstraint"; //TimeConstraint der zu startenden Subauftrï¿½ge
+  public static final String COL_MAX_PARALLELISM = "maxParallelism"; //maximale Anzahl an gleichzeitig gestarteten Subauftrï¿½gen
   public static final String COL_SLAVE_EXECUTION_PERIOD = "slaveExecutionPeriod"; //Wiederholungen
-  public static final String COL_GUI_REPRESENTATION_DATA = "guiRepresentationData"; //beliebiger String, zur freien Verwendung für den WebService
+  public static final String COL_GUI_REPRESENTATION_DATA = "guiRepresentationData"; //beliebiger String, zur freien Verwendung fï¿½r den WebService
   public static final String COL_TIME_WINDOW_DEFINITION = "timeWindowDefinition"; //Definition des Zeitfensters
 
   @Column(name = COL_BATCH_PROCESS_ID, index = IndexType.PRIMARY)
@@ -73,34 +73,34 @@ public class BatchProcessRestartInformationStorable extends Storable<BatchProces
   private String inputStorable; //XMOM Storable, das die Input-Daten liefert
   
   @Column(name = COL_INPUT_QUERY, size = 4000)
-  private String inputQuery; //benutzerdefinierte QueryCondition für Input-Daten
+  private String inputQuery; //benutzerdefinierte QueryCondition fï¿½r Input-Daten
   
   @Column(name = COL_INPUT_SORT_CRITERIA)
   private String inputSortCriteria; //Sortierkriterien
 
   @Column(name = COL_TOTAL)
-  private Integer total; //Gesamtzahl der zu startenden Subaufträge
+  private Integer total; //Gesamtzahl der zu startenden Subauftrï¿½ge
 
   @Column(name = COL_MASTER_SCHEDULING_DATA, type = ColumnType.BLOBBED_JAVAOBJECT)
-  private SchedulingData masterSchedulingData; //SchedulingData für den Master
+  private SchedulingData masterSchedulingData; //SchedulingData fï¿½r den Master
   
   @Column(name = COL_SLAVE_ORDER_EXEC_TIMEOUT)
-  private AbsRelTime slaveOrderExecTimeout; //OrderExecutionTimeout der zu startenden Subaufträge
+  private AbsRelTime slaveOrderExecTimeout; //OrderExecutionTimeout der zu startenden Subauftrï¿½ge
 
   @Column(name = COL_SLAVE_WORKFLOW_EXEC_TIMEOUT)
-  private AbsRelTime slaveWorkflowExecTimeout; //WorkflowExecutionTimeout der zu startenden Subaufträge
+  private AbsRelTime slaveWorkflowExecTimeout; //WorkflowExecutionTimeout der zu startenden Subauftrï¿½ge
 
   @Column(name = COL_SLAVE_TIME_CONSTRAINT)
-  private TimeConstraint slaveTimeConstraint; //TimeConstraint der zu startenden Subaufträge
+  private TimeConstraint slaveTimeConstraint; //TimeConstraint der zu startenden Subauftrï¿½ge
 
   @Column(name = COL_MAX_PARALLELISM)
-  private Integer maxParallelism; //maximale Anzahl an gleichzeitig gestarteten Subaufträgen
+  private Integer maxParallelism; //maximale Anzahl an gleichzeitig gestarteten Subauftrï¿½gen
 
   @Column(name = COL_SLAVE_EXECUTION_PERIOD)
   private SlaveExecutionPeriod slaveExecutionPeriod; //Wiederholungen
   
   @Column(name = COL_GUI_REPRESENTATION_DATA, size=4000)
-  private String guiRepresentationData; //beliebiger String, zur freien Verwendung für den WebService
+  private String guiRepresentationData; //beliebiger String, zur freien Verwendung fï¿½r den WebService
 
   @Column(name = COL_TIME_WINDOW_DEFINITION, size=4000)
   private TimeWindowDefinition timeWindowDefinition; //Definition des Zeitfensters

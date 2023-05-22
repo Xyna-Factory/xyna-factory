@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,13 +70,13 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
         XynaClusterSetup other = rows.getOthers().get(0);
         setStateInternally(sqlUtils, other.getBinding(), ClusterState.DISCONNECTED_SLAVE, other.isOnline());
 
-        //Dem anderen Knoten müsste nun mitgeteilt werden, dass er nun Slave ist. Allerdings 
-        //geht dies über RemoteInterfaceForClusterStateChangesImplAQ nicht, sonst wäre dieser 
+        //Dem anderen Knoten mï¿½sste nun mitgeteilt werden, dass er nun Slave ist. Allerdings 
+        //geht dies ï¿½ber RemoteInterfaceForClusterStateChangesImplAQ nicht, sonst wï¿½re dieser 
         //Catch-Block nicht gerufen worden. Es bleibt die Hoffnung, dass das eigentlich nicht
-        //vorkommen sollte. Grund dafür ist, dass der fremde Knoten wegen Nichterreichbarkeit 
+        //vorkommen sollte. Grund dafï¿½r ist, dass der fremde Knoten wegen Nichterreichbarkeit 
         //des Clusters bereits auf DISCONNECTED_SLAVE gegangen ist.
         //Nicht passieren darf, dass der ListenerThread im RemoteInterfaceForClusterStateChangesImplAQ
-        //ausfällt.
+        //ausfï¿½llt.
         logger.warn( "Could not notify other Binding "+other.getBinding()+" of stateChange to DISCONNECTED_SLAVE");
       }
       sqlUtils.commit();
@@ -95,7 +95,7 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
     ClusterState ownState;
     
     if( ownRow.isOnline() ) {
-      //das hätte nicht sein sollen: der Knoten war abgestürzt bzw. konnte beim Herunterfahren die DB nicht erreichen
+      //das hï¿½tte nicht sein sollen: der Knoten war abgestï¿½rzt bzw. konnte beim Herunterfahren die DB nicht erreichen
       logger.warn( "Own XynaClusterSetup-row was marked as online");
     }
 
@@ -123,12 +123,12 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
       try {
         interconnect.startup(sqlUtils, ownRow.getBinding()); //erledigt implizit das Commit auf den sqlUtils
       } catch (InterFactoryConnectionDoesNotWorkException e) {
-        //anderer Knoten antwortet nicht, möglicherweise gecrasht und deshalb fälschlich auf "online"
+        //anderer Knoten antwortet nicht, mï¿½glicherweise gecrasht und deshalb fï¿½lschlich auf "online"
         foreignIsOnline = false;
       } catch( DBNotReachableException e ) {
         logger.error("restoreCluster: interconnect.startup failed: "+e.getMessage(),e);
         //SQL-Fehler beim Enqueue, dies ist unwahrscheinlich und deutet auf einen Programmierfehler 
-        //oder eine plötzlich defekte Connection hin -> Wechsel auf DISC_SLAVE
+        //oder eine plï¿½tzlich defekte Connection hin -> Wechsel auf DISC_SLAVE
         ownState = ClusterState.DISCONNECTED_SLAVE;
         setStateInternally(sqlUtils, ownRow.getBinding(), ownState, true);
         throw new SQLRuntimeException(e);
@@ -186,7 +186,7 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
       } 
       
     } catch (InterFactoryConnectionDoesNotWorkException e) {
-      //anderer Knoten antwortet nicht, möglicherweise gecrasht und deshalb fälschlich auf "online"
+      //anderer Knoten antwortet nicht, mï¿½glicherweise gecrasht und deshalb fï¿½lschlich auf "online"
       //deswegen doch auf DISCONNECTED_MASTER gehen
       ownState = ClusterState.DISCONNECTED_MASTER;
       foreignState = ClusterState.DISCONNECTED_SLAVE;
@@ -195,7 +195,7 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
     } catch( DBNotReachableException e ) {
       logger.error("connect: interconnect.connect failed: "+e.getMessage(),e);
       //SQL-Fehler beim Enqueue, dies ist unwahrscheinlich und deutet auf einen Programmierfehler 
-      //oder eine plötzlich defekte Connection hin -> Wechsel auf DISC_SLAVE
+      //oder eine plï¿½tzlich defekte Connection hin -> Wechsel auf DISC_SLAVE
       ownState = ClusterState.DISCONNECTED_SLAVE;
       setStateInternally(sqlUtils, ownRow.getBinding(), ownState, true);
       throw new SQLRuntimeException(e);
@@ -269,18 +269,18 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
       }
      
     } else if( newState == ClusterState.DISCONNECTED_SLAVE ) {
-      //dieser Wunsch kann immer erfüllt werden
+      //dieser Wunsch kann immer erfï¿½llt werden
       ownState = ClusterState.DISCONNECTED_SLAVE;
       
     } else if (newState == ClusterState.DISCONNECTED_MASTER) {
-      //Achtung: nicht beide Knoten dürfen auf DISCONNECTED_MASTER gehen!
+      //Achtung: nicht beide Knoten dï¿½rfen auf DISCONNECTED_MASTER gehen!
       if( foreignRow.getState().in( ClusterState.DISCONNECTED_SLAVE, ClusterState.CONNECTED) ) {
         ownState = ClusterState.DISCONNECTED_MASTER;
       } else if( foreignRow.getState().in( ClusterState.DISCONNECTED_MASTER ) ) {
         
         //fremder Knoten ist DISCONNECTED_MASTER, daher sollte er online sein und ein Wechsel 
         //des eigenen Knotens auf DISCONNECTED_MASTER sollte verboten sein. Aber vielleicht ist der fremde 
-        //Knoten ja gecrasht und deshalb fälschlich auf DISCONNECTED_MASTER. Dies wird nun getestet.
+        //Knoten ja gecrasht und deshalb fï¿½lschlich auf DISCONNECTED_MASTER. Dies wird nun getestet.
         foreignIsOnline = checkForeignNodeAlive(sqlUtils, interconnect, ownRow.getBinding());
         if( foreignIsOnline ) {
           throw new RuntimeException("Foreign node is online, disconnect to state DISCONNECTED_MASTER is not possible. other node is in state "
@@ -338,13 +338,13 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
   }
 
   public ClusterState shutdown(SQLUtils sqlUtils, ClusterSetupRowsForUpdate rows, RemoteInterfaceForClusterStateChangesImplAQ interconnect) {
-    // lokaler Knoten fährt herunter
+    // lokaler Knoten fï¿½hrt herunter
     XynaClusterSetup ownRow = rows.getOwn();
     XynaClusterSetup foreignRow = rows.getOthers().get(0);
     ClusterState ownState;
     if (ownRow.getState() == ClusterState.CONNECTED) {
 
-      // Knoten fährt im Normalbetrieb herunter
+      // Knoten fï¿½hrt im Normalbetrieb herunter
       ownState = ClusterState.DISCONNECTED_SLAVE;
       setStateInternally(sqlUtils, ownRow.getBinding(), ownState, false);
       if (!foreignRow.isOnline()) {
@@ -357,7 +357,7 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
                                   foreignRow.isOnline());
       
     } else if (ownRow.getState().isDisconnected()) {
-      // Knoten ist gerade disconnected und fährt herunter
+      // Knoten ist gerade disconnected und fï¿½hrt herunter
       
       ownState = ownRow.getState();
       switch( ownState ) {
@@ -397,7 +397,7 @@ public class ClusterAlgorithmTwoNodes extends ClusterAlgorithmAbstract {
   public ClusterState leaveCluster(SQLUtils sqlUtils, ClusterSetupRowsForUpdate rows) {
     List<XynaClusterSetup> others = rows.getOthers();
 
-    //Status für den anderen Knoten auf SINGLE setzen.
+    //Status fï¿½r den anderen Knoten auf SINGLE setzen.
     setStateInternally(sqlUtils, others.get(0).getBinding(), ClusterState.SINGLE, others.get(0).isOnline());
     
     //eigenen Eintrag entfernen

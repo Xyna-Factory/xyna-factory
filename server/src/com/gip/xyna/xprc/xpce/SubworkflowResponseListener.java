@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ public class SubworkflowResponseListener extends ResponseListener implements Syn
   public void onOrderAbortion(ProcessAbortedException e) {
     if (xo == null) {
       //deserialisiert und aborted, bevor wieder der thread gestartet wurde
-      //TODO in welchen fällen kann das genau passieren?
+      //TODO in welchen fï¿½llen kann das genau passieren?
       logger.warn("Order has been aborted. ParentOrder can not be notified.", e);
       return;
     }

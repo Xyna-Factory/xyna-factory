@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
   //Type Choice only
   private Map<Integer, AVariableIdentification> createdVariables;
 
-  //wird vom autosnapping (->dataflow) befüllt
+  //wird vom autosnapping (->dataflow) befï¿½llt
   private Set<VarType> commonOutput;
   
   Map<AVariableIdentification, InputConnection> connections;
@@ -148,7 +148,7 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
     }
 
     /*
-     * outputs für die common outputs erstellen oder wiederverwenden.
+     * outputs fï¿½r die common outputs erstellen oder wiederverwenden.
      * wiederverwenden gibt es in zwei arten:
      * 1) gleiche variable wiederverwenden
      * 2) variable-id wiederverwenden
@@ -156,7 +156,7 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
      * 
      * => erstmal wird aber nur fall 1 implementiert.
      * 
-     * dazu alle ehemaligen outputs berücksichtigen
+     * dazu alle ehemaligen outputs berï¿½cksichtigen
      */
     final List<AVariableIdentification> list = new ArrayList<AVariableIdentification>();
     for (VarType commonOutputType : commonOutput) {
@@ -263,7 +263,7 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
       
       StepAssign assign = (StepAssign) stepSerial.getChildSteps().get(stepSerial.getChildSteps().size() - 1);
       for (AVariable avar : assign.getOutputVars()) {
-        //achtung, nicht die useroutputs zurückgeben
+        //achtung, nicht die useroutputs zurï¿½ckgeben
         if (avar instanceof ServiceVariable && ((ServiceVariable) avar).isUserOutput()) {
           continue;
         }
@@ -315,7 +315,7 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
 
   @Override
   protected void setFlags(AVariableIdentification var, VarUsageType usage) {
-    var.setConstPermission(ConstPermission.FOR_BRANCHES); // TODO: Ist das immer korrekt? Besser prüfen, ob var in getUserOutputs() ist, oder?
+    var.setConstPermission(ConstPermission.FOR_BRANCHES); // TODO: Ist das immer korrekt? Besser prï¿½fen, ob var in getUserOutputs() ist, oder?
     if (stepChoice.getDistinctionType() == DistinctionType.TypeChoice) {
       // input can only be changed via dynamic typing
       var.setDeletable(false);
@@ -428,14 +428,14 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
    * (B,A1) + (B,A2) => (A,B)
    * (A11) + (A2) => (A)
    * (A11,A2) + (A2) => (A)
-   *   (A2) wäre auch denkbar, aber lieber eine ambiguität mehr als einen fall, wo man manuellen output benötigt
+   *   (A2) wï¿½re auch denkbar, aber lieber eine ambiguitï¿½t mehr als einen fall, wo man manuellen output benï¿½tigt
    * (A11,A21) + (A12,A3) => (A1,A)
    * 
    */
   //wird von autosnapping aufgerufen
   public void addPossibleOutput(List<AVariableIdentification> singleLaneOutput, int branchIndex) {
     if (singleLaneOutput == null) {
-      return; //lane für berechnung von common output ignorieren (lane endet mit throw)
+      return; //lane fï¿½r berechnung von common output ignorieren (lane endet mit throw)
     }
     if( commonOutput.isEmpty() ) {
       if( outputCleared ) {
@@ -449,12 +449,12 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
     }
     /*
     * Algorithmus:
-    * für jeden typ aus Source1: (sortierung nach hierarchie-tiefe)
+    * fï¿½r jeden typ aus Source1: (sortierung nach hierarchie-tiefe)
     *   1: gibt es typ in Source2? => typ in Result adden und in beiden Sources removen
     *   2: gibt es subtyp von typ in Source2? => typ in Result adden und in beiden Sources removen
     *     else
     *       ersetze typ durch basistyp
-    *       goto 1 (sortierung berücksichtigen!)
+    *       goto 1 (sortierung berï¿½cksichtigen!)
      */
     SortedSet<VarType> sortedSetCommon = new TreeSet<>(COMPARATOR_HIERARCHY_DEPTH);
     sortedSetCommon.addAll(commonOutput);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
   }
 )
 </code>
-//alternativen: statische methode gibt array zurück => man kann statische methoden nicht vererben?!, keine laufzeit- oder compilesicherheit (methodenname falsch geschrieben?)
+//alternativen: statische methode gibt array zurï¿½ck => man kann statische methoden nicht vererben?!, keine laufzeit- oder compilesicherheit (methodenname falsch geschrieben?)
 
  */
 public @interface CompositeIndices {

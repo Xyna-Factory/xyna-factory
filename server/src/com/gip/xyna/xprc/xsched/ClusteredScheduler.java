@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ import com.gip.xyna.xprc.xsched.scheduling.ClusteredSchedulerRemoteInterface;
 
 public class ClusteredScheduler extends XynaScheduler implements Clustered, ClusteredSchedulerRemoteInterface {
   
-  //FIXME eigtl sollte die abhängigkeit zu XynaScheduler. siehe xynafactory-FIXME
+  //FIXME eigtl sollte die abhï¿½ngigkeit zu XynaScheduler. siehe xynafactory-FIXME
   static {
     addDependencies(ClusteredScheduler.class,
                     new ArrayList<XynaFactoryPath>(Arrays
@@ -211,27 +211,27 @@ public class ClusteredScheduler extends XynaScheduler implements Clustered, Clus
     }
     
     private void changeToDisconnected(ClusterState lastState, ClusterState newState ) {
-        //abhängigkeit zu capacities und vetos tabelle: diese sollen jetzt
-        //nicht mehr geclustered vergeben werden, d.h. ein knoten soll in godmode übergehen
+        //abhï¿½ngigkeit zu capacities und vetos tabelle: diese sollen jetzt
+        //nicht mehr geclustered vergeben werden, d.h. ein knoten soll in godmode ï¿½bergehen
         NotifyStorableClusterProvider nscp = new NotifyStorableClusterProvider(newState);
         if( lastState == ClusterState.STARTING ) {
           cdtId = cdt.schedule(10000, nscp ); //Timeout-Konstante ist unwichtig, da im Falle STARTING 
           //der Status CONNECTED rasch erreicht wird oder 
           //der StorableClusterProvider bereits auf DISCONNECTED_MASTER ist und bleibt
         } else {
-          nscp.run(); //sofortigen Übergang veranlassen
+          nscp.run(); //sofortigen ï¿½bergang veranlassen
         }
 
         if (newState.in(ClusterState.DISCONNECTED_SLAVE)) {
-          //in diesem Zustand sollen keine Aufträge mehr laufen, damit jedoch notwendige Aufträge
-          //vor dem Shutdown ausgeführt werden, wird das Schdeuling nicht komplett unterbunden
+          //in diesem Zustand sollen keine Auftrï¿½ge mehr laufen, damit jedoch notwendige Auftrï¿½ge
+          //vor dem Shutdown ausgefï¿½hrt werden, wird das Schdeuling nicht komplett unterbunden
           pauseScheduling(false);
         }
     }
 
     private void changeToConnected(ClusterState lastState, ClusterState newState) {
       if( lastState.in(ClusterState.DISCONNECTED_SLAVE)) {
-        //Rückkehr zum normalen Scheduling
+        //Rï¿½ckkehr zum normalen Scheduling
         resumeScheduling();
       }
     }
@@ -246,8 +246,8 @@ public class ClusteredScheduler extends XynaScheduler implements Clustered, Clus
         if (logger.isDebugEnabled()) {
           logger.debug( "NotifyStorableClusterProvider.run() called");
         }
-        //abhängigkeit zu capacities und vetos tabelle: diese sollen jetzt
-        //nicht mehr geclustered vergeben werden, d.h. ein knoten soll in godmode übergehen
+        //abhï¿½ngigkeit zu capacities und vetos tabelle: diese sollen jetzt
+        //nicht mehr geclustered vergeben werden, d.h. ein knoten soll in godmode ï¿½bergehen
         HashSet<ClusterProvider> clusterProviders = new HashSet<ClusterProvider>();
         clusterProviders.add( getClusterProvider( new VetoInformationStorable() ) );
         clusterProviders.add( getClusterProvider( new CapacityStorable() ) );
@@ -271,11 +271,11 @@ public class ClusteredScheduler extends XynaScheduler implements Clustered, Clus
         ClusterState cpClusterState = cp.getState();
         boolean notifyCpToChange = false;
         if( cpClusterState == newState) {
-          //Status stimmt schon überein
+          //Status stimmt schon ï¿½berein
           notifyCpToChange = false;
         } else if(cpClusterState.isDisconnected()) {
           if( cpClusterState == ClusterState.STARTING ) {
-            //STARTING zählt als disconnected, muss hier aber anders behandelt werden:
+            //STARTING zï¿½hlt als disconnected, muss hier aber anders behandelt werden:
             //Wenn RMIClusterProvider sicher erkennt, dass keine Verbindung zustandekommt, muss der
             //ClusterProvider der Storables zum Disconnect gezwungen werden, selbst wenn er noch 
             //nicht mit seiner Initialisierung fertig ist.
@@ -330,8 +330,8 @@ public class ClusteredScheduler extends XynaScheduler implements Clustered, Clus
 
 
   public void notifyRemoteScheduler() {
-    //TODO den lazyalgoexecutor noch verbessern, damit erst der nächste remoterequest gemacht wird, wenn der
-    //remote scheduler tatsächlich nicht mehr läuft. => "lazyremotealgorithmexecutor"
+    //TODO den lazyalgoexecutor noch verbessern, damit erst der nï¿½chste remoterequest gemacht wird, wenn der
+    //remote scheduler tatsï¿½chlich nicht mehr lï¿½uft. => "lazyremotealgorithmexecutor"
     remoteSchedulerNotificationExecutor.requestExecution();
   }
 
@@ -382,7 +382,7 @@ public class ClusteredScheduler extends XynaScheduler implements Clustered, Clus
         return retryAsynchronously(srm, target, null, e);
       }
     } else {
-      //nicht zuständig
+      //nicht zustï¿½ndig
       return false; //NotResponsible
     }
   }
@@ -412,7 +412,7 @@ public class ClusteredScheduler extends XynaScheduler implements Clustered, Clus
       if( ple == null ) {
         if( asyncFailedException == null ) {
           if( result != null && result.getFirst() == ResumeResult.Unresumeable && SuspendResumeManagement.UNRESUMABLE_LOCKED.equals(result.getSecond()) ) {
-            //Dies ist kein ungewöhnlicher Zustand: z.B. Resume kam recht schnell, bevor Suspend fertig ist.
+            //Dies ist kein ungewï¿½hnlicher Zustand: z.B. Resume kam recht schnell, bevor Suspend fertig ist.
             logger.debug(sb.toString());
           } else {
             logger.warn(sb.toString());
@@ -438,7 +438,7 @@ public class ClusteredScheduler extends XynaScheduler implements Clustered, Clus
             .executeAndCumulateNoException(clusterInstance, clusteredSchedulerInterfaceId, resumeOrderRemotely, null, Boolean.FALSE);
         for(Boolean result : results) {
           if(result) {
-            return true; //ein anderer Knoten hat das Resume ausführen können
+            return true; //ein anderer Knoten hat das Resume ausfï¿½hren kï¿½nnen
           }
         }
       } catch (InvalidIDException e) {

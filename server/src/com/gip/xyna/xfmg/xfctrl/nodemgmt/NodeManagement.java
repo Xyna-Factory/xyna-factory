@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class NodeManagement extends FunctionGroup {
   
   private static final XynaPropertyString ownNodeNameProperty = new XynaPropertyString("xfmg.xfctrl.nodemgmt.node_name", "")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Name of own Factory Node. Used by Remote Call Feature at the remote node to correlate waiting responses. Do not change while Remote Calls are still active.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Name des eigenen Factory-Nodes. Wird vom Remote Call Feature verwendet, um auf der entfernten Seite wartende Antworten von Remote Call Aufträgen zu korrelieren. Wert sollte deshalb nicht geändert werden, solange noch Remote Call Aufträge laufen.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Name des eigenen Factory-Nodes. Wird vom Remote Call Feature verwendet, um auf der entfernten Seite wartende Antworten von Remote Call Auftrï¿½gen zu korrelieren. Wert sollte deshalb nicht geï¿½ndert werden, solange noch Remote Call Auftrï¿½ge laufen.")
       ;
 
   
@@ -210,7 +210,7 @@ public class NodeManagement extends FunctionGroup {
       throw new RuntimeException("ClusterNode '" + name + "' already exists.");
     }
     
-    //TODO weitere Namenseinschränkungen, z.B für StringSerializableList
+    //TODO weitere Namenseinschrï¿½nkungen, z.B fï¿½r StringSerializableList
   }
 
   /**
@@ -266,15 +266,15 @@ public class NodeManagement extends FunctionGroup {
   
   
   /**
-   * Entfernt den Factory Node mit dem übergebenen Namen
+   * Entfernt den Factory Node mit dem ï¿½bergebenen Namen
    * @param name
-   * @return  true, falls Eintrag vorhanden war und gelöscht wurde
+   * @return  true, falls Eintrag vorhanden war und gelï¿½scht wurde
    * @throws PersistenceLayerException
    */
   public boolean removeNode(String name) throws PersistenceLayerException {
     FactoryNode removed = factoryNodes.remove(name);
     if( removed != null ) {
-      //Storable löschen
+      //Storable lï¿½schen
       removed.getNodeInformation().delete();
       return true;
     } else {
@@ -284,7 +284,7 @@ public class NodeManagement extends FunctionGroup {
   
   /**
    * Liefert alle bekannten Factory Nodes,
-   * vom ApplicationManagament benötigt
+   * vom ApplicationManagament benï¿½tigt
    * @return
    * @deprecated use List&lt;FactoryNodeInformation&gt; listFactoryNodes(verbose)
    */
@@ -295,7 +295,7 @@ public class NodeManagement extends FunctionGroup {
 
   /**
    * Liefert alle bekannten Factory Nodes
-   * Detailanzeige für listfactorynodes
+   * Detailanzeige fï¿½r listfactorynodes
    * @return
    */
   public List<FactoryNodeInformation> listFactoryNodes(boolean verbose) {
@@ -322,7 +322,7 @@ public class NodeManagement extends FunctionGroup {
 
   
   /**
-   * Liefert den Factory Node mit dem übergebenen Namen
+   * Liefert den Factory Node mit dem ï¿½bergebenen Namen
    * @param name
    * @return
    */
@@ -331,7 +331,7 @@ public class NodeManagement extends FunctionGroup {
   }
   
    /**
-   * Liefert den Status zu einm Factory Node mit dem übergebenen Namen
+   * Liefert den Status zu einm Factory Node mit dem ï¿½bergebenen Namen
    * @param name
    * @return
    */
@@ -397,15 +397,15 @@ public class NodeManagement extends FunctionGroup {
   }
 
   /**
-   * Entfernt den Cluster Node mit dem übergebenen Namen
+   * Entfernt den Cluster Node mit dem ï¿½bergebenen Namen
    * @param name
-   * @return  true, falls Eintrag vorhanden war und gelöscht wurde
+   * @return  true, falls Eintrag vorhanden war und gelï¿½scht wurde
    * @throws PersistenceLayerException
    */
   public boolean removeCluster(String name) throws PersistenceLayerException {
     ClusterNode removed = clusterNodes.remove(name);
     if( removed != null ) {
-      //Storable löschen
+      //Storable lï¿½schen
       removed.getNodeInformation().delete();
       return true;
     } else {

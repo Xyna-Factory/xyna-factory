@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class UndeployfilterImpl extends XynaCommandImplementation<Undeployfilter
 
     CommandControl.tryLock(CommandControl.Operation.FILTER_UNDEPLOY, revisionOfFilterInstance);
     try {
-      //TriggerInstanz für spätere Statusausgabe suchen
+      //TriggerInstanz fï¿½r spï¿½tere Statusausgabe suchen
       FilterInstanceInformation filterInstance = xat.getFilterInstanceInformation(payload.getFilterInstanceName(), revisionOfFilterInstance);
       TriggerInstanceInformation triggerInstance = null;
       if (filterInstance != null) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ class RelationManagementMethods {
     protected abstract String retrieveForwardRelationsFromStorable(F entry);
 
     /**
-     * müssen immer in der gleichen reihenfolge zurückgegeben werden.
+     * mï¿½ssen immer in der gleichen reihenfolge zurï¿½ckgegeben werden.
      * DATATYPE, EXCEPTION; WORKFLOW, OPERATION
      * @return
      */
@@ -106,7 +106,7 @@ class RelationManagementMethods {
           }
           Long rev = rcdm_local.getRevisionDefiningXMOMObjectOrParent(fqXmlName, entryToProcess.getRevision());          
           if (!entryToProcess.getRevision().equals(rev)) {
-            //rückwärtsbeziehungen in andere revisions nicht eintragen, weil da fehlt uns die möglichkeit, die revision mit zu speichern.
+            //rï¿½ckwï¿½rtsbeziehungen in andere revisions nicht eintragen, weil da fehlt uns die mï¿½glichkeit, die revision mit zu speichern.
             //wenn objekt noch nicht gefunden werden kann, ist es in der lokalen revision ok. typischer usecase: application-import, weil dort
             //deploymentitemstates erst im cleanup vom deployment behandelt wird, und damit erst nach dem eintrag in die xmomdatabase. 
             continue keyLoop;
@@ -122,7 +122,7 @@ class RelationManagementMethods {
             con.persistObject(entry);
             continue keyLoop;
           } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-            //nächsten typ probieren
+            //nï¿½chsten typ probieren
           }
         }
         //objekt in keinem xmomdb type gefunden
@@ -136,8 +136,8 @@ class RelationManagementMethods {
       if (allowedXMOMDatabaseTypes.contains(XMOMDatabaseType.DATAMODEL) || allowedXMOMDatabaseTypes.contains(XMOMDatabaseType.SERVICEGROUP)) {
         return;
       }
-      //falls das xml nicht existiert, soll das objekt möglichst trotzdem in die xmomdb eingetragen werden, aber dann ohne label.
-      //falls das xml existiert, dann soll es korrekt/vollständig eingetragen werden
+      //falls das xml nicht existiert, soll das objekt mï¿½glichst trotzdem in die xmomdb eingetragen werden, aber dann ohne label.
+      //falls das xml existiert, dann soll es korrekt/vollstï¿½ndig eingetragen werden
       XMOMDatabaseType archive = null;
       String rootTag = null;
       String fqName = primaryKeyOfUnregisteredObject;
@@ -180,7 +180,7 @@ class RelationManagementMethods {
           }
           archive = possibleXMOMDatabaseTypes.get(0);
         } else {
-          //trägt evtl in datatype ein, anstatt exception...
+          //trï¿½gt evtl in datatype ein, anstatt exception...
           archive = allowedXMOMDatabaseTypes.get(0);
         }
       } catch (Throwable e) {
@@ -213,7 +213,7 @@ class RelationManagementMethods {
       }
       modifyRelations(entryToProcess, entry);
       con.persistObject(entry);
-      //FIXME: was, wenn objekt bereits vorhanden war! unerwartet -> rollback und nochmal? geht nicht gut wegen der schleife über die objekte...
+      //FIXME: was, wenn objekt bereits vorhanden war! unerwartet -> rollback und nochmal? geht nicht gut wegen der schleife ï¿½ber die objekte...
     }
   
   }

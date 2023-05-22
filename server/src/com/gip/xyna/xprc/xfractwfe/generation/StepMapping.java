@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -734,7 +734,7 @@ public class StepMapping extends Step implements FormulaContainer, HasDocumentat
           parsedExpressions.set(i, ModelledExpression.parse(this, raw ) );
         } else {
           if (parsed.getFoundAssign() == null && !parsed.hasPathMapTarget()) {
-            //TODO hier müsste man noch überprüfen, dass das pathmaptarget auch ohne values zurecht kommt.
+            //TODO hier mï¿½sste man noch ï¿½berprï¿½fen, dass das pathmaptarget auch ohne values zurecht kommt.
             throw new XPRC_ParsingModelledExpressionException(raw, 0, new RuntimeException("Mapping is missing assignment operator."));
           }
         }
@@ -1054,7 +1054,7 @@ public class StepMapping extends Step implements FormulaContainer, HasDocumentat
             dynamicTypes.put(drte.getDynamicTypeName(), dynamicType);
           }
         } catch (Exception e) {
-          //ignore, fehler passiert später beim validieren. bei getDependencies soll es keinen fehler geben
+          //ignore, fehler passiert spï¿½ter beim validieren. bei getDependencies soll es keinen fehler geben
         }
       }
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class PublishedInterfaces {
 
   private final Map<String, OperationInterface> operationsByName = new HashMap<String, OperationInterface>(1);
   private final Map<String, MemberVariableInterface> memberVarsByName = new HashMap<String, MemberVariableInterface>(1);
-  private SupertypeInterface superType; //TODO performance: nach aussen hin will man immer das zugehörige TypeInterface wissen. gleich dieses speichern?
+  private SupertypeInterface superType; //TODO performance: nach aussen hin will man immer das zugehï¿½rige TypeInterface wissen. gleich dieses speichern?
   private TypeInterface ownType;
 
 
@@ -64,7 +64,7 @@ public class PublishedInterfaces {
 
 
   /**
-   * gibt es eine operation, die auf die übergebene matched
+   * gibt es eine operation, die auf die ï¿½bergebene matched
    */
   public boolean containsMatchingOperation(OperationInterface op) {
     return getMatchingOperation(op) != null;
@@ -111,7 +111,7 @@ public class PublishedInterfaces {
 
 
   /**
-   * gibt es eine membervar, die auf die übergebene matched 
+   * gibt es eine membervar, die auf die ï¿½bergebene matched 
    */
   public boolean containsMatchingMemberVar(MemberVariableInterface mem) {
     return getMatchingMemberVar(mem) != null;

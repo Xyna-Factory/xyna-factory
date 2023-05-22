@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,13 +96,13 @@ public class Table {
 
       if (lockedBy != txId) {
         if (lockedBy != -1) {
-          //jemand anderes hat das lock als vorher -> es geht vorwärts -> gleich wieder probieren
+          //jemand anderes hat das lock als vorher -> es geht vorwï¿½rts -> gleich wieder probieren
           sleepInMs = 0;
         }
         lockedBy = txId;
       }
       if (i % 100 == 1 && logger.isDebugEnabled()) {
-        //ausführliches logging
+        //ausfï¿½hrliches logging
         if (txId > 0) {
           logger.debug("Long waiting for Transaction lock: " + internalId + ", held by transaction txid=" + txId + ".");
         }

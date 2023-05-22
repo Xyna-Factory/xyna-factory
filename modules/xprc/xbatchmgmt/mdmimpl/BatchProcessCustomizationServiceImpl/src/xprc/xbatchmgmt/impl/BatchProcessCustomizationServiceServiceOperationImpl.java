@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -205,7 +205,7 @@ public class BatchProcessCustomizationServiceServiceOperationImpl implements Ext
     bpi.setInputGeneratorData(createInputGeneratorData(batchProcessInput.getInputGeneratorData()) );
     bpi.setSlaveExecutionPeriod(createSlaveExecutionPeriod(batchProcessInput.getSlaveOrder().getExecutionPeriod()) );
     bpi.setMaxParallelism( batchProcessInput.getSlaveOrder().getMaxParallelism() );
-    bpi.setGuiRepresentationData("UTC@false"); //derzeit gibt es keine möglichkeit im xmom der date/time typen auszudrücken, in welcher zeitzone man die zeiten angegeben haben möchte
+    bpi.setGuiRepresentationData("UTC@false"); //derzeit gibt es keine mï¿½glichkeit im xmom der date/time typen auszudrï¿½cken, in welcher zeitzone man die zeiten angegeben haben mï¿½chte
     
     BatchProcessManagement bpm = XynaFactory.getInstance().getProcessing().getBatchProcessManagement();
    

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -242,7 +242,7 @@ public class InitialRemoteDestinationType implements RemoteDestinationType {
     public List<String> dispatch(RuntimeContext ownContext, RuntimeContext stubContext, GeneralXynaObject remoteDispatchingParameter) throws XynaException;
     
     /**
-     * Parameter für GUI-Modellierung: 
+     * Parameter fï¿½r GUI-Modellierung: 
      * @return
      * @throws XynaException 
      */
@@ -337,7 +337,7 @@ public class InitialRemoteDestinationType implements RemoteDestinationType {
   /*
    * Im Gegensatz zum Dispatching-Typ DestinationKey wird hier immer der eigene RuntimeContext verwendet. Da dieser im
    * Vorneherein unbekannt ist, kann man dann aber nicht die DispatchingParameter ermitteln und muss diesen deshalb angeben.
-   * (bisher nur 1 Parameter unterstützt)
+   * (bisher nur 1 Parameter unterstï¿½tzt)
    */
   static class NodeDispatching_OrderType implements INodeDispatching {
 
@@ -359,7 +359,7 @@ public class InitialRemoteDestinationType implements RemoteDestinationType {
     }
     
     public List<String> dispatch(RuntimeContext ownContext, RuntimeContext stubContext, GeneralXynaObject remoteDispatchingParameter) throws XynaException {
-      // TODO remember to remove additionalParams -- nötig, wenn RuntimeContextDispatching auch WFs starten möchte (Input)
+      // TODO remember to remove additionalParams -- nï¿½tig, wenn RuntimeContextDispatching auch WFs starten mï¿½chte (Input)
       DestinationKey dk = new DestinationKey(orderType, ownContext);
       XynaOrderCreationParameter xocp = new XynaOrderCreationParameter(dk, remoteDispatchingParameter);
       
@@ -399,7 +399,7 @@ public class InitialRemoteDestinationType implements RemoteDestinationType {
     }
     
     public List<String> dispatch(RuntimeContext ownContext, RuntimeContext stubContext, GeneralXynaObject remoteDispatchingParameter) throws XynaException {
-      // TODO remember to remove additionalParams -- nötig, wenn RuntimeContextDispatching auch WFs starten möchte (Input)
+      // TODO remember to remove additionalParams -- nï¿½tig, wenn RuntimeContextDispatching auch WFs starten mï¿½chte (Input)
       XynaOrderCreationParameter xocp = new XynaOrderCreationParameter(key, remoteDispatchingParameter);
       
       GeneralXynaObject gxo = XynaFactory.getInstance().getProcessing().startOrderSynchronously(xocp);
@@ -519,7 +519,7 @@ public class InitialRemoteDestinationType implements RemoteDestinationType {
   static class ErrorHandling_Queue implements IErrorHandling {
     
     private final Duration timeout;
-    private final static long NEVER = 1000*60*60*24*365*1000L; //1000 Jahre, damit gibt es keinen Überlauf
+    private final static long NEVER = 1000*60*60*24*365*1000L; //1000 Jahre, damit gibt es keinen ï¿½berlauf
     
     ErrorHandling_Queue(Duration timeout) {
       this.timeout = timeout;

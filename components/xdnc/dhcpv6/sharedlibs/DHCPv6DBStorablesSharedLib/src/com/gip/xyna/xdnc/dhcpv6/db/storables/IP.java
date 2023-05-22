@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,9 +139,9 @@ public class IP {
   public int compareTo(IP o) {
 
     //bei prefixlength = 128 ist start==end, ansonsten ist "end" die letzte ip des subnets.
-    //gibt 1 zurück, falls this.start > other.end
-    //gibt -1 zurück, falls this.end < other.start
-    //gibt ansonsten 0 zurück.
+    //gibt 1 zurï¿½ck, falls this.start > other.end
+    //gibt -1 zurï¿½ck, falls this.end < other.start
+    //gibt ansonsten 0 zurï¿½ck.
 
     IPv6SubnetUtil otherSubnet;
     if (o instanceof IP) {
@@ -218,8 +218,8 @@ public class IP {
 
 
   /**
-   * Soll die Anzahl der im Intervall enthaltenen IP-Adressen bzw. Prefixes zurueckgeben (Grösse des Intervals inkl.
-   * beider Randwerte wäre minus()+1)
+   * Soll die Anzahl der im Intervall enthaltenen IP-Adressen bzw. Prefixes zurueckgeben (Grï¿½sse des Intervals inkl.
+   * beider Randwerte wï¿½re minus()+1)
    */
   public BigInteger minus(IP otherIp) {
     if (otherIp.prefixlength != prefixlength) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class ExceptionCodeManagementTest extends TestCase {
                                                           ODSConnectionType.DEFAULT, null);
     ods.setDefaultPersistenceLayer(ODSConnectionType.DEFAULT, persId);
     
-    //TODO exCodeMgmt.setAutomaticCodeGroupGeneration(true); muss nun über Property umgesetzt werden
+    //TODO exCodeMgmt.setAutomaticCodeGroupGeneration(true); muss nun ï¿½ber Property umgesetzt werden
   }
   
   @Override

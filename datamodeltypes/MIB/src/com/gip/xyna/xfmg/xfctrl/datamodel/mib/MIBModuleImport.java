@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ public class MIBModuleImport {
     //BITS( SmiPrimitiveType.BITS, null, null ); //TODO
     ;
     
-    //TODO wofür ?
+    //TODO wofï¿½r ?
     //"xact.snmp.types.SNMPNull"
     //"xact.snmp.types.SNMPString"
     //"xact.snmp.types.SNMPUnsignedInteger"
@@ -279,7 +279,7 @@ public class MIBModuleImport {
       if( cd.isSameModule() ) {
         variables.add(cd.getVariable());
       } else {
-        //TODO Unterstützung von DataModel-Joints
+        //TODO Unterstï¿½tzung von DataModel-Joints
       }
     }
     
@@ -290,9 +290,9 @@ public class MIBModuleImport {
     
     for( NodeData cd : childData ) {
       if( cd.isSimple() ) {
-        continue; //für simple Variablen keine Rekursion
+        continue; //fï¿½r simple Variablen keine Rekursion
       }
-      //rekursiv nun weitere Datentypen anlegen, falls diese noch zum gleichen Module gehören
+      //rekursiv nun weitere Datentypen anlegen, falls diese noch zum gleichen Module gehï¿½ren
       if( cd.isSameModule() ) {
         createDataType(cd, null);
       }
@@ -435,7 +435,7 @@ public class MIBModuleImport {
     
     boolean checkImportOnly = importOnlyOids != null;
     if( checkImportOnly ) {
-      //evtl. mÃ¼ssen alle Children genommen werden. Dies nun prüfen
+      //evtl. mÃ¼ssen alle Children genommen werden. Dies nun prï¿½fen
       OID oid = nodeData.getOID();
       for( OID ioo : importOnlyOids ) {
         if( ioo.hasChild(oid) ) {
@@ -462,7 +462,7 @@ public class MIBModuleImport {
       
       switch( c.getValues().size() ) {
         case 0:
-          //Sonderbehandlung für Traps
+          //Sonderbehandlung fï¿½r Traps
           NodeData nd = new NodeData(c, true);
           nd.type = new XmomType(xmomPath, "", nodeData.getLabel()+"."+c.getValue());
           nd.oidPrefix = String.valueOf(c.getValue());
@@ -486,7 +486,7 @@ public class MIBModuleImport {
 
 
   private NodeData createChildData(SmiOidValue val, NodeData nodeData) {
-    //zum selben Module gehören alle, die entweder im gleichen Module sind 
+    //zum selben Module gehï¿½ren alle, die entweder im gleichen Module sind 
     //... oder in einem Module ohne Identity vorkommen 
     boolean sameModule = val.getModule() == module || val.getModule().getModuleIdentity() == null;
     

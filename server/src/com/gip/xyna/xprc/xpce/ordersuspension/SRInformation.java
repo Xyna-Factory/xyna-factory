@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,12 +37,12 @@ import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause;
 
 
 /**
- * SRInformation kapselt pro Auftrag alle Informationen, die während der Durchführung von 
- * Suspend und Resume nötig sind und stellt auch das Lock zu Verfügung, mit dem konkurrierende
- * Suspend/Resumes geschützt werden.
+ * SRInformation kapselt pro Auftrag alle Informationen, die wï¿½hrend der Durchfï¿½hrung von 
+ * Suspend und Resume nï¿½tig sind und stellt auch das Lock zu Verfï¿½gung, mit dem konkurrierende
+ * Suspend/Resumes geschï¿½tzt werden.
  * Diese Informationen sind:
  * <ul>
- * <li>lock: Schützt konkurrierende Zugriffe auf resumeLanes und state </li>
+ * <li>lock: Schï¿½tzt konkurrierende Zugriffe auf resumeLanes und state </li>
  * <li>parallelExecutors: Map(parallelExecutorId-&gt;ParallelExecutor), damit bei einem Resume bei
  *     laufenden Auftrag eine Lane neugestartet werden kann</li>
  * <li>resumeLanes: Set(Lane), in die alle zu resumenden Lanes geschrieben werden, damit beim 
@@ -66,7 +66,7 @@ public class SRInformation {
     private Set<Lane> resumedLanes;
     //sollen alle lanes resumed werden (z.b. resumeorder von der cli aus)
     private ResumeAllLanes resumeAllLanes = ResumeAllLanes.None;
-    //bei einer hierarchie von PEs in einem workflow soll für jeden PE nur einmal alle lanes resumed werden. hier merkt man sich die, für die das bereits getan wurde
+    //bei einer hierarchie von PEs in einem workflow soll fï¿½r jeden PE nur einmal alle lanes resumed werden. hier merkt man sich die, fï¿½r die das bereits getan wurde
     private Set<String> parallelExecutorsForWhichAllLanesAreResumed;
 
 
@@ -107,7 +107,7 @@ public class SRInformation {
                 //lane ist damit erledigt.
                 it.remove();
               }
-              //else: beim nächsten verschachtelten PE wieder berücksichtigen!
+              //else: beim nï¿½chsten verschachtelten PE wieder berï¿½cksichtigen!
               break; //peid kann nur einmal in einer lane stehen
             }
             first = false;
@@ -121,7 +121,7 @@ public class SRInformation {
     }
 
     /*
-    * PE wird fortgesetzt. zu resumende laneids ermitteln und markieren/löschen, damit sie nicht doppelt resumen 
+    * PE wird fortgesetzt. zu resumende laneids ermitteln und markieren/lï¿½schen, damit sie nicht doppelt resumen 
     * beispiel:             
     *             
     *             PE3
@@ -134,7 +134,7 @@ public class SRInformation {
     * 
     * resumedLanes={"PE3-1,PE2-5,PERoot-3", "PE1-2,PERoot-7"}
     * 
-    * Falls PE2 resumed wird, "PE2-5" zurückgeben, und eintrag nicht aus resumedLanes entfernen, weil er beim PE3 noch benötigt wird
+    * Falls PE2 resumed wird, "PE2-5" zurï¿½ckgeben, und eintrag nicht aus resumedLanes entfernen, weil er beim PE3 noch benï¿½tigt wird
     * 
     */
     public Set<String> getLanesToBeResumedAndMarkAsResumed(String parallelExecutorId) {
@@ -144,7 +144,7 @@ public class SRInformation {
           //trotzdem wichtig und richtig, oben die lanes aus den resumed lanes entfernt zu haben, die bei diesem PE enden
           return FractalWorkflowParallelExecutor.ALL_SUSPENDED_LANE_IDS;
         }
-        //else: nicht resumealllanes - für diesen PE bereits früher passiert
+        //else: nicht resumealllanes - fï¿½r diesen PE bereits frï¿½her passiert
       }
 
       return lanesToBeResumed;
@@ -229,7 +229,7 @@ public class SRInformation {
      */
     Unknown(false),
     /**
-     * Auftrag läuft derzeit
+     * Auftrag lï¿½uft derzeit
      */
     Running(true),
     /**
@@ -237,8 +237,8 @@ public class SRInformation {
      */
     Suspended(true),
     /**
-     * Auftrag ist bereits für Resume im Scheduler eingestellt, wird aber noch nicht ausgeführt.
-     * Weitere Lanes zum Resumen können eingestellt werden.
+     * Auftrag ist bereits fï¿½r Resume im Scheduler eingestellt, wird aber noch nicht ausgefï¿½hrt.
+     * Weitere Lanes zum Resumen kï¿½nnen eingestellt werden.
      */
     Resuming(true),
     /**
@@ -248,7 +248,7 @@ public class SRInformation {
     /**
      * Auftrag ist suspendiert worden, die Daten sind veraltet. Daher sollte SRInformation verworfen 
      * werden. Dieser Status existiert nur kurze Zeit, bevor der SRInformation-Eintrag aus dem 
-     * Speicher gelöscht wird.  
+     * Speicher gelï¿½scht wird.  
      */
     Invalid(false);
   
@@ -468,7 +468,7 @@ public class SRInformation {
 
   public void removeParallelExecutor(String parallelExecutorId) {
     parallelExecutors.remove(parallelExecutorId);
-    //TODO nur nötig, weil man redundante resumedlanes hat (vgl. SuspendResumeAlgorithm.resumeParallelExecutor Kommentar)
+    //TODO nur nï¿½tig, weil man redundante resumedlanes hat (vgl. SuspendResumeAlgorithm.resumeParallelExecutor Kommentar)
     resumedLanes.removeResumedLanesEndingInParallelExecutor(parallelExecutorId);
   }
   

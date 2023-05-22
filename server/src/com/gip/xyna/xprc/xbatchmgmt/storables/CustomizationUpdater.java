@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.gip.xyna.xprc.xbatchmgmt.storables.BatchProcessCustomizationStorable.
 
 
 /**
- * CustomizationUpdater führt ein Update auf einem BatchProcessCustomizationStorable aus.
+ * CustomizationUpdater fï¿½hrt ein Update auf einem BatchProcessCustomizationStorable aus.
  *
  */
 public class CustomizationUpdater implements WarehouseRetryExecutableNoResult {
@@ -52,7 +52,7 @@ public class CustomizationUpdater implements WarehouseRetryExecutableNoResult {
 
 
   /**
-   * Inkrementieren der Counter um die übergebenen Werte
+   * Inkrementieren der Counter um die ï¿½bergebenen Werte
    * @param counter
    */
   public void addCounter(List<Double> counter) {
@@ -61,7 +61,7 @@ public class CustomizationUpdater implements WarehouseRetryExecutableNoResult {
   }
 
   /**
-   * Setzen der Counter auf die übergebenen Werte
+   * Setzen der Counter auf die ï¿½bergebenen Werte
    * @param counter
    */
   public void setCounter(List<Double> counter) {
@@ -89,10 +89,10 @@ public class CustomizationUpdater implements WarehouseRetryExecutableNoResult {
         execute(this);
     } catch (PersistenceLayerException e) {
       logger.warn("Could not update Customization for batchProcess "+ customization.getBatchProcessId() );
-      //Die Exception wird hier unterdrückt mit folgendem Grund:
-      //1) die Slaves können in ihrer Execution-Phase diesen Fehler nicht behandeln
-      //2) nach kurzer Zeit wird der nächste Slave ebenfalls ein Update machen und dann die aktuelle 
-      //   Änderung mit persistieren
+      //Die Exception wird hier unterdrï¿½ckt mit folgendem Grund:
+      //1) die Slaves kï¿½nnen in ihrer Execution-Phase diesen Fehler nicht behandeln
+      //2) nach kurzer Zeit wird der nï¿½chste Slave ebenfalls ein Update machen und dann die aktuelle 
+      //   ï¿½nderung mit persistieren
       //3) falls dies ein dauerhaftes Problem ist, wird entweder BatchProcessArchive noch geschrieben werden
       //   oder auch hier ein ernstes Problem vorliegen -> TODO auf Alternative statt Default schreiben
       //4) hat die Factory bei so massiven DB-Problemen ernstere Schwierigkeiten als nur fehlende 

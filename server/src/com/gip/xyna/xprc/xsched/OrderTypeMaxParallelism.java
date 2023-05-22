@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,10 @@ import com.gip.xyna.xprc.xsched.capacities.CapacityChangeListener;
 
 
 /**
- * OrderTypeMaxParallelism prüft, wieviele Aufträge eines bestimmten OrderTypes derzeit gestartet 
- * werden können. Diese Zahl kann sich ändern durch Änderungen am Mapping OrderType-&gt;Capacities oder 
- * Änderungen an der Capacity selbst.
- * Im Fall einer solchen Änderungen werden alle LimitChangeListener darüber informiert.
+ * OrderTypeMaxParallelism prï¿½ft, wieviele Auftrï¿½ge eines bestimmten OrderTypes derzeit gestartet 
+ * werden kï¿½nnen. Diese Zahl kann sich ï¿½ndern durch ï¿½nderungen am Mapping OrderType-&gt;Capacities oder 
+ * ï¿½nderungen an der Capacity selbst.
+ * Im Fall einer solchen ï¿½nderungen werden alle LimitChangeListener darï¿½ber informiert.
  */
 public class OrderTypeMaxParallelism implements CapacityChangeListener, CapacityMappingChangeListener {
 
@@ -52,7 +52,7 @@ public class OrderTypeMaxParallelism implements CapacityChangeListener, Capacity
   private final String orderType;
   private final long revision;
   private volatile boolean capacityChanged;
-  private Map<MaxParallelismChangeListener, Boolean> listeners; //die changelistener sollen gc-ed werden können.
+  private Map<MaxParallelismChangeListener, Boolean> listeners; //die changelistener sollen gc-ed werden kï¿½nnen.
   private String limitingCap;
   
   public interface MaxParallelismChangeListener {
@@ -99,7 +99,7 @@ public class OrderTypeMaxParallelism implements CapacityChangeListener, Capacity
           break;
         } else {
           int curr = ci.getCardinality() / c.getCardinality() + (ci.getCardinality() % c.getCardinality() == 0 ? 0 : 1); //aufrunden, wenn rest vorhanden
-          //int curr = (ci.getCardinality()+c.getCardinality()-1)/c.getCardinality();  //aufrunden, wenn rest vorhanden       wäre besser
+          //int curr = (ci.getCardinality()+c.getCardinality()-1)/c.getCardinality();  //aufrunden, wenn rest vorhanden       wï¿½re besser
           if( curr < lowest ) {
             lowest = curr;
             limitingCap = ci.getName();

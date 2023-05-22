@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class CapacityStorables extends AbstractList<CapacityStorable> {
   }
 
   /**
-   * Gesamt-Cardinality, wird jedesmal neu berechnet, da sich Cardinalities häufig ändern
+   * Gesamt-Cardinality, wird jedesmal neu berechnet, da sich Cardinalities hï¿½ufig ï¿½ndern
    */
   public int getTotalCardinality() {
     int total = 0;

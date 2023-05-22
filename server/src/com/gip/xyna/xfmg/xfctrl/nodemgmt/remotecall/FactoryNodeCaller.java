@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class FactoryNodeCaller {
   }
 
   /**
-   * Trennung der Threads: hierüber werden RemoteCallNotification dem NotificationProcessor-Thread übergeben.
+   * Trennung der Threads: hierï¿½ber werden RemoteCallNotification dem NotificationProcessor-Thread ï¿½bergeben.
    * Dieser ruft ein notify auf dem RemoteCallNotification-Objekt auf, so dass der Aufrufer nach einem await() 
    * weiterarbeiten kann.
    * 
@@ -133,12 +133,12 @@ public class FactoryNodeCaller {
     try {
       Thread.sleep(1000);
     } catch (InterruptedException e) {
-      //dann halt kürzer warten
+      //dann halt kï¿½rzer warten
     }
     
     //Sind noch Notifications eingegangen?
     if( ! notificationProcessor.isFinished() ) {
-      //nun sind doch nochmal unerwartet Aufträge eingegangen ...
+      //nun sind doch nochmal unerwartet Auftrï¿½ge eingegangen ...
       //diese nun umtragen in aktuellen FactoryNodeCaller
       if(hasSuccessor) {
         FactoryNodeCaller successor = nm.getFactoryNodeCaller(nodeName);
@@ -154,14 +154,14 @@ public class FactoryNodeCaller {
     
     //Sind noch Responses eingegangen?
     if( ! responses.isEmpty() && hasSuccessor) {
-      //nun sind doch nochmal unerwartet Aufträge eingegangen ...
+      //nun sind doch nochmal unerwartet Auftrï¿½ge eingegangen ...
       //diese nun umtragen in aktuellen FactoryNodeCaller
       FactoryNodeCaller successor = nm.getFactoryNodeCaller(nodeName);
       successor.responses.putAll(responses);
     }
     
     if( ! awaitResponses.isEmpty() ) {
-      //nun sind doch nochmal unerwartet Aufträge eingegangen ...
+      //nun sind doch nochmal unerwartet Auftrï¿½ge eingegangen ...
       //diese nun umtragen in aktuellen FactoryNodeCaller
       if(hasSuccessor) {
         FactoryNodeCaller successor = nm.getFactoryNodeCaller(nodeName);
@@ -191,7 +191,7 @@ public class FactoryNodeCaller {
   }
   
   public void disconnect() {
-    //alle AwaitOrderNotification mit Fehler beenden, damit wartende Threads nicht auf Reconnect warten müssen
+    //alle AwaitOrderNotification mit Fehler beenden, damit wartende Threads nicht auf Reconnect warten mï¿½ssen
     for( Map.Entry<Long,AwaitOrderNotification> entry : awaitResponses.entrySet() ) {
       entry.getValue().disconnect(nodeName);
       awaitResponses.remove(entry.getKey());

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ public class RemoteProcessor implements Runnable {
             break;
         }
       } catch (InterruptedException e) {
-        //dann eben kürzer warten
+        //dann eben kï¿½rzer warten
       } catch (Throwable t) {
         Department.handleThrowable(t);
         logger.error("RemoteProcessor caught unexpected error", t);
@@ -195,7 +195,7 @@ public class RemoteProcessor implements Runnable {
   }
   
   private SleepType executeCheckConnectivity() {
-    factoryNodeCaller.checkConnectivity(); //setzt Status auf Connecting, zusätzliches awake verpufft, da mode nicht geändert wird
+    factoryNodeCaller.checkConnectivity(); //setzt Status auf Connecting, zusï¿½tzliches awake verpufft, da mode nicht geï¿½ndert wird
     boolean connected = remoteOrderExecution.checkConnectivity();
     if( ! connected ) {
       return SleepType.CHECK_CONNECTIVITY;

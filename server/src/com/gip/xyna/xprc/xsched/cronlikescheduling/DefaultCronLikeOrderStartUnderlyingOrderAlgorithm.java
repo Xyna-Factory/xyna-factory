@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,12 +91,12 @@ public class DefaultCronLikeOrderStartUnderlyingOrderAlgorithm
         public Boolean executeAndCommit(ODSConnection con) throws PersistenceLayerException {
           try {
             if (!internally(xose, con)) {
-              con.rollback();  //TODO schädigt evtl. äußere Transaktion
+              con.rollback();  //TODO schï¿½digt evtl. ï¿½uï¿½ere Transaktion
               return false;
             }
             return true;
           } catch (Error e) {
-            updateCLOonError(con); //TODO schädigt evtl. äußere Transaktion
+            updateCLOonError(con); //TODO schï¿½digt evtl. ï¿½uï¿½ere Transaktion
             throw e;
           } catch (RuntimeException e) {
             updateCLOonError(con);
@@ -141,19 +141,19 @@ public class DefaultCronLikeOrderStartUnderlyingOrderAlgorithm
         }
       });
       
-      // CLO neu aus DB laden und dabei locken. Gibt die Sicherheit, dass die CLO nicht gleichzeitig ausgeführt wird
-      // oder jetzt vor dem Ausführen geändert wird.
+      // CLO neu aus DB laden und dabei locken. Gibt die Sicherheit, dass die CLO nicht gleichzeitig ausgefï¿½hrt wird
+      // oder jetzt vor dem Ausfï¿½hren geï¿½ndert wird.
       final CronLikeOrder cronOrderDB = new CronLikeOrder(order.getId());
       try {
         con.queryOneRowForUpdate(cronOrderDB);
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e1) {
-        // Auftrag muss schon ausgeführt wurden sein.
+        // Auftrag muss schon ausgefï¿½hrt wurden sein.
         logger.warn("CronLikeOrder with id <" + order.getId() + "> was not found. Abort starting the order.");
         return false;
       }
       if(!cronOrderDB.getNextExecution().equals(order.getNextExecution())) {
-        // Ausführungszeit wurde geändert -> Abbruch der Ausführung
-        // U.U. wurde der Auftrag schon ausgeführt.
+        // Ausfï¿½hrungszeit wurde geï¿½ndert -> Abbruch der Ausfï¿½hrung
+        // U.U. wurde der Auftrag schon ausgefï¿½hrt.
         logger.warn("CronLikeOrder with id <" + order.getId() + "> was changed. Abort starting the order.");
         return false;
       }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import java.util.List;
 
 
 /**
- * FIXME Wieso ist das serializable? Da StartParameter und Trigger nicht serializable sind, macht das überhaupt Sinn?
- * TODO besserer Name wäre TriggerInstanceData
+ * FIXME Wieso ist das serializable? Da StartParameter und Trigger nicht serializable sind, macht das ï¿½berhaupt Sinn?
+ * TODO besserer Name wï¿½re TriggerInstanceData
  * 
  */
 public class EventListenerInstance<J extends StartParameter, I extends EventListener<?,J>> implements Serializable {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package com.gip.xyna.xdnc.dhcpv6.ipv6.utils;
 
 /**
  * IPv6SubnetUtil liefert eine Darstellung eines IPv6-Subnetzes und bietet
- * einige Hilfsfunktionen für Manipulationen.
+ * einige Hilfsfunktionen fï¿½r Manipulationen.
  *
  * IPv6Subnet ist immutable und threadsafe.
  *
@@ -119,7 +119,7 @@ public class IPv6SubnetUtil implements IPv6Util{
       throw new IPv6SubnetParseException("IPv6-Check: no prefix-length found");
     }
     checkInterfaceIdentifierIsZero(network,prefixLength);
-    //Anzahl der benötigten Nullen am Ende, damit dies ein Netzwerk sein kann
+    //Anzahl der benï¿½tigten Nullen am Ende, damit dies ein Netzwerk sein kann
     int neededZeros = 128 - prefixLength;
     //vorhandene Nullen
     int zeros = network.numberOfTrailingZeros();
@@ -146,7 +146,7 @@ public class IPv6SubnetUtil implements IPv6Util{
   /**
    * Erstellt das IPv6Subnet anhand einer
    * IPv6-Adresse die innerhalb des Subnets liegen darf,
-   * es darf natürlich auch die IPv6-Subnetz-Adresse sein.
+   * es darf natï¿½rlich auch die IPv6-Subnetz-Adresse sein.
    * @param ipv6Address
    * @param prefixLength
    * @return
@@ -157,7 +157,7 @@ public class IPv6SubnetUtil implements IPv6Util{
 
 
   /**
-   * Erstellt das IPv6Subnet anhand einer IPv6-Adresse die innerhalb des Subnets liegen darf, es darf natürlich auch die
+   * Erstellt das IPv6Subnet anhand einer IPv6-Adresse die innerhalb des Subnets liegen darf, es darf natï¿½rlich auch die
    * IPv6-Subnetz-Adresse sein.
    */
   public static IPv6SubnetUtil createFromIPv6Address(IPv6AddressUtil ipv6Address, int prefixLength) {
@@ -190,10 +190,10 @@ public class IPv6SubnetUtil implements IPv6Util{
 
 
   /**
-   * Ist network ein passendes Subnet? (Sind alle Bits im GeräteTeil 0?)
+   * Ist network ein passendes Subnet? (Sind alle Bits im Gerï¿½teTeil 0?)
    */
   private static void checkInterfaceIdentifierIsZero(IPv6AddressUtil network, int prefixLength) {
-    //Anzahl der benötigten Nullen am Ende, damit dies ein InterfaceIdentifier 0 sein kann
+    //Anzahl der benï¿½tigten Nullen am Ende, damit dies ein InterfaceIdentifier 0 sein kann
     int neededZeros = 128 - prefixLength;
     //vorhandene Nullen
     int zeros = network.numberOfTrailingZeros();
@@ -204,7 +204,7 @@ public class IPv6SubnetUtil implements IPv6Util{
 
 
   /**
-   * Ist PrefixLength gültig?
+   * Ist PrefixLength gï¿½ltig?
    */
   private static void checkPrefixLength(int prefixLength) {
     if( prefixLength <0 || prefixLength > 128 ) {
@@ -248,7 +248,7 @@ public class IPv6SubnetUtil implements IPv6Util{
 
 
   /**
-   * Liefert das nächste Network, welche die angegebenen PrefixLänge hat
+   * Liefert das nï¿½chste Network, welche die angegebenen PrefixLï¿½nge hat
    * @param prefixLength
    * @return
    */
@@ -266,7 +266,7 @@ public class IPv6SubnetUtil implements IPv6Util{
 
 
   /**
-   * Liefert das vorhergehende Network, welche die angegebenen PrefixLänge hat
+   * Liefert das vorhergehende Network, welche die angegebenen PrefixLï¿½nge hat
    * @param prefixLength
    * @return
    */
@@ -307,7 +307,7 @@ public class IPv6SubnetUtil implements IPv6Util{
    */
   public boolean contains(IPv6SubnetUtil subnet) {
     if( prefixLength > subnet.prefixLength ) {
-      return false; //Subnet muss größeren Prefix haben
+      return false; //Subnet muss grï¿½ï¿½eren Prefix haben
     }
     return contains( subnet.network ); //Basisadresse des Subnet muss in this enthalten sein
   }
@@ -323,7 +323,7 @@ public class IPv6SubnetUtil implements IPv6Util{
       return false; //IP-Adresse darf nicht kleiner sein
     }
     if( ip.compareTo(nextNetwork()) >= 0 ) {
-      return false; //IP-Adresse darf nicht im NextNetwork oder darüber liegen
+      return false; //IP-Adresse darf nicht im NextNetwork oder darï¿½ber liegen
     }
     return true;
   }

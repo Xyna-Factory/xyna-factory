@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,17 +39,17 @@ import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause;
  * <li>SuspensionTimedOutAction: Behandlung bei Timeout:
  *    <ul>
  *    <li>None: keine gesonderte Behandlung</li>
- *    <li>Interrupt: alle ausführenden Thread erhalten ein Interrupt</li>
+ *    <li>Interrupt: alle ausfï¿½hrenden Thread erhalten ein Interrupt</li>
  *    </ul></li>
  * <li>SuspensionFailedAction: Behandlung im Fehlerfall "Suspendierung nicht fertig":
  *    <ul>
- *    <li>UndoSuspensions: Bisherige Suspendierungen werden rückgängig gemacht</li>
- *    <li>StopSuspending: Es werden keine weiteren Suspendierungen durchgeführt, bestehende Suspendierungen werden nicht rückgängig gemacht</li>
- *    <li>KeepSuspending: Es wird weiter suspendiert, bestehende Suspendierungen werden nicht rückgängig gemacht</li>
+ *    <li>UndoSuspensions: Bisherige Suspendierungen werden rï¿½ckgï¿½ngig gemacht</li>
+ *    <li>StopSuspending: Es werden keine weiteren Suspendierungen durchgefï¿½hrt, bestehende Suspendierungen werden nicht rï¿½ckgï¿½ngig gemacht</li>
+ *    <li>KeepSuspending: Es wird weiter suspendiert, bestehende Suspendierungen werden nicht rï¿½ckgï¿½ngig gemacht</li>
  *    </ul></li>
  * <li>Timeout und SuspensionCause</li>
  * </ul>
- * Als Rückgabe werden folgende Daten eingetragen
+ * Als Rï¿½ckgabe werden folgende Daten eingetragen
  * <ul>
  * <li>getSuspensionResult() {Suspended, Timeout, Failed}</li>
  * <li>getResumeTargets() alle bekannten ResumeTargets (durch diese Suspendierung bewirkt)</li>
@@ -123,15 +123,15 @@ public class SuspendRootOrderData {
   
   public enum SuspensionFailedAction {
     /**
-     * Bisherige Suspendierungen rückgängig machen
+     * Bisherige Suspendierungen rï¿½ckgï¿½ngig machen
      */
     UndoSuspensions,
     /**
-     * Nicht weiter suspendieren, bestehende Suspendierungen nicht rückgängig machen
+     * Nicht weiter suspendieren, bestehende Suspendierungen nicht rï¿½ckgï¿½ngig machen
      */
     StopSuspending,
     /**
-     * Weiter suspendieren, bestehende Suspendierungen nicht rückgängig machen
+     * Weiter suspendieren, bestehende Suspendierungen nicht rï¿½ckgï¿½ngig machen
      */
     KeepSuspending;
   }

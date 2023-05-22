@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@ public final class OrderContextServerExtension extends OrderContext {
   }
 
   /**
-   * Übergabe der Connection, mit der das Backup durchgeführt werden soll
+   * ï¿½bergabe der Connection, mit der das Backup durchgefï¿½hrt werden soll
    * @param con
    */
   public void setAckConnection(ODSConnection con) {

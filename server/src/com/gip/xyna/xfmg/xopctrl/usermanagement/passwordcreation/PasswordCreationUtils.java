@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,8 +96,8 @@ public class PasswordCreationUtils {
   }
 
   /**
-   * Idee: hashe einmal zwischen GUI und Server, und einmal extra für die Datenbank. Vgl EncryptionPhase
-   * Fälle: Konfigurierte HashFunktionen für Phase1+Phase2 Hashing (XynaProperty):
+   * Idee: hashe einmal zwischen GUI und Server, und einmal extra fï¿½r die Datenbank. Vgl EncryptionPhase
+   * Fï¿½lle: Konfigurierte HashFunktionen fï¿½r Phase1+Phase2 Hashing (XynaProperty):
    *    1) (null, null)
    *    2) (X, null)
    *    3) (null, Y)

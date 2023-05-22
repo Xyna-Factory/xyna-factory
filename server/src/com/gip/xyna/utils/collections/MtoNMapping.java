@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ public class MtoNMapping<U, V> {
 
 
     /**
-     * set freigeben für löschen etc
+     * set freigeben fï¿½r lï¿½schen etc
      */
     public void addComplete() {
       addDeleteSafety.decrementAndGet();
@@ -139,8 +139,8 @@ public class MtoNMapping<U, V> {
   /*
    * FIXME ohne lock auskommen?
    * code ist im prinzip darauf vorbereitet.
-   * problem: operationen über beide maps hinweg sind nicht atomar, beim remove sieht man vielleicht nur die hälfte des adds oder sowas.
-   * das führt dann zu inkonsistenzen.
+   * problem: operationen ï¿½ber beide maps hinweg sind nicht atomar, beim remove sieht man vielleicht nur die hï¿½lfte des adds oder sowas.
+   * das fï¿½hrt dann zu inkonsistenzen.
    * TODO ConcurrentMapWithObjectRemovalSupport verwenden
    */
   private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -210,7 +210,7 @@ public class MtoNMapping<U, V> {
           }
         }
         if (setValues.prepareToAdd()) {
-          //sichergestellt, dass man nicht zu einem set addet, welches bereits gelöscht werden soll
+          //sichergestellt, dass man nicht zu einem set addet, welches bereits gelï¿½scht werden soll
           break;
         }
       }
@@ -269,7 +269,7 @@ public class MtoNMapping<U, V> {
 
 
   /**
-   * entfernt das übergebene mapping
+   * entfernt das ï¿½bergebene mapping
    * @return true falls erfolgreich entfernt, false falls mapping nicht gefunden 
    */
   public boolean removeMapping(U key, V val) {

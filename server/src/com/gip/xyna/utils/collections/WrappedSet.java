@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.Set;
 
 
 /**
- * Set-Implementierung, die alle Aufrufe an ein im Konstruktor übergebenes Set weiterreicht.
+ * Set-Implementierung, die alle Aufrufe an ein im Konstruktor ï¿½bergebenes Set weiterreicht.
  * Dies vereinfacht das Implementieren von Dekoratoren. 
  */
 public class WrappedSet<E> implements Set<E> {

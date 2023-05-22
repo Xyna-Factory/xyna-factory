@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,15 +38,15 @@ import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceStatus;
 public class BatchProcessSelectImpl extends BatchProcessWhereClausesImpl implements Selection, Serializable {
   private static final long serialVersionUID = 1L;
 
-  private List<BatchProcessWhereClausesImpl> rightWhereClauses; //where-Clause für Rechteüberprüfung
+  private List<BatchProcessWhereClausesImpl> rightWhereClauses; //where-Clause fï¿½r Rechteï¿½berprï¿½fung
 
   private static final Pattern RIGHT_PART_SEPERATION_PATTERN = Pattern.compile("(?<!\\\\)[:]");
   
   /**
-   * Liefert den select-String für die übergebene BatchProcessTable mit where-Bedingung
-   * FIXME hierbei werden die ursprünglichen connects nicht beachtet!
+   * Liefert den select-String fï¿½r die ï¿½bergebene BatchProcessTable mit where-Bedingung
+   * FIXME hierbei werden die ursprï¿½nglichen connects nicht beachtet!
    * Gleiche Spalten werden mit "or" und unterschiedliche Spalten mit "and"
-   * verknüpft.
+   * verknï¿½pft.
    * @param table
    * @return
    * @throws XNWH_InvalidSelectStatementException
@@ -58,12 +58,12 @@ public class BatchProcessSelectImpl extends BatchProcessWhereClausesImpl impleme
       sb.append(" where").append( super.getSelectString(table) );
     }
     
-    //für Archive entweder die abgeschlossenen oder die laufenden Aufträge selektieren
+    //fï¿½r Archive entweder die abgeschlossenen oder die laufenden Auftrï¿½ge selektieren
     if (table == BatchProcessTable.Archive || table == BatchProcessTable.ArchiveRunning) {
       sb.append( hasWhereClauses(table) ? " and " : " where ");
       sb.append(table == BatchProcessTable.ArchiveRunning ? "":  "not ");
       appendOrderIsRunning(sb);
-      appendRightCondition(table, sb); //Rechteüberprüfung
+      appendRightCondition(table, sb); //Rechteï¿½berprï¿½fung
     }
     
     return sb.toString();
@@ -80,7 +80,7 @@ public class BatchProcessSelectImpl extends BatchProcessWhereClausesImpl impleme
   }
   
   /**
-   * Hängt die where-Clause für die Rechteüberprüfung an
+   * Hï¿½ngt die where-Clause fï¿½r die Rechteï¿½berprï¿½fung an
    * @param table
    * @param sb
    * @throws XNWH_InvalidSelectStatementException
@@ -105,7 +105,7 @@ public class BatchProcessSelectImpl extends BatchProcessWhereClausesImpl impleme
     List<Object> list = new ArrayList<Object>();
     super.addParameter(list, table);
     
-    //Parameter für Rechteüberprüfung hinzufügen
+    //Parameter fï¿½r Rechteï¿½berprï¿½fung hinzufï¿½gen
     if (rightWhereClauses != null && rightWhereClauses.size() > 0) {
       if (table == BatchProcessTable.Archive || table == BatchProcessTable.ArchiveRunning) {
         for (BatchProcessWhereClausesImpl right : rightWhereClauses) {
@@ -122,7 +122,7 @@ public class BatchProcessSelectImpl extends BatchProcessWhereClausesImpl impleme
    * Baut aus den TCO-Rechten die passenden WhereClauses.
    * Dabei muss das Recht wie folgt aufgebaut sein:
    * key:action:slaveordertype:application:version <br>
-   * (Doppelpunkte innerhalb der einzelnen Teile müssen durch \ escaped sein.)
+   * (Doppelpunkte innerhalb der einzelnen Teile mï¿½ssen durch \ escaped sein.)
    * 
    * '*' wird immer als Wildcard interpretiert. <br>
    * @param scopedRights

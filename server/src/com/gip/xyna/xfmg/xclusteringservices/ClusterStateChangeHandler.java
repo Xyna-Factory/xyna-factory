@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,16 @@ public interface ClusterStateChangeHandler {
 
   /**
    * Ein Wechsel des ClusterState nach newState ist fest geplannt.
-   * Mit dieser Methode wird dem ClusterStateChangeHandler folgendes ermöglicht:
-   * a) den Wechsel zu verzögern (durch Rückgabe von false) 
-   * b) einen früheren, noch nicht fertigen ClusterState-Wechsel abzubrechen. 
+   * Mit dieser Methode wird dem ClusterStateChangeHandler folgendes ermï¿½glicht:
+   * a) den Wechsel zu verzï¿½gern (durch Rï¿½ckgabe von false) 
+   * b) einen frï¿½heren, noch nicht fertigen ClusterState-Wechsel abzubrechen. 
    * @param newState
-   * @return true, wenn der ClusterState-Wechsel möglich ist
+   * @return true, wenn der ClusterState-Wechsel mï¿½glich ist
    */
   public boolean isReadyForChange(ClusterState newState);
   
   /**
-   * Ausführung des ClusterState-Wechsels nach newState
+   * Ausfï¿½hrung des ClusterState-Wechsels nach newState
    * @param newState
    */
   public void onChange(ClusterState newState);

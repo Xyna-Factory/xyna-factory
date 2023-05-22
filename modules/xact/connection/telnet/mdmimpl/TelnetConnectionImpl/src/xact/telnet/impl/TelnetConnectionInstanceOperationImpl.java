@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -252,7 +252,7 @@ public class TelnetConnectionInstanceOperationImpl extends TelnetConnectionSuper
             } else if (value.equals("\\n\\r")) {
               lineSeperator = "\n\r";
             } else if (value == null || value.length() == 0) {
-              lineSeperator = ""; //dafür verwendet, dass man z.b. ctrl-c drückt. das wird nicht mit enter bestätigt.
+              lineSeperator = ""; //dafï¿½r verwendet, dass man z.b. ctrl-c drï¿½ckt. das wird nicht mit enter bestï¿½tigt.
             }
           }
         }

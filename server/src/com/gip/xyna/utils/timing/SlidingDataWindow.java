@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class SlidingDataWindow implements Serializable {
   private transient Object lock;
 
   private final double[] data; //schubladen und ihr wert
-  private double size; //summe über die werte der schubladen
+  private double size; //summe ï¿½ber die werte der schubladen
 
   private final long width; //breite einer schublade
   private int startIndex; //index im array, der gerade dem start entspricht (0 bis data.length-1)
@@ -40,9 +40,9 @@ public class SlidingDataWindow implements Serializable {
 
   /**
    * man hat n schubladen, jede schublade hat eine virtuelle breite.
-   * nun kann man objekte mit absoluten werten einfügen, und diese werden immer derart eingefügt, dass
-   * der bisher höchste eingefügte wert in der letzten schublade liegt. die anderen liegen relativ dazu in 
-   * ihren schubladen. werte, die mehr als n*width kleiner sind als der aktuell größte wert, werden nicht 
+   * nun kann man objekte mit absoluten werten einfï¿½gen, und diese werden immer derart eingefï¿½gt, dass
+   * der bisher hï¿½chste eingefï¿½gte wert in der letzten schublade liegt. die anderen liegen relativ dazu in 
+   * ihren schubladen. werte, die mehr als n*width kleiner sind als der aktuell grï¿½ï¿½te wert, werden nicht 
    * eingetragen.
    * 
    * werte, die zu niedrig sind, werden automatisch entfernt.
@@ -58,8 +58,8 @@ public class SlidingDataWindow implements Serializable {
 
 
   /**
-   * fügt wert zu schublade hinzu
-   * @return false, falls die position ausserhalb der gültigen range liegt 
+   * fï¿½gt wert zu schublade hinzu
+   * @return false, falls die position ausserhalb der gï¿½ltigen range liegt 
    */
   public boolean put(long positionAbsolute, double value) {
     synchronized (lock) {
@@ -75,7 +75,7 @@ public class SlidingDataWindow implements Serializable {
 
 
   /**
-   * fügt wert relativ zu min/max position evtl verteilt auf mehrere schubladen hinzu.
+   * fï¿½gt wert relativ zu min/max position evtl verteilt auf mehrere schubladen hinzu.
    * @param minPosition included in range 
    * @param maxPosition included in range
    */
@@ -85,12 +85,12 @@ public class SlidingDataWindow implements Serializable {
     }
     synchronized (lock) {
       if (size == Double.MIN_VALUE) {
-        getIndex(minPosition, true); //muss nach maxIdx nochmal ermittelt werden. wenn man es nicht ausführt, wird aber evtl nicht weit genug geslided.
+        getIndex(minPosition, true); //muss nach maxIdx nochmal ermittelt werden. wenn man es nicht ausfï¿½hrt, wird aber evtl nicht weit genug geslided.
       }
 
       int maxIdx = getIndex(maxPosition, true);
       if (maxIdx < 0) {
-        //liegt vollständig ausserhalb des aktuellen datawindows
+        //liegt vollstï¿½ndig ausserhalb des aktuellen datawindows
         return;
       }
       long overheadRight = (maxPosition + 1 - startPosition) % width;
@@ -120,7 +120,7 @@ public class SlidingDataWindow implements Serializable {
 
       int l = data.length;
       if (maxIdx < minIdx) {
-        //ringbuffer berücksichtigen -> später modula l nehmen
+        //ringbuffer berï¿½cksichtigen -> spï¿½ter modula l nehmen
         maxIdx += l;
       }
       double valuePerBucket = width * valuePerPoint;
@@ -134,8 +134,8 @@ public class SlidingDataWindow implements Serializable {
 
 
   /**
-   * ermittelt den aktuellen index und sorgt für konsistenz, falls das sliding window weiter slidet.
-   * negativ, falls ausserhalb des gültigen bereichs
+   * ermittelt den aktuellen index und sorgt fï¿½r konsistenz, falls das sliding window weiter slidet.
+   * negativ, falls ausserhalb des gï¿½ltigen bereichs
    */
   private int getIndex(long positionAbsolute, boolean slideWindowToPositionIfPossible) {
     if (size == Double.MIN_VALUE) {
@@ -156,7 +156,7 @@ public class SlidingDataWindow implements Serializable {
     }
     //=> index >= data.length
     if (slideWindowToPositionIfPossible) {
-      //slide durchführen
+      //slide durchfï¿½hren
       int indexSlide = indexAccordingToCurrentStartPosition - data.length + 1;
       if (indexSlide >= data.length) {
         reset();
@@ -185,11 +185,11 @@ public class SlidingDataWindow implements Serializable {
 
 
   /**
-   * atomares äquivalent zu 
+   * atomares ï¿½quivalent zu 
    * <pre>
    * put(positionAbsolute, get(positionAbsolute)+1);
    * </pre> 
-   * @return false, falls die position ausserhalb der gültigen range liegt
+   * @return false, falls die position ausserhalb der gï¿½ltigen range liegt
    */
   public boolean increment(long positionAbsolute) {
     synchronized (lock) {
@@ -205,11 +205,11 @@ public class SlidingDataWindow implements Serializable {
 
 
   /**
-   * atomares äquivalent zu 
+   * atomares ï¿½quivalent zu 
    * <pre>
    * put(positionAbsolute, get(positionAbsolute)+value);
    * </pre> 
-   * @return false, falls die position ausserhalb der gültigen range liegt
+   * @return false, falls die position ausserhalb der gï¿½ltigen range liegt
    */
   public boolean add(long positionAbsolute, double value) {
     synchronized (lock) {
@@ -226,7 +226,7 @@ public class SlidingDataWindow implements Serializable {
 
   /**
    * @return inhalt der schublade an der angegebenen position  oder {@link Double#MIN_VALUE} falls position
-   * ausserhalb der gültigen range liegt
+   * ausserhalb der gï¿½ltigen range liegt
    */
   public double get(long positionAbsolute) {
     synchronized (lock) {
@@ -240,7 +240,7 @@ public class SlidingDataWindow implements Serializable {
 
 
   /**
-   * summe über die schubladen inhalte, ohne die daten zu ändern
+   * summe ï¿½ber die schubladen inhalte, ohne die daten zu ï¿½ndern
    */
   public double size() {
     synchronized (lock) {
@@ -250,7 +250,7 @@ public class SlidingDataWindow implements Serializable {
 
 
   /**
-   * summe über die schubladen inhalte, wobei zu der übergebenen position geslided wird
+   * summe ï¿½ber die schubladen inhalte, wobei zu der ï¿½bergebenen position geslided wird
    */
   public double size(long absolutePositionToSlideTo) {
     synchronized (lock) {

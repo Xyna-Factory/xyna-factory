@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import com.gip.xyna.xprc.xsched.xynaobjects.SchedulerInformation;
 
 
 /**
- * SchedulingData enthält Daten, die für das Scheduling der XynaOrder relevant sind.
+ * SchedulingData enthï¿½lt Daten, die fï¿½r das Scheduling der XynaOrder relevant sind.
  * 
  * TODO Diese Daten werden derzeit noch meist in der XynaOrder gespeichert, dort sollen
  * sie ausgetragen werden.
@@ -247,7 +247,7 @@ public class SchedulingData implements Serializable {
     for( Capacity cap : capacities ) {
       if( capName.equals(cap.getCapName()) ) {
         if( cap.getCardinality() == cardinality ) {
-          return false; //nichts zu ändern
+          return false; //nichts zu ï¿½ndern
         } else {
           cap.setCardinality(cardinality);
           return true;
@@ -261,7 +261,7 @@ public class SchedulingData implements Serializable {
 
 
   /**
-   * sollen capacities beim nächsten scheduling entnommen werden 
+   * sollen capacities beim nï¿½chsten scheduling entnommen werden 
    */
   public boolean isNeedsToAcquireCapacitiesOnNextScheduling() {
     return needsToAcquireCapacitiesOnNextScheduling;
@@ -269,9 +269,9 @@ public class SchedulingData implements Serializable {
 
 
   /**
-   * falls false, zählt das nur für das nächste scheduling. dann wird das flag wieder auf true gesetzt.
+   * falls false, zï¿½hlt das nur fï¿½r das nï¿½chste scheduling. dann wird das flag wieder auf true gesetzt.
    * falls true, bleibt es true.
-   * bewirkt, ob beim nächsten scheduling die capacities entnommen werden. 
+   * bewirkt, ob beim nï¿½chsten scheduling die capacities entnommen werden. 
    */
   public void setNeedsToAcquireCapacitiesOnNextScheduling(boolean needsToAcquireCapacitiesOnNextScheduling) {
     this.needsToAcquireCapacitiesOnNextScheduling = needsToAcquireCapacitiesOnNextScheduling;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -161,7 +161,7 @@ public class Scp {
       sb.append("C0644 "); //0644 sind File-Zugriffsberechtigungen -rw-r--r--
       sb.append(length).append(" ");
       if( filename.lastIndexOf('/') != -1 ) {
-        //nur Dateinamen übergeben, nicht den Pfad
+        //nur Dateinamen ï¿½bergeben, nicht den Pfad
         sb.append( filename.substring(filename.lastIndexOf('/')+1) );
       } else {
         sb.append( filename );

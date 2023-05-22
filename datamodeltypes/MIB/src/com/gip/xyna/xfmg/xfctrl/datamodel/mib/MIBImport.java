@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ public class MIBImport {
     if( parameter.getOverwrite() ) {
       return Pair.of(Boolean.TRUE,null); 
     }
-    //Fehlerfall: bestehende DataModels dürfen nicht überschrieben werden
+    //Fehlerfall: bestehende DataModels dï¿½rfen nicht ï¿½berschrieben werden
     List<String> importNotAllowed = new ArrayList<String>();
     for( DataModel dm : alreadyImportedDataModels ) {
       importNotAllowed.add( dm.getType().getFqName() );

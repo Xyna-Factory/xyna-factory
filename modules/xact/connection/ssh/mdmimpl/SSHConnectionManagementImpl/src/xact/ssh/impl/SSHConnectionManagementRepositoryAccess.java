@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -224,7 +224,7 @@ public class SSHConnectionManagementRepositoryAccess {
     
   
   /**
-   * Löscht die Identities vom angegeben type und publickey. Wird keiner der beiden
+   * Lï¿½scht die Identities vom angegeben type und publickey. Wird keiner der beiden
    * Parameter angeben wird das ganze Archiv geleert.
    * @param type
    * @param publickey

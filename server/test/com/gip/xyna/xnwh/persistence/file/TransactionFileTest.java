@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,7 +163,7 @@ public class TransactionFileTest extends TestCase {
   }
  
   
-  // commit zweimal ausführen
+  // commit zweimal ausfï¿½hren
   public void testCommitTwice() {
     
     File oFile = new File(tmp2Dir, "oFile");
@@ -192,7 +192,7 @@ public class TransactionFileTest extends TestCase {
     }
   }
   
-  // temporäre Datei existiert im gleichen Verzeichnis
+  // temporï¿½re Datei existiert im gleichen Verzeichnis
   public void testCreateTempInSameDirectory() {
     
     File oFile = new File(tmp2Dir, "oFile");

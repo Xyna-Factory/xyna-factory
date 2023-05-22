@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,19 +32,19 @@ public interface RMIClusterProviderInterconnectInterface extends Remote {
   public void register(String hostname, int port, boolean restore) throws RemoteException, XFMG_ClusterConnectionException;
   
   /**
-   * Knoten B signalisiert zurück an Knoten A, dass er im Cluster willkommen ist, beide sind dann CONNECTED
+   * Knoten B signalisiert zurï¿½ck an Knoten A, dass er im Cluster willkommen ist, beide sind dann CONNECTED
    */
   public void connect() throws RemoteException;
   
   /**
-   * knoten, der bereits zum cluster gehört, wird disconnected 
+   * knoten, der bereits zum cluster gehï¿½rt, wird disconnected 
    */
   public void disconnect(String hostname, int port) throws RemoteException;
   
   public void heartbeatPing() throws RemoteException, ClusterNodeOnlineButNotExpectingHeartbeatPingException;
 
   /**
-   *  Knoten B signalisiert nach einem {@link #register(String, int, boolean)} zurück an Knoten A, dass er noch nicht so weit ist, um timeouts beim warten
+   *  Knoten B signalisiert nach einem {@link #register(String, int, boolean)} zurï¿½ck an Knoten A, dass er noch nicht so weit ist, um timeouts beim warten
    *  auf {@link #connect()} zu verhindern
    */
   public void waiting() throws RemoteException;

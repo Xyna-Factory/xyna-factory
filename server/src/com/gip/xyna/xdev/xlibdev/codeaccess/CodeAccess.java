@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -153,7 +153,7 @@ public class CodeAccess implements RevisionChangeListener {
 
   private String name;
   /**
-   * zu welcher (application-)revision gehört das svn? (entspricht projekt-, user- oder default workingset)
+   * zu welcher (application-)revision gehï¿½rt das svn? (entspricht projekt-, user- oder default workingset)
    */
   private long revision;
   /**
@@ -173,21 +173,21 @@ public class CodeAccess implements RevisionChangeListener {
    */
   private XDEV_RepositoryAccessException repositoryUpstreamFailure;
   /**
-   * implementierung zuständig für builds (compile+jar-erstellung)
+   * implementierung zustï¿½ndig fï¿½r builds (compile+jar-erstellung)
    */
   private XynaComponentBuilder builder;
   /**
    * Zugang zum Repository
    */
   private RepositoryAccess repositoryAccess;
-  //semaphores anstatt von locks, weil die zuständigkeit nicht threadlocal ist (T1 lockt und T2 unlockt)
+  //semaphores anstatt von locks, weil die zustï¿½ndigkeit nicht threadlocal ist (T1 lockt und T2 unlockt)
   /**
    * jede componente hat ihr eigenes lock
    */
   private final ConcurrentMap<String, Semaphore> buildLocks = new ConcurrentHashMap<String, Semaphore>();
   private final Semaphore repositoryLock = new Semaphore(1); //TODO feingranulareres Lock (auf Fileebene) verwenden
   /**
-   * locks für die eclipse template erstellung
+   * locks fï¿½r die eclipse template erstellung
    */
   private final Semaphore[] templateLocks = new Semaphore[ComponentType.values().length];
   {
@@ -200,7 +200,7 @@ public class CodeAccess implements RevisionChangeListener {
    */
   private final Semaphore mdmLock = new Semaphore(1);
   /**
-   * fehlgeschlagene builds und zugehörige fehlerinformation
+   * fehlgeschlagene builds und zugehï¿½rige fehlerinformation
    */
   private ConcurrentMap<String, BuildFailure> buildFailures = new ConcurrentHashMap<String, BuildFailure>();
 
@@ -415,11 +415,11 @@ public class CodeAccess implements RevisionChangeListener {
   public void newVersion(final RepositoryRevision version) {
     final List<ComponentCodeChange> deployList = new Vector<ComponentCodeChange>();
 
-    //FIXME thread freigeben, wenn svn gelockt - der thread, der das lock hält, kann dann die aufgabe übernehmen, wenn er fertig ist
+    //FIXME thread freigeben, wenn svn gelockt - der thread, der das lock hï¿½lt, kann dann die aufgabe ï¿½bernehmen, wenn er fertig ist
 
     boolean success = false;
-    lockRepository(); //TODO partielles locking bzgl der änderungen, die ausgecheckt werden müssen
-    //solange man beim build ist, keine weiteren svn updates durchführen
+    lockRepository(); //TODO partielles locking bzgl der ï¿½nderungen, die ausgecheckt werden mï¿½ssen
+    //solange man beim build ist, keine weiteren svn updates durchfï¿½hren
     try {
       final RepositoryTransaction transaction = repositoryAccess.beginTransaction("HookNotification");
       try {
@@ -442,17 +442,17 @@ public class CodeAccess implements RevisionChangeListener {
             sortComponentsForBuild(modifiedXynaComponents);
   
         //build: erst shared libs bauen, dann trigger, dann filter, etc
-        // FIXME reihenfolge der builds ist wichtig, wenn es abhängigkeiten untereinander gibt.
+        // FIXME reihenfolge der builds ist wichtig, wenn es abhï¿½ngigkeiten untereinander gibt.
         //  dies ist insbesondere der fall bei von einander abgeleiteten datentypen mit instanzmethoden
         Iterator<List<ComponentCodeChange>> iterator = modifiedXynaComponentsSorted.values().iterator();
         while (iterator.hasNext()) {
           List<ComponentCodeChange> modifiedComponents = iterator.next();
           List<ComponentCodeChange> buildDirectly = new ArrayList<ComponentCodeChange>();
           
-          //builds gleichen typs parallelisieren, weil keine gegenseitige abhängigkeit
+          //builds gleichen typs parallelisieren, weil keine gegenseitige abhï¿½ngigkeit
           for (final ComponentCodeChange modifiedComponent : modifiedComponents) {
             if (modifiedComponent.getComponentType() == ComponentType.CODED_SERVICE) {
-              //ServiceGroups über LazyAlgorithmExecutor bauen und deployen
+              //ServiceGroups ï¿½ber LazyAlgorithmExecutor bauen und deployen
               buildAlgorithm.addChangedComponent(modifiedComponent);
               buildExecutor.requestExecution();
             } else {
@@ -477,7 +477,7 @@ public class CodeAccess implements RevisionChangeListener {
   }
 
   /**
-   * DeploymentItemStateManagement über build Ende informieren
+   * DeploymentItemStateManagement ï¿½ber build Ende informieren
    * @param modifiedComponent
    */
   private void notifyDeploymentItemMgmt(ComponentCodeChange modifiedComponent) {
@@ -532,8 +532,8 @@ public class CodeAccess implements RevisionChangeListener {
 
 
   /**
-   * gibt null zurück, falls ein erwarteter fehler passiert. dieser wird dann in {@list #svnFailure} gespeichert.
-   * fehlert bei fehlkonfiguration oder ähnlichem
+   * gibt null zurï¿½ck, falls ein erwarteter fehler passiert. dieser wird dann in {@list #svnFailure} gespeichert.
+   * fehlert bei fehlkonfiguration oder ï¿½hnlichem
    */
   private List<RepositoryItemModification> refreshFromRepository(RepositoryTransaction transaction) {
     List<RepositoryItemModification> modifiedFiles = null;
@@ -602,10 +602,10 @@ public class CodeAccess implements RevisionChangeListener {
     Semaphore s = buildLocks.get(modifiedComponent.getComponentOriginalName());
     boolean otherWaiting = s.hasQueuedThreads();
     if (!otherWaiting) {
-      //aufräumen
+      //aufrï¿½umen
       buildLocks.remove(modifiedComponent.getComponentOriginalName());
-      //man könnte das so jedes mal machen.
-      //aus performancegründen nur dann, wenn man den verdacht hat, dass die semaphore nicht mehr benötigt wird.
+      //man kï¿½nnte das so jedes mal machen.
+      //aus performancegrï¿½nden nur dann, wenn man den verdacht hat, dass die semaphore nicht mehr benï¿½tigt wird.
 
       //schlimmstenfalls kam gerade einer und hat die semaphore doch noch gesehen.
       //dann sieht er nach dem acquire, dass sie nicht mehr in der map ist.
@@ -623,7 +623,7 @@ public class CodeAccess implements RevisionChangeListener {
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }
-        //wurde es bereits aus der map entnommen und ist damit ungültig?
+        //wurde es bereits aus der map entnommen und ist damit ungï¿½ltig?
         if (buildLocks.get(modifiedComponent.getComponentOriginalName()) == s) {
           //man hat das offizielle lock -> erfolg!
           return;
@@ -661,9 +661,9 @@ public class CodeAccess implements RevisionChangeListener {
 
 
   /**
-   * baut alle jars, die zu dieser komponente gehören und legt sie in den zugehörigen saved-ordner.
-   * die jars, die sich nicht geändert haben, müssen auch im saved-ordner liegen, können aber von einem vorherigen 
-   * build-vorgang übernommen oder vom deployed-ordner kopiert werden.
+   * baut alle jars, die zu dieser komponente gehï¿½ren und legt sie in den zugehï¿½rigen saved-ordner.
+   * die jars, die sich nicht geï¿½ndert haben, mï¿½ssen auch im saved-ordner liegen, kï¿½nnen aber von einem vorherigen 
+   * build-vorgang ï¿½bernommen oder vom deployed-ordner kopiert werden.
    * 
    * auch bei shared_libs wird 
    */
@@ -716,7 +716,7 @@ public class CodeAccess implements RevisionChangeListener {
     ParallelExecutor executor = new ParallelExecutor(threadpoolForBuildAndDeploy);
     executor.setTaskConsumerPreparator(new SimpleXynaRunnableTaskConsumerPreparator(false));
     
-    //builds gleichen typs parallelisieren, weil keine gegenseitige abhängigkeit
+    //builds gleichen typs parallelisieren, weil keine gegenseitige abhï¿½ngigkeit
     for (final ComponentCodeChange modifiedComponent : collection) {
       executor.addTask(new ParallelTask() {
         
@@ -745,7 +745,7 @@ public class CodeAccess implements RevisionChangeListener {
                   buildFailures.remove(modifiedComponent.getComponentOriginalName());
                 } catch (Exception e) {
                   buildFailures.put(modifiedComponent.getComponentOriginalName(), new BuildFailure(modifiedComponent, e));
-                  //nächste komponente bauen
+                  //nï¿½chste komponente bauen
                   success = true;
                   unlockForBuild(modifiedComponent);
                 } finally {
@@ -772,7 +772,7 @@ public class CodeAccess implements RevisionChangeListener {
     try {
       executor.executeAndAwait();
     } catch (InterruptedException e) {
-      //TODO direkt return und aufräumen?
+      //TODO direkt return und aufrï¿½umen?
     }
 
     return deployList;
@@ -781,7 +781,7 @@ public class CodeAccess implements RevisionChangeListener {
   void deploy(List<ComponentCodeChange> deployList) {
     //deployment
     //TODO undeployment
-    //     beim undeployment auch die verzeichnisse ganz löschen, damit keine nicht-eingecheckten bin oder deploy-verzeichnisse überbleiben
+    //     beim undeployment auch die verzeichnisse ganz lï¿½schen, damit keine nicht-eingecheckten bin oder deploy-verzeichnisse ï¿½berbleiben
     threadpoolForBuildAndDeploy.execute(new DeployModifiedComponentsRunnable(this, deployList));
   }
   
@@ -791,8 +791,8 @@ public class CodeAccess implements RevisionChangeListener {
 
 
   /*
-   * TODO methoden für die ermittlung von
-   * - was für svn updates laufen gerade
+   * TODO methoden fï¿½r die ermittlung von
+   * - was fï¿½r svn updates laufen gerade
    * - was ist der status der thread pools
    */
 
@@ -818,7 +818,7 @@ public class CodeAccess implements RevisionChangeListener {
           List<GenerationBase> allDatatypes = new ArrayList<GenerationBase>();
           List<ComponentCodeChange> allFilters = new ArrayList<ComponentCodeChange>();
           
-          //xmomobjekte benötigen ggf aktuelle sharedlibs, dann müssen ggf auch filter/trigger erneut deployed werden
+          //xmomobjekte benï¿½tigen ggf aktuelle sharedlibs, dann mï¿½ssen ggf auch filter/trigger erneut deployed werden
           //deployment hat eigenes locking
           //TODO asynchron? -> dann das unlock im callbackhandler wenn deployment fertig ist
           for (ComponentCodeChange component : deployList) {
@@ -859,7 +859,7 @@ public class CodeAccess implements RevisionChangeListener {
             }
           }
 
-          //gemeinsames deployment für Datentypen
+          //gemeinsames deployment fï¿½r Datentypen
           for (GenerationBase gb : allDatatypes) {
             gb.setDeploymentComment("CodeAccess");
           }
@@ -911,7 +911,7 @@ public class CodeAccess implements RevisionChangeListener {
 
 
   /**
-   * spezialinformationen abfragen, über interne datenhaltung etc 
+   * spezialinformationen abfragen, ï¿½ber interne datenhaltung etc 
    */
   public Reader getExtendedInformation(final String[] args) {
     PipedReader reader = new PipedReader();
@@ -1009,7 +1009,7 @@ public class CodeAccess implements RevisionChangeListener {
   }
   
   /**
-   * trigger klassen erstellen, zum svn adden und einchecken. triggerName endet nicht auf Trigger, dies wird intern hinzugefügt.
+   * trigger klassen erstellen, zum svn adden und einchecken. triggerName endet nicht auf Trigger, dies wird intern hinzugefï¿½gt.
    */
   private void createTrigger(String triggerName) {
     if (triggerName.endsWith("Trigger")) {
@@ -1076,7 +1076,7 @@ public class CodeAccess implements RevisionChangeListener {
       }
     } finally {
       if (!success) {
-        //bei fehlern aufräumen
+        //bei fehlern aufrï¿½umen
         FileUtils.deleteDirectoryRecursively(f);
       }
     }
@@ -1149,13 +1149,13 @@ public class CodeAccess implements RevisionChangeListener {
       }
       
       for (RepositoryItemModification status : statusList) {
-        if (status.getFile().endsWith(file)) { //nur den Status des übergebenen Verzeichnisses überprüfen (Unterverzeichnisse dürfen unversioned sein)
+        if (status.getFile().endsWith(file)) { //nur den Status des ï¿½bergebenen Verzeichnisses ï¿½berprï¿½fen (Unterverzeichnisse dï¿½rfen unversioned sein)
           return status.getModification().equals(RepositoryModificationType.Unversioned);
         }
       }
       return false;
     } catch (XDEV_RepositoryAccessException e) {
-      //svn status schlägt fehl, wenn das Parent-Verzeichnis noch nicht versioniert ist
+      //svn status schlï¿½gt fehl, wenn das Parent-Verzeichnis noch nicht versioniert ist
       return true;
     }
   }
@@ -1204,7 +1204,7 @@ public class CodeAccess implements RevisionChangeListener {
   }
 
   /**
-   * beim erstellen von eclipse projekten wird temporär ein verzeichnis "TemplateImplName" angelegt.
+   * beim erstellen von eclipse projekten wird temporï¿½r ein verzeichnis "TemplateImplName" angelegt.
    * beim gleichzeitgen erstellen von eclipse projekten des gleichen typs kann man sich dadurch
    * gegenseitig in die quere kommen. -> locking! 
    */
@@ -1268,7 +1268,7 @@ public class CodeAccess implements RevisionChangeListener {
               }
               gb.parseGeneration(false, false); 
               
-              //für die eigene revision die ServiceGroups ermitteln
+              //fï¿½r die eigene revision die ServiceGroups ermitteln
               if (gb.getRevision().equals(revision)) {
                 if (event.getXMOMType() == XMOMType.DATATYPE) {
                   DOM dom = (DOM) gb;
@@ -1375,7 +1375,7 @@ public class CodeAccess implements RevisionChangeListener {
             
             for (Pair<String, String> pair : names) {
               if (name.endsWith(".class") && name.startsWith(pair.getFirst()) && path.getAbsolutePath().endsWith(pair.getSecond())) {
-                //soweit so gut. nun könnte es aber noch eine klasse sein, die mit dem gleichen namen anfängt (IP vs IPv6).
+                //soweit so gut. nun kï¿½nnte es aber noch eine klasse sein, die mit dem gleichen namen anfï¿½ngt (IP vs IPv6).
                 //also sicherstellen, dass danach entweder ein ".", oder ein "$" kommt.
                 
                 char c = name.charAt(pair.getFirst().length());
@@ -1437,7 +1437,7 @@ public class CodeAccess implements RevisionChangeListener {
             String path = pathname.getPath();
             for (String fqPathName : fqPathNameList) {
               if (path.endsWith(".class") && path.startsWith(fqPathName)) {
-                //soweit so gut. nun könnte es aber noch eine klasse sein, die mit dem gleichen namen anfängt (IP vs IPv6).
+                //soweit so gut. nun kï¿½nnte es aber noch eine klasse sein, die mit dem gleichen namen anfï¿½ngt (IP vs IPv6).
                 //also sicherstellen, dass danach entweder ein ".", oder ein "$" kommt.
                 
                 char c = path.charAt(fqPathName.length());
@@ -1470,7 +1470,7 @@ public class CodeAccess implements RevisionChangeListener {
   
   /**
    * required revisions so sortieren, dass zuerst die direkten kinder kommen, und ganz am ende die kinder, die am weitesten weg sind.
-   * dabei sind keine doppelten in der liste. falls doppelte vorhanden wären, werden die hintersten kopien bevorzugt.
+   * dabei sind keine doppelten in der liste. falls doppelte vorhanden wï¿½ren, werden die hintersten kopien bevorzugt.
    */
   private List<Long> getUsedRevisionsSorted(RuntimeContextDependencyManagement dependencyManagement) {
     List<Long> usedByCodeAccess = new ArrayList<>();
@@ -1494,7 +1494,7 @@ public class CodeAccess implements RevisionChangeListener {
 
 
   /**
-   * gibt die revision der @someRevisionsUsedByCodeAccessRevision zurück, die am weitesten weg ist von der codeaccess-revision 
+   * gibt die revision der @someRevisionsUsedByCodeAccessRevision zurï¿½ck, die am weitesten weg ist von der codeaccess-revision 
    */
   private Long getLowestRevision(List<Long> usedRevisionsSorted, Set<Long> someRevisionsUsedByCodeAccessRevision) {
     int highestIndex = -2;
@@ -1514,7 +1514,7 @@ public class CodeAccess implements RevisionChangeListener {
     RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
 
-    //in das mdm.jar müssen auch die XMOMClasses aus allen (rekursiv) verwendeten
+    //in das mdm.jar mï¿½ssen auch die XMOMClasses aus allen (rekursiv) verwendeten
     //RuntimeContexten eingepackt werden
     Set<Long> allRelevantRevisions = new HashSet<Long>();
     rcdm.getDependenciesRecursivly(revision, allRelevantRevisions);
@@ -1525,11 +1525,11 @@ public class CodeAccess implements RevisionChangeListener {
       //XMOMClasses kompilieren bzw. einsammeln
       for (long rev : allRelevantRevisions) {
         if (revMgmt.isApplicationRevision(rev)) {
-          //für Applications das xmomclasses-Verzeichnis kopieren (da in Applications immer alles kompiliert sein sollte)
+          //fï¿½r Applications das xmomclasses-Verzeichnis kopieren (da in Applications immer alles kompiliert sein sollte)
           String xmomClassDir = RevisionManagement.getPathForRevision(PathType.XMOMCLASSES, rev);
           FileUtils.copyRecursivelyWithFolderStructure(new File(xmomClassDir), javaClassFolder);
         } else {
-          //für Workspaces neu kompilieren
+          //fï¿½r Workspaces neu kompilieren
           compileMdm(rev);
         }
       }
@@ -1749,7 +1749,7 @@ public class CodeAccess implements RevisionChangeListener {
     }
     if (xmomDeleteEvents.size() > 0) {
       deleteXmom(xmomDeleteEvents);
-      buildAlgorithm.rebuildAll(); //da von gelöschten Objekten keine Dependencies mehr ermittelt werden können, muss alles neu gebaut werden
+      buildAlgorithm.rebuildAll(); //da von gelï¿½schten Objekten keine Dependencies mehr ermittelt werden kï¿½nnen, muss alles neu gebaut werden
       buildExecutor.requestExecution();
     }
   }
@@ -1772,7 +1772,7 @@ public class CodeAccess implements RevisionChangeListener {
     //mdm.jar updaten
     rebuildMdmJarAndPrepareCodedServices(events, null);
     
-    //ServiceGroups der eigenen Revision löschen
+    //ServiceGroups der eigenen Revision lï¿½schen
     List<String> servicesToDelete = new ArrayList<String>();
     for (XMOMDeleteEvent event : events) {
       if (event.getXMOMType() == XMOMType.DATATYPE && event.getRevision() == revision) {
@@ -1816,7 +1816,7 @@ public class CodeAccess implements RevisionChangeListener {
 
             StringBuilder commitMsg = new StringBuilder();
             for (Entry<String, Triple<XMOMChangeEvent, DOM, ComponentCodeChange>> entry : components.entrySet()) {
-              //originalFqName statt fqClassName verwenden, da ansonsten beim Auschecken nicht mehr der originalFqName fürs Deployment ermittelt werden kann
+              //originalFqName statt fqClassName verwenden, da ansonsten beim Auschecken nicht mehr der originalFqName fï¿½rs Deployment ermittelt werden kann
               String originalFqNameOfDatatype = entry.getKey();
               
               String serviceSubDir = ComponentType.CODED_SERVICE.getProjectSubFolder() + Constants.FILE_SEPARATOR + originalFqNameOfDatatype;
@@ -1843,7 +1843,7 @@ public class CodeAccess implements RevisionChangeListener {
                         serviceSubDir + Constants.FILE_SEPARATOR + "build.xml",
                         serviceSubDir + Constants.FILE_SEPARATOR + ".classpath"}, RecursionDepth.FULL_RECURSION);
                     
-                    //evtl wurden aber noch neue files hinzugefügt, die verschwinden beim revert nicht.
+                    //evtl wurden aber noch neue files hinzugefï¿½gt, die verschwinden beim revert nicht.
                     transaction.add(new String[] {serviceSubDir + Constants.FILE_SEPARATOR + "src",
                                                   serviceSubDir + Constants.FILE_SEPARATOR + "lib"}, RecursionDepth.FULL_RECURSION);
                     
@@ -1899,7 +1899,7 @@ public class CodeAccess implements RevisionChangeListener {
             List<String> dirsToCommit = new ArrayList<String>();
             
             StringBuilder commitMsg = new StringBuilder();
-            transaction.setTransactionProperty("force", true); //force, damit auch gelöscht wird, falls unversionierte Elemente enthalten sind
+            transaction.setTransactionProperty("force", true); //force, damit auch gelï¿½scht wird, falls unversionierte Elemente enthalten sind
             try {
               for (String originalFqNameOfDatatype : originalFqNameOfDatatypes) {
                 String serviceSubDir = ComponentType.CODED_SERVICE.getProjectSubFolder() + Constants.fileSeparator + originalFqNameOfDatatype;
@@ -2086,10 +2086,10 @@ public class CodeAccess implements RevisionChangeListener {
 
   
   private void endTransaction(RepositoryTransaction transaction, boolean rollback) {
-    //TODO Es wäre schöner, wenn das Rollback für nicht commitete Anteile der Transaction in
-    //transaction.endTransaction() ausgeführt wird. Dann wird der Rollback-Teil hier
-    //nicht mehr benötigt. Da bei svn updates aber kein svn commit ausgeführt wird,
-    //muss dann noch eine neue commit-Methode ergänzt werden, die die uncommited-Liste leert.
+    //TODO Es wï¿½re schï¿½ner, wenn das Rollback fï¿½r nicht commitete Anteile der Transaction in
+    //transaction.endTransaction() ausgefï¿½hrt wird. Dann wird der Rollback-Teil hier
+    //nicht mehr benï¿½tigt. Da bei svn updates aber kein svn commit ausgefï¿½hrt wird,
+    //muss dann noch eine neue commit-Methode ergï¿½nzt werden, die die uncommited-Liste leert.
     //In XMOMAccess muss die endTransaction-Methode dann ebenfalls angepasst werden.
     try {
       if (rollback) {

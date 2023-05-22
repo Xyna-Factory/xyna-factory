@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class ColumnDeclaration {
     String getterName1 = "is" + name.toLowerCase();
     String getterName2 = "get" + name.toLowerCase();
     
-    //Suche nach Getter: 1. kein ÜbergabeParameter; 2. passender Name; 3. passender ReturnType
+    //Suche nach Getter: 1. kein ï¿½bergabeParameter; 2. passender Name; 3. passender ReturnType
     for (Method m : methods) {
       if (m.getParameterTypes().length == 0) {
         String methodName = m.getName().toLowerCase();
@@ -82,7 +82,7 @@ public class ColumnDeclaration {
     if( returnTypeName.equals(fieldTypeName) || (returnTypeName.startsWith("int") && (fieldTypeName.startsWith("int")))) {
       return true;
     }
-    //returnType ist von fieldType zuweisbar: Beispiel: Zurückgegeben wird ein Interface returnType, das von fieldType implementiert wird
+    //returnType ist von fieldType zuweisbar: Beispiel: Zurï¿½ckgegeben wird ein Interface returnType, das von fieldType implementiert wird
     if( returnType.isAssignableFrom(fieldType) ) {
       return true;
     }
@@ -120,7 +120,7 @@ public class ColumnDeclaration {
 
 
   /**
-   * @return javagetter für diese spalte auf dem basierenden java objekt
+   * @return javagetter fï¿½r diese spalte auf dem basierenden java objekt
    */
   public String getGetter() {
     return getter;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 
 
 /**
- * achtung: beim refactoring auch das zugehörige MDM XML ändern
+ * achtung: beim refactoring auch das zugehï¿½rige MDM XML ï¿½ndern
  */
 public abstract class XynaExceptionBase extends XynaException implements GeneralXynaObject {
 
@@ -94,7 +94,7 @@ public abstract class XynaExceptionBase extends XynaException implements General
   }
   
   /**
-   * erhält den cause falls vorhanden
+   * erhï¿½lt den cause falls vorhanden
    * legt eine tiefe Kopie an
    */
   public XynaExceptionBase clone() {
@@ -102,7 +102,7 @@ public abstract class XynaExceptionBase extends XynaException implements General
   }
 
   /**
-   * erhält den cause falls vorhanden
+   * erhï¿½lt den cause falls vorhanden
    * @param deep
    */
   public XynaExceptionBase clone(boolean deep) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,10 +95,10 @@ public class XMOMAccessManagement extends FunctionGroup {
         initXMOMAccessInstance(xais.getRevision(), params, false);
       } catch (XDEV_XMOMAccessInitializationException e) {
         logger.warn("could not initialize xmom access instance for revision " + xais.getRevision(), e);
-        //FIXME disabled merken, damit man später manuell erneut versuchen kann zu enablen!
+        //FIXME disabled merken, damit man spï¿½ter manuell erneut versuchen kann zu enablen!
       } catch (RuntimeException e) {
         logger.warn("could not initialize xmom access instance for revision " + xais.getRevision(), e);
-        //FIXME disabled merken, damit man später manuell erneut versuchen kann zu enablen!
+        //FIXME disabled merken, damit man spï¿½ter manuell erneut versuchen kann zu enablen!
       }
     }
     

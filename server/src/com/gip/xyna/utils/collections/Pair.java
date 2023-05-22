@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.Comparator;
 
 
 /**
- * Einfacher Speicherung von zwei zusammengehörigen Objekten.
+ * Einfacher Speicherung von zwei zusammengehï¿½rigen Objekten.
  * <br><br>
  * Beispiel:
  * <pre>
@@ -74,7 +74,7 @@ public class Pair<F,S> implements Serializable {
 
   /**
    * Comparator, der nach Second sortiert.<br>
-   * Aufruf kann leider den Typ &lt;S&gt; nicht ermitteln, daher ist die Angabe nötig.<br>
+   * Aufruf kann leider den Typ &lt;S&gt; nicht ermitteln, daher ist die Angabe nï¿½tig.<br>
    * Beispiel: <code>Collections.sort( list, Pair.&lt;Integer&gt;comparatorSecond() )</code>
    * @return
    */
@@ -88,7 +88,7 @@ public class Pair<F,S> implements Serializable {
 
   /**
    * Comparator, der nach First sortiert.<br>
-   * Aufruf kann leider den Typ &lt;F&gt; nicht ermitteln, daher ist die Angabe nötig.<br>
+   * Aufruf kann leider den Typ &lt;F&gt; nicht ermitteln, daher ist die Angabe nï¿½tig.<br>
    * Beispiel: <code>Collections.sort( list, Pair.&lt;Integer&gt;comparatorFirst() )</code>
    * @return
    */
@@ -103,7 +103,7 @@ public class Pair<F,S> implements Serializable {
   /**
    * Comparator, der nach First und Second sortiert. Dabei ist eines der beiden das 
    * Hauptsortierkriterium, bei Gleichheit wird dann das zweite verglichen.<br>
-   * Aufruf kann leider den Typ nicht ermitteln, daher ist die Angabe nötig.<br>
+   * Aufruf kann leider den Typ nicht ermitteln, daher ist die Angabe nï¿½tig.<br>
    * Beispiel: <code>Collections.sort( list, Pair.&lt;String,Integer&gt;comparator(true) )</code>
    * @param orderFirstSecond <code>true</code>: First ist Haupt-Sortierung
    * @return

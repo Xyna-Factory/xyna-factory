@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -385,7 +385,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     deploySection(new XGUISupport());
 //    deploySection(new XMOMGui() );
     
-    //defaultvalues bevor die future execution ausgeführt wird
+    //defaultvalues bevor die future execution ausgefï¿½hrt wird
     initLocks();
     
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
@@ -595,8 +595,8 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     File file = new File(GenerationBase.getFileLocationOfXmlNameForSaving(fqNameFromXML, revision) + ".xml");
 
     if (rootTagName.equals(GenerationBase.EL.EXCEPTIONSTORAGE)) {
-      //überprüfung, ob in gespeichertem xml der exceptioncode bereits gesetzt wurde und ihn dann ggfs
-      //in das xml einfügen.
+      //ï¿½berprï¿½fung, ob in gespeichertem xml der exceptioncode bereits gesetzt wurde und ihn dann ggfs
+      //in das xml einfï¿½gen.
       //falls nicht, muss das exceptionmanagement einen code generieren.
       if (file.exists()) {
         Document oldDoc = XMLUtils.parse(file.getAbsolutePath());
@@ -1648,7 +1648,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
         throw new XMCP_RestrictedCallNotAvailableException("searchOrderArchive");
       }
       try {
-        //FIXME das geht auch übers orderarchive, aber evtl sollte man das hier besser kenntlich machen.
+        //FIXME das geht auch ï¿½bers orderarchive, aber evtl sollte man das hier besser kenntlich machen.
         //was unterscheidet diese methode schliesslich von search/searchorderinstances, ausser dem suchkriterium
         return getXynaFactoryManagementPortal().getAllRunningProcesses(offset, count);
       } finally {
@@ -1774,7 +1774,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
   }
 
   public static void exportMDM(TemporaryFileHandler tfh) throws XynaException, IOException {
-    // mdm kopieren, ausser ausgewählte dateien TODO
+    // mdm kopieren, ausser ausgewï¿½hlte dateien TODO
     FilenameFilter xmlFilter = new FilenameFilter() {
 
       public boolean accept(File dir, String name) {
@@ -1794,7 +1794,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     File tempDir = new File("tempdir" + Math.random());
     FileUtils.copyFiles(files, new File(Constants.BASEDIR), tempDir);
 
-    // temporäres zipfile bauen
+    // temporï¿½res zipfile bauen
     File f = new File("myzip" + Math.random() + ".zip");
     FileUtils.zipDirectory(f, tempDir);
     FileInputStream fis = new FileInputStream(f);
@@ -1812,7 +1812,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
 
   public static void importMDM(ZipInputStream zis) throws Ex_FileAccessException, Ex_FileAccessException, XACT_JarFileUnzipProblem, XPRC_XmlParsingException {
 
-    // TODO evtl progressindikator übergeben, wenn das lange dauert
+    // TODO evtl progressindikator ï¿½bergeben, wenn das lange dauert
 
     // zip auspacken
     File[] files = FileUtils.saveZipToDir(zis, new File(Constants.BASEDIR));
@@ -2574,7 +2574,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
 
 
   /**
-   * @param runtimeContext falls null, werden die ordertypeparas aller revisions zurückgegeben 
+   * @param runtimeContext falls null, werden die ordertypeparas aller revisions zurï¿½ckgegeben 
    */
   public List<OrdertypeParameter> listOrdertypes(RuntimeContext runtimeContext) throws PersistenceLayerException {
     return XynaFactory.getInstance().getFactoryManagement().listOrdertypes(runtimeContext);
@@ -3053,7 +3053,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
         result.addAll(rm.getApplications());
         return new SearchResult<RuntimeContext>(result, result.size());
       case xmomdetails:
-        //im Moment wird nur die Suche nach ApplicationDefinitions eines XMOMObjekts unterstützt
+        //im Moment wird nur die Suche nach ApplicationDefinitions eines XMOMObjekts unterstï¿½tzt
         ApplicationManagement appMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
         return appMgmt.searchApplicationDefinitions(searchRequest);
       case orderInputSource :

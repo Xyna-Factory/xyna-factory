@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import com.gip.xyna.coherence.management.NodeInformation;
 
 
 /**
- * Schnittstelle zu anderen Knoten der Kohärenz. Es gibt in einem Kohärenz Knoten normalerweise zwei Implementierungen.
+ * Schnittstelle zu anderen Knoten der Kohï¿½renz. Es gibt in einem Kohï¿½renz Knoten normalerweise zwei Implementierungen.
  * Die eine ist die des Callers, die andere die das Callees.
  */
 public interface InterconnectProtocol {
@@ -43,7 +43,7 @@ public interface InterconnectProtocol {
    * This is returned if the local thread already owns the requested lock and thus does not need to get any further
    * remote locks.
    */
-  public static final int RESPONSE_REENTRANT_LOCAL_LOCK = -2; //weil nur für lokale requests gedacht, steht es hier nur der vollständigkeit halber, damit nicht einer auf die idee kommt, dass -2 nicht vergeben ist
+  public static final int RESPONSE_REENTRANT_LOCAL_LOCK = -2; //weil nur fï¿½r lokale requests gedacht, steht es hier nur der vollstï¿½ndigkeit halber, damit nicht einer auf die idee kommt, dass -2 nicht vergeben ist
 
   /**
    * es gab andere threads, und man hat gewonnen
@@ -58,9 +58,9 @@ public interface InterconnectProtocol {
 
   /**
    * Versuch einen Lock auf das angegebene Objekt zu erlangen.
-   * gibt SUCCESSFUL_LOCK_NO_COMPARISON_REQ zurück, falls Lock erfolgreich erlangt wurde, ohne dass mit der angefragten
-   * verglichen werden musste bzw. ohne dass der Knoten lockend/gelockt ist. Ansonsten wird die Priorität des
-   * vorhandenen Locks auf der anderen Seite zurückgegeben. Gibt SUCCESSFUL_LOCK_BY_COMPARISON zurück, falls es andere
+   * gibt SUCCESSFUL_LOCK_NO_COMPARISON_REQ zurï¿½ck, falls Lock erfolgreich erlangt wurde, ohne dass mit der angefragten
+   * verglichen werden musste bzw. ohne dass der Knoten lockend/gelockt ist. Ansonsten wird die Prioritï¿½t des
+   * vorhandenen Locks auf der anderen Seite zurï¿½ckgegeben. Gibt SUCCESSFUL_LOCK_BY_COMPARISON zurï¿½ck, falls es andere
    * Lock-Anfragen an diesen Knoten gibt.
    */
   public LockRequestResponse requestLock(long objectId, long priority, boolean tryLock, long nanoTimeout)
@@ -68,7 +68,7 @@ public interface InterconnectProtocol {
 
 
   /**
-   * führt die angegebenen Actions remote aus.
+   * fï¿½hrt die angegebenen Actions remote aus.
    */
   public CoherencePayload executeActions(CoherenceAction actions);
 
@@ -80,22 +80,22 @@ public interface InterconnectProtocol {
 
 
   /**
-   * nimmt den vorher geschickten lockrequest wieder zurück. ähnlich wie {@link #releaseLock(long)}, aber kann auch
-   * ausgeführt werden, wenn das lock nicht erfolgreich geholt wurde.
+   * nimmt den vorher geschickten lockrequest wieder zurï¿½ck. ï¿½hnlich wie {@link #releaseLock(long)}, aber kann auch
+   * ausgefï¿½hrt werden, wenn das lock nicht erfolgreich geholt wurde.
    */
   public void recallLockRequest(long objectId, long priority, long priorityOfLockInOldLockCircle,
                                 boolean countedInLockCircle, int lockCircleSize) throws ObjectNotInCacheException;
 
 
   /**
-   * wartet, bis das remote lock erlangt und freigegeben wurde, welches die übergebene Priorität hatte.
+   * wartet, bis das remote lock erlangt und freigegeben wurde, welches die ï¿½bergebene Prioritï¿½t hatte.
    */
   public LockAwaitResponse awaitLock(long objectId, long priorityToWaitUpon, boolean tryLock, long nanoTimeout)
       throws ObjectNotInCacheException, InterruptedException;
 
 
   /**
-   * gibt metadaten+id etc zurück
+   * gibt metadaten+id etc zurï¿½ck
    */
   public InitialConnectionData connectToClusterRemotely(NodeInformation nodeInformation);
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,8 +94,8 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
         //readAllFromDBFlag kann hier auf true gesetzt werden, weil gleich alle (bzw. so viele
         //wie maximal in die Queue passen) Crons aus der Datenbank ausgelesen werden.
         //Werden zwischenzeitlich von anderen Threads neue Crons in die Queue eingestellt,
-        //so werden diese wieder verdrängt, wenn nicht genügend Platz ist und der
-        //Ausführungszeitpunkt zu weit in der Zukunft liegt. Kann ein Cron nicht eingefügt werden,
+        //so werden diese wieder verdrï¿½ngt, wenn nicht genï¿½gend Platz ist und der
+        //Ausfï¿½hrungszeitpunkt zu weit in der Zukunft liegt. Kann ein Cron nicht eingefï¿½gt werden,
         //wird das Flag auf false gesetzt.
         setReadAllFromDBFlag(true);
       }
@@ -181,7 +181,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
             }
           }
           if (logger.isDebugEnabled()) {
-            //auftrag ist aber nicht mehr notwendigerweise in der queue - evtl wurde er bereits gelöscht.
+            //auftrag ist aber nicht mehr notwendigerweise in der queue - evtl wurde er bereits gelï¿½scht.
             //das sieht man dann daran, ob er danach gestartet wird
             logger.debug("Got notified while waiting or finished waiting for cron like order " + next.getId());
           }
@@ -249,14 +249,14 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
           }
         }
         cnt++;
-        cronQueue.wait(100); //gibt das lock frei, damit andere threads nicht warten müssen
+        cronQueue.wait(100); //gibt das lock frei, damit andere threads nicht warten mï¿½ssen
       }
     }
   }
   
   
   /**
-   * Order wird nicht zur Scheduling-Queue hinzugefügt. Wenn sie schon drin sind, wird sie dort entfernt. 
+   * Order wird nicht zur Scheduling-Queue hinzugefï¿½gt. Wenn sie schon drin sind, wird sie dort entfernt. 
    */
   public void markAsNotToScheduleAndRemoveFromQueue(Long orderId) {
     synchronized (cronQueue) {
@@ -273,7 +273,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
   }
   
   /**
-   * Queue komplett leeren und neu aus DB befüllen ...
+   * Queue komplett leeren und neu aus DB befï¿½llen ...
    */
   public void recreateQueue() {
     synchronized (cronQueue) {
@@ -298,7 +298,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
   }
   
   /**
-   * Order wird nicht zur Scheduling-Queue hinzugefügt. Wenn sie schon drin sind, ist es zu spät und sie werden dennoch ausgeführt. 
+   * Order wird nicht zur Scheduling-Queue hinzugefï¿½gt. Wenn sie schon drin sind, ist es zu spï¿½t und sie werden dennoch ausgefï¿½hrt. 
    */
   public void markAsNotToSchedule(Long orderId) {
     synchronized (cronQueue) {
@@ -330,7 +330,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
         CronLikeOrder order = iter.next();
         cronQueue.unmarkCronLikeOrderAsNotToSchedule(order.getId());
         if (order.getNextExecution() <= cronQueue.getLatestExecutionTimeInQueue()) {
-          //muss früher gestartet werden als der auftrag mit der längsten wartezeit in der queue
+          //muss frï¿½her gestartet werden als der auftrag mit der lï¿½ngsten wartezeit in der queue
           cronQueue.addCronLikeOrderToQueue(order);
           added++;
         } else if(cronQueue.size() < maxQueueLengthUpperBound) {
@@ -344,7 +344,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
       }
       
       if(cronQueue.size() > maxQueueLengthUpperBound) {
-        // Queue kürzen ... letztes Element löschen
+        // Queue kï¿½rzen ... letztes Element lï¿½schen
         cronQueue.shrink(maxQueueLengthUpperBound);
         setReadAllFromDBFlag(false);
       }
@@ -364,7 +364,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
       boolean added;
       int maxQueueLengthUpperBound = XynaProperty.CRON_LIKE_TIMER_UPPER_BOUND.get();
       if (order.getNextExecution() <= cronQueue.getLatestExecutionTimeInQueue()) {
-        //muss früher gestartet werden als der auftrag mit der längsten wartezeit in der queue
+        //muss frï¿½her gestartet werden als der auftrag mit der lï¿½ngsten wartezeit in der queue
         added = cronQueue.addCronLikeOrderToQueue(order, addFromPersistenceLayer);
       } else if(cronQueue.size() < maxQueueLengthUpperBound) {
         added = cronQueue.addCronLikeOrderToQueue(order, addFromPersistenceLayer);
@@ -380,7 +380,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
         logger.trace("Adding cron like orders to memory queue.");
         
         if(cronQueue.size() > maxQueueLengthUpperBound) {
-          // Queue kürzen ... letztes Element löschen
+          // Queue kï¿½rzen ... letztes Element lï¿½schen
           logger.trace("Shrink Queue to fit the correct size.");
           cronQueue.shrink(maxQueueLengthUpperBound);
           setReadAllFromDBFlag(false);
@@ -388,7 +388,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
         
         cronQueue.notify();
       } else {
-        //wenn die Queue leer ist, müssen neue Crons aus der DB gelesen werden
+        //wenn die Queue leer ist, mï¿½ssen neue Crons aus der DB gelesen werden
         //dazu den CronLikeTimer aufwecken
         if (cronQueue.isEmpty()) {
           cronQueue.notify();
@@ -453,7 +453,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
   
   
   /**
-   * Startet das Einsammeln der Crons, die bereits aus der DB gelöscht / geändert wurden
+   * Startet das Einsammeln der Crons, die bereits aus der DB gelï¿½scht / geï¿½ndert wurden
    * und setzt cleared auf false.
    */
   public void prepareReadNext() {
@@ -461,7 +461,7 @@ public class CronLikeTimer extends ManagedPlainThreadFromPausableRunnable {
   }
 
   /**
-   * Stoppt das Einsammeln der Crons, die bereits aus der DB gelöscht /geändert wurden.
+   * Stoppt das Einsammeln der Crons, die bereits aus der DB gelï¿½scht /geï¿½ndert wurden.
    */
   public void finishReadNext() {
     cronQueue.finishReadNext();

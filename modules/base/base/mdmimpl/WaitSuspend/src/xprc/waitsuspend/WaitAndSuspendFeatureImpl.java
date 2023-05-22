@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,7 +131,7 @@ public class WaitAndSuspendFeatureImpl implements DeploymentTask {
         throw new RuntimeException("Suspension time is set but resume time has not been evaluated.");
       } else {
         if (resumeTime <= System.currentTimeMillis() ) {
-          return; //regulärer Ausgang: Wartezeit ist abgelaufen
+          return; //regulï¿½rer Ausgang: Wartezeit ist abgelaufen
         } else {
           prepareResume(xo, laneId, resumeTime, waitOrSuspend, true);
           suspend(xo, laneId, resumeTime, waitOrSuspend);
@@ -142,7 +142,7 @@ public class WaitAndSuspendFeatureImpl implements DeploymentTask {
 
 
   /**
-   * Vorbereitungen, damit ein Resume möglich wird
+   * Vorbereitungen, damit ein Resume mï¿½glich wird
    * @param xo
    * @param laneId
    * @param resumeTime
@@ -279,7 +279,7 @@ public class WaitAndSuspendFeatureImpl implements DeploymentTask {
 
       long l = tempCalendar.getTime().getTime();
       if (l > 0 && l < System.currentTimeMillis() - 24 * 60 * 60 * 1000) {
-        //absolute zeit wurde angegeben, aber vermutlich nicht wie intendiert, nämlich mehr als ein tag in der vergangenheit
+        //absolute zeit wurde angegeben, aber vermutlich nicht wie intendiert, nï¿½mlich mehr als ein tag in der vergangenheit
         logger.info("Absolute time provided is more than one day in the past.");
       }
       return l;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.gip.xyna.xprc.XynaRunnable;
 /**
  * SimpleXynaRunnableTaskConsumerPreparator modifiziert den ParallelExecutor und liefert mit
  * {@link #prepareExecutorRunnable(TaskConsumer)} ein Runnable,
- * welches im XynaExecutor lauffähig ist (XynaRunnable).
+ * welches im XynaExecutor lauffï¿½hig ist (XynaRunnable).
  */
 public class SimpleXynaRunnableTaskConsumerPreparator implements TaskConsumerPreparator {
 

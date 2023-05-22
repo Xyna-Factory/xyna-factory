@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ public class DHCPv6Constants {
   
   
   
-  //Suboptionen für Option 17 - VendorSpecific Information
+  //Suboptionen fï¿½r Option 17 - VendorSpecific Information
   public static final String SUB1732 = "CL_OPTION_TFTP_SERVERS";
   public static final String SUB1733 = "CL_OPTION_CONFIG_FILE_NAME";
   public static final String SUB1734 = "CL_OPTION_SYSLOG_SERVERS";

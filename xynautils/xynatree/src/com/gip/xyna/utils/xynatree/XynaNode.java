@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * Klasse für Bäume von Objekten
+ * Klasse fï¿½r Bï¿½ume von Objekten
  */
 public class XynaNode implements JSONObject, XMLObject {
 
@@ -82,7 +82,7 @@ public class XynaNode implements JSONObject, XMLObject {
    }
 
    /**
-    * value = null => attribut wird gelöscht
+    * value = null => attribut wird gelï¿½scht
     * 
     * @param name
     * @param value
@@ -109,7 +109,7 @@ public class XynaNode implements JSONObject, XMLObject {
 
    /**
     * Erzeugt im JSON-Format einen String der den Baum beschreibt, der zu dieser
-    * Node gehört (Kurz!). Ist ein Feld nicht gesetzt, wird "null" in den
+    * Node gehï¿½rt (Kurz!). Ist ein Feld nicht gesetzt, wird "null" in den
     * JSON-String geschrieben. <br>
     * Struktur: <br> { &lt;name&gt; : &lt;value&gt;, <br>
     * &lt;attributkey1&gt; : &lt;attributvalue1&gt;, <br>
@@ -153,7 +153,7 @@ public class XynaNode implements JSONObject, XMLObject {
 
    /**
     * Erzeugt im JSON-Format einen String der den Baum beschreibt, der zu dieser
-    * Node gehört (Ausführliche 1:1 Abbildung der Felder dieser Klasse). Ist ein
+    * Node gehï¿½rt (Ausfï¿½hrliche 1:1 Abbildung der Felder dieser Klasse). Ist ein
     * Feld nicht gesetzt, wird "null" in den JSON-String geschrieben. <br>
     * Struktur: <br> { name : &lt;name&gt;, <br>
     * value : &lt;value&gt;, <br>
@@ -236,7 +236,7 @@ public class XynaNode implements JSONObject, XMLObject {
             return ((XMLObject) value).getType();
          }
          String classname = getValue().getClass().getName();
-         // TODO ggfs hier erweitern für beliebige objekte mittels
+         // TODO ggfs hier erweitern fï¿½r beliebige objekte mittels
          // reflection?!
          return XynaSchemaNode.getXSDTypeOfClassname(classname);
       }

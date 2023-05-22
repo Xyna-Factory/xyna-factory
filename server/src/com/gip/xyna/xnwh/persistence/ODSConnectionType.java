@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ package com.gip.xyna.xnwh.persistence;
 public enum ODSConnectionType {
 
   //TODO wichtig wieso??
-  //Index wichtig, er stellt dar, wie "entfernt" oder "schwer zugänglich" daten sind.
-  //zb könnte default=speicher, alternative=festplatte, history=netzlaufwerk sein.
+  //Index wichtig, er stellt dar, wie "entfernt" oder "schwer zugï¿½nglich" daten sind.
+  //zb kï¿½nnte default=speicher, alternative=festplatte, history=netzlaufwerk sein.
   DEFAULT(0), ALTERNATIVE(1), HISTORY(2), INTERNALLY_USED(3);
 
   private int index;

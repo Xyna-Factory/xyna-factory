@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class BLOB {
   }
   
   /**
-   * Einfacher Konstruktor, danach kann dann mit setDataAsString oder getOutputStream().write(..) der BLOB gefüllt werden
+   * Einfacher Konstruktor, danach kann dann mit setDataAsString oder getOutputStream().write(..) der BLOB gefï¿½llt werden
    * @param type ZIPPED oder UNZIPPED
    */
   public BLOB( int type ) {
@@ -72,7 +72,7 @@ public class BLOB {
   
  
   /**
-   * Direktes Übergeben der BLOB-Daten als ByteArrayOutputStream
+   * Direktes ï¿½bergeben der BLOB-Daten als ByteArrayOutputStream
    * @param data
    */
   public BLOB( ByteArrayOutputStream data) {
@@ -90,7 +90,7 @@ public class BLOB {
   }
   
   /**
-   * Kann überschrieben werden, um andere ZipStreams zu verwenden, oder Einstellungen am Stream zu ändern (z.B. Buffersize).
+   * Kann ï¿½berschrieben werden, um andere ZipStreams zu verwenden, oder Einstellungen am Stream zu ï¿½ndern (z.B. Buffersize).
    * Default ist {@link GZIPOutputStream}
    * @param os
    */

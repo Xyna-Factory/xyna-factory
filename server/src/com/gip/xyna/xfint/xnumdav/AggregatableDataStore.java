@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class AggregatableDataStore implements Serializable {
 
   private static final long serialVersionUID = -8971595667148555032L;
 
-  private int maxEntriesPerDepth = 10; //max cnt buckets. falls mehr buckets benötigt werden, wird bucket width erhöht
+  private int maxEntriesPerDepth = 10; //max cnt buckets. falls mehr buckets benï¿½tigt werden, wird bucket width erhï¿½ht
   private Number intervalLength; //bucket width
 
   private int lastIndex = 0;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -206,9 +206,9 @@ public class ObjectsAction extends RuntimeContextDependendAction {
   
   
   /**
-   * Prüft den angegebenen XMOMDatabaseSearchResultEntry entry auf Ambiguität bzgl. der übergebenen Liste list.
+   * Prï¿½ft den angegebenen XMOMDatabaseSearchResultEntry entry auf Ambiguitï¿½t bzgl. der ï¿½bergebenen Liste list.
    * Elemente mit Typ "codedService" oder "instanceService" (XMOMDatabaseType.OPERATION) sind gesondert zu behandeln.
-   * @param entry XMOMDatabaseSearchResultEntry-Objekt, das auf Ambiguität geprüft wird
+   * @param entry XMOMDatabaseSearchResultEntry-Objekt, das auf Ambiguitï¿½t geprï¿½ft wird
    * @param list Liste, die auf Duplicates von entry durchsucht wird
    * @param index Index von entry in list
    * @return true, wenn entry.getType() nicht XMOMDatabaseType.OPERATION ist und ein anderes Objekt other in list
@@ -323,7 +323,7 @@ public class ObjectsAction extends RuntimeContextDependendAction {
     private boolean dataType;
     private boolean exceptionType;
     private boolean serviceGroup;
-    private boolean operation; // heißt in GUI "Service"
+    private boolean operation; // heiï¿½t in GUI "Service"
     
     @Override
     public SearchMetaData get() {

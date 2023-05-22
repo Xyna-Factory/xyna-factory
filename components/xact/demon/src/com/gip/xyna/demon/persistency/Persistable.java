@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 package com.gip.xyna.demon.persistency;
 
 /**
- * Über dieses Interface können der DemonPersistency-Instanz alle mögliche Objekte übergeben werden,
+ * ï¿½ber dieses Interface kï¿½nnen der DemonPersistency-Instanz alle mï¿½gliche Objekte ï¿½bergeben werden,
  * die etwas zu persistieren haben. 
  *
  */
@@ -30,7 +30,7 @@ public interface Persistable {
   public String getUniqueName();
 
   /**
-   * DemonPersistency intialisiert hierüber den persistierten Wert.
+   * DemonPersistency intialisiert hierï¿½ber den persistierten Wert.
    * Der String kann null sein, wenn der Wert noch nie persistiert wurde  
    * @param value
    */
@@ -38,7 +38,7 @@ public interface Persistable {
 
   /**
    * Liefert den aktuelle Wert als String
-   * Rückgabe darf nicht null sein, ansonsten wird der Wert nicht aktualisiert
+   * Rï¿½ckgabe darf nicht null sein, ansonsten wird der Wert nicht aktualisiert
    * @return
    */
   public String getPersistentValue();

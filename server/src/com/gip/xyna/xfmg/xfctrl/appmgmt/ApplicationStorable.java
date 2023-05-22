@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class ApplicationStorable extends Storable<ApplicationStorable> {
   }
   
   public ApplicationStorable(String applicationName, String version, String comment, Long parentRevision) {
-    this(applicationName, version, ApplicationState.WORKINGCOPY, comment); //Zustand WORKINGCOPY im Storable wegen Abwärtskompatibilität behalten (sollte aber nicht mehr ausgewertet werden)
+    this(applicationName, version, ApplicationState.WORKINGCOPY, comment); //Zustand WORKINGCOPY im Storable wegen Abwï¿½rtskompatibilitï¿½t behalten (sollte aber nicht mehr ausgewertet werden)
     this.parentRevision = parentRevision;
   }
   

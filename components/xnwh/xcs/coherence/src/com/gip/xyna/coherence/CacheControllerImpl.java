@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,7 +117,7 @@ public final class CacheControllerImpl
   private static final int CLUSTER_ID_START = 0;
   
 
-  // TODO prio3: konfigurierbarer Offset nach Verbrauchen eines ID-Kontingents. Für HA-Szenarien muss beachtet werden,
+  // TODO prio3: konfigurierbarer Offset nach Verbrauchen eines ID-Kontingents. Fï¿½r HA-Szenarien muss beachtet werden,
   // dass die Realisierung eindeutiger IDs mit Hilfe von kleinen Kontingenten nicht funktioniert, weil die einzelnen
   // Knoten dann schnell keine IDs mehr zum Vergeben haben.
   private static final long INCREMENT_IDGEN = 1000;
@@ -146,10 +146,10 @@ public final class CacheControllerImpl
   private ActionHandler actionHandler;
   private Map<Integer, InterconnectProtocol> connections = new HashMap<Integer, InterconnectProtocol>();
   private Random priorityGenerationRandom = new Random();
-  private int ownClusterNodeID; //unique auch über zeit. auch wenn knoten entfernt und ein neuer hinzugefügt wird, hat der neue niemals die id eines ehemals entfernten.
+  private int ownClusterNodeID; //unique auch ï¿½ber zeit. auch wenn knoten entfernt und ein neuer hinzugefï¿½gt wird, hat der neue niemals die id eines ehemals entfernten.
 
   //clusterzustand
-  private boolean clusteractive = false; //nur falls false, können callees geaddet werden. nur falls true, können standard-funktionen aufgerufen werden (create, read, etc)
+  private boolean clusteractive = false; //nur falls false, kï¿½nnen callees geaddet werden. nur falls true, kï¿½nnen standard-funktionen aufgerufen werden (create, read, etc)
   private volatile boolean valid = true; //wird beim shutdown auf false gestellt.
 
   private volatile Thread disconnectingThread;
@@ -158,7 +158,7 @@ public final class CacheControllerImpl
   private List<InterconnectCalleeProvider> calleeProvider = new ArrayList<InterconnectCalleeProvider>();
 
   // TODO prio5: konfigurierbarer ThreadPoolExecutor (setThreadPoolExecutor oder sowas). Dabei muss beachtet werden,
-  // das ein eventueller custom-threadpoolexecutor auch die threadlocals aufräumen kann.
+  // das ein eventueller custom-threadpoolexecutor auch die threadlocals aufrï¿½umen kann.
   private ThreadPoolExecutor threadpool2 = 
       new ThreadPoolExecutorWithThreadlocalsCleanup(1, 200, 20, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
   //  private ThreadPool threadpool = new ThreadPool(0);
@@ -166,12 +166,12 @@ public final class CacheControllerImpl
   private ClusterMemberChangeInformation clusterMemberChangeInformation;
   
   /**
-   * steuert locking von threads die kein unlock sind, zb während das cluster pausiert wird.
+   * steuert locking von threads die kein unlock sind, zb wï¿½hrend das cluster pausiert wird.
    */
   private ThreadLockInterface globalLock;
 
   /**
-   * steuert locking von threads, die {@link #unlock(long)} aufrufen, zb während das cluster pausiert wird.
+   * steuert locking von threads, die {@link #unlock(long)} aufrufen, zb wï¿½hrend das cluster pausiert wird.
    */
   private ThreadLockInterface globalUnlockLock;
 
@@ -524,7 +524,7 @@ public final class CacheControllerImpl
 
       boolean cleanupDeletedLocally = false;
       try {
-        //fälle, wo man noch kein remotelock hat. komplementär ist "reentrant && !onlygotpreliminary", genau da hat man bereits remotelocks.
+        //fï¿½lle, wo man noch kein remotelock hat. komplementï¿½r ist "reentrant && !onlygotpreliminary", genau da hat man bereits remotelocks.
         if (!reentrant || onlyGotPreliminaryLock) {
           
           
@@ -534,19 +534,19 @@ public final class CacheControllerImpl
           //beispiel: thread 1 unlockt von knoten 2 aus. erst remoteunlock auf 0, dann auf 1. bevor das unlock auf 1 ankommt
           //          kommt thread 2 mit einem delete auf knoten 0. das delete holt dort nur ein preliminary lock
           //          (zb, erst lock, dann delete, state MODIFIED). danach schickt es die delete-action auch an knoten 1.
-          //          dann können das unlock von thread 1 und die delete-action von thread 2 gleichzeitig bei knoten 1
-          //          ankommen und zu problemen führen.
-          //TODO: diese probleme anders lösen, und dann hier performance gewinnen, weil das preliminary lock eigentlich
-          //    ausreichen müsste.
+          //          dann kï¿½nnen das unlock von thread 1 und die delete-action von thread 2 gleichzeitig bei knoten 1
+          //          ankommen und zu problemen fï¿½hren.
+          //TODO: diese probleme anders lï¿½sen, und dann hier performance gewinnen, weil das preliminary lock eigentlich
+          //    ausreichen mï¿½sste.
           
           /*
-           * hier würde man gerne das lock upgraden.
+           * hier wï¿½rde man gerne das lock upgraden.
            * das funktioniert aber nicht, wegen: thread 1 hat preliminary lock und ruft dann delete auf. 
-           * dabei kann aber ein anderer thread in den lockzirkel kommen und dabei die höhere priorität haben. 
-           * folgender workaround behebt dieses problem, indem thread 1 dann immer die höchste priorität bekommt.
+           * dabei kann aber ein anderer thread in den lockzirkel kommen und dabei die hï¿½here prioritï¿½t haben. 
+           * folgender workaround behebt dieses problem, indem thread 1 dann immer die hï¿½chste prioritï¿½t bekommt.
            *
-           * ohne upgrade hat man ein ähnliches problem noch bei 2 konkurrierenden deletes. der thread mit dem
-           * preliminary lock wartet dann unter umständen bei getremotelocks auf das remotelock mit einer höheren
+           * ohne upgrade hat man ein ï¿½hnliches problem noch bei 2 konkurrierenden deletes. der thread mit dem
+           * preliminary lock wartet dann unter umstï¿½nden bei getremotelocks auf das remotelock mit einer hï¿½heren
            * prio als man selbst => hohe prio hilft auch hier.
            */  
           if (onlyGotPreliminaryLock) {
@@ -677,18 +677,18 @@ public final class CacheControllerImpl
               throw new ClusterInconsistentException("Nondeletable internal object was deleted (id=" + objectId + ")",
                                                      e);
             }
-            //gleichzeitig mit einem connectToCluster können noch andere (normale) threads ein lock auf ID_GLOBAL_LOCK_T (oder unlock) wollen
+            //gleichzeitig mit einem connectToCluster kï¿½nnen noch andere (normale) threads ein lock auf ID_GLOBAL_LOCK_T (oder unlock) wollen
             //und damit einen lockzirkel bilden (das passiert nur, wenn zwei connectToClusters direkt nacheinander aufgerufen werden).
             //
             //das bedeutet, dass alle threads des lockzirkels das lokale lock erhalten haben.
             //insbesondere kann es dann sein, dass der gewinner-thread der "connectToCluster" thread ist.
             //dieser will dann ein snapshot vom logregister machen.
-            //da aber andere mitglieder des lockzirkels hier an dieser stelle im code sein können (d.h. getCurrentMembers aufrufen),
+            //da aber andere mitglieder des lockzirkels hier an dieser stelle im code sein kï¿½nnen (d.h. getCurrentMembers aufrufen),
             //werden die remotelocks unsynchronisiert mit dem snapshot und dem setzen der aktuellen clustermembers geholt.
             //
-            //das kann dann dazu führen, dass der neue knoten inkonsistente lock-informationen für ID_GLOBAL_LOCK_T (oder unlock) bekommt.
+            //das kann dann dazu fï¿½hren, dass der neue knoten inkonsistente lock-informationen fï¿½r ID_GLOBAL_LOCK_T (oder unlock) bekommt.
             //
-            //deshalb hier die spezialbehandlung für diesen fall: threads zählen, die hier sind, und ggfs warten, bis connectToCluster
+            //deshalb hier die spezialbehandlung fï¿½r diesen fall: threads zï¿½hlen, die hier sind, und ggfs warten, bis connectToCluster
             //soweit ist.
             specialLock.checkLock();
             checkControllerState();
@@ -739,27 +739,27 @@ public final class CacheControllerImpl
           if (debugger.isEnabled()) {
             debugger.debug("lock request timed out. recalling lock requests...");
           }
-          /* lokales lock aufräumen: das wurde vorher erfolgreich geholt.
+          /* lokales lock aufrï¿½umen: das wurde vorher erfolgreich geholt.
            * zuerst lokal, dann remote, damit man die lockzirkelinformationen die lokal ermittelbar sind,
            * threadsicher remote verwenden kann. 
-           * andersrum könnte es passieren, dass der lockzirkel status sich ändert, 
-           * während man die remote locks recalled, weil das lokale lock noch gesetzt ist. (zb: neuer lock
+           * andersrum kï¿½nnte es passieren, dass der lockzirkel status sich ï¿½ndert, 
+           * wï¿½hrend man die remote locks recalled, weil das lokale lock noch gesetzt ist. (zb: neuer lock
            * request denkt, er ist in einem lockzirkel, obwohl das gar nicht der fall ist)
            * 
-           * wenn man das lokale lock zuerst freigibt, muss man aber dafür sorgen, dass keine 
+           * wenn man das lokale lock zuerst freigibt, muss man aber dafï¿½r sorgen, dass keine 
            * neuen lokalen requests mit der gleichen prio kommen. => preliminary lock holen und nach
            * dem recall der remote locks wieder freigeben.
            */
           boolean countedInLockCircle =
               existingObject.getLockObject().recallLocalLockRequest(nextPrio, getRemoteLockResponse.lockCircleSize);
           try {
-            //remote locks aufräumen.
+            //remote locks aufrï¿½umen.
             recallRemoteLocks(members, objectId, nextPrio, getRemoteLockResponse.priorityInOldLockCircle,
                               countedInLockCircle, getRemoteLockResponse.lockCircleSize,
                               getRemoteLockResponse.lockRequests);
           } finally {
 
-            //auch aufräumen, wenn remote locks recall fehler wirft (zb weil objekt gelöscht wurde)
+            //auch aufrï¿½umen, wenn remote locks recall fehler wirft (zb weil objekt gelï¿½scht wurde)
             existingObject.getLockObject().recallLocalPreliminaryLock();
           }
           return false;
@@ -818,13 +818,13 @@ public final class CacheControllerImpl
   /**
    * achtung, hier wird eine referenz ungelockt herausgegeben. d.h. andere threads die danach ein read machen, bekommen
    * die gleiche referenz.
-   * für ein modify muss unbedingt vor dem schreiben in die referenz ein richtiges lock geholt werden.
+   * fï¿½r ein modify muss unbedingt vor dem schreiben in die referenz ein richtiges lock geholt werden.
    * 
-   * für ein internes push (für redundanz) ist das nicht schlimm, weil dort nicht auf die gleiche referenz zugegriffen wird,
-   * sondern die referenz überschrieben wird. das gleiche gilt, falls das objekt invalidiert und direkt danach durch ein read 
+   * fï¿½r ein internes push (fï¿½r redundanz) ist das nicht schlimm, weil dort nicht auf die gleiche referenz zugegriffen wird,
+   * sondern die referenz ï¿½berschrieben wird. das gleiche gilt, falls das objekt invalidiert und direkt danach durch ein read 
    * aktualisiert wird. ein thread, der noch die alte referenz hat, merkt davon nichts.
    * 
-   * achtung bei internen aufrufen. hier wird global lock überprüft.
+   * achtung bei internen aufrufen. hier wird global lock ï¿½berprï¿½ft.
    */
   public CoherencePayload read(final long objectId) throws ObjectNotInCacheException {
     if (debugger.isEnabled()) {
@@ -869,9 +869,9 @@ public final class CacheControllerImpl
       checkControllerState();
 
       if (objectId > ID_MAXIMUM_INTERNALLY_USED) {
-        //unlocks müssen durchgelassen werden, damit bestehende aktive threads die auf locks warten weiterlaufen können.
-        //wenn diese dann alle durchgelaufen sind (threadCnt == 0), dann dürfen keine unlocks mehr vorbei.
-        //das könnten zb unlocks zu locks sein, auf die keiner wartet.
+        //unlocks mï¿½ssen durchgelassen werden, damit bestehende aktive threads die auf locks warten weiterlaufen kï¿½nnen.
+        //wenn diese dann alle durchgelaufen sind (threadCnt == 0), dann dï¿½rfen keine unlocks mehr vorbei.
+        //das kï¿½nnten zb unlocks zu locks sein, auf die keiner wartet.
         globalUnlockLock.checkLock();
       }
       try {
@@ -945,7 +945,7 @@ public final class CacheControllerImpl
         }
         
         // finally get the CoherenceObject to notify eventual change notification listeners
-        // FIXME prio3: event auf alter payload ausführen? spezifikationsbedarf!
+        // FIXME prio3: event auf alter payload ausfï¿½hren? spezifikationsbedarf!
         CoherenceObject o = null;
         try {
           o = localCache.read(objectId);
@@ -1026,7 +1026,7 @@ public final class CacheControllerImpl
             // taken from the local cache and the time it was locked.
             localCache.update(currentObj);
 
-            //FIXME prio3: event auf alter payload ausführen? spezifikationsbedarf!
+            //FIXME prio3: event auf alter payload ausfï¿½hren? spezifikationsbedarf!
             currentObj.onEvent(ObjectChangeEvent.UPDATE, this);
 
           } else {
@@ -1123,8 +1123,8 @@ public final class CacheControllerImpl
         });
       }
 
-      // das ist nur nötig, wenn die übergebene lock circle size auch gesetzt ist. in diesem Fall
-      // schließt der aufrufende Knoten den Zirkel
+      // das ist nur nï¿½tig, wenn die ï¿½bergebene lock circle size auch gesetzt ist. in diesem Fall
+      // schlieï¿½t der aufrufende Knoten den Zirkel
       if (action.getLockCircleSize() > -1) {
         LockObject targetLockObject;
         try {
@@ -1323,7 +1323,7 @@ public final class CacheControllerImpl
   private CoherencePayload readInternally(final long objectId) throws ObjectNotInCacheException {
 
     // TODO prio4: performance: it might be reasonable to look for the entry in the local cache here without getting a lock.
-    // if the entry is in SHARED state is that was is wanted? => man würde sich evtl auch das preliminary lock sparen
+    // if the entry is in SHARED state is that was is wanted? => man wï¿½rde sich evtl auch das preliminary lock sparen
     //    CoherenceObject result = localCache.read(objectId);
     //    if (!result.isInvalid()) {
     //      return result.getPayload();
@@ -1336,13 +1336,13 @@ public final class CacheControllerImpl
     try {
       ClusterMember[] members = null;
       if (objectId != ID_CLUSTER_MEMBERS) {
-        //würde für ID von clustermembers zu stackoverflow führen! ist eh nie invalid!
+        //wï¿½rde fï¿½r ID von clustermembers zu stackoverflow fï¿½hren! ist eh nie invalid!
         members = getCurrentMembers();
       }
 
       //kein normales requestlock, weil gleichzeitige remoteanfragen das lock nicht in den zirkel aufnehmen
-      //dürfen, sofern lokales objekt im status INVALID ist.
-      //weitere lokale threads müssen aber hier warten.
+      //dï¿½rfen, sofern lokales objekt im status INVALID ist.
+      //weitere lokale threads mï¿½ssen aber hier warten.
       CoherenceObject existingObject = localCache.read(objectId);
 //      existingObject.getLockObject().flagAsRequested();
 //      if (existingObject.isDeleted()) {
@@ -1389,8 +1389,8 @@ public final class CacheControllerImpl
               throw new RuntimeException(e);
             }
             gotRemoteLocks = true;
-            // wenn das remote lock erteilt ist, kann das objekt remote bereits gelöscht worden sein. 
-            // getRemoteLocks prüft das aber, also muss hier nicht noch einmal gecheckt werden.
+            // wenn das remote lock erteilt ist, kann das objekt remote bereits gelï¿½scht worden sein. 
+            // getRemoteLocks prï¿½ft das aber, also muss hier nicht noch einmal gecheckt werden.
           }
           if (members == null) {
             members = getCurrentMembers();
@@ -1407,7 +1407,7 @@ public final class CacheControllerImpl
                   executeActionsRemotely(existingObject, new ReadObjectAction(objectId, ownClusterNodeID,
                                                                               clusterToProvideData), members);
             } catch (ReadMissException e) {
-              // Das kann passieren, wenn gerade ein Knoten hinzugefügt wird und ein interes Objekt auf den neuen Knoten
+              // Das kann passieren, wenn gerade ein Knoten hinzugefï¿½gt wird und ein interes Objekt auf den neuen Knoten
               // gepusht wird. Das Objekt ist dann intern schon als SHARED auf dem neuen Knoten markiert, dieser
               // beantwortet eingehende Requests aber zu diesem Zeitpunkt noch pauschal mit <null>.
             }
@@ -1439,7 +1439,7 @@ public final class CacheControllerImpl
           }
           existingObject.getLockObject().releaseLock(true, executedAction && gotRemoteLocks);
         } catch (RuntimeException e) {
-          // FIXME prio1: fehlerbehandlung überall so!!!
+          // FIXME prio1: fehlerbehandlung ï¿½berall so!!!
           if (gotNoException) {
             throw e;
           } else {
@@ -1513,7 +1513,7 @@ public final class CacheControllerImpl
 
 
   /**
-   * lokaler request, sich zu einem cluster zu verbinden. falls kein provider übergeben wird, wird ein neues cluster
+   * lokaler request, sich zu einem cluster zu verbinden. falls kein provider ï¿½bergeben wird, wird ein neues cluster
    * begonnen.
    */
   private synchronized void connectToClusterLocallyInternally(NodeConnectionProvider nodeConnectionProvider) {
@@ -1543,15 +1543,15 @@ public final class CacheControllerImpl
       createLocally(new GlobalLockPayload(ThreadType.UNLOCK, false), ID_GLOBAL_UNLOCK_LOCK);
       createLocally(new GlobalLockPayload(ThreadType.SPECIAL, false), ID_SPECIAL);
       
-      //nur als globales lockobjekt für die threads gedacht
+      //nur als globales lockobjekt fï¿½r die threads gedacht
       createLocally(new CoherencePayload(), ID_GLOBAL_LOCK_T);
       createLocally(new CoherencePayload(), ID_GLOBAL_UNLOCK_LOCK_T);
 
-      // statisches lock zum Anlegen von Objekten mit von außen vorgegebener ID
+      // statisches lock zum Anlegen von Objekten mit von auï¿½en vorgegebener ID
       createLocally(new CoherencePayload(), ID_GLOBAL_STATIC_OBJECT_CREATION_LOCK);
 
     } else {
-      //verbinden, metadaten zurückbekommen, id zurückbekommen
+      //verbinden, metadaten zurï¿½ckbekommen, id zurï¿½ckbekommen
       InterconnectProtocol connection = nodeConnectionProvider.createConnection();
       InitialConnectionData data = connection.connectToClusterRemotely(createNodeInformation());
       localCache.importShapShot(data.getMetadata());
@@ -1565,8 +1565,8 @@ public final class CacheControllerImpl
       debugger.debug("new cluster node initialized. preparing callees for normal work.");
     }
 
-    //in beiden fällen zu tun:
-    //TODO prio5: Reihenfolge der gequeueten Anfragen global über alle callees hinweg beibehalten (beim nachholen). Nur
+    //in beiden fï¿½llen zu tun:
+    //TODO prio5: Reihenfolge der gequeueten Anfragen global ï¿½ber alle callees hinweg beibehalten (beim nachholen). Nur
     //            relevant, wenn man mehrere callees hat, z.B. HTTP und HTTPS bei Knoten an unterschiedlichen Standorten.
     //            Dabei eventuell die Abarbeitung der unterschiedlichen callees parallelisieren?
     for (InterconnectCallee callee : callees) {
@@ -1595,10 +1595,10 @@ public final class CacheControllerImpl
     // clustermembers aktualisieren und an andere knoten pushen
     InitialConnectionData initialConnectionData = new InitialConnectionData();
 
-    // globales lock setzen, welches verhindert, dass weitere änderungen an metadaten/lockdaten auf basis der alten
+    // globales lock setzen, welches verhindert, dass weitere ï¿½nderungen an metadaten/lockdaten auf basis der alten
     // clustermitglieder geschieht. Wenn das sichergestellt ist, kann gefahrlos der snapshot der metadaten erstellt
-    // werden und dann das lock freigegeben werden. Alle zukünftigen änderungen an metadaten geschehen dann auf basis
-    // er neuen clustermitglieder und es gehen somit keine metadatenänderungen beim neu hinzugekommenen knoten verloren.
+    // werden und dann das lock freigegeben werden. Alle zukï¿½nftigen ï¿½nderungen an metadaten geschehen dann auf basis
+    // er neuen clustermitglieder und es gehen somit keine metadatenï¿½nderungen beim neu hinzugekommenen knoten verloren.
     ClusterMember[] oldMembers = null;
     pauseCluster();
     try {
@@ -1614,7 +1614,7 @@ public final class CacheControllerImpl
       if (debugger.isEnabled()) {
         debugger.debug("creating snapshot of meta- and lockdata");
       }
-      //snapshot von metadaten erstellen um sie an den neuen knoten zurückzugeben
+      //snapshot von metadaten erstellen um sie an den neuen knoten zurï¿½ckzugeben
       initialConnectionData.setMetaData(localCache.getSnapShot(ownClusterNodeID, clusterMemberChangeInformation, true));
 
       //push members + warte auf aktive threads, die die metadaten beeinflussen
@@ -1749,7 +1749,7 @@ public final class CacheControllerImpl
 
 
   /**
-   * setzt payload lokal und schickt payload an alle angegebenen cluster member. für diese operation muss man vorher das
+   * setzt payload lokal und schickt payload an alle angegebenen cluster member. fï¿½r diese operation muss man vorher das
    * lock holen! objekt wird lokal und bei den remote knoten auf shared gesetzt. bei allen nicht angegebenen remote
    * knoten wird nur das directorydata aktualisiert.
    */
@@ -1759,7 +1759,7 @@ public final class CacheControllerImpl
 
     int[] ids = createNodeIdArray(members);
 
-    // TODO prio5: performance, diese überprüfung kann irgendwann raus oder durch ein static final flag konfigurierbar gemacht werden.
+    // TODO prio5: performance, diese ï¿½berprï¿½fung kann irgendwann raus oder durch ein static final flag konfigurierbar gemacht werden.
     boolean found = false;
     for (int i = 0; i < ids.length; i++) {
       if (ids[i] == ownClusterNodeID) {
@@ -1846,7 +1846,7 @@ public final class CacheControllerImpl
       }
       membersWithoutRemovedNode = removeOwnClusterMemberEntry(getCurrentMembers());
 
-      //TODO prio2: dafür sorgen, dass keine locks vom zu entfernenden knoten offenbleiben, die nicht geschlossen werden.
+      //TODO prio2: dafï¿½r sorgen, dass keine locks vom zu entfernenden knoten offenbleiben, die nicht geschlossen werden.
 
       if (distributeModifiedExclusive && membersWithoutRemovedNode.length > 0) {
         Random random = new Random();
@@ -1855,7 +1855,7 @@ public final class CacheControllerImpl
             localCache.getAllModifiedExclusive(clusterNodeId, ownClusterNodeID, clusterMemberChangeInformation);
         if (clusterNodeId == ownClusterNodeID) {
           for (CoherenceObject o : modifiedExclusive) {
-            //push zu zufälligem knoten ausser dem zu entfernenden
+            //push zu zufï¿½lligem knoten ausser dem zu entfernenden
             ClusterMember m = membersWithoutRemovedNode[random.nextInt(membersWithoutRemovedNode.length)];
             pushAlreadyLockedObject(o, o.getPayload(), new ClusterMember[] {m}, true, true);
           }
@@ -1929,10 +1929,10 @@ public final class CacheControllerImpl
 
 
   /**
-   * gibt {@link #REMOTELOCK_RESULT_SUCCESS} zurück, falls das lock erfolgreich war.<br>
-   * gibt {@link #REMOTELOCK_RESULT_TIMEOUT_NO_OLD_CIRCLE} zurück, falls timeout passiert ist, aber kein alter
+   * gibt {@link #REMOTELOCK_RESULT_SUCCESS} zurï¿½ck, falls das lock erfolgreich war.<br>
+   * gibt {@link #REMOTELOCK_RESULT_TIMEOUT_NO_OLD_CIRCLE} zurï¿½ck, falls timeout passiert ist, aber kein alter
    * lockzirkel gefunden wurde.<br>
-   * gibt ansonsten die priority des verbleibenden locks eines alten lockzirkels zurück.
+   * gibt ansonsten die priority des verbleibenden locks eines alten lockzirkels zurï¿½ck.
    */
   private GetRemoteLockResponse getRemoteLocks(ClusterMember[] members, CoherenceObject objectToBeLocked, long priority,
                                                boolean countThreads, boolean tryLock, long nanoTimeout)
@@ -1950,7 +1950,7 @@ public final class CacheControllerImpl
     try {
 
       if (members.length == 1 && members[0].getId() == ownClusterNodeID) {
-        //achtung: request kann bereits zu einem zirkel gehören, wenn zuvor das vorletzte clustermember entfernt worden ist.
+        //achtung: request kann bereits zu einem zirkel gehï¿½ren, wenn zuvor das vorletzte clustermember entfernt worden ist.
         //deshalb onlyIfNecessary = true;
         boolean onlyIfNecessary = true;
         objectToBeLocked.getLockObject().setPreliminaryLockCircleSize(1, onlyIfNecessary);
@@ -2024,7 +2024,7 @@ public final class CacheControllerImpl
         if (request.getResult().priority > -1) {
           if (request.getResult().remoteCircleSize > 0) {
             if (request.getResult().remoteCircleSize == 1) {
-              //remote lockender thread ist der letzte des zirkels => lokaler thread kann nicht zum zirkel gehören
+              //remote lockender thread ist der letzte des zirkels => lokaler thread kann nicht zum zirkel gehï¿½ren
               if (debugger.isEnabled()) {
                 debugger.debug(new Object() {
                   @Override
@@ -2067,7 +2067,7 @@ public final class CacheControllerImpl
           continue;
         }
 
-        //wenn priorität kleiner ist als die eigene, muss man nicht darauf warten.
+        //wenn prioritï¿½t kleiner ist als die eigene, muss man nicht darauf warten.
         if (request.getResult().priority < nextPriorityAfterMine && request.getResult().priority > priority) {
           nextPriorityAfterMine = request.getResult().priority;
           nodeConnectionToWaitForLock = request.getNodeConnection();
@@ -2116,9 +2116,9 @@ public final class CacheControllerImpl
         // this request will block until the lock has been obtained
 
         //es kann passieren, dass man der letzte verbleibende seines lockzirkels ist, aber
-        //man nicht der ursprünglich höchste war (der ursprünglich höchste hat dann aber auf jeden fall
+        //man nicht der ursprï¿½nglich hï¿½chste war (der ursprï¿½nglich hï¿½chste hat dann aber auf jeden fall
         //den zirkel geschlossen).
-        //in diesem fall muss man nicht warten und auch nicht die zirkelgröße setzen.
+        //in diesem fall muss man nicht warten und auch nicht die zirkelgrï¿½ï¿½e setzen.
         if (waitingForOldLockCircle && !objectToBeLocked.getLockObject().isLockCircleClosed()) {
           try {
             gotRemoteLock = nodeConnectionToWaitForLock.awaitLock(objectToBeLocked.getId(), oldLockCirclePriority, tryLock, nanoTimeout) != LockAwaitResponse.TIMEOUT;
@@ -2137,7 +2137,7 @@ public final class CacheControllerImpl
             });
           }
           if (gotRemoteLock) {
-            //man ist gewinner des "nächsten" lockzirkels und hat nur auf den alten gewartet.
+            //man ist gewinner des "nï¿½chsten" lockzirkels und hat nur auf den alten gewartet.
             objectToBeLocked.getLockObject().setPreliminaryLockCircleSize(preliminaryCircleSize, false);
           }
         } else {
@@ -2255,7 +2255,7 @@ public final class CacheControllerImpl
       return;
     }
 
-    // Sortieren der LockRequest anhand der Priorität (absteigend), um danach in dieser Reihenfolge die recalls zu versenden.
+    // Sortieren der LockRequest anhand der Prioritï¿½t (absteigend), um danach in dieser Reihenfolge die recalls zu versenden.
     Arrays.sort(lockRequests, priorityRequestComperator);
     
     for(LockRequest lockrequest : lockRequests) {
@@ -2349,7 +2349,7 @@ public final class CacheControllerImpl
   public void pauseCluster() {
     globalLock.lockAll();
     checkControllerState();
-    //erst hier die members ermitteln, damit sie nicht in der zwischenzeit von anderem thread geändert worden sein können.
+    //erst hier die members ermitteln, damit sie nicht in der zwischenzeit von anderem thread geï¿½ndert worden sein kï¿½nnen.
     ClusterMember[] members = getCurrentMembers();
     waitForActiveThreads(members, ThreadType.ELSE);
     globalUnlockLock.lockAll();

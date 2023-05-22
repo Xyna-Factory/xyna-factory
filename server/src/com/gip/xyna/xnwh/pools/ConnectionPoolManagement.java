@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -295,9 +295,9 @@ public class ConnectionPoolManagement extends Section {
   }
   
   /**
-   * Startet den ConnectionPool oder führt bei bereits gestarteten ConnectionPools einen Restart durch
+   * Startet den ConnectionPool oder fï¿½hrt bei bereits gestarteten ConnectionPools einen Restart durch
    * @param name
-   * @param restart bei true: Schließen und Neuöffnen aller Connections 
+   * @param restart bei true: Schlieï¿½en und Neuï¿½ffnen aller Connections 
    * @param force   bei true: auch aktive Connections werden geschlossen
    * @return
    * @throws NoConnectionAvailableException
@@ -571,7 +571,7 @@ public class ConnectionPoolManagement extends Section {
   
   
   private ConnectionPool getConnectionPoolNoLazyCreation(String name) {
-    //TODO schöner cachen? dazu registeredPoolDefinitions aufbohren?
+    //TODO schï¿½ner cachen? dazu registeredPoolDefinitions aufbohren?
     for (ConnectionPool cp : ConnectionPool.getAllRegisteredConnectionPools()) {
       if (cp.getId().equals(name)) {
         return cp;

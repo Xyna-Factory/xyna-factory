@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class XynaCleanup extends FunctionGroup {
         logger.debug("Too many threads (" + cntThreadsPostCleanup.get() + ") waiting to be archived. Order " + xo.getId()
             + " will free capacities and vetoes after archiving is finished.");
       }
-      //zuviele threads sind mit dem postcleanup beschäftigt und die kapazitätsfreigabe kann zu einer threadanzahlsexplosion führen. -> ab sofort kapazität erst ganz am ende freigeben
+      //zuviele threads sind mit dem postcleanup beschï¿½ftigt und die kapazitï¿½tsfreigabe kann zu einer threadanzahlsexplosion fï¿½hren. -> ab sofort kapazitï¿½t erst ganz am ende freigeben
       xo.setFreeCapacityLater(true);
     }
   }
@@ -106,7 +106,7 @@ public class XynaCleanup extends FunctionGroup {
   private static boolean numberOfThreadsInPostCleanupIsSmall() {
     boolean isSmall = cntThreadsPostCleanup.incrementAndGet() <= maximumNumberOfUnsecuredThreadsPostCleanup.get();
     if (isSmall) {
-      //gibt gleich capacity zurück und soll deshalb den threadzähler hochgezählt belassen
+      //gibt gleich capacity zurï¿½ck und soll deshalb den threadzï¿½hler hochgezï¿½hlt belassen
       return true;
     }
     cntThreadsPostCleanup.decrementAndGet();

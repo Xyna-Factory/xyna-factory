@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class CodeBufferTest extends TestCase {
     cb.addLine("*b");
     cb.addLine("*/");
     cb.addLine("{");
-    cb.addLine("int a = 3"); //codebuffer ist dumm - dass das "*4" zu dieser zeile gehört, erkennt er nicht
+    cb.addLine("int a = 3"); //codebuffer ist dumm - dass das "*4" zu dieser zeile gehï¿½rt, erkennt er nicht
     cb.addLine("*4");
     cb.addLine("}");
     String code = cb.toString();

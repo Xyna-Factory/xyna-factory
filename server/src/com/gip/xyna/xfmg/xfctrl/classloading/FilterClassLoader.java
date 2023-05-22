@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,7 +173,7 @@ public class FilterClassLoader extends ClassLoaderBase {
 
   @Override
   protected void deployWhenReload(String c) throws XFMG_ClassLoaderRedeploymentException {   
-    //ClassCache in der/den dazugehörigen TriggerInstanz leeren
+    //ClassCache in der/den dazugehï¿½rigen TriggerInstanz leeren
     //TODO we could set a Map<filterName,Boolean> that the EventListeners read before accessing their classMapping
     //that way they would only clear their cache if the need to and propably less often
     
@@ -192,13 +192,13 @@ public class FilterClassLoader extends ClassLoaderBase {
     }
     for (Filter filter : filters) {
       if (filter.getFQFilterClassName().equals(fqFilterName)) {
-        //ondeployment für alle filterinstanzen mit der zugehörigen triggerinstanz aufrufen.
+        //ondeployment fï¿½r alle filterinstanzen mit der zugehï¿½rigen triggerinstanz aufrufen.
         ConnectionFilterInstance[] cfis;
         if (parentRevision == null) {
-          //für "normale" Filter in der eigenen revision suchen
+          //fï¿½r "normale" Filter in der eigenen revision suchen
           cfis = xat.getFilterInstances(filter.getName(), getRevision());
         } else {
-          //für OutdatedFilter in der parentRevision nach OutdatedFiltern suchen
+          //fï¿½r OutdatedFilter in der parentRevision nach OutdatedFiltern suchen
           cfis = xat.getOutdatedFilterInstances(filter.getName(), getRevision(), getParentRevision());
         }
         
@@ -233,13 +233,13 @@ public class FilterClassLoader extends ClassLoaderBase {
     }
     for (Filter filter : filters) {
       if (filter.getFQFilterClassName().equals(fqFilterName)) {
-        //undeployment für alle filterinstanzen mit der zugehörigen triggerinstanz aufrufen.
+        //undeployment fï¿½r alle filterinstanzen mit der zugehï¿½rigen triggerinstanz aufrufen.
         ConnectionFilterInstance[] cfis;
         if (parentRevision == null) {
-          //für "normale" Filter in der eigenen revision suchen
+          //fï¿½r "normale" Filter in der eigenen revision suchen
           cfis = xat.getFilterInstances(filter.getName(), getRevision());
         } else {
-          //für OutdatedFilter in der parentRevision nach OutdatedFiltern suchen
+          //fï¿½r OutdatedFilter in der parentRevision nach OutdatedFiltern suchen
           cfis = xat.getOutdatedFilterInstances(filter.getName(), getRevision(), getParentRevision());
         }
         

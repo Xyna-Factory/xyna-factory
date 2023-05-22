@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ import java.util.Set;
  * <ul>
  * <li>Diese Map muss mit einer vorgebenen <code>capacity</code> angelegt werden, aus dieser
  * capacity wird u.a. der interne Speicher bestimmt. </li>
- * <li>Dabei bekommt ein Object (dessen HashCode sich nicht ändert!) immer den gleichen Wert 
+ * <li>Dabei bekommt ein Object (dessen HashCode sich nicht ï¿½ndert!) immer den gleichen Wert 
  * zugewiesen, unterschiedliche Objecte (deren HashCode sich unterscheidet!) bekommen mit
  * hoher Wahrscheinlichkeit (<code>1-1/capacity</code>) einen anderen Wert zugewiesen.</li>
  * <li><code>null</code> ist ebenfalls erlaubt und wird so angesehen, als ob der HashCode 0 ist.</li>
- * <li>Über das Interface {@link com.gip.xyna.utils.collections.HashCodeMap.Constructor Constructor&lt;T&gt;}
+ * <li>ï¿½ber das Interface {@link com.gip.xyna.utils.collections.HashCodeMap.Constructor Constructor&lt;T&gt;}
  * kann im Konstruktor eine Basisbelegung der Map erzeugt werden.</li>
  * </ul>
  * 
@@ -49,7 +49,7 @@ public class HashCodeMap<T> implements Map<Object,T> {
 
   /**
    * Eine Implementation dieses Interfaces kann im Konstruktor der HashCodeMap verwendet werden, 
-   * um eine Basisbelegung der Map zu erzeugen. Für jeden Eintrag wird die Methode {@link #newInstance() newInstance} gerufen.
+   * um eine Basisbelegung der Map zu erzeugen. Fï¿½r jeden Eintrag wird die Methode {@link #newInstance() newInstance} gerufen.
    */
   public interface Constructor<T> {
     /**
@@ -60,14 +60,14 @@ public class HashCodeMap<T> implements Map<Object,T> {
   }
   
   /**
-   * Capacity 32, kein Konstruktor für Values
+   * Capacity 32, kein Konstruktor fï¿½r Values
    */
   public HashCodeMap() {
     this(32,null);
   }
   
   /**
-   * Kein Konstruktor für Values
+   * Kein Konstruktor fï¿½r Values
    * @param capacity
    */
   public HashCodeMap(int capacity) {
@@ -83,7 +83,7 @@ public class HashCodeMap<T> implements Map<Object,T> {
   }
   
   /**
-   * Capacity und Constructor werden angegeben, über den Constructor wird eine Basisbelegung der Map erzeugt.
+   * Capacity und Constructor werden angegeben, ï¿½ber den Constructor wird eine Basisbelegung der Map erzeugt.
    * @param capacity
    * @param constructor
    */

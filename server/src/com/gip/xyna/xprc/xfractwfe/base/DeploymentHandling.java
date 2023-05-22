@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,12 +119,12 @@ public class DeploymentHandling extends FunctionGroup {
     public void exec(DestinationKey object);
 
     /**
-     * wird nur für generationbase objekte ausgeführt
+     * wird nur fï¿½r generationbase objekte ausgefï¿½hrt
      */
     public void finish() throws XPRC_UnDeploymentHandlerException;
     
     /**
-     * soll der UndeploymentHandler auch für reservedServerObjects ausgeführt werden?
+     * soll der UndeploymentHandler auch fï¿½r reservedServerObjects ausgefï¿½hrt werden?
      */
     public boolean executeForReservedServerObjects();
   }
@@ -242,7 +242,7 @@ public class DeploymentHandling extends FunctionGroup {
 
   public void executeUndeploymentHandler(Integer handlerPriority, GenerationBase object) throws XPRC_UnDeploymentHandlerException {
       for (UndeploymentHandler d : getUnDeploymentHandlers(handlerPriority)) {
-        //für ReservedServerObjects dürfen nur spezielle UndeploymentHandler ausgeführt werden
+        //fï¿½r ReservedServerObjects dï¿½rfen nur spezielle UndeploymentHandler ausgefï¿½hrt werden
         if (!object.isReservedServerObject() || d.executeForReservedServerObjects()) {
           if (logger.isTraceEnabled()) {
             logger.trace("Executing undeployment handler " + d);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@
 package com.gip.xyna.demon;
 
 /**
- * Über dieses Interface kann der DemonWorker weitergehend konfiguriert werden. 
+ * ï¿½ber dieses Interface kann der DemonWorker weitergehend konfiguriert werden. 
  * Es kann festgelegt werden, welche Objekte zu intialisieren sind und ob diese 
- * bei den Statusübergängen des Demons gestoppt oder gestartet werden müssen.  
+ * bei den Statusï¿½bergï¿½ngen des Demons gestoppt oder gestartet werden mï¿½ssen.  
  *
  */
 public interface DemonWorkConfigurator {
@@ -31,13 +31,13 @@ public interface DemonWorkConfigurator {
   public void initialize();
   
   /**
-   * Statusübergang des Demons: Stopped->Running
+   * Statusï¿½bergang des Demons: Stopped->Running
    * 
    */
   public void start();
   
   /**
-   * Statusübergang des Demons: Running->Stopped
+   * Statusï¿½bergang des Demons: Running->Stopped
    */
   public void terminate();
   

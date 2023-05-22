@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -175,11 +175,11 @@ public enum ProxyRight {
   
   public boolean needsValidation(ProxyRole proxyRole) {
     if( right != null && proxyRole.hasRight(right) ) {
-      //right erlaubt alles, daher keine genaue Validierung nötig
+      //right erlaubt alles, daher keine genaue Validierung nï¿½tig
       return false;
     }
     if( scopedRight != null ) {
-      //genauere Validierung nur bei ScopedRight nötig
+      //genauere Validierung nur bei ScopedRight nï¿½tig
       return true;
     }
     return false; //sollte nicht vorkommen FIXME

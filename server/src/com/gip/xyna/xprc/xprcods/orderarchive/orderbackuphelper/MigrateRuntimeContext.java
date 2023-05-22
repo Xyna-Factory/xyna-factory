@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -146,8 +146,8 @@ public class MigrateRuntimeContext {
 
   /*
    * force = versuche die laufenden objekte zu migrieren, und entferne sie falls es fehler dabei gibt
-   * !force = abbrechen, falls laufende objekte gefunden werden die voraussichtlich nicht migriert werden können 
-   *          (TODO genauere analyse durchführen - es wird zu häufig abgebrochen)
+   * !force = abbrechen, falls laufende objekte gefunden werden die voraussichtlich nicht migriert werden kï¿½nnen 
+   *          (TODO genauere analyse durchfï¿½hren - es wird zu hï¿½ufig abgebrochen)
    */
   public static MigrationContext migrateRuntimeContext(RuntimeDependencyContext from, RuntimeDependencyContext to, Collection<MigrationTargets> targets, boolean force, MigrateRuntimeContextAccessContext accessCtx)
                   throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, XFMG_ACCESS_VIOLATION {
@@ -207,7 +207,7 @@ public class MigrateRuntimeContext {
           migrateBatchProcesses(context);
         }
 
-        // Laufende Aufträge (Suspension & heldAtCheckpoints)
+        // Laufende Auftrï¿½ge (Suspension & heldAtCheckpoints)
         if (targets.contains(MigrationTargets.Orders)) {
           migrateRunningOrders(context, rbof);
         }
@@ -283,7 +283,7 @@ public class MigrateRuntimeContext {
            *   - alle typen sind bekannt
            *   - alle membervariablen, die bisher existieren, existieren immer noch und sind vom gleichen typ
            *   - achtung, hier sollte die serialisierte objektisntanz der CLO benutzt werden, und nicht die GenerationBase-Struktur der
-           *     Root-Types, weil Membervariablen abgeleitete Typen haben könnten.
+           *     Root-Types, weil Membervariablen abgeleitete Typen haben kï¿½nnten.
            * - Nicht validiert wird, dass der OrderType in der Ziel-Version noch existiert und auf die Inputdaten passt. => Das ist eine andere Art von Fehler.
            */
           GeneralXynaObject gxo = clo.getCreationParameters().getInputPayload();
@@ -319,7 +319,7 @@ public class MigrateRuntimeContext {
     }
 
     /**
-     * alle revisions für die gilt:
+     * alle revisions fï¿½r die gilt:
      * - sie sind von sourceRev erreichbar (inklusive sourceRev)
      * - sie erreichen targetRev (exclusive targetRev)  
      */
@@ -329,7 +329,7 @@ public class MigrateRuntimeContext {
       }
       RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
       Set<Long> result = new HashSet<>();
-      Set<Long> check = new HashSet<>(); //enthält nur revs, die noch nicht in result sind, und die != targetrev sind
+      Set<Long> check = new HashSet<>(); //enthï¿½lt nur revs, die noch nicht in result sind, und die != targetrev sind
       check.add(sourceRev);
       while (check.size() > 0) {
         Set<Long> tmp = new HashSet<>(check);
@@ -347,11 +347,11 @@ public class MigrateRuntimeContext {
 
     private boolean objectChangesAfterRevisionChange(GeneralXynaObject gxo, Set<Long> reachableRevisionsUntilChangedRevision) {
       /*
-       * rekursion pro GXO: falls typ in quell und ziel-RTC-hierarchie auf den gleichen typ auflöst, muss nichts berücksichtigt werden.
+       * rekursion pro GXO: falls typ in quell und ziel-RTC-hierarchie auf den gleichen typ auflï¿½st, muss nichts berï¿½cksichtigt werden.
        * - rekursion nur auf non-null-members
-       * - für jede membervariable checken, dass sie noch vom gleichen typ ist
+       * - fï¿½r jede membervariable checken, dass sie noch vom gleichen typ ist
        * 
-       * achtung, wenn man das wiederverwenden möchte für xynaobjekte, die in workflows/audits referenziert sind, muss man die oldVersions von
+       * achtung, wenn man das wiederverwenden mï¿½chte fï¿½r xynaobjekte, die in workflows/audits referenziert sind, muss man die oldVersions von
        * members auch durchsuchen!
        */
       long revisionLoadingObj = RevisionManagement.getRevisionByClass(gxo.getClass());
@@ -359,7 +359,7 @@ public class MigrateRuntimeContext {
         return false; //passt.
       }
       if (revisionsReachableFromToRevision.contains(revisionLoadingObj) || reachableRevisionsUntilChangedRevision.contains(revisionLoadingObj)) {
-        //objektdefinition ändert sich durch migration nicht. komplexwertige membervariablen trotzdem rekursiv checken!
+        //objektdefinition ï¿½ndert sich durch migration nicht. komplexwertige membervariablen trotzdem rekursiv checken!
       } else {
         Boolean compatible = definitionCompatibility.get(gxo.getClass().getName());
         if (compatible != null) {
@@ -368,7 +368,7 @@ public class MigrateRuntimeContext {
           }
           //ok, nicht nochmal die membervars checken, sondern nur die referenzierten objekte
         } else {
-          //hat sich definition geändert?
+          //hat sich definition geï¿½ndert?
           //d.h. vergleiche die beiden GenerationBaseCache -Definitionen
           String fqXmlName = getFQXmlName(gxo);
 
@@ -377,7 +377,7 @@ public class MigrateRuntimeContext {
           try {
             gbNew = parseGenerationBase(gxo, fqXmlName, context.toRevision); //korrekte revision wird automatisch berechnet
           } catch (RuntimeException e) {
-            //objekt nicht auflösbar oder sowas.
+            //objekt nicht auflï¿½sbar oder sowas.
             if (logger.isDebugEnabled()) {
               logger.debug("Could not parse " + fqXmlName + " in " + context.toRevision + ".", e);
             }
@@ -581,7 +581,7 @@ public class MigrateRuntimeContext {
         List<CronLikeOrder> batch = cursor.getRemainingCacheOrNextIfEmpty();
         while (batch != null && batch.size() > 0) {
           for (CronLikeOrder clo : batch) {
-            //inputparameter könnte abgeleitete typen enthalten, die aus parent-revision stammen? => nein, die müssen von der revision erreichbar sein, die der cron hat.
+            //inputparameter kï¿½nnte abgeleitete typen enthalten, die aus parent-revision stammen? => nein, die mï¿½ssen von der revision erreichbar sein, die der cron hat.
             if (isRevisionReachable(revision, clo.getRevision())) {
               affected.add(clo);
             }
@@ -653,7 +653,7 @@ public class MigrateRuntimeContext {
     for (int i = 0; i < orderBackupIds.size(); ++i) {
       Pair<Long, Long> p = orderBackupIds.get(i);
       if (isRevisionReachable(context.getToRevision(), p.getSecond())) { 
-        // TODO man erwischt damit leider auch aufträge, die vor der migration bereits die torevision verwendet hatten und deshalb nicht migriert werden müssten...
+        // TODO man erwischt damit leider auch auftrï¿½ge, die vor der migration bereits die torevision verwendet hatten und deshalb nicht migriert werden mï¿½ssten...
         reloadOrderHierarchy(context, p.getFirst());
       }
     }
@@ -715,7 +715,7 @@ public class MigrateRuntimeContext {
      *       v                         v
      * <usedRevisions>           <newUsedRevisions> (kann teile von usedRevisions enthalten)
      * 
-     * folgende möglichkeiten, wo sich aufträge im orderbackup einordnen:
+     * folgende mï¿½glichkeiten, wo sich auftrï¿½ge im orderbackup einordnen:
      * 
      * 1) root-auftrag in keiner der angegeben revisions
      * 2) root-auftrag in usedRevisions
@@ -723,7 +723,7 @@ public class MigrateRuntimeContext {
      * 4) root-auftrag in fromRevision, current orderbackup in usedRevision
      * 5) root-auftrag in parentrevisions, current orderbackup in parentrevisions
      * 6) root-auftrag in parentrevisions, current orderbackup in fromrevision
-     * 7) root-auftrag in parentrevisions, current orderbackup in usedrevisions (=> ordertype muss nicht in der gleichen revision von torevision aus auflösbar sein)
+     * 7) root-auftrag in parentrevisions, current orderbackup in usedrevisions (=> ordertype muss nicht in der gleichen revision von torevision aus auflï¿½sbar sein)
      * 
      * 1) => muss nicht migriert werden
      * 2) => muss nicht migriert werden
@@ -731,9 +731,9 @@ public class MigrateRuntimeContext {
      * 4) => muss nicht migriert werden? kann man migrieren - ansichtssache
      * 5) => migration notwendig, falls objekte aus fromRevision oder usedRevisions verwendet werden
      * 6) => da die ganze auftragshierarchie migriert wird, muss auch dieses orderbackup migriert werden
-     *  => orderbackup.revision: fromrevision in torevision umändern sollte immer ok sein. - ggfs auch ordertype auflösen
+     *  => orderbackup.revision: fromrevision in torevision umï¿½ndern sollte immer ok sein. - ggfs auch ordertype auflï¿½sen
      * 7) => da die ganze auftragshierarchie migriert wird, muss auch dieses orderbackup migriert werden
-     *  => orderbackup.revision: neue revision müsste eigtl durch neues auflösen des ordertypes bestimmt werden. 
+     *  => orderbackup.revision: neue revision mï¿½sste eigtl durch neues auflï¿½sen des ordertypes bestimmt werden. 
      *
      */
     ResultSetReader<MigrationSerialVersionIgnoringOrderInstanceBackup> reader = MigrationSerialVersionIgnoringOrderInstanceBackup
@@ -852,7 +852,7 @@ public class MigrateRuntimeContext {
     RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
                     .getRevisionManagement();
     RuntimeContext fromRc = revMgmt.getRuntimeContext(fromRevision);
-    if (xo.getDestinationKey().getRuntimeContext().equals(fromRc)) { //FIXME eigtl müsste man hier den ordertype erneut nachschlagen. der muss ja nicht notwendigerweise in der torevision leben
+    if (xo.getDestinationKey().getRuntimeContext().equals(fromRc)) { //FIXME eigtl mï¿½sste man hier den ordertype erneut nachschlagen. der muss ja nicht notwendigerweise in der torevision leben
       xo.getDestinationKey().setRuntimeContext(revMgmt.getRuntimeContext(toRevision));
     }
   }
@@ -910,7 +910,7 @@ public class MigrateRuntimeContext {
   }
 
   /*
-   * fälle:
+   * fï¿½lle:
    * 1) order stammt aus fromrevision
    *   => zu dem zeitpunkt, wo order hier ankommt, ist order noch nicht zu torevision migriert, soll einfach weiterlaufen (racecondition)
    * 2) order stammt aus parent von fromrevision (|| stammt aus einem parent von torevision - ist eine racecondition zwischen zeitpunkt, wo der orderfilter erzeugt wird
@@ -1144,7 +1144,7 @@ public class MigrateRuntimeContext {
         
         rcdm.modifyDependencies(changes, null, true, false, new NoOpRuntimeDependencyLock());
         
-        //Multi-User-Event für Dependency Änderungen am owner
+        //Multi-User-Event fï¿½r Dependency ï¿½nderungen am owner
         String user = "XynaFactory.migrateRuntimeContextDependencies";
         Publisher publisher = new Publisher(user);
         Set<RuntimeContext> runtimeContextsToPublishAsXMOMUpdate = new HashSet<>();

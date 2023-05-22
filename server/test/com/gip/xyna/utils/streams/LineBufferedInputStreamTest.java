@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class LineBufferedInputStreamTest extends TestCase {
 
 
   public void test1() throws IOException {
-    byte[] bytes = "Dies ist\nein langer\nString mit\nZeilenumbrüchen.".getBytes();
+    byte[] bytes = "Dies ist\nein langer\nString mit\nZeilenumbrï¿½chen.".getBytes();
 
     ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 
@@ -59,7 +59,7 @@ public class LineBufferedInputStreamTest extends TestCase {
     assertEquals("Dies ist#ein langer", lbis.readLine() + "#" + lbis.readLine());
 
     assertEquals("String mit", lbis.readLine());
-    assertEquals("Zeilenumbrüchen.", lbis.readLine());
+    assertEquals("Zeilenumbrï¿½chen.", lbis.readLine());
     assertNull(lbis.readLine());
 
   }
@@ -112,7 +112,7 @@ public class LineBufferedInputStreamTest extends TestCase {
 
   public void testHangingReadLine() throws Exception {
     byte[] buf = "1\r\n2\r\n3\r\n".getBytes();
-    final Semaphore s = new Semaphore(6); //6 reads für die ersten beiden zeilen
+    final Semaphore s = new Semaphore(6); //6 reads fï¿½r die ersten beiden zeilen
     ByteArrayInputStream bais = new ByteArrayInputStream(buf) {
 
 
@@ -148,7 +148,7 @@ public class LineBufferedInputStreamTest extends TestCase {
 
   public void testNotHangingReadLine() throws Exception {
     byte[] buf = "1\r\n2\r\n3\r\n".getBytes();
-    final Semaphore s = new Semaphore(6); //6 reads für die ersten beiden zeilen
+    final Semaphore s = new Semaphore(6); //6 reads fï¿½r die ersten beiden zeilen
     ByteArrayInputStream bais = new ByteArrayInputStream(buf) {
 
       @Override

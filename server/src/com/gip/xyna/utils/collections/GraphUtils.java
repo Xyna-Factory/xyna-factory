@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class GraphUtils {
   }
   
   /**
-   * Sammle alle Knoten, die von dem Startknoten aus erreichbar sind (Unterstützt Zyklen).
+   * Sammle alle Knoten, die von dem Startknoten aus erreichbar sind (Unterstï¿½tzt Zyklen).
    * @param includingStartNode falls false, ist der startnode nur einhalten, falls er von einem anderen knoten aus erreichbar ist
    */
   public static <T> Set<T> collectConnectedNodes(ConnectedEdges<T> connected, T start, boolean includingStartNode) {

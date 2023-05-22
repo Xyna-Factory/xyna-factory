@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -494,7 +494,7 @@ public class DHCPv6Filter extends ConnectionFilter<DHCPv6TriggerConnection> {
 
     if(msgtype!=14)
     {
-      // ueberpruefen, ob dieser knoten für die bearbeitung der anfrage verantwortlich ist
+      // ueberpruefen, ob dieser knoten fï¿½r die bearbeitung der anfrage verantwortlich ist
       boolean doIhaveToDoIt = checkResponsibility(XYNA_PROPERTY_CLUSTERMODE.get(), macstring, (innermessagetype-60), clientmac);
               
       if(logger.isDebugEnabled()) {
@@ -1116,7 +1116,7 @@ public class DHCPv6Filter extends ConnectionFilter<DHCPv6TriggerConnection> {
     // Rebind ist 6!
     if(msgType==6) {
 //      if(mode.equals(JOINED_MODE)) {
-//     // Rebinds müssen im Service entschieden werden
+//     // Rebinds mï¿½ssen im Service entschieden werden
 //        if (logger.isDebugEnabled())
 //          logger.debug("("+clientmac+")DHCPv6Filter: Joined Mode | Got msgType "+msgType+" with "+serverIdentifier+" (mine is "+MY_SERVERIDENTIFIER+")");
 //        if(MY_SERVERIDENTIFIER.equals(serverIdentifier))
@@ -1124,7 +1124,7 @@ public class DHCPv6Filter extends ConnectionFilter<DHCPv6TriggerConnection> {
 //        else 
 //          return false;
 //      } else if(mode.equals(DISJOINED_MODE)) {
-     // Rebinds müssen im Service entschieden werden
+     // Rebinds mï¿½ssen im Service entschieden werden
         if (logger.isDebugEnabled())
           logger.debug("("+clientmac+")DHCPv6Filter: Disjoined Mode | Got msgType "+msgType);
         return true;

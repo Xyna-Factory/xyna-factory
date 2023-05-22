@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,7 +138,7 @@ public class XynaProcessing extends XynaProcessingBase {
   @Deprecated
   public static final int FUTUREEXECUTIONID_STARTPERSISTEDORDERS = XynaFactory.getInstance().getFutureExecution().nextId();
   
-  //TODO wäre sinnvoll? //public static final String FUTUREEXECUTIONID_ORDER_ENTRANCE = "OrderEntrance";
+  //TODO wï¿½re sinnvoll? //public static final String FUTUREEXECUTIONID_ORDER_ENTRANCE = "OrderEntrance";
   public static final String FUTUREEXECUTIONID_ORDER_EXECUTION = "OrderExecution\npossible";
   
   private WorkflowEngine workflowEngine;
@@ -362,7 +362,7 @@ public class XynaProcessing extends XynaProcessingBase {
     try {
       return getXynaProcessCtrlExecution().startOrder(xocp);
     } catch (XynaException e) {
-      //wegen abwärtskompatibilität wird eine derartige exception in eine runtimeexception gewrapped
+      //wegen abwï¿½rtskompatibilitï¿½t wird eine derartige exception in eine runtimeexception gewrapped
       throw new XynaRuntimeException("Could not start order", null, Arrays.asList(new XynaException[] {e}));
     }
   }
@@ -399,7 +399,7 @@ public class XynaProcessing extends XynaProcessingBase {
   @Override
   public CancelBean cancelOrder(Long id, Long timeout, boolean waitForTimeout) throws XPRC_CancelFailedException {
 
-    // falls länger warten als die uhr zählen kann, warte für bis 5 sek vor uhr-ende
+    // falls lï¿½nger warten als die uhr zï¿½hlen kann, warte fï¿½r bis 5 sek vor uhr-ende
     if (Long.MAX_VALUE - System.currentTimeMillis() < timeout) {
       timeout = Long.MAX_VALUE - System.currentTimeMillis() - 5000;
     }
@@ -579,7 +579,7 @@ public class XynaProcessing extends XynaProcessingBase {
   }
   
   private void startPersistedOrders() {
-    // lade gespeicherte+pausierte Aufträge im eigenen Thread
+    // lade gespeicherte+pausierte Auftrï¿½ge im eigenen Thread
     ODS ods = getXynaProcessingODS().getODS();
     ClusterState clusterState = getClusterState(ods);
     OrderStartupAndMigrationManagement.getInstance().startLoadingAtStartup(clusterState);
@@ -608,11 +608,11 @@ public class XynaProcessing extends XynaProcessingBase {
 
 
   /**
-   * 1. cronls anhalten 2. trigger, rmi anhalten 3. mi bearbeitung deaktivieren 4. scheduler anhalten (pause-aufträge
-   * müssen noch laufen dürfen!) 5. aufträge die bald einen timeout haben mit fehler beantworten 6. 7. pause signal an
-   * laufende aufträge senden (timeout) 8. warten bis keine aufträge mehr laufen 9. warten bis von triggern keine
-   * aufträge mehr im planning sind oder dahin kommen können 10. überprüfen, dass responselistener-anzahl = wartender +
-   * pausierte aufträge 11. responselistener deregistrieren 12. pausierte und wartende aufträge persistieren 13.
+   * 1. cronls anhalten 2. trigger, rmi anhalten 3. mi bearbeitung deaktivieren 4. scheduler anhalten (pause-auftrï¿½ge
+   * mï¿½ssen noch laufen dï¿½rfen!) 5. auftrï¿½ge die bald einen timeout haben mit fehler beantworten 6. 7. pause signal an
+   * laufende auftrï¿½ge senden (timeout) 8. warten bis keine auftrï¿½ge mehr laufen 9. warten bis von triggern keine
+   * auftrï¿½ge mehr im planning sind oder dahin kommen kï¿½nnen 10. ï¿½berprï¿½fen, dass responselistener-anzahl = wartender +
+   * pausierte auftrï¿½ge 11. responselistener deregistrieren 12. pausierte und wartende auftrï¿½ge persistieren 13.
    * orderseriesmanagement persistieren
    */
   @Override
@@ -648,11 +648,11 @@ public class XynaProcessing extends XynaProcessingBase {
     }
 
     
-    // mögliche Migration beenden!
+    // mï¿½gliche Migration beenden!
     OrderStartupAndMigrationManagement.getInstance().stopMigrating();
     OrderStartupAndMigrationManagement.getInstance().pauseLoadingAtStartup();
     
-    // 3. pause signal an laufende aufträge senden und auf timeouts warten
+    // 3. pause signal an laufende auftrï¿½ge senden und auf timeouts warten
     try {
       getXynaProcessCtrlExecution().getSuspendResumeManagement().suspendAllOrders(true);
     } catch (XPRC_SuspendFailedException e1) {
@@ -661,15 +661,15 @@ public class XynaProcessing extends XynaProcessingBase {
     // interrupt/stop ServiceDestination executions
     terminateAllServiceExecutions();
 
-    // warten bis von triggern keine aufträge mehr im planning sind oder dahin kommen können
+    // warten bis von triggern keine auftrï¿½ge mehr im planning sind oder dahin kommen kï¿½nnen
     waitForActiveThreads( false, XynaProperty.TIMEOUT_SHUTDOWN_ORDERS_IN_PLANNING, "planning");
 
-    // warten bis keine Aufträge mehr in Execution oder Planning sind
+    // warten bis keine Auftrï¿½ge mehr in Execution oder Planning sind
     // passiert zB. wenn ein Auftrag erfolgreich unterbrochen wurde und noch dabei ist auszulaufen,
     // in diesem Fall wollen wir noch nicht die ResponseListener entfernen
     waitForActiveThreads( true, XynaProperty.TIMEOUT_SHUTDOWN_ORDERS_IN_CLEANUP, "cleanup");
 
-    // aufträge speichern
+    // auftrï¿½ge speichern
     // 1) get all root suspension entries and their xyna orders
     // 2) identify those child entries which are still required
     // 3) for these entries: store the entry within the xynaorder
@@ -725,7 +725,7 @@ public class XynaProcessing extends XynaProcessingBase {
           if (!warnXo.hasParentOrder()) {
             sb.append(", <").append(warnXo.toString()).append(">");
           }
-          // FIXME counter hochzählen und alle 1000 (?) Aufträge die IDs rausschreiben, sonst wird der StringBuilder zu groß
+          // FIXME counter hochzï¿½hlen und alle 1000 (?) Auftrï¿½ge die IDs rausschreiben, sonst wird der StringBuilder zu groï¿½
         }
         logger.warn("Could not save XynaOrders for the following orders and their child orders: " + sb.toString(), e);
       } catch (PersistenceLayerException e) {
@@ -736,7 +736,7 @@ public class XynaProcessing extends XynaProcessingBase {
       
     }
 
-    // backup für orderinstancedetails erstellen
+    // backup fï¿½r orderinstancedetails erstellen
     if (!connectionToClusterSeemsBroken) {
       try {
         getXynaProcessingODS().getOrderArchive().backupOrderInstanceDetailsOnShutdown();

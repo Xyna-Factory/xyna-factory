@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ import java.util.List;
 import com.gip.xyna.utils.db.exception.UnexpectedParameterException;
 
 /**
- * Parameterliste, in die Parameter mit Namen eingetragen werden können.
- * Dies ist bei längeren Insert-Statements praktisch.
+ * Parameterliste, in die Parameter mit Namen eingetragen werden kï¿½nnen.
+ * Dies ist bei lï¿½ngeren Insert-Statements praktisch.
  */
 public class NamedParameter {
 
@@ -40,7 +40,7 @@ public class NamedParameter {
   }
 
   /**
-   * Übernahme einer bereits bestehenden Parameterliste
+   * ï¿½bernahme einer bereits bestehenden Parameterliste
    */
   public NamedParameter(Parameter params) {
     names = new ArrayList<String>();
@@ -88,7 +88,7 @@ public class NamedParameter {
   }
 
   /**
-   * @return Rückgabe der Platzhalter für Aufruf einer StoredProcesdure in der Form
+   * @return Rï¿½ckgabe der Platzhalter fï¿½r Aufruf einer StoredProcesdure in der Form
    * "name1=>?,name2=>?"
    */
   public String getNamedPlaceHoldersProcedure() {
@@ -96,7 +96,7 @@ public class NamedParameter {
   }
 
   /**
-   * @return Rückgabe der Platzhalter für Aufruf eines Updates in der Form
+   * @return Rï¿½ckgabe der Platzhalter fï¿½r Aufruf eines Updates in der Form
   "name1=?,name2=?"
    */
   public String getNamedPlaceHoldersUpdate() {
@@ -104,8 +104,8 @@ public class NamedParameter {
   }
 
   /**
-   * Bau eines Strings, der alle Namen aus names enthält, an jeden Namen wird
-   * appendix angehängt
+   * Bau eines Strings, der alle Namen aus names enthï¿½lt, an jeden Namen wird
+   * appendix angehï¿½ngt
    * @param appendix
    * @return
    */

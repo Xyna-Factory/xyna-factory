@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import com.gip.xyna.xsor.common.XSORUtil;
 
 
 /**
- * verwendet in xcmemory um das lock sichtbar zu machen, ohne die queue in das java.util package packen zu müssen
+ * verwendet in xcmemory um das lock sichtbar zu machen, ohne die queue in das java.util package packen zu mï¿½ssen
  */
 public class LinkedBlockingDequeWithLockAccess extends LinkedBlockingDeque<byte[]> {
 
@@ -112,7 +112,7 @@ public class LinkedBlockingDequeWithLockAccess extends LinkedBlockingDeque<byte[
         lock.unlock();
         locked = false;
         try {
-          if (!lastSent.offer(nextItem, 100, TimeUnit.MILLISECONDS)) { //ungelockt mit der gefahr, dass nextItem später nicht mehr das erste item in der queue ist
+          if (!lastSent.offer(nextItem, 100, TimeUnit.MILLISECONDS)) { //ungelockt mit der gefahr, dass nextItem spï¿½ter nicht mehr das erste item in der queue ist
             return null;
           }
           //hat doch noch funktioniert.
@@ -120,7 +120,7 @@ public class LinkedBlockingDequeWithLockAccess extends LinkedBlockingDeque<byte[
           locked = true;
           byte[] currentNextItem = poll();
           if (currentNextItem != nextItem) {
-            //inzwischen ist ein neues item in die queue eingefügt worden. rückgängig machen und nochmal probieren...
+            //inzwischen ist ein neues item in die queue eingefï¿½gt worden. rï¿½ckgï¿½ngig machen und nochmal probieren...
             if (currentNextItem != null) {
               //wenn es nicht mehr da ist, macht das nichts
               addFirst(currentNextItem);
@@ -165,7 +165,7 @@ public class LinkedBlockingDequeWithLockAccess extends LinkedBlockingDeque<byte[
   }
 
 
-  //verwendete methoden, die objekte ändern FIXME andere methoden verbieten oder implementieren
+  //verwendete methoden, die objekte ï¿½ndern FIXME andere methoden verbieten oder implementieren
 
 
   @Override

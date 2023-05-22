@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,13 +63,13 @@ public class ConstantRateEventCreationAlgorithm extends FrequenceControlledTaskE
     threadSleepMinValue = XynaProperty.FQCTRL_HIGH_RATE_THREAD_SLEEP_MINVALUE.getMillis();
   }
   
-  //ACHTUNG: rundungsfehler in den nächsten beiden methoden können dazu führen, dass
+  //ACHTUNG: rundungsfehler in den nï¿½chsten beiden methoden kï¿½nnen dazu fï¿½hren, dass
   //die sleepduration zu kurz berechnet wird, und dann gibt es hohe cpu-last durch mehrfaches durchlaufen
-  //der while-schleife, ohne dass geschlafen wird und ohne dass neue aufträge gestartet werden können.
+  //der while-schleife, ohne dass geschlafen wird und ohne dass neue auftrï¿½ge gestartet werden kï¿½nnen.
   
   //sleepduration ist nicht unbedingt konstant, weil das triggern der events auch zeit kostet und das je nach belastung des systems unterschiedlich lang
   private long calculateSleepDurationForRate() {
-    //berechne zeit, wann nächster event gestartet werden sein muss
+    //berechne zeit, wann nï¿½chster event gestartet werden sein muss
     //bei 0 sekunden wird der erste event gestartet. der 2. bei 0+1/rate. der 3. bei 0+2/rate etc.
     long nextStartTime = Math.round(startTime + getControlledTask().getEventCount() / targetRate + 0.5); //aufrunden, weil ansonsten evtl keiner gestartet wird 
     
@@ -95,7 +95,7 @@ public class ConstantRateEventCreationAlgorithm extends FrequenceControlledTaskE
 
   public void run() {
     try {
-      // Es wird ein Thread verwendet der nach Ablauf einer ausgerechneten Wartezeit mehrere Events auslöst. Zielrate legt dabei Wartezeit & Anzahl fest
+      // Es wird ein Thread verwendet der nach Ablauf einer ausgerechneten Wartezeit mehrere Events auslï¿½st. Zielrate legt dabei Wartezeit & Anzahl fest
       startTime = System.currentTimeMillis();
       //logger.debug("Starting RateEventGeneration @"+startTime);
       while (executionIsPermitted()) {
@@ -133,13 +133,13 @@ public class ConstantRateEventCreationAlgorithm extends FrequenceControlledTaskE
   }
   
   private void sleep(long sleepDuration) {
-    //schlafen bis das nächste task gestartet werden kann. schlafen ist bei hohen raten u.u. problematisch. deshalb kann
+    //schlafen bis das nï¿½chste task gestartet werden kann. schlafen ist bei hohen raten u.u. problematisch. deshalb kann
     //man das verhalten konfigurieren.
-    //TODO für noch höhere genauigkeit könnte man die folgende fallunterscheidung einmalig im konstruktor vornehmen und hier nur
-    //eine methode eines interfaces aufrufen, welches je nach fallunterscheidung anders gesetzt ist (ähnlich wie im scheduler).
+    //TODO fï¿½r noch hï¿½here genauigkeit kï¿½nnte man die folgende fallunterscheidung einmalig im konstruktor vornehmen und hier nur
+    //eine methode eines interfaces aufrufen, welches je nach fallunterscheidung anders gesetzt ist (ï¿½hnlich wie im scheduler).
     try {
       if (sleepDuration <= threadSleepMinValue) {
-        //=> spezialbehandlung für sehr kurze sleeps!
+        //=> spezialbehandlung fï¿½r sehr kurze sleeps!
         
         if (highRateThreadSleepType == HighRateThreadSleepType.NORMALSLEEP) {
           Thread.sleep(sleepDuration);
@@ -156,7 +156,7 @@ public class ConstantRateEventCreationAlgorithm extends FrequenceControlledTaskE
            *    if it requests a sleep interval that is not a multiple of 10ms.
            * 2. Hotspot assumes that the default interrupt period is 10ms, but on some hardware it is 15ms.
            * ==> To account for both sleep durations will be set to multiples of 30 
-           * 3. bugs die dazu führen, dass die systemzeit ungenau wird
+           * 3. bugs die dazu fï¿½hren, dass die systemzeit ungenau wird
            */
           int m = 10;
           if (highRateThreadSleepType == HighRateThreadSleepType.DIVISIBLE15) {
@@ -172,7 +172,7 @@ public class ConstantRateEventCreationAlgorithm extends FrequenceControlledTaskE
           Thread.sleep(sleepDuration);
         }
       } else {
-        // => normale sleeplänge benötigt keine sonderbehandlung
+        // => normale sleeplï¿½nge benï¿½tigt keine sonderbehandlung
         Thread.sleep(sleepDuration);
       }
     } catch (InterruptedException e) {

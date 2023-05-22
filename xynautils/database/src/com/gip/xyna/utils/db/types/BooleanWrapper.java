@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package com.gip.xyna.utils.db.types;
 
 /**
  * Wrapper, um einen Boolean, der Null sein kann,
- * für die Auswertung durch ExtendedParameter zu speichern.
+ * fï¿½r die Auswertung durch ExtendedParameter zu speichern.
  * Grund: An einem Null-Objekt kann der Typ nicht mehr erkannt werden
  */
 public class BooleanWrapper {

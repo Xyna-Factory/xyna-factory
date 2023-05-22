@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import com.gip.xyna.xprc.xsched.orderseries.PredecessorTrees.TreeNode;
 /**
  * OSMTask_UpdatePredecessor:
  * <br>
- * Wird von OSMLocalImpl gerufen, wenn für den Aufruf updatePredecessor das nötige Lock nicht erhalten wurde.
+ * Wird von OSMLocalImpl gerufen, wenn fï¿½r den Aufruf updatePredecessor das nï¿½tige Lock nicht erhalten wurde.
  * <br>
  * Hier in dem separaten Task kann dann solange gewartet werden, bis das Lock erhalten wird. Dann muss
  * erstens der updatePredecessor nachgeholt werden, zweitens aber auch das, was der OSMTask_Preschedule 
@@ -41,26 +41,26 @@ import com.gip.xyna.xprc.xsched.orderseries.PredecessorTrees.TreeNode;
  * 1.2) Nein: Aufruf OSMRemoteProxyImpl.updatePredecessor (siehe dort)
  * 2) Auswertung Ergebnis updatePredecessor{,WithNormalLock}
  * 2.1) NotFound: nicht erlaubt -&gt; IllegalStateException
- * 2.2) Later:   Successor wird später benachrichtigt werden, nichts mehr weiter zu tun
+ * 2.2) Later:   Successor wird spï¿½ter benachrichtigt werden, nichts mehr weiter zu tun
  * 3.3) Running:  Predecessor ist noch nicht gelaufen, nichts mehr weiter zu tun
- * 3.4) Cancel, Success: Predecessor ist beendet. Darüber muss nun der Successor informiert werden
+ * 3.4) Cancel, Success: Predecessor ist beendet. Darï¿½ber muss nun der Successor informiert werden
  * 3.4.1) Suche der TreeNodes zu Predecessor und Successor
- * 3.4.2) Auswertung des Ergebnis des Aufrufs updateSuccessorInternal(sucTree), 3 Fälle
+ * 3.4.2) Auswertung des Ergebnis des Aufrufs updateSuccessorInternal(sucTree), 3 Fï¿½lle
  * 3.4.2.1) NotFound  nicht erlaubt -&gt; IllegalStateException
  * 3.4.2.2) Later:    nichts zu tun
  * 3.4.2.3) Success:  nichts zu tun, Successor ist bereits im Predecessor eingetragen
  * </pre>
  * <pre>
  * Algorithmus updateSuccessorInternal(sucTree):
- * 1) 3 Fälle
+ * 1) 3 Fï¿½lle
  * 1.1) sucTree hat keine Daten:     Successor existiert noch nicht. 
- *                                   Rückgabe Result.NotFound 
- * 1.2) sucTree hat eigenes Binding: Rückgabe Aufruf 
+ *                                   Rï¿½ckgabe Result.NotFound 
+ * 1.2) sucTree hat eigenes Binding: Rï¿½ckgabe Aufruf 
  *                                   OSMLocalImpl.updateSuccessor (siehe dort)
- * 1.3) sucTree hat fremdes Binding: Rückgabe Remote-Aufruf 
+ * 1.3) sucTree hat fremdes Binding: Rï¿½ckgabe Remote-Aufruf 
  *                                   OSMRemoteProxyImpl.updateSuccessor, ruft dort 
  *                                   OSMLocalImpl.updateSuccessor (siehe dort) auf
- * 2) Mögliche Rückgaben:
+ * 2) Mï¿½gliche Rï¿½ckgaben:
  * 2.1) NotFound: Successor existiert noch nicht
  * 2.2) Later:    Successor existiert zwar, der weitere Status ist jedoch unbekannt, 
  *                da das Lock nicht erhalten wurde. (Grund: Deadlock-Vermeidung, dies kann 
@@ -101,12 +101,12 @@ public class OSMTask_UpdatePredecessor extends OSMTask {
     boolean informSuccessor = false;
     switch( result ) {
       case Later: 
-        //ok, nichts mehr weiter zu tun, Successor wird später benachrichtigt werden
+        //ok, nichts mehr weiter zu tun, Successor wird spï¿½ter benachrichtigt werden
       case NotFound: 
         //sollte nicht auftreten: Predecessor existierte beim Erzeugen des Tasks!
         throw new IllegalStateException("OSMTask_UpdatePredecessor: updatePredecessorWithNormalLock returned "+result );
       case Running:
-        //ok, nichts mehr weiter zu tun, Successor wird später benachrichtigt werden
+        //ok, nichts mehr weiter zu tun, Successor wird spï¿½ter benachrichtigt werden
         break;
       case Cancel:
         //Successor muss informiert werden, da er auf jeden Fall gecancelt wird
@@ -123,21 +123,21 @@ public class OSMTask_UpdatePredecessor extends OSMTask {
       
       TreeNode sucTree = predecessorTrees.getTree( successorCorrId );
       if( sucTree == null ) {
-        //hier muss kein großer Baum gebaut werden, da hier nur die Informationen des TreeNode 
-        //selbst gebraucht werden. Falls doch irgendwann der vollständige Baum in 
-        //OSMTask_Preschedule gebraucht wird, wird er dort ergänzt werden.
+        //hier muss kein groï¿½er Baum gebaut werden, da hier nur die Informationen des TreeNode 
+        //selbst gebraucht werden. Falls doch irgendwann der vollstï¿½ndige Baum in 
+        //OSMTask_Preschedule gebraucht wird, wird er dort ergï¿½nzt werden.
         sucTree = predecessorTrees.buildShortTree(successorCorrId); 
       } else {
         if( ! sucTree.hasData() ) {
-          //Daten müssen existieren, da Successor ja vorhanden ist
+          //Daten mï¿½ssen existieren, da Successor ja vorhanden ist
           sucTree = predecessorTrees.buildShortTree(successorCorrId);
         }
       }
       TreeNode preTree = predecessorTrees.getTree( predecessorCorrId );
       if( preTree == null ) {
-        //hier muss kein großer Baum gebaut werden, da hier nur die Informationen des TreeNode 
-        //selbst gebraucht werden. Falls doch irgendwann der vollständige Baum in 
-        //OSMTask_Preschedule gebraucht wird, wird er dort ergänzt werden.
+        //hier muss kein groï¿½er Baum gebaut werden, da hier nur die Informationen des TreeNode 
+        //selbst gebraucht werden. Falls doch irgendwann der vollstï¿½ndige Baum in 
+        //OSMTask_Preschedule gebraucht wird, wird er dort ergï¿½nzt werden.
         preTree = predecessorTrees.buildShortTree(predecessorCorrId); 
       }
       if( ! preTree.hasData() ) {
@@ -168,10 +168,10 @@ public class OSMTask_UpdatePredecessor extends OSMTask {
       //logger.trace( Thread.currentThread().getName() + " sucTree="+sucTree +" ownBinding="+ownBinding );      
       int binding = sucTree.getBinding();
       if( binding == ownBinding ) {
-        //Successor gehört zum eigenen Binding
+        //Successor gehï¿½rt zum eigenen Binding
         return localOsm.updateSuccessor(binding, successorCorrId,predecessorCorrId,predecessorOrderId,cancel);
       } else {
-        //Successor gehört zu einem anderen Binding
+        //Successor gehï¿½rt zu einem anderen Binding
         return remoteOsm.updateSuccessor(binding, successorCorrId,predecessorCorrId,predecessorOrderId,cancel);
       }
     } else {

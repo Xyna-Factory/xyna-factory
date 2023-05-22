@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -516,7 +516,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
 
 
     /**
-     * erstellt ein codesnippet, welches den long mit dem übergebenen namen nach dem entsprechenden typ castet.
+     * erstellt ein codesnippet, welches den long mit dem ï¿½bergebenen namen nach dem entsprechenden typ castet.
      * z.b. falls this==String -&gt; return "String.valueOf(&lt;varName&gt;)" 
      */
     public abstract String createFromLong(String varName) throws UnsupportedJavaTypeException;
@@ -526,9 +526,9 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
 
 
     /**
-     * Erzeugt einen validen Literal zu dem übergebenen Wert.
-     * z.B für 123 und Type long: 123L,
-     *     für \a  und Type String: "\\a"
+     * Erzeugt einen validen Literal zu dem ï¿½bergebenen Wert.
+     * z.B fï¿½r 123 und Type long: 123L,
+     *     fï¿½r \a  und Type String: "\\a"
      * @param value
      * @return
      */
@@ -753,8 +753,8 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     List<Element> datatypeChildElements = XMLUtils.getChildElementsByName(e, GenerationBase.EL.DATA);
     List<Element> exceptionChildElements = XMLUtils.getChildElementsByName(e, GenerationBase.EL.EXCEPTION);
 
-    //FIXME zwischen null und leerstring unterscheiden. dafür benötigt man ein zusätzliches attribut
-    //am besten wäre es, leerstring auszuzeichnen, weil ansonsten für zahlenwertige values immer eine spezialbehandlung notwendig ist. null ist da bereits behandelt
+    //FIXME zwischen null und leerstring unterscheiden. dafï¿½r benï¿½tigt man ein zusï¿½tzliches attribut
+    //am besten wï¿½re es, leerstring auszuzeichnen, weil ansonsten fï¿½r zahlenwertige values immer eine spezialbehandlung notwendig ist. null ist da bereits behandelt
     if (datatypeChildElements.isEmpty() && exceptionChildElements.isEmpty()) {
       if (isList()) {
         //listenwertige variable
@@ -828,12 +828,12 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   }
 
   /**
-   * gibt nicht nur den typ der variable zurück sondern auch die typen von membervariablen (-instanzen), 
+   * gibt nicht nur den typ der variable zurï¿½ck sondern auch die typen von membervariablen (-instanzen), 
    * wenn diese in dieser variable auch instanziiert wurden.
-   * d.h. für variablen, die nur referenziert werden, gehören die membervariablen nicht zu den dependencies
+   * d.h. fï¿½r variablen, die nur referenziert werden, gehï¿½ren die membervariablen nicht zu den dependencies
    * dazu, ansonsten schon (insbesondere dann auch ggfs abgeleitete membervariablen).
    * 
-   * grund: wenn variablen konstant vorbelegt sind, müssen alle membervariablen im wf instanziiert werden
+   * grund: wenn variablen konstant vorbelegt sind, mï¿½ssen alle membervariablen im wf instanziiert werden
    * und werden deshalb direkt verwendet.
    */
   public Set<GenerationBase> getDependencies() {
@@ -997,7 +997,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   }
 
   /**
-   * gibt simpleclassname zurück, mit listensupport (inkl generics + extends)<p>
+   * gibt simpleclassname zurï¿½ck, mit listensupport (inkl generics + extends)<p>
    * Beispiele:
    * <ul>
    * <li>List&lt;boolean&gt;</li>
@@ -1029,7 +1029,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   }
 
   /**
-   * gibt import-korrigierten classname zurück, mit listensupport (inkl generics und extends)<p>
+   * gibt import-korrigierten classname zurï¿½ck, mit listensupport (inkl generics und extends)<p>
    * Beispiele:
    * <ul>
    * <li>List&lt;boolean&gt;</li>
@@ -1043,7 +1043,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   }
 
   /**
-   * gibt auch list (mit generics) zurück, falls liste<p>
+   * gibt auch list (mit generics) zurï¿½ck, falls liste<p>
    * Beispiele:
    * <ul>
    * <li>List&lt;boolean&gt;</li>
@@ -1070,7 +1070,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   }
 
   /**
-   * gibt nicht list zurück, falls liste<p>
+   * gibt nicht list zurï¿½ck, falls liste<p>
    * Beispiele:
    * <ul>
    * <li>List&lt;boolean&gt; =&gt; boolean</li>
@@ -1089,7 +1089,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
 
   
   /**
-   * gibt nicht list zurück, falls liste. bei primitiven listen wird der objektifizierte type zurück gegeben<p>
+   * gibt nicht list zurï¿½ck, falls liste. bei primitiven listen wird der objektifizierte type zurï¿½ck gegeben<p>
    * Beispiele:
    * <ul>
    * <li>List&lt;boolean&gt; =&gt; Boolean</li>
@@ -1159,7 +1159,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   
 
   /**
-   * gibt varname.getA().getB() zurück, falls path = "A.B" ist
+   * gibt varname.getA().getB() zurï¿½ck, falls path = "A.B" ist
    */
   public String getGetter(String path) {
     return getGetter(getVarName(), path);
@@ -1184,7 +1184,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   }
   
   /**
-   * gibt varname.getA().getB() zurück, falls path = "A.B" ist
+   * gibt varname.getA().getB() zurï¿½ck, falls path = "A.B" ist
    */
   public static String getGetter(String varName, String path) {
     StringBuilder sb = new StringBuilder();
@@ -1329,7 +1329,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   }
 
   public void generateJavaXml(CodeBuffer cb) {
-    generateJavaXml(cb, false); //abwärtskompatibel
+    generateJavaXml(cb, false); //abwï¿½rtskompatibel
   }
   
   public abstract void generateJavaXml(CodeBuffer cb, boolean useCache);
@@ -1339,7 +1339,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   }
   
   /**
-   * falls ignoreList == true und isList == true, wird nur der konstruktor für ein einzelnes listenelement erzeugt.
+   * falls ignoreList == true und isList == true, wird nur der konstruktor fï¿½r ein einzelnes listenelement erzeugt.
    * ansonsten wie {@link #generateConstructor(CodeBuffer, Set)}
    */
   protected abstract void generateConstructor(CodeBuffer cb, Set<String> importedClassNames, boolean ignoreList);
@@ -1420,7 +1420,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
       }
       if (v.isList()) {
         v.generateConstructor(cb, importedClassNames, false);
-      } else { // keine daten => als wert null übergeben.
+      } else { // keine daten => als wert null ï¿½bergeben.
         // ist nicht immer javabasetype, aber falls null, wird das abgefangen
         if (v.getJavaTypeEnum() == null) {
           cb.add("(" + v.getEventuallyQualifiedClassNameNoGenerics(importedClassNames) + ") null");
@@ -1443,12 +1443,12 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
 
 
   /**
-   * Füllt das übergebene XynaObject mit den werten, die in dem aktuellen variablen-objekt stecken, also 'this' ist eine
+   * Fï¿½llt das ï¿½bergebene XynaObject mit den werten, die in dem aktuellen variablen-objekt stecken, also 'this' ist eine
    * variable von parent.
    */
   @SuppressWarnings("unchecked")
   public void fillObject(GeneralXynaObject result) throws InvalidObjectPathException, XDEV_PARAMETER_NAME_NOT_FOUND {
-    // xo.setBla(value); und dann für alle kinddata-elemente rekursiv
+    // xo.setBla(value); und dann fï¿½r alle kinddata-elemente rekursiv
     if (isJavaBaseType) {
       if (isList()) {
         ArrayList<Object> l = (ArrayList<Object>) result.get(getVarName());

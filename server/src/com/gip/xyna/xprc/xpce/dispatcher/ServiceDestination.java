@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ public class ServiceDestination extends DestinationValue {
     
     @Override
     public void executeInternally() throws XynaException {
-      //TODO performance: method cachen (siehe auskommentierter code). achtung: dann benötigt man einen cache-refresh mechanismus, der beim classreloading des services zuschlägt. vgl bug 15802
+      //TODO performance: method cachen (siehe auskommentierter code). achtung: dann benï¿½tigt man einen cache-refresh mechanismus, der beim classreloading des services zuschlï¿½gt. vgl bug 15802
       Method operationMethod = destination.getOperationOfService(xo);
       boolean firstParameterIsXynaOrder = operationMethod.getParameterTypes().length > 0 && operationMethod.getParameterTypes()[0] == XynaOrderServerExtension.class;
       initEventSource();
@@ -385,7 +385,7 @@ public class ServiceDestination extends DestinationValue {
         .getMDMClassLoader(fqDatatypeClassname, revision, true);
         c = mdmClassLoader.loadClass(fqDatatypeClassname);
       } catch (ClassNotFoundException e) {
-        throw new RuntimeException(e); //sollte nicht passieren, weil dann eher MDMObjectClassLoaderNotFoundException kommen würde.
+        throw new RuntimeException(e); //sollte nicht passieren, weil dann eher MDMObjectClassLoaderNotFoundException kommen wï¿½rde.
       }
     }
     for (Method m : c.getMethods()) {
@@ -439,7 +439,7 @@ public class ServiceDestination extends DestinationValue {
   }
   
   public boolean equals(Object obj) {
-    //wenn die destination gleich ist, kann sie trotzdem deployed werden müssen, weil sie auf alte classloader zeigt (vgl bug 15802)
+    //wenn die destination gleich ist, kann sie trotzdem deployed werden mï¿½ssen, weil sie auf alte classloader zeigt (vgl bug 15802)
     return this == obj;
   }
 

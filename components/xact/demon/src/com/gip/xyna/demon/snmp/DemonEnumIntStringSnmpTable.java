@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.gip.xyna.utils.snmp.agent.utils.EnumIntStringSnmpTable;
 
 /**
  * DemonEnumIntStringSnmpTable erweitert EnumIntStringSnmpTable,
- * damit diese passend wird für die Tabellen der Demon-MIB. (OIDs enthalten zusäzliche Teile)
+ * damit diese passend wird fï¿½r die Tabellen der Demon-MIB. (OIDs enthalten zusï¿½zliche Teile)
  */
 public class DemonEnumIntStringSnmpTable<Index extends Enum<Index>> extends EnumIntStringSnmpTable<Index> {
 

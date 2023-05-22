@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,10 @@ public class ContainerClass implements Serializable {
 
   /**
    * wird nur von {@link SerializableClassloadedObject} aufgerufen. deshalb muss die signatur nicht der vom normalen
-   * readObject entsprechen, welches zu {@link Serializable} klassen gehört. 
+   * readObject entsprechen, welches zu {@link Serializable} klassen gehï¿½rt. 
    */
   /*
-   * beim deserialisieren wird vom objectinputstream für das auflösen der klassen folgende funktion verwendet:
+   * beim deserialisieren wird vom objectinputstream fï¿½r das auflï¿½sen der klassen folgende funktion verwendet:
    *   private static native ClassLoader latestUserDefinedLoader();
    *   
    * diese schaut im stack weiter oben nach dem letzten element, welches einen classloader!=appclassloader verwendet.

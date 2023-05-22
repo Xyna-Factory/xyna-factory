@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,16 +41,16 @@ public class XMLObjectEncoder {
 
   /**
    * erstellt ein xml aus dem objekt, wobei jedes xmlelement einem bean-feld in der klasse des objekts
-   * entspricht. es werden nur felder der klasse berücksichtigt, die auch dazugehörige gettermethoden
+   * entspricht. es werden nur felder der klasse berï¿½cksichtigt, die auch dazugehï¿½rige gettermethoden
    * besitzen. <p>
-   * es werden folgende getterarten unterstützt:
+   * es werden folgende getterarten unterstï¿½tzt:
    * boolean a; => isA
    * int test => getTest
    * int _test => getTest
    * int Test => getTest
    * nicht primitive typen werden derzeit nur string, date und calendar direkt in string-werte
    * umgewandelt. date und calendar werden im format yyyy-MM-dd'T'HH:mm:ss'Z' ins xml geschrieben.<p>
-   * gibt &lt;empty /&gt; zurück, falls o null ist.
+   * gibt &lt;empty /&gt; zurï¿½ck, falls o null ist.
    * 
    * beispiel: 
    * <code>
@@ -103,7 +103,7 @@ public class XMLObjectEncoder {
       Short.class };
 
   /**
-   * Ändert einen String ab
+   * ï¿½ndert einen String ab
    */
   private interface GetterVariation {
     public String vary(String baseName);

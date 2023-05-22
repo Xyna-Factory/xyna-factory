@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,7 +159,7 @@ public class XynaObjectCreatorUsingXSD {
   private String setMemberVar(String targetId, XynaObject o, String ns, String typeName, String memberVarName,
                               Object value, boolean isAttribute) throws TypeMappingInstantiationException,
       NoSuchFieldException {
-    if (ns != null) { //FIXME unschön
+    if (ns != null) { //FIXME unschï¿½n
       memberVarName = transformXMLToMemberVarName(targetId, ns, typeName, memberVarName, isAttribute);
     }
     //type herausfinden, dann danach casten und wert setzen.

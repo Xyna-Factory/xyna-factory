@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,7 +193,7 @@ public class XmomPaths {
     },
     
     compact() {
-      //leere Pfade werden in die Pfadnamen tieferliegender gefüllter Pfade integriert
+      //leere Pfade werden in die Pfadnamen tieferliegender gefï¿½llter Pfade integriert
       @Override
       public List<PathItem> transformToPathItem(XmomPath xp, Mode nextMode, PathItem pi) {
         boolean compactify = xp.getDepartment() == null && !xp.containsFiles() && (xp.getChildren() != null && xp.getChildren().size() < 2);
@@ -207,7 +207,7 @@ public class XmomPaths {
           }
           return pis;
         } else {
-          //normal gefüllt Pfade wie "full" behandeln
+          //normal gefï¿½llt Pfade wie "full" behandeln
           return Mode.full.transformToPathItem(xp, this, pi );
         }
       }
@@ -246,9 +246,9 @@ public class XmomPaths {
     ;
 
     /**
-     * Über mode.transformToPathItem(..,nextMode,-..) kann ein nextMode übergeben werden, 
+     * ï¿½ber mode.transformToPathItem(..,nextMode,-..) kann ein nextMode ï¿½bergeben werden, 
      * damit der Mode "mode" nur einmalig verwendet wird und 
-     * für die Rekursion dann "nextMode" verwendet wird.
+     * fï¿½r die Rekursion dann "nextMode" verwendet wird.
      * @param xp
      * @param nextMode
      * @param pi

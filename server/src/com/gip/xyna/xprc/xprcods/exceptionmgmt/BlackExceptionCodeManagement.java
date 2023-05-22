@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -241,13 +241,13 @@ public class BlackExceptionCodeManagement extends com.gip.xyna.utils.exceptions.
        * XynaProperty.AUTOMATIC_CODEGROUP_GENERATION_AND_EXTENSION
        * default = true.
        * 
-       * auswirkungen für createNewExceptionCode:
+       * auswirkungen fï¿½r createNewExceptionCode:
        * falls true, wird:
        * 1) bei einer nicht gefundenen codegruppe eine neue erstellt
-       * 2) falls keine codes für das codepattern verfügbar: ein neues codepattern mit länge 100 wird erstellt.
+       * 2) falls keine codes fï¿½r das codepattern verfï¿½gbar: ein neues codepattern mit lï¿½nge 100 wird erstellt.
        *    das codepattern sieht genauso aus wie ein schon vorhandenes zur codegruppe. falls die codegruppe noch kein
-       *    pattern enthält, wird ein pattern der form XYNA-[[]] angelegt.
-       * falls false, wird in den oben genannten fällen ein fehler geworfen
+       *    pattern enthï¿½lt, wird ein pattern der form XYNA-[[]] angelegt.
+       * falls false, wird in den oben genannten fï¿½llen ein fehler geworfen
        */
       String ret = null;
       try {
@@ -487,7 +487,7 @@ public class BlackExceptionCodeManagement extends com.gip.xyna.utils.exceptions.
       Collection<CodePatternStorable> codePatterns = con.loadCollection(CodePatternStorable.class);
       ODSConnection conTemp = ods.openConnection(ODSConnectionType.INTERNALLY_USED);
       try {
-        //nicht alte exportierte daten übernehmen
+        //nicht alte exportierte daten ï¿½bernehmen
         conTemp.deleteAll(CodeGroupStorable.class);
         conTemp.deleteAll(CodePatternStorable.class);
         

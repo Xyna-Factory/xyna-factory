@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ package com.gip.xyna.xnwh.persistence;
 import java.util.List;
 
 /**
- * Interface z.b. für Storables zur Beschreibung von Konfliktauflösungen.
+ * Interface z.b. fï¿½r Storables zur Beschreibung von Konfliktauflï¿½sungen.
  * 
  * Konflikten treten auf, wenn mehrere Kopien eines Objektes existieren, die das gleiche Objekt
- * beschreiben sollen, und diese in ein stellvertretendes Objekt zusammengeführt werden sollen.
+ * beschreiben sollen, und diese in ein stellvertretendes Objekt zusammengefï¿½hrt werden sollen.
  * 
- * Ein anderer möglicher Konflikt tritt auf, wenn eine Programminstanz behauptet, dass Objekt
- * gelöscht zu haben, während die andere meint, dass es noch existiert.
+ * Ein anderer mï¿½glicher Konflikt tritt auf, wenn eine Programminstanz behauptet, dass Objekt
+ * gelï¿½scht zu haben, wï¿½hrend die andere meint, dass es noch existiert.
  *
  */
 public interface ConflictResolver<T> {
@@ -35,8 +35,8 @@ public interface ConflictResolver<T> {
    * Methode zur Bereinigung von Konflikten auf einem Objekt.
    * 
    * @param conflictingObjects Liste der konfliktbehafteten Objekte.
-   * @param hasBeenDeleted true falls der Konflikt deswegen besteht, weil das Objekt irgendwo als gelöscht gilt
-   * @return null falls das Objekt gelöscht werden soll oder das konfliktbereinigte Objekt
+   * @param hasBeenDeleted true falls der Konflikt deswegen besteht, weil das Objekt irgendwo als gelï¿½scht gilt
+   * @return null falls das Objekt gelï¿½scht werden soll oder das konfliktbereinigte Objekt
    */
   public T resolveConflicts(List<T> conflictingObjects, boolean hasBeenDeleted);
 }

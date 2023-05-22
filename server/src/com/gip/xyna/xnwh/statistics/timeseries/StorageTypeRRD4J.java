@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,8 +50,8 @@ import com.gip.xyna.xnwh.statistics.timeseries.TimeSeriesCreationParameter.Stora
  *   o       o       o       o       o
  * 
  * --><--------------><-------------->
- *       bin-länge          bin2
- *      =CDP-länge
+ *       bin-lï¿½nge          bin2
+ *      =CDP-lï¿½nge
  *      =steps*stepsize
  * 
  * -------------------------------------------...----->
@@ -127,7 +127,7 @@ public class StorageTypeRRD4J implements StorageType {
 
   }
 
-  //cacheentry für rrddb, weil das andauernde öffnen und schliessen teuer ist.
+  //cacheentry fï¿½r rrddb, weil das andauernde ï¿½ffnen und schliessen teuer ist.
   private static class RrdDbWrapper {
 
     private final long syncInterval;
@@ -395,10 +395,10 @@ public class StorageTypeRRD4J implements StorageType {
 
 
   /*
-   * größe eines primary data points (PDP). z.b. in sekunden
+   * grï¿½ï¿½e eines primary data points (PDP). z.b. in sekunden
    */
   private long getStepSize(StorageParameterRRD4J[] parameters) {
-    //größter gemeinsamer teiler aller bin-längen
+    //grï¿½ï¿½ter gemeinsamer teiler aller bin-lï¿½ngen
     long s = parameters[0].getBucketSizeInSeconds();
     for (int i = 1; i < parameters.length; i++) {
       if (s == 1) {

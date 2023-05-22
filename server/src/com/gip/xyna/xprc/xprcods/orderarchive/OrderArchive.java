@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,10 +185,10 @@ public class OrderArchive extends FunctionGroup
 
   /**
    * liest entries aus orderbackup.alternative und versucht sie zu archivieren. falls es wieder nicht funktioniert,
-   * werden weitere einträge mit dem gleichen problemfall (zb kein zugriff auf orderarchive.history möglich) nicht
-   * weiter versucht zu reparieren. (es wird aber sichergestellt, dass der nächste normale archivierungsversuch wieder
-   * die durchführung des algorithms triggert.) erfolgreich archivierte einträge werden aus orderbackup.alternative
-   * gelöscht.
+   * werden weitere eintrï¿½ge mit dem gleichen problemfall (zb kein zugriff auf orderarchive.history mï¿½glich) nicht
+   * weiter versucht zu reparieren. (es wird aber sichergestellt, dass der nï¿½chste normale archivierungsversuch wieder
+   * die durchfï¿½hrung des algorithms triggert.) erfolgreich archivierte eintrï¿½ge werden aus orderbackup.alternative
+   * gelï¿½scht.
    */
   private static class RetryAlgorithm implements Algorithm {
 
@@ -238,7 +238,7 @@ public class OrderArchive extends FunctionGroup
             switch (oib.getBackupCauseAsEnum()) {
               //nur breaks im case, wenn abgebrochen werden muss, ansonsten macht archivierung alle schritte nacheinander,
               //ab dem, wo es schiefgegangen war. z.B. falls BackupCause = PROBLEM_DEFAULT:
-              //erst default löschen, dann history schreiben, dann backup löschen.
+              //erst default lï¿½schen, dann history schreiben, dann backup lï¿½schen.
               case ARCHIVING_PROBLEM_DEFAULT : {
                 try {
                   oid = oa.auditAccess.restore(conDefault, orderId, false);
@@ -258,8 +258,8 @@ public class OrderArchive extends FunctionGroup
                 oid.clearAuditDataJavaObjects();
                 try {
                   if (!ods.isSamePhysicalTable(oid.getTableName(), ODSConnectionType.DEFAULT, ODSConnectionType.HISTORY)) {
-                    //nur löschen, wenn default orderarchive != history orderarchive.
-                    //ansonsten wäre es zwar erstmal nicht schlimm, hier zu löschen, weil hinterher
+                    //nur lï¿½schen, wenn default orderarchive != history orderarchive.
+                    //ansonsten wï¿½re es zwar erstmal nicht schlimm, hier zu lï¿½schen, weil hinterher
                     //geaddet wird. aber weil bis dahin noch kein commit stattgefunden hat,
                     //ist die zeile gelockt. 
                     try {
@@ -275,14 +275,14 @@ public class OrderArchive extends FunctionGroup
                   throw new RuntimeException(e);
                 }
 
-                //wenn bis hierhin alles gut gegangen ist, kann mit history/backup schritten fortgesetzt werden => nächster switch schritt
+                //wenn bis hierhin alles gut gegangen ist, kann mit history/backup schritten fortgesetzt werden => nï¿½chster switch schritt
               }
               case ARCHIVING_PROBLEM_HISTORY : {
               }
               case ARCHIVING_PROBLEM_HISTORY_AND_BACKUP : {
                 historyPersistenceSuccessful = false;
                 try {
-                  // in dem zeitintervall bis zu dem commit des löschens ist der gelöschte auftrag ggfs
+                  // in dem zeitintervall bis zu dem commit des lï¿½schens ist der gelï¿½schte auftrag ggfs
                   // doppelt sichtbar. in search-orders wird das aber abgefangen.
                   oa.auditAccess.store(conHistory, oid);
                   conHistory.commit();
@@ -294,9 +294,9 @@ public class OrderArchive extends FunctionGroup
                   if (historyPersistenceSuccessful) {
                     success = true;
                   }
-                  break; //backup ist bereits gelöscht => switch beenden
+                  break; //backup ist bereits gelï¿½scht => switch beenden
                 }
-                //else backup löschen muss noch passieren => zum nächsten case weiter
+                //else backup lï¿½schen muss noch passieren => zum nï¿½chsten case weiter
               }
               case ARCHIVING_PROBLEM_ORDERBACKUP : {
                 try {
@@ -335,9 +335,9 @@ public class OrderArchive extends FunctionGroup
               if (changedBackupCause) {
                 listChangedBackupCause.add(oib);
               }
-              //nicht in diesem durchlauf nochmal gleiche problemfälle probieren
+              //nicht in diesem durchlauf nochmal gleiche problemfï¿½lle probieren
               hasHadProblemsDuringArchiveRetry[oib.getBackupCauseAsEnum().getIndexArchivingProblem()] = true;
-              //es soll aber beim nächsten mal, wo der problemfall funktioniert, ein token eingestellt werden
+              //es soll aber beim nï¿½chsten mal, wo der problemfall funktioniert, ein token eingestellt werden
               oa.hasHadProblemsDuringArchive[oib.getBackupCauseAsEnum().getIndexArchivingProblem()] = true;
             }
 
@@ -402,7 +402,7 @@ public class OrderArchive extends FunctionGroup
 
   private PreparedCommand deleteOldArchived;
   /**
-   * inkl suspendierter aufträge
+   * inkl suspendierter auftrï¿½ge
    */
   private PreparedQuery<OrderInstanceBackup> getAllBackupsInRange;
   static PreparedQuery<OrderInstance> getOrderInstanceByIdFromDefault;
@@ -467,7 +467,7 @@ public class OrderArchive extends FunctionGroup
 
 
                 public void remove(DestinationKey dk) {
-                  //nicht entfernen, weil aufträge könnten ja im orderarchive sein
+                  //nicht entfernen, weil auftrï¿½ge kï¿½nnten ja im orderarchive sein
                 }
               });
             }
@@ -599,7 +599,7 @@ public class OrderArchive extends FunctionGroup
             long maxId = nextCache.get(nextCache.size() - 1).getId() + 1;
 
             //FIXME performance ist so nicht gut, und es werden ggfs viel zu viele orderbackup entries geladen!
-            //      besser wäre es hier nur die orderbackups zu laden, die passend zu den orderinstancedetails sind.
+            //      besser wï¿½re es hier nur die orderbackups zu laden, die passend zu den orderinstancedetails sind.
             
             Collection<OrderInstanceBackup> relevantBackups =
                 defaultConnection.query(getAllBackupsInRange, new Parameter(maxId, minId, getOwnBinding()), -1,
@@ -614,7 +614,7 @@ public class OrderArchive extends FunctionGroup
                   || nextBackup.getBackupCauseAsEnum() == BackupCause.SUSPENSION) {
                 // order could not be deserialized => skip that entry to not overwrite the order with <null>. This
                 // may lose some audit information, though.
-                // suspendierte aufträge können auch übersprungen werden, weil dort die orderinstancedetails bereits up to date sind 
+                // suspendierte auftrï¿½ge kï¿½nnen auch ï¿½bersprungen werden, weil dort die orderinstancedetails bereits up to date sind 
                 if (idsToBeSkipped == null) {
                   idsToBeSkipped = new HashSet<Long>();
                 }
@@ -663,8 +663,8 @@ public class OrderArchive extends FunctionGroup
   }
 
   /**
-   * gibt false zurück, falls das monitoringlevel der methode höher als das der xynaorder ist, d.h. dass die
-   * archive-operation wegen zu niedrigem monitoringlevel nicht ausgeführt werden soll. ansonsten true.
+   * gibt false zurï¿½ck, falls das monitoringlevel der methode hï¿½her als das der xynaorder ist, d.h. dass die
+   * archive-operation wegen zu niedrigem monitoringlevel nicht ausgefï¿½hrt werden soll. ansonsten true.
    */
   private boolean checkArgAndCheckStateAndCheckMonitoringLevel(XynaOrderServerExtension order,
                                                                int monitoringLevelOfOperation) {
@@ -763,7 +763,7 @@ public class OrderArchive extends FunctionGroup
       try {
         OrderInstanceDetails oi = auditAccess.restore(con, order.getId(), true);
         switch (auditDataType) {
-          //TODO wieso wird hier immer die revision übergeben? die muss doch nicht jedes mal gesetzt werden!?
+          //TODO wieso wird hier immer die revision ï¿½bergeben? die muss doch nicht jedes mal gesetzt werden!?
           case PREHANDLER :
             oi.setAuditDataPreStep(order.getExecutionType(), pstep, order.getRevision());
             break;
@@ -847,7 +847,7 @@ public class OrderArchive extends FunctionGroup
               XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
             OrderInstanceDetails oi;
             // aus threadsicherheit hier ein "select for update", welches die zeile sperrt, bis sie upgedatet ist. Das ist
-            // nur erforderlich für die Übergänge zu Execution und Finished, weil nur in diesen Fällen mehr als triviale Felder
+            // nur erforderlich fï¿½r die ï¿½bergï¿½nge zu Execution und Finished, weil nur in diesen Fï¿½llen mehr als triviale Felder
             // gesetzt werden.
             boolean statusRunningExecution = OrderInstanceStatus.RUNNING_EXECUTION == status;
             boolean statusScheduling = OrderInstanceStatus.SCHEDULING == status;
@@ -930,10 +930,10 @@ public class OrderArchive extends FunctionGroup
 
 
   /**
-   * Liefert alle suspendierten Aufträge (ohne Details).
+   * Liefert alle suspendierten Auftrï¿½ge (ohne Details).
    * Kann die XynaOrder nicht deserialisiert werden, wird der Fehler
-   * geloggt und null für die XynaOrder zurückgegeben.
-   * @param revision nur Aufträge in dieser Revision suchen. Falls 'null' werden alle Aufträge gesucht.
+   * geloggt und null fï¿½r die XynaOrder zurï¿½ckgegeben.
+   * @param revision nur Auftrï¿½ge in dieser Revision suchen. Falls 'null' werden alle Auftrï¿½ge gesucht.
    * @param defaultConnection
    * @return
    * @throws PersistenceLayerException
@@ -956,7 +956,7 @@ public class OrderArchive extends FunctionGroup
   
   /**
    * Auslesen des OrderInstanceBackups zur angegebenen RootOrderId.
-   * Falls dabei PersistenceLayerExceptions auftreten, werden über XynaProperties konfiguriert Retries versucht.
+   * Falls dabei PersistenceLayerExceptions auftreten, werden ï¿½ber XynaProperties konfiguriert Retries versucht.
    * @param rootOrderId
    * @param defaultCon  darf null sein
    * @return
@@ -1016,9 +1016,9 @@ public class OrderArchive extends FunctionGroup
     if (!(order.getResponseListener() instanceof EmptyResponseListener)) {
       TransientOrderPart transientOrderPart = transientOrderParts.remove(rootOrderId);
       if (transientOrderPart != null) {
-        //alle anteile der xynaorder merken, die nach der deserialisierung nicht wieder korrekt hergestellt werden können
+        //alle anteile der xynaorder merken, die nach der deserialisierung nicht wieder korrekt hergestellt werden kï¿½nnen
 
-        //responselistener könnte zb offenes socket haben
+        //responselistener kï¿½nnte zb offenes socket haben
         order.setResponseListener(transientOrderPart.responseListener);
         if (order.getOrderContext() != null) {
           order.getOrderContext().set(EventListener.KEY_CONNECTION, transientOrderPart.triggerConnection);
@@ -1039,7 +1039,7 @@ public class OrderArchive extends FunctionGroup
   
   /**
    * - auftrag speichern, damit er neu gestartet werden kann (nur falls rootauftrag) - orderinstancedetails speichern,
-   * weil nur hier die auditdaten gespeichert sind (nicht nur für rootaufträge)
+   * weil nur hier die auditdaten gespeichert sind (nicht nur fï¿½r rootauftrï¿½ge)
    */
   public void backup(XynaOrderServerExtension order, BackupCause backupCause) throws PersistenceLayerException {
     backup(order, backupCause, null);
@@ -1047,15 +1047,15 @@ public class OrderArchive extends FunctionGroup
 
 
   /**
-   * macht kein commit, wenn eine connection != null übergeben wird
+   * macht kein commit, wenn eine connection != null ï¿½bergeben wird
    */
   public void backup(final XynaOrderServerExtension order, BackupCause backupCause, ODSConnection con)
       throws PersistenceLayerException {
 
-    //TODO eigtl sollte hasBeenBackuppedAfterChange nur als kennzeichen dafür verwendet werden, ob die auftragsdaten gebackupped werden müssen
-    //     der backup cause sollten unabhängig davon sein!
+    //TODO eigtl sollte hasBeenBackuppedAfterChange nur als kennzeichen dafï¿½r verwendet werden, ob die auftragsdaten gebackupped werden mï¿½ssen
+    //     der backup cause sollten unabhï¿½ngig davon sein!
     //     dabei muss man aber aufpassen: es ist nicht immer klar, wo auch das backup der xynaorder notwendig ist.
-    //     zb. bei AFTER_SCHEDULING müssen evtl auch die geänderten flags gespeichert werden, dass kapazitäten/vetos allokiert wurden?!
+    //     zb. bei AFTER_SCHEDULING mï¿½ssen evtl auch die geï¿½nderten flags gespeichert werden, dass kapazitï¿½ten/vetos allokiert wurden?!
     if (order.hasBeenBackuppedAfterChange() || !order.getDestinationKey().isAllowedForBackup()) {
       return;
     }
@@ -1072,7 +1072,7 @@ public class OrderArchive extends FunctionGroup
     try {
 
       //synchronisierung notwendig, damit nicht zb beim serverherunterfahren der runterfahr-thread das backup triggert und gleichzeitig
-      //der auftrag selbst zuende läuft/seine processsuspendedexception verarbeitet...
+      //der auftrag selbst zuende lï¿½uft/seine processsuspendedexception verarbeitet...
       // synchronized innerhalb der connection, um connection-deadlocks zu vermeiden
       synchronized (order) {
         if (!order.hasParentOrder() && order.getResponseListener() != null
@@ -1181,9 +1181,9 @@ public class OrderArchive extends FunctionGroup
         } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
           logger.warn("order " + oid.getId() + " not found in orderarchive DEFAULT and will thus be saved in backup without details.", e);
           break;
-          //TODO hier wird nun fast leere OrderInstanceDetails zurückgegeben
+          //TODO hier wird nun fast leere OrderInstanceDetails zurï¿½ckgegeben
           //entweder null?
-          //oder ersatzweise aus XynaOrderServerExtension füllen?
+          //oder ersatzweise aus XynaOrderServerExtension fï¿½llen?
         }
       }
     }
@@ -1278,7 +1278,7 @@ public class OrderArchive extends FunctionGroup
 
   /**
    * bescheid geben, dass archiving-schritt jetzt funktioniert hat, um eventuell in orderbackup.ALTERNATIVE wartende
-   * aufträge einen retry machen zu lassen.
+   * auftrï¿½ge einen retry machen zu lassen.
    */
   private void triggerArchiveRetry(BackupCause cause) {
     int idx = cause.getIndexArchivingProblem();
@@ -1307,7 +1307,7 @@ public class OrderArchive extends FunctionGroup
     }
     oid.clearAuditDataJavaObjects();
     
-    //bis zum commit kann nun eine ganze weile vergehen. in dieser zeit sollte das xml für weitere audit-anfragen zurückgegeben werden können.
+    //bis zum commit kann nun eine ganze weile vergehen. in dieser zeit sollte das xml fï¿½r weitere audit-anfragen zurï¿½ckgegeben werden kï¿½nnen.
     //vgl bug 19453
     try {
       if (!ods.isSamePhysicalTable(oid.getTableName(), ODSConnectionType.DEFAULT, ODSConnectionType.HISTORY)) {
@@ -1327,27 +1327,27 @@ public class OrderArchive extends FunctionGroup
         }
       }
     } catch (XNWH_NoPersistenceLayerConfiguredForTableException e) {
-      //fällt an anderen stellen auch schon auf. pech
+      //fï¿½llt an anderen stellen auch schon auf. pech
       logger.trace(null, e);
     }
   }
 
 
   /**
-   * übergebene connections sollten keine offenen transaktionsschritte haben
+   * ï¿½bergebene connections sollten keine offenen transaktionsschritte haben
    */
   private void internalArchive(final XynaOrderServerExtension xo, ODSConnection conDefault, ODSConnection conHistory,
                                OrderInstanceDetails preparedOid)
       throws PersistenceLayerException, DuplicatedOrderInstanceArchiveException {
-    //plan: falls orderarchive.DEFAULT zugriff nicht funktioniert, wird die id und der auftrag gespeichert (orderbackup.ALTERNATIVE) und internalArchive zu einem späteren zeitpunkt erneut probiert
-    //      falls orderarchive.HISTORY zugriff nicht funktioniert, werden id+orderinstancedetails gespeichert (orderbackup.ALTERNATIVE) und später erneut probiert. aus orderbackup.DEFAULT kann trotzdem gelöscht werden.    
-    //      falls orderbackup.DEFAULT zugriff nicht funktioniert, wird id gespeichert (orderbackup.ALTERNATIVE) und später erneut probiert zu löschen.
-    //      späterer zeitpunkt = sobald die verbindung wieder hergestellt werden kann, d.h. falls ein anderer auftrag erfolgreich da durch ist. alternativ wird alle x sekunden neu versucht (konfigurierbar)
-    //      beim speichern in orderbackup.ALTERNATIVE muss unterschieden werden, welcher fall zutrifft. dies geschieht über die spalte backupcause.
+    //plan: falls orderarchive.DEFAULT zugriff nicht funktioniert, wird die id und der auftrag gespeichert (orderbackup.ALTERNATIVE) und internalArchive zu einem spï¿½teren zeitpunkt erneut probiert
+    //      falls orderarchive.HISTORY zugriff nicht funktioniert, werden id+orderinstancedetails gespeichert (orderbackup.ALTERNATIVE) und spï¿½ter erneut probiert. aus orderbackup.DEFAULT kann trotzdem gelï¿½scht werden.    
+    //      falls orderbackup.DEFAULT zugriff nicht funktioniert, wird id gespeichert (orderbackup.ALTERNATIVE) und spï¿½ter erneut probiert zu lï¿½schen.
+    //      spï¿½terer zeitpunkt = sobald die verbindung wieder hergestellt werden kann, d.h. falls ein anderer auftrag erfolgreich da durch ist. alternativ wird alle x sekunden neu versucht (konfigurierbar)
+    //      beim speichern in orderbackup.ALTERNATIVE muss unterschieden werden, welcher fall zutrifft. dies geschieht ï¿½ber die spalte backupcause.
 
     long orderId = xo.getId();
 
-    //liest auftrag aus orderdb und schreibt auftrag in orderarchive. auftrag wird aus db und backup gelöscht.
+    //liest auftrag aus orderdb und schreibt auftrag in orderarchive. auftrag wird aus db und backup gelï¿½scht.
     OrderInstanceDetails oid = new OrderInstanceDetails(xo);
     if (preparedOid != null) {
       oid = preparedOid;
@@ -1376,8 +1376,8 @@ public class OrderArchive extends FunctionGroup
 
     try {
       if (!ods.isSamePhysicalTable(oid.getTableName(), ODSConnectionType.DEFAULT, ODSConnectionType.HISTORY)) {
-        //nur löschen, wenn default orderarchive != history orderarchive.
-        //ansonsten wäre es zwar erstmal nicht schlimm, hier zu löschen, weil hinterher
+        //nur lï¿½schen, wenn default orderarchive != history orderarchive.
+        //ansonsten wï¿½re es zwar erstmal nicht schlimm, hier zu lï¿½schen, weil hinterher
         //geaddet wird. aber weil bis dahin noch kein commit stattgefunden hat,
         //ist die zeile gelockt.
         try {
@@ -1402,11 +1402,11 @@ public class OrderArchive extends FunctionGroup
 
     boolean historyPersistenceSuccessful = false;
     try {
-      // in dem zeitintervall bis zu dem commit des löschens ist der gelöschte auftrag ggfs
+      // in dem zeitintervall bis zu dem commit des lï¿½schens ist der gelï¿½schte auftrag ggfs
       // doppelt sichtbar. in search-orders wird das aber abgefangen.
       boolean existedBefore = auditAccess.store(conHistory, oid);
       if (existedBefore && !ods.isSamePhysicalTable(oid.getTableName(), ODSConnectionType.DEFAULT, ODSConnectionType.HISTORY)) {
-        // kann passieren, wenn der server nach dem conHistory.commit und vor dem deleteFromBackup einen fehler hat oder abstürzt.
+        // kann passieren, wenn der server nach dem conHistory.commit und vor dem deleteFromBackup einen fehler hat oder abstï¿½rzt.
         logger.warn("Duplicate entry detected in table <" + OrderInstance.TABLE_NAME + "> with id <" + oid.getId() + ">. ");
 
         throw new DuplicatedOrderInstanceArchiveException(oid);
@@ -1421,7 +1421,7 @@ public class OrderArchive extends FunctionGroup
         deleteFromBackupInternally(orderId, conDefault);
         triggerArchiveRetry(BackupCause.ARCHIVING_PROBLEM_ORDERBACKUP);
         if (!historyPersistenceSuccessful) {
-          //nicht oben im catchblock von history.persistierung, damit es nicht zu nebenläufigkeitsproblemen kommt,
+          //nicht oben im catchblock von history.persistierung, damit es nicht zu nebenlï¿½ufigkeitsproblemen kommt,
           //weil evtl danach erneut mit anderem backup_cause gespeichert wird
           final OrderInstanceDetails localOid = oid;
           conHistory.executeAfterClose(new Runnable() {
@@ -1468,7 +1468,7 @@ public class OrderArchive extends FunctionGroup
           if( ncae.getReason() == NoConnectionAvailableException.Reason.PoolExhausted ) {
             logger.warn(connection.getConnectionType().toString() + " connection pool exhausted, retrying...");
           } else {
-            //nicht länger warten, evtl. gibt es keine Connection mehr!
+            //nicht lï¿½nger warten, evtl. gibt es keine Connection mehr!
             throw e;
           }
         } else {
@@ -1528,7 +1528,7 @@ public class OrderArchive extends FunctionGroup
           int runtimeMonLvl = MonitoringCodes.getMonitoringLevelForRuntime(nextOrder);
           if ((monitoringLevel >= MonitoringCodes.START_STOP_MONITORING || (monitoringLevel >= MonitoringCodes.ERROR_MONITORING && nextOrder
               .hasError()))) {
-            //es wird in orderarchive-history geschrieben =>  audit-xml erzeugen und ggfs batch-commit durchführen 
+            //es wird in orderarchive-history geschrieben =>  audit-xml erzeugen und ggfs batch-commit durchfï¿½hren 
             final OrderInstanceDetails oid;
 
             ODSConnection conLocalDefault = ods.openConnection();
@@ -1571,8 +1571,8 @@ public class OrderArchive extends FunctionGroup
 
               accumulatedXMLSize = 0;
               nextOrders.clear();
-              preparedOrderInstanceDetails.clear(); //damit können xmls nun freigegeben werden
-              continue; //nächster batch
+              preparedOrderInstanceDetails.clear(); //damit kï¿½nnen xmls nun freigegeben werden
+              continue; //nï¿½chster batch
             }
           }
         }
@@ -1630,8 +1630,8 @@ public class OrderArchive extends FunctionGroup
           conDefault.shareConnectionPools(conHistory);
         }
         if (doEnsureDefaultConnectivity) {
-          //ACHTUNG, hier mag es überflüssig sein, die backup connection zu holen, aber wenn man sie nicht holt,
-          //werden die connections evtl in der falschen reihenfolge geöffnet.
+          //ACHTUNG, hier mag es ï¿½berflï¿½ssig sein, die backup connection zu holen, aber wenn man sie nicht holt,
+          //werden die connections evtl in der falschen reihenfolge geï¿½ffnet.
           ensureConnectivityWithRetries(conDefault, OrderInstanceBackup.class);
           ensureConnectivityWithRetries(conDefault, OrderInstanceDetails.class);
         }
@@ -1652,7 +1652,7 @@ public class OrderArchive extends FunctionGroup
                 } catch (DuplicatedOrderInstanceArchiveException doe) {
                   if (lastDuplicateId == doe.oidNew.getId()) {
                     //gleicher auftrag erneut duplikat -> keine endlosschleife erzeugen.
-                    //kann auftreten, wenn aus irren gründen in der auftragshierarchie die gleiche auftragsid mehrfach vorkommt.
+                    //kann auftreten, wenn aus irren grï¿½nden in der auftragshierarchie die gleiche auftragsid mehrfach vorkommt.
                     logger.warn("Order " + doe.oidNew.getId() + " found as duplicate again. It will not be archived.");
                     orderIterator.remove();
                     lastDuplicateId = -1;
@@ -1766,16 +1766,16 @@ public class OrderArchive extends FunctionGroup
 
   /**
    * falls nicht rootauftrag: nichts tun
-   * falls rootauftrag, passiert für gesamte auftragsfamilie falls monitoringlevel es erfordert:
-   *       - aufräumen von default und backup (immer! falls nicht möglich, wird id gemerkt/geloggt)
-   *       - eintrag in history (falls nicht möglich, wird geloggt, dass eintrag gemerkt und später 
-   *         nochmals versucht wird in history einzufügen)
+   * falls rootauftrag, passiert fï¿½r gesamte auftragsfamilie falls monitoringlevel es erfordert:
+   *       - aufrï¿½umen von default und backup (immer! falls nicht mï¿½glich, wird id gemerkt/geloggt)
+   *       - eintrag in history (falls nicht mï¿½glich, wird geloggt, dass eintrag gemerkt und spï¿½ter 
+   *         nochmals versucht wird in history einzufï¿½gen)
    */
   public TwoConnectionBean archive(XynaOrderServerExtension order) throws PersistenceLayerException {
     if (order.hasParentOrder()) {
       if (!order.removeOrderReferenceIfNotNeededForCompensation()) {
-        // aufträge für compensate aufheben, weil internalarchive nicht zweimal durchgeführt werden
-        //kann (internal archive löscht aus default-persistencelayer)
+        // auftrï¿½ge fï¿½r compensate aufheben, weil internalarchive nicht zweimal durchgefï¿½hrt werden
+        //kann (internal archive lï¿½scht aus default-persistencelayer)
         return EMPTY_TWOCONNECTIONBEAN;
       }      
     }
@@ -1875,7 +1875,7 @@ public class OrderArchive extends FunctionGroup
 
 
   private void deleteFromBackupInternally(long orderId, ODSConnection connection) throws PersistenceLayerException {
-    transientOrderParts.remove(orderId); //kann immer gelöscht werden, weil nach dem löschen aus dem orderbackup wird das nicht mehr benötigt
+    transientOrderParts.remove(orderId); //kann immer gelï¿½scht werden, weil nach dem lï¿½schen aus dem orderbackup wird das nicht mehr benï¿½tigt
     connection.deleteOneRow(new OrderInstanceBackup(orderId, getOwnBinding()));
   }
 
@@ -2059,7 +2059,7 @@ public class OrderArchive extends FunctionGroup
       return searchOrderInstancesInternally(select, maxRows, searchMode);
     } catch (XNWH_IncompatiblePreparedObjectException e) {
       //nochmal probieren, weil der fehler evtl aufgetreten ist, nachdem ein gecachtes query
-      //durch eine persistencelayeränderung nicht mehr funktioniert.
+      //durch eine persistencelayerï¿½nderung nicht mehr funktioniert.
       cache.clear();
       return searchOrderInstancesInternally(select, maxRows, searchMode);
     }
@@ -2128,7 +2128,7 @@ public class OrderArchive extends FunctionGroup
         m1.put(e.getKey(), e.getValue());
       }
     } else {
-      //erst rootid map erstellen, um die sich evtl überlagenden (wegen precommits) family-selektionen aus default und history zu mergen
+      //erst rootid map erstellen, um die sich evtl ï¿½berlagenden (wegen precommits) family-selektionen aus default und history zu mergen
       Map<Long, Pair<OrderInstance, Collection<OrderInstance>>> rootIdMap =
           new HashMap<Long, Pair<OrderInstance, Collection<OrderInstance>>>();
       for (Entry<OrderInstance, Collection<OrderInstance>> e : m1.entrySet()) {
@@ -2176,12 +2176,12 @@ public class OrderArchive extends FunctionGroup
           /*
            * checken, ob family komplett ist, ansonsten ignorieren.
            * inkomplett passiert, wenn das ein neuer auftrag ist (durch where startTime < x ausgeschlossen), oder wenn der auftrag in default wegen maxrow
-           * beschränkung nicht selektiert wurde, und dann zwischenzeitlich fertiggelaufen ist. dann ist es ok, ihn wegzulassen.
+           * beschrï¿½nkung nicht selektiert wurde, und dann zwischenzeitlich fertiggelaufen ist. dann ist es ok, ihn wegzulassen.
            * 
            * in m1 kann es keine incompletes geben, weil alle partiell archivierten familien aus DEFAULT auch in HISTORY nachselektiert werden
            * 
-           * es kann unvollständige familien geben, weil nicht alle aufträge der familie hoch genuges monitoringlevel hatten.
-           * die müssen natürlich zurückgegeben werden.
+           * es kann unvollstï¿½ndige familien geben, weil nicht alle auftrï¿½ge der familie hoch genuges monitoringlevel hatten.
+           * die mï¿½ssen natï¿½rlich zurï¿½ckgegeben werden.
            */
           if (affectedByPrecommit.contains(e.getKey()) && !isComplete(family.getSecond(), null)) {
             m1.remove(e.getKey());
@@ -2199,7 +2199,7 @@ public class OrderArchive extends FunctionGroup
    */
   private boolean isComplete(Collection<OrderInstance> family, OrderInstance exception) {
     //komplett = der parent existiert jeweils innerhalb der collection
-    //geschwister müssen dann auch vorhanden sein, weil diese immer vor dem parent archiviert werden
+    //geschwister mï¿½ssen dann auch vorhanden sein, weil diese immer vor dem parent archiviert werden
     Set<Long> ids = new HashSet<Long>();
     ids.add(-1L);
     for (OrderInstance oi : family) {
@@ -2238,7 +2238,7 @@ public class OrderArchive extends FunctionGroup
 
     while (currentChildren.size() > 0) {
       ret.addAll(currentChildren);
-      //nächste kinder bestimmen
+      //nï¿½chste kinder bestimmen
       for (OrderInstance o : currentChildren) {
         List<OrderInstance> children = childOrders.get(o.getId());
         if (children != null) {
@@ -2755,7 +2755,7 @@ public class OrderArchive extends FunctionGroup
 
   /**
    * TODO Diese Art an die RootId zu kommen ist schlecht, da bei niedrigen MonitoringLeveln keine 
-   * OrderInstanceBackup geschrieben werden für Nicht-Root-Orders!
+   * OrderInstanceBackup geschrieben werden fï¿½r Nicht-Root-Orders!
    */
   private static class GetRootId implements WarehouseRetryExecutableOneException<Long,XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY> {
 
@@ -2800,7 +2800,7 @@ public class OrderArchive extends FunctionGroup
 
   public void cleanup(ODSConnection con, List<OrderInstanceDetails> family, String abortionCause)
       throws PersistenceLayerException {
-    //aufräumen
+    //aufrï¿½umen
     for (OrderInstanceDetails oid : family) {
       oid.addException(new XPRC_PROCESS_ABORTED_EXCEPTION(oid.getId(), abortionCause));
       oid.setStatus(OrderInstanceStatus.XYNA_ERROR);
@@ -2850,7 +2850,7 @@ public class OrderArchive extends FunctionGroup
 
 
   /**
-   * die zurückgegebenen orderbackupentries sind nicht vollständig gefüllt.
+   * die zurï¿½ckgegebenen orderbackupentries sind nicht vollstï¿½ndig gefï¿½llt.
    * sowohl die xynaorder darin als auch die orderinstancedetails sind leer.
    */
   public FactoryWarehouseCursor<? extends OrderInstanceBackup> getCursorForOrderBackupEntries(ODSConnection con, int blocksize,
@@ -2869,7 +2869,7 @@ public class OrderArchive extends FunctionGroup
                          blocksize);
   }
 
-  //Hilfskonstrukt für die Suche nach Auftragsteilfamilien, falls diese teilweise in OrderArchive DEFAULT und teilweise in HISTORY sind.
+  //Hilfskonstrukt fï¿½r die Suche nach Auftragsteilfamilien, falls diese teilweise in OrderArchive DEFAULT und teilweise in HISTORY sind.
   private static class OrderFamilyMemberList extends ObjectWithRemovalSupport {
 
     private boolean preCommittedSomeOrders = false;
@@ -2925,7 +2925,7 @@ public class OrderArchive extends FunctionGroup
 
 
   public void removePreCommitNotification(AtomicBoolean preCommitted, long rootId) {
-    if (!preCommitted.get()) { //ansonsten wurde bereits aufgeräumt
+    if (!preCommitted.get()) { //ansonsten wurde bereits aufgerï¿½umt
       preCommittedFamilyInfos.lazyCreateGet(rootId).deregister(preCommitted);
       preCommittedFamilyInfos.cleanup(rootId);
     }

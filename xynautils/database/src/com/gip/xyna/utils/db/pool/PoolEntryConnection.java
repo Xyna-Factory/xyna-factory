@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ public class PoolEntryConnection extends SQLInstrumentedWrappedConnection {
   private StackTraceElement[] stackTraceWhenThreadGotConnection;
   private long configurationCount;
   private volatile boolean closeInnerConnection = false; //flag, ob beim close() auch die innere connection geschlossen wird
-  //zuletzt durchgeführtes sql. wird genullt, wenn verbindung neu aufgemacht wird, d.h. ein neuer thread aktiv wird, weil
-  //es sonst verwirrend wird, ob der aktive thread zu dem sql gehört.
+  //zuletzt durchgefï¿½hrtes sql. wird genullt, wenn verbindung neu aufgemacht wird, d.h. ein neuer thread aktiv wird, weil
+  //es sonst verwirrend wird, ob der aktive thread zu dem sql gehï¿½rt.
   private volatile String lastSQL; 
   
 
@@ -108,7 +108,7 @@ public class PoolEntryConnection extends SQLInstrumentedWrappedConnection {
   }
 
   /**
-   * gibt die Connection zurück an den Pool
+   * gibt die Connection zurï¿½ck an den Pool
    */
   public void close() throws SQLException {
     boolean innerConnectionIsOpen = false;
@@ -127,7 +127,7 @@ public class PoolEntryConnection extends SQLInstrumentedWrappedConnection {
           innerConnectionIsOpen = con != null && !con.isClosed();
           if (innerConnectionIsOpen) {
             con.rollback();
-            String lastSql_t = lastSQL; //nicht überschreiben durch markConnection
+            String lastSql_t = lastSQL; //nicht ï¿½berschreiben durch markConnection
             pool.getConnectionBuildStrategy().markConnectionNotInUse(con);
             lastSQL = lastSql_t;
             lastCheck = System.currentTimeMillis();
@@ -140,7 +140,7 @@ public class PoolEntryConnection extends SQLInstrumentedWrappedConnection {
     } finally {
       this.currentThread = null;
       this.stackTraceWhenThreadGotConnection = null;
-      pool.returnConnection(this); //stellt die connection wieder zur verfügung
+      pool.returnConnection(this); //stellt die connection wieder zur verfï¿½gung
       if (closeInnerConnection && innerConnectionIsOpen) {
         con.close();
       }
@@ -230,7 +230,7 @@ public class PoolEntryConnection extends SQLInstrumentedWrappedConnection {
   }
 
   /**
-   * Markiert die Connection, so dass sie bei nächster Gelegenheit geschlossen wird
+   * Markiert die Connection, so dass sie bei nï¿½chster Gelegenheit geschlossen wird
    */
   public void markToClose() {
     closeInnerConnection = true;

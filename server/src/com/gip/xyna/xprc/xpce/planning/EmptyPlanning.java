@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.gip.xyna.xprc.xsched.SchedulerBean;
 
 
 
-// FIXME dependency nach XFractWFE! Klasse nach XFractWFE verschieben könnte funktionieren (Abwärtskompatibilität
+// FIXME dependency nach XFractWFE! Klasse nach XFractWFE verschieben kï¿½nnte funktionieren (Abwï¿½rtskompatibilitï¿½t
 //       beachten!), verschiebt aber das Problem nur auf die Referenz auf diese Klasse
 public class EmptyPlanning extends XynaProcess {
 

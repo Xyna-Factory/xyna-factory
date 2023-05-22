@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ public class OraclePLClusterStateChangeHandler implements ClusterStateChangeHand
         return true;
       } catch( NoConnectionAvailableException e ) {
         if( e.getReason() == Reason.PoolExhausted ) {
-          // Pool könnte valide sein, aber derzeit überlastet, dies muss genauer geprüft werden
+          // Pool kï¿½nnte valide sein, aber derzeit ï¿½berlastet, dies muss genauer geprï¿½ft werden
           return checkExhaustedPool(pool);
         } else {
           logger.info("Failed to validate test connection", e);
@@ -119,7 +119,7 @@ public class OraclePLClusterStateChangeHandler implements ClusterStateChangeHand
     }
     
     private boolean checkExhaustedPool(ConnectionPool pool) {
-      //Überlasteter Pool kann derzeit keine Connection liefern.
+      //ï¿½berlasteter Pool kann derzeit keine Connection liefern.
       //Daher nochmal versuchen, eine Connection direkt anzulegen
       Connection con = null;
       try {

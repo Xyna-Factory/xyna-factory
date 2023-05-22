@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ public final class VendorClassTlvReader implements TlvReader {
 
   private int readOptionLength() throws TlvReaderException // reads seperate length of options value
   {
-    int length = readByteValue() * 256 + readByteValue(); // Längenfeld 2 Byte lang
+    int length = readByteValue() * 256 + readByteValue(); // Lï¿½ngenfeld 2 Byte lang
     if (length > MAX_TLV_LENGTH) {
       throw new TlvReaderException(
                                    "Expected length shorter or equal to <" + MAX_TLV_LENGTH + ">, but was: <" + length + ">.");
@@ -175,7 +175,7 @@ public final class VendorClassTlvReader implements TlvReader {
 
 
   private int readLength() throws TlvReaderException {
-    int length = readByteValue() * 256 + readByteValue(); // Längenfeld 2 Byte lang
+    int length = readByteValue() * 256 + readByteValue(); // Lï¿½ngenfeld 2 Byte lang
     if (length > MAX_TLV_LENGTH) {
       throw new TlvReaderException(
                                    "Expected length shorter or equal to <" + MAX_TLV_LENGTH + ">, but was: <" + length + ">.");

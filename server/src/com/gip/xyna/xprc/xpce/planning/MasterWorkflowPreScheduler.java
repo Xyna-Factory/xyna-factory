@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ import com.gip.xyna.xprc.xprcods.orderarchive.orderbackuphelper.OrderStartupMode
 
 
 /**
- * Klasse gibt die Reihenfolge und die zugehörige Fehlerbehandlung für alle Einzel Schritte des Masterworkflows im
+ * Klasse gibt die Reihenfolge und die zugehï¿½rige Fehlerbehandlung fï¿½r alle Einzel Schritte des Masterworkflows im
  * Processing vor dem Scheduling an. Im Fehlerfall wird das Cleanup aufgerufen.
  */
 public class MasterWorkflowPreScheduler {
@@ -109,7 +109,7 @@ public class MasterWorkflowPreScheduler {
     try {
       orderArchive.insert(xo);
     } catch (PersistenceLayerException e1) {
-      // TODO evtl konfigurieren, ob aufträge bei fehlern in der persistierung abgebrochen werden?
+      // TODO evtl konfigurieren, ob auftrï¿½ge bei fehlern in der persistierung abgebrochen werden?
       logger.warn("could not persist instance of " + xo + ". this does not interrupt execution of order.", e1);
     }
   }
@@ -153,7 +153,7 @@ public class MasterWorkflowPreScheduler {
       orderStatus.changeMasterWorkflowStatus(xo, orderInstanceStatus, null);
     } catch (Throwable t) {
       Department.handleThrowable(t);
-      //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhängen
+      //TODO Exception nicht loggen, sondern als Warnung an XynaOrder anhï¿½ngen
       logger.warn("Could not write orderinstance status "+orderInstanceStatus+" for "+xo, t);
     }
   }
@@ -176,13 +176,13 @@ public class MasterWorkflowPreScheduler {
       }
 
       try {
-        if (!OrdertypeManagement.internalOrdertypes.contains(xo.getDestinationKey().getOrderType())) { //achtung, interne destinationkeys überschreiben teilweise methoden, vgl. XynaDispatcher.<clinit>
-          //wenn die revision nicht gesetzt ist, die aus dem destinationkey übernehmen
+        if (!OrdertypeManagement.internalOrdertypes.contains(xo.getDestinationKey().getOrderType())) { //achtung, interne destinationkeys ï¿½berschreiben teilweise methoden, vgl. XynaDispatcher.<clinit>
+          //wenn die revision nicht gesetzt ist, die aus dem destinationkey ï¿½bernehmen
           if (xo.getRevision() == null || xo.getRevision().equals(RevisionManagement.REVISION_DEFAULT_WORKSPACE)) {
             xo.setRevision(revisionManagement.getRevision(xo.getDestinationKey().getRuntimeContext()));
           }
 
-          //in welcher revision ist der ordertype definiert? => entsprechenden RTC auch für den destinationkey verwenden
+          //in welcher revision ist der ordertype definiert? => entsprechenden RTC auch fï¿½r den destinationkey verwenden
           DestinationKey dk = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getOrderTypeManagement().resolveDestinationKey(xo.getDestinationKey().getOrderType(), xo.getRevision());
           xo.setDestinationKey(dk);
         }

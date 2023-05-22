@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class CachedXynaProperty {
 
   /**
    * Konstante mit besonderem equals, so dass die Methode {@link ConcurrentHashMap#remove(Object, Object)} sicher 
-   * verwendet werden kann, um nicht mehr verwendete CachedXynaProperty zu löschen.
+   * verwendet werden kann, um nicht mehr verwendete CachedXynaProperty zu lï¿½schen.
    */
   public static final CachedXynaProperty REMOVEABLE = new CachedXynaProperty(0,null,false,null);
   
@@ -139,7 +139,7 @@ public class CachedXynaProperty {
       }
     } else {
       if( hasDifferentDefaults ) {
-        //bislang gab es mehrere Defaults, dies könnte nun anders sein
+        //bislang gab es mehrere Defaults, dies kï¿½nnte nun anders sein
         tryResolveDifferentDefaults(false);
       }
     }
@@ -158,7 +158,7 @@ public class CachedXynaProperty {
     }
     
     if( defVals.size() >= 1 && changeDefaultToMostUsed ) {
-      //häufigster DefaultWert:
+      //hï¿½ufigster DefaultWert:
       String newDefValue = defVals.entryListSortedByCount(true).get(0).getKey(); 
       cachedData = XynaPropertyWithDefaultValue.changeDefaultValue(cachedData,newDefValue);
     }
@@ -264,7 +264,7 @@ public class CachedXynaProperty {
   }
 
   /**
-   * Kann Property gelöscht werden, weil sie niemand mehr verwendet?
+   * Kann Property gelï¿½scht werden, weil sie niemand mehr verwendet?
    */
   public synchronized boolean canBeRemoved() {
     return instances.isEmpty() && !hasDBEntry;

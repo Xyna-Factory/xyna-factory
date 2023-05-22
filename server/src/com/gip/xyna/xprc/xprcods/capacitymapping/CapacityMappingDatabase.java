@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -219,7 +219,7 @@ public class CapacityMappingDatabase extends FunctionGroup {
       } else {
         for (Capacity cap : storable.getRequiredCapacities()) {
           if (cap.getCapName().equals(capacity.getCapName())) {
-            modified = capacity.getCardinality() != cap.getCardinality(); //nur dann Änderung
+            modified = capacity.getCardinality() != cap.getCardinality(); //nur dann ï¿½nderung
             cap.setCardinality(capacity.getCardinality());
             foundExistingCapacityRequirement = true;
             break;
@@ -388,7 +388,7 @@ public class CapacityMappingDatabase extends FunctionGroup {
 
 
   /**
-   * {@link CapacityMappingChangeListener} wird nur weakly gespeichert, damit objekte nicht mehr entfernt werden müssen
+   * {@link CapacityMappingChangeListener} wird nur weakly gespeichert, damit objekte nicht mehr entfernt werden mï¿½ssen
    * @param capacityMappingChangedListener
    */
   public void registerCapacityMappingChangedListener(CapacityMappingChangeListener capacityMappingChangedListener) {

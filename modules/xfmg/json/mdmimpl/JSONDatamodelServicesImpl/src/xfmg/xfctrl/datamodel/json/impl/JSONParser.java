@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class JSONParser {
 
 
     /** 
-     * führende indentation wird nicht geschrieben
+     * fï¿½hrende indentation wird nicht geschrieben
      *        {
      *          key : val,
      *          key2 : val2,
@@ -105,7 +105,7 @@ public class JSONParser {
 
 
     /**
-     * führende indentation wird nicht geschrieben
+     * fï¿½hrende indentation wird nicht geschrieben
      *             [
      *               val1,
      *               val2
@@ -181,7 +181,7 @@ public class JSONParser {
       }
     }
     while (true) {
-      //lese nächstes key-value paar
+      //lese nï¿½chstes key-value paar
       pos++;
       if (pos >= tokens.size()) {
         throw new InvalidJSONException(tokens.get(pos - 1).end, "Missing '}'.");
@@ -304,7 +304,7 @@ public class JSONParser {
         throw new InvalidJSONException(tokens.get(pos - 1).end, "Missing ']'.");
       }
 
-      //lese nächstes listenelement
+      //lese nï¿½chstes listenelement
       JSONToken next = tokens.get(pos);
       int commaCnt = 0;
       while (next.type == JSONTokenType.comma) {

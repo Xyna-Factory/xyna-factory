@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ public interface DeploymentItemState extends DeploymentItemIdentifier {
   public Set<DeploymentItemInterface> getInconsistencies(DeploymentLocation ownLocation, DeploymentLocation interfaceProviderLocation, boolean tryToInferTypes, CrossRevisionResolver resolver);
   
   /**
-   * @return deploymentitemstate hat sich geändert?
+   * @return deploymentitemstate hat sich geï¿½ndert?
    */
   public boolean deploymentTransition(DeploymentTransition transition, boolean fromSaved, Optional<? extends Throwable> deploymentException);
   

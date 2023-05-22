@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
   private interface CheckWCExecutor<T extends Storable> {
 
     /**
-     * gibt true zurück, falls row gelockt bleiben soll
+     * gibt true zurï¿½ck, falls row gelockt bleiben soll
      */
     boolean exec(MemoryRowData<T> rd, MemoryRowLock lock);
   }
@@ -182,7 +182,7 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
     } catch (UnderlyingDataNotFoundException e) {
       return CheckWCResult.CONTINUE;
     }
-    //1. erst check ohne sustainedlock für selects ohne "for update": 
+    //1. erst check ohne sustainedlock fï¿½r selects ohne "for update": 
     try {
       //achtung, deadlock kann passieren, weil commit hat zeilenlock und will dann index-update machen (-> index writelock)
       //dieser thread genau andersherum: hat index-readlock und will zeilen-lock.
@@ -213,7 +213,7 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
       //  falls matches: ist ein preliminary check. wird wiederholt innerhalb von sustainedlock
       //  falls nicht matches: wird nicht nochmal gecheckt.
       //bei normalem select:
-      //  falls matches wird direkt dem resultset hinzugefügt. keine weiteren checks mit sustainedlock
+      //  falls matches wird direkt dem resultset hinzugefï¿½gt. keine weiteren checks mit sustainedlock
       whereClauseMatches = checkWhereClause(data, params);
       if (whereClauseMatches) {
         keepLocked = executor.exec(rd, lock);
@@ -274,7 +274,7 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
 
 
   /**
-   * achtung, nachdem diese methode aufgerufen wird, müssen die angesammelten readlocks wieder freigegeben werden!!
+   * achtung, nachdem diese methode aufgerufen wird, mï¿½ssen die angesammelten readlocks wieder freigegeben werden!!
    * (rs.unlockReadLocks();)
    */
   public <T extends Storable, X extends MemoryRowData<T>> MemoryBaseResultSet execute(TableObject<T, X> table, Parameter p,
@@ -309,13 +309,13 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
         //fall B
         wcExecutor = lockButDontAddToResultSet;
       } else {
-        //fall D, F  -> fügt direkt zu resultset hinzu
+        //fall D, F  -> fï¿½gt direkt zu resultset hinzu
         wcExecutor = new LockAndAddToResultSet(rs);
       }
     }
 
     final Comparator<MemoryRowData> comparator = getRowDataComparator();
-    final int modifiedMaxRows = (!forUpdate && orderByDiffersFromIndex()) ? /* B */maxRows : Math.max(maxRows + 3, maxRows); //overflow berücksichtigen
+    final int modifiedMaxRows = (!forUpdate && orderByDiffersFromIndex()) ? /* B */maxRows : Math.max(maxRows + 3, maxRows); //overflow berï¿½cksichtigen
 
     if (indexedColumnIndex > -1) {
       ColumnDeclaration indexedColumn = table.getColTypes()[indexedColumnIndex];
@@ -347,13 +347,13 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
               //falls !forUpdate, && !orderByDiffersFromIndex muss man sich die zeilen nicht merken, weil sie bereits in checkWCLocked zum resultset geaddet werden.
               for (X x : values) {
                 CheckWCResult result = checkWhereClauseLocked(x, wcExecutor, escapedParams, true);
-                //gelöscht kann es hier nicht sein, weil der index gelockt ist.
+                //gelï¿½scht kann es hier nicht sein, weil der index gelockt ist.
                 if (result.match) {
                   if (orderByDiffersFromIndex) {
                     //fall A oder B
                     checkingSet.add(x);
                     if (checkingSet.size() > modifiedMaxRows) {
-                      //nach order-by richten, und nicht benötigte zeilen wegschmeissen TODO performance: weniger häufig sortieren
+                      //nach order-by richten, und nicht benï¿½tigte zeilen wegschmeissen TODO performance: weniger hï¿½ufig sortieren
                       Collections.sort(checkingSet, comparator);
                       X lastElement = checkingSet.remove(checkingSet.size() - 1);
                       if (!forUpdate) {
@@ -372,17 +372,17 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
                       copyOfRowData2.add(x);
                       if (copyOfRowData2.size() >= modifiedMaxRows) {
                         //man selektiert durch den abbruch nicht alle daten. wenn nach dem index-traversal die 
-                        //indizierten spalten auf den objekten geändert werden, hat man beim re-check der condition
-                        //evtl weniger zeilen gefunden, als man finden könnte (unter berücksichtigung von maxrows)
-                        //um diese fälle abzuschwächen, werden hier bereits mehr zeilen selektiert als man eigentlich benötigt.
-                        interruptedIndexTraversal.set(true); //TODO für composite order bys (order by a,b), sollte man besser alle values mit selektieren und dieses abbrechen ans ende der methode schieben
+                        //indizierten spalten auf den objekten geï¿½ndert werden, hat man beim re-check der condition
+                        //evtl weniger zeilen gefunden, als man finden kï¿½nnte (unter berï¿½cksichtigung von maxrows)
+                        //um diese fï¿½lle abzuschwï¿½chen, werden hier bereits mehr zeilen selektiert als man eigentlich benï¿½tigt.
+                        interruptedIndexTraversal.set(true); //TODO fï¿½r composite order bys (order by a,b), sollte man besser alle values mit selektieren und dieses abbrechen ans ende der methode schieben
                         return false;
                       }
                     } else {
                       //fall D
-                      //zeile bereits zu resultset hinzugefügt (NotForUpdateCheckWCExecutor)
+                      //zeile bereits zu resultset hinzugefï¿½gt (NotForUpdateCheckWCExecutor)
                       if (++cnt >= maxRows) {
-                        interruptedIndexTraversal.set(true); //unnötig, schadet aber nichts
+                        interruptedIndexTraversal.set(true); //unnï¿½tig, schadet aber nichts
                         return false;
                       }
                     }
@@ -409,7 +409,7 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
       }
     } else {
       //fall E oder F: full table scan
-      //hier darf man sich nicht auf maxRows beschränken, weil noch unklar ist, ob die gefundenen zeilen tatsächlich der whereclause entsprechen.
+      //hier darf man sich nicht auf maxRows beschrï¿½nken, weil noch unklar ist, ob die gefundenen zeilen tatsï¿½chlich der whereclause entsprechen.
       copyOfRowData = getCopyOfRowDataForFullTableScan(table, forUpdate);
 
       if (isOrdered()) {
@@ -441,20 +441,20 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
 
     if (forUpdate || indexedColumnIndex == -1) {
       //1) sortieren nach lock-order
-      //fall B und D sind bereits gelockt -> fall A, C, E, F müssen nach lockreihenfolge sortiert werden
+      //fall B und D sind bereits gelockt -> fall A, C, E, F mï¿½ssen nach lockreihenfolge sortiert werden
       Collections.sort(copyOfRowData, comparatorForLocking);
     } else {
-      //einfachste fälle -> gleich fertig.
+      //einfachste fï¿½lle -> gleich fertig.
 
-      //D -> kann direkt zurückgegeben werden, wurde bereits zu resultset hinzugefügt
+      //D -> kann direkt zurï¿½ckgegeben werden, wurde bereits zu resultset hinzugefï¿½gt
       if (orderByDiffersFromIndex() && indexedColumnIndex > -1) {
-        //B -> noch in richtiger reihenfolge zu resultset hinzufügen
+        //B -> noch in richtiger reihenfolge zu resultset hinzufï¿½gen
         Collections.sort(copyOfRowData, comparator);
         for (X x : copyOfRowData) {
           try {
             rs.add(x, x.getLock(persistenceLayer));
           } catch (UnderlyingDataNotFoundException e) {
-            //seit überprüfung der wc im index ist das objekt eigtl gelockt!
+            //seit ï¿½berprï¿½fung der wc im index ist das objekt eigtl gelockt!
             throw new RuntimeException("Data was unexpectedly deleted");
           }
         }
@@ -467,12 +467,12 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
       while (it.hasNext()) {
         MemoryRowData<T> rd = it.next();
 
-        //2) whereclause überprüfen, falls notwendig
+        //2) whereclause ï¿½berprï¿½fen, falls notwendig
         if (!forUpdate) {
-          //F -> fügt direkt zu resultset hinzu, falls whereclause noch stimmt
+          //F -> fï¿½gt direkt zu resultset hinzu, falls whereclause noch stimmt
           checkWhereClauseLocked(rd, wcExecutor, escapedParams, false);
         } else {
-          //forUpdate-fälle A, C, E
+          //forUpdate-fï¿½lle A, C, E
           //jetzt nochmal gefundene objekte bei "selects for update" sustained-locken
           boolean needToUnlock = true;
           MemoryRowLock lock;

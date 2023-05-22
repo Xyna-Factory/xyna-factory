@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause;
 
 
 /**
- * ProcessSuspendedException transportiert die bei der letzten Ausführung aufgetreten  
+ * ProcessSuspendedException transportiert die bei der letzten Ausfï¿½hrung aufgetreten  
  * Suspendierungen in Form einer SuspensionCause.
  */
 public class ProcessSuspendedException extends RuntimeException {
@@ -43,10 +43,10 @@ public class ProcessSuspendedException extends RuntimeException {
   }
 
   /**
-   * gibt aus performancegründen immer this zurück, macht aber nichts
+   * gibt aus performancegrï¿½nden immer this zurï¿½ck, macht aber nichts
    * <p>
    * diese exception ist kein echter fehler sondern nur die einfachste art, den thread zu beenden, ohne in jeder methode
-   * auf dem weg eine entsprechende behandlung einzubauen. diese art von exceptions benötigen deshalb gar keinen
+   * auf dem weg eine entsprechende behandlung einzubauen. diese art von exceptions benï¿½tigen deshalb gar keinen
    * stacktrace, weil dieser nie ausgelesen wird.
    * <p>
    * siehe zb hier: http://www.javaspecialists.eu/archive/Issue129.html

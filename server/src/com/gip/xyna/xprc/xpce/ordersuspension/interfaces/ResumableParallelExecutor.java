@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public interface ResumableParallelExecutor {
      */
     NotFound, 
     /**
-     * FractalWorkflowParallelExecutor ist in einem Zustand, in dem er nicht läuft und daher keine Resumes durchführen kann
+     * FractalWorkflowParallelExecutor ist in einem Zustand, in dem er nicht lï¿½uft und daher keine Resumes durchfï¿½hren kann
      */
     NotRunning, 
     /**
@@ -63,7 +63,7 @@ public interface ResumableParallelExecutor {
 
 
   /**
-   * Wartet, bis alle Threads der parallelen Ausführung beendet sind
+   * Wartet, bis alle Threads der parallelen Ausfï¿½hrung beendet sind
    * @return
    * @throws InterruptedException 
    */

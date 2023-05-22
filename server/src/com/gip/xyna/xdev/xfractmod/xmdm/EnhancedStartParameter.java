@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,13 +56,13 @@ public abstract class EnhancedStartParameter implements StartParameter {
       XACT_InvalidTriggerStartParameterValueException;
 
   /**
-   * Liefert alle StringParameter, die für die StartParameter möglich sind
+   * Liefert alle StringParameter, die fï¿½r die StartParameter mï¿½glich sind
    * @return
    */
   public abstract List<StringParameter<?>> getAllStringParameters();
 
   /**
-   * Baut die StartParameter-Instanz aus den bereits über die StringParameter validierten Daten
+   * Baut die StartParameter-Instanz aus den bereits ï¿½ber die StringParameter validierten Daten
    * @param paramMap
    * @return
    * @throws XACT_InvalidTriggerStartParameterValueException

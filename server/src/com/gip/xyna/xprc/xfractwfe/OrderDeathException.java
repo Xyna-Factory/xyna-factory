@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 package com.gip.xyna.xprc.xfractwfe;
 
 /**
- * falls server sich im cluster befindet, und die datenbank nicht mehr erreichbar ist, übernimmt der andere knoten
- * die aufgaben für diesen auftrag. deshalb soll der auftrag möglichst nichts mehr tun, sondern einfach nur noch 
+ * falls server sich im cluster befindet, und die datenbank nicht mehr erreichbar ist, ï¿½bernimmt der andere knoten
+ * die aufgaben fï¿½r diesen auftrag. deshalb soll der auftrag mï¿½glichst nichts mehr tun, sondern einfach nur noch 
  * geordnet verschwinden. 
  * der andere knoten resumed auf dem letzten backup-stand.
  */

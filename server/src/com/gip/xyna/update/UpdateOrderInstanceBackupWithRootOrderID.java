@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class UpdateOrderInstanceBackupWithRootOrderID extends UpdateJustVersion 
 
     XynaFactoryBase oldInstance = XynaFactory.getInstance();
     try {
-      // factory ist noch nicht initialisiert, zur Deserialisierung des xprc.xfractwfe.base.XynaProcess aber nötig
+      // factory ist noch nicht initialisiert, zur Deserialisierung des xprc.xfractwfe.base.XynaProcess aber nï¿½tig
       //FIXME siehe Bug 12743 xprc.xfractwfe.base.XynaProcess
       UpdateGeneratedClasses.mockFactory();
 
@@ -176,7 +176,7 @@ public class UpdateOrderInstanceBackupWithRootOrderID extends UpdateJustVersion 
       conHis.commit();
     } catch (PersistenceLayerException ple) {
       //falls Update in diesem PersistenceLayer nicht existiert: 
-      //Fallback auf umständliches komplettes Auslesen und Persistieren
+      //Fallback auf umstï¿½ndliches komplettes Auslesen und Persistieren
       FactoryWarehouseCursor<OrderInstanceDetailsPreservingSerializedData> cursorOID =
           conHis.getCursor(sqlGetAllOrderArchive, new Parameter(),
             new OrderInstanceDetailsPreservingSerializedData().getReader(),

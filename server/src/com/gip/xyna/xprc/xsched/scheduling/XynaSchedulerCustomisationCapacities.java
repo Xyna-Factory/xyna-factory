@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class XynaSchedulerCustomisationCapacities {
     
     public boolean addDemand(CapacityAllocationResult car, long urgency) {
       if( car.getDemand() > 0 ) {
-        return true; //auf Cap wartende UrgencyOrders werden sofort übersprungen
+        return true; //auf Cap wartende UrgencyOrders werden sofort ï¿½bersprungen
       } else {
         return false; //dies sollte eigentlich nur vorkommen, wenn Auftrag mehr 
         //Capacities fordert als vorhanden sind 
@@ -108,7 +108,7 @@ public class XynaSchedulerCustomisationCapacities {
   }
 
   public void capacityReservation(SchedulerInformationBean information) {
-    //falls lokal keine Aufträge vorliegen, sollen trotzdem Capacities für andere Knoten reserviert werden
+    //falls lokal keine Auftrï¿½ge vorliegen, sollen trotzdem Capacities fï¿½r andere Knoten reserviert werden
     reserveCapsForOtherNodes(Long.MIN_VALUE);
 
     if (logger.isTraceEnabled()) {
@@ -118,7 +118,7 @@ public class XynaSchedulerCustomisationCapacities {
     //eigenen Capacity-Bedarf an die anderen Knoten melden
     capacityReservation.communicateOwnDemand();
 
-    //nun können die gesammelten Capacity-Reservierungen übertragen werden
+    //nun kï¿½nnen die gesammelten Capacity-Reservierungen ï¿½bertragen werden
     int transportedCaps = capacityReservation.transportReservedCaps();
     information.setLastTransportedCaps(transportedCaps);
 
@@ -207,7 +207,7 @@ public class XynaSchedulerCustomisationCapacities {
         } else {
           try {
             CapacityDemandForNode newCdfn = new CapacityDemandForNode(node, cd);
-            allForeignCapacityDemands.remove(newCdfn); //equals enthält nicht alle Attribute!
+            allForeignCapacityDemands.remove(newCdfn); //equals enthï¿½lt nicht alle Attribute!
             allForeignCapacityDemands.add(newCdfn);
           } catch (IllegalArgumentException e) {
             logger.warn(cd + " invalid: " + e.getMessage() + "; will be ignored");

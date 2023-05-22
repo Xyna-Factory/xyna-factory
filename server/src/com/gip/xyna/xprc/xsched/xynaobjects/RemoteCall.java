@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -373,11 +373,11 @@ public class RemoteCall extends XynaObject implements ServiceStepEventHandler<Ab
     if( getRemoteOrderId() == null ) {
       boolean resumed = false;
       if( startTimeStamp == null ) {
-        //üblicher Start: StartTimeStamp und RemoteOrderId nicht gesetzt
+        //ï¿½blicher Start: StartTimeStamp und RemoteOrderId nicht gesetzt
         startTimeStamp = System.currentTimeMillis();
         resumed = false;
       } else {
-        //verzögerter Start nach Resume
+        //verzï¿½gerter Start nach Resume
         resumed = true;
       }
       
@@ -392,7 +392,7 @@ public class RemoteCall extends XynaObject implements ServiceStepEventHandler<Ab
       this.setRemoteOrderId( start.getFirst() );
      
       if( start.getSecond() != null ) {
-        defaultTarget = start.getSecond(); //evtl DispatchingTarget übernehmen, falls Fehler mit defaultTarget auftrat
+        defaultTarget = start.getSecond(); //evtl DispatchingTarget ï¿½bernehmen, falls Fehler mit defaultTarget auftrat
       }
       
       factoryNode = defaultTarget.factoryNodeName;

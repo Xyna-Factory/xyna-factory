@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ public class StorableTest extends TestCase {
         long diff1 = System.currentTimeMillis() - t;
         t = System.currentTimeMillis();
         for (int j = 0; j<count; j++) {
-          //ein equals zusätzlich zu
+          //ein equals zusï¿½tzlich zu
           if (cols[i].name().equals("orderType")) {
             Object o = oid.getOrderType();          
             assertEquals("myordertype2", o);
@@ -127,7 +127,7 @@ public class StorableTest extends TestCase {
       testcount *= 2;
       long t = System.currentTimeMillis();
       for (int i = 0; i<testcount; i++) {
-        //ein equals zusätzlich zu
+        //ein equals zusï¿½tzlich zu
         if ("orderType".equals("orderType")) {
           Object o = new String("myordertype2");          
           assertEquals("myordertype2", o);

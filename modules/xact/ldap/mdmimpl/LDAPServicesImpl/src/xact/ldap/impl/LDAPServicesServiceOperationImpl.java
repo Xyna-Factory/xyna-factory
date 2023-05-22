@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ public class LDAPServicesServiceOperationImpl implements ExtendedDeploymentTask,
     .setDefaultDocumentation(DocumentationLanguage.DE, "Der Standard-Host gegen denn eine LDAP-Verbindung aufgebaut wird wenn kein anderer Host angegeben wurde.")
     .setDefaultDocumentation(DocumentationLanguage.EN, "The default host used for connection establishment if no host was given.");
   private final static XynaPropertyInt DEFAULT_PORT = new XynaPropertyInt("xact.ldap.defaultPort", 389)
-    .setDefaultDocumentation(DocumentationLanguage.DE, "Der Standard-Port über denn eine LDAP-Verbindung aufgebaut wird wenn kein anderer Port angegeben wurde.")
+    .setDefaultDocumentation(DocumentationLanguage.DE, "Der Standard-Port ï¿½ber denn eine LDAP-Verbindung aufgebaut wird wenn kein anderer Port angegeben wurde.")
     .setDefaultDocumentation(DocumentationLanguage.EN, "The default port used for connection establishment if no port was given.");
   private final static XynaPropertyString DEFAULT_USER = new XynaPropertyString("xact.ldap.defaultUser", "")
     .setDefaultDocumentation(DocumentationLanguage.DE, "Der Standard-Benutzer mit dem eine LDAP-Verbindung aufgebaut wird wenn kein anderer Benutzer angegeben wurde.")

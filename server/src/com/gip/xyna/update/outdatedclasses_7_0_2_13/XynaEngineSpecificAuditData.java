@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public abstract class XynaEngineSpecificAuditData implements EngineSpecificAudit
 
     int initialCapacity = 10;
     float loadFactor = 0.75f;
-    int defaultSegments = 2; //wenig parallelität erwartet. könnte verbessert werden, wenn die tatsächliche parallelität des wfs ermittelt wird.
+    int defaultSegments = 2; //wenig parallelitï¿½t erwartet. kï¿½nnte verbessert werden, wenn die tatsï¿½chliche parallelitï¿½t des wfs ermittelt wird.
 
     mapStepIdToStepAuditDataContainer =
         new ConcurrentHashMap<Integer, StepAuditDataContainer>(initialCapacity, loadFactor, defaultSegments);
@@ -96,8 +96,8 @@ public abstract class XynaEngineSpecificAuditData implements EngineSpecificAudit
   }
 
   /**
-   * fügt subworkflowid für den step hinzu
-   * (für dynamisch zur laufzeit eines step gestartete kindaufträge)
+   * fï¿½gt subworkflowid fï¿½r den step hinzu
+   * (fï¿½r dynamisch zur laufzeit eines step gestartete kindauftrï¿½ge)
    */
   public void addSubworkflowId(ProcessStep pstep, long subworkflowId) {
 
@@ -132,7 +132,7 @@ public abstract class XynaEngineSpecificAuditData implements EngineSpecificAudit
     Integer[] forEachIndices = FractalProcessStep.calculateForEachIndices(fpstep)[0];
 
     Long childOrderId = null;
-    //implizit gestartete subaufträge über instanzmethoden von javacalls werden rufen explizit addSubworkflowId()
+    //implizit gestartete subauftrï¿½ge ï¿½ber instanzmethoden von javacalls werden rufen explizit addSubworkflowId()
     if (pstep instanceof SubworkflowCall) {
       SubworkflowCall swc = (SubworkflowCall) pstep;
       childOrderId = swc.getChildOrder().getId();
@@ -423,7 +423,7 @@ public abstract class XynaEngineSpecificAuditData implements EngineSpecificAudit
     // zugeordnet (versteckt im StepAuditDataKey) - falls kein forEach und somit kein Indizies, so wird ein besonderes
     // StepAuditDataKey verwendet.
     private Map<Long, Map<StepAuditDataKey, StepAuditDataContent>> manySteps = new HashMap<Long, Map<StepAuditDataKey, StepAuditDataContent>>(1); 
-    //TODO concurrentmap verwenden. achtung: ist nicht serialisierungs-abwärtskompatibel
+    //TODO concurrentmap verwenden. achtung: ist nicht serialisierungs-abwï¿½rtskompatibel
 
     private boolean containsCompensationInfo = false;
 
@@ -648,7 +648,7 @@ public abstract class XynaEngineSpecificAuditData implements EngineSpecificAudit
       newStep.retryCounter = retryCounter;
       newStep.versionInput = version;
       
-      // prüfen, gibt es schon einen Eintrag für diesen Retry-Versuch
+      // prï¿½fen, gibt es schon einen Eintrag fï¿½r diesen Retry-Versuch
       synchronized (manySteps) {
         Map<StepAuditDataKey, StepAuditDataContent> entry = manySteps.get(retryCounter);
         if (entry == null) {
@@ -769,7 +769,7 @@ public abstract class XynaEngineSpecificAuditData implements EngineSpecificAudit
       if (hashcode == 0) {
         int result = 1;
         Integer[] ar = forEachIndices;
-        if (ar != null) { //TODO null-überprüfung nur aus abwärtskompatibilität. kann eigtl nie null sein
+        if (ar != null) { //TODO null-ï¿½berprï¿½fung nur aus abwï¿½rtskompatibilitï¿½t. kann eigtl nie null sein
           for (int i=0; i<ar.length; i++) {
             Integer v = ar[i];
             result = result * 31 + (v == null ? 0 : v.hashCode());

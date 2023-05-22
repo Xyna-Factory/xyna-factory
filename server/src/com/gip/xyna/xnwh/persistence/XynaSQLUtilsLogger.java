@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public abstract class XynaSQLUtilsLogger implements SQLUtilsLogger {
   }
   
   /**
-   * Sorgt auf interessante Weise für das richtige Setzen des aufrufenden Zeile: (keine Zeile dieser Datei, sondern
+   * Sorgt auf interessante Weise fï¿½r das richtige Setzen des aufrufenden Zeile: (keine Zeile dieser Datei, sondern
    * der Aufrufer) siehe http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/Category.html
    * http://marc.info/?l=log4j-user&amp;m=99859247618691&amp;w=2 That's why you need to provide the fully-qualified classname.
    * If you use the wrapper I showed, you will not have this problem. That is, the class and method name of the
@@ -72,7 +72,7 @@ public abstract class XynaSQLUtilsLogger implements SQLUtilsLogger {
   protected void internalLog(Level level, String str, Throwable t) {
     if (logger == null) {
 
-      // TODO: Aufwändigen Check nicht machen, wenn man anhand der Konfiguration schon feststellen
+      // TODO: Aufwï¿½ndigen Check nicht machen, wenn man anhand der Konfiguration schon feststellen
       //       kann, dass die Meldung sowieso nicht geloggt werden wird. Vorschlag:
 //      long lastFactoryLogConfigDate = CentralFactoryLogging.getLastLogConfigChangeDate();
 //      if (lastFactoryLogConfigDate != lastSeenLogConfigDate) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public class ScopedRightCache {
   private void distributeRightNodes(String[] scopeParts, int index, BranchingTreeNode currentNode) {
     BranchingTreeNode nextNode;
     
-    //abhängig vom Typ wird der Rechtebereich nun in eine der Maps des aktuellen Knotens eingetragen
+    //abhï¿½ngig vom Typ wird der Rechtebereich nun in eine der Maps des aktuellen Knotens eingetragen
     ScopedRightPartType type = ScopedRightPartType.determineType(scopeParts[index]);
     switch (type) {
       case EXCLUSION :
@@ -101,7 +101,7 @@ public class ScopedRightCache {
         throw new RuntimeException("Unknown ScopePartType: " + type);
     }
     
-    //den nächsten Teil des Rechts untersuchen
+    //den nï¿½chsten Teil des Rechts untersuchen
     if (index + 1 < scopeParts.length) {
       distributeRightNodes(scopeParts, index + 1, nextNode);
     }
@@ -155,9 +155,9 @@ public class ScopedRightCache {
   }
 
   /**
-   * Liefert für einen scopePart, der Anteile enthält die ausgeschlossen werden sollen,
+   * Liefert fï¿½r einen scopePart, der Anteile enthï¿½lt die ausgeschlossen werden sollen,
    * ein Pair aus einem Pattern das zutreffen soll und einer Liste der Pattern, die
-   * nicht zutreffen dürfen
+   * nicht zutreffen dï¿½rfen
    * @param excludingPart
    * @return
    */
@@ -171,7 +171,7 @@ public class ScopedRightCache {
     //dieses Pattern soll zutreffen
     Pattern match = generatePatternForPartialWild(matcher.group(1));
     
-    //diese Pattern dürfen nicht zutreffen
+    //diese Pattern dï¿½rfen nicht zutreffen
     List<Pattern> exclude = new ArrayList<Pattern>();
     String[] split = COMMA_SEPERATION_PATTERN.split(matcher.group(2), -1);
     for (String s : split) {
@@ -189,18 +189,18 @@ public class ScopedRightCache {
     WILD,
     
     /**
-     * der scopePart enthält mindestens ein '*' als Wildcard
+     * der scopePart enthï¿½lt mindestens ein '*' als Wildcard
      */
     PARTIAL_WILD,
     
     /**
-     * der scopePart enhält keine Wildcards oder Ausschlüsse
+     * der scopePart enhï¿½lt keine Wildcards oder Ausschlï¿½sse
      */
     PRIMITIVE,
     
     /**
-     * der scopePart enthält Teile, die ausgeschlossen werden sollen,
-     * z.B. A*!{Ab,*e} liefert alle Strings, die mit 'A' anfangen, außer 'Ab' und denen, die mit 'e' aufhören
+     * der scopePart enthï¿½lt Teile, die ausgeschlossen werden sollen,
+     * z.B. A*!{Ab,*e} liefert alle Strings, die mit 'A' anfangen, auï¿½er 'Ab' und denen, die mit 'e' aufhï¿½ren
      */
     EXCLUSION;
     
@@ -280,7 +280,7 @@ public class ScopedRightCache {
       for (Pair<Pair<Pattern,List<Pattern>>, BranchingTreeNode> patternedPair : excludingBranches.values()) {
         //das erste Pattern muss zutreffen
         if (patternedPair.getFirst().getFirst().matcher(scopeParts[index]).matches()) {
-          //die Pattern aus dem zweiten Teil dürfen nicht zutreffen
+          //die Pattern aus dem zweiten Teil dï¿½rfen nicht zutreffen
           for (Pattern pattern : patternedPair.getFirst().getSecond()) {
             if (pattern.matcher(scopeParts[index]).matches()) {
               return false; //der scopePart ist ausgeschlossen worden
@@ -296,7 +296,7 @@ public class ScopedRightCache {
       return false;
     }
 
-    //TODO unvollständig...
+    //TODO unvollstï¿½ndig...
     public void fillRightsCovering(List<String> list, String prefix, String[] scopeParts, int index) {
       String sp = null;
       if( index <  scopeParts.length) {

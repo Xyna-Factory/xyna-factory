@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ public class XynaSchemaTest extends TestCase {
          el6.addElement("kind2");
          el6.addElement("kind"); // gleichbedeutend mit maxOcc hochsetzen.
          el5.setType("myNamespace3", "hellau"); // jetzt wird der typ von el5
-                                                // geändert
+                                                // geï¿½ndert
          ct2.addElement("baum", "bla", "blubb"); // gleichbedeutend mit maxOcc
                                                    // hochsetzen. namespace und
                                                    // typ werden verworfen.

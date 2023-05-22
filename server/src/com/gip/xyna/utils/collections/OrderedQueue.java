@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ import java.util.ListIterator;
 
 
 /**
- * OrderedQueue ist eine Queue-Implementierung, bei der alle Einträge durch die 
- * natürliche Ordnung durch Comparable&lt;E&gt; angeordnet sind.
+ * OrderedQueue ist eine Queue-Implementierung, bei der alle Eintrï¿½ge durch die 
+ * natï¿½rliche Ordnung durch Comparable&lt;E&gt; angeordnet sind.
  * Dadurch haben offer(E o) und add(E o) ein O(N)-Verhalten.
- * Über refresh() kann der erste Eintrag wieder neu einsortiert werden, wenn  
- * sein Ordnungskriterium geändert wurde.
+ * ï¿½ber refresh() kann der erste Eintrag wieder neu einsortiert werden, wenn  
+ * sein Ordnungskriterium geï¿½ndert wurde.
  */
 public class OrderedQueue<E extends Comparable<E> > extends AbstractQueue<E> {
 

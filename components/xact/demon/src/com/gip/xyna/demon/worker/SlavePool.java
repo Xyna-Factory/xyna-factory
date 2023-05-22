@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import com.gip.xyna.demon.worker.SlaveFactory.SlaveThread;
 /**
  * Pool 
  *
- * @param <Tool> Werkzeug, das jeder Slave zum Arbeiten benötigt (z.B. DB-Connection)
+ * @param <Tool> Werkzeug, das jeder Slave zum Arbeiten benï¿½tigt (z.B. DB-Connection)
  * @param <Work> der konkrete Arbeitsauftrag
  */
 public class SlavePool<Tool,Work> {
@@ -67,8 +67,8 @@ public class SlavePool<Tool,Work> {
   public void startThreadPoolExecutor() {
     threadPoolExecutor = new ThreadPoolExecutor( 
         corePoolSize, maxPoolSize,           //corePoolSize Threads sind dauerhaft vorhanden, anwachsend bis maxPoolSize
-        1000L, TimeUnit.MILLISECONDS,        //überzählige Threads werden nach 1 s wieder beendet
-        new SynchronousQueue<Runnable>(),    //direkte Übergabe an Thread, kein Queueing
+        1000L, TimeUnit.MILLISECONDS,        //ï¿½berzï¿½hlige Threads werden nach 1 s wieder beendet
+        new SynchronousQueue<Runnable>(),    //direkte ï¿½bergabe an Thread, kein Queueing
         new ThreadPoolExecutor.AbortPolicy() //sofortiges Werfen der RuntimeException RejectedExecutionException, falls kein Thread frei ist
         );
     threadPoolExecutor.setThreadFactory( new SlaveFactory<Tool>(slaveInitializer) );
@@ -129,7 +129,7 @@ public class SlavePool<Tool,Work> {
         try {
           success = slaveWork.work( st.getTool() );
         } catch( RuntimeException e ) {
-          //Schützt dem Thread vor dem Abbruch durch ungefangene RuntimeExceptions
+          //Schï¿½tzt dem Thread vor dem Abbruch durch ungefangene RuntimeExceptions
           logger.error("Catched RuntimeException from SlaveWork",e);
           success = false;
         }

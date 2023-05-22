@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,14 +43,14 @@ public class BatchProcessRuntimeInformationStorable extends Storable<BatchProces
   public static ResultSetReader<Long> idReader = new BatchProcessRuntimeInformationStorableIdReader();
 
   public static final String COL_BATCH_PROCESS_ID = "batchProcessId"; //ID des Batch Processes
-  public static final String COL_NEXT_EXECUTION_TIME = "nextExecutionTime"; //Nächster Zeitpunkt, zu dem frühestens ein Scheduling möglich sein wird; -1 falls die Ausführung zu diesem Zeitpunkt rein durch Kapazitäten beschränkt ist
+  public static final String COL_NEXT_EXECUTION_TIME = "nextExecutionTime"; //Nï¿½chster Zeitpunkt, zu dem frï¿½hestens ein Scheduling mï¿½glich sein wird; -1 falls die Ausfï¿½hrung zu diesem Zeitpunkt rein durch Kapazitï¿½ten beschrï¿½nkt ist
   public static final String COL_STATE = "state"; //aktueller Status des BatchProcesses
-  public static final String COL_RUNNING = "running"; //Anzahl der gerade laufenden Subaufträge
-  public static final String COL_FAILED = "failed"; //Anzahl der fehlgeschlagenen Subaufträge
-  public static final String COL_FINISHED = "finished"; //Anzahl der erfolgreich fertiggelaufenen Subaufträge
+  public static final String COL_RUNNING = "running"; //Anzahl der gerade laufenden Subauftrï¿½ge
+  public static final String COL_FAILED = "failed"; //Anzahl der fehlgeschlagenen Subauftrï¿½ge
+  public static final String COL_FINISHED = "finished"; //Anzahl der erfolgreich fertiggelaufenen Subauftrï¿½ge
   public static final String COL_LAST_INPUT_ID = "lastInputGeneratorID"; //Irgendeine Form von ID, die dem Batch Process sagt, welche Inputs er bereits verbraucht hat.
   public static final String COL_OPEN_DATA_PLANNING = "openDataPlanning"; //Inputs, die bereits ausgegeben wurden, aber deren Slave noch nicht gebackupt wurde
-  public static final String COL_PAUSE_CAUSE = "pauseCause"; //Ursache für das Pausieren des Batch Processes
+  public static final String COL_PAUSE_CAUSE = "pauseCause"; //Ursache fï¿½r das Pausieren des Batch Processes
   
   private transient ReentrantLock lock = new ReentrantLock();
   
@@ -75,19 +75,19 @@ public class BatchProcessRuntimeInformationStorable extends Storable<BatchProces
   private long batchProcessId;//ID des Batch Processes
   
   @Column(name = COL_NEXT_EXECUTION_TIME)
-  private String nextExecutionTime; //Nächster Zeitpunkt, zu dem frühestens ein Scheduling möglich sein wird; -1 falls die Ausführung zu diesem Zeitpunkt rein durch Kapazitäten beschränkt ist
+  private String nextExecutionTime; //Nï¿½chster Zeitpunkt, zu dem frï¿½hestens ein Scheduling mï¿½glich sein wird; -1 falls die Ausfï¿½hrung zu diesem Zeitpunkt rein durch Kapazitï¿½ten beschrï¿½nkt ist
 
   @Column(name = COL_STATE)
   private BatchProcessState state; //aktueller Status des BatchProcesses
 
   @Column(name = COL_RUNNING)
-  private int running; //Anzahl der gerade laufenden Subaufträge
+  private int running; //Anzahl der gerade laufenden Subauftrï¿½ge
 
   @Column(name = COL_FAILED)
-  private int failed; //Anzahl der fehlgeschlagenen Subaufträge
+  private int failed; //Anzahl der fehlgeschlagenen Subauftrï¿½ge
 
   @Column(name = COL_FINISHED)
-  private int finished; //Anzahl der erfolgreich fertiggelaufenen Subaufträge
+  private int finished; //Anzahl der erfolgreich fertiggelaufenen Subauftrï¿½ge
 
   @Column(name = COL_LAST_INPUT_ID)
   private String lastInputGeneratorID; //Irgendeine Form von ID, die dem Batch Process sagt, welche Inputs er bereits verbraucht hat.
@@ -97,7 +97,7 @@ public class BatchProcessRuntimeInformationStorable extends Storable<BatchProces
     = StringSerializableList.separator(String.class);
   
   @Column(name = COL_PAUSE_CAUSE, size=4000)
-  private String pauseCause; //Ursache für das Pausieren des Batch Processes
+  private String pauseCause; //Ursache fï¿½r das Pausieren des Batch Processes
  
 
   public BatchProcessRuntimeInformationStorable(){
@@ -282,11 +282,11 @@ public class BatchProcessRuntimeInformationStorable extends Storable<BatchProces
   
   
   /**
-   * Zählt running um eins runter, falls der Slave bereits gebackupt wurde
+   * Zï¿½hlt running um eins runter, falls der Slave bereits gebackupt wurde
    */
   public void decrRunningIfBackuped(OrderInstanceStatus slaveState) {
-    //Running nur runterzählen, falls der Slave im Planning keinen Fehler hatte
-    //(da running erst beim Backup hochgezählt wird)
+    //Running nur runterzï¿½hlen, falls der Slave im Planning keinen Fehler hatte
+    //(da running erst beim Backup hochgezï¿½hlt wird)
     if (slaveState == OrderInstanceStatus.SCHEDULING
           || slaveState == OrderInstanceStatus.RUNNING) {
       running--;

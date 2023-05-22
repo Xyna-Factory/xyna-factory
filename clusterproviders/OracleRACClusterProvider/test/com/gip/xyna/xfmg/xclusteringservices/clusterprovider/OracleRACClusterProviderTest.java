@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,7 +159,7 @@ public class OracleRACClusterProviderTest extends TestCase {
     public void expectClusterStateChange(ClusterState clusterState, String calledFrom, int timeout ) {
       if( newClusterState == null ) {
         //hier kann es leider zu Synchronisationsproblemen zwischen den Threads kommen: Der Test wird einen
-        //kurzen Moment vor dem asynchronen onChange-Aufruf ausgeführt. Daher einfach noch einen Moment warten
+        //kurzen Moment vor dem asynchronen onChange-Aufruf ausgefï¿½hrt. Daher einfach noch einen Moment warten
         int max = timeout;
         while( newClusterState == null ) {
           try {
@@ -573,7 +573,7 @@ public class OracleRACClusterProviderTest extends TestCase {
     assertEquals("", checkDB(1,ClusterState.DISCONNECTED_MASTER,true) );
     assertEquals("", checkDB(2,ClusterState.DISCONNECTED_SLAVE,false) );
    
-    //FIXME dann nötig csch1.expectClusterStateChange(ClusterState.DISCONNECTED_MASTER, "connect");
+    //FIXME dann nï¿½tig csch1.expectClusterStateChange(ClusterState.DISCONNECTED_MASTER, "connect");
     csch1.close();
     csch2.close();
   }
@@ -883,14 +883,14 @@ public class OracleRACClusterProviderTest extends TestCase {
     assertEquals(ClusterState.SINGLE, cp1.getState() );
     assertEquals("", checkDB(1,ClusterState.SINGLE,true) );
   
-    //getState erholt sich, da neue Connections aufgemacht werden können
+    //getState erholt sich, da neue Connections aufgemacht werden kï¿½nnen
     for( TestConnection tc : cp1.getTestConnections() ) {
       tc.close(); //hier werden auch interne Connections geschlossen  -> Geschlossene Anweisung/Closed statement
     }
     assertEquals(ClusterState.SINGLE, cp1.getState() );
     assertEquals("", checkDB(1,ClusterState.SINGLE,true) );
     
-    //Disconnect erholt sich, da neue Connections aufgemacht werden können
+    //Disconnect erholt sich, da neue Connections aufgemacht werden kï¿½nnen
     for( TestConnection tc : cp1.getTestConnections() ) {
       tc.close();
     }
@@ -922,7 +922,7 @@ public class OracleRACClusterProviderTest extends TestCase {
     
     //Disconnect scheitert ebenfalls -> DISCONNECTED_SLAVE
     cp1.disconnect();
-    csch1.expectClusterStateChange(ClusterState.DISCONNECTED_SLAVE, "dbNotReachable-run"); //über disconnect
+    csch1.expectClusterStateChange(ClusterState.DISCONNECTED_SLAVE, "dbNotReachable-run"); //ï¿½ber disconnect
     
     csch1.close();
     cp1.setCanConnect(true); //damit tearDown besser klappt
@@ -957,7 +957,7 @@ public class OracleRACClusterProviderTest extends TestCase {
     assertEquals("", checkDB(1,ClusterState.DISCONNECTED_MASTER,true) );
     assertEquals("", checkDB(2,ClusterState.DISCONNECTED_SLAVE,false) );
     
-    //getState erholt sich, da neue Connections aufgemacht werden können
+    //getState erholt sich, da neue Connections aufgemacht werden kï¿½nnen
     for( TestConnection tc : cp1.getTestConnections() ) {
       tc.close();
       System.err.println( "close TestConnection");
@@ -977,7 +977,7 @@ public class OracleRACClusterProviderTest extends TestCase {
     assertEquals("", checkDB(1,ClusterState.DISCONNECTED_MASTER,true) );
     assertEquals("", checkDB(2,ClusterState.DISCONNECTED_SLAVE,false) );
     
-    //Disconnect erholt sich, da neue Connections aufgemacht werden können
+    //Disconnect erholt sich, da neue Connections aufgemacht werden kï¿½nnen
     for( TestConnection tc : cp1.getTestConnections() ) {
       tc.close();
     }
@@ -1010,11 +1010,11 @@ public class OracleRACClusterProviderTest extends TestCase {
     assertEquals(ClusterState.DISCONNECTED_SLAVE, cp1.getState() );
     assertEquals("", checkDB(1,ClusterState.DISCONNECTED_MASTER,true) );
     assertEquals("", checkDB(2,ClusterState.DISCONNECTED_SLAVE,false) );
-    csch1.expectClusterStateChange(ClusterState.DISCONNECTED_SLAVE, "dbNotReachable-run", 1000); //über getState
+    csch1.expectClusterStateChange(ClusterState.DISCONNECTED_SLAVE, "dbNotReachable-run", 1000); //ï¿½ber getState
     
     //Disconnect scheitert ebenfalls -> DISCONNECTED_SLAVE
     cp1.disconnect();
-    //csch1.expectClusterStateChange(ClusterState.DISCONNECTED_SLAVE, "disconnect"); //über disconnect
+    //csch1.expectClusterStateChange(ClusterState.DISCONNECTED_SLAVE, "disconnect"); //ï¿½ber disconnect
         
     csch1.close();
     cp1.setCanConnect(true); //damit tearDown besser klappt
@@ -1145,7 +1145,7 @@ public class OracleRACClusterProviderTest extends TestCase {
     csch1.setReadyForConnected(true);
     cp2.joinCluster(new String[]{dbd.getUser(), dbd.getPassword(), dbd.getUrl(), TIMEOUT });
      
-    csch1.expectClusterStateChange(ClusterState.CONNECTED, "connect", 50); //nötig, um kurz zu warten
+    csch1.expectClusterStateChange(ClusterState.CONNECTED, "connect", 50); //nï¿½tig, um kurz zu warten
     //FIXME
     try {
       Thread.sleep(500);

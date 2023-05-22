@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,11 +51,11 @@ public class CMLocal extends CMAbstract {
   }
 
   protected int transportReservedCaps(List<Reservations> reservations) {
-    //eigentlich darf diese Methode nicht gerufen werden, deswegen wäre 
+    //eigentlich darf diese Methode nicht gerufen werden, deswegen wï¿½re 
     //throw new UnsupportedOperationException("transportReservedCaps is unsupported" );
     //korrekt.
     //Leider gibt es das Problem, dass das CapacityManagement die Information, wegen eines DISCONNECTs 
-    //auf CMLocal zu wechseln, zu einem anderen Zeitpunkt erhält las der ClusteredScheduler, der die 
+    //auf CMLocal zu wechseln, zu einem anderen Zeitpunkt erhï¿½lt las der ClusteredScheduler, der die 
     //Demands verwirft.
     //Deswegen wird hier nun nur eine Info ins Log geschrieben und ansonsten normal beendet.
     if (logger.isInfoEnabled()) {
@@ -90,7 +90,7 @@ public class CMLocal extends CMAbstract {
   }
 
   protected void increaseCaps(ODSConnection defCon, CapacityStorables allCs, String capName, int addCard) throws PersistenceLayerException {
-    //addCard Capacities werden hinzugefügt, dies ist immer möglich.
+    //addCard Capacities werden hinzugefï¿½gt, dies ist immer mï¿½glich.
     allCs.getOwn().setCardinality(allCs.getOwn().getCardinality() + addCard );
     
     defCon.persistCollection(allCs);
@@ -111,8 +111,8 @@ public class CMLocal extends CMAbstract {
    * @throws XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain 
    */
   protected void decreaseCaps(ODSConnection defCon, CapacityStorables allCs, String capName, int removeCard) throws PersistenceLayerException, XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryChangeState, XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
-    //removeCard Capacities sollen entfernt werden, dies ist unter Umständen nicht möglich
-    //hier werden 3 Fälle unterschieden, alle erfordern einen anderen Algorithmus
+    //removeCard Capacities sollen entfernt werden, dies ist unter Umstï¿½nden nicht mï¿½glich
+    //hier werden 3 Fï¿½lle unterschieden, alle erfordern einen anderen Algorithmus
     //a) Cardinality kann lokal verringert werden
     //b) Capacity ist ACTIVE
     //c) Capacity ist DISABLED

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class XynaSchemaComplexType extends XynaSchemaNode {
    }
 
    /**
-    * entweder nur ordnungsgebendes Element oder type später setzen
+    * entweder nur ordnungsgebendes Element oder type spï¿½ter setzen
     * 
     * @param name
     * @return
@@ -51,7 +51,7 @@ public class XynaSchemaComplexType extends XynaSchemaNode {
     * 
     * @param name
     * @param namespace
-    *              namespace des Types. keine Angabe ist äquivalent zum
+    *              namespace des Types. keine Angabe ist ï¿½quivalent zum
     *              TargetNS.
     * @param typeName
     * @return
@@ -104,7 +104,7 @@ public class XynaSchemaComplexType extends XynaSchemaNode {
          parentNode.appendChild(newElement);
       } else {
          throw new Exception(
-               "ComplexTypes dürfen nur direkt im Schema hinzugefügt werden.");
+               "ComplexTypes dï¿½rfen nur direkt im Schema hinzugefï¿½gt werden.");
       }
       // rekursion
       for (int i = 0; i < getChildren().size(); i++) {
@@ -115,15 +115,15 @@ public class XynaSchemaComplexType extends XynaSchemaNode {
 
    public void importFragmentAsChild(XynaSchemaFragment frag) throws Exception {
       if (frag.getNode() instanceof XynaSchema) {
-         // Kind-Elemente anhängen ?
-         throw new Exception("nicht unterstützt."); // TODO
+         // Kind-Elemente anhï¿½ngen ?
+         throw new Exception("nicht unterstï¿½tzt."); // TODO
       } else if (frag.getNode() instanceof XynaSchemaAttribute
             || frag.getNode() instanceof XynaSchemaElement) {
          frag.getNode().setRoot(getRoot());
          getChildren().add(frag.getNode());
       } else if (frag.getNode() instanceof XynaSchemaComplexType) {
-         // Kind-Elemente anhängen?! oder Exception werfen...
-         throw new Exception("nicht unterstützt."); // TODO
+         // Kind-Elemente anhï¿½ngen?! oder Exception werfen...
+         throw new Exception("nicht unterstï¿½tzt."); // TODO
       }
    }
 

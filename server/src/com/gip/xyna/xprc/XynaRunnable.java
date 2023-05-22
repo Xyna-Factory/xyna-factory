@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ public abstract class XynaRunnable implements Runnable {
 
   void setExecutingThread(Thread t) {
     if (executingThread != null && t != null) {
-      //xyna runnables können wegen der thread-referenzen nicht parallel wiederverwendet werden.
-      //siehe bugz 12663. das führt zu ganz fiesen problemen.
+      //xyna runnables kï¿½nnen wegen der thread-referenzen nicht parallel wiederverwendet werden.
+      //siehe bugz 12663. das fï¿½hrt zu ganz fiesen problemen.
 
       //TODO eigentlich hilft die abfrage so nicht immer, weil executingThread nicht volatile ist.
       //aber lohnt es sich deshalb, hier eine threadsichere abfrage einzubauen?
@@ -85,8 +85,8 @@ public abstract class XynaRunnable implements Runnable {
   }
 
   /**
-   * wird von XynaThreadPoolExecutor aufgerufen, bevor RejectionHandler ausgeführt wird. 
-   * ACHTUNG: Falls false zurückgegeben wird, wird dem Einsteller des Tasks in den Threadpool nicht Bescheid gegeben, dass das Task nicht ausgeführt wird.
+   * wird von XynaThreadPoolExecutor aufgerufen, bevor RejectionHandler ausgefï¿½hrt wird. 
+   * ACHTUNG: Falls false zurï¿½ckgegeben wird, wird dem Einsteller des Tasks in den Threadpool nicht Bescheid gegeben, dass das Task nicht ausgefï¿½hrt wird.
    */
   public boolean mayCallRejectionHandlerOnRejection() {
     return true;

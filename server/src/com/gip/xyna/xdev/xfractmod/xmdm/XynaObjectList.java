@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class XynaObjectList<I extends XynaObject> extends GeneralXynaObjectList<
     return clone;
   }
 
-  //für abwärtskompatibilität die alten signaturen erhalten
+  //fï¿½r abwï¿½rtskompatibilitï¿½t die alten signaturen erhalten
 
   @Override
   public boolean add(I el) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class FactoryManagementSNMPFilter extends ConnectionFilter<SNMPTriggerCon
   private static RequestHandler requestHandler;
   static {
     oidSingleDispatcher = new OidSingleDispatcher();
-    oidSingleDispatcher.add(new XynaPropertyHandler()); //TODO schöner wäre, wenn die handler beim trigger registriert werden. der hat dann die übersicht, was es so alles gibt
+    oidSingleDispatcher.add(new XynaPropertyHandler()); //TODO schï¿½ner wï¿½re, wenn die handler beim trigger registriert werden. der hat dann die ï¿½bersicht, was es so alles gibt
     requestHandler = new DefaultRequestHandler(oidSingleDispatcher);
   }
 
@@ -59,7 +59,7 @@ public class FactoryManagementSNMPFilter extends ConnectionFilter<SNMPTriggerCon
    */
   public XynaOrder generateXynaOrder(SNMPTriggerConnection tc) throws XynaException, InterruptedException {
     // wirft interruptedexception, falls oid bearbeitet wurde (filter greift), ansonsten passiert einfach nichts
-    // (nächster filter...)
+    // (nï¿½chster filter...)
     tc.handleEvent(requestHandler);    
     return null;
   }

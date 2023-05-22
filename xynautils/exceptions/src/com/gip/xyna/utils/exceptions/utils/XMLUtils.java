@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 
 
 /**
- * abgespeckte xml utils, um keine abhängigkeit von dem xml utils package zu erzeugen
+ * abgespeckte xml utils, um keine abhï¿½ngigkeit von dem xml utils package zu erzeugen
  */
 public class XMLUtils {
 
@@ -137,7 +137,7 @@ public class XMLUtils {
 
   /**
    * @param is
-   * @param fileName nur für logging/exceptions
+   * @param fileName nur fï¿½r logging/exceptions
    * @return
    * @throws InvalidXMLException
    */

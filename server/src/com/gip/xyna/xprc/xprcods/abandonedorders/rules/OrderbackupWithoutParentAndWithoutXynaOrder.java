@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceStatus;
 public class OrderbackupWithoutParentAndWithoutXynaOrder extends AbandonedOrderDetectionRule<AbandonedOrderDetails> {
 
 
-  // FIXME: ... where rootorderid = id ... können dies auch nicht DB-PLs verstehen?
-  // BG: Nope, java.lang.NumberFormatException: For input string: "id" für Mem-PL
+  // FIXME: ... where rootorderid = id ... kï¿½nnen dies auch nicht DB-PLs verstehen?
+  // BG: Nope, java.lang.NumberFormatException: For input string: "id" fï¿½r Mem-PL
   private static final String READ_TARGETS_SQL = "select * from " + OrderInstanceBackup.TABLE_NAME + " where "
       + OrderInstanceBackup.COL_ROOT_ID + "=" + OrderInstanceBackup.COL_ID + " and "
       + OrderInstanceBackup.COL_XYNAORDER + " is null and " + OrderInstanceBackup.COL_BINDING + "=? order by "
@@ -101,7 +101,7 @@ public class OrderbackupWithoutParentAndWithoutXynaOrder extends AbandonedOrderD
             // no parent, no order, no details => broken in any case
             broken = true;
           } else if (OrderInstanceStatus.WAITING_FOR_PREDECESSOR == oib.getDetails().getStatusAsEnum() ) {
-            // order is part of a series and thus not broken FIXME nur für alte Huckepack-Aufträge 
+            // order is part of a series and thus not broken FIXME nur fï¿½r alte Huckepack-Auftrï¿½ge 
             broken = false;
           } else {
             // xynaorder = null and no parent is only allowed for waiting series orders

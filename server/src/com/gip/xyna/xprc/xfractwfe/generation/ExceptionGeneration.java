@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -307,7 +307,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
       codeBufferForClazz = new CodeBuffer("XynaProcessing");
       codeBufferForClazz.addLine("public String toXml(String varName, boolean onlyContent, long version, ",
                                  XMLReferenceCache.class.getCanonicalName(), " cache) {");
-      //TODO unterstützung für onlyContent (wird für super-aufrufe verwendet, also hier gerade nicht notwendig)
+      //TODO unterstï¿½tzung fï¿½r onlyContent (wird fï¿½r super-aufrufe verwendet, also hier gerade nicht notwendig)
       codeBufferForClazz.addLine("long objectId");
       XynaObjectCodeGenerator.appendToXMLSnippetForObjectReferences(codeBufferForClazz);
       codeBufferForClazz.addLine("StringBuilder xml = new StringBuilder()");
@@ -493,7 +493,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     imports.add(InvalidObjectPathException.class.getName());
     imports.add(XDEV_PARAMETER_NAME_NOT_FOUND.class.getName());
     
-    //runtimeContext für audits
+    //runtimeContext fï¿½r audits
     imports.add(RevisionManagement.class.getName());
 
     boolean simpleListRequired = false;

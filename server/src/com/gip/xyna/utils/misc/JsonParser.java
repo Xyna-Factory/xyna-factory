@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public class JsonParser {
   
   public interface JsonVisitor<T> {
 
-    public enum Type { Null, String, Boolean, Number, Object, Mixed /*Achtung, wenn eine Liste Mixed ist, dann ist es nicht mehr möglich pro Element die Typinformation wiederherzustellen*/ }
+    public enum Type { Null, String, Boolean, Number, Object, Mixed /*Achtung, wenn eine Liste Mixed ist, dann ist es nicht mehr mï¿½glich pro Element die Typinformation wiederherzustellen*/ }
     
     void currentPosition(Position position);
 
@@ -346,7 +346,7 @@ public class JsonParser {
         case -1:
           return;
         default :
-          //ignore. zeilenumbrüche, whitespaces, etc
+          //ignore. zeilenumbrï¿½che, whitespaces, etc
           if (validate) {
             if (!Character.isWhitespace(c)) {
               throw new InvalidJSONException(position, "Unexpected character \'"+c+"\'");
@@ -531,7 +531,7 @@ public class JsonParser {
       stack.push(current);
       current = new JsonTokenVisitorImpl(next);
       //current.setInObjectList(inObjectList); //FIXME raus, da sonst Fehler bei komplexen Objekten in Liste. 
-      //FIXME Unschön: Für jedes Listenelement wird nach JsonVisitor gefragt
+      //FIXME Unschï¿½n: Fï¿½r jedes Listenelement wird nach JsonVisitor gefragt
     }
 
     @Override

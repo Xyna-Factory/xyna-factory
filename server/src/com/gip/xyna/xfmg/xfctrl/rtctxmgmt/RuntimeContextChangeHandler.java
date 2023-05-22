@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.gip.xyna.update.Version;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext;
 
 /**
- * Fehler bei der Ausführung (RuntimeExceptions/Error) werden nur geloggt 
+ * Fehler bei der Ausfï¿½hrung (RuntimeExceptions/Error) werden nur geloggt 
  */
 public interface RuntimeContextChangeHandler {
   
@@ -47,7 +47,7 @@ public interface RuntimeContextChangeHandler {
   void migration(RuntimeDependencyContext from, RuntimeDependencyContext to);
   
   /**
-   * wird nicht aufgerufen, falls ein rtc-change durch ein migrate ausgelöst wird. stattdessen wird die methode migration(from, to) aufgerufen.
+   * wird nicht aufgerufen, falls ein rtc-change durch ein migrate ausgelï¿½st wird. stattdessen wird die methode migration(from, to) aufgerufen.
    */
   void dependencyChanges(RuntimeDependencyContext of, Collection<RuntimeDependencyContext> oldDependencies , Collection<RuntimeDependencyContext> newDependencies);
   

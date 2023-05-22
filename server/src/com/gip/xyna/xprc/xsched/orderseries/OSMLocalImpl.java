@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,54 +30,54 @@ import com.gip.xyna.xprc.xsched.orderseries.tasks.OSMTask;
 
 /**
  * OSMLocalImpl:
- * Implementierung des Interfaces OSMRemoteInterface, die die notwendigen Änderungen an den 
- * SeriesInformationStorable lokal durchführt.  
+ * Implementierung des Interfaces OSMRemoteInterface, die die notwendigen ï¿½nderungen an den 
+ * SeriesInformationStorable lokal durchfï¿½hrt.  
  *
- * Algorithmus für update{Successor/Predecessor}
+ * Algorithmus fï¿½r update{Successor/Predecessor}
  * <pre>
  * 1) tryLock der corrId
  * 1.1) Lock erhalten
- * 1.1.1) Rückgabe des Ergebnis von update{Successor/Predecessor}WithoutLock
+ * 1.1.1) Rï¿½ckgabe des Ergebnis von update{Successor/Predecessor}WithoutLock
  * 1.1.2) Unlock
  * 1.2) Lock nicht erhalten
  * 1.2.1) Einstellen des Tasks OSMTask_Update{Successor/Predecessor} in die Task-Queue
- * 1.2.2) Rückgabe von Result.Later
+ * 1.2.2) Rï¿½ckgabe von Result.Later
  * </pre>
- * Algorithmus für updateSuccessorWithoutLock
+ * Algorithmus fï¿½r updateSuccessorWithoutLock
  * <pre>
  * 1) Suche des SeriesInformationStorable <code>sisSuc</code>
  * 2) Abbruch mit <code>Result.NotFound</code>, wenn kein SeriesInformationStorable gefunden wird
- * 3) Enthält <code>sisSuc</code> <code>predecessorCorrId</code>?
+ * 3) Enthï¿½lt <code>sisSuc</code> <code>predecessorCorrId</code>?
  * 3.1) Ja: <code>predecessorOrderId</code> eintragen, alle Vorkommen von <code>predecessorCorrId</code> entfernen
- * 3.2) Nein: Enthält <code>sisSuc</code> <code>predecessorOrderId</code> bereits?
+ * 3.2) Nein: Enthï¿½lt <code>sisSuc</code> <code>predecessorOrderId</code> bereits?
  * 3.2.1) Ja: Ok
  * 3.2.2) Nein: Predecessor und Successor passen nicht zusammen, Warnung ins Log, <code>predecessorOrderId</code> eintragen
  * 4) aus <code>cancel</code> ergibt sich <code>inheritedCancel</code>, dabei <code>ignoreInheritedCancel</code> beachten
  * 5) Falls OrderStatus = CANCELING und keine Predecessoren mehr vorhanden sind, mit einem OSMTask_Finish
  *    den OrderStatus auf CANCELED setzen und Successoren benachrichtigen
- * 6) Update <code>sisSuc</code>, falls sich Änderungen ergeben haben
+ * 6) Update <code>sisSuc</code>, falls sich ï¿½nderungen ergeben haben
  * 7) In PredecessorTrees zu <code>sucTree</code> den Branch <code>predecessorCorrId</code> entfernen
  * 8) Wenn <code>sisSuc</code> bereits <code>finished==true</code> hat und alle <code>{prede;suc}cessorCorrIds</code> 
  *    bereits gefunden wurden: <code>sisSuc</code> aus Cache entfernen
  * 9) OrderState (AlreadyFinished,HasToBeCanceled,CanBeStarted,WaitingForPredecessor) ermitteln 
  * 10) Wenn OrderState != WaitingForPredecessor: Aufruf {@link com.gip.xyna.xprc.xsched.orderseries.OSMInterface#readyToRun(String, long, OrderState, java.util.List)}
  * </pre>
- * Algorithmus für updateSuccessorWithoutLock
+ * Algorithmus fï¿½r updateSuccessorWithoutLock
  * <pre>
  * 1) Suche des SeriesInformationStorable <code>sisPre</code>
  * 2) Abbruch mit <code>Result.NotFound</code>, wenn kein SeriesInformationStorable gefunden wird
  * 3) Abbruch mit <code>Result.Running</code>, wenn in <code>sisPre</code> <code>finished==false</code>
- * 4) Enthält <code>sisPre</code> <code>successorCorrId</code>?
+ * 4) Enthï¿½lt <code>sisPre</code> <code>successorCorrId</code>?
  * 4.1) Ja: <code>successorOrderId</code> eintragen, alle weiteren Vorkommen von <code>successorCorrId</code> entfernen
- * 4.2) Nein: Enthält <code>sisPre</code> <code>successorOrderId</code> bereits?
+ * 4.2) Nein: Enthï¿½lt <code>sisPre</code> <code>successorOrderId</code> bereits?
  * 4.2.1) Ja: Ok
  * 4.2.2) Nein: Predecessor und Successor passen nicht zusammen, Warnung ins Log, <code>successorOrderId</code> eintragen
- * 5) Update <code>sisPre</code>, falls sich Änderungen ergeben haben
- * 6) Enthält <code>sisPre</code> <code>successorCorrId</code>s?
- * 6.1) Ja: Da kein Successor mehr den Predecessor benötigt, kann er aus PredecessorTrees und OsmCache entfernt werden
+ * 5) Update <code>sisPre</code>, falls sich ï¿½nderungen ergeben haben
+ * 6) Enthï¿½lt <code>sisPre</code> <code>successorCorrId</code>s?
+ * 6.1) Ja: Da kein Successor mehr den Predecessor benï¿½tigt, kann er aus PredecessorTrees und OsmCache entfernt werden
  * 7) Wenn <code>sisPre</code> <code>hadError==true</code> und <code>autoCancel==true</code> hat:
- * 7.1) Ja: Rückgabe <code>Result.Cancel</code>
- * 7.2) Nein: Rückgabe <code>Result.Success</code>
+ * 7.1) Ja: Rï¿½ckgabe <code>Result.Cancel</code>
+ * 7.2) Nein: Rï¿½ckgabe <code>Result.Success</code>
  * </pre>
  */
 
@@ -98,7 +98,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
   }
   
   /**
-   * Warten mit tryLock, falls Lock nicht erhalten wird: Auftrag in Queue einstellen und später probieren
+   * Warten mit tryLock, falls Lock nicht erhalten wird: Auftrag in Queue einstellen und spï¿½ter probieren
    * @see com.gip.xyna.xprc.xsched.orderseries.OSMRemoteInterface#updateSuccessor(int, java.lang.String, java.lang.String, long, boolean)
    */
   public Result updateSuccessor(int binding, String successorCorrId, String predecessorCorrId, long predecessorOrderId,
@@ -114,7 +114,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
       }
     } else {
       //Lock nicht erhalten. Da keine zeitnahe Abarbeitung wirklich erforderlich ist,
-      //wird dieser Update in einen OSMTask verpackt, der dann später nochmal vom 
+      //wird dieser Update in einen OSMTask verpackt, der dann spï¿½ter nochmal vom 
       //OSMTaskConsumer verarbeitet wird. 
       queue.add( OSMTask.updateSuccessor(binding,successorCorrId,predecessorCorrId,predecessorOrderId,cancel) );
       return Result.Later;
@@ -123,7 +123,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
   }
   
   /**
-   * Warten mit tryLock, falls Lock nicht erhalten wird: Auftrag in Queue einstellen und später probieren
+   * Warten mit tryLock, falls Lock nicht erhalten wird: Auftrag in Queue einstellen und spï¿½ter probieren
    * @see com.gip.xyna.xprc.xsched.orderseries.OSMRemoteInterface#updatePredecessor(int, java.lang.String, java.lang.String, long)
    */
   public Result updatePredecessor(int binding, String predecessorCorrId, String successorCorrId, long successorOrderId) {
@@ -136,7 +136,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
       }
     } else {
       //Lock nicht erhalten. Da keine zeitnahe Abarbeitung wirklich erforderlich ist,
-      //wird dieser Update in einen OSMTask verpackt, der dann später nochmal vom 
+      //wird dieser Update in einen OSMTask verpackt, der dann spï¿½ter nochmal vom 
       //OSMTaskConsumer verarbeitet wird. 
       queue.add( OSMTask.updatePredecessor(binding,predecessorCorrId,successorCorrId,successorOrderId) );
       return Result.Later;      
@@ -182,7 +182,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
   }
   
   /**
-   * Eigentlicher Update des Successor ohne Berücksichtigung der Locks
+   * Eigentlicher Update des Successor ohne Berï¿½cksichtigung der Locks
    * (Auftragsende)
    * @param successorCorrId
    * @param predecessorCorrId
@@ -213,7 +213,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
       } else {
         //das sollte nicht passieren. Laut Predecessor sollte dies der Successor sein -> Warnung ins Log
         logger.warn( "updateSuccessor: predecessor "+predecessorCorrId+" not found for successor "+successorCorrId);
-        //predecessorOrderId trotzdem nachträglich in Successor eintragen
+        //predecessorOrderId trotzdem nachtrï¿½glich in Successor eintragen
         sisSuc.getPredecessorOrderIds().add( predecessorOrderId );
       }
     }
@@ -227,7 +227,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
     }
     if( sisSuc.getOrderStatus() == OrderStatus.CANCELING ) {
       if( sisSuc.getPredecessorCorrIds().isEmpty() ) {
-        //keine weiteren Vorgänger vorhanden, daher nun mit einem OSMTask_Finish den
+        //keine weiteren Vorgï¿½nger vorhanden, daher nun mit einem OSMTask_Finish den
         //Status auf Canceled umsetzen und die Successoren benachrichtigen
         OSMTask finish = OSMTask.finish(successorCorrId, OrderStatus.CANCELED);
         queue.add(finish);
@@ -258,7 +258,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
     if( sisSuc.getOrderStatus().isFinished() 
                     && sisSuc.getPredecessorCorrIds().isEmpty() 
                     && sisSuc.getSuccessorCorrIds().isEmpty() ) {
-      //sisSuc sollte von niemandem mehr benötigt werden, daher aus dem Cache entfernen
+      //sisSuc sollte von niemandem mehr benï¿½tigt werden, daher aus dem Cache entfernen
       osmCache.remove(sisSuc.getCorrelationId());
     }
     
@@ -276,7 +276,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
   }
 
   /**
-   * Eigentlicher Update des Predecessor ohne Berücksichtigung der Locks
+   * Eigentlicher Update des Predecessor ohne Berï¿½cksichtigung der Locks
    * (Auftragseingang)
    * @param predecessorCorrId
    * @param successorCorrId
@@ -306,7 +306,7 @@ public class OSMLocalImpl implements OSMRemoteInterface {
       } else {
         //das sollte nicht passieren. Laut Successor sollte dies der Predecessor sein -> Warnung ins Log
         logger.warn( "updatePredecessor: successor "+successorCorrId+" not found for predecessor "+predecessorCorrId);
-        //successorOrderId trotzdem nachträglich in Predecessor eintragen
+        //successorOrderId trotzdem nachtrï¿½glich in Predecessor eintragen
         sisPre.getSuccessorOrderIds().add( successorOrderId );
       }
     }

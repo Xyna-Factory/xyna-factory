@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,18 +23,18 @@ final public class TransactionProperty {
 
   public static enum TransactionPropertyType {
     /**
-     * falls gesetzt, können alle zugriffe aufs netzwerk bei einem clusterbetrieb asynchron ausgeführt werden. ausnahme:
-     * beim lesenden zugriff werden daten bei bedarf übers netzwerk aktualisiert, wenn lokal die daten nicht aktuell
+     * falls gesetzt, kï¿½nnen alle zugriffe aufs netzwerk bei einem clusterbetrieb asynchron ausgefï¿½hrt werden. ausnahme:
+     * beim lesenden zugriff werden daten bei bedarf ï¿½bers netzwerk aktualisiert, wenn lokal die daten nicht aktuell
      * sind.
      * <p>
-     * d.h. locking passiert nur lokal und ist damit nur passiv gegenüber konkurrierenden locks aus dem cluster
+     * d.h. locking passiert nur lokal und ist damit nur passiv gegenï¿½ber konkurrierenden locks aus dem cluster
      * synchronisiert (der andere knoten muss aktiv synchronisieren). nicht synchronisierte updates auf verschiedenen
-     * knoten können sich gegenseitig überschreiben.
+     * knoten kï¿½nnen sich gegenseitig ï¿½berschreiben.
      * <p>
      * folglich sind daten bei schreibenden operationen (update, delete, insert) ggfs. nicht ausfall-sicher, obwohl von
-     * der ausgeführten persistencelayer operation erfolg zurückgemeldet wurde. ausserdem wird ggfs. fälschlicherweise
-     * erfolg gemeldet, obwohl das cluster bei der nachträglichen synchronisierung einen fehler meldet (z.b. weil das
-     * objekt bereits gelöscht wurde)
+     * der ausgefï¿½hrten persistencelayer operation erfolg zurï¿½ckgemeldet wurde. ausserdem wird ggfs. fï¿½lschlicherweise
+     * erfolg gemeldet, obwohl das cluster bei der nachtrï¿½glichen synchronisierung einen fehler meldet (z.b. weil das
+     * objekt bereits gelï¿½scht wurde)
      */
     noSynchronousActiveClusterSynchronizationNeeded,
 
@@ -47,8 +47,8 @@ final public class TransactionProperty {
     commitIfClusterNodeStateEqual,
     
     /**
-     * wenn man eine einzelne zeile selektiert, wird nicht immer die gleiche zeile zurückgegeben (sofern es mehrere passende gibt),
-     * sondern eine zufällige passende.
+     * wenn man eine einzelne zeile selektiert, wird nicht immer die gleiche zeile zurï¿½ckgegeben (sofern es mehrere passende gibt),
+     * sondern eine zufï¿½llige passende.
      */
     getRandomElement;
   }

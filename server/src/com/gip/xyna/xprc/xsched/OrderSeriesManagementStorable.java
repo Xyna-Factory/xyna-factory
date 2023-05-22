@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public final class OrderSeriesManagementStorable extends Storable<OrderSeriesMan
   }
 
 
-  //prefinder und sucfinder können mit filterclassloader gespeichert worden sein und müssen deshalb manuell
+  //prefinder und sucfinder kï¿½nnen mit filterclassloader gespeichert worden sein und mï¿½ssen deshalb manuell
   //behandelt werden
   private void writeObject(java.io.ObjectOutputStream s) throws IOException {
     s.defaultWriteObject();

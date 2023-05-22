@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +48,8 @@ import java.util.concurrent.atomic.AtomicLong;
  *    h.rethrow(h2); //wirft MyException1, MyException2, oder MultipleExceptions
  * </pre>
  * 
- * Für jeden Exceptiontyp muss ein eigener Handler definiert werden.
- * Für bis zu 5 Handler (und damit verschiedene Exceptiontypen) gibt es rethrow-Signaturen.
+ * Fï¿½r jeden Exceptiontyp muss ein eigener Handler definiert werden.
+ * Fï¿½r bis zu 5 Handler (und damit verschiedene Exceptiontypen) gibt es rethrow-Signaturen.
  * 
  */
 public class MultipleExceptionHandler<E extends Throwable> {
@@ -62,7 +62,7 @@ public class MultipleExceptionHandler<E extends Throwable> {
   public enum ExceptionCauseOrdering {
 
     /**
-     * Sortiert nach der Reihenfolge, in der "addException" aufgerufen wird. Die Reihenfolge wird über alle ExceptionHandler hinweg getrackt. 
+     * Sortiert nach der Reihenfolge, in der "addException" aufgerufen wird. Die Reihenfolge wird ï¿½ber alle ExceptionHandler hinweg getrackt. 
      */
     TIME,
     /**

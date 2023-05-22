@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@ public class InterFactoryRMIChannel implements InterFactoryChannel {
   public final static String HOSTNAME_PARAMETER = "hostname";
   public final static String PORT_PARAMETER = "port";
   /*
-   *  falls keystore nicht gesetzt, wird der keystore verwendet, der über die xynaproperties RMI_SSL_KEYSTORE_TYPE etc gesetzt ist
+   *  falls keystore nicht gesetzt, wird der keystore verwendet, der ï¿½ber die xynaproperties RMI_SSL_KEYSTORE_TYPE etc gesetzt ist
    *  falls truststore nicht gesetzt, wird kein truststore verwendet.
-   *  falls truststore gesetzt ist, wird server-authentication durchgeführt
+   *  falls truststore gesetzt ist, wird server-authentication durchgefï¿½hrt
    */
   public final static String KEYSTORE_FILE_PARAMETER = "keystorefile";
   public final static String KEYSTORE_TYPE_PARAMETER = "keystoretype";
@@ -106,7 +106,7 @@ public class InterFactoryRMIChannel implements InterFactoryChannel {
 
   
   public void setupCommunication(Duration timeout) {
-    //falls der server nicht auf SSL konfiguriert ist, ist das überflüssig. schadet aber nichts
+    //falls der server nicht auf SSL konfiguriert ist, ist das ï¿½berflï¿½ssig. schadet aber nichts
     RMISSLClientSocketFactory.threadLocalConParams.set(Pair.of(timeout, conParams));
   }
 

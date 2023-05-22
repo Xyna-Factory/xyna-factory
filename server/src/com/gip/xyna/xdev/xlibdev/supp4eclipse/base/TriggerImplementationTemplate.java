@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -336,8 +336,8 @@ public class TriggerImplementationTemplate extends ImplementationTemplate {
     cb.addLine("//TODO implementation").addLine("return null").addLine("}").addLB();
     /**
      * zur dokumentation
-     * @return liste der startparameterbeschreibungen sortiert nach möglichen kombinationen. falls es die
-     *         startparametermöglichkeiten (A,B) und (A,C,D) gibt, würde hier zurückgegeben werden: new String[][]{{"A",
+     * @return liste der startparameterbeschreibungen sortiert nach mï¿½glichen kombinationen. falls es die
+     *         startparametermï¿½glichkeiten (A,B) und (A,C,D) gibt, wï¿½rde hier zurï¿½ckgegeben werden: new String[][]{{"A",
      *         "B"}, {"A", "C", "D"}}.
      */
     cb.addLine("}");

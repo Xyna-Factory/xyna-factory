@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@ import com.gip.xyna.demon.worker.SlaveWork;
 
 
 /**
- * Vollständige Implementierung eines Masters, der auf dem angegebenen Socket lauscht und
- * die erhaltenen Pakete über den {@link SlaveWorkBuilder.buildWork} in Arbeitspakete für den {@link SlavePool}
- * verwandelt und diese dann dem SlavePool übergibt.
+ * Vollstï¿½ndige Implementierung eines Masters, der auf dem angegebenen Socket lauscht und
+ * die erhaltenen Pakete ï¿½ber den {@link SlaveWorkBuilder.buildWork} in Arbeitspakete fï¿½r den {@link SlavePool}
+ * verwandelt und diese dann dem SlavePool ï¿½bergibt.
  *
  * @param <Tool>
  */
@@ -51,7 +51,7 @@ public class SocketMaster<Tool> implements Master<Tool,Socket>  {
   private AtomicInteger requestedCounter;
   
   /**
-   * Interface, um den SocketMaster zu befähigen, Arbeitspakete SlaveWork<Tool,Socket> aus den Socket-Daten zu bauen.
+   * Interface, um den SocketMaster zu befï¿½higen, Arbeitspakete SlaveWork<Tool,Socket> aus den Socket-Daten zu bauen.
    *
    * @param <Tool>
    */

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,20 +84,20 @@ public class ThreadPoolExecutorWithThreadlocalsCleanup extends ThreadPoolExecuto
     Thread currentThread = ((RunnableWithThreadInformation) r).getExecutingThread();
     ((RunnableWithThreadInformation) r).setExecutingThread(null);
     try {
-      //workaround dafür, dass reentrantreadwritelock (und ggfs andere klassen, die threadlocal benutzen) ihren kontext
-      //daraus nicht korrekt entfernen und dadurch unkontrolliert der benötigte speicherplatz anwachsen kann
+      //workaround dafï¿½r, dass reentrantreadwritelock (und ggfs andere klassen, die threadlocal benutzen) ihren kontext
+      //daraus nicht korrekt entfernen und dadurch unkontrolliert der benï¿½tigte speicherplatz anwachsen kann
       threadLocalsField.set(currentThread, null);
       
-      //workaround dafür, dass in reentrantreadwritelock ein cache für objekte die threadlokal gehalten werden benutzt wird.
+      //workaround dafï¿½r, dass in reentrantreadwritelock ein cache fï¿½r objekte die threadlokal gehalten werden benutzt wird.
       //wenn man dies nicht macht, ist der cache != dem threadlokal gehaltenen objekt und es kann illegalmonitorstateexceptions geben.
       //usecase: thread1 macht readlock.lock(), readlock.unlock() => cache ist vorhanden mit holdcount = 0
       //         dann ist thread zuende und threadlocalmap wird geleert
       //         dann macht thread1 readlock.lock => gecachter holdcount = 1
-      //         dann kommt thread2 macht readlock.lock => cache wird entfernt und durch einen für thread2 ersetzt => information von holdcount = 1 geht verloren.
+      //         dann kommt thread2 macht readlock.lock => cache wird entfernt und durch einen fï¿½r thread2 ersetzt => information von holdcount = 1 geht verloren.
       //         thread1 readlock.unlock => illegalmonitorstateexception, weil holdcount in threadlocal = 0.
       //mit der neuen threadid wird forciert, dass der cache nicht nach wiederverwendet werden kann, falls der thread aus dem threadpool
       //einmal fertiggelaufen war und beim erneuten execute das gleiche reentrantlock benutzt.
-      //das verhalten ist dann genauso wie man es ohne threadpoolbenutzung erwarten würde (immer andere threadids)
+      //das verhalten ist dann genauso wie man es ohne threadpoolbenutzung erwarten wï¿½rde (immer andere threadids)
       long newTid = (Long)createTidMethod.invoke(null);
       tidField.set(currentThread, newTid);
     } catch (IllegalArgumentException e) {

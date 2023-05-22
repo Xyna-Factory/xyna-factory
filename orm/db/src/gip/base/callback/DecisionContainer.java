@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * DecisionContainer ist ein Datenkontainer für Callbacks vom Server an den Client. 
+ * DecisionContainer ist ein Datenkontainer fï¿½r Callbacks vom Server an den Client. 
  * Clientseitig wird dann dieser Datenkontainer grafisch aufbereitet.
  */
 @SuppressWarnings("serial")
@@ -255,7 +255,7 @@ public class DecisionContainer implements OBDTOInterface, Serializable {
   
   /**
    * Liefert die expliziet gesetzte GUI-DefaultAnswer,
-   * falls dieser nicht gesetzt ist, die primären DefaultAnswer.
+   * falls dieser nicht gesetzt ist, die primï¿½ren DefaultAnswer.
    * @return Default fuer GUI
    */
   public boolean getDefaultAnswerGUI() {
@@ -270,7 +270,7 @@ public class DecisionContainer implements OBDTOInterface, Serializable {
 
   /**
    * Liefert die expliziet gesetzte GUI-DefaultAnswer,
-   * falls dieser nicht gesetzt ist, die primären DefaultAnswer.
+   * falls dieser nicht gesetzt ist, die primï¿½ren DefaultAnswer.
    * @return Default fuer GUI
    */
   public String getDefaultAnswerStringGUI() {

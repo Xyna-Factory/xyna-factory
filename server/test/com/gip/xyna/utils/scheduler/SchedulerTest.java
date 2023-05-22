@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,15 +28,15 @@ import com.gip.xyna.utils.scheduler.UrgencyOrderList.Urgency;
 /**
  * 
  * 
- * TODO noch Testfälle aus com.gip.xyna.xprc.xsched.SchedulerAlgorithmUsingUrgencyAndDemandTest
+ * TODO noch Testfï¿½lle aus com.gip.xyna.xprc.xsched.SchedulerAlgorithmUsingUrgencyAndDemandTest
  *                     und com.gip.xyna.xprc.xsched.SchedulerAlgorithmTestBase
- *      übernehmen?
- * TODO com.gip.xyna.xprc.xsched.ParallelSchedulingTest für CapacityDemand-Tests 
- *      sind hier nicht möglich
- * alle drei Tests sind gelöscht, da sie nach Scheduler-Umstellung schwierig zu reparieren sind.
+ *      ï¿½bernehmen?
+ * TODO com.gip.xyna.xprc.xsched.ParallelSchedulingTest fï¿½r CapacityDemand-Tests 
+ *      sind hier nicht mï¿½glich
+ * alle drei Tests sind gelï¿½scht, da sie nach Scheduler-Umstellung schwierig zu reparieren sind.
  *
  *
- * TODO weitere Testfälle?
+ * TODO weitere Testfï¿½lle?
  */
 public class SchedulerTest extends TestCase {
 
@@ -82,16 +82,16 @@ public class SchedulerTest extends TestCase {
           @Override
           public ScheduleResult trySchedule(Urgency<TestOrder> uo) {
             switch( (int)(uo.getOrderId() %3) ) {
-              case 0: //Cap A ist dauerhaft nicht verfügbar
+              case 0: //Cap A ist dauerhaft nicht verfï¿½gbar
                 return new ScheduleResult.TagScheduleResult("A", true);
-              case 1: //Cap B ist erst nach dem 2 ScheulerLauf wieder verfügbar
+              case 1: //Cap B ist erst nach dem 2 ScheulerLauf wieder verfï¿½gbar
                 if( getCurrentSchedulerInformation().schedulerRunNumber <= 2 ) {
                   return new ScheduleResult.TagScheduleResult("B", true);
                 } else {
                   execute(uo);
                   return ScheduleResult.Scheduled;
                 }
-              case 2: //Cap C ist verfügbar
+              case 2: //Cap C ist verfï¿½gbar
                 execute(uo);
                 return ScheduleResult.Scheduled;
               default:
@@ -147,7 +147,7 @@ public class SchedulerTest extends TestCase {
     scheduler.exec();
     TestSchedulerInformation tsi = scheduler.getSchedulerInformation();
     assertEquals("1_5_4", tsi.getSchedulerRunNumber_Iterated_Scheduled() );
-    assertEquals("0_0_6", tsi.getWaiting_Tags_Null_Unknown() ); //6 Aufträge sind nicht untersucht worden
+    assertEquals("0_0_6", tsi.getWaiting_Tags_Null_Unknown() ); //6 Auftrï¿½ge sind nicht untersucht worden
     
     scheduler.exec();
     tsi = scheduler.getSchedulerInformation();
@@ -179,7 +179,7 @@ public class SchedulerTest extends TestCase {
     scheduler.exec();
     TestSchedulerInformation tsi = scheduler.getSchedulerInformation();
     assertEquals("1_5_4", tsi.getSchedulerRunNumber_Iterated_Scheduled() );
-    assertEquals("0_0_6", tsi.getWaiting_Tags_Null_Unknown() ); //6 Aufträge sind nicht untersucht worden
+    assertEquals("0_0_6", tsi.getWaiting_Tags_Null_Unknown() ); //6 Auftrï¿½ge sind nicht untersucht worden
     
     scheduler.exec();
     tsi = scheduler.getSchedulerInformation();
@@ -211,7 +211,7 @@ public class SchedulerTest extends TestCase {
     scheduler.exec();
     TestSchedulerInformation tsi = scheduler.getSchedulerInformation();
     assertEquals("1_6_6", tsi.getSchedulerRunNumber_Iterated_Scheduled() );
-    assertEquals("0_0_0", tsi.getWaiting_Tags_Null_Unknown() ); //6 Aufträge sind nicht untersucht worden
+    assertEquals("0_0_0", tsi.getWaiting_Tags_Null_Unknown() ); //6 Auftrï¿½ge sind nicht untersucht worden
     assertEquals("[5, 1, 2, 0, 3, 4]", tsi.getScheduledOrdersAsString() );
     
   }

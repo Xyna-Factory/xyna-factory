@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,7 +141,7 @@ public abstract class XynaProcess
   private transient volatile boolean hadErrorAfterInterruption = false;
   private boolean varsSet = false;
   
-  //achtung: der gleiche thread kann unterschiedliche tasks bearbeiten, wenn parallelitäten verschachtelt sind
+  //achtung: der gleiche thread kann unterschiedliche tasks bearbeiten, wenn parallelitï¿½ten verschachtelt sind
   private volatile transient HashMap<ParallelTask, Thread> threadsActivelyRunningInParallelTask;
   private volatile transient List<Thread> activeThreads = new ArrayList<Thread>();
   
@@ -165,12 +165,12 @@ public abstract class XynaProcess
   }
 
   /**
-   * Ausführung des Prozesses
+   * Ausfï¿½hrung des Prozesses
    */
   protected GeneralXynaObject executeInternally(GeneralXynaObject o) throws XynaException {
     FractalProcessStep<?>[] steps = getStartSteps();
     if (varsSet) {
-      // beim resume: nicht die inputvariablen des workflows überschreiben.
+      // beim resume: nicht die inputvariablen des workflows ï¿½berschreiben.
     } else {
       setInputVars(o);
       varsSet = true;
@@ -226,7 +226,7 @@ public abstract class XynaProcess
     RootProcessData rpd = getRootProcessData();
     if( rpd.shouldSuspend() ) {
       /*
-       * die abfrage nach isGoingToBeInterrupted ist hier notwendig für den usecase, dass der root-auftrags-thread hing und ersetzt wurde
+       * die abfrage nach isGoingToBeInterrupted ist hier notwendig fï¿½r den usecase, dass der root-auftrags-thread hing und ersetzt wurde
        * der ersatz thread startet den workflow dann erneut und soll dann eine suspensionexception mit MI-redirection werfen
        */
       rpd.suspend(this, step, afterFailure || isGoingToBeInterrupted);
@@ -287,8 +287,8 @@ public abstract class XynaProcess
   
   /**
    * Terminiert die Threads, die diesen XynaProcess bearbeiten, entweder per Thread.interrupt() oder Thread.stop().
-   * Ruft rekursiv alle Kind-Processe für Subworkflows auf.
-   * Zurückgegeben wird die Anzahl der so terminierten Threads.
+   * Ruft rekursiv alle Kind-Processe fï¿½r Subworkflows auf.
+   * Zurï¿½ckgegeben wird die Anzahl der so terminierten Threads.
    * @param stopForcefully true: Thread.stop, false: Thread.interrupt
    * @return Anzahl terminierter Threads
    */
@@ -308,7 +308,7 @@ public abstract class XynaProcess
         if (logger.isDebugEnabled()) {
           logger.debug("Step " + step + " is subworkflowcall");
         }
-        //rekursion auf subaufträge
+        //rekursion auf subauftrï¿½ge
         XynaProcess process = ((SubworkflowCall) step).getChildOrder().getExecutionProcessInstance();
         // process can be null if the order has been started but the process instance has not yet been created
         if (process != null && !process.isSuspended()) {
@@ -366,7 +366,7 @@ public abstract class XynaProcess
 
   
   /**
-   * gibt true zurück, falls der stepToBeFound ein kind oder kindeskind (etc) von parentStep ist und keiner der
+   * gibt true zurï¿½ck, falls der stepToBeFound ein kind oder kindeskind (etc) von parentStep ist und keiner der
    * dazwischen liegenden steps (inkl des parentSteps) ein parallelstep ist. 
    */
   private boolean stepContainsStepInSameParallelLane(Step parentStep, FractalProcessStep<?> stepToBeFound) {
@@ -408,12 +408,12 @@ public abstract class XynaProcess
 
   
   /**
-   * gibt die gerade aktiven steps zurück. das sind alle java-service-call und subwfcall steps, die
+   * gibt die gerade aktiven steps zurï¿½ck. das sind alle java-service-call und subwfcall steps, die
    * angefangen sind, aber noch nicht fertig/fehlerhaft. und alle parallelexecutionsteps die nocht nicht
    * fertig/fehlerhaft sind.<p>
    * 
    * falls recursive != NONE und der subwf bereits gestartet wurde, werden anstelle des subwfcall steps 
-   * die zugehörigen aktiven steps des subwfs zurückgegeben.
+   * die zugehï¿½rigen aktiven steps des subwfs zurï¿½ckgegeben.
    * 
    */
   public List<FractalProcessStep<?>> getCurrentExecutingSteps(RecursionType recursive) {
@@ -502,7 +502,7 @@ public abstract class XynaProcess
           }
 
           if (!foundCurrentlyExecutingSubWf && (filter == ActiveStepType.ALL || filter == ActiveStepType.JAVACALL)) {
-            //wenn javacall in einem implizit aufgerufenen workflow hängt, wird javacall-step nicht als "current executing" zurückgegeben.
+            //wenn javacall in einem implizit aufgerufenen workflow hï¿½ngt, wird javacall-step nicht als "current executing" zurï¿½ckgegeben.
             currentExecuting.add(step);
           }
           continue;
@@ -519,7 +519,7 @@ public abstract class XynaProcess
   }
   
   /**
-   * muss statisch gehaltene boolean variable zurückgeben, die per default auf true gesetzt wird.
+   * muss statisch gehaltene boolean variable zurï¿½ckgeben, die per default auf true gesetzt wird.
    * 
    * @return
    */
@@ -535,7 +535,7 @@ public abstract class XynaProcess
 
   
   /**
-   * wird einmal pro verwendung in auftrag anfangs ausgeführt um steps zu initialisieren
+   * wird einmal pro verwendung in auftrag anfangs ausgefï¿½hrt um steps zu initialisieren
    */
   public void tryReinitialize() {
     if (needsToBeInitializedBeforeNextExecution) {
@@ -605,7 +605,7 @@ public abstract class XynaProcess
     initRootProcessData();
     
     try {
-      //braucht u.U. nicht synchronisiert zu sein, führt aber sonst teilweise zu ConcurrentModificationException
+      //braucht u.U. nicht synchronisiert zu sein, fï¿½hrt aber sonst teilweise zu ConcurrentModificationException
       synchronized (activeThreads) {
         activeThreads.add(Thread.currentThread());
       }
@@ -659,7 +659,7 @@ public abstract class XynaProcess
       //this case should never happen, but is necessary for nicer code.
       throw new RuntimeException(t);
     } finally {
-      //braucht u.U. nicht synchronisiert zu sein, führt aber sonst teilweise zu ConcurrentModificationException
+      //braucht u.U. nicht synchronisiert zu sein, fï¿½hrt aber sonst teilweise zu ConcurrentModificationException
       synchronized (activeThreads) {
         activeThreads.remove(Thread.currentThread());
       }
@@ -686,8 +686,8 @@ public abstract class XynaProcess
             .getOrderExecutionTimeoutManagement().tryUnregisterOrderTimeout(correlatedXynaOrder);
       }
       
-      //falls der fehler durch eine suspension ausgelöst wurde (zb thread.interrupt), 
-      //soll fehler vergessen werden damit der auslösende schritt beim resume erneut ausgeführt wird.
+      //falls der fehler durch eine suspension ausgelï¿½st wurde (zb thread.interrupt), 
+      //soll fehler vergessen werden damit der auslï¿½sende schritt beim resume erneut ausgefï¿½hrt wird.
       // wenn andererseits das suspend erst innerhalb des compensates passiert, muss der fehler vorher gespeichert worden sein.      
       throwableThrownBefore = e;
       if(correlatedXynaOrder.isLetOrderCompensateAfterAbort() && compensate) {
@@ -716,8 +716,8 @@ public abstract class XynaProcess
   
   private void handleExceptionDuringCompensation(Throwable e, Throwable original) throws XynaException {
     if (isAttemptingSuspension() && isGoingToBeInterrupted) {
-      //fehler im compensate, die durch ein interrupt von haengenden services bei suspension ausgelöst wurden, 
-      //werden vergessen, damit beim resume die schritte erneut ausgeführt werden können.
+      //fehler im compensate, die durch ein interrupt von haengenden services bei suspension ausgelï¿½st wurden, 
+      //werden vergessen, damit beim resume die schritte erneut ausgefï¿½hrt werden kï¿½nnen.
       hadErrorAfterInterruption = true;
       setSuspended();
       SuspensionCause suspensionCause = new SuspensionCause_Manual(false, getCorrelatedXynaOrder().getId());
@@ -772,7 +772,7 @@ public abstract class XynaProcess
       if( correlatedXynaOrder != null && correlatedXynaOrder.hasParentOrder() && correlatedXynaOrder.getRootOrder().getExecutionProcessInstance() != null) {
         rootProcessData = correlatedXynaOrder.getRootOrder().getExecutionProcessInstance().getRootProcessData();
       } else {
-        //TODO oder können subworkflows von planningworkflows darauf verzichten? sollte aber nichts schaden
+        //TODO oder kï¿½nnen subworkflows von planningworkflows darauf verzichten? sollte aber nichts schaden
         rootProcessData = new RootProcessData();
       } 
     }
@@ -827,8 +827,8 @@ public abstract class XynaProcess
   }
 
   /**
-   * liefert Liste aller Kind und Kindeskind Aufträge (von ausgeführten oder sich in der Ausführung befindenden
-   * Subworkflows - noch nicht ausgeführte Subworkflows sind nicht enthalten)
+   * liefert Liste aller Kind und Kindeskind Auftrï¿½ge (von ausgefï¿½hrten oder sich in der Ausfï¿½hrung befindenden
+   * Subworkflows - noch nicht ausgefï¿½hrte Subworkflows sind nicht enthalten)
    */
   public List<XynaOrderServerExtension> getAllChildOrdersRecursively() {
     return getAllChildOrders(true, false);
@@ -1105,7 +1105,7 @@ public abstract class XynaProcess
   }
 
   /**
-   * erzeugt process-instanz-eindeutige ids für die lanes aller parallelexecutors
+   * erzeugt process-instanz-eindeutige ids fï¿½r die lanes aller parallelexecutors
    */
   long getNextSuspendedLaneId() {
     return nextSuspendedLaneId.incrementAndGet();
@@ -1122,8 +1122,8 @@ public abstract class XynaProcess
 
   /**
    * 
-   * @param killJavaCalls wird bei einem aufruf mit false übergeben, weil erst eine rekursion über die hierarchie 
-   *                      passieren soll, in der nur der state umgesetzt wird, und parallelitäten angehalten werden
+   * @param killJavaCalls wird bei einem aufruf mit false ï¿½bergeben, weil erst eine rekursion ï¿½ber die hierarchie 
+   *                      passieren soll, in der nur der state umgesetzt wird, und parallelitï¿½ten angehalten werden
    */
   private AbortionResult abortRunningWFInternally(boolean killJavaCalls, KillStuckProcessBean bean, int resumeHangsCounter, AtomicBoolean alreadyAbortedBefore) {
     outer : while (true) {
@@ -1133,7 +1133,7 @@ public abstract class XynaProcess
           if (logger.isDebugEnabled()) {
             logger.debug("workflow already in state " + XynaProcessState.ABORTING + " -> recursion to sub wfs");
           }
-          //wurde bereits schonmal abgebrochen, evtl hängt ein subwf in einer compensation
+          //wurde bereits schonmal abgebrochen, evtl hï¿½ngt ein subwf in einer compensation
           for (XynaOrderServerExtension childOrder : getCorrelatedXynaOrder().getDirectChildOrders()) {
             XynaFactory.getInstance().getProcessing().getXynaScheduler().getOrderAbortionManagement()
                 .abortMasterWorkflow(childOrder, childOrder.getId(), bean, true);
@@ -1156,7 +1156,7 @@ public abstract class XynaProcess
           if (logger.isDebugEnabled()) {
             logger.debug("workflow in state " + XynaProcessState.RUNNING + " -> " + XynaProcessState.ABORTING);
           }
-          setCompensationBarrier(true); //damit man nach dem setzen des aborting states nicht rekursion über schritte macht, die bereits kompensieren
+          setCompensationBarrier(true); //damit man nach dem setzen des aborting states nicht rekursion ï¿½ber schritte macht, die bereits kompensieren
           try {
             setAbortionException(new ProcessAbortedException(bean.getOrderIdToBeKilled(), bean.getTerminationReason()));
             if (!compareAndSetState(XynaProcessState.RUNNING, XynaProcessState.ABORTING)) {
@@ -1166,19 +1166,19 @@ public abstract class XynaProcess
 
             List<FractalProcessStep<?>> activeSteps = getCurrentExecutingSteps(RecursionType.NONE, ActiveStepType.PARALLEL);
 
-            //erst alle parallelsteps pausieren, damit aufträge weniger häufig im planning sind
+            //erst alle parallelsteps pausieren, damit auftrï¿½ge weniger hï¿½ufig im planning sind
             boolean foundParallelStep = false;
             for (FractalProcessStep<?> step : activeSteps) {
               foundParallelStep = true;
               ParallelExecutionStep<?> pStep = (ParallelExecutionStep<?>) step;
-              //parallel execution soll keine weiteren tasks starten, wenn parallelität beschränkt ist
+              //parallel execution soll keine weiteren tasks starten, wenn parallelitï¿½t beschrï¿½nkt ist
               pStep.getFractalWorkflowParallelExecutor().cancel();
             }
 
             if (foundParallelStep) {
               //evtl weiteren gestarteten threads eine chance geben, dass man sie bei currentexecutionsteps findet
               try {
-                //TODO performance: verbesserungsidee: parallelexecutor.cancel hat rückgabewert, an dem man erkennt, ob man hier warten muss
+                //TODO performance: verbesserungsidee: parallelexecutor.cancel hat rï¿½ckgabewert, an dem man erkennt, ob man hier warten muss
                 Thread.sleep(30);
               } catch (InterruptedException e) {
               }
@@ -1195,14 +1195,14 @@ public abstract class XynaProcess
           }
 
           if (!killJavaCalls) {
-            //während der rekursion werden nur parallelitäten angehalten und der state umgesetzt
+            //wï¿½hrend der rekursion werden nur parallelitï¿½ten angehalten und der state umgesetzt
             return AbortionResult.SUCCESS;
           }
           
           if (logger.isDebugEnabled()) {
             logger.debug("recursion finished, proceeding to search for hanging threads.");
           }
-          //nun für alle kinder die hängenden schritte identifizieren und abbrechen
+          //nun fï¿½r alle kinder die hï¿½ngenden schritte identifizieren und abbrechen
 
           //abort der abortable-services kommt direkt
           List<FractalProcessStep<?>> activeSteps = getCurrentExecutingSteps(RecursionType.EXECUTING, ActiveStepType.JAVACALL);
@@ -1256,14 +1256,14 @@ public abstract class XynaProcess
                  * es kann sein, dass ein subworkflow auf eine durch das abort gestartete compensation lange braucht und
                  * ein suspend deshalb nicht durchkommt. das muss man aber auch resumen!
                  * 
-                 *    parallelität
+                 *    parallelitï¿½t
                  *    ------------
                  *    |          |
                  *    v          v
                  *  wait()      kind-auftrag
                  *                   |
                  *                   v
-                 *            compensate hängt
+                 *            compensate hï¿½ngt
                  * 
                  */
                 cleanupPartiallySuspendedChildren();
@@ -1282,11 +1282,11 @@ public abstract class XynaProcess
           }
           //s == SUSPENDED_AFTER_ABORTING
           alreadyAbortedBefore.set(true); //verhindern, dass man ein resume/abort aufs compensate macht
-          //fall through: suspended workflow abbrechen (resumes durchführen)
+          //fall through: suspended workflow abbrechen (resumes durchfï¿½hren)
           
         case SUSPENDED : //oder SUSPENDED_AFTER_ABORTING (nach RUNNING)
           if (alreadyAbortedBefore.get()) {
-            //compensation bereits am laufen und darin suspendiert. ansonsten wäre der state suspended_after_aborting
+            //compensation bereits am laufen und darin suspendiert. ansonsten wï¿½re der state suspended_after_aborting
             //dieser fall kann vorkommen, wenn suspended_after_aborting passiert, dann already resumed wurde (-> retry), und dann die compensation erneut suspendiert.
             if (logger.isDebugEnabled()) {
               logger.debug("workflow in state " + XynaProcessState.SUSPENDED + ", was aborted before -> abortion successful.");
@@ -1331,7 +1331,7 @@ public abstract class XynaProcess
                 //s == SUSPENDED_AFTER_ABORTING
                 /*
                  * dann ist das suspend nach dem abort gekommen, und deshalb fehlt jetzt wirklich nur noch das resume.
-                 * fall A) resume hat nicht funktioniert, weil noch nicht suspendiert. => das würde aber zu "resume_failed_retry" führen
+                 * fall A) resume hat nicht funktioniert, weil noch nicht suspendiert. => das wï¿½rde aber zu "resume_failed_retry" fï¿½hren
                  * 
                  * wenn das resume von selbst kommt, findet es den auftrag bereits im zustand aborting und bricht sich dadurch selbst ab.
                  * 
@@ -1400,9 +1400,9 @@ public abstract class XynaProcess
 
   /**
    * 
-   * diese klasse ist dazu da, sich zu merken, welche hängenden threads welche paralleltasks welcher parallelexecutors gestartet haben.<p>
+   * diese klasse ist dazu da, sich zu merken, welche hï¿½ngenden threads welche paralleltasks welcher parallelexecutors gestartet haben.<p>
    * 
-   * angenommen, der workflow sieht (unter vernachlässigung von nicht-parallelitäten) so aus:
+   * angenommen, der workflow sieht (unter vernachlï¿½ssigung von nicht-parallelitï¿½ten) so aus:
    * <pre>
    * PE = parallel executor
    * H = hangs
@@ -1420,8 +1420,8 @@ public abstract class XynaProcess
    *     t0/ t3| t4\
    *      H   CO   CO
    * </pre>
-   * das bedeutet, t0 ist der main thread von PE1 und PE2 und er hängt. wenn also t3 und t4 fertig werden, ist kein
-   * thread da, der in richtung PE1 das ergebnis der parallelität propagiert.<br>
+   * das bedeutet, t0 ist der main thread von PE1 und PE2 und er hï¿½ngt. wenn also t3 und t4 fertig werden, ist kein
+   * thread da, der in richtung PE1 das ergebnis der parallelitï¿½t propagiert.<br>
    * t1 wird bei PE1 einfach ignoriert, also nicht darauf gewartet.
    */
   private class FailedThreadsInfo {
@@ -1443,7 +1443,7 @@ public abstract class XynaProcess
 
 
     /**
-     * @return true, falls der mainthread des root PEs hängt, also der orderthread neu gestartet werden muss
+     * @return true, falls der mainthread des root PEs hï¿½ngt, also der orderthread neu gestartet werden muss
      */
     public boolean rootParallelExecutorHangs(XynaProcess p) {
       return info.get(p).getFirst();
@@ -1488,7 +1488,7 @@ public abstract class XynaProcess
       //parallel tasks zu den threads ermitteln
       Map<Thread, ParallelTask> hangingThreadsForParallelExecutor = getHangingThreadsForParallelExecutor(hangingChildMainThreads, parallelExecutor);
       
-      //info map befüllen
+      //info map befï¿½llen
       Pair<Boolean, Map<FractalWorkflowParallelExecutor, Set<ParallelTask>>> pair = info.get(p); 
       if (pair == null) {
         pair = new Pair<Boolean, Map<FractalWorkflowParallelExecutor,Set<ParallelTask>>>(false, null);
@@ -1505,36 +1505,36 @@ public abstract class XynaProcess
   }
 
   /**
-   * hängende threads analysieren, ob aufträge oder main threads von parallelitäten neu gestartet werden müssen 
+   * hï¿½ngende threads analysieren, ob auftrï¿½ge oder main threads von parallelitï¿½ten neu gestartet werden mï¿½ssen 
    * @see FailedThreadsInfo
    */
   private void cleanupAbortFailedThreads(FailedThreadsInfo processesWithAbortFailedThreads) {
-    //cleanup (ggfs inkl. compensate) für (nicht notwendigerweise kind-)workflows ausführen, falls diese 
+    //cleanup (ggfs inkl. compensate) fï¿½r (nicht notwendigerweise kind-)workflows ausfï¿½hren, falls diese 
     //keine laufenden kinder haben
     /*
-     * usecase1: auftrag hängt in der normalen ausführung -> wird erneut gestartet, sieht state=ABORTING -> bricht ab und kompensiert, falls so konfiguriert.
-     * usecase2: auftrag hängt in der compensation -> wird erneut gestartet, geht ins compensate wo er war -> bricht ab
+     * usecase1: auftrag hï¿½ngt in der normalen ausfï¿½hrung -> wird erneut gestartet, sieht state=ABORTING -> bricht ab und kompensiert, falls so konfiguriert.
+     * usecase2: auftrag hï¿½ngt in der compensation -> wird erneut gestartet, geht ins compensate wo er war -> bricht ab
      * 
-     * danach wird in beiden fällen das normale masterworkflow cleanup durchgeführt
+     * danach wird in beiden fï¿½llen das normale masterworkflow cleanup durchgefï¿½hrt
      */
     int cnt = 1;
     int threadStartRetries = 30;
     for (XynaProcess processWithAbortFailedThreads : processesWithAbortFailedThreads.getWorkflows()) {
-      //orderthread neu starten, falls nicht auf einen kindauftrag gewartet wird (für den fall: keine parallelität)
+      //orderthread neu starten, falls nicht auf einen kindauftrag gewartet wird (fï¿½r den fall: keine parallelitï¿½t)
       List<FractalProcessStep<?>> activeSteps =
           processWithAbortFailedThreads.getCurrentExecutingSteps(RecursionType.NONE, ActiveStepType.SUBWF);
       boolean foundRunningChildOrder = activeSteps.size() > 0;
 
-      //starte den auftrag auch neu, wenn der root parallelexecutor hängt
+      //starte den auftrag auch neu, wenn der root parallelexecutor hï¿½ngt
       if (!foundRunningChildOrder || processesWithAbortFailedThreads.rootParallelExecutorHangs(processWithAbortFailedThreads)) {
-        cnt--; //führt dazu, dass bei der ersten whileschleife viele retries passieren, bei folgenden wenigstens ein retry
+        cnt--; //fï¿½hrt dazu, dass bei der ersten whileschleife viele retries passieren, bei folgenden wenigstens ein retry
         XynaOrderServerExtension xo = processWithAbortFailedThreads.getCorrelatedXynaOrder();
 
-        //auftrag muss nicht durch den scheduler, weil er ja noch seine kapazitäten hat.
+        //auftrag muss nicht durch den scheduler, weil er ja noch seine kapazitï¿½ten hat.
         //man kann aber nicht einfach compensate aufrufen, weil dann das cleanup danach nicht passiert.
         //asynchron (in eigenem execution thread starten:
 
-        //beim erneuten laufen funktioniert das abort wie beim resume. der thread sieht state ABORTING und wirft in den hängenden steps die exception.
+        //beim erneuten laufen funktioniert das abort wie beim resume. der thread sieht state ABORTING und wirft in den hï¿½ngenden steps die exception.
         if (logger.isDebugEnabled()) {
           logger.debug("restarting thread for order " + xo);
         }
@@ -1542,19 +1542,19 @@ public abstract class XynaProcess
         
         DeploymentManagement.getInstance().countOrderThatKnowsAboutDeployment(xo.getIdOfLatestDeploymentFromOrder());
         xo.setDeploymentCounterMustBeCountDown();
-        //auftragsthread muss runterzählen
+        //auftragsthread muss runterzï¿½hlen
         while (!XynaOrderExecutor.startOrder(xo, prio )) {
           if (++cnt >= threadStartRetries) {
-            //wenigstens jeden der nicht kompensierten aufträge loggen
+            //wenigstens jeden der nicht kompensierten auftrï¿½ge loggen
             logger.error("Giving up trying to compensate aborted order " + xo + " after " + threadStartRetries
                 + " tries to start a thread.");
             
-            //auftragsthread zählt nicht runter
+            //auftragsthread zï¿½hlt nicht runter
             DeploymentManagement.getInstance().countDownOrderThatKnowsAboutDeployment(xo.getIdOfLatestDeploymentFromOrder());
             xo.setDeploymentCounterCountDownDone();
             break;
           }
-          //im eigenen thread ausführen ist gefährlich. also warten, bis ein thread frei wird
+          //im eigenen thread ausfï¿½hren ist gefï¿½hrlich. also warten, bis ein thread frei wird
           logger.warn("Could not start thread for compensation of aborted order " + xo
               + ". Trying again in 1s with higher priority.");
           prio++;
@@ -1570,25 +1570,25 @@ public abstract class XynaProcess
 
       }
       
-      //fall: mindestens eine verschachtelte parallelität hängt, weil ihr main thread hängt
-      //bei verschachtelten parallelitäten startet man das task bei der parent-parallelität
+      //fall: mindestens eine verschachtelte parallelitï¿½t hï¿½ngt, weil ihr main thread hï¿½ngt
+      //bei verschachtelten parallelitï¿½ten startet man das task bei der parent-parallelitï¿½t
       for (FractalWorkflowParallelExecutor pe : processesWithAbortFailedThreads
           .getParallelExecutorsWithHangingTask(processWithAbortFailedThreads)) {
         for (ParallelTask task : processesWithAbortFailedThreads
             .getTasksForMainThreadOfChildExecutor(processWithAbortFailedThreads, pe)) {
-          cnt--; //führt dazu, dass bei der ersten whileschleife viele retries passieren, bei folgenden wenigstens ein retry
+          cnt--; //fï¿½hrt dazu, dass bei der ersten whileschleife viele retries passieren, bei folgenden wenigstens ein retry
           if (logger.isDebugEnabled()) {
             logger.debug("restarting main thread of child parallel executor " + task + " in " + pe + " of order "
                 + processWithAbortFailedThreads.getCorrelatedXynaOrder().getId());
           }
           while (!pe.startTaskWithNewThread(task)) {
             if (++cnt >= threadStartRetries) {
-              //wenigstens jeden der nicht kompensierten aufträge loggen
+              //wenigstens jeden der nicht kompensierten auftrï¿½ge loggen
               logger.error("Giving up trying to restart main thread of parallel executor after " + threadStartRetries
                   + " tries to start a thread.");
               break;
             }
-            //im eigenen thread ausführen geht nicht. also warten, bis ein thread frei wird
+            //im eigenen thread ausfï¿½hren geht nicht. also warten, bis ein thread frei wird
             logger.warn("Could not start thread for hanging main thread of parallel executor " + task + ".");
             Thread.yield();
             try {
@@ -1604,7 +1604,7 @@ public abstract class XynaProcess
 
   private int stopAbortFailedThreads(FailedThreadsInfo processesWithAbortFailedThreads) {
     //threads die vorher in die abortFailedThreads Liste aufgenommen wurden stoppen versuchen
-    //dazu benötigt man hier eine liste der entsprechenden xynaprocesses
+    //dazu benï¿½tigt man hier eine liste der entsprechenden xynaprocesses
     int cntStopped = 0;
     for (XynaProcess xp : processesWithAbortFailedThreads.getWorkflows()) {
       Set<Thread> localCopy = xp.abortFailedThreads;
@@ -1628,13 +1628,13 @@ public abstract class XynaProcess
   private void findAndSaveHangingThreadAsAbortFailedThreadsRecursively(FailedThreadsInfo processesWithHangingThreads, boolean forAbort) {
     List<XynaOrderServerExtension> allChildOrders = getAllChildOrders(false, true);
     if (forAbort && state != XynaProcessState.ABORTING) {
-      //überprüfen, dass man nicht steps gefunden hat, die bereits aus dem compensate stammen
+      //ï¿½berprï¿½fen, dass man nicht steps gefunden hat, die bereits aus dem compensate stammen
       return;
     }
-    //flag setzen, synchronisieren, so dass processsteps nicht mehr weiterlaufen können
-    //in der synchronisierung die hängenden schritte ermitteln, damit diese danach ggfs kompensiert werden können
+    //flag setzen, synchronisieren, so dass processsteps nicht mehr weiterlaufen kï¿½nnen
+    //in der synchronisierung die hï¿½ngenden schritte ermitteln, damit diese danach ggfs kompensiert werden kï¿½nnen
     findAndSaveHangingThreadAsAbortFailedThreadsLocally(processesWithHangingThreads, forAbort);
-    //rekursion über kindaufträge
+    //rekursion ï¿½ber kindauftrï¿½ge
     for (XynaOrderServerExtension childOrder : allChildOrders) {
       if (childOrder.getExecutionProcessInstance() != null) {
         childOrder.getExecutionProcessInstance()
@@ -1659,7 +1659,7 @@ public abstract class XynaProcess
   }
   
   /**
-   * hierarchie von parallelitäten im workflow
+   * hierarchie von parallelitï¿½ten im workflow
    */
   private class ParallelStepHierarchy {
     
@@ -1667,7 +1667,7 @@ public abstract class XynaProcess
     private final FractalProcessStep<?> step;
 
     /**
-     * erstellt hierarchie aus der übergebenen liste, wobei dieser knoten der rootknoten ist.
+     * erstellt hierarchie aus der ï¿½bergebenen liste, wobei dieser knoten der rootknoten ist.
      */
     public ParallelStepHierarchy(List<FractalProcessStep<?>> activeParallelSteps) {
       Map<FractalProcessStep<?>, ParallelStepHierarchy> nodes = new HashMap<FractalProcessStep<?>, XynaProcess.ParallelStepHierarchy>();
@@ -1705,7 +1705,7 @@ public abstract class XynaProcess
           nodes.put(parentParallelStep, parent);
           parent.addChild(psh);
 
-          //nächsten parent in liste suchen
+          //nï¿½chsten parent in liste suchen
           step = parentParallelStep;
           psh = parent;
         }
@@ -1743,11 +1743,11 @@ public abstract class XynaProcess
     
     List<FractalProcessStep<?>> activeParallelSteps = getCurrentExecutingSteps(RecursionType.NONE, ActiveStepType.PARALLEL);
     if (activeParallelSteps.size() > 0) {
-      //hängende threads bei den zugehörigen parallelexecutoren melden, damit diese nicht ewig auf eine antwort warten!
+      //hï¿½ngende threads bei den zugehï¿½rigen parallelexecutoren melden, damit diese nicht ewig auf eine antwort warten!
       //das muss hier im synchronized passieren, damit nicht ein thread bereits wieder aus der abortFailedThread-liste
-      //ausgetragen wird, wenn er zurückkommt. weil er dann einen ThreadDeath wirft, weiss der PE dann nicht, dass
+      //ausgetragen wird, wenn er zurï¿½ckkommt. weil er dann einen ThreadDeath wirft, weiss der PE dann nicht, dass
       //da etwas auszutragen ist
-      //das restart der threads passiert dann später
+      //das restart der threads passiert dann spï¿½ter
       
       ParallelStepHierarchy parallelTree = new ParallelStepHierarchy(activeParallelSteps);
       Thread hangingMainThread = fillFailedThreadsInfoRecursively(fti, parallelTree, hangingThreads);
@@ -1763,7 +1763,7 @@ public abstract class XynaProcess
     abortFailedThreads.addAll(hangingThreads);
     activeThreads.removeAll(abortFailedThreads);
 
-    //die threads auch aus der liste der threads entfernen, die für die parallele schritt-ausführung gemerkt wird
+    //die threads auch aus der liste der threads entfernen, die fï¿½r die parallele schritt-ausfï¿½hrung gemerkt wird
     if (threadsActivelyRunningInParallelTask != null) {
       for (Thread t : hangingThreads) {
         synchronized (threadsActivelyRunningInParallelTask) {
@@ -1781,8 +1781,8 @@ public abstract class XynaProcess
 
 
   /**
-   * bestimmt die zuordnung der hängenden mainthreads zum jeweiligen parentparallelexecutor, damit diese neu gestartet werden können
-   * @return hängenden mainthread der parallelität oder null, falls er nicht hängt
+   * bestimmt die zuordnung der hï¿½ngenden mainthreads zum jeweiligen parentparallelexecutor, damit diese neu gestartet werden kï¿½nnen
+   * @return hï¿½ngenden mainthread der parallelitï¿½t oder null, falls er nicht hï¿½ngt
    */
   private Thread fillFailedThreadsInfoRecursively(FailedThreadsInfo fti, ParallelStepHierarchy parallelTreeNode,
                                                   Set<Thread> allHangingThreads) {
@@ -1795,14 +1795,14 @@ public abstract class XynaProcess
     }
     
     if (hangingChildMainThreads.size() > 0) {
-      //hängende mainthreads von kind-PEs merken, für die müssen später threads neu gestartet werden
+      //hï¿½ngende mainthreads von kind-PEs merken, fï¿½r die mï¿½ssen spï¿½ter threads neu gestartet werden
       fti.addHangingMainThreads(this, parallelTreeNode.getParallelExecutor(), hangingChildMainThreads);
     }
 
-    //lokal hängenden thread ermitteln und zurückgeben
+    //lokal hï¿½ngenden thread ermitteln und zurï¿½ckgeben
 
     Thread hangingMainThread = null;
-    //bestimmung der teilmenge der hängenden threads, die in diesem parallel executor hängen
+    //bestimmung der teilmenge der hï¿½ngenden threads, die in diesem parallel executor hï¿½ngen
     Map<Thread, ParallelTask> hangingThreadsForThisParallelExecutor =
         getHangingThreadsForParallelExecutor(allHangingThreads, parallelTreeNode.getParallelExecutor());
 
@@ -1832,9 +1832,9 @@ public abstract class XynaProcess
             ParallelTask pt = e.getKey();
             if (pe.hasStarted(pt)) {
               hangingThreadsForThisParallelExecutor.put(t, pt);
-              break; //nächster thread, weil ein thread kann nur ein task pro PE ausführen
+              break; //nï¿½chster thread, weil ein thread kann nur ein task pro PE ausfï¿½hren
             }
-            //hier kein break, es kann noch weitere treffer geben, aber nur für andere parallelexecutoren 
+            //hier kein break, es kann noch weitere treffer geben, aber nur fï¿½r andere parallelexecutoren 
           }
         }
       }
@@ -1844,16 +1844,16 @@ public abstract class XynaProcess
 
 
   /**
-   * sammelt alle zu diesem workflow gehörenden hängenden javacalls (bzw zugehörige threads).
-   * ausserdem werden die error step handler des steps aufgerufen, falls der hängende schritt sich
-   * innerhalb einer parallelität befindet, weil dann das paralleltask nie neu gestartet wird.
+   * sammelt alle zu diesem workflow gehï¿½renden hï¿½ngenden javacalls (bzw zugehï¿½rige threads).
+   * ausserdem werden die error step handler des steps aufgerufen, falls der hï¿½ngende schritt sich
+   * innerhalb einer parallelitï¿½t befindet, weil dann das paralleltask nie neu gestartet wird.
    */
   private Set<Thread> getHangingThreadsLocally(boolean onlyIfAborting) {
     Set<Thread> hangingThreads = new HashSet<Thread>();
     List<FractalProcessStep<?>> activeSteps = getCurrentExecutingSteps(RecursionType.NONE, ActiveStepType.JAVACALL);
 
     if (onlyIfAborting && state != XynaProcessState.ABORTING) {
-      //überprüfen, dass man nicht steps gefunden hat, die bereits aus dem compensate stammen
+      //ï¿½berprï¿½fen, dass man nicht steps gefunden hat, die bereits aus dem compensate stammen
       return hangingThreads;
     }
     for (FractalProcessStep<?> step : activeSteps) {
@@ -1864,7 +1864,7 @@ public abstract class XynaProcess
         } catch (ProcessAbortedException e) {
           //ignore
         } catch (RuntimeException e) {
-          //abort fortführen
+          //abort fortfï¿½hren
           logger.warn("could not execute process step error handlers successfully for hanging step " + step
               + " in workflow " + this + " for order " + getCorrelatedXynaOrder() + ".", e);
         }
@@ -1881,7 +1881,7 @@ public abstract class XynaProcess
   private boolean interruptHangingThreadsRecursively() {
     List<XynaOrderServerExtension> allChildOrders = getAllChildOrders(false, true);
     if (state != XynaProcessState.ABORTING) {
-      //überprüfen, dass man nicht steps gefunden hat, die bereits aus dem compensate stammen
+      //ï¿½berprï¿½fen, dass man nicht steps gefunden hat, die bereits aus dem compensate stammen
       return false;
     }
     boolean interrupted = interruptHangingThreadsLocally();
@@ -1899,7 +1899,7 @@ public abstract class XynaProcess
   private Thread getHangingThreadForStep(FractalProcessStep<?> step, int size) {
     Thread hangingThread = null;
     if (threadsActivelyRunningInParallelTaskIsEmpty()) {
-      //interrupt/kill für "keine parallelität vorhanden"          
+      //interrupt/kill fï¿½r "keine parallelitï¿½t vorhanden"          
       if (logger.isDebugEnabled()) {
         logger.debug("Step " + step + " is not running in parallel.");
       }
@@ -1917,13 +1917,13 @@ public abstract class XynaProcess
         } else {
           logger.warn("No parallel execution detected but found more than one active thread in workflow " + this
               + ". activeThreads.size=" + activeThreads.size() + " activeSteps.size=" + size);
-          //sollte nicht vorkommen, weil threadmapping bei parallelität gesetzt wird und ansonsten nur ein thread aktiv ist
-          //wenn es doch vorkommen sollte, ist es ein programmierfehler, dann weiß man nicht, wieviele threads man killen muss.
+          //sollte nicht vorkommen, weil threadmapping bei parallelitï¿½t gesetzt wird und ansonsten nur ein thread aktiv ist
+          //wenn es doch vorkommen sollte, ist es ein programmierfehler, dann weiï¿½ man nicht, wieviele threads man killen muss.
           //deshalb wird hier einfach nichts ausser der warnung gemacht.
         }
       }
     } else {
-      //hängender javacall in einem parallelem thread. 
+      //hï¿½ngender javacall in einem parallelem thread. 
       if (logger.isDebugEnabled()) {
         logger.debug("step " + step + " is running in parallel");
       }
@@ -1944,7 +1944,7 @@ public abstract class XynaProcess
     List<FractalProcessStep<?>> activeSteps = getCurrentExecutingSteps(RecursionType.NONE, ActiveStepType.JAVACALL);
 
     if (state != XynaProcessState.ABORTING) {
-      //überprüfen, dass man nicht steps gefunden hat, die bereits aus dem compensate stammen
+      //ï¿½berprï¿½fen, dass man nicht steps gefunden hat, die bereits aus dem compensate stammen
       return false;
     }
     boolean killed = false;
@@ -1983,16 +1983,16 @@ public abstract class XynaProcess
   private boolean waitForAllStepsToBeAborted(long timeoutMs) {
     long tEnd = System.currentTimeMillis() + timeoutMs;
     while (true) {
-      //warten, bis dieser step != ABORTING ist. dann sind nämlich auch alle kinder nicht mehr ABORTING
+      //warten, bis dieser step != ABORTING ist. dann sind nï¿½mlich auch alle kinder nicht mehr ABORTING
       if (state != XynaProcessState.ABORTING) {
         return true;
       }
       if (System.currentTimeMillis() >= tEnd) {
         return false;
       }
-      //FIXME nicht auf hängende compensation von kind-workflows warten, sondern nur auf workflows warten, die in state ABORTING sind
-      //      das ist aber nicht trivial, weil manche kinder noch hängen können, andere in der compensation sein können 
-      //      (und hängen und nicht abgebrochen werden sollen), etc
+      //FIXME nicht auf hï¿½ngende compensation von kind-workflows warten, sondern nur auf workflows warten, die in state ABORTING sind
+      //      das ist aber nicht trivial, weil manche kinder noch hï¿½ngen kï¿½nnen, andere in der compensation sein kï¿½nnen 
+      //      (und hï¿½ngen und nicht abgebrochen werden sollen), etc
       try {
         Thread.sleep(10);
       } catch (InterruptedException e) {
@@ -2008,18 +2008,18 @@ public abstract class XynaProcess
 
   public enum XynaProcessState {
     /**
-     * workflow läuft und fängt gleich an zu laufen.
+     * workflow lï¿½uft und fï¿½ngt gleich an zu laufen.
      * evtl wurde er vorher mal abgebrochen und ist in der compensation.
      */
     RUNNING, 
     
     /**
-     * workflow läuft nicht mehr. evtl wird er (falls erfolgreich) später noch kompensiert, dann geht er nochmal auf RUNNING
+     * workflow lï¿½uft nicht mehr. evtl wird er (falls erfolgreich) spï¿½ter noch kompensiert, dann geht er nochmal auf RUNNING
      */
     FINISHED, 
     
     /**
-     * workflow soll abgebrochen werden und läuft
+     * workflow soll abgebrochen werden und lï¿½uft
      */
     ABORTING, 
     
@@ -2052,7 +2052,7 @@ public abstract class XynaProcess
   
   
   /**
-   * folgende zustandsübergänge werden umgebogen:<br>
+   * folgende zustandsï¿½bergï¿½nge werden umgebogen:<br>
    * ABORTING -&gt; SUSPENDED =&gt; SUSPENDED_AFTER_ABORTING<br>
    * ABORTING -&gt; RUNNING =&gt; bleibt auf ABORTING<br>
    * SUSPENDED_AFTER_ABORTING -&gt; RUNNING =&gt; ABORTING<br> 
@@ -2125,7 +2125,7 @@ public abstract class XynaProcess
   }
   
   /**
-   * wieviel InputVars werden benötigt? Default ist 0 für bestehende Planning-Workflows
+   * wieviel InputVars werden benï¿½tigt? Default ist 0 fï¿½r bestehende Planning-Workflows
    */
   public int getNeededInputVarsCount() {
     return 0;
@@ -2137,8 +2137,8 @@ public abstract class XynaProcess
   }
   
   /**
-   * RootProcessData wird für den XynaProcess der RootOrder neu angelegt und dann alle XynaProcess der 
-   * Kind-Aufträge weitergereicht, so dass der ganze Auftragsbaum auf einen gemeinsamen RootProcessData
+   * RootProcessData wird fï¿½r den XynaProcess der RootOrder neu angelegt und dann alle XynaProcess der 
+   * Kind-Auftrï¿½ge weitergereicht, so dass der ganze Auftragsbaum auf einen gemeinsamen RootProcessData
    * zugreifen kann.
    *
    */
@@ -2148,7 +2148,7 @@ public abstract class XynaProcess
     private Throwable abortionCause; 
     
     /**
-     * Vorläufige Anfrage, ob suspendiert werden soll. Genauer wird dies in
+     * Vorlï¿½ufige Anfrage, ob suspendiert werden soll. Genauer wird dies in
      * {@link #suspend(XynaProcess, FractalProcessStep, boolean)} untersucht. 
      * @return
      */
@@ -2161,7 +2161,7 @@ public abstract class XynaProcess
     }
 
     /**
-     * Prüfen, ob supendiert werden soll, wenn ja: Werfen der ProcessSuspendedException
+     * Prï¿½fen, ob supendiert werden soll, wenn ja: Werfen der ProcessSuspendedException
      * @param xynaProcess
      * @param step
      * @param afterFailure 
@@ -2271,7 +2271,7 @@ public abstract class XynaProcess
     }
   }
 
-  //derzeit nicht benötigt, vgl auskommentierter aufruf in XynaOrderServerExtension.removeOrderReferenceIfNotNeededForCompensation
+  //derzeit nicht benï¿½tigt, vgl auskommentierter aufruf in XynaOrderServerExtension.removeOrderReferenceIfNotNeededForCompensation
   public boolean removeOrderReferenceIfNotNeededForCompensation(int[][] stepCoordinates, long childOrderId) {
     DefaultSubworkflowCall<?> step = findUniqueStep(this, stepCoordinates);
     if (step.compensationRecursive()) {
@@ -2285,9 +2285,9 @@ public abstract class XynaProcess
    * pfad:
    *       (<uniquestepid in scope>[<dynamicstepindex in childsteps>].)*<uniquestepid in scope>
    * stepCoordinate ist z.b.
-   * enthält n 1-2elementige arrays. das erste element ist die stepid
+   * enthï¿½lt n 1-2elementige arrays. das erste element ist die stepid
    *                                 das zweite element gibt es nur, wenn das erste element auf einen processstepdynamicchildren zeigt
-   *                                   und enthält dann den index in dessen childsteps-array
+   *                                   und enthï¿½lt dann den index in dessen childsteps-array
    */
   private DefaultSubworkflowCall<?> findUniqueStep(Scope scope, int[][] stepCoordinates) {
     for (int i = 0; i < stepCoordinates.length; i++) {

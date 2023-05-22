@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class SubstringMapTest extends TestCase {
     public SubstringMap2(boolean casesens, int i, float f, float g, int j, int k, int l) {
     }
     
-    private final char SPECIAL= '¹';
+    private final char SPECIAL= 'ï¿½';
     private StringBuilder sb = new StringBuilder();
     public Collection<String> getSuperStrings2(String string) {
       Pattern p = Pattern.compile("(?:^|" +SPECIAL +")(\\Q" + string + "\\E)" + SPECIAL);

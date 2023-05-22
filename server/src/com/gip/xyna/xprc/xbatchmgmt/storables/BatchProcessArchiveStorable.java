@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,17 +49,17 @@ public class BatchProcessArchiveStorable extends Storable<BatchProcessArchiveSto
 
   public static final String COL_ORDER_ID = "orderId"; //Order ID des Batch Processes
   public static final String COL_LABEL = "label"; //Bezeichnung des Batch Processes 
-  public static final String COL_APPLICATION = "application"; //Application, in der der Batch Process läuft und in der alle Subaufträge gestartet werden
-  public static final String COL_VERSION = "version"; //Zugehörige Version der Application
-  public static final String COL_WORKSPACE = "workspace"; //Workspace, in dem der Batch Process läuft und in dem alle Subaufträge gestartet werden
-  public static final String COL_COMPONENT = "component"; //Die zugehörige Komponente, z.B. XDNC.XFwMgmt
+  public static final String COL_APPLICATION = "application"; //Application, in der der Batch Process lï¿½uft und in der alle Subauftrï¿½ge gestartet werden
+  public static final String COL_VERSION = "version"; //Zugehï¿½rige Version der Application
+  public static final String COL_WORKSPACE = "workspace"; //Workspace, in dem der Batch Process lï¿½uft und in dem alle Subauftrï¿½ge gestartet werden
+  public static final String COL_COMPONENT = "component"; //Die zugehï¿½rige Komponente, z.B. XDNC.XFwMgmt
   public static final String COL_ORDER_STATUS = "orderStatus"; //OrderInstanceStatus des Masters
-  public static final String COL_FAILED = "failed"; //Anzahl der fehlgeschlagenen Subaufträge
-  public static final String COL_FINISHED = "finished"; //Anzahl der erfolgreich fertiggelaufenen Subaufträge
+  public static final String COL_FAILED = "failed"; //Anzahl der fehlgeschlagenen Subauftrï¿½ge
+  public static final String COL_FINISHED = "finished"; //Anzahl der erfolgreich fertiggelaufenen Subauftrï¿½ge
   public static final String COL_CANCELED = "canceled"; //Anzahl der Objekte, die aufgrund eines Abbruchs nicht verarbeitet wurden.
-  public static final String COL_TOTAL = "total"; //Gesamtzahl der zu startenden Subaufträge
-  public static final String COL_SLAVE_ORDER_TYPE = "slaveOrdertype"; //Ordertype der zu startenden Subaufträge
-  public static final String COL_CUSTOM0 = "custom0"; //Erstes Custom-Feld, für die freie Verwendung durch Komponenten.
+  public static final String COL_TOTAL = "total"; //Gesamtzahl der zu startenden Subauftrï¿½ge
+  public static final String COL_SLAVE_ORDER_TYPE = "slaveOrdertype"; //Ordertype der zu startenden Subauftrï¿½ge
+  public static final String COL_CUSTOM0 = "custom0"; //Erstes Custom-Feld, fï¿½r die freie Verwendung durch Komponenten.
   public static final String COL_CUSTOM1 = "custom1";
   public static final String COL_CUSTOM2 = "custom2";
   public static final String COL_CUSTOM3 = "custom3";
@@ -80,37 +80,37 @@ public class BatchProcessArchiveStorable extends Storable<BatchProcessArchiveSto
   private String label;//Bezeichnung des Batch Processes 
 
   @Column(name = COL_APPLICATION)
-  private String application;//Application, in der der Batch Process läuft und in der alle Subaufträge gestartet werden
+  private String application;//Application, in der der Batch Process lï¿½uft und in der alle Subauftrï¿½ge gestartet werden
 
   @Column(name = COL_VERSION)
-  private String version; //Zugehörige Version der Application
+  private String version; //Zugehï¿½rige Version der Application
   
   @Column(name = COL_WORKSPACE)
-  private String workspace; //Workspace, in dem der Batch Process läuft und in dem alle Subaufträge gestartet werden
+  private String workspace; //Workspace, in dem der Batch Process lï¿½uft und in dem alle Subauftrï¿½ge gestartet werden
 
   @Column(name = COL_COMPONENT)
-  private String component; //Die zugehörige Komponente, z.B. XDNC.XFwMgmt
+  private String component; //Die zugehï¿½rige Komponente, z.B. XDNC.XFwMgmt
 
   @Column(name = COL_ORDER_STATUS)
   private OrderInstanceStatus orderStatus; //OrderInstanceStatus des Masters
   
   @Column(name = COL_FAILED)
-  private int failed; //Anzahl der fehlgeschlagenen Subaufträge
+  private int failed; //Anzahl der fehlgeschlagenen Subauftrï¿½ge
 
   @Column(name = COL_FINISHED)
-  private int finished; //Anzahl der erfolgreich fertiggelaufenen Subaufträge
+  private int finished; //Anzahl der erfolgreich fertiggelaufenen Subauftrï¿½ge
 
   @Column(name = COL_CANCELED)
   private int canceled; //Anzahl der Objekte, die aufgrund eines Abbruchs nicht verarbeitet wurden.
 
   @Column(name = COL_TOTAL)
-  private Integer total; //Gesamtzahl der zu startenden Subaufträge
+  private Integer total; //Gesamtzahl der zu startenden Subauftrï¿½ge
 
   @Column(name = COL_SLAVE_ORDER_TYPE)
-  private String slaveOrdertype; //Ordertype der zu startenden Subaufträge
+  private String slaveOrdertype; //Ordertype der zu startenden Subauftrï¿½ge
 
   @Column(name = COL_CUSTOM0)
-  private String custom0; //Erstes Custom-Feld, für die freie Verwendung durch Komponenten.
+  private String custom0; //Erstes Custom-Feld, fï¿½r die freie Verwendung durch Komponenten.
 
   @Column(name = COL_CUSTOM1)
   private String custom1;
@@ -166,7 +166,7 @@ public class BatchProcessArchiveStorable extends Storable<BatchProcessArchiveSto
   }
 
   /**
-   * Übernimmt die Counter aus der RuntimeInformation
+   * ï¿½bernimmt die Counter aus der RuntimeInformation
    * @param runtimeInformation
    * @param terminated Ist der Batch Process bereits abgeschlossen?
    */
@@ -175,7 +175,7 @@ public class BatchProcessArchiveStorable extends Storable<BatchProcessArchiveSto
     this.failed = runtimeInformation.getFailed();
     
     //falls der Batch Prozess abgeschlossen ist, aber noch Slaves laufen (zum Beispiel, weil
-    //sie beim cancel nicht abgebrochen werden konnten), werden diese als failed gezählt
+    //sie beim cancel nicht abgebrochen werden konnten), werden diese als failed gezï¿½hlt
     if (terminated) {
       this.failed += runtimeInformation.getRunning();
     }
@@ -566,7 +566,7 @@ public class BatchProcessArchiveStorable extends Storable<BatchProcessArchiveSto
   }
   
   /**
-   * Ermittelt die Revision für die Application-Version des Batch Prozesses.
+   * Ermittelt die Revision fï¿½r die Application-Version des Batch Prozesses.
    * @return
    */
   public Long getRevision() {

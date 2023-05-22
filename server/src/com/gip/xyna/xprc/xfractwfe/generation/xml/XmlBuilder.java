@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class XmlBuilder {
   }
   
   /**
-   * ergänzt Attribute " name=\"value\""
+   * ergï¿½nzt Attribute " name=\"value\""
    */
   public void addAttribute(String name, String value) {
     if( value == null ) {
@@ -108,7 +108,7 @@ public class XmlBuilder {
   }
   
   /**
-   * vollständiges Ende "&gt;value&lt;/elementName&gt;" 
+   * vollstï¿½ndiges Ende "&gt;value&lt;/elementName&gt;" 
    * @param value
    * @param elementName
    */
@@ -127,7 +127,7 @@ public class XmlBuilder {
   }
 
   /**
-   * vollständiges Ende "&lt;/elementName&gt;"
+   * vollstï¿½ndiges Ende "&lt;/elementName&gt;"
    */
   public void endElement(String elementName) {
     --indent;
@@ -136,7 +136,7 @@ public class XmlBuilder {
   }
 
   /**
-   * vollständiges Ende "&lt;/elementName&gt;"
+   * vollstï¿½ndiges Ende "&lt;/elementName&gt;"
    */
   public void endElementNoIdent(String elementName) {
     --indent;

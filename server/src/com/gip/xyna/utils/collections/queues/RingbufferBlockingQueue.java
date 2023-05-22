@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 /**
- * BlockingQueue-Implementierung, die sich wie ein RingBuffer verhält.
+ * BlockingQueue-Implementierung, die sich wie ein RingBuffer verhï¿½lt.
  * 
- * Selbst wenn die Queue mit der konfigurierten Kapazität gefüllt ist und andere Threads 
- * blockierend warten, dass sie Einträge hinzufügen können, kann mit der exchange-Methode
- * ein neuer Eintrag eingetragen werden indem gleichzeitig der älteste Eintrag entfernt wird.
+ * Selbst wenn die Queue mit der konfigurierten Kapazitï¿½t gefï¿½llt ist und andere Threads 
+ * blockierend warten, dass sie Eintrï¿½ge hinzufï¿½gen kï¿½nnen, kann mit der exchange-Methode
+ * ein neuer Eintrag eingetragen werden indem gleichzeitig der ï¿½lteste Eintrag entfernt wird.
  *
  */
 public class RingbufferBlockingQueue<E> extends LinkedBlockingQueueWithAccessibleLocks<E> {
@@ -44,7 +44,7 @@ public class RingbufferBlockingQueue<E> extends LinkedBlockingQueueWithAccessibl
   }
   
   /**
-   * gefiltertes Poll: gesucht wird ältester Eintrag, der zum Filter passt (Filter meldet true)
+   * gefiltertes Poll: gesucht wird ï¿½ltester Eintrag, der zum Filter passt (Filter meldet true)
    * @param queueFilter
    * @return
    */
@@ -60,7 +60,7 @@ public class RingbufferBlockingQueue<E> extends LinkedBlockingQueueWithAccessibl
   }
   
   /**
-   * gefiltertes Peek: gesucht wird ältester Eintrag, der zum Filter passt (Filter meldet true)
+   * gefiltertes Peek: gesucht wird ï¿½ltester Eintrag, der zum Filter passt (Filter meldet true)
    * @param queueFilter
    * @return
    */
@@ -79,9 +79,9 @@ public class RingbufferBlockingQueue<E> extends LinkedBlockingQueueWithAccessibl
   
   
   /**
-   * Erst ein poll, dann ein offer. Abgesichert durch Locks, so dass kein anderer Thread stört
+   * Erst ein poll, dann ein offer. Abgesichert durch Locks, so dass kein anderer Thread stï¿½rt
    * @param newest
-   * @return eldest ältester Eintrag im RingBuffer
+   * @return eldest ï¿½ltester Eintrag im RingBuffer
    */
   public E exchange( E newest )  {
     putLock.lock();
@@ -97,7 +97,7 @@ public class RingbufferBlockingQueue<E> extends LinkedBlockingQueueWithAccessibl
   /**
    * Erst ein offer, bei Nicht-Erfolg ein Exchange (poll, dann offer)
    * @param newest
-   * @return eldest null, wenn offer erfolgreich ist, ansonsten ältester Eintrag im RingBuffer
+   * @return eldest null, wenn offer erfolgreich ist, ansonsten ï¿½ltester Eintrag im RingBuffer
    */
   public E offerOrExchange( E newest ) {
     putLock.lock();
@@ -115,10 +115,10 @@ public class RingbufferBlockingQueue<E> extends LinkedBlockingQueueWithAccessibl
   }
     
   /**
-   * Erst ein filteredPoll, dann ein offer. Abgesichert durch Locks, so dass kein anderer Thread stört
+   * Erst ein filteredPoll, dann ein offer. Abgesichert durch Locks, so dass kein anderer Thread stï¿½rt
    * @param queueFilter
    * @param newest
-   * @return ältester Eintrag im RingBuffer, der Filter erfüllt oder newest, falls Filter nicht erfüllt wird
+   * @return ï¿½ltester Eintrag im RingBuffer, der Filter erfï¿½llt oder newest, falls Filter nicht erfï¿½llt wird
    */
   public E filteredExchange( QueueFilter<E> queueFilter, E newest )  {
     putLock.lock();
@@ -135,7 +135,7 @@ public class RingbufferBlockingQueue<E> extends LinkedBlockingQueueWithAccessibl
    * Erst ein offer, bei Nicht-Erfolg ein filteredExchange (filteredPoll, dann offer)
    * @param queueFilter
    * @param newest
-   * @return null, wenn offer erfolgreich ist, ansonsten ältester Eintrag im RingBuffer den Filter findet oder newest
+   * @return null, wenn offer erfolgreich ist, ansonsten ï¿½ltester Eintrag im RingBuffer den Filter findet oder newest
    */
   public E offerOrFilteredExchange( QueueFilter<E> queueFilter, E newest ) {
     putLock.lock();
@@ -177,8 +177,8 @@ public class RingbufferBlockingQueue<E> extends LinkedBlockingQueueWithAccessibl
   }
  
   private void silentPut(E newest) {
-    //kein put, da dann InterruptedException zu behandeln wäre.
-    //offer/put sollte immer erfolgreich sein, da vorher ein poll ausgeführt wurde
+    //kein put, da dann InterruptedException zu behandeln wï¿½re.
+    //offer/put sollte immer erfolgreich sein, da vorher ein poll ausgefï¿½hrt wurde
     if( ! offer( newest ) ) {
       throw new IllegalStateException("Could not offer after poll");
     }

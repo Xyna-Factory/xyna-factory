@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,9 +69,9 @@ public class DatabasePersistenceLayerWithAlterTableSupportHelper {
       if (logger.isDebugEnabled()) {
         logger.debug("Validating table " + tableName);
       }
-      //typen von spalten ermitteln und auf kompatibilität prüfen
+      //typen von spalten ermitteln und auf kompatibilitï¿½t prï¿½fen
       //falls nicht kompatibel => fehler werfen.
-      //falls nicht existent => spalte hinzufügen
+      //falls nicht existent => spalte hinzufï¿½gen
       Set<DatabaseIndexCollision> collisions = connection.checkColumns(persi, klass, cols);
 
       if (collisions != null && collisions.size() > 0) {
@@ -138,11 +138,11 @@ public class DatabasePersistenceLayerWithAlterTableSupportHelper {
     boolean columnsAreCompatible = connection.areColumnsCompatible(col, klass, colInfo);
     if (columnsAreCompatible) {
       //zb varchar / varchar
-      //muss noch überprüfen, ob varchar größe auch ok ist.
+      //muss noch ï¿½berprï¿½fen, ob varchar grï¿½ï¿½e auch ok ist.
       if (colInfo.isTypeDependentOnSizeSpecification()) {
         if (col.size() > 0) {
           if (col.size() > colInfo.getCharLength()) {
-            //TODO das ist eigtl etwas gemogelt, die größe könnte für verschiedene typen auch verschiedene auswirkungen haben.
+            //TODO das ist eigtl etwas gemogelt, die grï¿½ï¿½e kï¿½nnte fï¿½r verschiedene typen auch verschiedene auswirkungen haben.
             if (automaticColumnTypeWidening) {
               try {
                 connection.modifyColumnsCompatible(col, klass, tableName);
@@ -158,15 +158,15 @@ public class DatabasePersistenceLayerWithAlterTableSupportHelper {
               }
             }
           }
-        } //else keine größe angegeben im storable, dann ist sie wohl nicht so wichtig
-      } //else dann passen die typen unabhängig von einer größenangabe im colInfo.type
+        } //else keine grï¿½ï¿½e angegeben im storable, dann ist sie wohl nicht so wichtig
+      } //else dann passen die typen unabhï¿½ngig von einer grï¿½ï¿½enangabe im colInfo.type
 
       return;
     }
 
     // Check if the old type can be converted into the new type without losses.
     // Mostly it is expected to 
-    //könnte zb sein, dass vorhanden=TINYINT, recommended=MEDIUMINT
+    //kï¿½nnte zb sein, dass vorhanden=TINYINT, recommended=MEDIUMINT
     boolean areBaseTypesCompatible = connection.areBaseTypesCompatible(col, klass, colInfo);
     if (areBaseTypesCompatible) {
 

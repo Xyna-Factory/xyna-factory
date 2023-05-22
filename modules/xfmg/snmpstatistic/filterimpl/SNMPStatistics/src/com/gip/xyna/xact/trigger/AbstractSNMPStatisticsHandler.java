@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public abstract class AbstractSNMPStatisticsHandler extends AbstractOidSingleHan
   
   protected SortedSet<OID> oidWalk = new TreeSet<OID>(); // FIXME once the deprecated classes are gone, this should be private
   
-  // TODO: nachschauen, was für andere orderTypes existieren, die nicht aufgerufen wurden um dort 0 zurückzugeben
+  // TODO: nachschauen, was fï¿½r andere orderTypes existieren, die nicht aufgerufen wurden um dort 0 zurï¿½ckzugeben
   // TODO: die call/finished/error/timeout stats in die Statistics Klasse packen
   protected TreeMap<String, Integer> mapStringInteger = new TreeMap<String, Integer>();
   protected TreeMap<Integer, String> mapIntegerString = new TreeMap<Integer, String>();

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,17 +52,17 @@ public interface ClusterProvider {
   public boolean isConnected();
 
   /**
-   * informationen für die CLI oder die GUI
+   * informationen fï¿½r die CLI oder die GUI
    */
   public ClusterInformation getInformation();
 
   /**
-   * vorübergehend aus cluster raus, mit der motivation, später wieder mit restoreCluster dazustoßen zu können 
+   * vorï¿½bergehend aus cluster raus, mit der motivation, spï¿½ter wieder mit restoreCluster dazustoï¿½en zu kï¿½nnen 
    */
   public void disconnect();
 
   /**
-   * dieser knoten verlässt das cluster endgültig.
+   * dieser knoten verlï¿½sst das cluster endgï¿½ltig.
    */
   public void leaveCluster();
   
@@ -107,7 +107,7 @@ public interface ClusterProvider {
   public void restoreClusterConnect();
 
   /**
-   * fügt verbindung zu weiterem cluster knoten dazu
+   * fï¿½gt verbindung zu weiterem cluster knoten dazu
    * @return interne id, die beim {@link #restoreClusterPrepare(long)} wieder angegeben wird
    */
   public long joinCluster(String[] connectionParameters)
@@ -120,10 +120,10 @@ public interface ClusterProvider {
   public ClusterState getState();
 
   /**
-   * Gibt eine Liste aller Bindings zurück oder wirft XNWH_RetryTransactionException, wenn dies nicht
-   * möglich ist. Ein möglicher Retry wird intern gemacht, außerhalb ist kein Retry nötig.
+   * Gibt eine Liste aller Bindings zurï¿½ck oder wirft XNWH_RetryTransactionException, wenn dies nicht
+   * mï¿½glich ist. Ein mï¿½glicher Retry wird intern gemacht, auï¿½erhalb ist kein Retry nï¿½tig.
    * @return Liste aller Bindings
-   * @throws XNWH_RetryTransactionException falls Bindings nicht ermittelt werden können (beispielsweise weil DB nicht verfügbar ist)
+   * @throws XNWH_RetryTransactionException falls Bindings nicht ermittelt werden kï¿½nnen (beispielsweise weil DB nicht verfï¿½gbar ist)
    */
   public List<Integer> getAllBindingsIncludingLocal() throws XNWH_RetryTransactionException;
 
@@ -134,7 +134,7 @@ public interface ClusterProvider {
 
   /**
    * ClusterProvider wird informiert, dass ein erneuter Aufruf seines ClusterStateChangeHandler.isReadyForChange(...)
-   * nun true ergeben könnte.
+   * nun true ergeben kï¿½nnte.
    */
   public void readyForStateChange();
   

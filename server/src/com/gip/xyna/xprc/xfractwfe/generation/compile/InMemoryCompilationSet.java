@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,9 +85,9 @@ public class InMemoryCompilationSet implements CompilationSet {
 
   /**
    * classdir, in das die classfiles generiert werden.
-   * wirkt sich nur auf sources aus, die nach dem setzen des classdirs zum compilationset hinzugefügt werden.
+   * wirkt sich nur auf sources aus, die nach dem setzen des classdirs zum compilationset hinzugefï¿½gt werden.
    * 
-   * alternativ kann für jede javasource ein eigenes classdir angegeben werden @link{JavaSourceFromString#setClassOutputLocation(String)}
+   * alternativ kann fï¿½r jede javasource ein eigenes classdir angegeben werden @link{JavaSourceFromString#setClassOutputLocation(String)}
    * @param classDir
    */
   public void setClassDir(String classDir) {
@@ -213,7 +213,7 @@ public class InMemoryCompilationSet implements CompilationSet {
       }
       CompilationTask task = compiler.getTask(sw, stfm, stfm.getErrorCollector(), options, null, compilationTargetsOrdered);
 
-      synchronized (GenerationBase.class) { //keine compiles gleichzeitig ausführen (synchronisiert mit Main.compile())
+      synchronized (GenerationBase.class) { //keine compiles gleichzeitig ausfï¿½hren (synchronisiert mit Main.compile())
         if (!task.call()) {
           // according to the java-doc we should have encountered an error and will throw once checking the diagnostics collector 
         }
@@ -276,7 +276,7 @@ public class InMemoryCompilationSet implements CompilationSet {
   }
   
   /**
-   * reihenfolge in der files hier hinzugefügt werden, ist fürs kompilieren relevant
+   * reihenfolge in der files hier hinzugefï¿½gt werden, ist fï¿½rs kompilieren relevant
    */
   public void addToCompile(JavaSourceFromString source) {
     if (classDir != null) {

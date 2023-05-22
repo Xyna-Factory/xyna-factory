@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ import com.gip.xyna.xprc.xpce.planning.Capacity;
 
 
 /**
- * schnittstelle um exceptions abfragen zu können, exception codes zu verwalten etc
+ * schnittstelle um exceptions abfragen zu kï¿½nnen, exception codes zu verwalten etc
  */
 public final class ExceptionManagement extends FunctionGroup {
 
@@ -165,7 +165,7 @@ public final class ExceptionManagement extends FunctionGroup {
         try {
           Long rev = object.getRevision();
           if (object.isReservedServerObject()) {
-            //mit -1 registrieren, weil XynaExceptionBase.getRevision() für diese Exception auch -1 zurückgibt
+            //mit -1 registrieren, weil XynaExceptionBase.getRevision() fï¿½r diese Exception auch -1 zurï¿½ckgibt
             rev = -1L;
           }
           for (Map.Entry<String, String> entry : messages.entrySet()) {
@@ -240,7 +240,7 @@ public final class ExceptionManagement extends FunctionGroup {
 
 
   /**
-   * prüft, ob in im xml definierte exception bereits einen code besitzt. falls nicht, wird ein neuer generiert
+   * prï¿½ft, ob in im xml definierte exception bereits einen code besitzt. falls nicht, wird ein neuer generiert
    * @param doc
    * @throws NoCodeAvailableException
    * @throws CodeGroupUnknownException

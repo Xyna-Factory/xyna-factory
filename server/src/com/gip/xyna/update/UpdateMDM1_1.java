@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public class UpdateMDM1_1 extends MDMUpdate {
 
   protected Version getVersionAfterUpdate() throws XynaException {
     Version v = new Version(Updater.START_MDM_VERSION);
-    // letzte stelle um eins erhöhen
+    // letzte stelle um eins erhï¿½hen
     v.increaseToNextMajorVersion(v.length());
     return v;
   }
@@ -81,13 +81,13 @@ public class UpdateMDM1_1 extends MDMUpdate {
         serviceRef.setAttribute(GenerationBase.ATT.REFERENCENAME, name);
       }
     } else {
-      // datentypen benötigen keine änderungen
+      // datentypen benï¿½tigen keine ï¿½nderungen
     }
     NodeList nl = doc.getChildNodes();
     if (nl.getLength() == 0 || nl.item(0).getNodeType() != Node.COMMENT_NODE) {
       doc.insertBefore(doc.createComment("\n *\n" 
                       + " * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n"
-                      + " * Copyright 2022 GIP SmartMercial GmbH, Germany\n" 
+                      + " * Copyright 2023 Xyna GmbH, Germany\n" 
                       + " *\n" 
                       + " * Licensed under the Apache License, Version 2.0 (the \"License\");\n"
                       + " * you may not use this file except in compliance with the License.\n"

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class DefaultRetryStrategy implements RetryStrategy {
         if( retry == 0 );
         //todo beim ersten Durchlauf warn
         logger.trace("could not create new connection", exception);
-        continue; //nächster Retry
+        continue; //nï¿½chster Retry
       }
       exception = validationStrategy.validate(con);
       if( exception != null ) {
@@ -75,7 +75,7 @@ public class DefaultRetryStrategy implements RetryStrategy {
         } catch (SQLException e) {
           logger.trace("connection could not be closed successfully", e);
         }
-        continue; //nächster Retry
+        continue; //nï¿½chster Retry
       } else {
         //valide Connection erhalten
         return con;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class DefaultPlanning extends XynaProcess {
 
     logger.debug("Gathering output of default planning workflow");
 
-    // capacities hängen standardmässig am execution-wf
+    // capacities hï¿½ngen standardmï¿½ssig am execution-wf
     DestinationKey key = getCorrelatedXynaOrder().getDestinationKey();
     List<Capacity> caps = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getCapacityMappingDatabase()
                     .getCapacities(key);

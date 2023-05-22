@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -364,7 +364,7 @@ public class Persistence {
   /**
    * Escaped oder Unescaped alle FilterConditions aller Querys im Workflow.
    * Dies ist ein Workaround bis das Escapen in der Methode com.gip.xyna.xprc.xfractwfe.generation.StepFunction.appendXML(XmlBuilder).queryFilterCondition gemacht wird.
-   * TODO PMOD-598 Methode kann gelöscht werden
+   * TODO PMOD-598 Methode kann gelï¿½scht werden
    * @param wf
    * @param escape
    */

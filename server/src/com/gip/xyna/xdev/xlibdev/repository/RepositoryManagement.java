@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,7 +129,7 @@ public class RepositoryManagement extends FunctionGroup {
 
 
   private void initXMLRepositories() {
-    //priority so wählen, damit von generationbase auch für serverreservierte objekte richtig berücksichtigt
+    //priority so wï¿½hlen, damit von generationbase auch fï¿½r serverreservierte objekte richtig berï¿½cksichtigt
     XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
         .addDeploymentHandler(DeploymentHandling.PRIORITY_EXCEPTION_DATABASE, new DeploymentHandler() {
 
@@ -311,7 +311,7 @@ public class RepositoryManagement extends FunctionGroup {
 
 
   /**
-   * erzeuge eindeutigen namen für das repository unterverzeichnis und speichert das mapping einem file
+   * erzeuge eindeutigen namen fï¿½r das repository unterverzeichnis und speichert das mapping einem file
    */
   public static synchronized String createRuntimeContextSubDirInRepository(RuntimeContext rc) {
     String s;
@@ -325,7 +325,7 @@ public class RepositoryManagement extends FunctionGroup {
       throw new RuntimeException("Unsupported RuntimeContext Type " + rc);
     }
     if (existingRepositoryRuntimeContexts.size() > 10000) {
-      //alte einträge entfernen
+      //alte eintrï¿½ge entfernen
       existingRepositoryRuntimeContexts.clear();
     }
     lazyInitRepositoryRuntimeContexts();
@@ -338,7 +338,7 @@ public class RepositoryManagement extends FunctionGroup {
       } else if (existingRC.equals(rc)) {
         return s;
       }
-      s += "X"; //TODO hochlaufende nummer? sollte aber nicht häufig passieren...
+      s += "X"; //TODO hochlaufende nummer? sollte aber nicht hï¿½ufig passieren...
     }
 
     //namen persistieren
@@ -433,8 +433,8 @@ public class RepositoryManagement extends FunctionGroup {
   
   public void cleanupRepositories(long timestampMillis) throws XynaException {
     /*
-     * für alle repositories die es gibt (in xmomrepository):
-     *   aufräumen
+     * fï¿½r alle repositories die es gibt (in xmomrepository):
+     *   aufrï¿½umen
      *   ist history leer -> verzeichnis entfernen und eintrag aus repositories textfile
      */
     lazyInitRepositoryRuntimeContexts();
@@ -486,7 +486,7 @@ public class RepositoryManagement extends FunctionGroup {
         }
       }
 
-      // verzeichnisse löschen
+      // verzeichnisse lï¿½schen
       for (Entry<String, RuntimeContext> e : toDelete) {
         File f = new File(Constants.ROOT_DIR_FOR_REPOSITORY, e.getKey());
         logger.info("deleting directory " + f.getAbsolutePath());
@@ -498,14 +498,14 @@ public class RepositoryManagement extends FunctionGroup {
 
   /**
    * @param rc
-   * @param timestampMillis Fileversionen die nach diesem Zeitpunkt nicht mehr gültig sind, können entfernt werden.
+   * @param timestampMillis Fileversionen die nach diesem Zeitpunkt nicht mehr gï¿½ltig sind, kï¿½nnen entfernt werden.
    * @throws XynaException 
    */
   private boolean cleanupRepository(RuntimeContext rc, long timestampMillis, boolean activeRuntimeContext) throws XynaException {
     Repository repository = getRepository(rc);
     repository.cleanupEarlierThan(timestampMillis);
-    if (!activeRuntimeContext) { //ansonsten könnte noch aufträge erstellt werden
-      //nun noch überprüfen, dass nach timestampmillis keine aufträge mehr gelaufen sein können -> currentRevision == damalige revision && alles gelöscht.
+    if (!activeRuntimeContext) { //ansonsten kï¿½nnte noch auftrï¿½ge erstellt werden
+      //nun noch ï¿½berprï¿½fen, dass nach timestampmillis keine auftrï¿½ge mehr gelaufen sein kï¿½nnen -> currentRevision == damalige revision && alles gelï¿½scht.
       long r = repository.getCurrentRevision();
       if (repository.listFiles(r).length == 0) {
         Revision rev = repository.getRevision(r);

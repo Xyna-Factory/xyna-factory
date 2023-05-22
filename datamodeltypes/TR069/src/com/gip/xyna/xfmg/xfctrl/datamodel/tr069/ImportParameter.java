@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class ImportParameter {
       StringParameter.typeBoolean("overwrite").
       documentation(Documentation.
                     en("Overwrites existing types").
-                    de("Überschreiben bereits existierender Datentypen").
+                    de("ï¿½berschreiben bereits existierender Datentypen").
                     build()).
       defaultValue(defaults.getOverwrite()).build();
   
@@ -89,7 +89,7 @@ public class ImportParameter {
   public enum Information implements DocumentedEnum {
     NoImport(Documentation.
              en("no import, only informations" ).
-             de("keinen Import durchführen").
+             de("keinen Import durchfï¿½hren").
              build()), 
     Colorize(Documentation.
              en("colorized presentation").
@@ -109,7 +109,7 @@ public class ImportParameter {
               build()), 
     Changes(Documentation.
             en("show changes between datamodel versions").
-            de("Anzeige der Änderungen zwischen den Datenmodellen-Versionen").
+            de("Anzeige der ï¿½nderungen zwischen den Datenmodellen-Versionen").
             build());
     
     private Documentation doc;

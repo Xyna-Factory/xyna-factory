@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,23 +33,23 @@ import com.gip.xyna.xprc.xsched.orderseries.SeriesInformationStorable.OrderStatu
  * noch fertigzustellen und eventuell die Successoren zu starten.<br>
  * Vorbedingung ist, dass in der DB bereits der SeriesInformationStorable-Eintrag transaktionssicher 
  * in den Attributen finished und hadError sowie die XynaOrder angepasst wurde. Diese Vorbedingung 
- * wird hier nicht überprüft, der Update hier überschreibt sogar die bisherigen Änderungen in der DB.
- * Wichtig ist er aber zur Konsistenzwahrung im Fehlerfall, wenn dieser Task nicht mehr vollständig 
- * ausgeführt werden kann.
+ * wird hier nicht ï¿½berprï¿½ft, der Update hier ï¿½berschreibt sogar die bisherigen ï¿½nderungen in der DB.
+ * Wichtig ist er aber zur Konsistenzwahrung im Fehlerfall, wenn dieser Task nicht mehr vollstï¿½ndig 
+ * ausgefï¿½hrt werden kann.
  * <br><br>
  * <pre>
  * Algorithmus:
  * 1) Lock der correlationId
  * 2) Suche des SeriesInformationStorable
  * 3) Anpassen des OrderStatus
- * 3.1) Falls der Auftrag gecancelt wurde, muss entschieden werden, ob die Successoren laufen dürfen.
+ * 3.1) Falls der Auftrag gecancelt wurde, muss entschieden werden, ob die Successoren laufen dï¿½rfen.
  * 3.1.1) Es sind noch nicht alle Predecessoren fertig: nur OrderStatus auf CANCELING setzen und Task beenden
- * 3.1.2) Auftrag war regulär lauffähig: OrderStatus auf CANCELED setzen, weiter mit 4)
+ * 3.1.2) Auftrag war regulï¿½r lauffï¿½hig: OrderStatus auf CANCELED setzen, weiter mit 4)
  * 4) Nachfolger muss gecancelt werden, wenn OrderStatus.isError=true und AutoCancel=true
- * 5) Schleife über alle SuccessorCorrIds
+ * 5) Schleife ï¿½ber alle SuccessorCorrIds
  * 5.1) Zugriff auf Predecessor-Baum sucTree zu SuccessorCorrId
  * 5.1.1) Falls sucTree nicht existiert, Neubau.
- * 5.2) Auswertung des Ergebnis des Aufrufs updateSuccessorInternal(sucTree), 3 Fälle
+ * 5.2) Auswertung des Ergebnis des Aufrufs updateSuccessorInternal(sucTree), 3 Fï¿½lle
  * 5.2.1) NotFound: nichts zu tun
  * 5.2.2) Later:    Umtragen von SuccessorCorrIds nach SuccessorOrderIds
  * 5.2.3) Success:  Umtragen von SuccessorCorrIds nach SuccessorOrderIds
@@ -58,15 +58,15 @@ import com.gip.xyna.xprc.xsched.orderseries.SeriesInformationStorable.OrderStatu
  * </pre>
  * <pre>
  * Algorithmus updateSuccessorInternal(sucTree):
- * 1) 3 Fälle
+ * 1) 3 Fï¿½lle
  * 1.1) sucTree hat keine Daten:     Successor existiert noch nicht. 
- *                                   Rückgabe Result.NotFound 
- * 1.2) sucTree hat eigenes Binding: Rückgabe Aufruf 
+ *                                   Rï¿½ckgabe Result.NotFound 
+ * 1.2) sucTree hat eigenes Binding: Rï¿½ckgabe Aufruf 
  *                                   OSMLocalImpl.updateSuccessor (siehe dort)
- * 1.3) sucTree hat fremdes Binding: Rückgabe Remote-Aufruf 
+ * 1.3) sucTree hat fremdes Binding: Rï¿½ckgabe Remote-Aufruf 
  *                                   OSMRemoteProxyImpl.updateSuccessor, ruft dort 
  *                                   OSMLocalImpl.updateSuccessor (siehe dort) auf
- * 2) Mögliche Rückgaben:
+ * 2) Mï¿½gliche Rï¿½ckgaben:
  * 2.1) NotFound: Successor existiert noch nicht
  * 2.2) Later:    Successor existiert zwar, der weitere Status ist jedoch unbekannt, 
  *                da das Lock nicht erhalten wurde. (Grund: Deadlock-Vermeidung, dies kann 
@@ -108,13 +108,13 @@ public class OSMTask_Finish extends OSMTask {
         throw new IllegalStateException("osmCache has no entry for "+correlationId);
       }
       
-      //Auftrag wurde gecancelt. Nun entscheiden, ob Successoren starten dürfen
+      //Auftrag wurde gecancelt. Nun entscheiden, ob Successoren starten dï¿½rfen
       if( orderStatus == OrderStatus.CANCELING ) {
         if( sis.getPredecessorCorrIds().isEmpty() ) {
-          //Auftrag war regulär lauffähig, d.h. der Auftrag ist fertig und Nachfolger dürfen starten
+          //Auftrag war regulï¿½r lauffï¿½hig, d.h. der Auftrag ist fertig und Nachfolger dï¿½rfen starten
           orderStatus = OrderStatus.CANCELED;
         } else {
-          //nur den Status CANCELING speichern. Successoren dürfen noch nicht benachrichtigt werden
+          //nur den Status CANCELING speichern. Successoren dï¿½rfen noch nicht benachrichtigt werden
           sis.setOrderStatus(orderStatus);
           osmCache.update(sis);
           return;
@@ -129,19 +129,19 @@ public class OSMTask_Finish extends OSMTask {
         cancel = sis.getOrderStatus().isError();
       }
     
-      //Successor füllen
+      //Successor fï¿½llen
       Iterator<String> iter = sis.getSuccessorCorrIds().iterator();
       while( iter.hasNext() ) {
         String successorCorrId = iter.next();
         TreeNode sucTree = predecessorTrees.getTree( successorCorrId );
         if( sucTree == null ) {
-          //hier muss kein großer Baum gebaut werden, da hier nur die Informationen des TreeNode 
-          //selbst gebraucht werden. Falls doch irgendwann der vollständige Baum in 
-          //OSMTask_Preschedule gebraucht wird, wird er dort ergänzt werden.
+          //hier muss kein groï¿½er Baum gebaut werden, da hier nur die Informationen des TreeNode 
+          //selbst gebraucht werden. Falls doch irgendwann der vollstï¿½ndige Baum in 
+          //OSMTask_Preschedule gebraucht wird, wird er dort ergï¿½nzt werden.
           sucTree = predecessorTrees.buildShortTree(successorCorrId); 
         } else {
           if( ! sucTree.hasData() ) {
-            //Daten ergänzen, da Successor ja benachrichtigt werden muss 
+            //Daten ergï¿½nzen, da Successor ja benachrichtigt werden muss 
             sucTree = predecessorTrees.buildShortTree(successorCorrId);
           }
         }
@@ -151,7 +151,7 @@ public class OSMTask_Finish extends OSMTask {
             //Successor existiert noch nicht
             break;
           case Later:
-            //Successor kann derzeit nicht bearbeitet werden, Operation wird später wiederholt
+            //Successor kann derzeit nicht bearbeitet werden, Operation wird spï¿½ter wiederholt
             sis.getSuccessorOrderIds().add( sucTree.getOrderId() );
             ++countStartedSuccessors;
             iter.remove();
@@ -197,10 +197,10 @@ public class OSMTask_Finish extends OSMTask {
       //logger.trace( Thread.currentThread().getName() + " sucTree="+sucTree +" ownBinding="+ownBinding );
       int binding = sucTree.getBinding();
       if( binding == ownBinding ) {
-        //Successor gehört zum eigenen Binding
+        //Successor gehï¿½rt zum eigenen Binding
         return localOsm.updateSuccessor(binding, successorCorrId,predecessorCorrId,predecessorOrderId,cancel);
       } else {
-        //Successor gehört zu einem anderen Binding
+        //Successor gehï¿½rt zu einem anderen Binding
         return remoteOsm.updateSuccessor(binding, successorCorrId,predecessorCorrId,predecessorOrderId,cancel);
       }
     } else {

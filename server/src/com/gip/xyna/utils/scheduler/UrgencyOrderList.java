@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import com.gip.xyna.utils.collections.TaggedOrderedCollection;
 import com.gip.xyna.utils.scheduler.UrgencyOrderList.Urgency;
 
 /**
- * Speicherung der zu scheduulenden Aufträge sortiert nach Urgency und gruppiert nach Tags, 
- * um ganze Tag-Gruppen überspringen zu können. 
+ * Speicherung der zu scheduulenden Auftrï¿½ge sortiert nach Urgency und gruppiert nach Tags, 
+ * um ganze Tag-Gruppen ï¿½berspringen zu kï¿½nnen. 
  *
  */
 public class UrgencyOrderList<O> extends TaggedOrderedCollection<Urgency<O>> {
@@ -111,7 +111,7 @@ public class UrgencyOrderList<O> extends TaggedOrderedCollection<Urgency<O>> {
   }
   
   /**
-  * Wrapper für einen Auftrag O, damit die berechnete Urgency gespeichert werden kann. 
+  * Wrapper fï¿½r einen Auftrag O, damit die berechnete Urgency gespeichert werden kann. 
   * "Note: this class has a natural ordering that is inconsistent with equals."
   */
   public static class Urgency<O> implements Comparable<Urgency<O>> {
@@ -149,10 +149,10 @@ public class UrgencyOrderList<O> extends TaggedOrderedCollection<Urgency<O>> {
     }
 
     public int compareTo(Urgency<O> uo) {
-      //hohe Urgency zuerst, d.h hier anderes Vorzeichen als üblich
+      //hohe Urgency zuerst, d.h hier anderes Vorzeichen als ï¿½blich
       //return (o.urgency < urgency ? -1 : (o.urgency == urgency ? 0 : 1));
       if( uo.urgency < urgency ) {
-        return -1; //höhere Urgency, d.h nach vorne
+        return -1; //hï¿½here Urgency, d.h nach vorne
       } else if( uo.urgency == urgency ) {
         //gleiche Urgency ist unwahrscheinlich...
         return orderId.compareTo(uo.orderId); //kleinere orderId nach vorne

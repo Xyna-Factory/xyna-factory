@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import com.gip.xyna.coherence.utils.debugging.Debugger;
 
 
 /**
- * hält informationen von states auf allen knoten, die das objekt kennen. Speichert auch den Status auf dem lokalen Knoten.
+ * hï¿½lt informationen von states auf allen knoten, die das objekt kennen. Speichert auch den Status auf dem lokalen Knoten.
  */
 public class CoherenceDirectoryData implements Cloneable, Serializable {
 
@@ -44,11 +44,11 @@ public class CoherenceDirectoryData implements Cloneable, Serializable {
   /**
    * zuordnung von node-id zu state auf dem knoten. invalid states tauchen in der map nie auf. kann states von knoten
    * enthalten, die bereits nicht mehr bestandteil des clusters sind, weil beim disconnect eines knotens die
-   * coherence-states lazy gelöscht werden. siehe auch
+   * coherence-states lazy gelï¿½scht werden. siehe auch
    * {@link #removeInvalidClusterMembers(ClusterMemberChangeInformation)
    */
   private final Map<Integer, CoherenceState> remoteStateByClusterNodeID;
-  private Integer[] remoteStateArray; //für performance
+  private Integer[] remoteStateArray; //fï¿½r performance
 
   //redundant auch in map vorhanden
   private Integer exclusiveNode;
@@ -95,7 +95,7 @@ public class CoherenceDirectoryData implements Cloneable, Serializable {
 
 
   /**
-   * fügt neuen eintrag in directory data als shared hinzu
+   * fï¿½gt neuen eintrag in directory data als shared hinzu
    */
   public void addSharingClusterNode(int requestingClusterNodeID) {
     remoteStateByClusterNodeID.put(requestingClusterNodeID, CoherenceState.SHARED);
@@ -117,8 +117,8 @@ public class CoherenceDirectoryData implements Cloneable, Serializable {
           Iterator<Integer> it = remoteStateByClusterNodeID.keySet().iterator();
           while (it.hasNext()) {
             final int nodeId = it.next();
-            //keine synchronisierung auf das invalidNodes set notwendig, weil es nur während des global
-            // locks geändert wird und dann hier keiner darauf zugreift.
+            //keine synchronisierung auf das invalidNodes set notwendig, weil es nur wï¿½hrend des global
+            // locks geï¿½ndert wird und dann hier keiner darauf zugreift.
             if (clusterMemberChangeInformation.getInvalidNodes().contains(nodeId)) {
               if (debugger.isEnabled()) {
                 debugger.debug(new Object() {
@@ -207,7 +207,7 @@ public class CoherenceDirectoryData implements Cloneable, Serializable {
 
 
   /**
-   * fügt node als shared hinzu und convertiert ggfs eine derzeitig modified/exclusive node zu shared.
+   * fï¿½gt node als shared hinzu und convertiert ggfs eine derzeitig modified/exclusive node zu shared.
    */
   public void convertToShared(int requestingClusterNodeID) {
     if (modifiedNode != null) {

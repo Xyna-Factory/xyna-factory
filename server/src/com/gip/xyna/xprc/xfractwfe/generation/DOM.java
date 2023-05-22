@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -239,8 +239,8 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
   
 
-  //false = serialisierte objektinstanzen der alten version können von der neuen version problemlos deserialisiert werden und alle methoden, die es in der alten
-  //        version gab, können immer noch aufgerufen werden.
+  //false = serialisierte objektinstanzen der alten version kï¿½nnen von der neuen version problemlos deserialisiert werden und alle methoden, die es in der alten
+  //        version gab, kï¿½nnen immer noch aufgerufen werden.
   @Override
   public boolean compareImplementation(GenerationBase oldVersion) {
     DOM oldDOM = (DOM)oldVersion;
@@ -262,7 +262,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     if (memberVars.size() < oldDOM.memberVars.size()) {
       return true;
     }
-    //jede membervariable von old muss immer noch vorhanden sein, ansonsten true zurückgeben
+    //jede membervariable von old muss immer noch vorhanden sein, ansonsten true zurï¿½ckgeben
     Map<String, AVariable> nameToNewVars = new HashMap<>();
     for (AVariable v : memberVars) {
       nameToNewVars.put(v.getVarName(), v);
@@ -329,7 +329,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     if (var.isList()) {
       for (AVariable child : var.getChildren()) {
-        //kinder könnten von abgeleitetem typ sein (z.b. konstante vorbelegung oder beim fromXML)
+        //kinder kï¿½nnten von abgeleitetem typ sein (z.b. konstante vorbelegung oder beim fromXML)
         addDependenciesOfVariable(child, set);
       }
     }
@@ -376,7 +376,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   /**
-   * getter der form .getX().getY() für den relativen pfad von fullPath relativ zu basePath. 
+   * getter der form .getX().getY() fï¿½r den relativen pfad von fullPath relativ zu basePath. 
    */
   public static String createGetterForRelativePath(String fullPath, String basePath) {
     StringBuilder getter = new StringBuilder();
@@ -495,8 +495,8 @@ public class DOM extends DomOrExceptionGenerationBase {
     validateClassName(rootElement.getAttribute(GenerationBase.ATT.TYPEPATH),
                       rootElement.getAttribute(GenerationBase.ATT.TYPENAME));
     if (!isEmpty(rootElement.getAttribute(GenerationBase.ATT.BASETYPENAME))) {
-      // FIXME hier müsste man eigentlich das super class dom auch parsen, um sicherzugehen, dass das nicht ein Exceptiontyp
-      //       ist, den man hier zurückerhält...
+      // FIXME hier mï¿½sste man eigentlich das super class dom auch parsen, um sicherzugehen, dass das nicht ein Exceptiontyp
+      //       ist, den man hier zurï¿½ckerhï¿½lt...
       superClassDom =
           getCachedDOMInstanceOrCreate(rootElement.getAttribute(GenerationBase.ATT.BASETYPEPATH) + "."
               + rootElement.getAttribute(GenerationBase.ATT.BASETYPENAME), revision);
@@ -599,7 +599,7 @@ public class DOM extends DomOrExceptionGenerationBase {
       }
     }
 
-    //pktype ist ggf aus supertype und wird erst später befüllt (validate)
+    //pktype ist ggf aus supertype und wird erst spï¿½ter befï¿½llt (validate)
     persistenceInformation = PersistenceInformation.parse(metaElement);
     
     if (isStorableEquivalent() && 
@@ -686,7 +686,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   /**
-   * fügt ohne rekursion abhängige jars dazu
+   * fï¿½gt ohne rekursion abhï¿½ngige jars dazu
    */
   public void getDependentJarsWithoutRecursion(Set<String> jars, boolean withSharedLibs, boolean tryFromSaved) throws XPRC_JarFileForServiceImplNotFoundException, XFMG_SHARED_LIB_NOT_FOUND {
     if (XynaFactory.isFactoryServer()) {
@@ -697,7 +697,7 @@ public class DOM extends DomOrExceptionGenerationBase {
       RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
       if (withSharedLibs) {
         for (String s : sharedLibs) {
-          // FIXME abhängigkeit von sharedlibclassloader entfernen.
+          // FIXME abhï¿½ngigkeit von sharedlibclassloader entfernen.
           Long rev = rcdm.getRevisionDefiningSharedLib(s, revision);
           if (rev == null) {
             throw new XFMG_SHARED_LIB_NOT_FOUND(s);
@@ -730,7 +730,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   /**
-   * rekursion über andere davon abhängige doms, nicht über WFs
+   * rekursion ï¿½ber andere davon abhï¿½ngige doms, nicht ï¿½ber WFs
    */
   public void getDependentJarsWithRecursion(Set<String> jars, boolean withSharedLibs, boolean tryFromSaved)
       throws XPRC_JarFileForServiceImplNotFoundException, XFMG_SHARED_LIB_NOT_FOUND {
@@ -811,7 +811,7 @@ public class DOM extends DomOrExceptionGenerationBase {
           foundAbstractMethod = true;
         }
         if (!o.isStatic()) {
-          //finde die superclass, die diese operation definiert. falls überschreiben nicht ok -> fehler.
+          //finde die superclass, die diese operation definiert. falls ï¿½berschreiben nicht ok -> fehler.
           nextSuperClassDOM = getSuperClassGenerationObject();
           while (nextSuperClassDOM != null) {
             //finde operation mit gleichem namen und parametern:
@@ -826,7 +826,7 @@ public class DOM extends DomOrExceptionGenerationBase {
               }
             }
             if (found) {
-              break; //nächste operation checken
+              break; //nï¿½chste operation checken
             }
             //operation nicht gefunden, vielleicht in oberklasse??
             nextSuperClassDOM = nextSuperClassDOM.getSuperClassGenerationObject();
@@ -836,7 +836,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     
     if (!isAbstract() && !foundAbstractMethod) {
-      //nach abstrakten methoden in den oberklassen suchen, die hier nicht überschrieben werden
+      //nach abstrakten methoden in den oberklassen suchen, die hier nicht ï¿½berschrieben werden
       OperationInformation[] operations = collectOperationsOfDOMHierarchy(false);
       for (OperationInformation o : operations) {
         if (o.isAbstract()) {
@@ -931,7 +931,7 @@ public class DOM extends DomOrExceptionGenerationBase {
           }
           
           //im xml verewigen. sowohl im saved als auch im deployed-ordner
-          //TODO achtung! bei xsd änderungen sind die xml anpassungen evtl auch anzupassen
+          //TODO achtung! bei xsd ï¿½nderungen sind die xml anpassungen evtl auch anzupassen
           try {
             Document d = XMLUtils.parse(getFileLocationForDeploymentStaticHelper(getOriginalFqName(), getRevision()) + ".xml", true);
             Element docEl = d.getDocumentElement();
@@ -1133,7 +1133,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   /**
-   * alle variablennamen müssen auch in lowercase eindeutig sein. auch für die verwendeten datentypen
+   * alle variablennamen mï¿½ssen auch in lowercase eindeutig sein. auch fï¿½r die verwendeten datentypen
    */
   private static void checkUniqueLowerCaseVarNamesForStorablesRecursively(DOM rootXMOMStorable, DOM currentDom,
                                                                           String path, List<DOM> previousDoms) {
@@ -1238,7 +1238,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     
     /**
-     * ~ muss man also überschreiben, wenn man das objekt instanziieren will 
+     * ~ muss man also ï¿½berschreiben, wenn man das objekt instanziieren will 
      */
     public boolean isAbstractInBaseType() {
       if (getDefiningType() == domHierarchy[0]) {
@@ -1247,7 +1247,7 @@ public class DOM extends DomOrExceptionGenerationBase {
       boolean first = true;
       for (DOM d : domHierarchy) {
         if (first) {
-          //erstes nicht berücksichtigen
+          //erstes nicht berï¿½cksichtigen
           first = false;
           continue;
         }
@@ -1378,7 +1378,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
   /**
-   * sind lokal methoden definiert, die in einem subtyp überschrieben werden können
+   * sind lokal methoden definiert, die in einem subtyp ï¿½berschrieben werden kï¿½nnen
    * (weder static noch final)
    */
   public boolean hasInheritableInstanceMethods(InterfaceVersion versionFilter) {
@@ -1406,7 +1406,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   public boolean hasJavaImpl(boolean onlyCountInstanceMethods, InterfaceVersion versionFilter) {
     boolean hasInstanceMethods = false;
     boolean hasStaticMethods = false;
-    //bei den methoden zu checken ist nicht redundant (später wird auf das impl-jar gecheckt), weil die library unter umständen nicht da ist
+    //bei den methoden zu checken ist nicht redundant (spï¿½ter wird auf das impl-jar gecheckt), weil die library unter umstï¿½nden nicht da ist
     //und trotzdem verwendet werden soll. z.b. beim ersten deployment aus der gui
     for (Operation op : getOperations()) {
       if (onlyCountInstanceMethods && op.isStatic()) {
@@ -1426,7 +1426,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     // => keine methode verwendet das impl-jar
 
-    //unterstützung von javalib an einer instanz, die die lib nicht selbst verwendet (aber für subklassen zur verfügung stellt)
+    //unterstï¿½tzung von javalib an einer instanz, die die lib nicht selbst verwendet (aber fï¿½r subklassen zur verfï¿½gung stellt)
     if (libraryExists()) {
       if (onlyCountInstanceMethods && !hasInstanceMethods && hasStaticMethods) {
         //library bezieht sich auf statische methoden
@@ -1466,7 +1466,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   /**
-   * für statische operations nur die des aktuellen types, nicht die der hierarchy!<br>
+   * fï¿½r statische operations nur die des aktuellen types, nicht die der hierarchy!<br>
    * nach name sortiert
    */
   public OperationInformation[] collectOperationsOfDOMHierarchy(boolean includeStaticMethods) {
@@ -1474,7 +1474,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     SortedMap<String, OperationInformation> opMap = new TreeMap<String, OperationInformation>();
     for (DOM dom : getDOMHierarchy()) {
       for (Operation op : dom.getOperations()) {
-        if (opMap.containsKey(op.getName())) { //überschrieben
+        if (opMap.containsKey(op.getName())) { //ï¿½berschrieben
           continue;
         } else {
           if (!op.isStatic() || (includeStaticMethods && dom == this)) {
@@ -1578,11 +1578,11 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     for (OperationInformation operation : collectOperationsOfDOMHierarchy(true)) {
       if (operation.getOperation().isStatic() && !operation.isImplementedHere()) {
-        //benötigt keine imports lokal
+        //benï¿½tigt keine imports lokal
         continue;
       }
       if (!operation.getOperation().isStatic() && operation.isAbstractInBaseType() && !operation.isImplementedHere()) {
-        //imports von geerbten methoden sind notwendig für die super-aufruf-proxys
+        //imports von geerbten methoden sind notwendig fï¿½r die super-aufruf-proxys
         continue;
       }
       operation.getOperation().getImports(imports);
@@ -1663,7 +1663,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     imports.add(NoSuchFieldException.class.getName());
     
     
-    //runtimeContext für audits
+    //runtimeContext fï¿½r audits
     imports.add(RevisionManagement.class.getName());
     return imports;
   }
@@ -1676,7 +1676,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     return getOperationByName(operationName, false);
   }
 
-  //FIXME mehrere operations mit dem gleichen namen unterstützen
+  //FIXME mehrere operations mit dem gleichen namen unterstï¿½tzen
   public Operation getOperationByName(String operationName, boolean includeParents) throws XPRC_OperationUnknownException {
     for (List<Operation> operations : serviceNameToOperationMap.values()) {
       for (Operation o : operations) {
@@ -1915,7 +1915,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
   public InterfaceVersion[] getVersionsOfOperations(boolean onlyOneCurrentVersion) {
     Set<InterfaceVersion> versions = new HashSet<DOM.InterfaceVersion>();
-    versions.add(InterfaceVersion.BASE); //base immer, damit es auch ohne modellierte methoden möglich ist, code zu schreiben
+    versions.add(InterfaceVersion.BASE); //base immer, damit es auch ohne modellierte methoden mï¿½glich ist, code zu schreiben
     boolean containsCurrentVersion = false;
     for (Operation op : getOperations()) {
       if (onlyOneCurrentVersion && op.getVersion().isCurrentVersion()) {
@@ -1934,8 +1934,8 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
 
-  //FIXME soll das wirklich festgelegt werden, dass impl klassen so heissen müssen. abgesehen von der template-generierung ist das die einzige stelle wo man 
-  // sich darauf verlässt. dann kann man auch die code-snippets verstecken und sagen, dass man die eh immer generiert.
+  //FIXME soll das wirklich festgelegt werden, dass impl klassen so heissen mï¿½ssen. abgesehen von der template-generierung ist das die einzige stelle wo man 
+  // sich darauf verlï¿½sst. dann kann man auch die code-snippets verstecken und sagen, dass man die eh immer generiert.
   public final String getImplFqClassName() {
     return getFqClassName() + "Impl";
   }
@@ -1960,7 +1960,7 @@ public class DOM extends DomOrExceptionGenerationBase {
       v.fillVariableContents();
     }
     
-    //persistenceinformation fertig befüllen falls nötig. kann in parsexml nicht gemacht werden, weil noch das geparsten super-objekt fehlt.
+    //persistenceinformation fertig befï¿½llen falls nï¿½tig. kann in parsexml nicht gemacht werden, weil noch das geparsten super-objekt fehlt.
     PrimitiveType pktype = PersistenceInformation.detectPrimaryKeyType(getAllMemberVarsIncludingInherited());
     if (pktype != null) {
       if (persistenceInformation == PersistenceInformation.EMPTY) {
@@ -1998,7 +1998,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     if (ss.size() == 0) {
       // not expected to happen since that is checked on first deployment when performing an xsd check
 
-      // kann aber passieren, wenn oberklasse methoden hat, und man im impl nur interne methoden überschreiben möchte
+      // kann aber passieren, wenn oberklasse methoden hat, und man im impl nur interne methoden ï¿½berschreiben mï¿½chte
       if (!dom.hasSuperTypeWithJavaImpl(true, null)) {
         throw new RuntimeException("invalid xml of datatype " + dom.getOriginalFqName() + ". expected at least one child of "
             + GenerationBase.EL.SERVICE);
@@ -2081,14 +2081,14 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     
     /**
-     * die files, die im eclipse projekt implementiert werden müssen 
+     * die files, die im eclipse projekt implementiert werden mï¿½ssen 
      */
     public List<Pair<String, String>> getTemplateImplementationFiles() {
       return templateImplementationFiles;
     }
 
     /**
-     * fürs compile notwendige oberklasse-files, die man nicht aus den deploy-ten jars verwenden will.
+     * fï¿½rs compile notwendige oberklasse-files, die man nicht aus den deploy-ten jars verwenden will.
      * problemfall ist z.b., dass in der oberklasse abstrakte methoden in der implklasse sind, die
      * der server nicht kennt
      */
@@ -2105,10 +2105,10 @@ public class DOM extends DomOrExceptionGenerationBase {
 
   /**
    * sucht alle xmom storables, die in ihrer membervariablen-hierarchie diesen typ enthalten. <br>
-   * diese müssen nämlich auch neu deployed werden, wenn this sich ändert (weil die storable-klassen sich ändern müssen).
+   * diese mï¿½ssen nï¿½mlich auch neu deployed werden, wenn this sich ï¿½ndert (weil die storable-klassen sich ï¿½ndern mï¿½ssen).
    */
   public Set<GenerationBase> getRootXMOMStorablesUsingThis(GenerationBaseCache parseAdditionalCache, Set<GenerationBase> visited) {
-    //dependencyregister bemühen. 
+    //dependencyregister bemï¿½hen. 
 
     Set<GenerationBase> ret = new HashSet<GenerationBase>();
     
@@ -2116,7 +2116,7 @@ public class DOM extends DomOrExceptionGenerationBase {
       ret.add(this);
     }
 
-    //FIXME performance!!!! eigtl wäre es hier schön, wenn man die xmomdatabase verwenden könnte. man benötigt aber die informationen aus dem deployed ordner
+    //FIXME performance!!!! eigtl wï¿½re es hier schï¿½n, wenn man die xmomdatabase verwenden kï¿½nnte. man benï¿½tigt aber die informationen aus dem deployed ordner
     Set<DependencyNode> dependencies =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDependencyRegister()
             .getDependencies(getOriginalFqName(), DependencySourceType.DATATYPE, revision, true);
@@ -2174,8 +2174,8 @@ public class DOM extends DomOrExceptionGenerationBase {
   
   /**
    * wenn man alle membervariablen von this rekursiv betrachtet (bis jeweils zu referenzierten anderen storablen 
-   * oder transienten variablen), wird dort das übergebene dom irgendwo verwendet??
-   * berücksichtigt nicht, dass z.b. das dom in einer additionaldependency eines verwendeten datentyps steht oder
+   * oder transienten variablen), wird dort das ï¿½bergebene dom irgendwo verwendet??
+   * berï¿½cksichtigt nicht, dass z.b. das dom in einer additionaldependency eines verwendeten datentyps steht oder
    * unterhalb einer evtl im blob gespeicherten exception verwendet wird. 
    */
   private boolean usesInStorableHierarchy(DOM dom) {

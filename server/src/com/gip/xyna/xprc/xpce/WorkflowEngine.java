@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -168,7 +168,7 @@ public interface WorkflowEngine {
                   throws XPRC_EXISTING_DEPENDENCY_ONUNDEPLOYMENT;
 
   /**
-   * Gibt aus der übergebenen Liste alle WORKFLOWs, EXCEPTIONs und DATATYPEs zurück, die bereits in der Revision vorliegen
+   * Gibt aus der ï¿½bergebenen Liste alle WORKFLOWs, EXCEPTIONs und DATATYPEs zurï¿½ck, die bereits in der Revision vorliegen
    * @param xmomObjects
    * @param revision
    * @return
@@ -176,8 +176,8 @@ public interface WorkflowEngine {
   public Map<XMOMType,List<String>> existsInRevision( Map<XMOMType,List<String>> xmomObjects, Long revision);
 
   /**
-   * Kopiert aus der übergebenen Liste alle WORKFLOWs, EXCEPTIONs und DATATYPEs aus einer Revision 
-   * in die andere und deploy anschließend.
+   * Kopiert aus der ï¿½bergebenen Liste alle WORKFLOWs, EXCEPTIONs und DATATYPEs aus einer Revision 
+   * in die andere und deploy anschlieï¿½end.
    * @param xmomObjects
    * @param fromRevision
    * @param toRevision

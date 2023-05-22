@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class InterlinkSearchDispatcher extends FunctionGroup {
 
     public SearchJob(String factoryNode, SearchRequestBean srb, SearchResult<?> sr) {
       this.factoryNode = factoryNode;
-      searchRequest = new SearchRequestBean(srb); //kopie erstellen, damit jeder job unabhängige nodefilter haben kann
+      searchRequest = new SearchRequestBean(srb); //kopie erstellen, damit jeder job unabhï¿½ngige nodefilter haben kann
       searchRequest.clearFactoryNodesFilter(); //nicht beim job wieder dispatchen
       this.sr = sr;
     }
@@ -195,7 +195,7 @@ public class InterlinkSearchDispatcher extends FunctionGroup {
     try {
       cb.await();
     } catch (InterruptedException e) {
-      //trotzdem sr zurückgeben, evtl ist da ja bereits was vernünftiges drin
+      //trotzdem sr zurï¿½ckgeben, evtl ist da ja bereits was vernï¿½nftiges drin
       synchronized (sr) {
         sr.addException(e);
       }
@@ -259,7 +259,7 @@ public class InterlinkSearchDispatcher extends FunctionGroup {
       if (node.equals(NodeManagement.FACTORYNODE_LOCAL)) {
         output.add(node);
       } else if (node.contains("%")) { //FIXME wenn man nach einem escapten % sucht, findet man keinen knoten und es gibt keinen fehler.
-        //TODO caching? die anfragen kommen ja evtl häufiger
+        //TODO caching? die anfragen kommen ja evtl hï¿½ufiger
         String regexp = SelectionParser.escapeParams(node, true, escapeIntoRegexp);
         Pattern pattern = Pattern.compile(regexp);
         boolean found = false;

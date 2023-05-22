@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import com.gip.xyna.xact.rmi.GenericRMIAdapter;
 import com.gip.xyna.xact.rmi.RMIConnectionFailureException;
 
 /**
- * Kapselt den Zugriff auf eine Xyna Blackedition Instanz über RMI. Bietet Möglichkeiten für Fallback auf zweite Instanz,
- * falls eine Instanz nicht erreichbar ist über URLChooser Interface. Zwei einfache Implementierungen davon stehen
- * über statische Methoden zur Verfügung.
+ * Kapselt den Zugriff auf eine Xyna Blackedition Instanz ï¿½ber RMI. Bietet Mï¿½glichkeiten fï¿½r Fallback auf zweite Instanz,
+ * falls eine Instanz nicht erreichbar ist ï¿½ber URLChooser Interface. Zwei einfache Implementierungen davon stehen
+ * ï¿½ber statische Methoden zur Verfï¿½gung.
  * TODO: falls server neu gestartet wird, verbindung automatisch wieder reconnecten?!
  * codebeispiel:
  * <code>
@@ -41,7 +41,7 @@ public class RMIAdapter extends GenericRMIAdapter<XynaRMIChannel> {
   
   public static final Logger logger = CentralFactoryLogging.getLogger(RMIAdapter.class);
 
-  //TODO factory für multiple urls wo man hostname+port tupels angibt.
+  //TODO factory fï¿½r multiple urls wo man hostname+port tupels angibt.
   //TODO validierung der urls
   
   private String user;

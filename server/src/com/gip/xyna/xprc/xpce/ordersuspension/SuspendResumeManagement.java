@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ import com.gip.xyna.xprc.xsched.timeconstraint.TimeConstraint;
 
 
 /**
- * SuspendResumeManagement soll sich um alles kümmern, was mit Suspend/Resume in Zusammenhang steht.
+ * SuspendResumeManagement soll sich um alles kï¿½mmern, was mit Suspend/Resume in Zusammenhang steht.
  * TODO 
  * 
  * 
@@ -98,7 +98,7 @@ public class SuspendResumeManagement {
   public static XynaPropertyEnum<BackupFailedAction> SUSPEND_RESUME_BACKUP_FAILED_ACTION = 
       new XynaPropertyEnum<BackupFailedAction>("xyna.xprc.xpce.ordersuspension.backup_failed_action", BackupFailedAction.class, BackupFailedAction.KeepRunning).
       setDefaultDocumentation(DocumentationLanguage.EN, "Action when backup for suspension can not be written: KeepRunning, Abort").
-      setDefaultDocumentation(DocumentationLanguage.DE, "Aktion, wenn das Backup für die Suspendierung nicht geschrieben werden kann: KeepRunning, Abort");
+      setDefaultDocumentation(DocumentationLanguage.DE, "Aktion, wenn das Backup fï¿½r die Suspendierung nicht geschrieben werden kann: KeepRunning, Abort");
       
   
   
@@ -149,7 +149,7 @@ public class SuspendResumeManagement {
   }
 
   public void removeListener(SuspendedOrderAbortionSupportListenerInterface soasl) {
-    if( suspendedOrderAbortionSupportListeners != null ) { //NPE bei ShutDown während fehlerhaftem FactoryStart verhindern
+    if( suspendedOrderAbortionSupportListeners != null ) { //NPE bei ShutDown wï¿½hrend fehlerhaftem FactoryStart verhindern
       if( soasl != null ) {
         suspendedOrderAbortionSupportListeners.remove(soasl);
       }
@@ -236,7 +236,7 @@ public class SuspendResumeManagement {
   
  
   /**
-   * TODO eigentlich nur benötigt, weil direktes Resume nicht mit Cluster umgehen kann!
+   * TODO eigentlich nur benï¿½tigt, weil direktes Resume nicht mit Cluster umgehen kann!
    * Ansonsten bringt die extra ResumeOrder nichts
    * @param target
    * @param sync
@@ -434,10 +434,10 @@ public class SuspendResumeManagement {
     }
     CleanupOrderFamily cof = new CleanupOrderFamily(this, rootOrder.getId(), orderIds);
     WarehouseRetryExecutor.buildMinorExecutor().
-        storable(OrderInstanceBackup.class). //FIXME dieses Storable wird nicht benötigt
+        storable(OrderInstanceBackup.class). //FIXME dieses Storable wird nicht benï¿½tigt
         execute(cof);
     
-    //Korrekt wäre die Ermittlung der Storables über 
+    //Korrekt wï¿½re die Ermittlung der Storables ï¿½ber 
     //for (SuspendedOrderAbortionSupportListenerInterface component : suspendedOrderAbortionSupportListeners ) {
       //storableList.adAll( component.getStorableClassList() );
     //}
@@ -486,7 +486,7 @@ public class SuspendResumeManagement {
   
   
   /**
-   * Nur für Ausgabe über ListSuspendResumeInfo
+   * Nur fï¿½r Ausgabe ï¿½ber ListSuspendResumeInfo
    * @return
    */
   public Map<Long, String> getRunningOrders() {
@@ -494,7 +494,7 @@ public class SuspendResumeManagement {
   }
 
   /**
-   * Nur für Ausgabe über ListSuspendResumeInfo
+   * Nur fï¿½r Ausgabe ï¿½ber ListSuspendResumeInfo
    * @param id
    * @return
    */
@@ -503,7 +503,7 @@ public class SuspendResumeManagement {
   }
 
   /**
-   * Locken der Aufträge, damit diese kein Resume beginnen können
+   * Locken der Auftrï¿½ge, damit diese kein Resume beginnen kï¿½nnen
    * @param orderIds
    */
   public void addUnresumeableOrders(Collection<Long> orderIds) {

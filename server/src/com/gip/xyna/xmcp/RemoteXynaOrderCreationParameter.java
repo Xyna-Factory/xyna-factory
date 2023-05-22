@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
 /**
  * Erweiterung der XynaOrderCreationParameter, da die in XynaOrderCreationParameter
- * enthaltene InputPayload als XynaObject nicht außerhalb der Factory 
+ * enthaltene InputPayload als XynaObject nicht auï¿½erhalb der Factory 
  * deserialisiert werden kann.
  *
  */
@@ -83,7 +83,7 @@ public final class RemoteXynaOrderCreationParameter extends XynaOrderCreationPar
   }
 
   /**
-   * unterstützte payloads
+   * unterstï¿½tzte payloads
    * - &lt;Data&gt;/&lt;ExceptionStorage&gt; element
    * - Wrapper-Element um Liste von &lt;Data&gt;/&lt;ExceptionStorage&gt; elemente
    * @param payload
@@ -139,7 +139,7 @@ public final class RemoteXynaOrderCreationParameter extends XynaOrderCreationPar
   }
 
   /**
-   * gibt xml immer ohne wrapper-element zurück
+   * gibt xml immer ohne wrapper-element zurï¿½ck
    * @return
    */
   public String getInputPayloadAsXML() {
@@ -148,7 +148,7 @@ public final class RemoteXynaOrderCreationParameter extends XynaOrderCreationPar
   
   /**
    * Entfernen der XynaObject-InputPayload, damit die RemoteXorderCreationParameter
-   * auch wieder außerhalb der Factory deserialisiert werden kann
+   * auch wieder auï¿½erhalb der Factory deserialisiert werden kann
    */
   public void removeXynaObjectInputPayload() {
     super.setInputPayload((GeneralXynaObject)null);

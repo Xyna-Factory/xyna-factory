@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.Path.PathCreationVisitor;
 
 
 /**
- * DataModelType sammelt die Methoden, die alle konkreten DataModelType-Implementierungen erfüllen müssen.
+ * DataModelType sammelt die Methoden, die alle konkreten DataModelType-Implementierungen erfï¿½llen mï¿½ssen.
  * 
  * Wird implementiert von MIB, TR069...
  *
@@ -52,7 +52,7 @@ public interface DataModelType {
 
 
   /**
-   * Initialisierung des DataModelTypes, Rückgabe der initialen PluginDescription
+   * Initialisierung des DataModelTypes, Rï¿½ckgabe der initialen PluginDescription
    * @param name Name des Datenmodells
    * @return PluginDescription
    * @throws XynaException
@@ -60,7 +60,7 @@ public interface DataModelType {
   public PluginDescription init(String name) throws XynaException ;
   
   /**
-   * Konfiguration der Default-Parameter, Rückgabe der angepassten PluginDescription
+   * Konfiguration der Default-Parameter, Rï¿½ckgabe der angepassten PluginDescription
    * @param paramMap
    * @return PluginDescription
    */
@@ -69,7 +69,7 @@ public interface DataModelType {
   
   /**
    * Anzeige der PluginDescription.
-   * Diese sollte vom DataModelType gecacht werden, da showDescription() häufiger gerufen werden kann
+   * Diese sollte vom DataModelType gecacht werden, da showDescription() hï¿½ufiger gerufen werden kann
    * @return PluginDescription
    */
   public PluginDescription showDescription();

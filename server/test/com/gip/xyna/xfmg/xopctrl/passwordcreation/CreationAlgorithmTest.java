@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.passwordcreation.CreationAlgorit
 public class CreationAlgorithmTest extends TestCase{
 
   public void testCreateAndCheck() {
-    String password = "Xbt&8äJ§3$n";
+    String password = "Xbt&8ï¿½Jï¿½3$n";
     String salt = "u2(aw1UH!=o";
     Integer rounds = 6;
     

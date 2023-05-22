@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public class Parser {
 
   /**
    * @param gotOpenOperator gab es zuletzt beim parsen einen operator, der nun eine expression verlangt, die den operator beendet? z.b. vorher "expression =="
-   *        falls nicht, kann nun alles mögliche kommen:
+   *        falls nicht, kann nun alles mï¿½gliche kommen:
    *        - assignment
    *        - komplexe expression, etc 
    */
@@ -240,7 +240,7 @@ public class Parser {
               }
               state = FunctionParsingState.EXPECTING_NEW_PARAMETER;
             } else if (f.getParameterTypeDef().numberOfParas() == 0) {
-              //klammern sind optional. das komma gehört zu einer übergeordneten funktion oder sowas
+              //klammern sind optional. das komma gehï¿½rt zu einer ï¿½bergeordneten funktion oder sowas
               return new FunctionExpression(startIdx, idx - 1, f, subExpressions, null);
             } else {
               throw new XPRC_ParsingModelledExpressionException(expression, idx + 1,
@@ -275,7 +275,7 @@ public class Parser {
                 return new FunctionExpression(startIdx, idx, f, subExpressions, null);
               }
             } else if (f.getParameterTypeDef().numberOfParas() == 0) {
-              //klammern sind optional. die klammer gehört zu einer übergeordneten funktion oder sowas
+              //klammern sind optional. die klammer gehï¿½rt zu einer ï¿½bergeordneten funktion oder sowas
               return new FunctionExpression(startIdx, idx - 1, f, subExpressions, null);
             } else {
               throw new XPRC_ParsingModelledExpressionException(expression, idx + 1);
@@ -361,7 +361,7 @@ public class Parser {
             forJava = "\\\\"; // in string: "asd\\asd" -> value <asd\asd>
             break;
           case 'u' :
-            // "\ u <zahl>" erstmal nicht korrekt unterstützt
+            // "\ u <zahl>" erstmal nicht korrekt unterstï¿½tzt
             // fall through
           default :
             if (logger.isDebugEnabled()) {
@@ -369,7 +369,7 @@ public class Parser {
                   + ". this has no special meaning and will be ignored.");
             }
             d = c;
-            forJava = String.valueOf(c); // escape von anderen zeichen enthält im value kein backslash, sondern nur c. -> in string: "asd'c'asd" -> value <asd'c'asd>
+            forJava = String.valueOf(c); // escape von anderen zeichen enthï¿½lt im value kein backslash, sondern nur c. -> in string: "asd'c'asd" -> value <asd'c'asd>
         }
         value.append(d);
         valueForJavaCodeGen.append(forJava);
@@ -392,7 +392,7 @@ public class Parser {
 
   public Expression parseSecondPartOfExpressionIfExisting(final int startIdx, Expression firstPart)
       throws XPRC_ParsingModelledExpressionException {
-    boolean firstPartPlusSecondPartMustBeBoolean = false; //TODO das könnte man wahrscheinlich immer ganz gut checken - z.b. wissen funktionen, ob sie vom typ boolean sind
+    boolean firstPartPlusSecondPartMustBeBoolean = false; //TODO das kï¿½nnte man wahrscheinlich immer ganz gut checken - z.b. wissen funktionen, ob sie vom typ boolean sind
     int idx = startIdx;
     /*
      * entweder 

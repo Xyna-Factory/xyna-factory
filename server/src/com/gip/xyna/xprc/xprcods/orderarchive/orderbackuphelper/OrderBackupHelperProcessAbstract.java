@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@ public abstract class OrderBackupHelperProcessAbstract {
       }
       wreb.execute(getWarehouseRetryExecutable());
       
-      //fertig geworden, nun noch übrige Warter benachrichtigen
+      //fertig geworden, nun noch ï¿½brige Warter benachrichtigen
       synchronized (idsWithPriority) {
         for( PrioritizedRootId pri : idsWithPriority ) {
           pri.countDown();
@@ -133,7 +133,7 @@ public abstract class OrderBackupHelperProcessAbstract {
   }
   
   /** 
-   * @return true, wenn Auftrag zum Scheduler hinzugefügt werden soll - sonst false
+   * @return true, wenn Auftrag zum Scheduler hinzugefï¿½gt werden soll - sonst false
    */
   private ResumeAction specialHandlingForUnsafeOrders(OrderInstanceBackup orderBackup) {
       OrderStartupMode orderStartupMode = orderBackup.getXynaorder().getOrderStartupMode();
@@ -297,11 +297,11 @@ public abstract class OrderBackupHelperProcessAbstract {
           + " is not started because deserialization of order backup entry failed.");
     }
     
-    // Wir sichern die XynaOrders in der Liste mit den zu verarbeitenden Aufträgen, wenn die Familie vollständig ist.
-    // Ansonsten werfen wir sie in die Liste mit unvollständigen Familien. Die Annahme hier ist, dass
+    // Wir sichern die XynaOrders in der Liste mit den zu verarbeitenden Auftrï¿½gen, wenn die Familie vollstï¿½ndig ist.
+    // Ansonsten werfen wir sie in die Liste mit unvollstï¿½ndigen Familien. Die Annahme hier ist, dass
     // Familienmitglieder adjazent im OrderBackup sind (sichergestellt durch ein SQL Query mit orderBy RootId).
     if (orderBackup.getXynaorder() == null) {
-      //dies ist keine Root-Order, daher überspringen
+      //dies ist keine Root-Order, daher ï¿½berspringen
       return ResumeAction.NoRoot;
     } else {
       BackupCause obBackupCauseAsEnum = orderBackup.getBackupCauseAsEnum();
@@ -336,8 +336,8 @@ public abstract class OrderBackupHelperProcessAbstract {
         //Capacity-Vergabe ist nicht persistent: Daher muss andere Knoten erneut Capacities belegen.
         sd.setHasAcquiredCapacities(false);
         sd.setNeedsToAcquireCapacitiesOnNextScheduling(true);
-        //Veto-Vergabe ist zwar persistent: VetoManagmente benötigt aber Informationen über das Binding, 
-        //die es über dan erneute Allokieren erhält
+        //Veto-Vergabe ist zwar persistent: VetoManagmente benï¿½tigt aber Informationen ï¿½ber das Binding, 
+        //die es ï¿½ber dan erneute Allokieren erhï¿½lt
         sd.setNeedsToAcquireVetosOnNextScheduling(true);
 
         // execution process instance can be null e.g. if the order has not been scheduled
@@ -352,8 +352,8 @@ public abstract class OrderBackupHelperProcessAbstract {
           break;
         case AddToScheduler:
           //direktes Einstellen in den Scheduler ist unsicher, da nicht bekannt ist, obe Auftrag bereits gelaufen ist.
-          //Falls er bereits gelaufen war, können Resumes auftreten. Daher muss der Auftrag über das
-          //SuspendResumeManagement in den Scheduler eingestellt werden, damit sich das SRM um konkurrierende Resumes kümmern kann.
+          //Falls er bereits gelaufen war, kï¿½nnen Resumes auftreten. Daher muss der Auftrag ï¿½ber das
+          //SuspendResumeManagement in den Scheduler eingestellt werden, damit sich das SRM um konkurrierende Resumes kï¿½mmern kann.
         case Resume:
           // Execution Timeout erreicht und bereits einmal gescheduled (TODO destinationtype != WF behandeln)
           if (order.getExecutionProcessInstance() != null && order.getOrderExecutionTimeout() != null) {
@@ -366,8 +366,8 @@ public abstract class OrderBackupHelperProcessAbstract {
             }, Thread.MIN_PRIORITY);
           }
           
-          //Auch Aufträge mit SchedulingTimeout gelangen nun in den Scheduler. 
-          //Das TimeConstraintManagement wird diese Aufträge beenden. 
+          //Auch Auftrï¿½ge mit SchedulingTimeout gelangen nun in den Scheduler. 
+          //Das TimeConstraintManagement wird diese Auftrï¿½ge beenden. 
           if (order.isInOrderSeries()) {
             XynaFactory.getInstance().getProcessing().getXynaScheduler().getOrderSeriesManagement().resume(order, con);
           }
@@ -426,8 +426,8 @@ public abstract class OrderBackupHelperProcessAbstract {
   }
   
   /**
-   * gibt true zurück, falls auftrag nicht wiederherstellbar ist 
-   * @param removeImmediately auftragsfamilie sofort aufräumen
+   * gibt true zurï¿½ck, falls auftrag nicht wiederherstellbar ist 
+   * @param removeImmediately auftragsfamilie sofort aufrï¿½umen
    */
   protected boolean checkOrderBackupInstanceForRemoval(OrderInstanceBackup orderInstanceBackup, ODSConnection con,
                                                        boolean removeImmediately) throws PersistenceLayerException {
@@ -441,8 +441,8 @@ public abstract class OrderBackupHelperProcessAbstract {
       logger.warn("Backup information for order " + orderInstanceBackup.getId()
                   + " has no parent and no order information. Removing it from orderbackup.");
       if (removeImmediately) {
-        // Fall kann auftreten, wenn der Auftrag auf dem Node gestartet wird, während der Node
-        // herunter fährt und die Daten noch nicht vollständig ins orderbackup gesichert wurden.
+        // Fall kann auftreten, wenn der Auftrag auf dem Node gestartet wird, wï¿½hrend der Node
+        // herunter fï¿½hrt und die Daten noch nicht vollstï¿½ndig ins orderbackup gesichert wurden.
         removeOrderBackupInstance(orderInstanceBackup, con);
       }
       return true;
@@ -539,12 +539,12 @@ public abstract class OrderBackupHelperProcessAbstract {
    */
   public boolean waitFor(long rootOrderId) throws InterruptedException {
     if( isAlreadyProcessed(rootOrderId) ) {
-      return true; //Es muss nicht länger gewartet werden
+      return true; //Es muss nicht lï¿½nger gewartet werden
     }
     
     if( finished ) {
       if( isAlreadyProcessed(rootOrderId) ) {
-        return true; //Es muss nicht länger gewartet werden
+        return true; //Es muss nicht lï¿½nger gewartet werden
       } else {
         //unerwartet: rootOrderId ist nicht prozessiert worden
         //FIXME was nun

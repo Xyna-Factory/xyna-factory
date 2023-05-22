@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * AbstractLoggerWrapper ist eine Basis für Wrapper der Klasse org.apache.log4j.Logger.
+ * AbstractLoggerWrapper ist eine Basis fï¿½r Wrapper der Klasse org.apache.log4j.Logger.
  * 
  * Leider kann nicht ohne Probleme eine Subklasse von Logger gebaut werden, 
- * dies wird in der Dokumentation sogar ausdrücklich nicht empfohlen, stattdessen
+ * dies wird in der Dokumentation sogar ausdrï¿½cklich nicht empfohlen, stattdessen
  * sollten solche Wrapper verwendet werden.
  * 
- * AbstractLoggerWrapper bildet viele Methoden, die für einen Nachbau der Logger-Schnittstelle
+ * AbstractLoggerWrapper bildet viele Methoden, die fï¿½r einen Nachbau der Logger-Schnittstelle
  * auf drei Basisfunktionen ab.
  *
  */

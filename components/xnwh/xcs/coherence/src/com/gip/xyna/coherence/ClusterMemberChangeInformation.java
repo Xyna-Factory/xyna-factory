@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class ClusterMemberChangeInformation {
   
   private Set<Integer> clusterIds = new HashSet<Integer>();
 
-  //FIXME prio3: im auge behalten, dass das ausschliesslich wächst! irgendwann mal leeren und alle directorydaten updaten.
+  //FIXME prio3: im auge behalten, dass das ausschliesslich wï¿½chst! irgendwann mal leeren und alle directorydaten updaten.
   //achtung dann auch unten bei der methode getNewClusterMemberId
   private Set<Integer> removedClusterIds = new HashSet<Integer>();
 
@@ -69,7 +69,7 @@ public class ClusterMemberChangeInformation {
       newClusterIds.add(members[i].getId());
     }
 
-    //clusterIds enthält nur noch entfernte ids;
+    //clusterIds enthï¿½lt nur noch entfernte ids;
     removedClusterIds.addAll(clusterIds);
     if (debugger.isEnabled()) {
       debugger.debug("invalid cluster ids = " + clusterIds);

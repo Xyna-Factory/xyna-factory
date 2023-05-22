@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,17 +87,17 @@ public interface GeneralXynaObject extends Serializable {
     }
     
     /*
-     * es werden immer negative ids zurückgegeben, die höher als LONG.MAX_VALUE/2 sind.
-     * d.h. ea funktioniert so, als wäre jedes übergebene object anders/neu
+     * es werden immer negative ids zurï¿½ckgegeben, die hï¿½her als LONG.MAX_VALUE/2 sind.
+     * d.h. ea funktioniert so, als wï¿½re jedes ï¿½bergebene object anders/neu
      */
     public static XMLReferenceCache getCacheObjectWithoutCaching(long ownerRevision) {
       return new XMLReferenceCache(ownerRevision, "");
     }
 
     /**
-     * checkt, ob version bereits eine id zugeordnet hat. falls ja, wird die version zurückgegeben. falls nein, wird die negative neue versionsnummer zurückgegeben
+     * checkt, ob version bereits eine id zugeordnet hat. falls ja, wird die version zurï¿½ckgegeben. falls nein, wird die negative neue versionsnummer zurï¿½ckgegeben
      */
-    //vorteil: hinzufügen und gleichzeitiger check auf gleichheit (teures equal+hashcode) muss so nur einmal durchgeführt werden
+    //vorteil: hinzufï¿½gen und gleichzeitiger check auf gleichheit (teures equal+hashcode) muss so nur einmal durchgefï¿½hrt werden
     public long putIfAbsent(ObjectVersionBase version) {
       long id = ++currentId;
       if (ids == null) {
@@ -172,7 +172,7 @@ public interface GeneralXynaObject extends Serializable {
       if (node != null) {
         auditImports.add(node);
       }
-      //keine rekursion notwendig, weil für die kindobjekte diese methode ebenso aufgerufen wird bei toXml()
+      //keine rekursion notwendig, weil fï¿½r die kindobjekte diese methode ebenso aufgerufen wird bei toXml()
     }
 
 

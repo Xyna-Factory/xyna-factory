@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class XynaFactoryWarehouse extends XynaFactoryWarehouseBase {
           setDefaultDocumentation(DocumentationLanguage.EN, 
             "Show message on factory startup if index collisions exists. (possible values: always, never, onlyMissing, onlyMissingOrChanged)").
           setDefaultDocumentation(DocumentationLanguage.DE,
-            "Ausgabe einer Meldung beim Factory-Startup, wenn Index-Collisions aufgetreten sind. (Mögliche Werte: always, never, onlyMissing, onlyMissingOrChanged).");
+            "Ausgabe einer Meldung beim Factory-Startup, wenn Index-Collisions aufgetreten sind. (Mï¿½gliche Werte: always, never, onlyMissing, onlyMissingOrChanged).");
 
   public enum InformIndexCollisions {
     always, never, onlyMissing, onlyMissingOrChanged

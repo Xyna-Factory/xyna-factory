@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ public class DeploymentItemBuilder {
   /*
    * bei verwendung einer inputsource in einem workflow soll der workflow genau dann invalide werden, wenn durch die reparatur der inputsource der workflow
    * nicht valide werden kann.
-   * damit verbleibt das problem der outputs, die mit dem output des von der inputsource referenzierten workflows übereinstimmen müssen. 
+   * damit verbleibt das problem der outputs, die mit dem output des von der inputsource referenzierten workflows ï¿½bereinstimmen mï¿½ssen. 
    */
   public static class UsageOfOutputsOfWFReferencedByInputSource implements DeploymentItemInterface, InterfaceWithPotentiallyUnknownProvider {
 
@@ -164,7 +164,7 @@ public class DeploymentItemBuilder {
                 .getExecutionDestination(new DestinationKey(ois.getOrderType(), XynaFactory.getInstance().getFactoryManagement()
                                              .getXynaFactoryControl().getRevisionManagement().getRuntimeContext(revision)));
         if (executionDestination == null || !executionDestination.getFQName().equals(fqWFName)) {
-          //derzeit nicht unterstützt, dass man einen ordertype verwendet, der einen anderen kompatiblen workflow aufruft
+          //derzeit nicht unterstï¿½tzt, dass man einen ordertype verwendet, der einen anderen kompatiblen workflow aufruft
           return false;
         }
       } catch (XPRC_DESTINATION_NOT_FOUND e) {
@@ -262,7 +262,7 @@ public class DeploymentItemBuilder {
   
   private static final String ORDERTYPE_PREFIX = "xprc.xpce.ordertype";
 
-  //verwendung vom ordertype ohne genaueres wissen über die eingangsschnittstelle des workflows
+  //verwendung vom ordertype ohne genaueres wissen ï¿½ber die eingangsschnittstelle des workflows
   public static class OrderTypeEmployment implements DeploymentItemInterface, InterfaceWithPotentiallyUnknownProvider {
 
     private final DestinationKey destinationKey;
@@ -337,7 +337,7 @@ public class DeploymentItemBuilder {
 
   }
   
-  //verwendung von ordertype und eingangsschnittstelle von workflow. name des workflows ist irrelevant (weil über ordertype gestartet), und ausgangsschnittstelle auch
+  //verwendung von ordertype und eingangsschnittstelle von workflow. name des workflows ist irrelevant (weil ï¿½ber ordertype gestartet), und ausgangsschnittstelle auch
   public static class DetachedOrderTypeEmployment implements DeploymentItemInterface, InterfaceWithPotentiallyUnknownProvider {
 
     private final DestinationKey destinationKey;
@@ -361,7 +361,7 @@ public class DeploymentItemBuilder {
           InterfaceEmployment employment = InterfaceEmployment.of(TypeInterface.of(wfName), signatureOfCalledWF);
           return employment.resolve();
         } else {
-          return false; //nicht unterstützt
+          return false; //nicht unterstï¿½tzt
         }
       } catch (XPRC_DESTINATION_NOT_FOUND e) {
         return false;
@@ -580,7 +580,7 @@ public class DeploymentItemBuilder {
     }
     for (AVariable thrown : wf.getAllThrownExceptions()) {
       if (thrown.isPrototype()) {
-        //FIXME TypeOfUsage ist nicht korrekt, müsste EXCEPTION sein, gibts aber nicht
+        //FIXME TypeOfUsage ist nicht korrekt, mï¿½sste EXCEPTION sein, gibts aber nicht
         invocations.add(extractTypeInterface(thrown, TypeOfUsage.OUTPUT, null));
       } else {
         invocations.add(TypeInterface.of(thrown, XMOMType.EXCEPTION));
@@ -627,7 +627,7 @@ public class DeploymentItemBuilder {
           }
         } else {
           /*
-           * überprüfung von:
+           * ï¿½berprï¿½fung von:
            * - existenz von inputsource
            * - zeigt ordertype von inputsource auf den workflow, der referenziert wird
            * - passen die erwarteten outputs zu den outputs vom workflow
@@ -648,7 +648,7 @@ public class DeploymentItemBuilder {
       dii = OperationInterface.of(wf);
       published.add(dii);
     } catch (AvariableNotResolvableException e) {
-      //nicht auflösbare variable wurden oben bereits ermittelt.
+      //nicht auflï¿½sbare variable wurden oben bereits ermittelt.
     }
     published.add(TypeInterface.of(wf));
     return Pair.of(published, invocations);
@@ -752,7 +752,7 @@ public class DeploymentItemBuilder {
                 addToInvocation(invocations, InterfaceEmployment.of(TypeInterface.of(wfCall.getWf()), wfOp));
               }
             } catch (AvariableNotResolvableException e) {
-              //ok, nun findet man die nicht auflösbaren variablen unten.
+              //ok, nun findet man die nicht auflï¿½sbaren variablen unten.
             }
             for (AVariable variable : operation.getInputVars()) {
               if (!variable.isJavaBaseType()) {
@@ -766,7 +766,7 @@ public class DeploymentItemBuilder {
             }
             for (AVariable variable : operation.getThrownExceptions()) {
               if (variable.isPrototype()) {
-                //FIXME TypeOfUsage ist nicht korrekt, müsste EXCEPTION sein, gibts aber nicht
+                //FIXME TypeOfUsage ist nicht korrekt, mï¿½sste EXCEPTION sein, gibts aber nicht
                 addToInvocation(invocations, extractTypeInterface(variable, TypeOfUsage.OUTPUT, null));
               } else {
                 addToInvocation(invocations, TypeInterface.of(variable, XMOMType.EXCEPTION));
@@ -817,8 +817,8 @@ public class DeploymentItemBuilder {
       result.add(new UnresolvableInterface.PrototypeElement(TypeOfUsage.SERVICE_REFERENCE, step.getXmlId()));
     } else {
       //dass das ein workflow ist, wird in deploymentitemstateimpl benutzt, um alle sub-wf aufrufe zu finden
-      //TODO nachteil ist hier, dass eigtl das xml auch gültig bleiben würde, wenn man den wf löscht und eine servicegroup anlegt, die in einem DT lebt, der genauso heisst.
-      //deshalb wäre "UNKNOWN" als type dann resistenter.
+      //TODO nachteil ist hier, dass eigtl das xml auch gï¿½ltig bleiben wï¿½rde, wenn man den wf lï¿½scht und eine servicegroup anlegt, die in einem DT lebt, der genauso heisst.
+      //deshalb wï¿½re "UNKNOWN" als type dann resistenter.
       DeploymentItemInterface operation = OperationInterface.of(step, sid);
       if (operation instanceof UnresolvableInterface) {
         result.add(operation);
@@ -1009,7 +1009,7 @@ public class DeploymentItemBuilder {
   
   public static void extractConstants(TypeInterface providingType, Integer stepId, AVariable variable, boolean parentWasList, Set<DeploymentItemInterface> diis) {
     if (variable.hasValue() && variable.isJavaBaseType() && variable.getJavaTypeEnum() == null) {
-      //das ist der fall, dass die membervariable unbekannt ist. beim validate würde es einen fehler geben
+      //das ist der fall, dass die membervariable unbekannt ist. beim validate wï¿½rde es einen fehler geben
       diis.add(UnresolvableInterface.get(TypeOfUsage.EMPLOYMENT, String.valueOf(variable.getVarName()), stepId));
       return;
     }
@@ -1190,7 +1190,7 @@ public class DeploymentItemBuilder {
     private Set<TypeInterface> dynamicTypeAccess = new HashSet<TypeInterface>();
     
     
-    //falls innerhalb der funktion ein roottype oder eine chain verwendet wurde, muss diese nun beseitigt werden, damit sie bei der parent-funktion (o.ä,) nicht interferiert
+    //falls innerhalb der funktion ein roottype oder eine chain verwendet wurde, muss diese nun beseitigt werden, damit sie bei der parent-funktion (o.ï¿½,) nicht interferiert
     //beispiel: cast(%0%.a[length(%1%.b)], type) -> %1% chain muss abgespalten werden, sobald der kontext von length() endet.
     //wenn funktionsparameter-kontext endet muss das genauso abgespalten werden
     //beispiel: cast(%0%.a[sum(%1%.b, %2%.c)], type)
@@ -1236,7 +1236,7 @@ public class DeploymentItemBuilder {
         if (parentContext.currentChainElementHasIndexDef) {
           parentContext.currentChainElementHasIndexDef = false;
           //roottype so lassen
-          //TODO überprüfen, dass funktion int-rückgabe typ kompatibel ist, sonst wird z.b. %0%[appendlist(%1%, "bla")] nicht richtig validiert
+          //TODO ï¿½berprï¿½fen, dass funktion int-rï¿½ckgabe typ kompatibel ist, sonst wird z.b. %0%[appendlist(%1%, "bla")] nicht richtig validiert
         } else {
           //parentcontext kann kein chain/oder root haben
           parentContext.chain = null;
@@ -1287,12 +1287,12 @@ public class DeploymentItemBuilder {
     @Override
     public void functionSubExpressionEnds(FunctionExpression fe, int parameterIndex) {
       if (fe.getFunction().getName().equals(Functions.APPEND_TO_LIST_FUNCTION_NAME) && parameterIndex == 0) {
-        //typ des ersten parameters vererbt sich auf rückgabe typ von funktion - deshalb diesen typ in parent-chain setzen
+        //typ des ersten parameters vererbt sich auf rï¿½ckgabe typ von funktion - deshalb diesen typ in parent-chain setzen
         LocalChainContext parentContext = getParentChainContext();
         LocalChainContext localContext = getCurrentChainContext();
         AccessChain chain = createOrGetChain(localContext);
         parentContext.chain = chain; //hier kann bisher kein roottyp/chain existieren
-        localContext.chain = null; //nullen für den nächsten parameter
+        localContext.chain = null; //nullen fï¿½r den nï¿½chsten parameter
       } else if (parameterIndex < fe.getSubExpressions().size() - 1) { //letzten parameter hier nicht bearbeiten, sondern in functionEnds()        
         saveTypedChain(context.get(fe), TypeInterface.of(fe.getParameterTypeDef(parameterIndex), false));
       }
@@ -1411,7 +1411,7 @@ public class DeploymentItemBuilder {
 
     @Override
     public void allPartsOfVariableFinished(Variable variable) {
-      //TODO es fehlt eine analoge behandlung noch für das enden der chain hinter einem funktionsaufruf (Beispiel: f(x,y).a.b["0"].c)
+      //TODO es fehlt eine analoge behandlung noch fï¿½r das enden der chain hinter einem funktionsaufruf (Beispiel: f(x,y).a.b["0"].c)
       if (!contextKey.isEmpty() &&
           contextKey.peek() == variable) {
         if (activeChainInIndexDef) {

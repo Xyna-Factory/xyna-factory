@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,18 +148,18 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
             }
             //FIXME wenn jetzt ein fehler im netzwerk passiert, kann es passieren, dass man diese nachricht verliert, 
             //weil nicht auf eine antwort des anderen knoten gewartet wird.
-            //und hat evtl zusätzlich einen synchron wartenden client (waitmanagement). der läuft dann in ein timeout...
+            //und hat evtl zusï¿½tzlich einen synchron wartenden client (waitmanagement). der lï¿½uft dann in ein timeout...
           }
 
         }
         if (!foundMessage) {//In keiner der Queues eine Nachricht gefunden.
 
 
-          //Potentiell könnte aber inzwischen eine weitere
+          //Potentiell kï¿½nnte aber inzwischen eine weitere
           //Nachricht eingetroffen sein.
           //Warte deshalb nur eine kurze Zeit
           /*
-           * TODO man könnte hier effizienter sein, indem man länger wartet und innerhalb des synchronized
+           * TODO man kï¿½nnte hier effizienter sein, indem man lï¿½nger wartet und innerhalb des synchronized
            * blocks einen modcounter der queues abfragt.
            * 
            * lastModCounter = modCounter;
@@ -201,7 +201,7 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
 
 
   /*
-   * Für Testzwecke Einfuegen einer Verzoegerung
+   * Fï¿½r Testzwecke Einfuegen einer Verzoegerung
    */
   public void setAdditionalWait(int i) {
     additionalWait = i;
@@ -222,7 +222,7 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
   //Runnable zum Auslesen der Replies
   class ReplyReader implements Runnable {
 
-    public void run() {//Besser als Callback=> Abhängigkeiten
+    public void run() {//Besser als Callback=> Abhï¿½ngigkeiten
       while (running) {
         while (running && !paused) {
           Socket localSocket = socket;
@@ -339,7 +339,7 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
     int n = 0;
     closeSocket();
     for (Interconnectable interconnectable : registeredXSORMemory.values()) {
-      n += interconnectable.getOutgoingQueue().size(); //immer zählen
+      n += interconnectable.getOutgoingQueue().size(); //immer zï¿½hlen
       if (!specialStartMessageSent) {
         interconnectable.sendSpecialStartedMessage();
       }
@@ -372,7 +372,7 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
     lastSent.clear();
   }
 
-  //für Tests
+  //fï¿½r Tests
   Socket getSocket() {
     return socket;
   }

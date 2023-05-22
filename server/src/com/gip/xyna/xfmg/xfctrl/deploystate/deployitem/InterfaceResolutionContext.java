@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,7 +260,7 @@ public class InterfaceResolutionContext {
   }
 
   /*
-   * es wird nicht angenommen, dass relation USEDINIMPLOF übergeben wird
+   * es wird nicht angenommen, dass relation USEDINIMPLOF ï¿½bergeben wird
    * invoker benutzt usingInterface
    */
   public static boolean satisfiesRelation(DeploymentItemStateImpl invokerImpl, XMOMDatabaseEntryColumn relation,
@@ -315,7 +315,7 @@ public class InterfaceResolutionContext {
         switch (type) {
           case INPUT :
             if (contains(relation, XMOMDatabaseEntryColumn.NEEDEDBY)) {
-              //innerhalb von workflows werden die inputs von aufgerufenen services auch mit INPUT geflaggt. Diese sollen nicht als neededby aufgeführt werden
+              //innerhalb von workflows werden die inputs von aufgerufenen services auch mit INPUT geflaggt. Diese sollen nicht als neededby aufgefï¿½hrt werden
               //neededby=input des WF/Service/etc.
               if (!isWF || invokerImpl.getPublishedInterfaces(DeploymentLocation.SAVED).getAllOperations().iterator().next().getInput().contains(usingInterface)) {
                 return true;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 public interface CapacityManagementInterface {
 
   /**
-   * Versucht, die Capacities für die übergebene Order zu belegen.
+   * Versucht, die Capacities fï¿½r die ï¿½bergebene Order zu belegen.
    * Kann mehrfach gerufen werden, loggt dann aber eine Meldung auf WARN.
    * @param orderInformation
    * @param schedulingData
@@ -49,7 +49,7 @@ public interface CapacityManagementInterface {
   public CapacityAllocationResult allocateCapacities(OrderInformation orderInformation, SchedulingData schedulingData);
   
   /**
-   * Macht die Belegungen des letzten {@link #allocateCapacities(OrderInformation, SchedulingData)} rückgängig.
+   * Macht die Belegungen des letzten {@link #allocateCapacities(OrderInformation, SchedulingData)} rï¿½ckgï¿½ngig.
    * @param orderInformation
    * @param schedulingData
    */
@@ -62,7 +62,7 @@ public interface CapacityManagementInterface {
   public boolean freeTransferableCapacities(XynaOrderServerExtension xo); 
 
   /**
-   * Versucht, die Capacities für die übergebene XynaOrder freizugeben.
+   * Versucht, die Capacities fï¿½r die ï¿½bergebene XynaOrder freizugeben.
    * Kann mehrfach gerufen werden, loggt dann aber eine Meldung auf DEBUG.
    * @param xo
    * @return
@@ -80,7 +80,7 @@ public interface CapacityManagementInterface {
 
   
   /**
-   * Gibt alle Capacities für die übergebene XynaOrder frei.
+   * Gibt alle Capacities fï¿½r die ï¿½bergebene XynaOrder frei.
    * Kann mehrfach gerufen werden.
    * @param orderId
    * @return

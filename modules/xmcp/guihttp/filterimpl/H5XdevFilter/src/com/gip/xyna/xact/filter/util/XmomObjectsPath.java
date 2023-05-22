@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class XmomObjectsPath {
 
   /**
    * Auftrennung: Default ist Suche direkt im Server.
-   * Im Test ist beliebige andere Implementierung (beispielsweise über RMI) möglich.
+   * Im Test ist beliebige andere Implementierung (beispielsweise ï¿½ber RMI) mï¿½glich.
    *
    */
   public interface Searcher {

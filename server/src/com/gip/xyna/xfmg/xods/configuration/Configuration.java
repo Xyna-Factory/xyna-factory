@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ import com.gip.xyna.xnwh.persistence.Storable;
  * Management of Factory Configuration (aka Xyna Properties).
  * 
  * TODO Daten werden derzeit an 3 Stellen gespeichert: PL-History, PL-Default und xynaPropertyCache.
- * PL-Default ist nun unnötig; xynaPropertyCache speichert mehr als PL-Default.
+ * PL-Default ist nun unnï¿½tig; xynaPropertyCache speichert mehr als PL-Default.
  */
 public class Configuration extends FunctionGroup {
   
@@ -80,12 +80,12 @@ public class Configuration extends FunctionGroup {
   private volatile boolean isInitialized;
   protected ODS ods;
 
-  //FIXME ConcurrentHashMap könnte hier listenerLock sparen?
+  //FIXME ConcurrentHashMap kï¿½nnte hier listenerLock sparen?
   private ReentrantLock listenerLock;
-  private Map<String, Set<IPropertyChangeListener>> listenerTargets; //für normale Listener
+  private Map<String, Set<IPropertyChangeListener>> listenerTargets; //fï¿½r normale Listener
   //Speicherung der Properties und ihrer Instanzen
   private XynaPropertySourceFactory xynaPropertyCache;
-  private Map<String,Pair<UserType,String>> dependencies; //nur ein temporärer speicher während der initialisierung, bevor dependencyregister da ist
+  private Map<String,Pair<UserType,String>> dependencies; //nur ein temporï¿½rer speicher wï¿½hrend der initialisierung, bevor dependencyregister da ist
 
   private DependencyRegister dependencyRegister;
   
@@ -94,7 +94,7 @@ public class Configuration extends FunctionGroup {
     isInPreInitMode = false;
   }
 
-  //für tests/updates
+  //fï¿½r tests/updates
   private Configuration(String cause) throws XynaException {
 
     super(cause);
@@ -152,7 +152,7 @@ public class Configuration extends FunctionGroup {
   
   
   /**
-   * XynaProperties können nun von DB gelesen werden und sind daher bereits funktionsfähig.
+   * XynaProperties kï¿½nnen nun von DB gelesen werden und sind daher bereits funktionsfï¿½hig.
    * Dependency wird noch nicht gesetzt
    */
   private void initConfiguration() {
@@ -169,7 +169,7 @@ public class Configuration extends FunctionGroup {
       }
       if( ! xpsd.getSetValues().isEmpty() ) {
         logger.warn("XynaPropertySourceDefault has changed properties "+ xpsd.getSetValues() );
-        //FIXME Änderungen in xps...
+        //FIXME ï¿½nderungen in xps...
       }
     }
     
@@ -178,7 +178,7 @@ public class Configuration extends FunctionGroup {
   
   /**
    * DependencyRegister ist nun initialisiert, daher dort anmelden. 
-   * Nun sind XynaProperties voll funktionsfähig
+   * Nun sind XynaProperties voll funktionsfï¿½hig
    */
   private void initXynaProperties() {
     dependencyRegister = XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getDependencyRegister();
@@ -416,7 +416,7 @@ public class Configuration extends FunctionGroup {
     
     persistProperty(propStorable);
 
-    xpc.setProperty(propStorable); //Zuerst die Properties ändern
+    xpc.setProperty(propStorable); //Zuerst die Properties ï¿½ndern
     notifyListeners(key); //danach die PropertyChangeListener informieren
   }
 
@@ -574,16 +574,16 @@ public class Configuration extends FunctionGroup {
   }
 
   /**
-   * priorität wirkt sich auf die reihenfolge der ausführung beim propertychange aus.
-   * FIXME priorität derzeit nicht verwendet!
+   * prioritï¿½t wirkt sich auf die reihenfolge der ausfï¿½hrung beim propertychange aus.
+   * FIXME prioritï¿½t derzeit nicht verwendet!
    * 
-   * @param prio 0 = am höchsten, > 0 niedriger. 
+   * @param prio 0 = am hï¿½chsten, > 0 niedriger. 
    */
   void addPropertyChangeListener(int prio, IPropertyChangeListener listener) {
-    //TODO siehe bugz 15959: neue methode, die propertychangelistener weakreferenced hält
+    //TODO siehe bugz 15959: neue methode, die propertychangelistener weakreferenced hï¿½lt
     
-    //prio benötigt, damit man innerhalb eines changehandlers XynapropertyUtils verwenden kann. falls
-    //die changehandler in der falschen reihenfolge ausgeführt werden, liest man immer den alten wert.
+    //prio benï¿½tigt, damit man innerhalb eines changehandlers XynapropertyUtils verwenden kann. falls
+    //die changehandler in der falschen reihenfolge ausgefï¿½hrt werden, liest man immer den alten wert.
     
     if (listener.getWatchedProperties() == null) {
       logger.warn("tried to add property change listener that did not specify any properties: " + listener);
@@ -610,9 +610,9 @@ public class Configuration extends FunctionGroup {
               logger.trace(null, new Exception());
             }
           } else {
-            //hier eine neue liste erstellen, damit es keine concurrentmodificationexceptions gibt für den fall, dass
-            //jemand in einem propertychangehandler einen weiteren propertychangehandler hinzufügt.
-            //das hört sich komisch an, ist aber der fall, wenn man im propertychangehandler das erstemal
+            //hier eine neue liste erstellen, damit es keine concurrentmodificationexceptions gibt fï¿½r den fall, dass
+            //jemand in einem propertychangehandler einen weiteren propertychangehandler hinzufï¿½gt.
+            //das hï¿½rt sich komisch an, ist aber der fall, wenn man im propertychangehandler das erstemal
             //ein xynapropertyutils.xynapropertybase.get() aufruft.
             Set<IPropertyChangeListener> newSet = new HashSet<IPropertyChangeListener>(oldList.size() + 1);
             newSet.add(listener);
@@ -782,7 +782,7 @@ public class Configuration extends FunctionGroup {
     @Override
     public Object getPrimaryKey() {
       if(id == null) {
-        return ""; // Workaround für Bug, wenn Einträge ohne Id persistiert wurden ...
+        return ""; // Workaround fï¿½r Bug, wenn Eintrï¿½ge ohne Id persistiert wurden ...
       } else {
         return id;
       }

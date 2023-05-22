@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +25,20 @@ import com.gip.xyna.xprc.xsched.scheduling.CapacityDemand;
 
 
 /**
- * Interface, über das die CapacityReservation auf das CapacityManagement zugreift.
+ * Interface, ï¿½ber das die CapacityReservation auf das CapacityManagement zugreift.
  * 
  */
 public interface CapacityManagementReservationInterface {
 
   /**
-   * Rückgabe des eigenen Bindings, damit bekannt ist, für welches Binding Capacities angefordert werden sollen
+   * Rï¿½ckgabe des eigenen Bindings, damit bekannt ist, fï¿½r welches Binding Capacities angefordert werden sollen
    * @return
    */
   public int getOwnBinding();
 
   /**
-   * Reservieren einer Capacity für ein fremdes Binding. Die Capacity steht dann lokal nicht mehr zu Verfügung,
-   * ist aber noch nicht an den anderen Knoten übertragen.
+   * Reservieren einer Capacity fï¿½r ein fremdes Binding. Die Capacity steht dann lokal nicht mehr zu Verfï¿½gung,
+   * ist aber noch nicht an den anderen Knoten ï¿½bertragen.
    * @param binding
    * @param capacity
    * @return
@@ -46,8 +46,8 @@ public interface CapacityManagementReservationInterface {
   public int reserveCapForForeignBinding(int binding, Capacity capacity);
 
   /**
-   * Übertragen aller reservierten Capacities an die anderen Knoten
-   * @return Anzahl aller übertragenen Capacities
+   * ï¿½bertragen aller reservierten Capacities an die anderen Knoten
+   * @return Anzahl aller ï¿½bertragenen Capacities
    */
   public int transportReservedCaps();
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,22 +29,22 @@ import com.gip.xyna.xdev.map.typegen.XmomDataCreator;
 
 
 /**
- * TypeInfoMember sammelt Informationen über die Membervariablen eines Datentyps.
+ * TypeInfoMember sammelt Informationen ï¿½ber die Membervariablen eines Datentyps.
  */
 public class TypeInfoMember {
   
-  //Basisdaten für equals und hashCode
+  //Basisdaten fï¿½r equals und hashCode
   private final FQName name;            //Name
   private final TypeInfo complexType;   //Typ: entweder XMOM-Type
   private final Class<?> simpleType;    //     oder einfacher Java-Typ
   private final MemberType memberType;  //Element, List, Attribute
   
-  //Basisdaten, nicht für equals und hashCode
+  //Basisdaten, nicht fï¿½r equals und hashCode
   private final boolean optional;
   private final boolean qualified;  //Ausgabe im XML mit Namespace-Qualifizierung
   private final boolean list;
   
-  //Erweiterungen, die nachträglich gesetzt werden und nicht in equals und hashCode verwendet werden dürfen
+  //Erweiterungen, die nachtrï¿½glich gesetzt werden und nicht in equals und hashCode verwendet werden dï¿½rfen
   private String varName;
   private String label;
   private int position;
@@ -182,7 +182,7 @@ public class TypeInfoMember {
       } else if (XSConstants.DOUBLE_DT == basicType) {
         return Double.class;
       } else if (XSConstants.FLOAT_DT == basicType) {
-        return Double.class; //TODO Float von Factory nicht unterstützt
+        return Double.class; //TODO Float von Factory nicht unterstï¿½tzt
       } else if (XSConstants.INT_DT == basicType) {
         return Integer.class;
       } else if (XSConstants.INTEGER_DT == basicType) {
@@ -332,7 +332,7 @@ public class TypeInfoMember {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((complexType == null) ? 0 : complexType.getName().hashCode()); //hier für rekursive typeInfos keine Endlosschleife!
+    result = prime * result + ((complexType == null) ? 0 : complexType.getName().hashCode()); //hier fï¿½r rekursive typeInfos keine Endlosschleife!
     result = prime * result + ((memberType == null) ? 0 : memberType.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((simpleType == null) ? 0 : simpleType.hashCode());

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Klasse zur Verwaltung von ShutdownHooks. Es können mehrere Tasks, die eigentlich als
- * Shutdown-Hooks ausgeführt werden sollen, registriert werden. Diese werden dann
- * von einem "echten" Shutdown-Hook ausgeführt. Dabei kann durch den ShutdownHookType
+ * Klasse zur Verwaltung von ShutdownHooks. Es kï¿½nnen mehrere Tasks, die eigentlich als
+ * Shutdown-Hooks ausgefï¿½hrt werden sollen, registriert werden. Diese werden dann
+ * von einem "echten" Shutdown-Hook ausgefï¿½hrt. Dabei kann durch den ShutdownHookType
  * die Abarbeitungsreihenfolge bestimmt werden.
  *
  */
@@ -38,19 +38,19 @@ public final class ShutdownHookManagement {
   
   //Achtung: Reihenfolge legt Abarbeitungsreihenfolge fest
   public static enum ShutdownHookType {
-    DEFAULT, //beliebige Shutdown-Hooks, werden zuerst ausgeführt
-    DELETE_PID, //Löschen des pid files
-    CLOSE_SOCKET; //Schließen des CLI Sockets, muss als letztes ausgeführt werden
+    DEFAULT, //beliebige Shutdown-Hooks, werden zuerst ausgefï¿½hrt
+    DELETE_PID, //Lï¿½schen des pid files
+    CLOSE_SOCKET; //Schlieï¿½en des CLI Sockets, muss als letztes ausgefï¿½hrt werden
   }
 
   private static final ShutdownHookManagement INSTANCE = new ShutdownHookManagement();
 
-  //Tasks die ausgeführt werden sollen
+  //Tasks die ausgefï¿½hrt werden sollen
   private static EnumMap<ShutdownHookType, List<Runnable>> tasks = new EnumMap<ShutdownHookType, List<Runnable>>(ShutdownHookType.class);
 
   
   private ShutdownHookManagement () {
-    //Resgistrierung des "echten" Shutdown-Hooks, der dann die Tasks ausführt
+    //Resgistrierung des "echten" Shutdown-Hooks, der dann die Tasks ausfï¿½hrt
     Runtime.getRuntime().addShutdownHook(new Thread("ShutdownHook") {
       public void run() {
         if (logger.isDebugEnabled()) {
@@ -61,7 +61,7 @@ public final class ShutdownHookManagement {
             try {
               task.run();
             } catch (Throwable t) {
-              //andere Shutdown-Hooks sollen trotzdem ausgeführt werden
+              //andere Shutdown-Hooks sollen trotzdem ausgefï¿½hrt werden
               logger.warn("Could not execute shutdown hook", t);
             }
           }
@@ -74,7 +74,7 @@ public final class ShutdownHookManagement {
   }
 
   /**
-   * Registriert einen neuen Task, für den egal ist, wann er ausgeführt wird
+   * Registriert einen neuen Task, fï¿½r den egal ist, wann er ausgefï¿½hrt wird
    * @param task
    */
   public void addTask(Runnable task) {
@@ -83,7 +83,7 @@ public final class ShutdownHookManagement {
 
   /**
    * Registriert einen neuen Task. Der ShutdownHookType legt fest, wann der Task
-   * ausgeführt wird.
+   * ausgefï¿½hrt wird.
    * @param task
    * @param type
    */

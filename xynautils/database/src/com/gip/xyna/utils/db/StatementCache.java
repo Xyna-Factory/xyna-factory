@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ public class StatementCache {
 
   
   /**
-   * Cachet das PreparedStatement zur späteren Wiederverwendung
-   * Achtung: nicht für Callable-Statements verwendbar
+   * Cachet das PreparedStatement zur spï¿½teren Wiederverwendung
+   * Achtung: nicht fï¿½r Callable-Statements verwendbar
    * @param connection 
    * @param sql
    * @throws SQLException 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class ConnectionPoolTransactionType implements TransactionType<Connection
   private static final String DEFAULT_CLIENT_INFO = TRANSACTION_TYPE_NAME;
   private static final Long DEFAULT_TIMEOUT = 1800_000L; //30 min
   
-  //namen der keys für die parameter
+  //namen der keys fï¿½r die parameter
   public final static String KEY_CONNECTION_POOLS = "connectionPools";
   public final static String KEY_CONNECTION_TIMEOUT = "conTimeout";
   public final static String KEY_CLIENT_INFO = "clientInfo";

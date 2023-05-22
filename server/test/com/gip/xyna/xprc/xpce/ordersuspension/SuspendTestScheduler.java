@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ public class SuspendTestScheduler {
         try {
           vetoMutex.wait();
         } catch (InterruptedException e) {
-          //ignorieren, while sorgt für nächstes Warten
+          //ignorieren, while sorgt fï¿½r nï¿½chstes Warten
         }
       }
     }
@@ -159,7 +159,7 @@ public class SuspendTestScheduler {
   
 
   /**
-   * Scheduler beendet die Ausführung und räumt im Cleanup auf
+   * Scheduler beendet die Ausfï¿½hrung und rï¿½umt im Cleanup auf
    * @param id
    */
   private void finish(Long id) {

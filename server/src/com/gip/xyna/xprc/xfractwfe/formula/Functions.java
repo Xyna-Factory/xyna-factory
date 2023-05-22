@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -471,7 +471,7 @@ public class Functions implements SupportedFunctionStore {
 
   private static ClassLoaderDispatcher cld;
   
-  //nur für abwärtskompatibilität
+  //nur fï¿½r abwï¿½rtskompatibilitï¿½t
   private static final XynaPropertyBoolean toggleInstanceOfNullBehaviourToReturnTrue = new XynaPropertyBoolean("xprc.xfractwfe.formula.function.instanceof.null.returnstrue", false).setHidden(true);
 
   /**
@@ -663,7 +663,7 @@ public class Functions implements SupportedFunctionStore {
     if(a.getClass() != b.getClass()) {
       return false;
     }
-    //Beide haben den selben typ, daher muss bei instanceof nur noch a geprüft werden
+    //Beide haben den selben typ, daher muss bei instanceof nur noch a geprï¿½ft werden
     if(a instanceof List) {
       return deepequalsList((List)a, (List)b);
     } else if(a instanceof XynaObject) {

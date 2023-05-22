@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
 
     public synchronized void onChange(ClusterState newState) {
       logger.info("VetoManagement.RMIClusterStateChangeHandler.onChange " + newState );
-      //VetoManagement ist nur über RMI geclustert.
+      //VetoManagement ist nur ï¿½ber RMI geclustert.
       this.clusterState = newState;
       if( vetoManagementAlgorithmType != null && vetoManagementAlgorithmType.isClusterable() ) {
         switchAlgorithmClusteredLocal();
@@ -147,7 +147,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
       case DISCONNECTED:
       case NEVER_CONNECTED:
         //TODO Sinnvollerweise konfigurierbar Local oder Unsupported, da hier beide 
-        //Clusterknoten laufen können und damit Vetos doppelt vergeben könnten
+        //Clusterknoten laufen kï¿½nnen und damit Vetos doppelt vergeben kï¿½nnten
         cm = ClusterMode.Local; //ClusterMode.Unsupported;
         break;
       default: //INIT, SHUTDOWN, STARTING, SYNC_PARTNER, SYNC_SLAVE

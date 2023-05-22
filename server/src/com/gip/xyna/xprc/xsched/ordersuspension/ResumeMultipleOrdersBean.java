@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class ResumeMultipleOrdersBean extends XynaObject {
   @LabelAnnotation(label="Targets")
   private List<ResumeTarget> targets;
 
-  //private List<Long> targetIds; Achtung: Inkompatible Änderung der ResumeMultipleOrdersBean:
+  //private List<Long> targetIds; Achtung: Inkompatible ï¿½nderung der ResumeMultipleOrdersBean:
   //targetIds kann nicht in targets konvertiert werden. ResumeMultipleOrdersBean sollte aber
   //nicht serialisiert vorkommen.
  

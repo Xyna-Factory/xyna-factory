@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -210,8 +210,8 @@ public class ConnectionPoolTest extends TestCase {
 
 
   public void testGetConnectionBeforeTimeout() throws Exception {
-    //threads warten zufällige zeit, neue threads haben timeout > zufällige zeit und bekommen deshalb connections.
-    //andere threads haben timeout < zufällige zeit und bekommen deshalb keine connection
+    //threads warten zufï¿½llige zeit, neue threads haben timeout > zufï¿½llige zeit und bekommen deshalb connections.
+    //andere threads haben timeout < zufï¿½llige zeit und bekommen deshalb keine connection
     final long[] waitTimesFirstThreads = new long[connectionPoolSize];
     final boolean[] timeouts = new boolean[connectionPoolSize];
     int expectedGotConnection = 0;
@@ -374,7 +374,7 @@ public class ConnectionPoolTest extends TestCase {
     //wer als erstes eine connection will, soll sie auch als erstes bekommen!
     
     //erstmal alle connections vergeben. dann mehrere threads auf connection warten lassen. dann wird eine connection frei.
-    //dann überprüfen, dass der richtige thread sie bekommt.
+    //dann ï¿½berprï¿½fen, dass der richtige thread sie bekommt.
     Connection con = cp.getConnection(100, "");
     final CountDownLatch latch = new CountDownLatch(connectionPoolSize-1);
     for (int i = 0; i<connectionPoolSize-1; i++) {
@@ -505,7 +505,7 @@ public class ConnectionPoolTest extends TestCase {
       dbConnectionOkDefault = true;   
     }
 
-    //jetzt is db wieder verfügbar
+    //jetzt is db wieder verfï¿½gbar
     int cntNoConnectionAvailable2 = 0;
     for (int i = 0; i<cntNoConnectionAvailable; i++) {
       try {
@@ -671,7 +671,7 @@ public class ConnectionPoolTest extends TestCase {
     }
     cp.recreateAllConnections(false);
     
-    //testen, dass genau poolSize neue connections zur verfügung stehen
+    //testen, dass genau poolSize neue connections zur verfï¿½gung stehen
     for (int i = 0; i<connectionPoolSize; i++) {
       Connection con = cp.getConnection(1000, "");
       connections.add(con);
@@ -706,7 +706,7 @@ public class ConnectionPoolTest extends TestCase {
   
   /*
    * #######################################################################################
-   * jdbc klassen für die tests 
+   * jdbc klassen fï¿½r die tests 
    */
   
   private static class TestRS extends UnsupportingResultSet {

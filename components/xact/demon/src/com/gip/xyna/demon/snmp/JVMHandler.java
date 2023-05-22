@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,8 +66,8 @@ public class JVMHandler {
       //GarbageCollection begrenzen, auf alle 5 Sekunden einmal
       long now = System.currentTimeMillis();
       if( now - lastGC > 5000 ) {
-        Runtime.getRuntime().gc(); //GarbageCollection ist nötig, damit ein 
-        //sinnvoller Wert für den benötigten Speicher berechnet werden kann
+        Runtime.getRuntime().gc(); //GarbageCollection ist nï¿½tig, damit ein 
+        //sinnvoller Wert fï¿½r den benï¿½tigten Speicher berechnet werden kann
         memory = (int)(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
         lastGC = now;
       }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class ModuleManagedKeyStoreType implements KeyStoreType<ModuleManagedKeyS
                                  .label("Passphrase")
                                  .documentation(Documentation
                                                 .en("Passphrase of key store file")
-                                                .de("Passwort der Schlüsseldatei")
+                                                .de("Passwort der Schlï¿½sseldatei")
                                                 .build())
                                  .optional().build();
   

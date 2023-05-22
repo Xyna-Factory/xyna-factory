@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,28 +41,28 @@ import com.gip.xyna.debug.Debugger;
  * implementierung des zustandsautomaten des clusterstates.
  * 
  * beschreibung:
- * der clusterstate ändert sich im normalfall wie folgt:
- * INIT -> STARTUP (getriggert über setState) -> ein SYNC-Zustand -> CONNECTED -> SHUTDOWN.
+ * der clusterstate ï¿½ndert sich im normalfall wie folgt:
+ * INIT -> STARTUP (getriggert ï¿½ber setState) -> ein SYNC-Zustand -> CONNECTED -> SHUTDOWN.
  * 
- * änderungen in der erreichbarkeit werden nur über {@link #setOtherNodeAvailable(boolean)} durchgeführt.
- * falls beim senden timeouts passieren, wird solange wiederholt bis die erreichbarkeit sich geändert hat.
+ * ï¿½nderungen in der erreichbarkeit werden nur ï¿½ber {@link #setOtherNodeAvailable(boolean)} durchgefï¿½hrt.
+ * falls beim senden timeouts passieren, wird solange wiederholt bis die erreichbarkeit sich geï¿½ndert hat.
  * 
- * bei jeder clusterstate änderung werden alle registrierten {@link StateChangeHandler} aufgerufen. bevor der
- * clusterstate den ziel-wert erreicht, wird für alle registrierten {@link StateChangeHandler} parallel die methode
+ * bei jeder clusterstate ï¿½nderung werden alle registrierten {@link StateChangeHandler} aufgerufen. bevor der
+ * clusterstate den ziel-wert erreicht, wird fï¿½r alle registrierten {@link StateChangeHandler} parallel die methode
  * {@link StateChangeHandler#readyForStateChange(ClusterState, ClusterState)} aufgerufen. wenn alle 
- * {@link StateChangeHandler} geantwortet haben, wird die stateänderung sichtbar gemacht und dann wieder für 
+ * {@link StateChangeHandler} geantwortet haben, wird die stateï¿½nderung sichtbar gemacht und dann wieder fï¿½r 
  * alle parallel die methode {@link StateChangeHandler#onChange(ClusterState, ClusterState)} aufgerufen.
  * 
  * 
  * 
- * verwendung für entwickler:
+ * verwendung fï¿½r entwickler:
  * - es muss eine komponente geben, die den availability-change an diese klasse weiterleitet.
  * - die kommunikation mit dem entfernten knoten muss implementiert werden. beim empfangen an {@link #getThisNodeImpl()} weiterleiten,
- * beim senden wird immer die im konstruktor übergebene implementierung des {@link ClusterNodeRemoteInterface} verwendet.
+ * beim senden wird immer die im konstruktor ï¿½bergebene implementierung des {@link ClusterNodeRemoteInterface} verwendet.
  * 
  */
 /*
- * TODO: sync-zustände aus der klasse rausnehmen und separat behandeln als zwischenzustand vor connected,
+ * TODO: sync-zustï¿½nde aus der klasse rausnehmen und separat behandeln als zwischenzustand vor connected,
  */
 public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemoteInterface {
 
@@ -71,7 +71,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
 
   /**
-   * führt statechanges durch, die sich durch änderungen in der erreichbarkeit ergeben
+   * fï¿½hrt statechanges durch, die sich durch ï¿½nderungen in der erreichbarkeit ergeben
    */
   private class AvailabilityChangeHandler implements Runnable {
 
@@ -108,7 +108,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
             if (available == availabilityLastChangedTo) {
               break;
             }
-            //else nochmal ändern.
+            //else nochmal ï¿½ndern.
           }
         }
       }
@@ -117,7 +117,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
   }
 
   /**
-   * führt die asynchron durchzuführenden statechanges durch
+   * fï¿½hrt die asynchron durchzufï¿½hrenden statechanges durch
    */
   private class StateChanger implements Runnable {
 
@@ -156,7 +156,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
   private volatile ClusterState currentState;
   private volatile boolean wasMaster; //der letzte zustand, der zwischen master/slave unterscheidet war master.
 
-  private volatile ClusterState nextState; //für asynchrone zustandsänderungen merkt man sich den als nächstes durchzuführenden statechange
+  private volatile ClusterState nextState; //fï¿½r asynchrone zustandsï¿½nderungen merkt man sich den als nï¿½chstes durchzufï¿½hrenden statechange
 
   private final Object stateChangerThreadLock = new Object();
   private volatile boolean stateChangerThreadIsRunning;
@@ -165,7 +165,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
   private final List<StateChangeHandler> handlers; //registrierte handler
 
-  //threadpool für die parallele durchführung von statechangehandlern
+  //threadpool fï¿½r die parallele durchfï¿½hrung von statechangehandlern
   private final ThreadPoolExecutor threadpool = new ThreadPoolExecutor(2, 5, 20, TimeUnit.SECONDS,
                                                                        new LinkedBlockingQueue<Runnable>(20),
                                                                        new ThreadFactory() {
@@ -196,7 +196,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
   /**
    * diese zahl ist die anzahl der syncFinished-aufrufe aus der applikation, auf die gewartet wird vor dem
-   * zustandsübergang nach CONNECTED. 
+   * zustandsï¿½bergang nach CONNECTED. 
    */
   private int syncFinishedConditions = 0;
   private final AtomicInteger syncFinishedCounter = new AtomicInteger(0);
@@ -204,8 +204,8 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
   /**
    * @param remoteInterface implementierung des remoteInterfaces des anderen knoten: wie erreicht man den anderen knoten?
-   * @param wasMasterBefore true, falls  dieser knoten früher master gewesen ist.
-   * @param availabilityDelayMs verzögerung von STARTUP -> NEVERCONNECTED, falls anderer knoten nicht erreichbar ist. bedingt durch 
+   * @param wasMasterBefore true, falls  dieser knoten frï¿½her master gewesen ist.
+   * @param availabilityDelayMs verzï¿½gerung von STARTUP -> NEVERCONNECTED, falls anderer knoten nicht erreichbar ist. bedingt durch 
    *        "lag" des erreichbarkeitdaemons
    */
   public ClusterManagementImpl(ClusterNodeRemoteInterface remoteInterface, boolean wasMasterBefore, long availabilityDelayMs) {
@@ -234,12 +234,12 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
 
   /**
-   * per default wird der übergang von SYNC_X auf CONNECTED versucht durchzuführen, sobald alle statechangehandler 
-   * ausgeführt wurden.
-   * über die methode {@link #registerSyncFinishedCondition()} wird eine
-   * zusätzliche bedingung registriert, auf die gewartet wird, bis versucht wird auf CONNECTED zu wechseln. 
+   * per default wird der ï¿½bergang von SYNC_X auf CONNECTED versucht durchzufï¿½hren, sobald alle statechangehandler 
+   * ausgefï¿½hrt wurden.
+   * ï¿½ber die methode {@link #registerSyncFinishedCondition()} wird eine
+   * zusï¿½tzliche bedingung registriert, auf die gewartet wird, bis versucht wird auf CONNECTED zu wechseln. 
    * 
-   * zu dem zeitpunkt, wo die bedingung erfüllt ist, muss {@link #notifySyncFinishedCondition()} aufgerufen werden.
+   * zu dem zeitpunkt, wo die bedingung erfï¿½llt ist, muss {@link #notifySyncFinishedCondition()} aufgerufen werden.
    * 
    * dies ist besser als einfach zu verlangen, dass der synchronisierungsvorgang der applikation synchron im statechangehandler
    * zu passieren hat.
@@ -269,9 +269,9 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
 
   /**
-   * merkt sich den asynchron zu setzenden nächsten clusterstate. überschreibt weitere clusterstates, 
+   * merkt sich den asynchron zu setzenden nï¿½chsten clusterstate. ï¿½berschreibt weitere clusterstates, 
    * die sich in der warteschlange befinden.
-   * unterbricht nicht änderungen, die bereits durchgeführt werden. 
+   * unterbricht nicht ï¿½nderungen, die bereits durchgefï¿½hrt werden. 
    */
   private void changeStateInternallyAsync(final ClusterState newState) {
     debugger.debug(new Object() {
@@ -293,11 +293,11 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
 
   /**
-   * synchrone durchführung eines statechanges.
+   * synchrone durchfï¿½hrung eines statechanges.
    * besonderheiten: 
    * - nach STARTUP gehts direkt weiter mit dem versuch zu synchronisieren
    * - nach synchronisation gehts direkt weiter mit dem versuch nach CONNECTED zu gehen
-   * - falls SHUTDOWN, wird dies dem anderen knoten mitgeteilt (falls möglich)
+   * - falls SHUTDOWN, wird dies dem anderen knoten mitgeteilt (falls mï¿½glich)
    */
   private void changeStateInternally(final ClusterState newState, boolean syncAfterChangeHandlerExecution) {
     if (currentState == newState || nextState == newState) {
@@ -373,7 +373,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
       final ClusterState oldState = currentState;
 
-      //dinge, die vor dem ändern des zustands passieren müssen, aber nach den clusterstatechangehandlern.
+      //dinge, die vor dem ï¿½ndern des zustands passieren mï¿½ssen, aber nach den clusterstatechangehandlern.
       if (newState == ClusterState.SHUTDOWN) {
         shutdownProcess();
       }
@@ -463,7 +463,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
       case SYNC_MASTER :
         //dem anderen knoten bescheid geben
         try {
-          otherNode.changeState(ClusterState.SHUTDOWN); //ohne vernünftige daten (als slave) kann der andere nicht leben
+          otherNode.changeState(ClusterState.SHUTDOWN); //ohne vernï¿½nftige daten (als slave) kann der andere nicht leben
         } catch (TimeoutException e) {
           //pech, der andere wirds von allein merken.
         } catch (RuntimeException e) {
@@ -530,8 +530,8 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
     //sync fertig bedeutet, dass sync-handler alle abgeschlossen sind.
 
     /*
-     * achtung: der master darf nicht auf disconnect_master zurückspringen, wenn unklar ist, ob der andere schon auf connected war.
-     * weil das würde dazu führen, dass ein knoten master ist und der andere trotzdem läuft (disconnected).
+     * achtung: der master darf nicht auf disconnect_master zurï¿½ckspringen, wenn unklar ist, ob der andere schon auf connected war.
+     * weil das wï¿½rde dazu fï¿½hren, dass ein knoten master ist und der andere trotzdem lï¿½uft (disconnected).
      * 
      * was aber passieren darf ist, dass der master auf disconnected geht und der slave auf shutdown.
      * 
@@ -547,7 +547,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
     while (gotTimeout) {
       try {
         if (!(currentState == ClusterState.SYNC_MASTER && !otherNodeIsSyncMaster())) {
-          //für sync_master erst nachdem der slave fertig ist.
+          //fï¿½r sync_master erst nachdem der slave fertig ist.
           otherNode.syncFinished();
         } else {
           debugger
@@ -589,7 +589,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
             //der andere (slave) muss mit sync fertig sein.
 
             //in diesem block hat man das statechangelock und ist deshalb sicher,
-            //dass kein anderer thread den übergang nach disconnected_master vollzieht, und hier trotzdem 
+            //dass kein anderer thread den ï¿½bergang nach disconnected_master vollzieht, und hier trotzdem 
             //syncFinished aufgerufen wird.
             retryCnt = 0;
             gotTimeout = true;
@@ -608,7 +608,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
                     stateChangeLock.lock();
                   }
                 }
-                //erneut prüfen, weil das lock freigegeben war.
+                //erneut prï¿½fen, weil das lock freigegeben war.
                 if (available && currentState == ClusterState.SYNC_MASTER && !otherNodeIsSyncMaster()) {
                   continue; //ok retry.
                 }
@@ -623,7 +623,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
           // wird von availabilitycheck gehandelt
         }
       } else {
-        //ok, wurde bereits von einem anderen prozess geändert. passt.
+        //ok, wurde bereits von einem anderen prozess geï¿½ndert. passt.
       }
     } finally {
       syncStateOfOtherNode = null;
@@ -645,7 +645,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
 
   /**
-   * setzt das wasMaster-flag passend zum übergebenen state.
+   * setzt das wasMaster-flag passend zum ï¿½bergebenen state.
    */
   private void setWasMaster(ClusterState newState) {
     switch (newState) {
@@ -670,7 +670,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
 
 
   /**
-   * wechsel zum übergebenen state, falls erlaubt.
+   * wechsel zum ï¿½bergebenen state, falls erlaubt.
    * erlaubt sind:
    * - DISCONNECTED_MASTER,
    * - DISCONNECTED
@@ -873,7 +873,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
               }
             };
             t.schedule(task, availabilityDelayMs);
-            //TODO task canceln, wenn nicht mehr benötigt. ist aber nicht so wichtig, weil dann das task eh nichts mehr tut...
+            //TODO task canceln, wenn nicht mehr benï¿½tigt. ist aber nicht so wichtig, weil dann das task eh nichts mehr tut...
           }
         }
       }
@@ -939,7 +939,7 @@ public class ClusterManagementImpl implements ClusterManagement, ClusterNodeRemo
           break;
         case STARTUP :
           //wird von afterstartupprozess erledigt, ausser der wartet gerade auf den timer, dann muss man das selbst erledigen.
-          //in beiden fällen ist es nicht schlimm, einfach den afterstartupprozess nochmal aufzurufen, weil das dort
+          //in beiden fï¿½llen ist es nicht schlimm, einfach den afterstartupprozess nochmal aufzurufen, weil das dort
           //synchronisiert ist und nochmal den state abfragt.
           afterStartupProcess();
           break;

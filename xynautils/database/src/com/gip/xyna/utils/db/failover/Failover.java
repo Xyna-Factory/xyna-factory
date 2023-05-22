@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,10 +125,10 @@ public class Failover {
    * @return null if check fails and sqlUtils could not be recreated
    */
   public SQLUtils checkValidAndRecreate(SQLUtils sqlUtils, SQLUtilsLogger sqlUtilsLogger) {
-    //zuerst failover-Prüfung
+    //zuerst failover-Prï¿½fung
     SQLUtils su = checkAndRecreate(sqlUtils,sqlUtilsLogger);
     boolean isValid = false;
-    //unter 1.6 wäre es schön einfach:
+    //unter 1.6 wï¿½re es schï¿½n einfach:
     /*
           try {
             isValid = sqlUtils.getConnection().isValid(0);
@@ -137,8 +137,8 @@ public class Failover {
             isValid = false;
           }
      */
-    //unter 1.5 ist leider Query nötig
-    //FIXME nur für Oracle und MySQL möglich!
+    //unter 1.5 ist leider Query nï¿½tig
+    //FIXME nur fï¿½r Oracle und MySQL mï¿½glich!
     Integer res = su.queryInt("SELECT count(*) FROM DUAL", null );
     isValid = (res != null);
     if( isValid ) {

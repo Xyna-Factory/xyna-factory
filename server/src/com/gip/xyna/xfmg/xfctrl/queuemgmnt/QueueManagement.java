@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public class QueueManagement extends FunctionGroup {
     ods = ODSImpl.getInstance();
     ods.registerStorable(Queue.class);
 
-    // TODO performance: alle Einträge nach DEFAULT kopieren und bei Lesezugriffen dadurch Caching
+    // TODO performance: alle Eintrï¿½ge nach DEFAULT kopieren und bei Lesezugriffen dadurch Caching
     //                   auf Applikations-Ebene erlauben (Konfiguration von DEFAULT auf Memory)
 
   }

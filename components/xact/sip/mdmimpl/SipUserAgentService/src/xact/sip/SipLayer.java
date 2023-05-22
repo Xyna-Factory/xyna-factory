@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ public class SipLayer implements SipListener {
 
 
   /**
-   * öffnet an localip:localPort ein socket. ausgehende verbindungen gehen über den angegebenen proxy (falls nicht null)
+   * ï¿½ffnet an localip:localPort ein socket. ausgehende verbindungen gehen ï¿½ber den angegebenen proxy (falls nicht null)
    */
   public SipLayer(String localip, int localPort, String proxy) throws PeerUnavailableException,
       TransportNotSupportedException, InvalidArgumentException, ObjectInUseException, TooManyListenersException {
@@ -137,7 +137,7 @@ public class SipLayer implements SipListener {
     properties.setProperty("gov.nist.javax.sip.DELIVER_UNSOLICITED_NOTIFY", "true"); //notify geht auch ohne subscription
     //properties.setProperty("javax.sip.USE_ROUTER_FOR_ALL_URIS", "true");
 
-    sipStack = (SipStackExt) sipFactory.createSipStack(properties); //einmal pro local IP, gibt ggfs den bestehenden stack zurück
+    sipStack = (SipStackExt) sipFactory.createSipStack(properties); //einmal pro local IP, gibt ggfs den bestehenden stack zurï¿½ck
     headerFactory = sipFactory.createHeaderFactory();
     addressFactory = sipFactory.createAddressFactory();
     messageFactory = sipFactory.createMessageFactory();
@@ -306,7 +306,7 @@ public class SipLayer implements SipListener {
       synchronized (credentials) {
         uc = credentials.get(callIdHeader.getCallId());
       }
-      //TODO nullpointerexception verhindern? accountmanager interface stellt leider keine exception zur verfügung => runtimeexception werfen?
+      //TODO nullpointerexception verhindern? accountmanager interface stellt leider keine exception zur verfï¿½gung => runtimeexception werfen?
       return uc;
     }
 
@@ -490,15 +490,15 @@ public class SipLayer implements SipListener {
 
 
   /**
-   * wartet bis response zurückgekommen ist. führt einen retry bei 401 fehler durch, bei dem authentifizierungsdetails
-   * angehängt werden ({@link #addCredentials})
+   * wartet bis response zurï¿½ckgekommen ist. fï¿½hrt einen retry bei 401 fehler durch, bei dem authentifizierungsdetails
+   * angehï¿½ngt werden ({@link #addCredentials})
    * @param r
    * @param timeout millisekunden
    * @throws SipNotifySendException
    * @throws SipNotifyAbortedException
    * @throws SipResponseException
    * @throws SipNotifySendTimeoutException 
-   * @throws SipException falls response fehlerhaft ist, oder ein fehler während der responseverarbeitung aufgetreten
+   * @throws SipException falls response fehlerhaft ist, oder ein fehler wï¿½hrend der responseverarbeitung aufgetreten
    *           ist
    * @throws TimeoutException falls timeout zugeschlagen hat
    * @throws XynaException falls es ein problem beim warten auf die antwort gab
@@ -519,7 +519,7 @@ public class SipLayer implements SipListener {
     final List<Response> responses401 = new ArrayList<Response>();
     addResponseListener(r, new SipResponseListener() {
 
-      //durchführung des retries mit authentifizierung
+      //durchfï¿½hrung des retries mit authentifizierung
       public void onResponse(Response response) {
         if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
           //erfolg
@@ -675,13 +675,13 @@ public class SipLayer implements SipListener {
           logger.debug("transaction termination got error", e);
         }
       }
-      //beim notify nicht unbedingt nötig, weil das automatisch passiert
+      //beim notify nicht unbedingt nï¿½tig, weil das automatisch passiert
     }
   }
 
 
   /**
-   * passwort für authentifizierung registrieren. fügt dem internen accountmanager das password hinzu. es ist gebundenen
+   * passwort fï¿½r authentifizierung registrieren. fï¿½gt dem internen accountmanager das password hinzu. es ist gebundenen
    * an die callid des requests - d.h. bei anforderung von einer transaktion mit dieser callid wird das passwort
    * benutzt.
    * @param r

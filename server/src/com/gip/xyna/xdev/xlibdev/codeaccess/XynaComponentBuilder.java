@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,9 +122,9 @@ public class XynaComponentBuilder {
 
 
   private void prepare(ComponentCodeChange modifiedComponent) throws Ex_FileAccessException {
-    // TODO exception klassen generieren? erstmal nicht so wichtig, kann der benutzer einchecken? -> müsste er eigtl nicht!
+    // TODO exception klassen generieren? erstmal nicht so wichtig, kann der benutzer einchecken? -> mï¿½sste er eigtl nicht!
     
-    // nicht mehr benötigte classfiles entfernen
+    // nicht mehr benï¿½tigte classfiles entfernen
     for (RepositoryItemModification mod : modifiedComponent.getModifiedJavaFiles()) {
       if (mod.getModification() == RepositoryModificationType.Deleted) {
         //TODO
@@ -135,7 +135,7 @@ public class XynaComponentBuilder {
     if (modifiedComponent.getComponentType() == ComponentType.CODED_SERVICE) {
       try {
         if (modifiedComponent.getParsedDOMFromSaved(codeAccess.getRevision()).hasJavaImpl(false, null)) {
-          //servicedefinition jar zu den classfiles hinzufügen
+          //servicedefinition jar zu den classfiles hinzufï¿½gen
           FileUtils.unzip(codeAccess.getProjectDir() + Constants.fileSeparator + modifiedComponent.getBasePath() + Constants.fileSeparator
               + ServiceImplementationTemplate.SERVICE_DEFINITION_JAR, getClassDir(modifiedComponent), new FileFilter() {
 
@@ -222,7 +222,7 @@ public class XynaComponentBuilder {
 
 
   /**
-   * erstellt und gibt die liste aller artefakte (jars, xmls, etc) zurück, die kopiert werden müssen, weil sie sich geändert haben
+   * erstellt und gibt die liste aller artefakte (jars, xmls, etc) zurï¿½ck, die kopiert werden mï¿½ssen, weil sie sich geï¿½ndert haben
    */
   private FileUpdate[] createFilesForDeployment(ComponentCodeChange modifiedComponent, String version)
       throws Ex_FileAccessException {
@@ -269,7 +269,7 @@ public class XynaComponentBuilder {
       Support4Eclipse.createJarFile(createManifest(version), jarFile, inputDir, true);
       updates.add(new FileUpdate(jarFile, ModificationType.Modified));
 
-      //wurden noch andere verwendete jars geändert?
+      //wurden noch andere verwendete jars geï¿½ndert?
       for (FileUpdate fu : modifiedComponent.getModifiedJars()) {
         updates.add(fu);
       }
@@ -381,7 +381,7 @@ public class XynaComponentBuilder {
 
 
   private String getClassPathForCompile(ComponentCodeChange modifiedComponent) {
-    // abhängige jars ermitteln (shared libs, etc)
+    // abhï¿½ngige jars ermitteln (shared libs, etc)
     // jars verwenden, die evtl vorher gebaut wurden, aber noch nicht deployed sind -> d.h. sie liegen im saved-verzeichnis.
 
     StringBuilder classPath = new StringBuilder();
@@ -440,7 +440,7 @@ public class XynaComponentBuilder {
                                            modifiedComponent, true);
 
           if (dom.hasSuperTypeWithInstanceMethods(null)) {
-            //evtl leitet der datentyp von anderen datentypen ab, die benötigt man auch als jars
+            //evtl leitet der datentyp von anderen datentypen ab, die benï¿½tigt man auch als jars
             boolean first = true;
             for (DOM superType : dom.getDOMHierarchy()) {
               if (first) {
@@ -482,7 +482,7 @@ public class XynaComponentBuilder {
   private void appendClassPathForOtherCodedService(StringBuilder classPath, DOM dom)
       throws XPRC_JarFileForServiceImplNotFoundException, XFMG_SHARED_LIB_NOT_FOUND {
     //TODO: falls in der gleichen revision und auch im repository vorhanden (beides checken!), dann von dort nehmen? 
-    //was hätte das für vorteile/nachteile gegenüber aus saved/deployed nehmen? wenn es compilefähig ist, sollte es identisch sein
+    //was hï¿½tte das fï¿½r vorteile/nachteile gegenï¿½ber aus saved/deployed nehmen? wenn es compilefï¿½hig ist, sollte es identisch sein
     //ansonsten?
     Set<String> jars = new HashSet<>();
     boolean fromSaved = false;

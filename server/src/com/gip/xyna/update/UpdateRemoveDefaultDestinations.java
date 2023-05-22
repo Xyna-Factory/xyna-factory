@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ import com.gip.xyna.xprc.xpce.execution.ExecutionDispatcher;
 import com.gip.xyna.xprc.xpce.planning.PlanningDispatcher;
 
 /**
- * überflüssigerweise angelegte (persistent) default destinations entfernen, die werden beim deployment ja wieder angelegt. 
- * das sind genau alle destinations, bei denen der key und der value gleich sind und die zugehörigen destinations der anderen dispatcher.
+ * ï¿½berflï¿½ssigerweise angelegte (persistent) default destinations entfernen, die werden beim deployment ja wieder angelegt. 
+ * das sind genau alle destinations, bei denen der key und der value gleich sind und die zugehï¿½rigen destinations der anderen dispatcher.
  */
 public class UpdateRemoveDefaultDestinations extends Update {
 
@@ -76,7 +76,7 @@ public class UpdateRemoveDefaultDestinations extends Update {
                                           .setDestination(dk, XynaDispatcher.DESTINATION_EMPTY_WORKFLOW, false);
                         }
                         
-        beim löschen wie folgt vorgehen:
+        beim lï¿½schen wie folgt vorgehen:
         1. falls planning-destinationkey == destinationvalue:
            -> planning destination entfernen
            -> falls execution-destinationvalue = EMPTY_WORKFLOW -> entfernen
@@ -94,7 +94,7 @@ public class UpdateRemoveDefaultDestinations extends Update {
       List<DispatcherDestinationStorable> toDelete = new ArrayList<DispatcherDestinationStorable>();
       Map<String, DispatcherDestinationStorable> wfToDDSs = new HashMap<String, DispatcherDestinationStorable>();
       
-      //hauptdestinations (key = value) finden die man löschen kann
+      //hauptdestinations (key = value) finden die man lï¿½schen kann
       Collection<DispatcherDestinationStorable> coll = con.loadCollection(DispatcherDestinationStorable.class);      
       for (DispatcherDestinationStorable dds : coll) {
         if (dds.getDestinationKey().equals(dds.getDestinationValue())) {
@@ -105,7 +105,7 @@ public class UpdateRemoveDefaultDestinations extends Update {
         }
       }
       
-      //nebendestinations (key ist gelöschte hauptdestination) finden, die man löschen kann
+      //nebendestinations (key ist gelï¿½schte hauptdestination) finden, die man lï¿½schen kann
       for (DispatcherDestinationStorable dds : coll) {
         DispatcherDestinationStorable wfDDS = wfToDDSs.get(dds.getDestinationKey());
         if (wfDDS != null && wfDDS != dds) {

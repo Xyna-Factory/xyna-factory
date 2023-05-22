@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public final class RelayMessageTlvEncoder extends AbstractTypeOnlyTlvEncoder {
             throw new IllegalArgumentException("Subnodes contain more than "
                     + DHCPv6ConfigurationEncoder.MAX_TLV_LENGTH + " bytes: <" + node + ">.");
         }
-        // DHCPv6 2 Byte für TypeEncoding und Länge
+        // DHCPv6 2 Byte fï¿½r TypeEncoding und Lï¿½nge
         
         
         target.write(ByteUtil.toByteArray(typeEncoding,2));

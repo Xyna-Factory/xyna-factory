@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ public abstract class TriggerConnection implements Serializable {
   }
   
   /**
-   * beim überschreiben immer super.close() aufrufen!!
-   * pflegt die anzahl der gleichzeitig über den gleichen trigger gestarteten, laufenden aufträge.
+   * beim ï¿½berschreiben immer super.close() aufrufen!!
+   * pflegt die anzahl der gleichzeitig ï¿½ber den gleichen trigger gestarteten, laufenden auftrï¿½ge.
    * beim close() wird die anzahl um eins verringert.
    * 
-   * das close wird automatisch aufgerufen, und muss mehrfach aufgerufen werden können.
+   * das close wird automatisch aufgerufen, und muss mehrfach aufgerufen werden kï¿½nnen.
    */
   public synchronized void close() {
     if (closed) {
@@ -49,7 +49,7 @@ public abstract class TriggerConnection implements Serializable {
     if (trigger != null) {
       trigger.decrementActiveEvents();
     } else {
-      //TODO counter nach neustart weiterzählen? dann müsste man den trigger anderweitig identifizieren um den korrekten counter zu finden. siehe eventlistener-todo
+      //TODO counter nach neustart weiterzï¿½hlen? dann mï¿½sste man den trigger anderweitig identifizieren um den korrekten counter zu finden. siehe eventlistener-todo
     }
   }
   

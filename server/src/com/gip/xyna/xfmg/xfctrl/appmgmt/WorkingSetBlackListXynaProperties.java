@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 
-//TODO wenn mehrere workingsets unterstützt werden, funktioniert das so nicht mehr
+//TODO wenn mehrere workingsets unterstï¿½tzt werden, funktioniert das so nicht mehr
 public class WorkingSetBlackListXynaProperties implements RevisionContentBlackWhiteList {
 
 
@@ -52,7 +52,7 @@ public class WorkingSetBlackListXynaProperties implements RevisionContentBlackWh
   private static final XynaPropertyString xmomobjectsProp;
   private static final XynaPropertyString applicationsProp;
 
-  // ------------------ ACHTUNG: die namen dieser properties sind auch in ClearWorkingSet.xml aufgeführt
+  // ------------------ ACHTUNG: die namen dieser properties sind auch in ClearWorkingSet.xml aufgefï¿½hrt
   
   static {
     triggerinstancesProp =

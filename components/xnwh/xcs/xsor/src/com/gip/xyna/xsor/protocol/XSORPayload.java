@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package com.gip.xyna.xsor.protocol;
  * After the invocation of copyIntoByteArray from an instance A, a copyFromByteArray should generate an instance B with exactly the same values
  * even in corner cases like null-values (which would need to be encoded into the byte[])
  * If this is not the case it will lead to errors if there exist indices on those values 
- * benötigt annotation {@link XSORPayloadInformation}
+ * benï¿½tigt annotation {@link XSORPayloadInformation}
  */
 public interface XSORPayload {
 
@@ -57,7 +57,7 @@ public interface XSORPayload {
   byte[] pkToByteArray(Object o);
   
   /**
-   * wandelt eine byte[]-Repräsentation in ein PK-Objekt um 
+   * wandelt eine byte[]-Reprï¿½sentation in ein PK-Objekt um 
    * @param o
    * @return
    * REENTRANT, da quasistatisch

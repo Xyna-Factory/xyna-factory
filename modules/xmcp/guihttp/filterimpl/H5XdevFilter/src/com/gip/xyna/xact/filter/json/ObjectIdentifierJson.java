@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class ObjectIdentifierJson implements JsonSerializable {
   public enum Type {
     
     workflow, dataType(true), exceptionType, serviceGroup(true), instanceService, codedService;
-    // Reihenfolge ist relevant für die compareTo-Methode. Verwendet von ObjectIdentifierJsonFQNSorter.
+    // Reihenfolge ist relevant fï¿½r die compareTo-Methode. Verwendet von ObjectIdentifierJsonFQNSorter.
     
     private boolean multiView;
     
@@ -264,8 +264,8 @@ public class ObjectIdentifierJson implements JsonSerializable {
     
     /*
      * Vergleicht die beiden Strings "first" und "second" auf exakten Match mit dem "searchString".
-     * Stimmt genau einer der beiden mit "searchString" überein, so wird 1 bzw. -1 zurückgegeben.
-     * Stimmen beide oder keiner mit "searchString" überein, so wird 0 zurückgegeben. (Die beiden String sind gleichwertig hinsichtlich exaktem Match.)
+     * Stimmt genau einer der beiden mit "searchString" ï¿½berein, so wird 1 bzw. -1 zurï¿½ckgegeben.
+     * Stimmen beide oder keiner mit "searchString" ï¿½berein, so wird 0 zurï¿½ckgegeben. (Die beiden String sind gleichwertig hinsichtlich exaktem Match.)
      * Jeder Wert hat Vorrang vor null.
      */
     private int compareFavoringExactMatch(String first, String second, String searchString) {

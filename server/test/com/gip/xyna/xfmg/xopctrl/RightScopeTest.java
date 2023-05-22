@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ public class RightScopeTest extends TestCase {
                um.createRightScope(TEST_RIGHT_SCOPE, "Testing", "EN"));
     assertFalse("TEST_RIGHT_SCOPE should not have been succesfully created, as it should already exist.",
                um.createRightScope(TEST_RIGHT_SCOPE, "Testing", "EN"));
-    String invalidScopeDefinition1 = "c0mpl³xK$y:*:*";
+    String invalidScopeDefinition1 = "c0mplï¿½xK$y:*:*";
     String invalidScopeDefinition2 = "invalid:[valu$, otherValue]:*";
     String invalidScopeDefinition3 = "invalid:][:*";
     String invalidScopeDefinition4 = "invalid:something:*";

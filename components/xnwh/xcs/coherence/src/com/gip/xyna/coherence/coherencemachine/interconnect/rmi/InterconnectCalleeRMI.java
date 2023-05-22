@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.gip.xyna.coherence.coherencemachine.interconnect.InterconnectProtocol
 
 
 /**
- * RMI spezifische implementierung des callees für das interconnect protokoll. benötigt noch weiteres interface+impl
+ * RMI spezifische implementierung des callees fï¿½r das interconnect protokoll. benï¿½tigt noch weiteres interface+impl
  * weil rmi-schnittstelle von remote-interface ableiten muss. alle requests die von aussen kommen, werden an den parent
  * weitergeleitet.
  */

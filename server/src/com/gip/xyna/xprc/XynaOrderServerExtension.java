@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class XynaOrderServerExtension extends XynaOrder {
   
   public enum TransientFlags {
     /**
-     * XynaOrder ist dem Scheduler bekannt: Sicherung der Übergabe der XynaOrder von
+     * XynaOrder ist dem Scheduler bekannt: Sicherung der ï¿½bergabe der XynaOrder von
      * MasterWorkflowPreScheduler.startOrder in den XynaScheduler.addOrderIntoAllOrdersEtc
      */
     WasKnownToScheduler,
@@ -105,12 +105,12 @@ public class XynaOrderServerExtension extends XynaOrder {
      */
     BackuppedInScheduler,
     /**
-     * wird immer auf false gestellt, wenn sich etwas ändert, was ein backup sinnvoll macht
+     * wird immer auf false gestellt, wenn sich etwas ï¿½ndert, was ein backup sinnvoll macht
      */
     BackuppedAfterChange,
     /**
      * wird nur einmal auf true gestellt nach einem backup - dann ist die entscheidung einfach, ob der auftrag aus dem
-     * backup gelöscht werden muss
+     * backup gelï¿½scht werden muss
      */
     BackuppedAtLeastOnce,
     
@@ -127,7 +127,7 @@ public class XynaOrderServerExtension extends XynaOrder {
   private volatile transient long idOfLatestDeploymentKnownToOrder; //not meant to be stored
   
   private List<XynaOrderServerExtension> childOrders = new ArrayList<XynaOrderServerExtension>();
-  private boolean informStateTransitionListeners = true; //statuschangelistener cached hiermit, ob die statuschangelistener überprüfungen weggelassen werden können
+  private boolean informStateTransitionListeners = true; //statuschangelistener cached hiermit, ob die statuschangelistener ï¿½berprï¿½fungen weggelassen werden kï¿½nnen
 
   private volatile boolean isSuspended = false;
   private volatile boolean isSuspendedOnShutdown = false;
@@ -195,7 +195,7 @@ public class XynaOrderServerExtension extends XynaOrder {
   }
   
   public XynaOrderServerExtension() {
-    //für storable benötigt
+    //fï¿½r storable benï¿½tigt
   }
 
   public XynaOrderServerExtension(XynaOrder xo) {
@@ -253,7 +253,7 @@ public class XynaOrderServerExtension extends XynaOrder {
         setOrderExecutionTimeout(absoluteExecutionTimeout);
       }
       
-      // ggf. Scheduling-Timeout anpassen, wenn Scheduling-Timeout größer oder nicht gesetzt
+      // ggf. Scheduling-Timeout anpassen, wenn Scheduling-Timeout grï¿½ï¿½er oder nicht gesetzt
       Long schedulingTimeout = schedulingData.getTimeConstraintData().getSchedulingTimeout();
       if (schedulingTimeout == null || schedulingTimeout > executionTimeoutTimestamp) {
         setSchedulingTimeout(executionTimeoutTimestamp);
@@ -287,8 +287,8 @@ public class XynaOrderServerExtension extends XynaOrder {
         setOrderExecutionTimeout(absoluteExecutionTimeout);
       }
       
-      // ggf. Scheduling-Timeout anpassen, wenn Scheduling-Timeout größer oder nicht gesetzt
-      // für rescheduling bei z.b. suspend/resume
+      // ggf. Scheduling-Timeout anpassen, wenn Scheduling-Timeout grï¿½ï¿½er oder nicht gesetzt
+      // fï¿½r rescheduling bei z.b. suspend/resume
       Long schedulingTimeout = schedulingData.getTimeConstraintData().getSchedulingTimeout();
       if (schedulingTimeout == null || schedulingTimeout > executionTimeoutTimestamp) {
         setSchedulingTimeout(executionTimeoutTimestamp);
@@ -347,8 +347,8 @@ public class XynaOrderServerExtension extends XynaOrder {
   }
  
 /**
-   * speichert die process instance der executionphase zum auftrag. benötigt zb für subworkflow aufrufe um später
-   * kompensieren zu können
+   * speichert die process instance der executionphase zum auftrag. benï¿½tigt zb fï¿½r subworkflow aufrufe um spï¿½ter
+   * kompensieren zu kï¿½nnen
    * 
    * @param p
    */
@@ -362,8 +362,8 @@ public class XynaOrderServerExtension extends XynaOrder {
   }
 
   /**
-   * Rückgabe true: Auftrag wurde noch nie geschedult
-   * TODO dies muss für JavaDestination evtl. verbessert werden
+   * Rï¿½ckgabe true: Auftrag wurde noch nie geschedult
+   * TODO dies muss fï¿½r JavaDestination evtl. verbessert werden
    * @return
    */
   public boolean wasNeverScheduled() {
@@ -396,7 +396,7 @@ public class XynaOrderServerExtension extends XynaOrder {
 
   /**
    * FIXME: dieser parameter wird nicht benutzt?
-   * falls ein subauftrag. intern verwendete id fürs processmonitoring.
+   * falls ein subauftrag. intern verwendete id fï¿½rs processmonitoring.
    * 
    * @param parentStepNo
    */
@@ -471,8 +471,8 @@ public class XynaOrderServerExtension extends XynaOrder {
   }
 
   private void writeObject(java.io.ObjectOutputStream s) throws IOException {
-    //Daten sind in SchedulingData umgezogen, müssen aber aus Kompatibilitätsgründen noch aus XynaOrder in readObject gelesen werden.
-    //Dehalb müssen sie hier auch richtig geschrieben werden
+    //Daten sind in SchedulingData umgezogen, mï¿½ssen aber aus Kompatibilitï¿½tsgrï¿½nden noch aus XynaOrder in readObject gelesen werden.
+    //Dehalb mï¿½ssen sie hier auch richtig geschrieben werden
     hasAquiredCapacities = schedulingData.isHasAcquiredCapacities();
     needsToAquireCapacitiesOnNextScheduling = schedulingData.isNeedsToAcquireCapacitiesOnNextScheduling();
     needsToAquireVetosOnNextScheduling = schedulingData.isNeedsToAcquireVetosOnNextScheduling();
@@ -529,7 +529,7 @@ public class XynaOrderServerExtension extends XynaOrder {
   public void cleanup() {
     redirection = null;    
     //workflowinstance nullen, sobald die nicht mehr gebraucht wird
-    //(aufpassen: wird für compensation benötigt und kann deshalb nicht sofort entfernt werden)
+    //(aufpassen: wird fï¿½r compensation benï¿½tigt und kann deshalb nicht sofort entfernt werden)
     if (!hasParentOrder()) {
       nullResponseListenersRecursively();
     }
@@ -702,7 +702,7 @@ public class XynaOrderServerExtension extends XynaOrder {
   
   
   /**
-   * wurde der auftrag nach der letzten änderung die backup-wert ist, bereits gebackupped?
+   * wurde der auftrag nach der letzten ï¿½nderung die backup-wert ist, bereits gebackupped?
    */
   public boolean hasBeenBackuppedAfterChange() {
     return isTransientFlagSet(TransientFlags.BackuppedAfterChange);
@@ -880,13 +880,13 @@ public class XynaOrderServerExtension extends XynaOrder {
   public void abortResumingOrder(boolean ignoreCapacitiesAndVetos, Throwable cause) {
     /*
      * (teil-)auftragsfamilie ist beim resume und soll aborted werden
-     * => keiner der aufträge macht irgendwelche workflowschritte bis auf das compensate
-     * das flag ignoreCapacitiesAndVetos soll bringen, dass beim wieder einstellen der kind-aufträge irgendeiner auf
+     * => keiner der auftrï¿½ge macht irgendwelche workflowschritte bis auf das compensate
+     * das flag ignoreCapacitiesAndVetos soll bringen, dass beim wieder einstellen der kind-auftrï¿½ge irgendeiner auf
      * capacities warten muss (wird ja eh abgebrochen).
      * 
-     * wenn das flag also gesetzt ist, muss für alle (bestehenden und damit zu resumenden) kindaufträge die capacities und vetos ausgeschaltet werden
+     * wenn das flag also gesetzt ist, muss fï¿½r alle (bestehenden und damit zu resumenden) kindauftrï¿½ge die capacities und vetos ausgeschaltet werden
      * 
-     * in beiden fällen werden alle workflowinstanzen auf aborting gesetzt
+     * in beiden fï¿½llen werden alle workflowinstanzen auf aborting gesetzt
      */
     if( cause != null ) {
       XynaProcess xp = getExecutionProcessInstance();
@@ -913,7 +913,7 @@ public class XynaOrderServerExtension extends XynaOrder {
       }
     }
     if (ignoreCapacitiesAndVetos) {
-      //so tun, als wäre man gescheduled worden. die subaufträge setzen das selbst im scheduler
+      //so tun, als wï¿½re man gescheduled worden. die subauftrï¿½ge setzen das selbst im scheduler
       schedulingData.setHasAcquiredCapacities(true);
     }
     setHasBeenBackuppedAfterChange(false);
@@ -957,7 +957,7 @@ public class XynaOrderServerExtension extends XynaOrder {
    * Setzt das Flag auf vorhanden/nicht vorhanden
    * @param flag
    * @param set
-   * @return true, wenn änderung bewirkt wurde
+   * @return true, wenn ï¿½nderung bewirkt wurde
    */
   private boolean setTransientFlag(TransientFlags flag, boolean set) {
     if( set ) {
@@ -1154,9 +1154,9 @@ public class XynaOrderServerExtension extends XynaOrder {
   
   /*
    * Vergleiche Kommentar in XynaProcessCtrlExecution.startOrder
-   * null/0 = muss nicht runtergezählt werden
-   * 1 = muss runtergezählt werden
-   * 2 = ist runtergezählt worden
+   * null/0 = muss nicht runtergezï¿½hlt werden
+   * 1 = muss runtergezï¿½hlt werden
+   * 2 = ist runtergezï¿½hlt worden
    */
   private transient AtomicInteger deploymentCounterCountDownDone;
 
@@ -1181,7 +1181,7 @@ public class XynaOrderServerExtension extends XynaOrder {
   
   private int[][] stepCoordinates;
   
-  //wird nur (aus dem generierten code) gesetzt, falls auftrag beim beenden archiviert/aus memory entfernt werden darf, weil er nicht mehr für compensationzwecke benötigt wird
+  //wird nur (aus dem generierten code) gesetzt, falls auftrag beim beenden archiviert/aus memory entfernt werden darf, weil er nicht mehr fï¿½r compensationzwecke benï¿½tigt wird
   //vgl StepFunction.createCodeForLazyCreateSubWf
   public void setStepCoordinates(int[][] stepCoordinates) {
     this.stepCoordinates = stepCoordinates;
@@ -1199,8 +1199,8 @@ public class XynaOrderServerExtension extends XynaOrder {
     if (stepCoordinates == null) {
       return false;
     }
-    //solange keine genauere evaluierung passiert, ob compensation notwendig ist, ist dieser aufruf nicht nötig. 
-    //ansonsten wäre dieser aufruf hilfreich, wenn man erst nach dem ausführen des subauftrags schaut, ob die gelaufenen schritte compensations hatten.
+    //solange keine genauere evaluierung passiert, ob compensation notwendig ist, ist dieser aufruf nicht nï¿½tig. 
+    //ansonsten wï¿½re dieser aufruf hilfreich, wenn man erst nach dem ausfï¿½hren des subauftrags schaut, ob die gelaufenen schritte compensations hatten.
     //boolean removed = getParentOrder().getExecutionProcessInstance().removeOrderReferenceIfNotNeededForCompensation(stepCoordinates, getId());
     boolean removed = true;
     if (removed) {

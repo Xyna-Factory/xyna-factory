@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,17 @@ public interface ClusterNodeRemoteInterface {
   public SyncResponse syncWasNeverConnectedBefore() throws TimeoutException;
 
   /**
-   * synchronisierungs-request, nachdem man früher master gewesen ist, also der andere knoten sich korrekt abgemeldet hat 
+   * synchronisierungs-request, nachdem man frï¿½her master gewesen ist, also der andere knoten sich korrekt abgemeldet hat 
    */
   public SyncResponse syncWasMaster() throws TimeoutException;
 
   /**
-   * synchronisierungs-request, nachdem man früher einmal connected war und sich nie richtig vom anderen knoten abgemeldet hat
+   * synchronisierungs-request, nachdem man frï¿½her einmal connected war und sich nie richtig vom anderen knoten abgemeldet hat
    */
   public SyncResponse syncWasConnectedBefore() throws TimeoutException;
   
   /**
-   * setzt den übergebenen state auf dem knoten 
+   * setzt den ï¿½bergebenen state auf dem knoten 
    */
   public void changeState(ClusterState newState) throws TimeoutException;
 

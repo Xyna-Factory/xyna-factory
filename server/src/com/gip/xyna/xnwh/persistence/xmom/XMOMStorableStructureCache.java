@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -256,7 +256,7 @@ public class XMOMStorableStructureCache {
     }
     
     HierachyTraversal traversalForSubs = HierachyTraversal.FULL_HIERARCHY;
-    //structure-graph vorläufig befüllen (für supertypen)
+    //structure-graph vorlï¿½ufig befï¿½llen (fï¿½r supertypen)
     if (!isFlattened) {
       // basetype
       DOM relevantSuperDom = findRelevantSuperDom(currentDom);
@@ -431,7 +431,7 @@ public class XMOMStorableStructureCache {
        newEntry.primaryKeyName = pkInfo.getColumnName();
      } else {
        if (!newEntry.hasSuper()) {
-         //  Eigene PK spalte erzeugen, basierend auf PK des RootTypes + foreignKey auf parent (relevant für zB. Liste)
+         //  Eigene PK spalte erzeugen, basierend auf PK des RootTypes + foreignKey auf parent (relevant fï¿½r zB. Liste)
          String unidName = sgc.createUniqueColNameFor("unid");
          pkInfo = new StorableColumnInformation(null, unidName, null, newEntry);
          pkInfo.definedIn = VarDefinitionSite.STORABLE;
@@ -542,8 +542,8 @@ public class XMOMStorableStructureCache {
        continue;
      }
 
-     //achtung, für primitive typen werden hier unnötigerweise spaltennamen neu generiert, d.h. die datenhaltung im kontext geändert
-     //beim fixen aber auf abwärtskompatibilität achten, also z.b. erst, wenn es das feature gibt, dass spaltennamen-zuordnung persistiert wird
+     //achtung, fï¿½r primitive typen werden hier unnï¿½tigerweise spaltennamen neu generiert, d.h. die datenhaltung im kontext geï¿½ndert
+     //beim fixen aber auf abwï¿½rtskompatibilitï¿½t achten, also z.b. erst, wenn es das feature gibt, dass spaltennamen-zuordnung persistiert wird
      StorableColumnInformation info = StorableColumnInformation.createXMOMStorableColumnInformation(aVar, newEntry, sgc);
      if (currentDOMisDefinedAsFlatInParent && !currentStorableIsList) {
        info.typeInformation = new HashSet<PersistenceTypeInformation>();
@@ -568,7 +568,7 @@ public class XMOMStorableStructureCache {
        boolean isFlat = (currentDOMisDefinedAsFlatInParent && !isExludedFromFlat(xmomStorableBase, localPath)) || isFlat(xmomStorableBase, localPath);
        if (isStorableReference(xmomStorableBase, localPath)) {
          if (aVar.isList()) {
-           //es gibt kein zugehöriges dom für die util-tabelle, deshalb hier die notwendigen sachen setzen
+           //es gibt kein zugehï¿½riges dom fï¿½r die util-tabelle, deshalb hier die notwendigen sachen setzen
            StorableStructureInformation synthInfo = StorableStructureInformation.createSyntheticListStructure(xmomStorableBase, aVar, info, newEntry, sgc);
            info.correspondingStorable = new DirectStorableStructureIdentifier(synthInfo);
            StorableColumnInformation forwardRef = synthInfo.getColInfoByVarType(VarType.REFERENCE_FORWARD_FK);
@@ -610,7 +610,7 @@ public class XMOMStorableStructureCache {
            
            info.correspondingReferenceIdColumnName = referenceColumnName;
          }
-         // Structure für Referenzen anlegen
+         // Structure fï¿½r Referenzen anlegen
          sgc.pb.enter(aVar.getVarName(), aVar.isList());
          sgc.pb.enter((DOM) aVar.getDomOrExceptionObject(), false, true);
          StorableStructureIdentifier revStructure = getOrCreateStructure((DOM) aVar.getDomOrExceptionObject(), (DOM) aVar.getDomOrExceptionObject(), null, null, null, 
@@ -792,7 +792,7 @@ public class XMOMStorableStructureCache {
     protected String tableName;
     
     /**
-     * colname (eindeutig) - bei der erzeugung werden alle colnames die zu einer typ-hierarchie gehören eindeutig erzeugt
+     * colname (eindeutig) - bei der erzeugung werden alle colnames die zu einer typ-hierarchie gehï¿½ren eindeutig erzeugt
      */
     protected Map<String, StorableColumnInformation> columnInformation;
     protected String primaryKeyName;
@@ -1606,12 +1606,12 @@ public class XMOMStorableStructureCache {
     protected StorableStructureInformation generateMergedClone(MergeFilter mergeFilter) {
       /*
        * 1) sammle die relevante hierarchy. die beeinhaltet die supertypen und die subtypen von this (rekursiv), aber nicht die anderen subtypen der supertypen ("geschwister-typen" im ableitungsbaum")
-       * 2) schmeisse alle einträge aus der hierarchy raus, die nicht zum mergefilter passen
+       * 2) schmeisse alle eintrï¿½ge aus der hierarchy raus, die nicht zum mergefilter passen
        * 3) erzeuge merged structureinfo:
-       * 3.1) alle spalten der hierarchy-typen zum merge hinzufügen
-       * 3.2) für komplexe members (inklusive der aus der hierarchy stammenden, die ja in 3.1. bereits hinzugefügt wurden)
+       * 3.1) alle spalten der hierarchy-typen zum merge hinzufï¿½gen
+       * 3.2) fï¿½r komplexe members (inklusive der aus der hierarchy stammenden, die ja in 3.1. bereits hinzugefï¿½gt wurden)
        *       die zu joinenden tabellen und daraus auszulesenden spalten bestimmen
-       *      dazu für jede komplexe member (isStorableVariable) genauso behandeln wie hier, also rekursion auf generateMergedClone
+       *      dazu fï¿½r jede komplexe member (isStorableVariable) genauso behandeln wie hier, also rekursion auf generateMergedClone
        * 
        */
       StorableStructureInformation superRoot = getSuperRootStorableInformation();
@@ -2016,7 +2016,7 @@ public class XMOMStorableStructureCache {
   public static enum VarType {
     PK, REFERENCE_FORWARD_FK, EXPANSION_PARENT_FK, LIST_IDX, DEFAULT, UTILLIST_PARENT_FK,
     /**
-     * helferspalte für uniqueness, die nach aussen nicht sichtbar ist (uniqueness in verbindung mit historization)
+     * helferspalte fï¿½r uniqueness, die nach aussen nicht sichtbar ist (uniqueness in verbindung mit historization)
      */
     UNIQUE_HELPER_COL, // TODO there can be multiple UNIQUE_HELPER_COLs but they are indexed uniquely in the strcuture info!
     TYPENAME;
@@ -2026,13 +2026,13 @@ public class XMOMStorableStructureCache {
         
     private String variableName; 
     public String columnName;
-    private String path; //bei geflachten typen der pfad vom xmom object aus, welches zum parentstorable gehört.
+    private String path; //bei geflachten typen der pfad vom xmom object aus, welches zum parentstorable gehï¿½rt.
     private VarType type = VarType.DEFAULT;
     private Set<PersistenceTypeInformation> typeInformation;
     //private StorableStructureIdentifier parent;
     // TODO would be nice, but a call during generateMegeredClone would need to flatten referencedParents to direct
     private StorableStructureInformation parent;
-    private PrimitiveType simpleType; //primitive type of column oder null (blob). auch bei primitiven listen gesetzt, um sie unterscheiden zu können von anderen listen
+    private PrimitiveType simpleType; //primitive type of column oder null (blob). auch bei primitiven listen gesetzt, um sie unterscheiden zu kï¿½nnen von anderen listen
     /**
      * nicht bei referenzen gesetzt.
      * aber auch bei primitiven listen gesetzt - zeigt dann auf die helper-storable-structure
@@ -2047,7 +2047,7 @@ public class XMOMStorableStructureCache {
     private String className;
     /**
      * belegt, falls this eine datentyp-column ist, die referenziert auf ein anderes xmom storable zeigt.
-     * enthält {@link #correspondingReferenceIdColumn} die col-info der storable-column, die dem FK entspricht.<br>
+     * enthï¿½lt {@link #correspondingReferenceIdColumn} die col-info der storable-column, die dem FK entspricht.<br>
      * bei listenwertigen referenzen ist dies nicht eine col-info des gleichen parent-types, sondern eine, des 
      * util-storables. 
      */
@@ -2168,21 +2168,21 @@ public class XMOMStorableStructureCache {
 
     /**
      * belegt, falls this die datentyp-column ist, die referenziert auf ein anderes xmom storable zeigt.
-     * @return gibt die col-info der storable-column, die dem FK entspricht zurück
+     * @return gibt die col-info der storable-column, die dem FK entspricht zurï¿½ck
      */
     public StorableColumnInformation getCorrespondingReferenceIdColumn() {
       return parent.getColumnInfoByName(correspondingReferenceIdColumnName);
     }
     
     /**
-     * belegt, falls this die UNIQUEHelper_COL ist die erzeugt wird für weitere UniqueIndizes bei historisierung
+     * belegt, falls this die UNIQUEHelper_COL ist die erzeugt wird fï¿½r weitere UniqueIndizes bei historisierung
      */
     public StorableColumnInformation getCorrespondingUniqueIdentifierColumn() {
       return correspondingUniqueIdentifier;
     }
 
     /**
-     * storableclass-settermethode für diese variable/column 
+     * storableclass-settermethode fï¿½r diese variable/column 
      */
     public Method getStorableSetter() {
       if (setterMethod == null) {
@@ -2302,7 +2302,7 @@ public class XMOMStorableStructureCache {
      *   2) nach owner-tabellenname
      *   3) ansonsten nach columnname +X
      *   
-     * +X, für den fall von kollisionen (subtypen mit gleichnamigen spalten, oder subtypen aus unterschiedlichen runtimecontexten)
+     * +X, fï¿½r den fall von kollisionen (subtypen mit gleichnamigen spalten, oder subtypen aus unterschiedlichen runtimecontexten)
      */
     @Override
     public int compareTo(StorableColumnInformation o) {
@@ -2345,8 +2345,8 @@ public class XMOMStorableStructureCache {
   
   public static class StructureGenerationContext {
     
-    //root-storable -> path -> path-ende-DOM (vereinigung aller subtypen, die sich beim path befinden können)
-    //abhängig von verwendung wird die innerste map unterschiedlich befüllt
+    //root-storable -> path -> path-ende-DOM (vereinigung aller subtypen, die sich beim path befinden kï¿½nnen)
+    //abhï¿½ngig von verwendung wird die innerste map unterschiedlich befï¿½llt
     public Map<DOM, Map<String, Map<DOM, StorableStructureIdentifier>>> visitedExtensionHierarchy;
     public GenerationBaseCache gbc;
     public PathBuilder pb;

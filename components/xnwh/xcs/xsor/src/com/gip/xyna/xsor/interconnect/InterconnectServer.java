@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -211,10 +211,10 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
 
 
   /**
-   * bestimmt die länge aus dem 8 byte langen buffer, mit gleichzeitigem check, ob die länge korrekt kodiert wurde.
-   * damit man sicher sein kann, dass man nicht als länge das ende einer alten nachricht ausliest.
+   * bestimmt die lï¿½nge aus dem 8 byte langen buffer, mit gleichzeitigem check, ob die lï¿½nge korrekt kodiert wurde.
+   * damit man sicher sein kann, dass man nicht als lï¿½nge das ende einer alten nachricht ausliest.
    * 
-   * L(i) gleich das i-te byte des ints, der die länge bestimmt.
+   * L(i) gleich das i-te byte des ints, der die lï¿½nge bestimmt.
    * 
    * 0. 42
    * 1. L(0)
@@ -310,7 +310,7 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
 
   public void offer(byte[] reply, int corrId) {
     //dieser aufruf kommt von processIncomingRequest, normalerweise weiss man hier noch
-    //den index, der die aktuelle corrId enthält.
+    //den index, der die aktuelle corrId enthï¿½lt.
     int guessedIndex = (lastIndex - 1 + corrQueueLength) % corrQueueLength;
     for (int i = guessedIndex; i < corrQueueLength; i++) {
       if (corrId == lastReceivedCorrId[i]) {
@@ -370,7 +370,7 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
     }
   }
 
-  //für Tests
+  //fï¿½r Tests
   Socket getSocket() {
     return socket;
   }

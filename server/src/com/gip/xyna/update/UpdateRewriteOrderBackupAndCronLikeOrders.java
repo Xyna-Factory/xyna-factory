@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public class UpdateRewriteOrderBackupAndCronLikeOrders {
 
     XynaFactoryBase oldInstance = XynaFactory.getInstance();
     try {
-      // factory ist noch nicht initialisiert, zur Deserialisierung des xprc.xfractwfe.base.XynaProcess aber nötig
+      // factory ist noch nicht initialisiert, zur Deserialisierung des xprc.xfractwfe.base.XynaProcess aber nï¿½tig
       //FIXME siehe Bug 12743 xprc.xfractwfe.base.XynaProcess
       UpdateGeneratedClasses.mockFactory();
 
@@ -131,7 +131,7 @@ public class UpdateRewriteOrderBackupAndCronLikeOrders {
         conHis.commit();
       }
     } catch (XNWH_UnsupportedPersistenceLayerFeatureException e) {
-      //xmlpersistence oder ähnliches. crons kann man nicht verwenden, wenn sie nicht auf einen durchsuchbaren persistencelayer konfiguriert sind
+      //xmlpersistence oder ï¿½hnliches. crons kann man nicht verwenden, wenn sie nicht auf einen durchsuchbaren persistencelayer konfiguriert sind
       //deshalb ist hier nichts zu tun
       logger.trace("Found cronlikeorders configured to non searchable persistencelayer.", e);
     } catch (PersistenceLayerException e) {
@@ -160,7 +160,7 @@ public class UpdateRewriteOrderBackupAndCronLikeOrders {
         conDef.commit();
       }
     } catch (XNWH_UnsupportedPersistenceLayerFeatureException e) {
-      //xmlpersistence oder ähnliches. backups kann man nicht verwenden, wenn nicht auf einen durchsuchbaren persistencelayer konfiguriert
+      //xmlpersistence oder ï¿½hnliches. backups kann man nicht verwenden, wenn nicht auf einen durchsuchbaren persistencelayer konfiguriert
       //deshalb ist hier nichts zu tun
       logger.trace("Found orderbackup configured to non searchable persistencelayer.", e);
     } catch (PersistenceLayerException e) {

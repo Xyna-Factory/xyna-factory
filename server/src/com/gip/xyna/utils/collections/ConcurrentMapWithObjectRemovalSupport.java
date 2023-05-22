@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * map, aus der value objekte sicher entfernt werden können, wenn sie von keinem anderen client mehr verwendet werden.
+ * map, aus der value objekte sicher entfernt werden kï¿½nnen, wenn sie von keinem anderen client mehr verwendet werden.
  * es kann damit sichergestellt werden, dass jeder client immer mit dem aktuellen/gleichen objekt in der map arbeitet.<p>
  * 
  * motivation: normalerweise muss man beim entfernen von komplexen objekten aus einer map immer stark darauf aufpassen,
- * dass nicht ein anderer thread gleichzeitig das zu entfernende objekt noch als gültig sieht.<p>
+ * dass nicht ein anderer thread gleichzeitig das zu entfernende objekt noch als gï¿½ltig sieht.<p>
  * 
  * beispiel: value der map ist eine liste, die nur dann entfernt werden soll, wenn sie leer ist.<p>
  * 
- * achtung: um synchronisierung des values an sich muss man sich selbst kümmern.<p>
+ * achtung: um synchronisierung des values an sich muss man sich selbst kï¿½mmern.<p>
  * 
  * verwendungsmuster:
  * <pre>
@@ -50,7 +50,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *   l.add(element);
  *   ....
  *   
- *   //es ist sichergestellt, dass l nun nicht aus der map entfernt wird, solange für das remove nur cleanup() verwendet wird
+ *   //es ist sichergestellt, dass l nun nicht aus der map entfernt wird, solange fï¿½r das remove nur cleanup() verwendet wird
  *   ....
  * 
  *   l.remove(element);
@@ -80,7 +80,7 @@ public abstract class ConcurrentMapWithObjectRemovalSupport<K, V extends ObjectW
 
   /**
    * erstellt objekt falls nicht vorhanden mittels {@link #createValue(Object)}.
-   * ansonsten wird das existierende objekt zurückgegeben.
+   * ansonsten wird das existierende objekt zurï¿½ckgegeben.
    * markiert objekt als in benutzung, sodass es nicht aus der map entfernt werden kann,
    * solange man nicht {@link #cleanup(Object)} aufgerufen hat.
    */
@@ -98,15 +98,15 @@ public abstract class ConcurrentMapWithObjectRemovalSupport<K, V extends ObjectW
       if (v.markForUsage()) {
         break;
       }
-      //object wurde gerade wieder gelöscht
+      //object wurde gerade wieder gelï¿½scht
     }
     return v;
   }
 
 
   /**
-   * trägt übergebenes objekt falls nicht vorhanden in map ein.
-   * ansonsten wird das existierende objekt zurückgegeben.
+   * trï¿½gt ï¿½bergebenes objekt falls nicht vorhanden in map ein.
+   * ansonsten wird das existierende objekt zurï¿½ckgegeben.
    * markiert objekt als in benutzung, sodass es nicht aus der map entfernt werden kann,
    * solange man nicht {@link #cleanup(Object)} aufgerufen hat.
    */
@@ -124,7 +124,7 @@ public abstract class ConcurrentMapWithObjectRemovalSupport<K, V extends ObjectW
       if (v.markForUsage()) {
         break;
       }
-      //object wurde gerade wieder gelöscht
+      //object wurde gerade wieder gelï¿½scht
     }
     return v;
   }
@@ -146,7 +146,7 @@ public abstract class ConcurrentMapWithObjectRemovalSupport<K, V extends ObjectW
           remove(key);
           v.onDeletion();
         } else {
-          //anderer thread hatte es nach unserer ersten überprüfung kurz gehabt und geändert
+          //anderer thread hatte es nach unserer ersten ï¿½berprï¿½fung kurz gehabt und geï¿½ndert
           v.unmarkForDeletion();
         }
       }
@@ -163,7 +163,7 @@ public abstract class ConcurrentMapWithObjectRemovalSupport<K, V extends ObjectW
   }
 
   /**
-   * verarbeitung des values zum key ohne sich um das create und cleanup kümmern zu müssen.
+   * verarbeitung des values zum key ohne sich um das create und cleanup kï¿½mmern zu mï¿½ssen.
    */
   public <R> R process(final K key, ValueProcessor<V, R> processor) {
     V v = lazyCreateGet(key);
@@ -180,10 +180,10 @@ public abstract class ConcurrentMapWithObjectRemovalSupport<K, V extends ObjectW
   public abstract V createValue(K key);
 
 
-  //wenn man alles löschen würde, kann es zu NPEs kommen, weil der obige code davon ausgeht, sich auf die markierungen verlassen zu können
-  //TODO eigtl benötigt man entsprechende behandlung auch für iterator-remove, normales remove, etc
+  //wenn man alles lï¿½schen wï¿½rde, kann es zu NPEs kommen, weil der obige code davon ausgeht, sich auf die markierungen verlassen zu kï¿½nnen
+  //TODO eigtl benï¿½tigt man entsprechende behandlung auch fï¿½r iterator-remove, normales remove, etc
   /**
-   * löscht jedes key value paar, dessen value nicht in benutzung ist ohne überprüfung von {@link ObjectWithRemovalSupport#shouldBeDeleted()}
+   * lï¿½scht jedes key value paar, dessen value nicht in benutzung ist ohne ï¿½berprï¿½fung von {@link ObjectWithRemovalSupport#shouldBeDeleted()}
    */
   @Override
   public void clear() {

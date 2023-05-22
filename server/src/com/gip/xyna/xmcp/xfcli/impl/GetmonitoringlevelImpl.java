@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class GetmonitoringlevelImpl extends XynaCommandImplementation<Getmonitor
 
   public void execute(OutputStream statusOutputStream, Getmonitoringlevel payload) throws XynaException {
     
-    // Prüfung, ob Application/Version existiert
+    // Prï¿½fung, ob Application/Version existiert
     RuntimeContext runtimeContext = RevisionManagement.getRuntimeContext(payload.getApplicationName(), payload.getVersionName(), payload.getWorkspaceName());
     if (payload.getOrderType() == null) {
       Map<DestinationKey, Integer> codes = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getMonitoringDispatcher().getAllMonitoringLevels();

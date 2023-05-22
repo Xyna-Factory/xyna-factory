@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,26 @@ package com.gip.xyna.utils.misc;
 
 /**
  * Verwaltet Zahlen/Indizes von 1-n, n ist nicht fest
- * Unterscheidet zwischen freien und vergebenen Zahlen. Wenn eine Zahl zurückgegeben wurde, wird sie in der Zukunft wieder als frei herausgegeben.
+ * Unterscheidet zwischen freien und vergebenen Zahlen. Wenn eine Zahl zurï¿½ckgegeben wurde, wird sie in der Zukunft wieder als frei herausgegeben.
  * 
- * Nutzen: Gewährleisten, dass man eindeutige Zahlen vergeben kann ohne sich um Overflow kümmern zu müssen, wie man es müsste, wenn man z.B. einfach
- * nur einen Integer hochzählt.
+ * Nutzen: Gewï¿½hrleisten, dass man eindeutige Zahlen vergeben kann ohne sich um Overflow kï¿½mmern zu mï¿½ssen, wie man es mï¿½sste, wenn man z.B. einfach
+ * nur einen Integer hochzï¿½hlt.
  * 
- * Speicherverbrauch: n ints (n ist Maximum der jemals gleichzeitig benötigten Zahlen).
+ * Speicherverbrauch: n ints (n ist Maximum der jemals gleichzeitig benï¿½tigten Zahlen).
  * 
- * Naive Implementierung wäre ein Set oder eine Liste von freien ints zu pflegen. Das ist aber von der Performance her deutlich teurer als diese Implementierung.
- * Dafür hat es den Vorteil, dass es unter Umständen weniger Speicher benötigt.
+ * Naive Implementierung wï¿½re ein Set oder eine Liste von freien ints zu pflegen. Das ist aber von der Performance her deutlich teurer als diese Implementierung.
+ * Dafï¿½r hat es den Vorteil, dass es unter Umstï¿½nden weniger Speicher benï¿½tigt.
  */
 public class ReusableIndexProvider {
   /*
-   * TODO: konfigurierbar: statische größe (kein growth)
+   * TODO: konfigurierbar: statische grï¿½ï¿½e (kein growth)
    *       growth erst, wenn alle zahlen herausgegeben worden sind, und nicht eine zahl zuvor
    */
 
   private final float growthFactor;
   /*
-   * head zeigt auf den nächsten freien index. 
-   * der value im array ist der index des übernächsten frei indizes usw.
+   * head zeigt auf den nï¿½chsten freien index. 
+   * der value im array ist der index des ï¿½bernï¿½chsten frei indizes usw.
    * somit ergibt sich eine verkettete liste von freien indizes.
    * tail ist der letzte frei index.
    * die werte in allen nicht freien indizes des arrays sind egal.
@@ -74,7 +74,7 @@ public class ReusableIndexProvider {
       vals[head] = l;
     }
     
-    //kette am head verkürzen
+    //kette am head verkï¿½rzen
     int idx = head;
     head = vals[idx];
     return idx;
@@ -82,7 +82,7 @@ public class ReusableIndexProvider {
 
 
   public synchronized void returnIdx(int idx) {
-    //kette am tail verlängern
+    //kette am tail verlï¿½ngern
     vals[tail] = idx;
     tail = idx;
   }

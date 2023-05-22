@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ import java.util.logging.*;
 /**
  * Diese Klasse dient dem Logging. Sie ist initial auf Konsolen-Logging
  * eingestellt und loggt alle OBLog-Level. Momentan gibt es nur einen zentralen
- * Logger in einer JVM, eventuell müssen hier noch Anpassungen stattfinden,
- * damit der Server mehrere Logger öffnen kann.
+ * Logger in einer JVM, eventuell mï¿½ssen hier noch Anpassungen stattfinden,
+ * damit der Server mehrere Logger ï¿½ffnen kann.
  * 
  * 
  */
@@ -125,7 +125,7 @@ public class ConsoleLogger extends Logger {
    }
 
    /**
-    * Ausgabe von kritischen Zuständen/Fehlern.
+    * Ausgabe von kritischen Zustï¿½nden/Fehlern.
     * 
     * @param logMarker
     *              prefix for log line
@@ -222,7 +222,7 @@ public class ConsoleLogger extends Logger {
    }
 
    /**
-    * Ein Assert, das ein Panic auslöst wenn 'b'=false ist.
+    * Ein Assert, das ein Panic auslï¿½st wenn 'b'=false ist.
     * 
     * @param b
     * @param string
@@ -234,10 +234,10 @@ public class ConsoleLogger extends Logger {
    }
 
    /**
-    * Liefert die Session-ID zurück, falls der Context gesetzt ist.
+    * Liefert die Session-ID zurï¿½ck, falls der Context gesetzt ist.
     * 
     * @param con
-    *              Wenn con==null, dann kann keine Session zurückgeliefert
+    *              Wenn con==null, dann kann keine Session zurï¿½ckgeliefert
     *              werden.
     * @return
     */
@@ -249,7 +249,7 @@ public class ConsoleLogger extends Logger {
    }
 
    /**
-    * Gibt Informationen über den aktuellen Speicherverbrauch der VM aus
+    * Gibt Informationen ï¿½ber den aktuellen Speicherverbrauch der VM aus
     * 
     * @param str
     */

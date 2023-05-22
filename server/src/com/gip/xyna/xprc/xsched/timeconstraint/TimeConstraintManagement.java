@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,14 +95,14 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
   private volatile boolean initialized = false;
   
   public static enum TimeConstraintProblemReaction {
-    Wait,         //Auftrag wartet im Scheduler, bis TimeWindow-Problem gelöst ist
+    Wait,         //Auftrag wartet im Scheduler, bis TimeWindow-Problem gelï¿½st ist
     Fail,         //Auftrag mit Exception abbrechen
     Schedule;     //trotzdem schedulen
 
     public static String documentation(DocumentationLanguage lang) {
       switch( lang ) {
         case DE:
-          return "'Wait': Auftrag wartet im Scheduler, bis TimeWindow-Problem gelöst ist; "
+          return "'Wait': Auftrag wartet im Scheduler, bis TimeWindow-Problem gelï¿½st ist; "
           +"'Fail': Auftrag wird mit XynaException abgebrochen; "
           +"'Schedule': Auftrag wird sofort geschedult";
         case EN:
@@ -185,18 +185,18 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
   }
 
   private void initClusterStatusKnown() {
-    //ClusterStatus ist nun bekannt, daher können die restlichen Initialisierungen durchgeführt werden.
+    //ClusterStatus ist nun bekannt, daher kï¿½nnen die restlichen Initialisierungen durchgefï¿½hrt werden.
     
-    //Können Zeitfenster komplett initialisiert werden?
+    //Kï¿½nnen Zeitfenster komplett initialisiert werden?
     XynaProperty.SCHEDULER_WAIT_FOR_STABLE_TIME_WINDOWS.registerDependency(UserType.XynaFactory, getDefaultName());
     hasToWaitForStableTimeWindows = false;
     if( ! rmiClusterContext.getClusterState().isStable() ) {
-      //Zeitfenster müssen nach Übergang in einen stabilen ClusterState erneut initialisiert werden
+      //Zeitfenster mï¿½ssen nach ï¿½bergang in einen stabilen ClusterState erneut initialisiert werden
       if( XynaProperty.SCHEDULER_WAIT_FOR_STABLE_TIME_WINDOWS.get() ) {
-        //Zeitfenster werden gesperrt angelegt, damit Aufträge im Scheduler nicht wegen fehlender 
+        //Zeitfenster werden gesperrt angelegt, damit Auftrï¿½ge im Scheduler nicht wegen fehlender 
         hasToWaitForStableTimeWindows = true;
       } else {
-        //Zeitfenster werden angelegt, könnten bei Verwendung aber veraltete Definition haben
+        //Zeitfenster werden angelegt, kï¿½nnten bei Verwendung aber veraltete Definition haben
       }
     }
     
@@ -234,7 +234,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
     TimeConstraintData tcd = schedulingData.getTimeConstraintData();
     
     if( ! tcd.isConfigured() ) {
-      return false; //keinerlei zeitliche Einschränkung
+      return false; //keinerlei zeitliche Einschrï¿½nkung
     }
     long now = System.currentTimeMillis();
     
@@ -248,7 +248,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
     
     String windowName = tcd.getTimeWindowName();
     if( windowName != null ) {
-      //TimeWindow fehlt: gleich in Scheduler eintragen, der soll sich dann um das Problem kümmern
+      //TimeWindow fehlt: gleich in Scheduler eintragen, der soll sich dann um das Problem kï¿½mmern
       //TimeWindow ist offen: gleich in Scheduler eintragen
       //TimeWindow  ist geschlossen: Auftrag muss warten
       return allTimeConstraintWindows.isClosed(windowName);
@@ -257,7 +257,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
   }
   
   /**
-   * Eintragen der Order in die TimeConstraint-Überwachung
+   * Eintragen der Order in die TimeConstraint-ï¿½berwachung
    */
   public void addWaitingOrder(SchedulingOrder so, boolean wasNeverScheduled) {
     TimeConstraintData tcd = so.getSchedulingData().getTimeConstraintData();
@@ -266,14 +266,14 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
       //auf jeden Fall wegen SchedulingTimeout eintragen
       addSchedulingTimeout(so,tcd);
       
-      //TODO ist es hier nicht sinnvoll, aufträge aktiv abzubrechen (wie beim cancel), falls bereits ein timeout erreicht wurde?
-      // vorteil: kein unnötiges scheduling
+      //TODO ist es hier nicht sinnvoll, auftrï¿½ge aktiv abzubrechen (wie beim cancel), falls bereits ein timeout erreicht wurde?
+      // vorteil: kein unnï¿½tiges scheduling
       
       if( so.isWaitingFor(WaitingCause.StartTime) ) {
-        //Normales Scheduling hier, um SchedulingOrder in TimeConstraintExecutor einzutragen bzw. zum Melden, dass Auftrag lauffähig ist. 
+        //Normales Scheduling hier, um SchedulingOrder in TimeConstraintExecutor einzutragen bzw. zum Melden, dass Auftrag lauffï¿½hig ist. 
         TimeConstraintResult tcr = checkTimeConstraint(so);
         if (tcr.isExecutable()) {
-          //Auftrag ist entweder sofort lauffähig oder hat Fehler, der zum Abbruch führen muss
+          //Auftrag ist entweder sofort lauffï¿½hig oder hat Fehler, der zum Abbruch fï¿½hren muss
           logger.warn(so + " is executable.");
           so.removeWaitingCause(WaitingCause.StartTime);
         } else if ( tcr.removeFromScheduler() ) {
@@ -282,7 +282,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
             xo.setTransientFlag(TransientFlags.WasKnownToScheduler);
           } //else: Unerwartet, da SchedulingOrder eben erst angelegt
         } else {
-          //Auftrag ist entweder sofort lauffähig oder hat Fehler, der zum Abbruch führen muss
+          //Auftrag ist entweder sofort lauffï¿½hig oder hat Fehler, der zum Abbruch fï¿½hren muss
           so.removeWaitingCause(WaitingCause.StartTime);
         }
       }
@@ -312,19 +312,19 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
       return timeout(so);
     }
     
-    //4. Muss doch noch länger auf Startzeit gewartet werden?
+    //4. Muss doch noch lï¿½nger auf Startzeit gewartet werden?
     if( tcd.hasToWaitForStartTime(now) ) {
-      //Auftrag muss noch länger warten
+      //Auftrag muss noch lï¿½nger warten
       return waitAgain( so, null, tcd.getStartTimestamp(), now, false );
     }
 
     //5. Zeitfenster
     String windowName = tcd.getTimeWindowName();
     if( windowName == null ) {
-      //Keine Zeitfenster-Beschränkung, d.h startbar
+      //Keine Zeitfenster-Beschrï¿½nkung, d.h startbar
       return TimeConstraintResult.SUCCESS;
     } else {
-      //Zeitfenster holen, gesperrt gegen gleichzeitige Änderungen
+      //Zeitfenster holen, gesperrt gegen gleichzeitige ï¿½nderungen
       TimeConstraintWindow window = allTimeConstraintWindows.getLockedTimeWindow(windowName);
       try {
         if( window == null ) {
@@ -357,10 +357,10 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
     }
     
     //2. Zeitfenster ist offen
-    //nun um die TimeConstraints kümmern, die innerhalb des Zeitfensteres gelten:
+    //nun um die TimeConstraints kï¿½mmern, die innerhalb des Zeitfensteres gelten:
     tcd.recalculateInWindow(window);
      
-    //3. Im Zeitfenster könnte es Timeout geben
+    //3. Im Zeitfenster kï¿½nnte es Timeout geben
     if( tcd.hasTimeout(now) ) {
       //evtl. gibt es doch ein Timeout und nur der SchedulingOrder-State konnte noch nicht umgesetzt werden
       return timeout(so);
@@ -368,13 +368,13 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
       addSchedulingTimeout(so,tcd);
     }
 
-    //4. Im Zeitfenster könnte es eine neue Wartezeit geben
+    //4. Im Zeitfenster kï¿½nnte es eine neue Wartezeit geben
     if( tcd.hasToWaitForStartTime(now) ) {
-      //Auftrag muss noch länger warten
+      //Auftrag muss noch lï¿½nger warten
       return waitAgain( so, null, tcd.getStartTimestamp(), now, false );
     }
 
-    //5. Auftrag ist startfähig
+    //5. Auftrag ist startfï¿½hig
     tcd.setWindowIsOpenSince( window.getOpenSince() );
     return TimeConstraintResult.SUCCESS;
   }
@@ -413,7 +413,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
   }
   
   /**
-   * Eintragen der SchedulingOrder in die SchedulingTimeout-Überwachung
+   * Eintragen der SchedulingOrder in die SchedulingTimeout-ï¿½berwachung
    * @param so
    * @param tcd
    */
@@ -450,7 +450,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
      
     
     if( hasToWait < XynaProperty.SCHEDULER_CLOSED_TIMEWINDOW_REMOVE_TIME_OFFSET.getMillis() ) {
-      //Auftrag ist in wenigen Millisekunden lauffähig, daher ist es nicht nötig, ihn aus 
+      //Auftrag ist in wenigen Millisekunden lauffï¿½hig, daher ist es nicht nï¿½tig, ihn aus 
       //dem Scheduler zu entfernen
       return TimeConstraintResult.CONTINUE;
     }  
@@ -502,9 +502,9 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
     
   /**
    * Reschedule der SchedulingOrder, wenn TimeContraint gewechselt wird: 
-   * SchedulingOrder befindet sich unter Umständen nicht im Scheduler, weil das alte Zeitfenster 
+   * SchedulingOrder befindet sich unter Umstï¿½nden nicht im Scheduler, weil das alte Zeitfenster 
    * geschlossen ist oder der Startzeitpunkt noch nicht erreicht ist. 
-   * Daher muss beim Wechsel des TimeConstraints dafür gesorgt werden, dass diese Methode 
+   * Daher muss beim Wechsel des TimeConstraints dafï¿½r gesorgt werden, dass diese Methode 
    * gerufen wird, um den Auftrag umzutragen.
    * @param so
    * @param timeConstraint
@@ -549,7 +549,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
     }
     //muss wegen StartZeit gewartet werden? 
     if( tcd.hasToWaitForStartTime(now) ) {
-      //Auftrag muss noch länger warten
+      //Auftrag muss noch lï¿½nger warten
       TimeConstraintResult result = waitAgain( so, null, tcd.getStartTimestamp(), now, true); //TODO sicherstellen, dass true stimmt
       if( result == TimeConstraintResult.CONTINUE ) {
         return true;
@@ -562,7 +562,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
   }
 
   /**
-   * Frühzeitiger Timeout aller Aufträge, die ihren regulären Timeout innerhalb der nächsten timeout ms hätten
+   * Frï¿½hzeitiger Timeout aller Auftrï¿½ge, die ihren regulï¿½ren Timeout innerhalb der nï¿½chsten timeout ms hï¿½tten
    * @param timeout
    */
   public void earlyTimeout(long timeout) {
@@ -589,7 +589,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
   
   public void addTimeWindow(TimeConstraintWindowDefinition definition) throws XPRC_DuplicateTimeWindowNameException, PersistenceLayerException, XPRC_TimeWindowNotFoundInDatabaseException, XPRC_TimeWindowRemoteManagementException {
     String name = definition.getName();
-    //gegen konkurrierende Änderungen schützen
+    //gegen konkurrierende ï¿½nderungen schï¿½tzen
     allTimeConstraintWindows.lock(name);
     try {
       if( allTimeConstraintWindows.hasTimeWindow(name) ) {
@@ -604,7 +604,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
           addTimeWindow.remoteActivate(timeWindow);
           //zuletzt lokal aktivieren, da hier kein Fehler zu erwarten ist
           addTimeWindow.localActivate(timeWindow);
-          //addTimeWindow ist erfolgreich, keine Compensation nötig
+          //addTimeWindow ist erfolgreich, keine Compensation nï¿½tig
           addTimeWindow.success();
         } finally {
           addTimeWindow.compensate();
@@ -628,7 +628,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
   }
 
   public void removeTimeWindow(String name, boolean force) throws PersistenceLayerException, XPRC_TimeWindowStillUsedException {
-    //gegen konkurrierende Änderungen schützen
+    //gegen konkurrierende ï¿½nderungen schï¿½tzen
     allTimeConstraintWindows.lock(name);
     try {
       RemoveTimeWindow removeTimeWindow = new RemoveTimeWindow(tcmLocal, tcmRemoteProxy, tcwsQueries);
@@ -637,9 +637,9 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
         removeTimeWindow.localDeactivate(name,force);
         //...dann remote deaktivieren
         removeTimeWindow.remoteDeActivate(name,force);
-        //zuletzt lokal aus DB löschen
+        //zuletzt lokal aus DB lï¿½schen
         removeTimeWindow.remove(name);
-        //removeTimeWindow ist erfolgreich, keine Compensation nötig
+        //removeTimeWindow ist erfolgreich, keine Compensation nï¿½tig
         removeTimeWindow.success();
       } finally {
         removeTimeWindow.compensate();
@@ -654,7 +654,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
 
   public void changeTimeWindow(TimeConstraintWindowDefinition definition) throws PersistenceLayerException, XPRC_TimeWindowNotFoundInDatabaseException, XPRC_TimeWindowRemoteManagementException {
     String name = definition.getName();
-    //gegen konkurrierende Änderungen schützen
+    //gegen konkurrierende ï¿½nderungen schï¿½tzen
     allTimeConstraintWindows.lock(name);
     try {
       ChangeTimeWindow changeTimeWindow = new ChangeTimeWindow(tcmLocal, tcmRemoteProxy, tcwsQueries);
@@ -668,7 +668,7 @@ public class TimeConstraintManagement extends FunctionGroup implements TimeConst
         //zuletzt lokal aktivieren, da hier kein Fehler zu erwarten ist
         changeTimeWindow.localActivateWithoutCompensation(timeWindow);
         
-        //changeTimeWindow ist erfolgreich, keine Compensation nötig
+        //changeTimeWindow ist erfolgreich, keine Compensation nï¿½tig
         changeTimeWindow.success();
       } finally {
         changeTimeWindow.compensate();

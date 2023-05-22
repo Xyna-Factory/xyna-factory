@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceStatus;
 
 
 /**
- * RuntimeInformationUpdater führt ein Update auf einem BatchProcessRuntimeInformationStorable aus.
+ * RuntimeInformationUpdater fï¿½hrt ein Update auf einem BatchProcessRuntimeInformationStorable aus.
  *
- * Hierbei werden folgende Tasks unterstützt:
+ * Hierbei werden folgende Tasks unterstï¿½tzt:
  * <ul>
- * <li> InputData: lastInputGeneratorId wird zu openDataPlanning hinzugefügt und persistiert</li>
- * <li> SlaveAcknowledged: Running wird um eins erhöht und Inputs aktualisiert</li>
- * <li> SlaveFinished: Finished wird um eins erhöht, Running um eins reduziert </li>
- * <li> SlaveFailed: Failed wird um eins erhöht, Running um eins reduziert </li>
+ * <li> InputData: lastInputGeneratorId wird zu openDataPlanning hinzugefï¿½gt und persistiert</li>
+ * <li> SlaveAcknowledged: Running wird um eins erhï¿½ht und Inputs aktualisiert</li>
+ * <li> SlaveFinished: Finished wird um eins erhï¿½ht, Running um eins reduziert </li>
+ * <li> SlaveFailed: Failed wird um eins erhï¿½ht, Running um eins reduziert </li>
  * <li> Pause: der Status wird auf PAUSED gesetzt </li>
  * <li> Continue: der Status wird auf RUNNING gesetzt </li>
  * <li> Cancel: der Status wird auf CANCELED gesetzt </li>

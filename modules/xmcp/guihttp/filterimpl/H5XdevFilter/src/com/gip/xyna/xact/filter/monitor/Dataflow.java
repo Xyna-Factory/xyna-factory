@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ public class Dataflow {
   public static Pair<AVariable, Step> determineSource(ScopeStep parentScope, AVariable parameter, Step stepWithParameterInput, String sourceId,
                                                 List<Integer> foreachIndices, int retryCounter) {
     /*
-     * von einer variable zur nächsten hangeln, bis man an einem output eines schrittes angekommen ist
-     * man muss das rekursiv machen, weil in den auditdetails nur die ausgeführten schritte angezeigt werden, aber nicht choices etc
-     * falls man auf den output einer choice verbinden wollen würde (wie im alten flash monitor), muss man die rekursion reduzieren/weglassen.
+     * von einer variable zur nï¿½chsten hangeln, bis man an einem output eines schrittes angekommen ist
+     * man muss das rekursiv machen, weil in den auditdetails nur die ausgefï¿½hrten schritte angezeigt werden, aber nicht choices etc
+     * falls man auf den output einer choice verbinden wollen wï¿½rde (wie im alten flash monitor), muss man die rekursion reduzieren/weglassen.
      * 
      * findSource(X)
      *   1: X=workflow-output
@@ -57,35 +57,35 @@ public class Dataflow {
      *      Fall B: -> step-output/workflow-input -> END
      * 
      * wie identifiziert man eine step-output-variable?
-     * 1. id genügt für eindeutigkeit
+     * 1. id genï¿½gt fï¿½r eindeutigkeit
      * 
      * source von objekt innerhalb von Foreach kann auf objekt innerhalb von Foreach oder von vorne dran zeigen.
-     * source von objekt kann nie von außerhalb von Foreach auf innerhalb von Foreach zeigen. nur auf output von foreach-scope.
+     * source von objekt kann nie von auï¿½erhalb von Foreach auf innerhalb von Foreach zeigen. nur auf output von foreach-scope.
      * 
      * 
      * die parameter haben alle ids+source/target-ids gesetzt. 
-     * die werden beim parsen (Step.parseParameter) des audit-xmls von den step-inputs/outputs übernommen.
+     * die werden beim parsen (Step.parseParameter) des audit-xmls von den step-inputs/outputs ï¿½bernommen.
      */
 
     String id = parameter.getId();
 
     /*
      * workflow-output: sourceId von parameter ist stepid von assign
-     *   in assign zugehörige inputid suchen -> rekursion
+     *   in assign zugehï¿½rige inputid suchen -> rekursion
      * stepfunction/mapping/assign-input: id von globaler variable
-     *   suche, wo id zugewiesen wird (stepid steht als sourceid am dataobjekt. aber da können mehrere sourceids stehen
-     *   (was derzeit nicht unterstützt wird -> lieber über alle steps iterieren und entsprechenden output suchen, output-/targetvarids = x?)
+     *   suche, wo id zugewiesen wird (stepid steht als sourceid am dataobjekt. aber da kï¿½nnen mehrere sourceids stehen
+     *   (was derzeit nicht unterstï¿½tzt wird -> lieber ï¿½ber alle steps iterieren und entsprechenden output suchen, output-/targetvarids = x?)
      *     1) stepfunction/stepmapping
      *       return (step, outputvar)
      *     2) assign von stepchoice
-     *       im assign zugehörige inputid suchen -> rekursion
+     *       im assign zugehï¿½rige inputid suchen -> rekursion
      *     3) workflow-input
      *       return (wfstep, wfinputvar)
      *     4) foreach-outputlist.refid
      *       ??
      */
     if (stepWithParameterInput instanceof WFStep) {
-      //die inputs des wf-outputs findet man immer über das globale assign am ende des workflows
+      //die inputs des wf-outputs findet man immer ï¿½ber das globale assign am ende des workflows
       WFStep wfStep = (WFStep) stepWithParameterInput;
       StepAssign stepAssign = (StepAssign) wfStep.getChildStep().getChildSteps().get(wfStep.getChildStep().getChildSteps().size()-1);
       AVariable inputVar = stepAssign.getInputVars().get(indexOf(id, stepAssign.getOutputVarIds()));
@@ -106,16 +106,16 @@ public class Dataflow {
         }
         List<Integer> foreachIndicesOfStep = foreachIndicesForDepth(foreachIndices, foreachDepth);
         /*
-         * TODO das gleiche für retrycounter... die können auch verschachtelt sein. dazu muss xyna das aber auch in den parametern richtig unterstützen
+         * TODO das gleiche fï¿½r retrycounter... die kï¿½nnen auch verschachtelt sein. dazu muss xyna das aber auch in den parametern richtig unterstï¿½tzen
          * 
-         * wann muss man den retrycounter von != -1 auf -1 setzen? wenn man beim "weiterhangeln" den bereich verlässt, wo das retry passiert.
+         * wann muss man den retrycounter von != -1 auf -1 setzen? wenn man beim "weiterhangeln" den bereich verlï¿½sst, wo das retry passiert.
          * bei lokalem retry also wenn man schritte vor dem fehlgeschlagenen service betrachtet.
          * 
          * befindet sich ein schritt nicht in einem catchblock, muss retrycounter sich auf globalen retry beziehen
-         * befindet sich ein schritt in einem catchblock, gibt es folgende fälle:
+         * befindet sich ein schritt in einem catchblock, gibt es folgende fï¿½lle:
          * 1) es gibt globalen retry und der retrycounter bezieht sich darauf
          * 2) es gibt lokalen retry und der retrycounter bezieht sich darauf
-         * 3) es gibt globalen UND lokalen retry (dann müsste es 2 retrycounter geben)
+         * 3) es gibt globalen UND lokalen retry (dann mï¿½sste es 2 retrycounter geben)
          * 4)-6) es gibt zwar retry-schritte, aber die sind nicht angesprungen 
          * 
          */
@@ -125,7 +125,7 @@ public class Dataflow {
           retryCounterForStep = -1;
         }
         if (!(step instanceof StepForeach) && step.getParameter(foreachIndicesOfStep, retryCounterForStep) == null) {
-          //schritt weiter unten oder schritt in choice-lane, die nicht ausgeführt wurde, etc
+          //schritt weiter unten oder schritt in choice-lane, die nicht ausgefï¿½hrt wurde, etc
           continue;
         }
         if (step instanceof WFStep) {// wf.input.targetid
@@ -212,7 +212,7 @@ public class Dataflow {
   }
 
   /*
-   * gibt die tiefe D in dem sinne zurück, dass step-parameter bzgl dieses steps D foreachindices beinhalten.
+   * gibt die tiefe D in dem sinne zurï¿½ck, dass step-parameter bzgl dieses steps D foreachindices beinhalten.
    * d.h. toplevel step => 0
    *     step innerhalb von foreach => 1
    *     step innerhalb von foreach innerhalb von foreach => 2

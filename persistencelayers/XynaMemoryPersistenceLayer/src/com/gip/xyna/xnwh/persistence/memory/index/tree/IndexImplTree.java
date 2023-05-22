@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,12 +111,12 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
           //keines der kinder kann passen
           return new ConditionResult(false, RecursionRequest.NO_RECURSION_CHECK_NEXT);
         } else if (compared > 0) {
-          //dieser knoten passt, alle folgenden geschwister müssen auch passen, bei den kindern können aber noch welche existieren, die nciht passen
-          //FIXME hier könnte man für performance noch einen neuen recursionrequest (RECURSE_CHILD_NEXT_RECURSE_ALL) einführen, der weniger checks ab dem nächsten geschwisterknoten durchführt
+          //dieser knoten passt, alle folgenden geschwister mï¿½ssen auch passen, bei den kindern kï¿½nnen aber noch welche existieren, die nciht passen
+          //FIXME hier kï¿½nnte man fï¿½r performance noch einen neuen recursionrequest (RECURSE_CHILD_NEXT_RECURSE_ALL) einfï¿½hren, der weniger checks ab dem nï¿½chsten geschwisterknoten durchfï¿½hrt
           return new ConditionResult(true, RecursionRequest.RECURSE_CHILD_CHECK_NEXT);
         } else {
           //in dem teilbaum findet sich nichts mehr
-          //FIXME oben erwähnter recursionrequest kann hier auch verwendet werden für die nächsten geschwisterknoten
+          //FIXME oben erwï¿½hnter recursionrequest kann hier auch verwendet werden fï¿½r die nï¿½chsten geschwisterknoten
           return new ConditionResult(false, RecursionRequest.NO_RECURSION_CHECK_NEXT);
         }
       } else {
@@ -156,16 +156,16 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
           //ganzer teilbaum ist gesucht
           return new ConditionResult(true, RecursionRequest.RECURSE_CHILD_CHECK_NEXT);
         } else if (compared > 0) {
-          //es können größere größere knoten im teilbauem existieren, im nächsten geschwister aber nicht mehr
+          //es kï¿½nnen grï¿½ï¿½ere grï¿½ï¿½ere knoten im teilbauem existieren, im nï¿½chsten geschwister aber nicht mehr
           return new ConditionResult(false, RecursionRequest.RECURSE_CHILD_ONLY);
         } else {
-          //es können größere größere knoten im teilbauem existieren, im nächsten geschwister aber nicht mehr
+          //es kï¿½nnen grï¿½ï¿½ere grï¿½ï¿½ere knoten im teilbauem existieren, im nï¿½chsten geschwister aber nicht mehr
           return new ConditionResult(false, RecursionRequest.RECURSE_CHILD_ONLY);
         }
       } else {
         //falls gesuchter wert < currentValue => weiter
         //falls gesuchter wert = currentValue => weiter
-        //falls gesuchter wert > currentValue => nächsten geschwisterknoten checken
+        //falls gesuchter wert > currentValue => nï¿½chsten geschwisterknoten checken
         if (compared < 0) {
           return new ConditionResult(true, RecursionRequest.RECURSE_ALL);
         } else if (compared > 0) {
@@ -204,15 +204,15 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
       int compared = lookupValue.compareTo(currentNode.getValue().key);
       if (reverseTraversal) {
         if (compared < 0) {
-          //alle knoten in diesem teilbaum sind zu groß
+          //alle knoten in diesem teilbaum sind zu groï¿½
           return new ConditionResult(false, RecursionRequest.NO_RECURSION_CHECK_NEXT);
         } else if (compared > 0) {
-          //in dem teilbaum können noch zu große knoten sein
-          //FIXME siehe oben: neuer recursionrequest für die nächsten geschwister
+          //in dem teilbaum kï¿½nnen noch zu groï¿½e knoten sein
+          //FIXME siehe oben: neuer recursionrequest fï¿½r die nï¿½chsten geschwister
           return new ConditionResult(true, RecursionRequest.RECURSE_CHILD_CHECK_NEXT);
         } else {
-          //alle kinder sind zu groß, also nächste geschwister testen
-          //FIXME siehe oben: neuer recursionrequest für die nächsten geschwister
+          //alle kinder sind zu groï¿½, also nï¿½chste geschwister testen
+          //FIXME siehe oben: neuer recursionrequest fï¿½r die nï¿½chsten geschwister
           return new ConditionResult(true, RecursionRequest.NO_RECURSION_CHECK_NEXT);
         }
       } else {
@@ -247,18 +247,18 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
     public ConditionResult check(AbstractNode<IndexNodeValue<E, F>> currentNode, boolean reverseTraversal) {
       //falls gesuchter wert < currentValue => weiter
       //falls gesuchter wert = currentValue => weiter
-      //falls gesuchter wert > currentValue => nächsten geschwisterknoten checken
+      //falls gesuchter wert > currentValue => nï¿½chsten geschwisterknoten checken
       E lookupValue = condition.getLookupValue();
       int compared = lookupValue.compareTo(currentNode.getValue().key);
       if (reverseTraversal) {
         if (compared < 0) {
-          //alle kinder gehören zum resultset
+          //alle kinder gehï¿½ren zum resultset
           return new ConditionResult(true, RecursionRequest.RECURSE_CHILD_CHECK_NEXT);
         } else if (compared > 0) {
-          //es können kinder in diesem teilbaum zum resultset gehören, aber folgende geschwisterknoten können ignoriert werden
+          //es kï¿½nnen kinder in diesem teilbaum zum resultset gehï¿½ren, aber folgende geschwisterknoten kï¿½nnen ignoriert werden
           return new ConditionResult(false, RecursionRequest.RECURSE_CHILD_ONLY);
         } else {
-        //es können kinder in diesem teilbaum zum resultset gehören, aber folgende geschwisterknoten können ignoriert werden
+        //es kï¿½nnen kinder in diesem teilbaum zum resultset gehï¿½ren, aber folgende geschwisterknoten kï¿½nnen ignoriert werden
           return new ConditionResult(true, RecursionRequest.RECURSE_CHILD_ONLY);
         }
       } else {
@@ -291,10 +291,10 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
       int compared = lookupValue.compareTo(currentNode.getValue().key);
       if (reverseTraversal) {
         if (compared < 0) {
-          //alle kinder sind auch größer
+          //alle kinder sind auch grï¿½ï¿½er
           return new ConditionResult(false, RecursionRequest.NO_RECURSION_CHECK_NEXT);
         } else if (compared > 0) {
-          //nur in diesem knoten rekursion, in späteren kann es nicht sein, in vorherigen auch nicht, sonst hätten wir es bereits gefunden
+          //nur in diesem knoten rekursion, in spï¿½teren kann es nicht sein, in vorherigen auch nicht, sonst hï¿½tten wir es bereits gefunden
           return new ConditionResult(false, RecursionRequest.RECURSE_CHILD_ONLY);
         } else {
           //fertig
@@ -303,11 +303,11 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
       } else {
         //falls gesuchter wert < currentValue => abbrechen
         //falls gesuchter wert = currentValue => fertig
-        //falls gesuchter wert > currentValue => nächsten geschwisterknoten checken
+        //falls gesuchter wert > currentValue => nï¿½chsten geschwisterknoten checken
         if (compared < 0) {
           return new ConditionResult(false, RecursionRequest.NO_RECURSION, true);
         } else if (compared > 0) {
-          //TODO performance: suboptimal, wenn der nächste knoten == ist, weil dann wird trotzdem rekursiert, obwohl das nicht notwendig ist. allerdings nur ein level tief
+          //TODO performance: suboptimal, wenn der nï¿½chste knoten == ist, weil dann wird trotzdem rekursiert, obwohl das nicht notwendig ist. allerdings nur ein level tief
           return new ConditionResult(false, RecursionRequest.RECURSE_IF_NEXTSIBLING_A);
         } else {
           return new ConditionResult(true, RecursionRequest.NO_RECURSION, true);
@@ -347,8 +347,8 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
 
 
   /**
-   * fügt element zu knoten hinzu, falls wert übereinstimmt. erstellt neuen knoten, falls kein übereinstimmender knoten
-   * gefunden wurde und der letzte größer war.
+   * fï¿½gt element zu knoten hinzu, falls wert ï¿½bereinstimmt. erstellt neuen knoten, falls kein ï¿½bereinstimmender knoten
+   * gefunden wurde und der letzte grï¿½ï¿½er war.
    */
   private static class AddElementHandler<E extends Comparable<E>, F>
       implements
@@ -387,7 +387,7 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
       } else if (compare > 0) {
         return new ConditionResult(false, RecursionRequest.RECURSE_IF_NEXTSIBLING_A);
       } else {
-        //erster knoten, wo der alte wert größer als der neue ist => einfügeposition parent.insertBefore 
+        //erster knoten, wo der alte wert grï¿½ï¿½er als der neue ist => einfï¿½geposition parent.insertBefore 
         return new ConditionResult(true, RecursionRequest.NO_RECURSION, true);
       }
     }
@@ -431,9 +431,9 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
       lockedRoot = (LockedOrderedNode<IndexNodeValue<E, F>>) index;
     }
     if (lockedRoot != null) {
-      //beim ändern des baums (hinzufügen oder entfernen von knoten) wird u.a. rekursiv die größe der knoten geupdated. dafür werden wiederum 
-      //writelocks benötigt => gleich in der richtigen reihenfolge writelocks holen.
-      //es genügt, das root writelock zu holen.
+      //beim ï¿½ndern des baums (hinzufï¿½gen oder entfernen von knoten) wird u.a. rekursiv die grï¿½ï¿½e der knoten geupdated. dafï¿½r werden wiederum 
+      //writelocks benï¿½tigt => gleich in der richtigen reihenfolge writelocks holen.
+      //es genï¿½gt, das root writelock zu holen.
       lockedRoot.getLock().writeLock().lock();
     }
     try {
@@ -527,7 +527,7 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
   
 
   /**
-   * klasse mit der man es hinbekommt, atomar mehrere knoten zu bearbeiten: values hinzufügen oder entfernen oder
+   * klasse mit der man es hinbekommt, atomar mehrere knoten zu bearbeiten: values hinzufï¿½gen oder entfernen oder
    * zuweisen eines neuen keys zu einem existierenden value.
    */
   public final class AtomicBulkUpdateImpl extends AtomicBulkUpdateBase<E, F>
@@ -553,21 +553,21 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
           rebalance();
           cnt = 0;
         } else {
-          //überbleibende actions sind ausserhalb des baums.
+          //ï¿½berbleibende actions sind ausserhalb des baums.
           break;
         }
       }
 
-      //nun sind nur noch adds übrig, die nicht innerhalb des baums eingefügt werden konnten, und deshalb am ende angefügt werden müssen.
+      //nun sind nur noch adds ï¿½brig, die nicht innerhalb des baums eingefï¿½gt werden konnten, und deshalb am ende angefï¿½gt werden mï¿½ssen.
       AbstractNode<IndexNodeValue<E, F>> lastAdded = null;
       while (currentAction != null) {
-        //wert könnte gleich dem sein, der vorher schon geaddet wurde
+        //wert kï¿½nnte gleich dem sein, der vorher schon geaddet wurde
         if (lastAdded != null && compareWithNullCheck(lastAdded.getValue().key, currentAction.getKey()) == 0) {
           handleInternally(lastAdded);
           continue;
         }
 
-        //echt größer als letzter wert im index
+        //echt grï¿½ï¿½er als letzter wert im index
         if (currentAction instanceof AtomicBulkUpdateBase.AtomicAddAction) {
 
           AtomicAddAction addAction = (AtomicAddAction) currentAction;
@@ -611,7 +611,7 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
         recursionRequest = RecursionRequest.RECURSE_IF_NEXTSIBLING_A;
       } else {
         //compare > 0
-        //=> wie in AddElementHandler muss man hitten, wenn man beim nächstgrößeren knoten ist, weil man offenbar bisher nicht getroffen hat.
+        //=> wie in AddElementHandler muss man hitten, wenn man beim nï¿½chstgrï¿½ï¿½eren knoten ist, weil man offenbar bisher nicht getroffen hat.
         if (currentAction instanceof AtomicBulkUpdateBase.AtomicAddAction) {
           isHit = true;
         } else if (currentAction instanceof AtomicBulkUpdateBase.AtomicUpdateAction) {
@@ -663,7 +663,7 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
     
     public TraversalContinuation handleInternally(AbstractNode<IndexNodeValue<E, F>> node) {
 
-      //es kann mehrere actions für diesen knoten geben => so lange loopen, bis man die alle behandelt hat
+      //es kann mehrere actions fï¿½r diesen knoten geben => so lange loopen, bis man die alle behandelt hat
       //wenn ein add und ein remove einen gleichen key haben, gehen sie auf unterschiedliche (aufeinanderfolgende) knoten => muss also anders behandelt werden.
       //andersrum kann es sein, dass ein add und ein remove auf den gleichen knoten gehen, obwohl sie unterschiedliche keys haben.
       Map<E, AbstractNode<IndexNodeValue<E, F>>> additionallyCreatedNodes = new HashMap<E, AbstractNode<IndexNodeValue<E, F>>>();
@@ -683,9 +683,9 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
             removeEntry(node, updateAction.oldKey, updateAction.value);
           }
 
-          //spezialfall updateaction => muss zweimal currentAction sein => wieder zur liste hinzufügen
+          //spezialfall updateaction => muss zweimal currentAction sein => wieder zur liste hinzufï¿½gen
           if (updateAction.firstHandle) {
-            comparisonIfChangedUpdate = currentAction.compareTo(action) != 0; //wird unten benötigt, aber dann ist die action bereits geändert
+            comparisonIfChangedUpdate = currentAction.compareTo(action) != 0; //wird unten benï¿½tigt, aber dann ist die action bereits geï¿½ndert
             updateAction.firstHandle = false;
             //key tauschen.
             updateAction.currentKey =
@@ -703,12 +703,12 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
           removeEntry(node, removeAction.e, removeAction.f);
         }
         if (actions.size() > 0) {
-          currentAction = actions.poll(); //nächste action lesen
-          //nächste action muss entweder auch auf den gleichen knoten angewendet werden, oder auf einen späteren.
+          currentAction = actions.poll(); //nï¿½chste action lesen
+          //nï¿½chste action muss entweder auch auf den gleichen knoten angewendet werden, oder auf einen spï¿½teren.
           //hier also entscheidung, ob die while-schleife nochmal durchlaufen werden muss, oder nicht.
           //sie muss genauo so lange weiter durchlaufen werden, wie der aktuelle key <= dem node-key ist.
           
-          //currentaction == action führt dazu, dass compare == 0 ist, obwohl immer != 0 gemeint ist (update hat sich geändert von add auf remove oder andersrum)
+          //currentaction == action fï¿½hrt dazu, dass compare == 0 ist, obwohl immer != 0 gemeint ist (update hat sich geï¿½ndert von add auf remove oder andersrum)
           if (currentAction == action) {
             //update
             //=> (1) unterschiedlicher wert oder (2) gleicher wert mit unterschiedlichem add/remove.
@@ -762,7 +762,7 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
         throw new RuntimeException("could not remove entry");
       }
     } else {
-      //im parent beim nächsten knoten schauen
+      //im parent beim nï¿½chsten knoten schauen
       removeEntry(node.getParent().getChild(node.getParent().getChildIndex(node) + 1), key, value);
     }
     
@@ -774,7 +774,7 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
 
 
   /**
-   * fügt neuen knoten als sibling vor dem übergebenen knoten ein, oder modifiziert den knoten, falls der key gleich ist. 
+   * fï¿½gt neuen knoten als sibling vor dem ï¿½bergebenen knoten ein, oder modifiziert den knoten, falls der key gleich ist. 
    */
   public AbstractNode<IndexNodeValue<E, F>> addEntryToTreeAtPosition(AbstractNode<IndexNodeValue<E, F>> node, E e, F f) {
     IndexNodeValue<E, F> nodeValue = node.getValue();
@@ -782,7 +782,7 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
       nodeValue.values.add(f); //FIXME setValue, damit knoten zb im cluster geupdated wird?
       return null;
     } else {
-      //erster knoten, wo der alte wert größer als der neue ist => einfügeposition parent.insertBefore
+      //erster knoten, wo der alte wert grï¿½ï¿½er als der neue ist => einfï¿½geposition parent.insertBefore
 
       AbstractNode<IndexNodeValue<E, F>> parent = node.getParent();
       AbstractNode<IndexNodeValue<E, F>> newNode = createNode(e, f, parent);
@@ -793,7 +793,7 @@ public class IndexImplTree<E extends Comparable<E>, F> implements Index<E, F> {
   }
 
 
-  //für tests:
+  //fï¿½r tests:
   public AbstractNode<IndexNodeValue<E, F>> getRoot() {
     return index;
   }

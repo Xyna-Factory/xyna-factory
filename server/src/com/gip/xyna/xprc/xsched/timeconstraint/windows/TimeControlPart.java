@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,9 @@ import org.joda.time.DateTimeConstants;
 public interface TimeControlPart {
   
   /**
-   * berechnet den nächsten zeitpunkt (in richtung stepping), der bzgl der schrittweite am nähesten an "reference" liegt.
+   * berechnet den nï¿½chsten zeitpunkt (in richtung stepping), der bzgl der schrittweite am nï¿½hesten an "reference" liegt.
    * 
-   * dazu braucht man einen stützpunkt, an dem man sich orientieren kann (aValidTime).
+   * dazu braucht man einen stï¿½tzpunkt, an dem man sich orientieren kann (aValidTime).
    */
   DateTime calculate(DateTime reference, DateTime aValidTime, DateTime interimResult, Stepping stepping);
   
@@ -381,7 +381,7 @@ public interface TimeControlPart {
         case AFTER :
           if (calculation.isAfter(target)) {
             long units = unit.between(target, calculation);   
-            //nächstkleinere (oder gleiche) zahl, die durch increment teilbar ist 
+            //nï¿½chstkleinere (oder gleiche) zahl, die durch increment teilbar ist 
             units = (units/increment) * increment;
             while (units > 0) {
               int k = (int) Math.min(units, max);
@@ -390,7 +390,7 @@ public interface TimeControlPart {
             }
           } else if (calculation.isBefore(target)) {
             long units = unit.between(calculation, target);            
-            //nächstgrößere (oder gleiche) zahl, die durch increment teilbar ist 
+            //nï¿½chstgrï¿½ï¿½ere (oder gleiche) zahl, die durch increment teilbar ist 
             units = (units/increment) * increment + (units % increment == 0 ? 0 : increment);            
             while (units > 0) {
               int k = (int) Math.min(units, max);

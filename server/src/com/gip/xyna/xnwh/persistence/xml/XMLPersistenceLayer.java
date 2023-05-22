@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -245,8 +245,8 @@ public class XMLPersistenceLayer implements PersistenceLayer {
         String tableNameLC = tableName.toLowerCase();
         Class<? extends Storable> clazz;
         try {
-          //bei mehreren registrierten storables für den tablename (applications) kann hier eine beliebige klasse genommen werden,
-          //weil die klasse nur für den datentransfer von journal->xml verwendet wird
+          //bei mehreren registrierten storables fï¿½r den tablename (applications) kann hier eine beliebige klasse genommen werden,
+          //weil die klasse nur fï¿½r den datentransfer von journal->xml verwendet wird
           clazz = classes.lazyCreateGet(tableNameLC).getAnyElement();
         } finally {
           classes.cleanup(tableNameLC);
@@ -657,7 +657,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
           currentStore = new TXStore(line.substring(TransactionPartID.STORE.name().length() + 1));
           parts.add(currentStore);
         } else {
-          //gehört zum store-xml
+          //gehï¿½rt zum store-xml
           currentXml.append(line);
         }
       }
@@ -733,11 +733,11 @@ public class XMLPersistenceLayer implements PersistenceLayer {
         outer : for (int i = journalFiles.length - 1; i >= 0; i--) {
           journalFile = journalFiles[i];
 
-          //suche darin von hinten solange, bis eine transaktion gefunden ist, die vollständig abgearbeitet wurde
-          //alle neueren transaktionen merken und später in umgekehrter reihenfolge (älteste zuerst)
+          //suche darin von hinten solange, bis eine transaktion gefunden ist, die vollstï¿½ndig abgearbeitet wurde
+          //alle neueren transaktionen merken und spï¿½ter in umgekehrter reihenfolge (ï¿½lteste zuerst)
           //der memory queue zum abarbeiten geben.
 
-          //falls man einer tabelle begegnet, die unbekannt ist, das parsing unterbrechen und später fortsetzen, 
+          //falls man einer tabelle begegnet, die unbekannt ist, das parsing unterbrechen und spï¿½ter fortsetzen, 
           //wenn diese methode erneut aufgerufen wird
 
           if (logger.isDebugEnabled()) {
@@ -750,14 +750,14 @@ public class XMLPersistenceLayer implements PersistenceLayer {
               String line = r.readLine();
               if (line == null) {
                 if (currentTransactionId < 0) {
-                  //ohne die aktuelle transaktionsid müsste man alle zugehörigen tabellen-xmls nach der entsprechenden id durchsuchen
-                  //die weiß man aber hier nicht.
+                  //ohne die aktuelle transaktionsid mï¿½sste man alle zugehï¿½rigen tabellen-xmls nach der entsprechenden id durchsuchen
+                  //die weiï¿½ man aber hier nicht.
                   //FIXME
                   logger.warn("Found empty journal file " + journalFile.getAbsolutePath());
                   currentTransactionId = JOURNAL_EMPTY;
-                  //wenn man nun im nächstälteren file eine transactionsid findet, ist es ok. usecase: im aktuellen journalfile steht nur eine IGNORE.
+                  //wenn man nun im nï¿½chstï¿½lteren file eine transactionsid findet, ist es ok. usecase: im aktuellen journalfile steht nur eine IGNORE.
                 }
-                break; //nächstes file
+                break; //nï¿½chstes file
               }
 
               if (line.startsWith(TransactionPartID.COMMIT.name())) {
@@ -790,11 +790,11 @@ public class XMLPersistenceLayer implements PersistenceLayer {
 
                 if (transactionIsComplete) {
                   /*
-                   * TODO ganz sauber ist das so nicht. es könnte evtl passieren,
-                   * dass vor einem crash ein file nicht geschrieben werden könnte, danach aber
-                   * eine transaktion auf anderen files erfolgreich durchgeführt werden konnte.
-                   * dann genügt es nicht, nur eine erfolgreiche transaktion zu finden, sondern
-                   * man müsste für jede tabelle checken, ob die letzte transaktion enthalten ist
+                   * TODO ganz sauber ist das so nicht. es kï¿½nnte evtl passieren,
+                   * dass vor einem crash ein file nicht geschrieben werden kï¿½nnte, danach aber
+                   * eine transaktion auf anderen files erfolgreich durchgefï¿½hrt werden konnte.
+                   * dann genï¿½gt es nicht, nur eine erfolgreiche transaktion zu finden, sondern
+                   * man mï¿½sste fï¿½r jede tabelle checken, ob die letzte transaktion enthalten ist
                    */
                   if (logger.isDebugEnabled()) {
                     logger.debug("found complete transaction " + commit.getId());
@@ -808,7 +808,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
                   first = false;
                 }
 
-                //nicht complete, also aktuelle transaction merken und nächste checken
+                //nicht complete, also aktuelle transaction merken und nï¿½chste checken
                 currentContext = new ReplayTransaction(journalFile.getAbsolutePath(), commit.getTables(), commit.getId());
                 transactionsToReplay.add(currentContext);
               } else if (line.startsWith(TransactionPartID.ROLLBACK.name())) { //FIXME achtung, wenn zeilen in xml content mit ROLLBACK beginnen, gibt es probleme
@@ -828,8 +828,8 @@ public class XMLPersistenceLayer implements PersistenceLayer {
                 if (currentContext == null) {
                   /*
                    * kein commit/rollback am ende des journals -> journal wurde entweder manuell editiert oder ein kill 
-                   * des servers während des schreibens des commits hat es nicht beendet.
-                   * -> verwerfen des eintrags und als "IGNORE" markieren, damit nicht danach weitere transaktionen angehängt werden, die dann parsingprobleme bereiten.
+                   * des servers wï¿½hrend des schreibens des commits hat es nicht beendet.
+                   * -> verwerfen des eintrags und als "IGNORE" markieren, damit nicht danach weitere transaktionen angehï¿½ngt werden, die dann parsingprobleme bereiten.
                    */
                   logger.warn("Missing COMMIT at end of journal " + journalFile.getAbsolutePath() + ", marking as IGNORE.");
                   BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(journalFile, true)));
@@ -957,7 +957,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
 
     /**
      * initialisiert auch {@link #transactionCnt}
-     * @return true falls check abgeschlossen/transaktionen vollständig nachgeholt
+     * @return true falls check abgeschlossen/transaktionen vollstï¿½ndig nachgeholt
      */
     public boolean checkLastTransactions(MemoryQueue memoryQueue) {
 
@@ -1013,7 +1013,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
       openTransactionsLock.lock();
       try {
         while (openTransactions.first() != transactionContext.getId()) {
-          //TODO die verantwortung zum schreiben der anderen id übergeben. dann kann der andere gebatched ins journal schreiben. 
+          //TODO die verantwortung zum schreiben der anderen id ï¿½bergeben. dann kann der andere gebatched ins journal schreiben. 
           try {
             condition.await();
           } catch (InterruptedException e) {
@@ -1063,7 +1063,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
 
     private void flush(BufferedWriter bw) throws IOException {
       /*
-       * AFS z.b. überträgt die änderungen bei einem flush nicht an den server, sondern hält die änderung nur clientseitig. dann muss 
+       * AFS z.b. ï¿½bertrï¿½gt die ï¿½nderungen bei einem flush nicht an den server, sondern hï¿½lt die ï¿½nderung nur clientseitig. dann muss 
        * ein close aufgerufen werden, damit bei einem crash keine daten verloren gehen.
        */
       if (closeToFlush) {
@@ -1128,7 +1128,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
       } else {
         long len = currentJournal_File.length();
         if (len >= journalMaxLengthPerFile.get()) {
-          //maximale journal file size erreicht. neues öffnen
+          //maximale journal file size erreicht. neues ï¿½ffnen
           Matcher m = fileNamePattern.matcher(currentJournal_File.getName());
           if (!m.matches()) {
             throw new RuntimeException();
@@ -1148,7 +1148,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
             logger.error("Journal file " + currentJournal_File.getName() + " not found unexpectedly. Creating new one...");
             File old = currentJournal_File;
             currentJournal_File = null;
-            //gelöscht? -> neu erstellen
+            //gelï¿½scht? -> neu erstellen
             boolean success = false;
             try {
               BufferedWriter bw = getOrCreateCurrentJournal();
@@ -1157,7 +1157,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
             } finally {
               if (!success) {
                 logger.warn("Could not create new Journal.");
-                currentJournal_File = old; //falls netzwerk-filesystem o.ä. (nfs, afs), vielleicht gibts das file nach retry wieder?
+                currentJournal_File = old; //falls netzwerk-filesystem o.ï¿½. (nfs, afs), vielleicht gibts das file nach retry wieder?
               }
             }
           }
@@ -1350,7 +1350,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
             if (commit.getId() == transactionid) {
               break;
             } else if (commit.getId() < transactionid) {
-              //diese transaktion ist nicht die gewünschte - überspringen
+              //diese transaktion ist nicht die gewï¿½nschte - ï¿½berspringen
               lines.clear();
             } else {
               throw new RuntimeException("transactionid " + transactionid + " not found in " + activeFile);
@@ -1528,7 +1528,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
     private volatile boolean isRunning = false; //thread-zustand
     private final ConcurrentMap<String, TableInfo> tableInfos = new ConcurrentHashMap<String, TableInfo>();
     private final ConcurrentLinkedQueue<TransactionContext> transactionQueue = new ConcurrentLinkedQueue<TransactionContext>();
-    private final XMLPersistenceLayer pl; //für das asynchrone schreiben ins xml
+    private final XMLPersistenceLayer pl; //fï¿½r das asynchrone schreiben ins xml
     private final ReusableCountDownLatch rcdl = new ReusableCountDownLatch(1);
     private boolean doSleep = true;
     private final BackupManagerIfc backupManager;
@@ -1708,9 +1708,9 @@ public class XMLPersistenceLayer implements PersistenceLayer {
     }
 
     public boolean awaitReload(long timeout) {
-      //Damit sicher ist, dass der Reload wirklich durchgeführt wurde, muss eine vollständiger 
+      //Damit sicher ist, dass der Reload wirklich durchgefï¿½hrt wurde, muss eine vollstï¿½ndiger 
       //Durchlauf abgewartet werden. Es reicht nicht, dass ein Durchlauf fertig wurde, da er
-      //zu Beginn die gewünschte Tabelle übersprungen haben kann.
+      //zu Beginn die gewï¿½nschte Tabelle ï¿½bersprungen haben kann.
       if( ! isRunning ) {
         return false;
       }
@@ -1723,20 +1723,20 @@ public class XMLPersistenceLayer implements PersistenceLayer {
           return false;
         }
       } catch (InterruptedException e) {
-        //dann halt nicht länger warten
+        //dann halt nicht lï¿½nger warten
         return false;
       }
       
       long remainingTimeout = start+timeout - System.currentTimeMillis();
       
-      //Einen vollständigen Durchlauf abwarten
+      //Einen vollstï¿½ndigen Durchlauf abwarten
       try {
         CountDownLatch cdl = rcdl.prepareLatch();
         //Thread wecken
         awake();
         return cdl.await(remainingTimeout, TimeUnit.MILLISECONDS);
       } catch (InterruptedException e) {
-        //dann halt nicht länger warten
+        //dann halt nicht lï¿½nger warten
         return false;
       }
     }
@@ -1881,7 +1881,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
                 logger.warn("could not check file for storable " + tableName, e);
               }
             }
-            //storables über "alten" pl ins xml speichern
+            //storables ï¿½ber "alten" pl ins xml speichern
             Collection<Storable<?>> storables;
             long txId;
             synchronized (ti) {
@@ -1896,14 +1896,14 @@ public class XMLPersistenceLayer implements PersistenceLayer {
             String tableNameLC = tableName.toLowerCase();
             final Class<? extends Storable> clazz;
             try {
-              //bei mehreren registrierten storables für den tablename (applications) kann hier eine beliebige klasse genommen werden,
-              //weil die klasse nur für den datentransfer von journal->xml verwendet wird
+              //bei mehreren registrierten storables fï¿½r den tablename (applications) kann hier eine beliebige klasse genommen werden,
+              //weil die klasse nur fï¿½r den datentransfer von journal->xml verwendet wird
               clazz = classes.lazyCreateGet(tableNameLC).getAnyElement();
             } finally {
               classes.cleanup(tableNameLC);
             }
             if (clazz == null) {
-              continue forloop; //wird vermutlich später noch registriert
+              continue forloop; //wird vermutlich spï¿½ter noch registriert
             }
 
             XMLPersistenceLayerConnection con;
@@ -1937,7 +1937,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
 
                 public void handleFileIsModified(File originalFile) {
                   /*
-                   * 1. file lesen und in cache übernehmen
+                   * 1. file lesen und in cache ï¿½bernehmen
                    * 2. tableinfo aktualisieren
                    * 3. aktuellen stand trotzdem schreiben, damit die txid im xml auf dem neusten stand steht.
                    */
@@ -2032,7 +2032,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
       }
 
       if (journal.currentJournal_File == null) {
-        //erst mit löschen anfangen, wenn das aktuelle journal auch verwendet wird, damit es keine raceconditions gibt
+        //erst mit lï¿½schen anfangen, wenn das aktuelle journal auch verwendet wird, damit es keine raceconditions gibt
         if (logger.isTraceEnabled()) {
           logger.trace("Not deleting anything, because journal is not initialized properly yet.");
         }
@@ -2049,17 +2049,17 @@ public class XMLPersistenceLayer implements PersistenceLayer {
         File journalFile = journalFiles[i];
         if (journalFile.equals(journal.currentJournal_File)) {
           if (journal.currentJournal_File.length() == 0) {
-            //nichts löschen, wenn das aktuelle journal file noch leer ist
+            //nichts lï¿½schen, wenn das aktuelle journal file noch leer ist
             delete.clear();
           }
           break;
         }
         if (i == journalFiles.length - 1) {
-          //letztes file nie löschen
+          //letztes file nie lï¿½schen
           break;
         }
         
-        //wird es noch für replay benötigt?
+        //wird es noch fï¿½r replay benï¿½tigt?
         for (TableInfo ti : tableInfos.values()) {
           for (ReplayTransaction rt : ti.toReplay) {
             if (rt.filename.equals(journalFile.getAbsolutePath())) {
@@ -2088,7 +2088,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
                     delete.add(journalFile);
                   }
                 }
-                break; //nächstes file
+                break; //nï¿½chstes file
               } else if (line.trim().length() == 0) {
                 //ignore
               } else {
@@ -2169,7 +2169,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
               logger.trace("filling tableinfo from xml with replay data.");
             }
             
-            //es gibt vermutlich noch transaktionen die replayed werden müssen -> in memoryqueue schreiben            
+            //es gibt vermutlich noch transaktionen die replayed werden mï¿½ssen -> in memoryqueue schreiben            
             long txId = loadCollectionAndTxId.getFirst();
             for (T s : loadCollectionAndTxId.getSecond()) {
               ti.rows.put(String.valueOf(s.getPrimaryKey()), s);
@@ -2254,7 +2254,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
   private String dir;
   private TransactionMode modeDefault = TransactionMode.FULL_TRANSACTION;
   
-  //bei mehreren registrierten storables für den tablename (applications) werden hier alle klasse eingetragen
+  //bei mehreren registrierten storables fï¿½r den tablename (applications) werden hier alle klasse eingetragen
   private final ConcurrentMapWithObjectRemovalSupport<String, SetWrapper<Class<? extends Storable>>> classes = new ConcurrentMapWithObjectRemovalSupport<String, SetWrapper<Class<? extends Storable>>>() {
 
     private static final long serialVersionUID = 1L;
@@ -2279,7 +2279,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
     private final Set<E> set = new HashSet<E>(); 
     
     /**
-     * Fügt ein Element zur Liste hinzu
+     * Fï¿½gt ein Element zur Liste hinzu
      * @param e
      * @return true, falls die Liste vorher leer war
      */
@@ -2509,8 +2509,8 @@ public class XMLPersistenceLayer implements PersistenceLayer {
           }
         }
       } catch(Exception e) {
-        // Wenn hier irgendwas passiert, können wir das eigentlich ignorieren. Worst case wäre, dass die temporären Dateien nicht gelöscht werden konnten und
-        // die Platte voll müllen.
+        // Wenn hier irgendwas passiert, kï¿½nnen wir das eigentlich ignorieren. Worst case wï¿½re, dass die temporï¿½ren Dateien nicht gelï¿½scht werden konnten und
+        // die Platte voll mï¿½llen.
         logger.warn("could not delete temporary xml persistence layer files.", e);
       }
 
@@ -2547,7 +2547,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
           if (logger.isDebugEnabled()) {
             logger.debug("filling xml persistencelayer caches for pl=" + journal.pliId + " ... ");
           }
-          synchronized (uninitialized) { //nacheinander, damit nicht das persist zu häufig passiert
+          synchronized (uninitialized) { //nacheinander, damit nicht das persist zu hï¿½ufig passiert
             Iterator<String> it = uninitialized.keySet().iterator();
             while (it.hasNext()) {
               String t = it.next();
@@ -2561,7 +2561,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
                 Class<? extends Storable> tClass = classes.lazyCreateGet(t.toLowerCase()).getAnyElement();
                 classes.cleanup(t.toLowerCase());
                 try {
-                  c.addTable(tClass, false, null); //forcewidening für memory-pl egal
+                  c.addTable(tClass, false, null); //forcewidening fï¿½r memory-pl egal
                   c.persistCollection(objects);
                   c.commit();
                   if (logger.isDebugEnabled()) {
@@ -2578,7 +2578,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
             }
           }
         } else {
-          //beim nächsten addTable wieder versuchen
+          //beim nï¿½chsten addTable wieder versuchen
           if (logger.isDebugEnabled()) {
             logger.debug("table " + tableName + " will be registered at a later time.");
           }
@@ -2599,7 +2599,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
 
         if (addedToCachePL) {
           //darauf warten, dass alles ins file geschrieben wird.
-          //es könnte nach dem removeTable ein erneutes addTable mit dem gleichen storable geben, welches dann die daten sehen soll
+          //es kï¿½nnte nach dem removeTable ein erneutes addTable mit dem gleichen storable geben, welches dann die daten sehen soll
           int retryCnt = 0;
           memoryQueue.awake();
           while (!memoryQueue.awaitStore(2000)) {
@@ -2700,12 +2700,12 @@ public class XMLPersistenceLayer implements PersistenceLayer {
           return;
         }
         StringBuilder lines = transactionContext.asString();
-        //bei großen transaktionen kann die umwandlung in den string etwas dauern. deshalb tun, bevor man transaktionsid ermittelt, 
+        //bei groï¿½en transaktionen kann die umwandlung in den string etwas dauern. deshalb tun, bevor man transaktionsid ermittelt, 
         //weil sich das schreiben ins journal dann von der reihenfolge nach den ids richtet
         
         journal.setTransactionId(transactionContext);
 
-        //allerdings muss in die letzte zeile dann das COMMIT mit der transaktionsid - das muss dann nachträglich erzeugt werden
+        //allerdings muss in die letzte zeile dann das COMMIT mit der transaktionsid - das muss dann nachtrï¿½glich erzeugt werden
         lines.append(transactionContext.parts.get(transactionContext.parts.size() - 1).asString()).append("\n");
 
         boolean needToInvalidateTransactionId = true;
@@ -2965,7 +2965,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
       } else {
         //update alter werte => alte collection laden
         
-        //TODO performance: in vielen fällen weiss man als aufrufer dieser methode, dass man vorher deleteall aufgerufen hat
+        //TODO performance: in vielen fï¿½llen weiss man als aufrufer dieser methode, dass man vorher deleteall aufgerufen hat
         //     dann kann man sich das laden der alten collection sparen.
         Collection<T> oldCollection = (Collection<T>) loadCollection(storableClass);
         HashMap<Object, T> pkMap = new HashMap<Object, T>();
@@ -3283,7 +3283,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
 
 
     public void setTransactionProperty(TransactionProperty property) {
-      //nicht unterstützt
+      //nicht unterstï¿½tzt
     }
 
 
@@ -3332,7 +3332,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
   private static Random random = new Random();
   static {
     String[] prefixes = new String[]{"", ".", ",", ";"};
-    String chars = ""; //kleinbuchstaben, großbuchstaben, ziffern, -_
+    String chars = ""; //kleinbuchstaben, groï¿½buchstaben, ziffern, -_
     char a = 'a';
     for (int i = 0; i<26; i++) {
       chars += (char)(a + i); 
@@ -3484,9 +3484,9 @@ public class XMLPersistenceLayer implements PersistenceLayer {
       if (sum > 2*minLengthForStatistics/3) {
         //in diesem fall ist BASE64 schlechter als huffman. siehe http://www.javaworld.com/javaworld/javatips/jw-javatip117.html?page=3
         
-        //BASE64 vergrößtert die daten durchschnittlich um faktor 4/3. 
-        //huffman abhängig von der verteilung der bytes in den daten um einen faktor zwischen 1 und 1,75.
-        //falls die häufigsten 64 bytes insgesamt mehr als 2/3 aller bytes ausmachen, ist huffman effizienter.
+        //BASE64 vergrï¿½ï¿½tert die daten durchschnittlich um faktor 4/3. 
+        //huffman abhï¿½ngig von der verteilung der bytes in den daten um einen faktor zwischen 1 und 1,75.
+        //falls die hï¿½ufigsten 64 bytes insgesamt mehr als 2/3 aller bytes ausmachen, ist huffman effizienter.
         //durch das zippen passiert das fast nie. sollte das zippen hier nicht mehr automatisch geschehen, passiert es allerdings sehr oft
         
         //TODO huffman impl
@@ -3716,7 +3716,7 @@ public class XMLPersistenceLayer implements PersistenceLayer {
       }
       memoryQueue.running = false;
       memoryQueue.awake();
-      //falls thread noch läuft, dann noch warten - ansonsten kommt die methode zurück
+      //falls thread noch lï¿½uft, dann noch warten - ansonsten kommt die methode zurï¿½ck
       if (!memoryQueue.awaitStore(5000)) {
         logger.warn("Memory queue of pl " + journal.pliId + " was not cleared before timeout.");
       }

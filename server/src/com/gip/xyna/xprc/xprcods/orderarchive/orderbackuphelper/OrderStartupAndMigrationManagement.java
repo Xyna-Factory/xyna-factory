@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class OrderStartupAndMigrationManagement {
     
       loadingLock.lock();
       try {
-        // Prüfen, ob Thread noch läuft ... vllt. ist der Status veraltet?
+        // Prï¿½fen, ob Thread noch lï¿½uft ... vllt. ist der Status veraltet?
         if(loadingAtStartupThread != null && loadingAtStartupRunning) {
           if(!loadingAtStartupThread.isAlive()) {
             loadingAtStartupThread = null;
@@ -144,14 +144,14 @@ public class OrderStartupAndMigrationManagement {
     if(clusterState ==  ClusterState.DISCONNECTED_MASTER) {
       migratingLock.lock();
       try {
-        // Prüfen, ob Thread noch läuft ... vllt. ist der Status veraltet?
+        // Prï¿½fen, ob Thread noch lï¿½uft ... vllt. ist der Status veraltet?
         if(migratingThread != null && !migratingThread.isAlive()) {
           migratingThread = null;
           migratingHelperProcess = null;
           migrationRunning = false;      
         }
         if(migrationRunning) {
-          // TODO wird stoppen der Migration 100%ig unterstützt?
+          // TODO wird stoppen der Migration 100%ig unterstï¿½tzt?
           //logger.debug("Stop running migration.");
           //stopMigrating();
           return;
@@ -179,7 +179,7 @@ public class OrderStartupAndMigrationManagement {
           migratingLock.lock();
         
           if(abortWaiting) {
-            // offensichtlich wurde während der Wartezeit abgebrochen. 
+            // offensichtlich wurde wï¿½hrend der Wartezeit abgebrochen. 
             logger.debug("Stop running migration while waiting.");
             migrationRunning = false;
             XynaFactory.getInstance().getFactoryManagement().getXynaExtendedStatusManagement()
@@ -260,7 +260,7 @@ public class OrderStartupAndMigrationManagement {
   public boolean waitUntilRootOrderIsAccessible(long rootOrderId) throws LoadingAbortedWithErrorException, MigrationAbortedWithErrorException, InterruptedException {
     
     waitUntilStartupIsRunning();
-    //LoadOrderBackupWithOwnBindingAndDifferentBootCountId ist nun sicher gelaufen oder läuft noch
+    //LoadOrderBackupWithOwnBindingAndDifferentBootCountId ist nun sicher gelaufen oder lï¿½uft noch
     
     LoadOrderBackupWithOwnBindingAndDifferentBootCountId loadProcess = loadingAtStartungHelperProcess;
     while( loadProcess != null ) {
@@ -339,7 +339,7 @@ public class OrderStartupAndMigrationManagement {
     }
     logger.debug("called stopMigrating");
     try {
-      //nicht ewig am lock hängen. wenn benötigt, wird diese methode von aussen erneut aufgerufen
+      //nicht ewig am lock hï¿½ngen. wenn benï¿½tigt, wird diese methode von aussen erneut aufgerufen
       if (!migratingLock.tryLock(30, TimeUnit.MILLISECONDS)) {
         return;
       }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public abstract class ProcessStepDynamicChildren<T extends Scope> extends Fracta
 
   @Override
   /**
-   * nicht gecachte kinder ausführen
+   * nicht gecachte kinder ausfï¿½hren
    */
   protected void executeChildren(int i) throws XynaException {
     for (FractalProcessStep<?> step : getChildren(i)) {

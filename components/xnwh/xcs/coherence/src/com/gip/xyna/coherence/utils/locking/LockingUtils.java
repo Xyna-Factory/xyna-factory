@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ public class LockingUtils {
 
 
   /**
-   * warte mit einem object.wait auf dem übergebenen objekt, bis notify passiert, oder der übergebene zeitpunkt erreicht
+   * warte mit einem object.wait auf dem ï¿½bergebenen objekt, bis notify passiert, oder der ï¿½bergebene zeitpunkt erreicht
    * ist.
    */
   public static boolean wait(Object o, long nanoTimeStamp) throws InterruptedException {

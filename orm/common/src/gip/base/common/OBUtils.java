@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class OBUtils {
     OBException.addErrorMessage(inputToShort2(),"Der Inhalt des Feldes {0} muss mindestens {1} Zeichen lang sein."); //$NON-NLS-1$
     OBException.addErrorMessage(inputToLong2(),"Der Inhalt des Feldes {0} darf maximal {1} Zeichen lang sein."); //$NON-NLS-1$
     OBException.addErrorMessage(inputToSmall2(),"Der Inhalt des Feldes {0} darf den Wert {1} nicht unterschreiten."); //$NON-NLS-1$
-    OBException.addErrorMessage(inputToLarge2(),"Der Inhalt des Feldes {0} darf den Wert {1} nicht überschreiten."); //$NON-NLS-1$
+    OBException.addErrorMessage(inputToLarge2(),"Der Inhalt des Feldes {0} darf den Wert {1} nicht ï¿½berschreiten."); //$NON-NLS-1$
     OBException.addErrorMessage(inputWrongChar2(),"Der Inhalt des Feldes {0} darf das Zeichen {1} nicht enthalten. Bitte verwenden Sie nur Zeichen aus der Menge {2}."); //$NON-NLS-1$
     OBException.addErrorMessage(inputWrongString2(),"Der Inhalt des Feldes {0} darf die Zeichenfolge {1} nicht enthalten."); //$NON-NLS-1$
     OBException.addErrorMessage(inputWrongRegexp2(),"Der Inhalt des Feldes {0} entspricht nicht dem Ausdruck {1}."); //$NON-NLS-1$

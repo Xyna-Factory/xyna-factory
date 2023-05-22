@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -412,7 +412,7 @@ public class VetoManagementTest extends TestCase {
       fail("Unexpected exception "+e);
     }
     
-    result = allocateVetos(blockedXo); //nötig, da Scheduler hier nicht richtig funktioniert 
+    result = allocateVetos(blockedXo); //nï¿½tig, da Scheduler hier nicht richtig funktioniert 
     assertTrue("Allocation of veto should have succeded", result.isAllocated());
     
     vetos = vm.listVetos();

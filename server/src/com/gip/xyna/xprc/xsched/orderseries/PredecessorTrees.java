@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.gip.xyna.xprc.xsched.orderseries.tasks.OSMTask;
 
 
 /**
- * PredecessorTrees verwaltet alle bekannten Predecessor-Abhängigkeiten.
+ * PredecessorTrees verwaltet alle bekannten Predecessor-Abhï¿½ngigkeiten.
  * Die Daten zu den Predecessoren werden in einer Baum-Struktur gehalten, alle Predecessoren
  * eines Knoten bilden dessen Zweige.
  * Jeder Knoten des Baums ist selbst noch eine Zuweisung correlationId-&gt;(orderId,binding).
@@ -67,12 +67,12 @@ public class PredecessorTrees {
       super(correlationId);
     }
     
-    public TreeNode getBranch( String correlationId ) { //wandelt ReturnType für einfachere Verwendung
+    public TreeNode getBranch( String correlationId ) { //wandelt ReturnType fï¿½r einfachere Verwendung
       return (TreeNode) branches.get(correlationId);
     }
 
     /**
-     * Liefert das Binding (Achtung: vorher mit hasData() prüfen, sonst NPE!)
+     * Liefert das Binding (Achtung: vorher mit hasData() prï¿½fen, sonst NPE!)
      * @return 
      */
     public int getBinding() {
@@ -88,7 +88,7 @@ public class PredecessorTrees {
     }
 
     /**
-     * Liefert die OrderId (Achtung: vorher mit hasData() prüfen, sonst NPE!)
+     * Liefert die OrderId (Achtung: vorher mit hasData() prï¿½fen, sonst NPE!)
      * @return
      */
     public long getOrderId() {
@@ -127,7 +127,7 @@ public class PredecessorTrees {
         cachedTree = new TreeNode(correlationId);
         predecessorTrees.put(correlationId,cachedTree);
       }
-      if( cachedTree.getValue() == null ) { //(orderId,binding) ergänzen
+      if( cachedTree.getValue() == null ) { //(orderId,binding) ergï¿½nzen
         SeriesInformationStorable sis = getCachedSis(correlationId);
         if( sis != null ) {
           cachedTree.setValue( new SisData(sis) );
@@ -145,10 +145,10 @@ public class PredecessorTrees {
       if( sis == null ) {
         return null;
       } else {
-        //Hier wird auf sis zugegriffen, ohne dass ein Lock schützt: nur sichere Operationen verwenden
+        //Hier wird auf sis zugegriffen, ohne dass ein Lock schï¿½tzt: nur sichere Operationen verwenden
         //sis.getPredecessorCorrIds().isEmpty() wird als sicher angesehen
         if( sis.getPredecessorCorrIds().isEmpty() ) {
-          //häufiger Spezialfall: alle Predecessoren sind bereits gelaufen
+          //hï¿½ufiger Spezialfall: alle Predecessoren sind bereits gelaufen
           return Collections.emptyList(); 
         } else {
           //nun muss auf die Daten in sis.getPredecessorCorrIds() zugegriffen werden: besser locken
@@ -160,7 +160,7 @@ public class PredecessorTrees {
             }
           } else {
             //Lock wurde nicht erhalten, trotzdem versuchen, an die Daten zu gelangen
-            //es ist unwahrscheinlich, dass gerade die Daten verändert werden.
+            //es ist unwahrscheinlich, dass gerade die Daten verï¿½ndert werden.
             //FIXME das ist so aber nicht so gut...
 
             ArrayList<String> v1 = new ArrayList<String>(sis.getPredecessorCorrIds());
@@ -181,8 +181,8 @@ public class PredecessorTrees {
 
     /**
      * Liefert den gecachten SeriesInformationStorable oder liest ihn neu
-     * (Lokaler Cache ist nötig, da meist die beiden Aufrufe createTree und getBranchKeys
-     * direkt nacheinander kommen und vor allem die teure Suche fehlender Einträge im OSMCache
+     * (Lokaler Cache ist nï¿½tig, da meist die beiden Aufrufe createTree und getBranchKeys
+     * direkt nacheinander kommen und vor allem die teure Suche fehlender Eintrï¿½ge im OSMCache
      * dadurch gespart wird.
      * @param correlationId
      * @return
@@ -222,7 +222,7 @@ public class PredecessorTrees {
   /**
    * Baut den Baum zur angebenen correlationId
    * @param correlationId
-   * @return true, falls eine zyklische Abhängigkeit besteht
+   * @return true, falls eine zyklische Abhï¿½ngigkeit besteht
    */
   public synchronized boolean buildTree( String correlationId ) {
     TreeBuilder treeBuilder = new TreeBuilder(osmCache,predecessorTrees);
@@ -283,9 +283,9 @@ public class PredecessorTrees {
   }
 
   /**
-   * Aussortieren aller PredecessorTrees, die nicht mehr benötigt werden
-   * Benötigt werden alle PredecessorTrees mit eigenem Binding
-   * Benötigt werden alle von benötigten PredecessorTrees referenzierten PredecessorTrees. 
+   * Aussortieren aller PredecessorTrees, die nicht mehr benï¿½tigt werden
+   * Benï¿½tigt werden alle PredecessorTrees mit eigenem Binding
+   * Benï¿½tigt werden alle von benï¿½tigten PredecessorTrees referenzierten PredecessorTrees. 
    * -&gt; nur PredecessorTrees zu fremdem Binding werden also entfernt
    * @param ownBinding
    */

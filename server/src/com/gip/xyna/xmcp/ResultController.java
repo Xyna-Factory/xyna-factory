@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,17 +26,17 @@ import java.util.Map;
 
 
 /**
- * Steuerung welche XynaObjekte oder Exceptions in welcher Form zurückgegeben werden, damit man sich gegen
- * Deserialisierungsprobleme durch unbekannte Klassen schützen kann.<br>
+ * Steuerung welche XynaObjekte oder Exceptions in welcher Form zurï¿½ckgegeben werden, damit man sich gegen
+ * Deserialisierungsprobleme durch unbekannte Klassen schï¿½tzen kann.<br>
  * 
- * Beispiel: Eine Exception enthält einen Cause, dessen Exceptionklasse aus einem PersistenceLayer kommt. Dann
+ * Beispiel: Eine Exception enthï¿½lt einen Cause, dessen Exceptionklasse aus einem PersistenceLayer kommt. Dann
  * kennt der RMI-Client diese Klasse typischerweise nicht und beim Aufruf gibt es eine ClassNotFoundException.<br>
  * 
  * Mit dieser Klasse kann man angeben, welche Exceptions einer Cause-Hierarchie als Original Javaobjekt 
- * zurückgegeben werden sollen, und welche in anderer Form (z.b. nur bestehend aus Klassenname, Message
+ * zurï¿½ckgegeben werden sollen, und welche in anderer Form (z.b. nur bestehend aus Klassenname, Message
  * und Stacktrace).<br>
- * Das gleiche kann auch für XynaObjekte gesteuert werden (Wahl zwischen XML und Original Javaobjekt). 
- * TODO Achtung: Diese können als Membervariablen auch Exception enthalten. Diese sollen von dieser Klasse
+ * Das gleiche kann auch fï¿½r XynaObjekte gesteuert werden (Wahl zwischen XML und Original Javaobjekt). 
+ * TODO Achtung: Diese kï¿½nnen als Membervariablen auch Exception enthalten. Diese sollen von dieser Klasse
  * genauso wie normale Exceptions behandelt werden.
  */
 public final class ResultController implements Serializable {
@@ -63,7 +63,7 @@ public final class ResultController implements Serializable {
 
 
   /**
-   * default ist XML. hiermit kann man angeben, dass auch andere daten zurückgegeben werden sollen
+   * default ist XML. hiermit kann man angeben, dass auch andere daten zurï¿½ckgegeben werden sollen
    */
   public void setDefaultWrappingTypeForXMOMTypes(WrappingType type) {
     if (type == null) {
@@ -78,7 +78,7 @@ public final class ResultController implements Serializable {
 
   /**
    * default ist SIMPLE, diese daten bekommt man immer. hiermit kann man angeben, dass man immer auch andere daten bekommen
-   * möchte.
+   * mï¿½chte.
    */
   public void setDefaultWrappingTypeForExceptions(WrappingType type) {
     if (type == null) {
@@ -101,7 +101,7 @@ public final class ResultController implements Serializable {
 
 
   /**
-   * alle exceptions deren classloader von der übergebenen klasse ist (oder davon abgeleitet) werden wie angegeben
+   * alle exceptions deren classloader von der ï¿½bergebenen klasse ist (oder davon abgeleitet) werden wie angegeben
    * gewrapped.
    */
   public void addSupportedExceptionClassLoader(Class<? extends ClassLoader> cl, WrappingType type) {
@@ -115,7 +115,7 @@ public final class ResultController implements Serializable {
   /**
    * alle exceptions die von der angegebenen klasse sind (oder davon abgeleitet) werden wie angegeben
    * gewrapped.<br>
-   * hilfsmethode für private classloader klassen.
+   * hilfsmethode fï¿½r private classloader klassen.
    */
   public void addSupportedExceptionClassLoader(String classLoaderFQName, WrappingType type) {
     if (classLoaderFQName == null || type == null) {
@@ -148,10 +148,10 @@ public final class ResultController implements Serializable {
   /**
    * soll ein throwable dieser klasse in dieser art verschickt werden?<br>
    * <ul>
-   * <li>SIMPLE ist immer unterstützt</li>
-   * <li>defaultForException ist immer unterstützt</li>
-   * <li>ORIGINAL ist für alle mit dem bootstrap classloader geladenen klassen unterstützt</li>
-   * <li>ansonsten ist die klasse genau dann unterstützt, wenn sie über supportedExceptionClasses oder -ClassLoader angegeben wurde</li>
+   * <li>SIMPLE ist immer unterstï¿½tzt</li>
+   * <li>defaultForException ist immer unterstï¿½tzt</li>
+   * <li>ORIGINAL ist fï¿½r alle mit dem bootstrap classloader geladenen klassen unterstï¿½tzt</li>
+   * <li>ansonsten ist die klasse genau dann unterstï¿½tzt, wenn sie ï¿½ber supportedExceptionClasses oder -ClassLoader angegeben wurde</li>
    * </ul> 
    */
   public boolean isSupported(Class<? extends Throwable> throwableClass, WrappingType type) {

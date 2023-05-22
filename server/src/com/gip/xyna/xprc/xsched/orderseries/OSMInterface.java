@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public interface OSMInterface {
   public enum OrderState {
     WaitingForPredecessor,  //Auftrag wartet noch auf Predecessoren
     CanBeStarted,           //Auftrag kann gestartet werden
-    HasToBeCanceled,        //Auftrag muss abgebrochen werden wegen AutoCancel des Vorgängers
+    HasToBeCanceled,        //Auftrag muss abgebrochen werden wegen AutoCancel des Vorgï¿½ngers
     HasCyclicDependencies,  //Auftrag hat zyklische Predecessoren und muss deshalb abgebrochen werden
     NotFound,               //Auftrag wurd nicht mehr gefunden
     AlreadyFinished;        //Auftrag ist bereits fertig. Dies kann passieren, wenn ein Predecessor fertig wird,
@@ -36,7 +36,7 @@ public interface OSMInterface {
   }
   
   /**
-   * Auftrag mit angegebener ID muss nicht länger warten und kann durch den Scheduler ausgeführt werden
+   * Auftrag mit angegebener ID muss nicht lï¿½nger warten und kann durch den Scheduler ausgefï¿½hrt werden
    * oder muss abgebrochen werden
    * @param correlationId
    * @param id

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ public class ClusteredReadWriteLockTest extends TestCase {
       public void run() {
         try {
           locks[0].readLock().lock();
-          //warte auf anderen thread, dass er readlock hat. => zwei threads können readlock haben.
+          //warte auf anderen thread, dass er readlock hat. => zwei threads kï¿½nnen readlock haben.
           latch.await();
           locks[0].readLock().unlock();
           long t0 = System.currentTimeMillis();
@@ -126,7 +126,7 @@ public class ClusteredReadWriteLockTest extends TestCase {
           latch3.countDown();
           locks[1].readLock().lock(); //downgrade
           locks[1].writeLock().unlock();
-          latch4.await(); //nur noch readlock übrig          
+          latch4.await(); //nur noch readlock ï¿½brig          
           Thread.sleep(4000);
 
           latchEnd.countDown();

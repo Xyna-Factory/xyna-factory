@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * InList zum Bau von SQL-Statements und dem zugehörigen Parameter-Objekt.
+ * InList zum Bau von SQL-Statements und dem zugehï¿½rigen Parameter-Objekt.
  * Beispiel:<code><pre>
     InList inList = new InList( new Long[]{1L,3L,17L} );
     String sql = "SELECT count(*) FROM TestT WHERE pk=? AND "+inList.getSQL("fk");
@@ -29,8 +29,8 @@ import java.util.List;
     int n = sqlUtils.query( sql, new Parameter( 123L, inList.getParams() ), ResultSetReaderFactory.getIntReader() ); 
     //mit Parameter( 123, 1, 3, 17 );
  </pre></code>
- * per Default werden bis zu maxLenght=5 Einträge mit Platzhaltern eingetragen, danach 
- * werden die Werte direkt in den SQL-String übernommen:
+ * per Default werden bis zu maxLenght=5 Eintrï¿½ge mit Platzhaltern eingetragen, danach 
+ * werden die Werte direkt in den SQL-String ï¿½bernommen:
 <code><pre>
     InList inList = new InList( new Long[]{1L,3L,17L,43L,137L,1234L} );
     String sql = "SELECT count(*) FROM TestT WHERE pk=? AND "+inList.getSQL("fk");
@@ -38,14 +38,14 @@ import java.util.List;
     int n = sqlUtils.query( sql, new Parameter( 123L, inList.getParams() ), ResultSetReaderFactory.getIntReader() ); 
     //mit Parameter( 123 );
 </pre></code>
- * Im Konstruktor kann maxLength verändert werden.
+ * Im Konstruktor kann maxLength verï¿½ndert werden.
  * <p>
  * Falls mehr als 1000 Werte in der Liste stehen, wird diese automatisch aufgetrennt, 
  * um den Fehler "ORA-01795: maximum number of expressions in a list is 1000" zu umgehen.
- * Dies könnte dann so aussehen: "(col IN (A,B,C) OR col IN (D,E,F) OR col IN (G))"
+ * Dies kï¿½nnte dann so aussehen: "(col IN (A,B,C) OR col IN (D,E,F) OR col IN (G))"
  * <p>
- * Die Liste kann Strings enthalten, die dann automatisch mit einfachen Anführungszeichen
- * umschlossen werden, bei anderen Typen wird toString aufgerufen und kein Anführungszeichen gesetzt.
+ * Die Liste kann Strings enthalten, die dann automatisch mit einfachen Anfï¿½hrungszeichen
+ * umschlossen werden, bei anderen Typen wird toString aufgerufen und kein Anfï¿½hrungszeichen gesetzt.
  * <p>
  */
 public class InList {
@@ -73,14 +73,14 @@ public class InList {
   }
   
   /**
-   * kann überschrieben werden
+   * kann ï¿½berschrieben werden
    */
   protected Parameter createParameter() {
     return new Parameter();
   }
   
   /**
-   * kann überschrieben werden
+   * kann ï¿½berschrieben werden
    */
   protected void addParameter(Parameter parameter, Object p) {
     parameter.addParameter(p);
@@ -110,7 +110,7 @@ public class InList {
       sql = sb.toString();
     }
     else {
-      boolean isString = (list[0] instanceof String); //nur erstes Element prüfen, wer mischt ist selbst dran schuld
+      boolean isString = (list[0] instanceof String); //nur erstes Element prï¿½fen, wer mischt ist selbst dran schuld
       StringBuilder sb = null;
       orLists = new ArrayList<String>();
       for( int i=0; i<list.length; ++i ) {
@@ -146,17 +146,17 @@ public class InList {
   public String getSQL(String colName) {
     if (sql == null) {
       if( orLists == null ) {
-        //leere IN-Liste -> ungültige Abfrage
+        //leere IN-Liste -> ungï¿½ltige Abfrage
         return colName + " <> " + colName;
       } else {
         //zuviele Parameter in IN-Liste -> mehrere IN-Listen durch OR getrennt
         StringBuilder sb = new StringBuilder();
-        sb.append("("); //Einklammern, um OR zu schützen
+        sb.append("("); //Einklammern, um OR zu schï¿½tzen
         for( int i=0; i<orLists.size(); ++i ) {
           if( i != 0 ) sb.append(" OR ");
           sb.append(colName).append(" IN ").append( orLists.get(i) );
         }
-        sb.append(")"); //Einklammern, um OR zu schützen
+        sb.append(")"); //Einklammern, um OR zu schï¿½tzen
         return sb.toString();
       }
     }

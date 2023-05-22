@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class ListcodeaccessinstancesImpl extends XynaCommandImplementation<Listc
     writeLineToCommandLine(statusOutputStream, codeAccessInstances.size() + " codeAccessInstances defined"
         + (codeAccessInstances.size() > 0 ? ":" : "."));
     for (Entry<Long, CodeAccess> codeAccessInstance : codeAccessInstances.entrySet()) {
-      //FIXME support für andere workingsets
+      //FIXME support fï¿½r andere workingsets
       Long revision = codeAccessInstance.getKey();
 
       writeLineToCommandLine(statusOutputStream, " - workingset (rev=" + (revision == -1 ? "rev_workingset" : revision)

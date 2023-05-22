@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,12 @@ import org.apache.log4j.Logger;
 
 /**
  * basis wrapper. logt methodenbeginn, -ende und fehler. kapselt exceptionhandling.
- * gedacht für webservices, so dass man sich auf die implementierung der methode
+ * gedacht fï¿½r webservices, so dass man sich auf die implementierung der methode
  * konzentrieren kann und in jeder methode sich wiederholende fehlerbehandlung etc
  * sparen kann.
  * service-/projektspezifische sich wiederholende dinge sollten in einer von
  * methodwrapper abgeleiteten klasse geschehen (vgl. MethodWithSql)<p>
- * für beispiele kann man sich webservices aus dem factorymanagement anschauen.
+ * fï¿½r beispiele kann man sich webservices aus dem factorymanagement anschauen.
  */
 public abstract class MethodWrapper<T, U> {
 
@@ -64,7 +64,7 @@ public abstract class MethodWrapper<T, U> {
   }
 
   /**
-   * wird ausgeführt, falls ein fehler in tryBlock passiert
+   * wird ausgefï¿½hrt, falls ein fehler in tryBlock passiert
    * @param e
    * @return
    * @throws XynaFault_ctype
@@ -77,14 +77,14 @@ public abstract class MethodWrapper<T, U> {
   }
 
   /**
-   * wird als finally ausgeführt
+   * wird als finally ausgefï¿½hrt
    */
   public void finallyBlock(U ret) {
     logger.debug("exiting " + methodName + ".");
   }
 
   /**
-   * führt die methode doStuff innerhalb eines try catch blocks aus.
+   * fï¿½hrt die methode doStuff innerhalb eines try catch blocks aus.
    * <code>
    * preface();<br>
     U ret = null;<br>

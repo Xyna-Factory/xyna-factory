@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,9 +48,9 @@ public class UrgencyCalculators {
    * U = p*P + t*T, mit zwei festen, aber konfigurierbaren Parametern p und t.
    * Beispiel:
    * p     t       Interpretation
-   * 0     1       Prioritäten werden nicht berücksichtigt
-   * 1     0       Wartezeiten werden nicht berücksichtigt
-   * 60000 1       Eine Wartezeit von 60 Sekunden bedeutet Hochstufung um eine Prioritätsstufe
+   * 0     1       Prioritï¿½ten werden nicht berï¿½cksichtigt
+   * 1     0       Wartezeiten werden nicht berï¿½cksichtigt
+   * 60000 1       Eine Wartezeit von 60 Sekunden bedeutet Hochstufung um eine Prioritï¿½tsstufe
    *
    */
   public static class NormalUrgencyCalculator implements UrgencyCalculator {

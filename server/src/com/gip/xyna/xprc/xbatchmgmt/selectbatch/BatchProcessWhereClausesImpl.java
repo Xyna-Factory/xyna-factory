@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,26 +38,26 @@ import com.gip.xyna.xprc.xbatchmgmt.beans.BatchProcessStatus;
 
 
 /**
- * WhereClauses für BatchProzesse. <br>
+ * WhereClauses fï¿½r BatchProzesse. <br>
  * 
  * ACHTUNG: In {@link BatchProcessWhereClausesImpl#addWhereClause(WhereClausesConnection)} werden
- * die WhereClauses verschiedenen Tabellen zugeordnet. Dabei gehen die ursprünglichen Verknüpfungen und Klammern verloren.
- * Beim Erstellen des Select-Strings werden dann immer gleiche Spalten mit "or" verknüpft
+ * die WhereClauses verschiedenen Tabellen zugeordnet. Dabei gehen die ursprï¿½nglichen Verknï¿½pfungen und Klammern verloren.
+ * Beim Erstellen des Select-Strings werden dann immer gleiche Spalten mit "or" verknï¿½pft
  * und unterschiedliche Spalten mit "and" ({@link BatchProcessWhereClausesImpl#getSelectString(BatchProcessTable)}). <br>
  *
- * Beispiel für Zuordnung der whereClauses zu den Tabellen:<br>
+ * Beispiel fï¿½r Zuordnung der whereClauses zu den Tabellen:<br>
  * BatchProcessSelectImpl select = new BatchProcessSelectImpl();<br>
  * select.whereLabel().isEqual("A").or().whereLabel().isEqual("B").and().whereCustom0().isBiggerThan("0")<br>
  * 
  * ergibt folgende Zuordnung:
  * <ul>
  * <li> Archive={label=[label = "A", label = "B"], custom0=[custom0 &gt; "0"]} <br>
- * (die abgeschlossenen Aufträge müssen nach label und custom0 gefiltert werden)</li>
+ * (die abgeschlossenen Auftrï¿½ge mï¿½ssen nach label und custom0 gefiltert werden)</li>
  * <li> ArchiveRunning={label=[label = "A", label = "B"]}<br>
- * (bei laufenden Aufträgen sind die custom-Felder im Archive noch leer, daher nur nach label filtern </li>
+ * (bei laufenden Auftrï¿½gen sind die custom-Felder im Archive noch leer, daher nur nach label filtern </li>
  * <li> Custom={counter0=[counter0 &gt; "0"]}<br>
- * (label ist in der Custom-Tabelle nicht vorhanden. Die Counter werden für abgeschlossene
- * Prozesse in die Custom-Feldern im Archiv übertragen (falls sie nicht explizit gesetzt werden).
+ * (label ist in der Custom-Tabelle nicht vorhanden. Die Counter werden fï¿½r abgeschlossene
+ * Prozesse in die Custom-Feldern im Archiv ï¿½bertragen (falls sie nicht explizit gesetzt werden).
  * Daher hier nach counter0 filtern.)</li>
  * </ul>
  * 
@@ -127,12 +127,12 @@ public class BatchProcessWhereClausesImpl implements BatchProcessWhereClauses<Ba
   }
 
   /**
-   * Fügt eine neue WhereClauseConnection hinzu. Dabei wird die WhereClause zu jeder Tabelle
-   * hinzugefügt, in der nach der entsprechenden Column gefiltert werden soll. <br>
+   * Fï¿½gt eine neue WhereClauseConnection hinzu. Dabei wird die WhereClause zu jeder Tabelle
+   * hinzugefï¿½gt, in der nach der entsprechenden Column gefiltert werden soll. <br>
    * FIXME durch das Kopieren der WhereClause (um sie mehreren Tabellen zuzuordnen)
-   * geht die Verknüpfung (WhereClausesConnection.connect) und Klammern verloren.
+   * geht die Verknï¿½pfung (WhereClausesConnection.connect) und Klammern verloren.
    * Daher werden beim Zusammenbauen des SQL-Strings ({@link BatchProcessWhereClausesImpl#getSelectString(BatchProcessTable)})
-   * eigene Verknüpfungen wieder eingefügt.
+   * eigene Verknï¿½pfungen wieder eingefï¿½gt.
    */
   public void addWhereClause(WhereClausesConnection<BatchProcessWhereClausesImpl> wcc) {
     String columnName = wcc.getConnectedObject().getColumn();
@@ -140,26 +140,26 @@ public class BatchProcessWhereClausesImpl implements BatchProcessWhereClauses<Ba
     if( columnName != null ) {
       BatchProcessColumn bpc = BatchProcessColumn.getBatchProcessColumnByName(columnName);
       
-      //whereClause für die "Haupttabelle" hinzufügen
+      //whereClause fï¿½r die "Haupttabelle" hinzufï¿½gen
       addWhereClauseForTable(wcc, bpc.getTable(), columnName);
       
       if (bpc.getAdditionalTable() != null) {
         //es soll noch in einer weiteren Tabelle gefiltert werden
-        //hier könnte der ColumnName anders sein, daher erst einmal umwandeln
+        //hier kï¿½nnte der ColumnName anders sein, daher erst einmal umwandeln
         String convertedColumn = bpc.getAdditionalTable().convertColumnName(columnName);
         
         //eine Kopie der WhereClause anlegen und dabei den neuen ColumnName verwenden
-        //ACHTUNG: hierdurch gehen die connects verloren, da diese erst später an die 
-        //whereClause angehängt werden
+        //ACHTUNG: hierdurch gehen die connects verloren, da diese erst spï¿½ter an die 
+        //whereClause angehï¿½ngt werden
         WhereClause<BatchProcessWhereClausesImpl> additionalWc = wcc.getConnectedObject().copy(convertedColumn);
         WhereClausesConnection<BatchProcessWhereClausesImpl> additionalWcc = new WhereClausesConnection<BatchProcessWhereClausesImpl>(additionalWc);
 
-        //whereClause mit angepasstem Spaltenname bei der zusätzlichen Tabelle speichern
+        //whereClause mit angepasstem Spaltenname bei der zusï¿½tzlichen Tabelle speichern
         addWhereClauseForTable(additionalWcc, bpc.getAdditionalTable(), convertedColumn);
       }
     } else {
       if( wcc.getConnectedObject() instanceof WhereClauseBrace ) {
-        //bei geklammerte Ausdrücke, die enthaltenen WhereClauses übernehmen
+        //bei geklammerte Ausdrï¿½cke, die enthaltenen WhereClauses ï¿½bernehmen
         //ACHTUNG: hierdurch gehen die Klammern verloren
         EnumMap<BatchProcessTable,Map<String,List<WhereClausesConnection<BatchProcessWhereClausesImpl>>>> innerWhereClauses = ((WhereClauseBrace)wcc.getConnectedObject()).innerContainer.whereClauses;
         for (BatchProcessTable table : innerWhereClauses.keySet()){
@@ -181,7 +181,7 @@ public class BatchProcessWhereClausesImpl implements BatchProcessWhereClauses<Ba
 
 
   /**
-   * Fügt eine WhereClause zu einer Tabelle hinzu und legt sie bei der entsprechenden column ab
+   * Fï¿½gt eine WhereClause zu einer Tabelle hinzu und legt sie bei der entsprechenden column ab
    * @param wcc
    * @param table
    * @param columnName
@@ -192,12 +192,12 @@ public class BatchProcessWhereClausesImpl implements BatchProcessWhereClauses<Ba
     if (whereClauses.get(table) != null) {
       wcList = whereClauses.get(table).get(columnName);
     } else {
-      // es gibt bisher noch keine whereClauses für diese Tabelle
+      // es gibt bisher noch keine whereClauses fï¿½r diese Tabelle
       whereClauses.put(table, new HashMap<String, List<WhereClausesConnection<BatchProcessWhereClausesImpl>>>());
     }
 
     if (wcList == null) {
-      // es gibt noch keine whereClauses für diese Spalte
+      // es gibt noch keine whereClauses fï¿½r diese Spalte
       wcList = new ArrayList<WhereClausesConnection<BatchProcessWhereClausesImpl>>();
     }
     
@@ -211,9 +211,9 @@ public class BatchProcessWhereClausesImpl implements BatchProcessWhereClauses<Ba
   }
 
   /**
-   * Liefert den sql-String für die where-Bedingung <br>
-   * FIXME hierbei werden die ursprünglichen connects nicht beachtet!
-   * Gleiche Spalten werden mit "or" und unterschiedliche Spalte mit "and" verknüpft.
+   * Liefert den sql-String fï¿½r die where-Bedingung <br>
+   * FIXME hierbei werden die ursprï¿½nglichen connects nicht beachtet!
+   * Gleiche Spalten werden mit "or" und unterschiedliche Spalte mit "and" verknï¿½pft.
    * @param table
    * @return
    * @throws XNWH_InvalidSelectStatementException

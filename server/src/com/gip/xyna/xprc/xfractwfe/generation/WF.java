@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   protected static final String FIELDNAME_INSTANCE_METHOD_TYPES;
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_GET_NEEDED_INPUT_VARS_COUNT = XynaProcess.class.getDeclaredMethod(_METHODNAME_GET_NEEDED_INPUT_VARS_COUNT_ORIG).getName();
     } catch (Exception e) {
@@ -306,7 +306,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
         // cb.addLine(v.getVarName() + ".onDeployment()");
       }
       cb.addLine("}");
-      // TODO statische services initialisieren (nur für performance)
+      // TODO statische services initialisieren (nur fï¿½r performance)
       xynaPropertySupport.generateJavaOnDeployment(cb);
       for(XynaPropertySupport supp: xynaPropertySupportOfSubscopes) {
         supp.generateJavaOnDeployment(cb);
@@ -345,7 +345,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
 
     @Override
     protected void generateJavaStepMethods(CodeBuffer cb, HashSet<String> importedClassesFqStrings) {
-      //kein methoden für executeinternally oder compensateinternally die es in step klasse gibt.
+      //kein methoden fï¿½r executeinternally oder compensateinternally die es in step klasse gibt.
     }
 
 
@@ -360,9 +360,9 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
       /*
        *  WF -> stepserial -> childsteps
        *                   -> catchstep (globalcatch) -> try (-> stepserial (gleiches wie oben!!!))
-       *                                              -> catchblöcke
+       *                                              -> catchblï¿½cke
        *                                              
-       * TODO: Achtung, wenn man eine Rekursion über alle Schritte des Workflows machen möchte, kommt man über den globalen
+       * TODO: Achtung, wenn man eine Rekursion ï¿½ber alle Schritte des Workflows machen mï¿½chte, kommt man ï¿½ber den globalen
        *       catchblock bei allen Steps doppelt vorbei.
        *       Wenn man in der Rekursion ein Set von Steps hat und damit Dupliakte verhindert, schadet das wenig, 
        *       aber es gibt auch Codepfade, die das nicht tun!
@@ -507,7 +507,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
    * in referencedOrderInputSources alle stepfunctions die inputsources referenziert, die nicht in
    * - choices/verzweigungen
    * - foreaches
-   * - catch blöcken
+   * - catch blï¿½cken
    * sind.
    * 
    * in allReferencedOrderInputSources alle inputsources
@@ -521,7 +521,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
       } else if (s instanceof StepCatch) {
         StepCatch sc = (StepCatch) s;
         collectOrderInputSources(null, allReferencedOrderInputSources, sc, cnt);
-        //wurde bereits oben mitgezählt
+        //wurde bereits oben mitgezï¿½hlt
         collectOrderInputSources(preparableReferencedOrderInputSources, allReferencedOrderInputSources, sc.getStepInTryBlock(), new AtomicInteger(0));
       } else if (s instanceof StepChoice) {
         collectOrderInputSources(null, allReferencedOrderInputSources, s, cnt);
@@ -751,7 +751,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
         Set<DeploymentItemInterface> invalid_sd = dis.getInconsistencies(source, DeploymentLocation.DEPLOYED, false);
         Set<DeploymentItemInterface> invalid_ss;
         if (XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().isApplicationRevision(revision)) {
-          // es kann in Applications keine Inkonsistenzen zu Saved-Zuständen geben
+          // es kann in Applications keine Inkonsistenzen zu Saved-Zustï¿½nden geben
           invalid_ss = Collections.emptySet();
         } else {
           invalid_ss = dis.getInconsistencies(source, DeploymentLocation.SAVED, false);
@@ -764,7 +764,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
               TypeInterface prov = InterfaceResolutionContext.getProviderType(diii);
               if (prov != null) {
                 GenerationBase gb = cacheReference.getFromCacheInCorrectRevision(prov.getName(), revision); //ss_invalid: muss gleiche revision sein
-                invalid = gb != null && gb.getDeploymentMode().shouldCopyXMLFromSavedToDeployed() && !gb.hasError(); //!hasError, weil sonst backup passieren würde
+                invalid = gb != null && gb.getDeploymentMode().shouldCopyXMLFromSavedToDeployed() && !gb.hasError(); //!hasError, weil sonst backup passieren wï¿½rde
                 if (invalid) {
                   break;
                 }
@@ -801,7 +801,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
         } else {
           //es gibt saved-saved inkonsistenzen und saved-deployed ebenso. es kann trotzdem sein, dass die mengen disjunkt sind, und deshalb
           //die saved-deployed inkonsistenzen verschwinden
-          //es muss also überprüft werden, dass jede s-d inkonsistenz verschwindet
+          //es muss also ï¿½berprï¿½ft werden, dass jede s-d inkonsistenz verschwindet
           invalid = false;
           for (DeploymentItemInterface diii : invalid_sd) {
             if (!(diii instanceof UnresolvableInterface)) {
@@ -937,7 +937,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
     cb.addLine("protected void ", METHODNAME_ON_UNDEPLOYMENT, "() throws ", XynaException.class.getName(), " {").addLine("}").addLB();
 
     if (invalid) {
-      //!!!!!!!!!!! ACHTUNG! absichtlich "+" konkateniert, ansonsten wird am ende ein semikolon angehängt 
+      //!!!!!!!!!!! ACHTUNG! absichtlich "+" konkateniert, ansonsten wird am ende ein semikolon angehï¿½ngt 
       cb.addLB().addLine("@" + Override.class.getName());
       cb.addLine("public boolean ", METHODNAME_IS_GENERATED_AS_INVALID, "() {");
       cb.addLine("return true");
@@ -958,7 +958,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
     }
     for (AVariable outputVar : outputVars) {
       if (outputVar.getDomOrExceptionObject() != null) {
-        result.add(outputVar.getDomOrExceptionObject()); //muss nicht getDependencies aufgerufen werden, weil konstante vorbelegung über ein assign passiert
+        result.add(outputVar.getDomOrExceptionObject()); //muss nicht getDependencies aufgerufen werden, weil konstante vorbelegung ï¿½ber ein assign passiert
       }
     }
 
@@ -1144,8 +1144,8 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
    */
     private void moveVariablesToPrivateScopes() {
       /*
-       * für jede variable checken, in welcher scope sie verwendet werden, und sie dann dort deklarieren.
-       * entfernt variablen auch vollständig, wenn sie gar nicht verwendet werden.
+       * fï¿½r jede variable checken, in welcher scope sie verwendet werden, und sie dann dort deklarieren.
+       * entfernt variablen auch vollstï¿½ndig, wenn sie gar nicht verwendet werden.
        */
       Set<Step> steps = wfAsStep.getAllStepsRecursively();
       Set<Triple<? extends Step, ? extends AVariable, ? extends ScopeStep>> changes =
@@ -1448,7 +1448,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   private int countOfAllReferencedOrderInputSources;
 
   /**
-   * @return map von einer eindeutigen id für den wf-schritt auf den namen der referenzierten inputsource
+   * @return map von einer eindeutigen id fï¿½r den wf-schritt auf den namen der referenzierten inputsource
    */
   public Map<String, String> getPreparableReferencedOrderInputSources() {
     return preparableReferencedOrderInputSources;
@@ -1462,7 +1462,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   }
 
   /**
-   * nicht unique gezählt die anzahl der aufgerufenen inputsources
+   * nicht unique gezï¿½hlt die anzahl der aufgerufenen inputsources
    */
   public int getCountOfAllReferencedOrderInputSources() {
     return countOfAllReferencedOrderInputSources;

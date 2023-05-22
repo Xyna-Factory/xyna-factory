@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -281,7 +281,7 @@ public class ExceptionStorage {
   public static void loadFromResource(String fileName, ClassLoader cl) {
     //caching, damit man das gleiche xml nicht andauernd neu parsen muss.
     CacheKey key = new CacheKey();
-    key.clhash = cl.hashCode(); //nicht den classloader selbst als key nehmen, weil darauf referenzen zu haben zu outofmemory führen kann oder so zeug 
+    key.clhash = cl.hashCode(); //nicht den classloader selbst als key nehmen, weil darauf referenzen zu haben zu outofmemory fï¿½hren kann oder so zeug 
     key.fileName = fileName;
     key.clString = cl.toString();
     Long l = cache.get(key);
@@ -298,8 +298,8 @@ public class ExceptionStorage {
       }
     }
 
-    //alte einträge aus cache werfen
-    if (currentTime - lastCacheCleanup.get() > 60 * 1000 * 10) { //maximal einmal alle 10 minuten (nicht threadsicher, aber dann passiert es halt etwas öfters)
+    //alte eintrï¿½ge aus cache werfen
+    if (currentTime - lastCacheCleanup.get() > 60 * 1000 * 10) { //maximal einmal alle 10 minuten (nicht threadsicher, aber dann passiert es halt etwas ï¿½fters)
       lastCacheCleanup.set(currentTime);
       cache.clear(); //das mag etwas zuviel sein, aber macht nix.
     }

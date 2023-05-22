@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.io.RandomAccessFile;
 /**
  * ordnet die bytes des files so um, dass zeilenweise von hinten nach vorne gestreamed wird. zeilentrenner ist \n
  * 
- * funktioniert nicht für alle encodings, aber für UTF-8 funktioniert das.
+ * funktioniert nicht fï¿½r alle encodings, aber fï¿½r UTF-8 funktioniert das.
  * file muss mit \n enden (oder leer sein).
  */
 public class ReverseLineInputStream extends InputStream {
@@ -47,14 +47,14 @@ public class ReverseLineInputStream extends InputStream {
    *             |
    *         bufferend
    *         
-   *    bufferstart (globaler index, darf negativ sein, wenn buffer den startbereich des files überschneidet)
+   *    bufferstart (globaler index, darf negativ sein, wenn buffer den startbereich des files ï¿½berschneidet)
    *    bufferend
    * x: currentPos (bufferrelativer index): von currentLineStart bis currentPos - 1 wurde bereits ausgelesen
    * A: currentLineStart (bufferrelativer index. erster index, der kein \n ist)
-   * B: currentLineEnd (bufferrelativer index. falls index>buffer.length, dann endet die zeile nicht im buffer, sondern in (einem der/dem) nächsten)
+   * B: currentLineEnd (bufferrelativer index. falls index>buffer.length, dann endet die zeile nicht im buffer, sondern in (einem der/dem) nï¿½chsten)
    *    zeigt auf den index, der nach \n ist
    *    
-   *    d.h. bei \n\n ist A=0, B=1 für das erste \n und A=1 und B=2 für das zweite
+   *    d.h. bei \n\n ist A=0, B=1 fï¿½r das erste \n und A=1 und B=2 fï¿½r das zweite
    *    
    */
   private int currentLineStart;
@@ -86,7 +86,7 @@ public class ReverseLineInputStream extends InputStream {
   }
 
 
-  //gehe von currentLineStart soweit zurück, bis ein zeilenumbruch oder start vom file gefunden wird, so dass dieser innerhalb des buffers liegt.
+  //gehe von currentLineStart soweit zurï¿½ck, bis ein zeilenumbruch oder start vom file gefunden wird, so dass dieser innerhalb des buffers liegt.
   private void findPrevLine() throws IOException {
     int c = currentLineStart - 2; //zeichen bei current-1 ist \n
     currentLineEnd = currentLineStart;
@@ -110,7 +110,7 @@ public class ReverseLineInputStream extends InputStream {
       c = (int) -bufferStart - 1;
     }
     currentLineStart = c + 1;
-    currentPos = currentLineStart; //jetzt die nächste zeile von beginn aus auslesen
+    currentPos = currentLineStart; //jetzt die nï¿½chste zeile von beginn aus auslesen
   }
 
 
@@ -166,7 +166,7 @@ public class ReverseLineInputStream extends InputStream {
   }
 
 
-  //kopiere von relativer bufferposition "start" bis maximal zu currentLineEnd in das übergebene byte array
+  //kopiere von relativer bufferposition "start" bis maximal zu currentLineEnd in das ï¿½bergebene byte array
   private void copy(long start, byte[] b, int off, int len) throws IOException {
     long readFromBuffer = buffer.length - start;
     if (len <= readFromBuffer) {

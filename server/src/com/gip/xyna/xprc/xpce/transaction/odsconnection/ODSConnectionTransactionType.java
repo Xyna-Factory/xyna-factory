@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class ODSConnectionTransactionType implements TransactionType<ODSConnecti
 
   public static final String TRANSACTION_TYPE_NAME = "ODSConnectionTransactionType";
   
-  //namen der keys für die parameter
+  //namen der keys fï¿½r die parameter
   public final static String KEY_CONNECTION_TYPE = "connectionType";
   public final static String KEY_FQ_STORABLE_NAMES = "storables";
   public final static String KEY_FQ_XMOM_STORABLE_NAMES = "xmomStorables";

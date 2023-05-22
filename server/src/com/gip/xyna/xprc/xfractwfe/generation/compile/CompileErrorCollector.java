@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ class CompileErrorCollector implements DiagnosticListener<JavaFileObject> {
     try {
       return diagnostic.getSource();
     } catch (NullPointerException e) {
-      return null; //passiert aus bisher unerfindlichen gründen manchmal beim eclipsecompiler, vgl bug 24184
+      return null; //passiert aus bisher unerfindlichen grï¿½nden manchmal beim eclipsecompiler, vgl bug 24184
     }
   }
   
@@ -111,7 +111,7 @@ class CompileErrorCollector implements DiagnosticListener<JavaFileObject> {
         return jfo.getName();
       }
     } catch (NullPointerException | IllegalArgumentException | IllegalAccessException e) {
-      return null; //passiert aus bisher unerfindlichen gründen manchmal beim eclipsecompiler, vgl bug 24184
+      return null; //passiert aus bisher unerfindlichen grï¿½nden manchmal beim eclipsecompiler, vgl bug 24184
     }
   }
 

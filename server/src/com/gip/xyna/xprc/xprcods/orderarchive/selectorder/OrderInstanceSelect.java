@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -184,8 +184,8 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
     }
     sb.append(super.getSelectString());
 
-    //FIXME folgende whereclause ist ein workaround für bugz 10999: in mysql inno db tabellen 
-    //ist ein select count(*) über den pk sehr langsam und sollte über einen anderen index gehen.
+    //FIXME folgende whereclause ist ein workaround fï¿½r bugz 10999: in mysql inno db tabellen 
+    //ist ein select count(*) ï¿½ber den pk sehr langsam und sollte ï¿½ber einen anderen index gehen.
     //use index(...) funktioniert unter oracle nicht.
     if (!hasWhere) {
       sb.append(" where ");
@@ -447,11 +447,11 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
    *  -> globaler datenraum vs pro application (muss aus query ausgelesen werden)
    *  
    * wie ist ordertype-datenhaltung aufgebaut?
-   *  expiringmap<suchbegriff, liste<ordertypes>> enthält vorherige suchbegriffe.
-   *  map<substring, liste<ordertypes>> enthält map aller substrings aller ordertypes auf die dazu passenden ordertypes, erstmal nur substrings der länge 2 pflegen, damit es nicht zu viele werden
+   *  expiringmap<suchbegriff, liste<ordertypes>> enthï¿½lt vorherige suchbegriffe.
+   *  map<substring, liste<ordertypes>> enthï¿½lt map aller substrings aller ordertypes auf die dazu passenden ordertypes, erstmal nur substrings der lï¿½nge 2 pflegen, damit es nicht zu viele werden
    *  
-   *  für eine anfrage der form like %x% bestimme für alle 2 langen substrings von x aus der obigen map die möglichen ordertypes
-   *  nimm die liste die minimal ist (bei größe 0 vorzeitig abbrechen)
+   *  fï¿½r eine anfrage der form like %x% bestimme fï¿½r alle 2 langen substrings von x aus der obigen map die mï¿½glichen ordertypes
+   *  nimm die liste die minimal ist (bei grï¿½ï¿½e 0 vorzeitig abbrechen)
    *  - caseinsensitiv
    */
   public void substituteOrderTypeLikeConditions(SubstringMap orderTypes) {
@@ -573,7 +573,7 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
     if (s.equals("xax")) { //hinten %. dann ist substring alleine richtig
       return new ArrayList<String>(ret);
     } else if (s.equals("xa")) {
-      //nur ordertypes berücksichtigen, die auch mit dem richtigen substring enden
+      //nur ordertypes berï¿½cksichtigen, die auch mit dem richtigen substring enden
       List<String> l = new ArrayList<String>();
       String end = likeParts.get(likeParts.size() - 1).toLowerCase();
       for (String r : ret) {
@@ -583,7 +583,7 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
       }
       return l;
     } else {
-      //regulären ausdruck bauen, damit %a%b%c nicht von "bac" getroffen wird.
+      //regulï¿½ren ausdruck bauen, damit %a%b%c nicht von "bac" getroffen wird.
       List<String> l = new ArrayList<String>();
       Pattern patt = Pattern.compile(ep.regexp.toString(), Pattern.CASE_INSENSITIVE);
       for (String r : ret) {
@@ -611,8 +611,8 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
       if (connectedObject instanceof WhereClauseBrace) {
         WhereClauseBrace wcb = (WhereClauseBrace) connectedObject;
         if (wcb.isNegated()) {
-          //achtung: "where not (id = 3)" kann genauso zeilen mit finished/failed zurückgeben wie "where (id = 3)".
-          //die einzigen negierten anfagen, die keine finished/failed zeilen zurückgeben können, sind die,
+          //achtung: "where not (id = 3)" kann genauso zeilen mit finished/failed zurï¿½ckgeben wie "where (id = 3)".
+          //die einzigen negierten anfagen, die keine finished/failed zeilen zurï¿½ckgeben kï¿½nnen, sind die,
           //die alle finished/failed zeilen beinhalten
           FinishedOrFailedBean fofb = queriesAllFinishedOrFailed(wcb.getInnerWC());
           return !(fofb.containsAllFailed && fofb.containsAllFinished);
@@ -677,7 +677,7 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
 
   /**
    * @return true/true, falls alle finished/failed zeilen mit dieser query abgefragt werden. d.h. die finished/failed zeilen
-   * dürfen mit dieser query (jeweils) nicht eingeschränkt werden.
+   * dï¿½rfen mit dieser query (jeweils) nicht eingeschrï¿½nkt werden.
    */
   private static FinishedOrFailedBean queriesAllFinishedOrFailed(WhereClausesContainerImpl wcContainer) {
     FinishedOrFailedBean result = new FinishedOrFailedBean();
@@ -701,7 +701,7 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
 
   /**
    * @return true/true falls alle finished/failed zeilen mit dieser query abgefragt werden. d.h. die finished/failed zeilen
-   * dürfen mit dieser query (jeweils) nicht eingeschränkt werden.
+   * dï¿½rfen mit dieser query (jeweils) nicht eingeschrï¿½nkt werden.
    */
   private static FinishedOrFailedBean queriesAllFinishedOrFailed(WhereClause<WhereClausesContainerImpl> connectedObject) {
     FinishedOrFailedBean result = new FinishedOrFailedBean();
@@ -711,8 +711,8 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
       if (connectedObject instanceof WhereClauseBrace) {
         WhereClauseBrace wcb = (WhereClauseBrace) connectedObject;
         if (wcb.isNegated()) {
-          //falls die innere bedingung keine finished/failed enthält, dann bedeutet die negation alle zu haben
-          //falls die innere bedingung mindestens ein finished/failed enthält, dann bedeutet die negation nicht alle zu haben
+          //falls die innere bedingung keine finished/failed enthï¿½lt, dann bedeutet die negation alle zu haben
+          //falls die innere bedingung mindestens ein finished/failed enthï¿½lt, dann bedeutet die negation nicht alle zu haben
           boolean containsSomeFinishedOrFailed = queriesSomeFinishedOrFailed(wcb.getInnerWC());
           result.containsAllFailed = !containsSomeFinishedOrFailed;
           result.containsAllFinished = !containsSomeFinishedOrFailed;
@@ -730,7 +730,7 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
           case EQUALS :
             result.containsAllFailed = false;
             result.containsAllFinished = false;
-            if (wce.getParameterValue().isSucceeded()) {//isFinished() wäre erfolgreich oder mit Fehler, hier wird unterschieden
+            if (wce.getParameterValue().isSucceeded()) {//isFinished() wï¿½re erfolgreich oder mit Fehler, hier wird unterschieden
               result.containsAllFinished = true;
             } else if (wce.getParameterValue().isFailed()) {
               result.containsAllFailed = true;
@@ -748,7 +748,7 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
             result.containsAllFailed = false;
             result.containsAllFinished = false;
             OrderInstanceStatus ois = OrderInstanceStatus.fromString(wcs.getParameterValue());
-            if (ois.isSucceeded()) { //isFinished() wäre erfolgreich oder mit Fehler, hier wird unterschieden
+            if (ois.isSucceeded()) { //isFinished() wï¿½re erfolgreich oder mit Fehler, hier wird unterschieden
               result.containsAllFinished = true;
             } else if (ois.isFailed()) {
               result.containsAllFailed = true;

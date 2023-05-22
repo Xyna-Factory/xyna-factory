@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ public @interface Column {
   public ColumnType type() default ColumnType.INHERIT_FROM_JAVA;
   
   /**
-   * empfehlung, evtl von projekt geändert. beispiel: mientries haben reason-size nicht definiert,
-   * projekte können aber reason-size auf 16 beschränken wollen, oder bis zu 4000 erlauben. 
+   * empfehlung, evtl von projekt geï¿½ndert. beispiel: mientries haben reason-size nicht definiert,
+   * projekte kï¿½nnen aber reason-size auf 16 beschrï¿½nken wollen, oder bis zu 4000 erlauben. 
    */
   public int size() default -1;
   

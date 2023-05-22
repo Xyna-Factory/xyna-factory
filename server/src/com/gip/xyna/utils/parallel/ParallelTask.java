@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,20 @@ package com.gip.xyna.utils.parallel;
 
 
 /**
- * Task, der im {@link ParallelExecutor} ausgeführt werden kann.
- * Dieser Task hat eine Priorität, die über {@link #getPriority()} vom ParallelExecutor ausgewertet wird.
+ * Task, der im {@link ParallelExecutor} ausgefï¿½hrt werden kann.
+ * Dieser Task hat eine Prioritï¿½t, die ï¿½ber {@link #getPriority()} vom ParallelExecutor ausgewertet wird.
  * 
  */
 public interface ParallelTask {
   
   /**
-   * Priority, mit der der Task ausgeführt wird. Hohe Werte werden bevorzugt.
+   * Priority, mit der der Task ausgefï¿½hrt wird. Hohe Werte werden bevorzugt.
    * @return
    */
   int getPriority();
 
   /**
-   * Ausführung des Tasks. Darf keine Exceptions werfen, da diese den Thread beenden!
+   * Ausfï¿½hrung des Tasks. Darf keine Exceptions werfen, da diese den Thread beenden!
    */
   void execute(); 
   

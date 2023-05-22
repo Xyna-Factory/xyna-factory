@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ public class CapacityInformation implements Serializable {
   private int cardinality;
   private int inuse;
   private CapacityManagement.State state;
-  public int binding; //FIXME package private, damit in CapacityManagement verwendbar, aber nicht von außen sichtbar
-  //müsste dafür aber in com.gip.xyna.xprc.xsched.capacities umziehen
+  public int binding; //FIXME package private, damit in CapacityManagement verwendbar, aber nicht von auï¿½en sichtbar
+  //mï¿½sste dafï¿½r aber in com.gip.xyna.xprc.xsched.capacities umziehen
   
   public CapacityInformation(String name, int cardinality, int inuse, CapacityManagement.State state) {
     this.name = name;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /*
- * RingBuffer, der mitzählt, wie oft ein Element hintereinander hinzugefügt wird.
- * Damit werden für mehrfache hinzugefügte Element keine zusätzlichen Plätze im 
+ * RingBuffer, der mitzï¿½hlt, wie oft ein Element hintereinander hinzugefï¿½gt wird.
+ * Damit werden fï¿½r mehrfache hinzugefï¿½gte Element keine zusï¿½tzlichen Plï¿½tze im 
  * RingBuffer belegt und Wiederholungen lassen sich besser erkennen.
  * 
  * 

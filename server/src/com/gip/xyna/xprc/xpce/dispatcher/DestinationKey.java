@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,8 @@ public class DestinationKey implements Serializable, StringSerializable<Destinat
   private String orderType;
   private Boolean compensate = false;
   
-  private String applicationName; //nur noch wegen Abwärtskompatibilität drin
-  private String versionName; //nur noch wegen Abwärtskompatibilität drin
+  private String applicationName; //nur noch wegen Abwï¿½rtskompatibilitï¿½t drin
+  private String versionName; //nur noch wegen Abwï¿½rtskompatibilitï¿½t drin
   private RuntimeContext runtimeContext;
 
   
@@ -66,7 +66,7 @@ public class DestinationKey implements Serializable, StringSerializable<Destinat
 
   /**
    * intern benutzt um zu kennzeichnen, dass der auftrag ein subauftrag ist, der die kompensierung eines vorher
-   * erfolgreich ausgeführten subauftrags erledigen soll.
+   * erfolgreich ausgefï¿½hrten subauftrags erledigen soll.
    */
   public void setCompensate(boolean b) {
     compensate = b;
@@ -221,10 +221,10 @@ public class DestinationKey implements Serializable, StringSerializable<Destinat
   }
   
   /**
-   * Lesen des DestinationKey im Format "orderType@applicationName/versionName" für Applications
-   * bzw. "orderType@workspaceName" für Workspaces
-   * Im Ordertype müssen '@', im ApplicationName '/' maskiert werden:
-   * "or\\der\@Ty/pe@applic\\ati\/on@Name/ver@si/on\Name" für "or\der@Ty/pe", "applic\ati/on@Name", "ver@si/on\Name"
+   * Lesen des DestinationKey im Format "orderType@applicationName/versionName" fï¿½r Applications
+   * bzw. "orderType@workspaceName" fï¿½r Workspaces
+   * Im Ordertype mï¿½ssen '@', im ApplicationName '/' maskiert werden:
+   * "or\\der\@Ty/pe@applic\\ati\/on@Name/ver@si/on\Name" fï¿½r "or\der@Ty/pe", "applic\ati/on@Name", "ver@si/on\Name"
    * @param string
    * @return
    */

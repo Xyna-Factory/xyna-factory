@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class StringParameterTest extends TestCase {
     abc( Documentation.de("erste 3 Buchstaben des Alphabets").
          en("first 3 letters of alphabet").
          build() ), 
-    def( Documentation.de("Abkürzung für default").
+    def( Documentation.de("Abkï¿½rzung fï¿½r default").
          en("abbreviation for default").
          build() ), 
     ghi( Documentation.de("weitere drei Buchstaben").
@@ -440,7 +440,7 @@ public class StringParameterTest extends TestCase {
   
   public void testExample() {
     StringParameter<Testenum> sp1 = StringParameter.typeEnum(Testenum.class, "testEnum").
-        description("beliebige Enums sind möglich").build();
+        description("beliebige Enums sind mï¿½glich").build();
     StringParameter<Boolean> sp3 = StringParameter.typeBoolean("testBoolean").
         description("nur true und false sind caseInsensitive zugelassen").build();
     StringParameter<String> sp2 = StringParameter.typeString("testMandatoryFor").
@@ -537,7 +537,7 @@ public class StringParameterTest extends TestCase {
        "    )",
        "test: Beschreibung (optional, type=Enum, default=def",
        "    abc: erste 3 Buchstaben des Alphabets",
-       "    def: Abkürzung für default",
+       "    def: Abkï¿½rzung fï¿½r default",
        "    ghi: weitere drei Buchstaben",
        "    )"
      ), output.toString() );
@@ -708,7 +708,7 @@ public class StringParameterTest extends TestCase {
     assertEquals("false", StringParameter.parse(Arrays.asList("test=")).with(sp).get("test").toString() );
     assertEquals("false", StringParameter.parse(Arrays.asList("test=")).with(sp2).get("test").toString() );
     
-    //deserialisiert sind keine Default-Änderungen mehr möglich
+    //deserialisiert sind keine Default-ï¿½nderungen mehr mï¿½glich
     modDefVal.setDefaultValue(true);  
     assertEquals("true", StringParameter.parse(Arrays.asList("test=")).with(sp).get("test").toString() );
     assertEquals("false", StringParameter.parse(Arrays.asList("test=")).with(sp2).get("test").toString() );

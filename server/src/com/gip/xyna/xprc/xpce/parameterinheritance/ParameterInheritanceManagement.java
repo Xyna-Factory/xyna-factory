@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class ParameterInheritanceManagement extends FunctionGroup {
 
   public static final String DEFAULT_NAME = "ParameterInheritanceManagement";
   
-  //für OrderTypes konfigurierte InheritanceRules
+  //fï¿½r OrderTypes konfigurierte InheritanceRules
   private static EnumMap<ParameterType, ParameterInheritanceMap> orderTypeInheritanceRules = new EnumMap<ParameterType, ParameterInheritanceMap>(ParameterType.class);
   
   private ParameterInheritanceStorage storage;
@@ -135,7 +135,7 @@ public class ParameterInheritanceManagement extends FunctionGroup {
 
   public static enum DefaultPrecedence {
     XynaOrder(100), //bei der XynaOrder gesetztes MonitoringLevel
-    OrderType(0);  //für den OrderType konfiguriertes MonitoringLevel
+    OrderType(0);  //fï¿½r den OrderType konfiguriertes MonitoringLevel
     
     private int value;
 
@@ -339,8 +339,8 @@ public class ParameterInheritanceManagement extends FunctionGroup {
     
     if (parameterType.equals(ParameterType.MonitoringLevel)
          && (inheritanceRule.getChildFilter() == null || inheritanceRule.getChildFilter().length() == 0)) {
-      //falls die Regel für den eigenen Ordertype gilt, muss ein evtl. existierendes
-      //statisches Monitoringlevel gelöscht werden
+      //falls die Regel fï¿½r den eigenen Ordertype gilt, muss ein evtl. existierendes
+      //statisches Monitoringlevel gelï¿½scht werden
       MonitoringDispatcher monitoringDispatcher = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getMonitoringDispatcher();
       if (monitoringDispatcher.getMonitoringLevel(destinationKey) != null) {
         try {
@@ -479,7 +479,7 @@ public class ParameterInheritanceManagement extends FunctionGroup {
   }
   
   /**
-   * Liefert alle OrderTypes für die eine oder mehrere Vererbungsregeln definiert sind.
+   * Liefert alle OrderTypes fï¿½r die eine oder mehrere Vererbungsregeln definiert sind.
    * @return
    */
   public Set<DestinationKey> discoverInheritanceRuleOrderTypes() {
@@ -492,8 +492,8 @@ public class ParameterInheritanceManagement extends FunctionGroup {
   }
   
   /**
-   * Ermittelt die Regel die für die XynaOrder für das MonitoringLevel verwendet werden soll,
-   * d.h. die Regel mit der höchsten Precedence die für die XynaOrder gilt.
+   * Ermittelt die Regel die fï¿½r die XynaOrder fï¿½r das MonitoringLevel verwendet werden soll,
+   * d.h. die Regel mit der hï¿½chsten Precedence die fï¿½r die XynaOrder gilt.
    * @param xo
    * @return
    */
@@ -506,14 +506,14 @@ public class ParameterInheritanceManagement extends FunctionGroup {
       preferredRule = monitoringLevelRule;
     }
     
-    //für OrderType konfiguriertes MonitoringLevel auch als InheritanceRule betrachten
+    //fï¿½r OrderType konfiguriertes MonitoringLevel auch als InheritanceRule betrachten
     Integer code = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getMonitoringDispatcher().getMonitoringLevel(xo.getDestinationKey());
     if (code != null) {
       InheritanceRule  orderTypeMonitoringLevelRule = ParameterType.MonitoringLevel.createInheritanceRuleBuilder(code.toString()).precedence(DefaultPrecedence.OrderType.getValue()).build();
       preferredRule = compareRules(preferredRule, orderTypeMonitoringLevelRule);
     }
     
-    //die Regel mit der höchsten Precedence im eigenen Auftrag und seinen Parents ermitteln
+    //die Regel mit der hï¿½chsten Precedence im eigenen Auftrag und seinen Parents ermitteln
     return getPreferredRuleRecursively(ParameterType.MonitoringLevel, preferredRule, xo, "");
   }
   
@@ -568,7 +568,7 @@ public class ParameterInheritanceManagement extends FunctionGroup {
     }
     
     if (xo.hasParentOrder()) {
-      //den eigenen Auftrag als Parent zur ChildHierarchy hinzufügen
+      //den eigenen Auftrag als Parent zur ChildHierarchy hinzufï¿½gen
       childHierarchy = prependOrderTypeToHierarchy(dk.getOrderType(), childHierarchy);
       //beim Parent nach weiteren passenden Regeln suchen
       preferredRule = getPreferredRuleRecursively(parameterType, preferredRule, xo.getParentOrder(), childHierarchy);
@@ -578,7 +578,7 @@ public class ParameterInheritanceManagement extends FunctionGroup {
   }
   
   /**
-   * Vergleicht zwei Vererbungsregeln und liefert die mit der höheren Precedence zurück.
+   * Vergleicht zwei Vererbungsregeln und liefert die mit der hï¿½heren Precedence zurï¿½ck.
    * Bei Gleichheit wird newRule bevorzugt.
    * @param currentRule
    * @param newRule
@@ -588,10 +588,10 @@ public class ParameterInheritanceManagement extends FunctionGroup {
     int comp = precedenceComparator.compare(currentRule, newRule);
     
     if (comp <= 0) {
-      //neue Regel hat gleiche oder höhere Precedence
+      //neue Regel hat gleiche oder hï¿½here Precedence
       return newRule;
     } else {
-      //alte Regel behalten, da neue Regel keine höhere Precedence hat
+      //alte Regel behalten, da neue Regel keine hï¿½here Precedence hat
       return currentRule;
     }
   }
@@ -601,7 +601,7 @@ public class ParameterInheritanceManagement extends FunctionGroup {
   private final static Pattern starPattern = Pattern.compile("[*]");
   
   /**
-   * Fügt den OrderType an den Anfang der Hierarchie an.
+   * Fï¿½gt den OrderType an den Anfang der Hierarchie an.
    * @param orderType
    * @param hierarchy
    * @return

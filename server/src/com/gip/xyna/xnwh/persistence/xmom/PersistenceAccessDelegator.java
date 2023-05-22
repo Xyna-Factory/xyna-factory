@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,7 +174,7 @@ public class PersistenceAccessDelegator {
   public static void adjustSpecialColumnsForExpansion(Storable<?> possessedStorable, Storable<?> possessingStorable, StorableStructureInformation possessedInfo, int listIdx) {
     Set<StorableColumnInformation> columns = possessedInfo.getColumnInfoAcrossHierarchy();
     for (StorableColumnInformation sci : columns) {
-      //TODO anstatt reflection könnte man hier auch methoden des storables direkt aufrufen, wenn man sie z.b. in ein interface packt...
+      //TODO anstatt reflection kï¿½nnte man hier auch methoden des storables direkt aufrufen, wenn man sie z.b. in ein interface packt...
       switch (sci.getType()) {
         case EXPANSION_PARENT_FK :
         case UTILLIST_PARENT_FK :

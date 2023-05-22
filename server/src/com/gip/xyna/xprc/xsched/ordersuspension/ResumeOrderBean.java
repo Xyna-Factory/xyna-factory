@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class ResumeOrderBean extends XynaObject {
   private int retryCount;
 
   @LabelAnnotation(label="May Not Delegate to Other Node if Order Is Not Found")
-  private boolean mayNotDelegateToOtherNodeIfOrderIsNotFound; //Not ist zwar unschön, aber der default soll aus Abwärtskompatiblitätsgründen false sein.
+  private boolean mayNotDelegateToOtherNodeIfOrderIsNotFound; //Not ist zwar unschï¿½n, aber der default soll aus Abwï¿½rtskompatiblitï¿½tsgrï¿½nden false sein.
 
   public ResumeOrderBean(ResumeTarget target) {
     this.target = target;

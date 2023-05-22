@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,13 +30,13 @@ import org.apache.log4j.Logger;
 public interface Master<Tool,Work> extends Runnable {
   
   /**
-   * Übergabe des SlavePools, an den der Master seine Aufträge weiterreicht
+   * ï¿½bergabe des SlavePools, an den der Master seine Auftrï¿½ge weiterreicht
    * @param slavePool
    */
   public void setSlavePool(SlavePool<Tool,Work> slavePool);
   
   /**
-   * Master wird ab nun nicht mehr benötigt und kann daher Ressourcen freigeben
+   * Master wird ab nun nicht mehr benï¿½tigt und kann daher Ressourcen freigeben
    */
   public void terminate();
 

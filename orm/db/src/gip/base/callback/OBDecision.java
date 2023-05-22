@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
   private boolean _defaultAnswerStringGUI_ISSET=false;
 
   /**
-   * Liefert true oder false als Entscheidung zurück
+   * Liefert true oder false als Entscheidung zurï¿½ck
    * @return Boolean-Entscheidung
    */
   abstract public boolean decideBoolean();
@@ -50,8 +50,8 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
   }
 
   /**
-   * Liefert die Entscheidung als String zurück, 
-   * nützlich bei mehreren Wahlmöglichkeiten.
+   * Liefert die Entscheidung als String zurï¿½ck, 
+   * nï¿½tzlich bei mehreren Wahlmï¿½glichkeiten.
    * @return Entscheidung
    */
   abstract public String decideMultipleChoice();
@@ -61,8 +61,8 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
   }
   
   /**
-   * Liefert nur eine Warnung, die i.d.R. bestätigt werden muss,
-   * die abgeleiteten Klassen müssen damit entsprechen umgehen. 
+   * Liefert nur eine Warnung, die i.d.R. bestï¿½tigt werden muss,
+   * die abgeleiteten Klassen mï¿½ssen damit entsprechen umgehen. 
    */
   abstract public void printWarning();  
   
@@ -70,7 +70,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
   /**
    * Fragt nach einen Wert der eingegeben werden kann (GUI).
    * Bei nichtgrafischen abgeleiteten Klassen wird hier 
-   * die Default-Answer zurückgeliefert.
+   * die Default-Answer zurï¿½ckgeliefert.
    * @return Wert
    */
   abstract public String askForValue();
@@ -83,7 +83,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
   
   /**
    * Setzt den Text der Frage. 
-   * Desweiteren wird das Objekt zurückgesetzt.
+   * Desweiteren wird das Objekt zurï¿½ckgesetzt.
    * Dies muss hier geschen, 
    * da immer ein und das selbe Objekt neu konfiguriert wird
    * und zur Abfrage verwendet wird.
@@ -141,7 +141,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
   }
 
   /**
-   * Setzt eine Menge von Entscheidungsmöglichkeiten.
+   * Setzt eine Menge von Entscheidungsmï¿½glichkeiten.
    * @param mc Mehrere Strings
    */
   public void setMultipleChoices(String[] mc) {
@@ -157,7 +157,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
   }
 
   /**
-   * Setzt die primäre DefaultAnswer die von 
+   * Setzt die primï¿½re DefaultAnswer die von 
    * abgeleiteten Klassen ausgewertet wird.
    * @param da Default
    */
@@ -167,7 +167,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
   
 
   /**
-   * Setzt die primäre DefaultAnswer die von 
+   * Setzt die primï¿½re DefaultAnswer die von 
    * abgeleiteten Klassen ausgewertet wird.
    * @param da Default
    */
@@ -225,7 +225,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
 
   
   /**
-   * Liefert die möglichen Entscheidungen.
+   * Liefert die mï¿½glichen Entscheidungen.
    * @return Multiple-Choice-Texte
    */
   protected String[] getMultipleChoices() {
@@ -251,7 +251,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
 
   /**
    * Liefert die expliziet gesetzte GUI-DefaultAnswer,
-   * falls dieser nicht gesetzt ist, die primären DefaultAnswer.
+   * falls dieser nicht gesetzt ist, die primï¿½ren DefaultAnswer.
    * @return GUI-Default bei boolean
    */
   protected boolean getDefaultAnswerGUI() {
@@ -266,7 +266,7 @@ abstract public class OBDecision extends Object implements java.io.Serializable 
 
   /**
    * Liefert die expliziet gesetzte GUI-DefaultAnswer,
-   * falls dieser nicht gesetzt ist, die primären DefaultAnswer.
+   * falls dieser nicht gesetzt ist, die primï¿½ren DefaultAnswer.
    * @return GUI-Default bei Multiple Choice
    */
   protected String getDefaultAnswerStringGUI() {

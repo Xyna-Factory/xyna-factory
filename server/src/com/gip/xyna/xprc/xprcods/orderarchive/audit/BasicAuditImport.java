@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 
 /**
  * Klasse zur Verwaltung von Objekten, die in allen Audits als Import gebraucht werden.
- * Dies sind für die Modellierung wichtige Datentypen (z.B. Xyna Exception, Xyna Exception Base,
+ * Dies sind fï¿½r die Modellierung wichtige Datentypen (z.B. Xyna Exception, Xyna Exception Base,
  * Exception, Storable, ...).
  *
  */
@@ -48,7 +48,7 @@ public class BasicAuditImport {
   
   private static final List<String> basicDataTypeNames = new ArrayList<String>();
   
-  //TODO auditImports-Cache refreshen, wenn sich eine Basis-Application geändert hat
+  //TODO auditImports-Cache refreshen, wenn sich eine Basis-Application geï¿½ndert hat
   private static List<AuditImport> auditImports;          // version of imports where rtc is set to the actual rtc it belongs to
   private static List<AuditImport> auditImportsWithWfRtc; // version of imports where rtc is set to the on from the parent wf
   

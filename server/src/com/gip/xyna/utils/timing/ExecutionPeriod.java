@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,15 @@ package com.gip.xyna.utils.timing;
 
 
 /**
- * ExecutionPeriod berechnet die Zeitpunkte, zu denen Operationen wiederholt ausgeführt werden sollen.
+ * ExecutionPeriod berechnet die Zeitpunkte, zu denen Operationen wiederholt ausgefï¿½hrt werden sollen.
  * 
- * Über die Methode {@link #next(long, int)} kann der nächste geplante Zeitpunkt nach dem 
+ * ï¿½ber die Methode {@link #next(long, int)} kann der nï¿½chste geplante Zeitpunkt nach dem 
  * aktuellen Zeitpunkt "<code>now</code>" berechnet werden.<br>
  * 
  * Die Zeitpunkte sind durch ein Intervall voneinander getrennt, welches je nach ExecutionPeriod-Typ und 
  * dem aktuellen Zeitpunkt mehr oder weniger einem Soll-Intervall entspricht. Die Abweichungen vom 
- * Soll-Intervall dienen dazu, dass Verzögerungen des aktuellen Zeitpunkts gegenüber dem letzen 
- * geplanten Zeitpunkt ausgeglichen werden können oder ausgefallene Zeitpunkte nachgeholt werden können.
+ * Soll-Intervall dienen dazu, dass Verzï¿½gerungen des aktuellen Zeitpunkts gegenï¿½ber dem letzen 
+ * geplanten Zeitpunkt ausgeglichen werden kï¿½nnen oder ausgefallene Zeitpunkte nachgeholt werden kï¿½nnen.
  *
  */
 public class ExecutionPeriod {
@@ -63,7 +63,7 @@ public class ExecutionPeriod {
   }
    
   /**
-   * Die Termine sind in gleichmäßigen Abständen zum Startzeitpunkt, 
+   * Die Termine sind in gleichmï¿½ï¿½igen Abstï¿½nden zum Startzeitpunkt, 
    * verpasste Termine werden nicht nachgeholt.
    */
   public static class FixedDate_IgnoreAllMissed extends Calculation {
@@ -84,7 +84,7 @@ public class ExecutionPeriod {
   }
   
   /**
-   * Die Termine sind in gleichmäßigen Abständen zum Startzeitpunkt, 
+   * Die Termine sind in gleichmï¿½ï¿½igen Abstï¿½nden zum Startzeitpunkt, 
    * verpasste Termine werden alle nachgeholt, da Termine auch in der 
    * Vergangenheit liegen.
    */
@@ -98,7 +98,7 @@ public class ExecutionPeriod {
   }
   
   /**
-   * Die Termine sind bevorzugt in gleichmäßigen Abständen zum Startzeitpunkt, 
+   * Die Termine sind bevorzugt in gleichmï¿½ï¿½igen Abstï¿½nden zum Startzeitpunkt, 
    * verpasste Termine werden zum aktuellen Zeitpunkt nachgeholt.
    */
   public static class FixedDate_CatchUpImmediately extends Calculation {
@@ -111,7 +111,7 @@ public class ExecutionPeriod {
   }
   
   /**
-   * Die Termine sind bevorzugt in gleichmäßigen Abständen zum Startzeitpunkt, 
+   * Die Termine sind bevorzugt in gleichmï¿½ï¿½igen Abstï¿½nden zum Startzeitpunkt, 
    * verpasste Termine werden zum aktuellen Zeitpunkt nachgeholt, falls sie nicht zu alt sind.
    */
   public static class FixedDate_CatchUpNotTooLate extends Calculation {
@@ -119,7 +119,7 @@ public class ExecutionPeriod {
     private long tooLateThreshold = 0;
     public FixedDate_CatchUpNotTooLate(long start, long interval) {
       super(start, interval);
-      tooLateThreshold = interval/2; //nachholen, wenn der Abstand zu nächsten Termin größer ist als der Anstand zum verpassten
+      tooLateThreshold = interval/2; //nachholen, wenn der Abstand zu nï¿½chsten Termin grï¿½ï¿½er ist als der Anstand zum verpassten
     }
     public FixedDate_CatchUpNotTooLate(long start, long interval, long tooLateThreshold) {
       super(start, interval);
@@ -135,16 +135,16 @@ public class ExecutionPeriod {
     }
     public long next(long now, int counter) {
       long cnt = (now -start)/interval+1;
-      //gibt es einen Versatz zwischen erwartetem cnt und tatsächlichem counter? bisheriger Versatz skipped
+      //gibt es einen Versatz zwischen erwartetem cnt und tatsï¿½chlichem counter? bisheriger Versatz skipped
       long skipInc = cnt-counter-skipped;
       long next = start +cnt*interval;
       if( skipInc == 0 ) {
         return next; //kein Versatz
       } else {
-        //wie groß ist Verspätung gegenüber regulärem Termin?
+        //wie groï¿½ ist Verspï¿½tung gegenï¿½ber regulï¿½rem Termin?
         long tooLate = now +interval - next;
         if( tooLate < tooLateThreshold ) {
-          skipped += skipInc-1; //Versatz hinzufügen, -1 da nachgeholt
+          skipped += skipInc-1; //Versatz hinzufï¿½gen, -1 da nachgeholt
           return now;
         } else {
           skipped += skipInc;
@@ -216,7 +216,7 @@ public class ExecutionPeriod {
   }
   
   /**
-   * Berechnung des nächsten Zeitpunktes, interner Counter wird erhöht
+   * Berechnung des nï¿½chsten Zeitpunktes, interner Counter wird erhï¿½ht
    * @param now
    * @return
    */
@@ -225,7 +225,7 @@ public class ExecutionPeriod {
   }
   
   /**
-   * Berechnung des nächsten Zeitpunktes, externer Counter wird verwendet
+   * Berechnung des nï¿½chsten Zeitpunktes, externer Counter wird verwendet
    * @param now
    * @param counter
    * @return
@@ -243,7 +243,7 @@ public class ExecutionPeriod {
   }
   
   /**
-   * Reset der ExecutionPeriod: Counter wird auf 0 gesetzt, Startzeitpunkt wird geändert.
+   * Reset der ExecutionPeriod: Counter wird auf 0 gesetzt, Startzeitpunkt wird geï¿½ndert.
    * @param start
    */
   public void reset(long start) {

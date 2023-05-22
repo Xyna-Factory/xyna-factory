@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +36,9 @@ import java.util.Set;
 
 
 /*
- * kopiert + leichte änderungen von WeakHashMap:
+ * kopiert + leichte ï¿½nderungen von WeakHashMap:
  * - HashMap.hash() ersetzt durch System.identityHashCode()
- * - memberVariablen values und keySet ergänzt, weil auf packageprivate members von parentklasse zugegriffen wurde
+ * - memberVariablen values und keySet ergï¿½nzt, weil auf packageprivate members von parentklasse zugegriffen wurde
  * - AbstractMap.SimpleEntry als innere klasse eingebaut, weil in 1.5 private
  */
 public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
@@ -821,7 +821,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
   }
 
 
-  //aus abstractmap kopiert. sollte für die verwendung hier keinen unterschied machen
+  //aus abstractmap kopiert. sollte fï¿½r die verwendung hier keinen unterschied machen
   transient volatile Set<K> keySet = null;
   transient volatile Collection<V> values = null;
 

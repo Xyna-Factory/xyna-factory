@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 
 /**
- * Dieser Iterator-Wrapper führt eine Datenkonvertierung durch. 
+ * Dieser Iterator-Wrapper fï¿½hrt eine Datenkonvertierung durch. 
  */
 public abstract class ConvertingIterator<F,T> implements Iterator<T> {
 

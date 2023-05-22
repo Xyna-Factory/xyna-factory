@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
         
         hasConnection = true;
         
-        // vor der ersten Persistierung prüfen wir nochmal, ob nicht doch Migration gestoppt werden soll
+        // vor der ersten Persistierung prï¿½fen wir nochmal, ob nicht doch Migration gestoppt werden soll
         if (stop) {
           return;
         }
@@ -121,17 +121,17 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
         break;
       }
       
-      //komplette Root-Familien extrahieren, unvollständige Familien aufbewahren
+      //komplette Root-Familien extrahieren, unvollstï¿½ndige Familien aufbewahren
       List<OrderInstanceBackup> completeFamilies = extractCompleteOrderFamilies( incompleteFamily, nextOBs );
       
-      //priorisierte Migrationen ergänzen
+      //priorisierte Migrationen ergï¿½nzen
       completeFamilies.addAll( retrievePrioritized(con, getLastRootId(completeFamilies), 
                                                    "MigrateMIsAndCronsAndOrderBackups" ) );
       
-      //Migration durchführen und Aufträge starten
+      //Migration durchfï¿½hren und Auftrï¿½ge starten
       migrateAndLoadOrderBackup(con, completeFamilies);
       
-      //Zwischencommit: falls viele Einträge im OrderBackup liegen darf Hauptspeicher nicht platzen
+      //Zwischencommit: falls viele Eintrï¿½ge im OrderBackup liegen darf Hauptspeicher nicht platzen
       con.commit();
       
       XynaExtendedStatusManagement xesm = XynaFactory.getInstance().getFactoryManagement().getXynaExtendedStatusManagement();
@@ -140,7 +140,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
       
     }
     if( ! stop ) {
-      //Migration des Rests durchführen und Aufträge starten
+      //Migration des Rests durchfï¿½hren und Auftrï¿½ge starten
       migrateAndLoadOrderBackup(con, incompleteFamily);
       con.commit();
     }
@@ -152,7 +152,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
       return; //nichts zu tun
     }
     
-    //Migration durchführen
+    //Migration durchfï¿½hren
     Map<MigrationResult, List<OrderInstanceBackup>> backupOrderMap = loadAndMigrateOrderBackup(completeFamilies, con, "migration loop");
     
     //Fehlgeschlagene Migrationen abbrechen
@@ -194,7 +194,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
         changedCronLikeOrders.add(cron);
       }
         
-      // Prüfen, ob einzelne rootids priorisiert bearbeitet werden sollen
+      // Prï¿½fen, ob einzelne rootids priorisiert bearbeitet werden sollen
       List<Long> prioIds = retrievePrioritized(-1, "MigrateMIsAndCronsAndOrderBackups");
       
       if (!prioIds.isEmpty()) {
@@ -301,7 +301,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
         while(iterCrons.hasNext()) {
           CronLikeOrder clo = iterCrons.next();
           if (!migrateOneCron(clo.getId(), con)) {
-            // offensichtlich schon ausgeführt ... Cron ist jedenfalls nicht mehr da
+            // offensichtlich schon ausgefï¿½hrt ... Cron ist jedenfalls nicht mehr da
             iterCrons.remove();
           }
         }
@@ -443,7 +443,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
     try {
       con.queryOneRowForUpdate(clo);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      // offensichtlich ist CLO schon ausgeführt wurden? Jedenfalls ist nichts zu tun.
+      // offensichtlich ist CLO schon ausgefï¿½hrt wurden? Jedenfalls ist nichts zu tun.
       con.executeAfterCommit(new Runnable() {
 
         public void run() {
@@ -476,9 +476,9 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
     List<SeriesInformationStorable> seriesInfos = new ArrayList<SeriesInformationStorable>();
     
     for( OrderInstanceBackup foreignBackupInstance : backupOrders ) {
-      // Prüfung, ob orderbackup nicht vllt. doch schon migriert wurde ... sollte eigentlich nicht passieren
+      // Prï¿½fung, ob orderbackup nicht vllt. doch schon migriert wurde ... sollte eigentlich nicht passieren
       boolean bootCountDiffers = foreignBackupInstance.getBootCntId() != XynaFactory.getInstance().getBootCntId();
-      //bootCountDiffers ist hier wahrscheinlich überflüssig
+      //bootCountDiffers ist hier wahrscheinlich ï¿½berflï¿½ssig
       if (bootCountDiffers && foreignBackupInstance.getBinding() != ownBinding) {
         //es muss migriert werden
         foreignBackupInstance.setBootCntId(XynaFactory.getInstance().getBootCntId());
@@ -506,7 +506,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
         }
         catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
           //Dies sollte nur direkt nach der Umstellung auf die Version mit SeriesInformationStorable
-          //auftreten können.
+          //auftreten kï¿½nnen.
           logger.warn( "No SeriesInformationStorable found for xynaorder "+xo+", creating new." );
           sis = XynaFactory.getInstance().getProcessing().getXynaScheduler()
                          .getOrderSeriesManagement().createSeriesInformationStorable(xo);

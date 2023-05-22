@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,7 +156,7 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
     execution.startOrder(xose, rorl, context);
     
     //TODO evtl. kommt SuccesfullOrderExecutionResponse nicht auf Aufruferseite an. In diesem 
-    //Fall könnte der Auftrag gecancelt werden
+    //Fall kï¿½nnte der Auftrag gecancelt werden
     //Two-Phase-Commit?
     return new SuccesfullOrderExecutionResponse(xose.getId());
   }
@@ -184,7 +184,7 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
     while( (next = remoteData.poll() ) != null ) {
       addIfNull(oers, next.createRemoteData());
     }
-    //TODO evtl geht Verbindung nach den "next.finishOrder()" kaputt: Hier sind Aufträge dann als abgeholt markiert,
+    //TODO evtl geht Verbindung nach den "next.finishOrder()" kaputt: Hier sind Auftrï¿½ge dann als abgeholt markiert,
     //Ergebnisse gelangen aber nicht zum Aufrufer
     //Two-Phase-Commit?
     return oers;
@@ -222,7 +222,7 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
   }
 
   /**
-   * Rückgabe der übergebenen orderIds, die hier unbekannt sind 
+   * Rï¿½ckgabe der ï¿½bergebenen orderIds, die hier unbekannt sind 
    * @param orderIds
    * @return
    */
@@ -241,8 +241,8 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
    */
   public void applicationStarted(String applicationName) {
     if (System.currentTimeMillis() - lastInteraction.get() > 1000 * 60 * 10) {
-      //aufrufer hat entweder keine verbindung, dann versucht er eh nochmal für alle applications nen start
-      //oder es interessiert ihn gar nicht mehr, was hier für applicationchanges gesammelt sind
+      //aufrufer hat entweder keine verbindung, dann versucht er eh nochmal fï¿½r alle applications nen start
+      //oder es interessiert ihn gar nicht mehr, was hier fï¿½r applicationchanges gesammelt sind
       synchronized (changedApplications) {
         changeNotificationRequests.clear();
         changedApplications.clear();
@@ -257,14 +257,14 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
       if (changeNotificationRequests.remove(applicationName)) {
         changedApplications.add(applicationName);
         notifyNecessary = true;
-        //nun ist sichergestellt, dass ein remotedata für diese application an den client verschickt wird
+        //nun ist sichergestellt, dass ein remotedata fï¿½r diese application an den client verschickt wird
       }
     }
     if (notifyNecessary) {
       if (logger.isDebugEnabled()) {
         logger.debug("Notification of appstart " + applicationName + " to " + identifier + " necessary.");
       }
-      //ein remotedata objekt in der queue genügt
+      //ein remotedata objekt in der queue genï¿½gt
       if (applicationDataIsQueued.compareAndSet(false, true)) {
         remoteData.add(new RemoteDataCreation() {
 
@@ -301,7 +301,7 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
   
 
   public void loadStoredResponses() throws PersistenceLayerException {
-    //lade responses aus db und stelle sie zur verfügung, so dass sie abgeholt werden können
+    //lade responses aus db und stelle sie zur verfï¿½gung, so dass sie abgeholt werden kï¿½nnen
     ODSConnection con = ODSImpl.getInstance().openConnection(ODSConnectionType.HISTORY);
     try {
       if (loadIds == null) {
@@ -317,8 +317,8 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
       }
       List<Long> l = con.query(loadIds, new Parameter(identifier), -1);
       for (final Long id : l) {
-        //TODO performance: für jede gespeicherte antwort wird im createRemoteData ein db-zugriff durchgeführt. 
-        //     stattdessen alle aufträge aufeinmal in memory laden.
+        //TODO performance: fï¿½r jede gespeicherte antwort wird im createRemoteData ein db-zugriff durchgefï¿½hrt. 
+        //     stattdessen alle auftrï¿½ge aufeinmal in memory laden.
         //     
         remoteData.add(new RemoteDataCreation() {
 
@@ -369,7 +369,7 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
   }
 
 
-  //response muss später abgeholt werden
+  //response muss spï¿½ter abgeholt werden
   public void storeResponse(Long orderId, OrderExecutionResponse response, ODSConnection historyCon) throws PersistenceLayerException {
     String xml = StoredResponse.serializeResponse(response);
     StoredResponse resp = new StoredResponse(orderId, identifier, xml);
@@ -380,7 +380,7 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
     }
     try {
       if (historyCon.persistObject(resp)) {
-        //dann soll es gelöscht werden, s.u.
+        //dann soll es gelï¿½scht werden, s.u.
         historyCon.deleteOneRow(resp);
       }
       if (conWasNull) {
@@ -405,9 +405,9 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
           con.queryOneRow(resp);
           con.deleteOneRow(resp);
         } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-          //delete vor store -> dann insert probieren, damit das store erkennt, dass das delete durchzuführen ist.
+          //delete vor store -> dann insert probieren, damit das store erkennt, dass das delete durchzufï¿½hren ist.
           if (con.persistObject(resp)) {
-            //nun ist das persist doch bereits durchgeführt worden
+            //nun ist das persist doch bereits durchgefï¿½hrt worden
             con.deleteOneRow(resp);
           }
         }

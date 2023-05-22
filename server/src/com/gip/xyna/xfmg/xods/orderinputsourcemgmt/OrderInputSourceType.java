@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
 /**
  * Erzeugung von Auftrags-Inputs:
- * Auftragsinputs können beliebig kompliziert erstellt werden
+ * Auftragsinputs kï¿½nnen beliebig kompliziert erstellt werden
  *  - konstant
  *  - Workflow erzeugt Input teilweise aus Datenhaltung in DB mit verbrauchbaren Daten (Usecase XTF)
  * <ul>
@@ -34,8 +34,8 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
  * {@link OrderInputSourceType} ist die Basisklasse (Dokumentation + Erzeugung von {@link OrderInputSource}
  * </li>
  * <li>
- * {@link OrderInputSource} Instanzen entsprechen den Einträgen die in der GUI sichtbar sind. Immer wenn ein Auftrag
- * bzgl eines Typs mit Parametrisierung gestartet werden soll, wird auf die zugehörige {@link OrderInputSource} Instanz zugegriffen und daraus eine
+ * {@link OrderInputSource} Instanzen entsprechen den Eintrï¿½gen die in der GUI sichtbar sind. Immer wenn ein Auftrag
+ * bzgl eines Typs mit Parametrisierung gestartet werden soll, wird auf die zugehï¿½rige {@link OrderInputSource} Instanz zugegriffen und daraus eine
  * {@link OrderInputCreationInstance} erzeugt
  * </li>
  * <li>
@@ -50,7 +50,7 @@ public interface OrderInputSourceType {
 
   /**
    * @param name Name der InputSource, der auch in der GUI als Identifikation verwendet wird
-   * @param destinationKey Was für ein Auftragstyp soll mit dieser InputSource gestartet werden
+   * @param destinationKey Was fï¿½r ein Auftragstyp soll mit dieser InputSource gestartet werden
    * @param parameters Was sind Typ-spezifische Parameter? (Z.B. bei Konstanten Inputs die Konstante)
    */
   public OrderInputSource createOrderInputSource(String name, DestinationKey destinationKey, Map<String, Object> parameters,
@@ -58,7 +58,7 @@ public interface OrderInputSourceType {
 
 
   /**
-   * refactored die übergebenen parameter in der map
+   * refactored die ï¿½bergebenen parameter in der map
    * @return true falls refactoring stattgefunden hat
    */
   public boolean refactorParameters(Map<String, Object> parameters, DependencySourceType refactoredObjectType, String fqNameOld, String fqNameNew) throws XynaException;

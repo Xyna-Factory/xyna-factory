@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   private transient SocketChannel socketChannel;
   private String uri;
   private String version = "HTTP/1.0";
-  @Deprecated //nur noch für Deserialisierung
+  @Deprecated //nur noch fï¿½r Deserialisierung
   private String method; 
   private Method methodEnum;
   private Properties header;
@@ -192,8 +192,8 @@ public class HTTPTriggerConnection extends TriggerConnection {
   
   /**
    * 
-   * @throws XynaException falls fehler nicht zurück signalisiert wurde
-   * @throws InterruptedException falls fehler bereits zurück signalisiert wurde
+   * @throws XynaException falls fehler nicht zurï¿½ck signalisiert wurde
+   * @throws InterruptedException falls fehler bereits zurï¿½ck signalisiert wurde
    */
   public void readHeader() throws XynaException, InterruptedException {
     if (socket == null) {
@@ -210,7 +210,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
     // atomically make sure that the stream is only read once
     if (!isRead.compareAndSet(false, true)) {
-      // FIXME eigentlich müsste man in diesem Fall blockieren, bis das andere read fertig ist, damit
+      // FIXME eigentlich mï¿½sste man in diesem Fall blockieren, bis das andere read fertig ist, damit
       //       der zweite Thread nicht auf leere Felder zugreift
       if (!suppressLogging) {
         logger.debug("HTTP request reading has already begun, nothing to be done.");
@@ -237,8 +237,8 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
   /**
    * 
-   * @throws XynaException falls fehler nicht zurück signalisiert wurde
-   * @throws InterruptedException falls fehler bereits zurück signalisiert wurde
+   * @throws XynaException falls fehler nicht zurï¿½ck signalisiert wurde
+   * @throws InterruptedException falls fehler bereits zurï¿½ck signalisiert wurde
    */
   public void readPayload() throws XynaException, InterruptedException {
     readPayload(0x7FFFFFFFFFFFFFFFl);
@@ -247,8 +247,8 @@ public class HTTPTriggerConnection extends TriggerConnection {
   
   /**
    * @param contentLengthIfEmpty falls keine content-length im header gefunden wird, werden soviele bytes trotzdem versucht auszulesen
-   * @throws XynaException falls fehler nicht zurück signalisiert wurde
-   * @throws InterruptedException falls fehler bereits zurück signalisiert wurde
+   * @throws XynaException falls fehler nicht zurï¿½ck signalisiert wurde
+   * @throws InterruptedException falls fehler bereits zurï¿½ck signalisiert wurde
    */
   public String readPayload(long contentLengthIfEmpty) throws XynaException, InterruptedException {
     if (header.containsKey("transfer-encoding") && 
@@ -273,7 +273,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
       
       payload = readPayloadInternally(numberOfBytes, !contentLengthSet);
       payload =  payload.trim();
-      //decodeParas(postLine, paras); //FIXME: braucht man das? führt aber zu fehlern, wenn zb %<keine zahl> im text vorkommt.
+      //decodeParas(postLine, paras); //FIXME: braucht man das? fï¿½hrt aber zu fehlern, wenn zb %<keine zahl> im text vorkommt.
 
     } else {
       payload = "";
@@ -299,7 +299,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
           // if the size is empty dont try to read from the stream because that would block until timeout (bugz 13244)
           payload = "";
         } else {
-          //TODO unterscheiden zwischen content-types: bei binärdaten ist das vielleicht nicht die beste methode...
+          //TODO unterscheiden zwischen content-types: bei binï¿½rdaten ist das vielleicht nicht die beste methode...
           ByteArrayOutputStream postLine = new ByteArrayOutputStream();
           byte buf[] = new byte[(int) Math.min(512l, numberOfBytes)];
           int read = lineBufferedInputStream.read(buf);
@@ -366,8 +366,8 @@ public class HTTPTriggerConnection extends TriggerConnection {
   
   /**
    * based on http://tools.ietf.org/html/rfc2616
-   * @throws XynaException falls fehler nicht zurück signalisiert wurde
-   * @throws InterruptedException falls fehler bereits zurück signalisiert wurde
+   * @throws XynaException falls fehler nicht zurï¿½ck signalisiert wurde
+   * @throws InterruptedException falls fehler bereits zurï¿½ck signalisiert wurde
    */
   public void read() throws XynaException, InterruptedException {
     readHeader();
@@ -395,8 +395,8 @@ public class HTTPTriggerConnection extends TriggerConnection {
   }
 
   /**
-   * ermöglicht, dass der erneute aufruf von read auch tatsächlich erneut aus dem socket liest.
-   * für connections gedacht, über die mehrere nachrichten ausgetauscht werden. 
+   * ermï¿½glicht, dass der erneute aufruf von read auch tatsï¿½chlich erneut aus dem socket liest.
+   * fï¿½r connections gedacht, ï¿½ber die mehrere nachrichten ausgetauscht werden. 
    */
   public void reset() {
     isRead.set(false);
@@ -482,9 +482,9 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
 
     long start = System.currentTimeMillis();
-    //request-zeile zweiteilig auslesen, damit bereits zu beginn eine validierung durchgeführt werden kann.
-    //beispiel: ssh-handshake vs http-(nicht https)-trigger: erste zeile enthält dann irgendwelchen kram, aber nicht notwendigerweise einen zeilenumbruch 
-    //-> führt zu clienttimeout, weil der server nie antwortet
+    //request-zeile zweiteilig auslesen, damit bereits zu beginn eine validierung durchgefï¿½hrt werden kann.
+    //beispiel: ssh-handshake vs http-(nicht https)-trigger: erste zeile enthï¿½lt dann irgendwelchen kram, aber nicht notwendigerweise einen zeilenumbruch 
+    //-> fï¿½hrt zu clienttimeout, weil der server nie antwortet
     byte[] firstPartOfLine = new byte[4];
     int read;
     int off = 0;
@@ -589,7 +589,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
     for (int i = 0; i<FIRSTLINE_HASHES.length; i++) {
       if (hash == FIRSTLINE_HASHES[i]) {
-        return; //gut genug als validierung. man könnte sich natürlich immer noch mehr mühe geben
+        return; //gut genug als validierung. man kï¿½nnte sich natï¿½rlich immer noch mehr mï¿½he geben
       }
     }
     logInvalidHttpRequest();
@@ -664,7 +664,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
           logger.error("socket was unexpectedly not available when trying to send errormessage to client", e1);
         }
       }
-      return null; // wird nicht ausgeführt
+      return null; // wird nicht ausgefï¿½hrt
     }
   }
 
@@ -707,7 +707,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   void handleUnsupportedEncoding() {
-    //support wird schon bei setCharset() überprüft. eigtl sollte das hier nicht passieren.
+    //support wird schon bei setCharset() ï¿½berprï¿½ft. eigtl sollte das hier nicht passieren.
     throw new RuntimeException("charset " + charSet + " is unsupported.");
   }
 
@@ -911,9 +911,9 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   /**
-   * Schreibt Header und Daten in den OutputStream, schließt das Socket aber nicht.
+   * Schreibt Header und Daten in den OutputStream, schlieï¿½t das Socket aber nicht.
    * Daher kann sendResponse mehrfach aufgerufen werden.
-   * Schließen des Sockets wird über {@link #close()} vorgenommen.
+   * Schlieï¿½en des Sockets wird ï¿½ber {@link #close()} vorgenommen.
    */
   public void sendResponse(String status, String mime, Properties responseHeader, InputStream data)
                   throws SocketNotAvailableException {
@@ -1000,7 +1000,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
       pw.print(CRLF);
       pw.flush(); //ansonsten gibt es "java.net.SocketException Unexpected end of file from server." 
-      // beim Empfänger in java.net.HttpURLConnection.getResponseCode()
+      // beim Empfï¿½nger in java.net.HttpURLConnection.getResponseCode()
   }
 
   /**
@@ -1085,7 +1085,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
     try {
       shutdownSocket();
-      socket.close(); //schließt auch socketChannel
+      socket.close(); //schlieï¿½t auch socketChannel
     } catch (IOException e) {
       if (!suppressLogging) {
         logger.error("error closing socket", e);
@@ -1112,7 +1112,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
    */
   private void shutdownSocket() {
     if (socket instanceof SSLSocket) {
-      //vgl http://stackoverflow.com/questions/6424998/properly-closing-sslsocket, o.ä.
+      //vgl http://stackoverflow.com/questions/6424998/properly-closing-sslsocket, o.ï¿½.
       return;
     }
     if (!socket.isOutputShutdown()) {

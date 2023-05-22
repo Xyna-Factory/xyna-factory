@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -180,8 +180,8 @@ public class OrdertypeManagement extends FunctionGroup implements IPropertyChang
 
     @Override
     public void capacityMappingChanged(DestinationKey key) {
-      //TODO hier könnte man auch nur den cache notifizieren, dass capacitymappings später neu ausgelesen werden müssen. das verschiebt die aufwände zu dem zeitpunkt, wo es gebraucht wird.
-      //allerdings ist das ändern von capacitymappings meistens kein performancekritischer zeitpunkt...
+      //TODO hier kï¿½nnte man auch nur den cache notifizieren, dass capacitymappings spï¿½ter neu ausgelesen werden mï¿½ssen. das verschiebt die aufwï¿½nde zu dem zeitpunkt, wo es gebraucht wird.
+      //allerdings ist das ï¿½ndern von capacitymappings meistens kein performancekritischer zeitpunkt...
       List<Capacity> caps =
           XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getCapacityMappingDatabase().getCapacities(key);
       if (caps.isEmpty()) {
@@ -589,7 +589,7 @@ public class OrdertypeManagement extends FunctionGroup implements IPropertyChang
     }
     if (updateApplication) {
       if (ordertypeParameter.getApplicationName() != null) {
-        //zur applikation hinzufügen
+        //zur applikation hinzufï¿½gen
         ApplicationManagementImpl applicationManagement =
             (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
                 .getApplicationManagement();
@@ -615,7 +615,7 @@ public class OrdertypeManagement extends FunctionGroup implements IPropertyChang
         createOrdertype(ordertypeParameter, true);
         return;
       } catch (XFMG_InvalidCreationOfExistingOrdertype e) {
-        //wurde gleichzeitig hinzugefügt? nochmal modify probieren
+        //wurde gleichzeitig hinzugefï¿½gt? nochmal modify probieren
         logger.warn("OrderType seems to have been added concurrently. Modifying existing OrderType ...", e);
       } catch (XFMG_FailedToAddObjectToApplication e) {
         throw new RuntimeException("OrderType could not be added to application", e);
@@ -1128,7 +1128,7 @@ public class OrdertypeManagement extends FunctionGroup implements IPropertyChang
   
   private void modifyParameterInheritanceRules(OrdertypeParameter ordertypeParameter) throws PersistenceLayerException {
     if (ordertypeParameter.getParameterInheritanceRules() == null) {
-      return; //Regeln nicht ändern
+      return; //Regeln nicht ï¿½ndern
     }
     
     //aktuell konfigurierte Regeln ermitteln
@@ -1143,7 +1143,7 @@ public class OrdertypeManagement extends FunctionGroup implements IPropertyChang
         List<InheritanceRule> newRules = entry.getValue();
         
         if (newRules == null || newRules.size() == 0) {
-          //alle aktuellen Regeln löschen
+          //alle aktuellen Regeln lï¿½schen
           for (InheritanceRule oldRule : existing.get(type)) {
             getParameterInheritanceManagement().removeInheritanceRule(type, dk, oldRule.getChildFilter());
           }
@@ -1155,7 +1155,7 @@ public class OrdertypeManagement extends FunctionGroup implements IPropertyChang
               InheritanceRule newRule = it.next();
               if (newRule.getChildFilter().equals(oldRule.getChildFilter())) {
                 if (!newRule.equals(oldRule)) {
-                  //Regel hat sich geändert
+                  //Regel hat sich geï¿½ndert
                   getParameterInheritanceManagement().addInheritanceRule(type, dk, newRule);
                 }
                 it.remove();
@@ -1163,7 +1163,7 @@ public class OrdertypeManagement extends FunctionGroup implements IPropertyChang
               }
             }
             if (!found) {
-              //Regel soll gelöscht werden
+              //Regel soll gelï¿½scht werden
               getParameterInheritanceManagement().removeInheritanceRule(type, dk, oldRule.getChildFilter());
             }
           }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ public class InterconnectCalleeAlgorithmDisconnected extends InterconnectCalleeA
 
 
   public InitialConnectionData connectToClusterRemotely(NodeInformation nodeInformation) {
-    //TODO wieso hier nich auch einfach zur queue hinzufügen?
+    //TODO wieso hier nich auch einfach zur queue hinzufï¿½gen?
     synchronized (lock) {
       // wait in a loop to make sure that the connected flag has been set in the meantime
       while (!connected) {
@@ -220,7 +220,7 @@ public class InterconnectCalleeAlgorithmDisconnected extends InterconnectCalleeA
       try {
         calleeImpl.requestLock(objectId, priority, tryLock, nanoTimeout);
       } catch (ObjectNotInCacheException e) {
-        // FIXME: klären: can happen if the object has already been removed => dann ist runtimeexception doch nicht so gut?
+        // FIXME: klï¿½ren: can happen if the object has already been removed => dann ist runtimeexception doch nicht so gut?
         if (debugger.isEnabled()) {
           debugger.debug("object with id <" + objectId + "> wasn't locked because it has already been removed");
         }

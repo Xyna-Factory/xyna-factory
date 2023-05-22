@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,33 +54,33 @@ import com.gip.xyna.utils.db.utils.RepeatedExceptionCheck;
 /**
  * TODO: 
  * - in den connectioninformations sichtbar machen, dass eine connection gerade in der validierung befindlich ist
- * - statt "synchronized (object)", mit einem lock arbeiten, um timeouts zu gewährleisten. "synchronized (object)"
- *   hat in lasttests sehr lange auf das lock gewartet, evtl länger als der gewünschte timeout.
- * - prioritäten für getConnection?
- * - keepalive-thread besser als anderweitig regelmässiges connection-verify?
- * - connections erst aufmachen, wenn benötigt
- *  * dietrich ist übrigens der ansicht, dass connectionpools mit dynamischer größe gar nicht so gut sind.
-    weil es dann ganz schnell passiert, dass man während der tests keine probleme hat, aber dann zur laufzeit ganz unvorbereitet (jaja) engpässe mit den connections.
-    ich denke trotzdem, dass etwas mehr configurationsmöglichkeiten bei den connectionpools schon gut wären...
- * - connections schliessen, wenn sie lange nicht benötigt wurden
- * - connections zurückholen, wenn sie lange inaktiv sind, aber in benutzung (zb vergessenes close) => daraus resultierend: 
+ * - statt "synchronized (object)", mit einem lock arbeiten, um timeouts zu gewï¿½hrleisten. "synchronized (object)"
+ *   hat in lasttests sehr lange auf das lock gewartet, evtl lï¿½nger als der gewï¿½nschte timeout.
+ * - prioritï¿½ten fï¿½r getConnection?
+ * - keepalive-thread besser als anderweitig regelmï¿½ssiges connection-verify?
+ * - connections erst aufmachen, wenn benï¿½tigt
+ *  * dietrich ist ï¿½brigens der ansicht, dass connectionpools mit dynamischer grï¿½ï¿½e gar nicht so gut sind.
+    weil es dann ganz schnell passiert, dass man wï¿½hrend der tests keine probleme hat, aber dann zur laufzeit ganz unvorbereitet (jaja) engpï¿½sse mit den connections.
+    ich denke trotzdem, dass etwas mehr configurationsmï¿½glichkeiten bei den connectionpools schon gut wï¿½ren...
+ * - connections schliessen, wenn sie lange nicht benï¿½tigt wurden
+ * - connections zurï¿½ckholen, wenn sie lange inaktiv sind, aber in benutzung (zb vergessenes close) => daraus resultierend: 
  *      wie geht man damit um, dass dann mehrere threads das gleiche connection objekt kennen?
  *      eventuell an threads binden. falls anderer thread zugreifen will => fehler.
  * - statistiken: 
- *    - wie ist die zeitliche ausnutzung der connections in benutzung? (zb 90% der zeit zwischen get und commit wurde die connection eigtl nicht benötigt)
+ *    - wie ist die zeitliche ausnutzung der connections in benutzung? (zb 90% der zeit zwischen get und commit wurde die connection eigtl nicht benï¿½tigt)
  *    - wie lange haben threads auf connection gewartet
  *    - wie lange warten gerade wartende threads? (zb maxwert)
  *    - maximale anzahl von threads, die warten mussten
  *    - durchschnitt wartender threads in den letzten x minuten
- *    - statistken über die zeit zwischen holen der connection und zurückgeben
+ *    - statistken ï¿½ber die zeit zwischen holen der connection und zurï¿½ckgeben
  * - methode public static ConnectionPool getInstance(final String sqlConnectString, int poolSize) rauswerfen
  * - methode zum freigeben von connections
  * - {@link PhantomReference} nutzen: http://www.javalobby.org/java/forums/t16520.html
- * - keine operationen auf connection erlauben, falls sie dem pool gehört
+ * - keine operationen auf connection erlauben, falls sie dem pool gehï¿½rt
  *  
  * Bemerkung:
- * Durch die Verwendung von ConnectionFactory besteht derzeit eine Abhängigkeit von Oracle (nur noch wegen 
- * Abwärtskompatibilität in oben genannter zu entfernender Methode)
+ * Durch die Verwendung von ConnectionFactory besteht derzeit eine Abhï¿½ngigkeit von Oracle (nur noch wegen 
+ * Abwï¿½rtskompatibilitï¿½t in oben genannter zu entfernender Methode)
  * 
  * Verwendung ohne SQLUtils: 
  * ConnectionPool pool = ConnectionPool.getInstance(...); //lazy initialization
@@ -89,7 +89,7 @@ import com.gip.xyna.utils.db.utils.RepeatedExceptionCheck;
  *   ...
  *   con.commit();
  * } finally {
- *   con.close(); //zurückgeben an pool
+ *   con.close(); //zurï¿½ckgeben an pool
  * }
 
  * Verwendung mit SQLUtils: 
@@ -99,7 +99,7 @@ import com.gip.xyna.utils.db.utils.RepeatedExceptionCheck;
  *   ...
  *   sqlUtils.commit(); 
  * } finally {
- *   sqlUtils.closeConnection(); //zurückgeben an pool
+ *   sqlUtils.closeConnection(); //zurï¿½ckgeben an pool
  * }
  */
 public class ConnectionPool {
@@ -132,15 +132,15 @@ public class ConnectionPool {
     Initializing, Running, Closing, Closed, Broken;
   }
   
-  //Wrapper, um die Ausführungsweise des Cleanups zu steuern
+  //Wrapper, um die Ausfï¿½hrungsweise des Cleanups zu steuern
   public interface CleanupWrapper {
     public void registerCleanup(Runnable cleanup);
   }
 
-  //Zähler für registrierte CleanupWrapper, damit immer nur der neueste ausgeführt wird
+  //Zï¿½hler fï¿½r registrierte CleanupWrapper, damit immer nur der neueste ausgefï¿½hrt wird
   private static final AtomicInteger marker = new AtomicInteger(0);
 
-  //als Default wird ein "normaler" Shutdown-Hook verwendet, um das Cleanup durchzuführen
+  //als Default wird ein "normaler" Shutdown-Hook verwendet, um das Cleanup durchzufï¿½hren
   static {
     setCleanupWrapper(new CleanupWrapper() {
       public void registerCleanup(Runnable hook) {
@@ -150,7 +150,7 @@ public class ConnectionPool {
   }
 
   /**
-   * Setzt einen neuen CleanupWrapper, der dann das Schließen der ConnectionPools ausführt.
+   * Setzt einen neuen CleanupWrapper, der dann das Schlieï¿½en der ConnectionPools ausfï¿½hrt.
    * @param newCleanup
    */
   public static void setCleanupWrapper(CleanupWrapper newCleanup) {
@@ -220,7 +220,7 @@ public class ConnectionPool {
   }
 
   /**
-   * für abwärtskompatibiltät
+   * fï¿½r abwï¿½rtskompatibiltï¿½t
    * @param sqlConnectString
    * @param poolSize
    * @return
@@ -254,7 +254,7 @@ public class ConnectionPool {
   }
 
   /**
-   * für abwärtskompatibiltät
+   * fï¿½r abwï¿½rtskompatibiltï¿½t
    * @param cf
    * @param conPoolId
    * @param poolSize
@@ -324,8 +324,8 @@ public class ConnectionPool {
 
   /**
    * pooled sqlUtils mit default SQLUtilsLogger, der als verursachende Zeile der SQL Statements
-   * die Klasse loggt, in der sqlUtils.query(...) o.ä. aufgerufen wird.
-   * Zum Zurückgeben der Connection muss nur sqlUtils.closeConnection() aufgerufen werden
+   * die Klasse loggt, in der sqlUtils.query(...) o.ï¿½. aufgerufen wird.
+   * Zum Zurï¿½ckgeben der Connection muss nur sqlUtils.closeConnection() aufgerufen werden
    * @param clientInfo
    * @return
    * @throws SQLException
@@ -344,7 +344,7 @@ public class ConnectionPool {
         }
 
         /**
-         * Sorgt auf interessante Weise für das richtige Setzen des aufrufenden Zeile: (keine Zeile dieser Datei, sondern der Aufrufer)
+         * Sorgt auf interessante Weise fï¿½r das richtige Setzen des aufrufenden Zeile: (keine Zeile dieser Datei, sondern der Aufrufer)
          * siehe http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/Category.html
          * http://marc.info/?l=log4j-user&m=99859247618691&w=2
          * That's why you need to provide the fully-qualified classname. If you
@@ -390,7 +390,7 @@ public class ConnectionPool {
   /**
    * versucht innerhalb des timeouts (in millisekunden) eine connection aus dem pool zu bekommen.
    * 
-   * danach wird die connection validiert und die clientinfo gesetzt. die dafür benötigte zeit (oder falls das lange dauert,
+   * danach wird die connection validiert und die clientinfo gesetzt. die dafï¿½r benï¿½tigte zeit (oder falls das lange dauert,
    * weil es netzwerkprobleme gibt), ist nicht im timeout enthalten.
    */
   public PooledConnection getConnection(long timeout, String clientInfo) throws NoConnectionAvailableException {
@@ -460,7 +460,7 @@ public class ConnectionPool {
     // Keine Connection frei? Dann warte!
     long endTime = System.currentTimeMillis() + timeout;
 
-    //TODO besser wäre es, wenn jeder thread sein eigenes objekt hat, auf dem er wartet. was passiert dann, wenn ein thread mehrere connections will?
+    //TODO besser wï¿½re es, wenn jeder thread sein eigenes objekt hat, auf dem er wartet. was passiert dann, wenn ein thread mehrere connections will?
     synchronized (waitingThreads) {
       waitingThreads.addLast(currentThread);
     }
@@ -489,14 +489,14 @@ public class ConnectionPool {
             } catch (InterruptedException e1) {
               throw new NoConnectionAvailableException(Reason.PoolExhausted);
             }
-            //nur der erste thread darf versuchen sich eine connection zu holen. die anderen müssen warten
+            //nur der erste thread darf versuchen sich eine connection zu holen. die anderen mï¿½ssen warten
             if (waitingThreads.indexOf(currentThread) > 0) {
               continue;
             }
           }
         }
 
-        // Aufgeweckt? Dann könnte nun eine Connection frei sein... .
+        // Aufgeweckt? Dann kï¿½nnte nun eine Connection frei sein... .
         // Falls jemand schneller war: con bleibt null => wieder warten.          
         synchronized (listLock) {
           if (listFree.size() > 0) {
@@ -552,8 +552,8 @@ public class ConnectionPool {
           //Letzter Check war auch schon nicht erfolgreich. Wahrscheinlich sind mittlerweile alle 
           //freien Connections schon einmal als fehlerhaft validiert worden und kommen nun 
           //zum zweiten Mal in die Validierung.
-          //Damit dies nicht ewig so weitergeht, müssen die Connections neugebaut werden und nicht 
-          //mit dem throw einfach nur übersprungen werden. 
+          //Damit dies nicht ewig so weitergeht, mï¿½ssen die Connections neugebaut werden und nicht 
+          //mit dem throw einfach nur ï¿½bersprungen werden. 
           return false;
         }
         throw new NoConnectionAvailableException( exception, connectionPoolParameter.getNoConnectionAvailableReasonDetector() );
@@ -675,14 +675,14 @@ public class ConnectionPool {
   }
   
   /**
-   * schliesst alle connections des zugehörigen pools. auf connections wartende threads werden
+   * schliesst alle connections des zugehï¿½rigen pools. auf connections wartende threads werden
    * mit einem fehler beantwortet. entfernt den pool nicht, damit ein erneuter aufruf von
    * ConnectionPool.getInstance(...) keinen neuen Pool erstellt. um den Pool zu entfernen, muss
    * removePool() aufgerufen werden.
    * @param pool
    * @param force falls true, werden auch connections, die gerade in benutzung sind geschlossen.
-   * ansonsten wird mit dem übergebenen timeout versucht auf die connections in benutzung zu
-   * warten. sind sie bis dahin nicht zurückgegeben, werden sie hart geschlossen.
+   * ansonsten wird mit dem ï¿½bergebenen timeout versucht auf die connections in benutzung zu
+   * warten. sind sie bis dahin nicht zurï¿½ckgegeben, werden sie hart geschlossen.
    * @param timeout milliseconds. will only be used if force=false. cumulative!
    * @throws ConnectionCouldNotBeClosedException falls eine oder mehrere der connections nicht
    * geschlossen werden konnten
@@ -706,7 +706,7 @@ public class ConnectionPool {
       for (Thread th: waitingThreads) {
         th.interrupt();
       }
-      waitingThreads.clear(); //damit man sich später selbst sorgenfrei hier reinhängen kann
+      waitingThreads.clear(); //damit man sich spï¿½ter selbst sorgenfrei hier reinhï¿½ngen kann
     }
     int cntErroneous = 0;
     int lfs = 0;
@@ -756,8 +756,8 @@ public class ConnectionPool {
             }
           }
         } else {
-          //lfs == 0, lus > 0, force=false und timeout noch nicht überschritten => warten
-          //es könnte allerdings sein, dass seit beginn der whileschleife eine connection frei
+          //lfs == 0, lus > 0, force=false und timeout noch nicht ï¿½berschritten => warten
+          //es kï¿½nnte allerdings sein, dass seit beginn der whileschleife eine connection frei
           //geworden ist.
           synchronized (listLock) {
             lfs = listFree.size();
@@ -950,7 +950,7 @@ public class ConnectionPool {
   
   /**
    * unterscheidet sich von einer normalen connection dadurch, dass sie beim close
-   * an den pool zurückgegeben wird.
+   * an den pool zurï¿½ckgegeben wird.
    */
   public static class PooledConnection extends WrappedConnection {
 
@@ -959,7 +959,7 @@ public class ConnectionPool {
     }
 
     /**
-     * Gibt die Connection zurück an den Pool (innere Con ist eine PoolEntryConnection)
+     * Gibt die Connection zurï¿½ck an den Pool (innere Con ist eine PoolEntryConnection)
      * Eine geschlossene Connection sollte von niemandem weiterverwendet werden, daher wird 
      * die innere Connection genullt. Die danach auftreteneden NPEs sollen eine starke Warnung sein!
      */
@@ -1086,7 +1086,7 @@ public class ConnectionPool {
 
     public Reason getReason() {
       if( reason == null ) {
-        reason = Reason.Other; //nur für Abwärts 
+        reason = Reason.Other; //nur fï¿½r Abwï¿½rts 
       }
       return reason;
     }
@@ -1120,8 +1120,8 @@ public class ConnectionPool {
   }
 
   /**
-   * in millisekunden: nach welcher zeit der nicht-benutzung im pool wird eine connection erneut überprüft, ob sie noch gültig ist.
-   * falls <=0 : überprüfung jedes mal
+   * in millisekunden: nach welcher zeit der nicht-benutzung im pool wird eine connection erneut ï¿½berprï¿½ft, ob sie noch gï¿½ltig ist.
+   * falls <=0 : ï¿½berprï¿½fung jedes mal
    * @deprecated 
    */
   public void setCheckInterval(long checkInterval) {
@@ -1133,7 +1133,7 @@ public class ConnectionPool {
       if (sql == null) {
         sql = "null";
       }
-      //TODO eher als ringbuffer implementieren statt zu clearen. älteste statistiken fliegen raus
+      //TODO eher als ringbuffer implementieren statt zu clearen. ï¿½lteste statistiken fliegen raus
       if (storedSQLs.size() > maxSizeForSQLStatistics) {
         storedSQLs.clear();
       }
@@ -1181,8 +1181,8 @@ public class ConnectionPool {
   }
   
   /**
-   * maximale anzahl der für statistics gespeicherten sqls.
-   * wird diese größe überschritten, werden alle gespeicherten sqls gelöscht.
+   * maximale anzahl der fï¿½r statistics gespeicherten sqls.
+   * wird diese grï¿½ï¿½e ï¿½berschritten, werden alle gespeicherten sqls gelï¿½scht.
    * per default auf {@link #DEFAULT_MAXSIZE_SQLSTATISTICS} 
    */
   public void setMaxSizeForSQLStatistics(int maxSize) {
@@ -1305,9 +1305,9 @@ public class ConnectionPool {
   }
   
   /**
-   * diese informationen sind unter umständen nicht konsistent. zb kann es passieren, 
+   * diese informationen sind unter umstï¿½nden nicht konsistent. zb kann es passieren, 
    * dass zwischen dem ermitteln eines attributs einer connection und einem anderen 
-   * sich die daten drastisch ändern. zb ist der aktive thread ggfs schon an dem close 
+   * sich die daten drastisch ï¿½ndern. zb ist der aktive thread ggfs schon an dem close 
    * vorbei, trotzdem ist die connection laut connectioninfo noch nicht closed.
    */
   public ConnectionInformation[] getConnectionStatistics() {
@@ -1341,7 +1341,7 @@ public class ConnectionPool {
   }
   
   /**
-   * statistiken, wie oft sqls ausgeführt wurden.
+   * statistiken, wie oft sqls ausgefï¿½hrt wurden.
    */
   public Map<String, Integer> getSQLStatistics() {
     Map<String, Integer> m = storedSQLs;
@@ -1355,8 +1355,8 @@ public class ConnectionPool {
    * falls @param closeConnectionsInUseImmediately = true, werden:
    * - alle freien und alle aktiven connection geschlossen 
    * - alle connections im pool durch neue connections ersetzt
-   * das führt dann dazu, dass jeder zukünftig anfragende (oder derzeit wartende) thread eine neue funktionierende connection bekommt. die bestehenden
-   * threads die eine aktive connection haben, werden vermutlich in einen fehler laufen, ausser sie müssen nur noch ein close() durchführen, dann
+   * das fï¿½hrt dann dazu, dass jeder zukï¿½nftig anfragende (oder derzeit wartende) thread eine neue funktionierende connection bekommt. die bestehenden
+   * threads die eine aktive connection haben, werden vermutlich in einen fehler laufen, ausser sie mï¿½ssen nur noch ein close() durchfï¿½hren, dann
    * gibt es keinen fehler.
    * - wenn fehler beim schliessen der connections auftreten, werden trotzdem alle connections neu erstellt.
    * 
@@ -1364,16 +1364,16 @@ public class ConnectionPool {
    * - alle freien connections geschlossen
    * - alle (freien und aktiven) connections aus dem pool entfernt und durch neue ersetzt
    * - aktive connections erst geschlossen, wenn der jeweilige thread das close() aufruft.
-   * vorrübergehend sind damit maximal 2*connectionPoolSize offene connections vorhanden.
+   * vorrï¿½bergehend sind damit maximal 2*connectionPoolSize offene connections vorhanden.
    * 
-   * fehler beim schliessen bestehender connections werden nur geloggt, fehler beim erstellen neuer connections führen zum abbruch und
+   * fehler beim schliessen bestehender connections werden nur geloggt, fehler beim erstellen neuer connections fï¿½hren zum abbruch und
    * werden weitergeworfen.
    */
   public void recreateAllConnections(boolean closeConnectionsInUseImmediately) {
-    //TODO ein modus wäre noch schön, der nur immediately die connections schliesst, wenn sie bereits längere zeit hängen, bzw, wenn der thread, der die
-    //     connection hält, innerhalb eines timeouts nicht zurückkommt.
-    //     usecase: man will die connections eines pools neu erstellen, während er noch in "normaler" verwendung ist, ohne fehler bei den benutzern
-    //     zu erzeugen, die durch das bisherige closeImmediately die connection während der verwendung geschlossen bekommen können.
+    //TODO ein modus wï¿½re noch schï¿½n, der nur immediately die connections schliesst, wenn sie bereits lï¿½ngere zeit hï¿½ngen, bzw, wenn der thread, der die
+    //     connection hï¿½lt, innerhalb eines timeouts nicht zurï¿½ckkommt.
+    //     usecase: man will die connections eines pools neu erstellen, wï¿½hrend er noch in "normaler" verwendung ist, ohne fehler bei den benutzern
+    //     zu erzeugen, die durch das bisherige closeImmediately die connection wï¿½hrend der verwendung geschlossen bekommen kï¿½nnen.
     synchronized (listLock) {
       boolean success = false;
 
@@ -1466,12 +1466,12 @@ public class ConnectionPool {
   
   
   /**
-   * stellt sicher, dass die connection funktionstüchtig ist, indem erstens die innere connection getestet wird, und
-   * falls sie geschlossen oder nicht funktionstüchtig ist, neu aufgemacht wird.
-   * @param con pooledconnection, die geprüft werden soll
+   * stellt sicher, dass die connection funktionstï¿½chtig ist, indem erstens die innere connection getestet wird, und
+   * falls sie geschlossen oder nicht funktionstï¿½chtig ist, neu aufgemacht wird.
+   * @param con pooledconnection, die geprï¿½ft werden soll
    * @throws SQLException
-   * @throws ConnectionNotInPoolException falls connection nicht zum pool gehört
-   * @throws DiscardedConnectionException falls connection von {@link #recreateAllConnections(boolean)} ungültig gemacht
+   * @throws ConnectionNotInPoolException falls connection nicht zum pool gehï¿½rt
+   * @throws DiscardedConnectionException falls connection von {@link #recreateAllConnections(boolean)} ungï¿½ltig gemacht
    *           wurde
    */
   public void ensureConnectivity(Connection con) throws SQLException {
@@ -1512,7 +1512,7 @@ public class ConnectionPool {
         Exception e = validationStrategy.validate(peCon.getInnerConnection() );
         if (e != null) {
           logger.trace("connection could not be validated ", e);
-          //alte connection aufräumen
+          //alte connection aufrï¿½umen
           try {
             peCon.getInnerConnection().rollback();
           } catch (SQLException ee) {

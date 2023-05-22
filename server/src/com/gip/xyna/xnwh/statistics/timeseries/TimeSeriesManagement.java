@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ public class TimeSeriesManagement extends FunctionGroup {
   protected void init() throws XynaException {
     types = new HashMap<>();
     typesByName = new HashMap<>();
-    //initialisierung erst, nachdem xynaproperties auch verfügbar sind
+    //initialisierung erst, nachdem xynaproperties auch verfï¿½gbar sind
     XynaFactory.getInstance().getFutureExecution().addTask(TimeSeriesManagement.class, "TimeSeriesMgmt").after(XynaProperty.class)
         .execAsync(new Runnable() {
 

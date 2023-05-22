@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
 
   private static class OrderInputSourceSeriesInfo {
 
-    //map von einer eindeutigen id für den wf-schritt auf die id der referenzierten inputsource
+    //map von einer eindeutigen id fï¿½r den wf-schritt auf die id der referenzierten inputsource
     private final Map<String, Long> childOrderInputSources = new HashMap<String, Long>();
 
     //alle von der serie direkt aufgerufenen inputsource-Ids
@@ -462,7 +462,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
         if (p.getName().equals(specific.getKey())) {
           ret.put(p.getName(), p.parse(specific.getValue()));
           found = true;
-          break; //nächstes specific
+          break; //nï¿½chstes specific
         }
       }
       if (!found) {
@@ -507,7 +507,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
       List<OrderInputSourceSpecificStorable> specifics = new ArrayList<OrderInputSourceSpecificStorable>();
       Map<String, String> paras = oiss.getParameters();
       for (Entry<String, String> para : paras.entrySet()) {
-        //ids nicht benötigt
+        //ids nicht benï¿½tigt
         specifics.add(new OrderInputSourceSpecificStorable(-1, -1, para.getKey(), para.getValue()));
       }
       createOrderInputSourceFromType(oiss, specifics, false);
@@ -527,7 +527,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
     
     orderInputSourceTypes.remove(name);
 
-    //OrderInputGeneratorTypeStorable löschen
+    //OrderInputGeneratorTypeStorable lï¿½schen
     storage.deleteOrderInputSourceType(name);
   }
 
@@ -536,7 +536,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
     List<PluginDescription> pds = new ArrayList<PluginDescription>();
     for (Entry<String, OrderInputSourceType> oigt : orderInputSourceTypes.entrySet()) {
       try {
-        //forms müssen simplename / label umändern auf den typ-namen, den beim registrieren angegeben wurde
+        //forms mï¿½ssen simplename / label umï¿½ndern auf den typ-namen, den beim registrieren angegeben wurde
         pds.add(transformForms(oigt.getKey(), oigt.getValue().showDescription()));
       } catch (XPRC_XmlParsingException e) {
         logger.info("Invalid form xmls in InputSourceType " + oigt.getKey() + ".", e);
@@ -594,7 +594,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
 
 
   /**
-   * Lädt die Klasse "fqClassName" für einen {@link OrderInputSourceType} vom Typ "type"
+   * Lï¿½dt die Klasse "fqClassName" fï¿½r einen {@link OrderInputSourceType} vom Typ "type"
    */
   private OrderInputSourceType loadOrderInputSourceType(String name, String fqClassName) throws XynaException {
     OrderInputSourceTypeClassLoader oigtcl = new OrderInputSourceTypeClassLoader(name);
@@ -711,7 +711,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
 
     //TODO eine transaktion statt mehrerer!
 
-    //alle überbleibenden alten specifics löschen
+    //alle ï¿½berbleibenden alten specifics lï¿½schen
     con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       con.delete(existingSpecifics);
@@ -734,7 +734,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
 
 
   public void deleteOrderInputSource(long inputSourceId) throws XynaException {
-    //TODO überprüfen, ob noch in verwendung?
+    //TODO ï¿½berprï¿½fen, ob noch in verwendung?
     try {
       OrderInputSourceStorable ois = storage.getOrderInputSourceById(inputSourceId);
       unregisterFromDeploymentItemStateManagement(ois.getName(), ois.getRevision());
@@ -750,7 +750,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
 
 
   /**
-   * Alle OrderInputSources einer Revision löschen
+   * Alle OrderInputSources einer Revision lï¿½schen
    */
   public void deleteOrderInputSourcesForRevision(long revision) throws PersistenceLayerException {
     List<OrderInputSourceStorable> deletedInputSources = storage.deleteOrderInputSourcesForRevision(revision);
@@ -827,8 +827,8 @@ public class OrderInputSourceManagement extends FunctionGroup {
             addChildren(child, generationContextId, xocp.getDestinationKey(), visited, parameters);
           }
         }
-        //TODO hier könnte man auch noch versuchen, die workflows zu untersuchen, die keine inputsources DIREKT referenzieren
-        //weil die könnten ja wiederum subwfs enthalten, die inputsources referenzieren.
+        //TODO hier kï¿½nnte man auch noch versuchen, die workflows zu untersuchen, die keine inputsources DIREKT referenzieren
+        //weil die kï¿½nnten ja wiederum subwfs enthalten, die inputsources referenzieren.
       }
     }
   }
@@ -842,7 +842,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
           XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaExecution()
               .getExecutionDestination(xo.getDestinationKey());
     } catch (XPRC_DESTINATION_NOT_FOUND e) {
-      //ignorieren. gibt später eh noch einen fehler...
+      //ignorieren. gibt spï¿½ter eh noch einen fehler...
       return;
     }
     OrderInputSourceSeriesInfo seriesInfo = orderInputSourceSeriesInfo.get(Pair.of(destination, destination.resolveRevision(xo.getDestinationKey())));
@@ -899,7 +899,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
   public String[] refactor(DependencySourceType refactoredObjectType, String fqClassNameOld, String fqClassNameNew, Long revision)
       throws XynaException {
     /*
-     * jede input source überprüfen, ob sie betroffen ist. delegation an inputsourcetype für interne refactoringarbeit
+     * jede input source ï¿½berprï¿½fen, ob sie betroffen ist. delegation an inputsourcetype fï¿½r interne refactoringarbeit
      */
     if (refactoredObjectType == DependencySourceType.ORDERTYPE) {
       DestinationValue key = new FractalWorkflowDestination(fqClassNameOld);
@@ -941,7 +941,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
               throw new RuntimeException("Invalid input parameter for orderinputsource of type " + ois.getType() + " : " + para.getKey());
             }
             found = true;
-            break; //nächstes specific
+            break; //nï¿½chstes specific
           }
         }
         if (!found) {
@@ -951,7 +951,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
 
       //eigentliche delegation an inputsourcetype
       if (orderInputSourceType.refactorParameters(paras, refactoredObjectType, fqClassNameOld, fqClassNameNew)) {
-        //neue parameter map übernehmen. dafür muss sie erst wieder transformiert werden
+        //neue parameter map ï¿½bernehmen. dafï¿½r muss sie erst wieder transformiert werden
         changed = true;
         List<OrderInputSourceSpecificStorable> specifics = new ArrayList<OrderInputSourceSpecificStorable>();
         for (Entry<String, Object> para : paras.entrySet()) {
@@ -1003,7 +1003,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement();
     final Optional<DeploymentItem> di = DeploymentItemBuilder.buildInputSource(oigs, inputGen);
     long revision = oigs.getRevision();
-    //immer so tun, als wäre die inputsource deployed
+    //immer so tun, als wï¿½re die inputsource deployed
     deploymentItemStateManagement.save(di.get(), revision);
     DeploymentContext ctx = new DeploymentContext(new GenerationBaseCache()) {
 
@@ -1051,7 +1051,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
 
 
   public static String convertTypeNameToFQFormName(String typeName) {
-    //GUI benötigt, dass formname immer datatypename + "Form" ist
+    //GUI benï¿½tigt, dass formname immer datatypename + "Form" ist
     return convertTypeNameToFQDatatypeName(typeName) + "Form";
   }
 
@@ -1085,10 +1085,10 @@ public class OrderInputSourceManagement extends FunctionGroup {
   
   
   /*
-   * - TODO zähle mehrfache aufrufe von workflows, die auch mehrfach
+   * - TODO zï¿½hle mehrfache aufrufe von workflows, die auch mehrfach
    * - bei rekursion abbrechen
-   * - zähle jede inputsource-invocation einzeln
-   * - bei foreaches nur einmal zählen
+   * - zï¿½hle jede inputsource-invocation einzeln
+   * - bei foreaches nur einmal zï¿½hlen
    */
   private int getReferenceCountRecursively(DestinationValue dv, List<String> visitedWFsStack, Long rootRevision) {
     if (visitedWFsStack.contains(dv.getFQName())) {
@@ -1109,7 +1109,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
           }
           s = info.cntAllOrderInputSources;
         }
-        //subworkflows über deploymentitemstatemanagement herausfinden
+        //subworkflows ï¿½ber deploymentitemstatemanagement herausfinden
         DeploymentItemStateImpl diis =
             (DeploymentItemStateImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement().get(dv.getFQName(), aRevision);
         if (diis != null) {

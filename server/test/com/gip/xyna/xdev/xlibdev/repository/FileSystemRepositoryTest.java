@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ import com.gip.xyna.xfmg.Constants;
 
 public class FileSystemRepositoryTest extends TestCase {
 
-  private static final String CONTENT_1 = "abcä\nx";
-  private static final String CONTENT_2 = "abcöy";
+  private static final String CONTENT_1 = "abcï¿½\nx";
+  private static final String CONTENT_2 = "abcï¿½y";
   private static final String FILE_1 = "a/b/c.txt";
   private static final String FILE_2 = "a/c/d/c.txt";
 

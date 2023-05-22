@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class XTFInputSource implements OrderInputSource{
   }
 
 
-  //kann berschrieben werden um mit zusätzlichem input anzureichern
+  //kann berschrieben werden um mit zusï¿½tzlichem input anzureichern
   public Optional<XynaOrderCreationParameter> getOrderCreationParameterForWorkflowToCreateInputWith() {
     if (xocpForWorkflowToCreateInputWith.isPresent()) {
       XynaOrderCreationParameter xocp = new XynaOrderCreationParameter(xocpForWorkflowToCreateInputWith.get());
@@ -193,7 +193,7 @@ public class XTFInputSource implements OrderInputSource{
 
 
     private boolean mayCall(OperationInterface caller, OperationInterface interfaceToCall) {
-      //nun kann der caller noch den zusätzlichen xprc.xpce.OrderCreationParameter parameter haben, den man beim vergleich ignorieren muss
+      //nun kann der caller noch den zusï¿½tzlichen xprc.xpce.OrderCreationParameter parameter haben, den man beim vergleich ignorieren muss
 
       List<TypeInterface> input = new ArrayList<TypeInterface>();
       for (TypeInterface ti : caller.getOutput()) {

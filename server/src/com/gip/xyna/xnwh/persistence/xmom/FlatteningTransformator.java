@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@ public class FlatteningTransformator {
     private void addReferencedStorableToStack(StorableColumnInformation sci) {
       if (sci.isStorableVariable()) {
         if (sci.isList() && sci.getStorableVariableInformation().isReferencedList()) {
-          //die hilfstabelle für die listenwertigkeit überspringen
+          //die hilfstabelle fï¿½r die listenwertigkeit ï¿½berspringen
           sci = sci.getStorableVariableInformation().getColInfoByVarType(VarType.REFERENCE_FORWARD_FK);
         }
         structureStack.add(new XMOMStorableStructureInfoWrapper(sci.getStorableVariableInformation(), variablePartStack.size()));
@@ -278,7 +278,7 @@ public class FlatteningTransformator {
       String transformation = vis.getXFLExpression() + (xfl.endsWith("*") ? "*" : "");
       return transformation;
     } catch (XPRC_ParsingModelledExpressionException e) {
-      //ersetzte[] in der position in der fehlermeldung berücksichtigen
+      //ersetzte[] in der position in der fehlermeldung berï¿½cksichtigen
       int cnt = 0;
       for (int i = 0; i < e.getPosition(); i++) {
         if (xfl2.charAt(i) == '[') {

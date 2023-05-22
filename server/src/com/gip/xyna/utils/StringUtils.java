@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ public class StringUtils {
   
   
   /**
-   * ohne support für reguläre ausdrücke, mit limit&lt;0 am schnellsten.
+   * ohne support fï¿½r regulï¿½re ausdrï¿½cke, mit limit&lt;0 am schnellsten.
    */
   public static String[] fastSplit(String s, char delimiter, int limit) {
     if (limit < 0) {
@@ -161,7 +161,7 @@ public class StringUtils {
   }
   
   /**
-   * ohne support für reguläre ausdrücke
+   * ohne support fï¿½r regulï¿½re ausdrï¿½cke
    */
   //vgl https://gist.github.com/banthar/2923321
   private static String[] fastSplitInternally(String s, char delimiter) {
@@ -195,7 +195,7 @@ public class StringUtils {
 
 
   /**
-   * ohne support für reguläre ausdrücke
+   * ohne support fï¿½r regulï¿½re ausdrï¿½cke
    */
   //aus apache lang commons StringUtils
   public static String fastReplace(String text, String searchString, String replacement, int max) {
@@ -250,7 +250,7 @@ public class StringUtils {
    * @param sb gelesener, unmaskierter String
    * @param string
    * @param sep
-   * @return Index des nächsten nicht gelesenen Zeichen im String string
+   * @return Index des nï¿½chsten nicht gelesenen Zeichen im String string
    */
   public static int readMaskedUntil(StringBuilder sb, String string, char sep) {
     boolean lastBackSlash = false;
@@ -277,7 +277,7 @@ public class StringUtils {
   public static StringReplacer toLiteral = StringReplacer.
       replace('\\',"\\\\").
       replace('\"',"\\\"").
-      //replace('\'',"\\'"). TODO nötig?
+      //replace('\'',"\\'"). TODO nï¿½tig?
       replace('\n',"\\n").
       replace('\r',"\\r").
       replace('\b',"\\b").

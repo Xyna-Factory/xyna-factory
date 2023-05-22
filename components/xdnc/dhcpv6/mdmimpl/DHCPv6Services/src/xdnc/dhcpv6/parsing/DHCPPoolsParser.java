@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public class DHCPPoolsParser {
 
 
   /**
-   * gibt true zurück, falls eine weitere zeile gelesen werden konnte
+   * gibt true zurï¿½ck, falls eine weitere zeile gelesen werden konnte
    */
   private boolean readNextLine() throws IOException {
     boolean b = null != (line = reader.readLine());
@@ -104,7 +104,7 @@ public class DHCPPoolsParser {
   }
 
 
-  //aktuelle zeile ist die erste, die überprüft wird
+  //aktuelle zeile ist die erste, die ï¿½berprï¿½ft wird
   private SharedNetwork parseSharedNetwork() throws IOException, DHCPPoolsFormatException, DHCPPoolsIgnoreLineException {
     if (!gotoNextNonEmptyLine()) {
       return null;
@@ -135,7 +135,7 @@ public class DHCPPoolsParser {
     } else {
       throw new DHCPPoolsFormatException("expected shared Network in line <" + lineNumber + ">: " + line);
     }
-    //cursor ist auf der ersten zeile, die nicht mehr zum shared network gehört.
+    //cursor ist auf der ersten zeile, die nicht mehr zum shared network gehï¿½rt.
   }
 
 
@@ -282,8 +282,8 @@ public class DHCPPoolsParser {
 
 
   /**
-   * liest solange zeilen aus bis das ende des streams oder eine nicht leere zeile gefunden wurde. gibt true zurück,
-   * falls die zuletzt ausgelesene zeile eine nicht leere zeile war. gibt false zurück, falls ende des streams erreicht.
+   * liest solange zeilen aus bis das ende des streams oder eine nicht leere zeile gefunden wurde. gibt true zurï¿½ck,
+   * falls die zuletzt ausgelesene zeile eine nicht leere zeile war. gibt false zurï¿½ck, falls ende des streams erreicht.
    */
   private boolean gotoNextNonEmptyLine() throws IOException {
     while (true) {

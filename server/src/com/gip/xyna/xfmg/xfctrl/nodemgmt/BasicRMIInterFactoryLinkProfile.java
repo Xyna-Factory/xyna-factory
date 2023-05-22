@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ public abstract class BasicRMIInterFactoryLinkProfile<R extends Remote> implemen
           }
           if (cnt > 0) {
             throw new XFMG_NodeConnectException(nodeName + " in " + (end - start) + " ms", e);
-          } //else 1 retry, für den fall, dass das remote objekt referenz einfach nur veraltet war (z.b. durch classloader-reloading)
+          } //else 1 retry, fï¿½r den fall, dass das remote objekt referenz einfach nur veraltet war (z.b. durch classloader-reloading)
         } catch (Exception e) { //RemoteException
           long end = System.currentTimeMillis();
           if (rmi != null) {

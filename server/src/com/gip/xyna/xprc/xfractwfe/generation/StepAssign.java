@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ public class StepAssign extends Step {
 
     for (int i = 0; i < input.length(); i++) {
       cb.add(targetVars[i].getScopeGetter(getParentScope()));
-      //casten zum typ, typen müssen immer verträglich sein.
+      //casten zum typ, typen mï¿½ssen immer vertrï¿½glich sein.
       cb.add(targetVars[i].variable.getSetter("("
                                                   + targetVars[i].variable
                                                       .getEventuallyQualifiedClassNameWithGenerics(importedClassesFqStrings) + ") "

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ public class Condition {
     } else if (e instanceof Not) {
       Condition c = convertExpressionIntoCondition2(sqlString, ((Not) e).subExpression);
       if (!(((Not) e).subExpression instanceof AndOrExpressions)) {
-        //FIXME nur aus abwärtskompatibilitätsgründen zwischenschicht
+        //FIXME nur aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden zwischenschicht
         Condition c2 = new Condition();
         c2.isEmpty = false;
         c2.conditions.add(c);
@@ -203,7 +203,7 @@ public class Condition {
 
 
     public int getNextParameterIndex() {
-      return parameterIndex++; // vorherigen index zurückgeben
+      return parameterIndex++; // vorherigen index zurï¿½ckgeben
     }
 
   }
@@ -233,7 +233,7 @@ public class Condition {
     return exprToJava(expr, context, otherExpr, false);
   }
   
-  private final static Pattern findCharsToReplaceForStringLiteral = Pattern.compile("([\\\\\"])"); //backslashes und anführungszeichen
+  private final static Pattern findCharsToReplaceForStringLiteral = Pattern.compile("([\\\\\"])"); //backslashes und anfï¿½hrungszeichen
 
   private String exprToJava(String expr, JavaGenContext context, String otherExpr, boolean escapeExprForLikeStatement)
       throws PreparedQueryBuildException {
@@ -246,14 +246,14 @@ public class Condition {
        * "."a%     -> a ist escaped, es wird praktisch nach strings, die mit .a anfangen gesucht
        *    \.a  
        * \"a%      -> es wird nach strings, die mit "a anfangen gesucht
-       *    \"a (generierter javacode benötigt anführungszeichen escaped)
+       *    \"a (generierter javacode benï¿½tigt anfï¿½hrungszeichen escaped)
        * \\\"a%     -> es wird nach strings, die mit \"a anfangen gesucht
        *    \\\\\"a
        * \\\\\"a%   -> es wird nach strings, die mit \\"a anfangen gesucht
        *    \\\\\\\\\"a
        *    
-       * für string müssen anführungszeichen und backslashes jeweils 1x escaped werden
-       * für regexp müssen backslashes 1x escaped werden
+       * fï¿½r string mï¿½ssen anfï¿½hrungszeichen und backslashes jeweils 1x escaped werden
+       * fï¿½r regexp mï¿½ssen backslashes 1x escaped werden
        * 
        */
       String exprSubstring = expr.substring(1, expr.length() - 1);
@@ -417,7 +417,7 @@ public class Condition {
 
       boolean localConditionOperatorInJavaEndsWithClosingBrace = localConditionOperatorInJava.endsWith("(");
       if (likeOperator && localConditionOperatorContainsQuotationMarks) {
-        // weil der javaoperator ... + "").matches( keine öffnende klammer hat; für Strings ist der Operator aber nur
+        // weil der javaoperator ... + "").matches( keine ï¿½ffnende klammer hat; fï¿½r Strings ist der Operator aber nur
         // '.matches(', d.h. es wird doch wieder keine Klammer gebraucht
         sb.append("(");
       } else if (!localConditionOperatorInJavaEndsWithClosingBrace && isNegated) {

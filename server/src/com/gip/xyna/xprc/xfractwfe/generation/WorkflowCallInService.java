@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class WorkflowCallInService extends WorkflowCall {
   
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_CREATE_OR_GET_XYNA_ORDER = ChildOrderStorageStack.class.getDeclaredMethod(_METHODNAME_CREATE_OR_GET_XYNA_ORDER_ORIG, String.class, long.class).getName();
     } catch (Exception e) {
@@ -86,7 +86,7 @@ public class WorkflowCallInService extends WorkflowCall {
 
   @Override
   protected void getImports(Set<String> imports) {
-    //nun noch die parameter der lokal deklarierten schnittstelle. z.b. könnte da eine exception definiert sein, die im workflow nicht geworfen wird
+    //nun noch die parameter der lokal deklarierten schnittstelle. z.b. kï¿½nnte da eine exception definiert sein, die im workflow nicht geworfen wird
     //die schnittstellen parameter vom workflow sind nicht so wichtig, weil die im code nicht verwendet werden
     
     for (AVariable v : getInputVars()) {
@@ -145,7 +145,7 @@ public class WorkflowCallInService extends WorkflowCall {
       cb.add("new Container(");
     }
 
-    cb.addListElement("this"); //instanz übergeben
+    cb.addListElement("this"); //instanz ï¿½bergeben
 
     for (AVariable v : getInputVars()) {
       if (v.isList()) {
@@ -226,7 +226,7 @@ public class WorkflowCallInService extends WorkflowCall {
       if (includeImplementation) {
         cb.addListElement(v.getEventuallyQualifiedClassNameWithGenerics(importedClassesFqStrings) + " "
             + v.getVarName());
-        //FIXME list generics extensions nicht abwärtskompatibel zu alten service-impls. siehe auch klasse javaoperation
+        //FIXME list generics extensions nicht abwï¿½rtskompatibel zu alten service-impls. siehe auch klasse javaoperation
         //cb.addListElement((v.isList() ? "List " : v.getEventuallyQualifiedClassNameWithGenerics(importedClassesFqStrings) + " ") + v.getVarName());
       } else {
         cb.addListElement(v.getEventuallyQualifiedClassNameWithGenerics(importedClassesFqStrings) + " "

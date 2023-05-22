@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,8 +96,8 @@ public abstract class CronLikeSchedulingClusterServices extends FunctionGroup
     }
 
     public void onChange(ClusterState newState) {
-      // reaktion auf cluster state änderungen, die den direkten RMI interconnect betreffen und
-      // z.B. das removeCronLikeOrder beeinträchtigen
+      // reaktion auf cluster state ï¿½nderungen, die den direkten RMI interconnect betreffen und
+      // z.B. das removeCronLikeOrder beeintrï¿½chtigen
       if (clusterState == newState)
         return;
       clusterState = newState;
@@ -163,14 +163,14 @@ public abstract class CronLikeSchedulingClusterServices extends FunctionGroup
         clusterContext.getFutureExecution()
             .addTask(FUTURE_EXECUTION_TASK_ON_CHANGEHANDLER_ID, "CronLikeScheduler-ClusterState." + newState)
             .after(ClusteredOrderArchive.FUTURE_EXECUTION_TASK_ON_CHANGEHANDLER_ID).
-            // FIXME diese After-abhängigkeit (und die entsprechende in
+            // FIXME diese After-abhï¿½ngigkeit (und die entsprechende in
             // ManualInteractionManagement) nur dann setzen
             // wenn beide auf die gleiche cluster-instanz konfiguriert sind.
             execAsync(new Runnable() {
               public void run() {
                 if (XynaFactory.getInstance().isShuttingDown()) {
-                  // Wenn Server gerade runterfährt, sollte dieser
-                  // Statusübergang ignoriert werden, da die Migration auch
+                  // Wenn Server gerade runterfï¿½hrt, sollte dieser
+                  // Statusï¿½bergang ignoriert werden, da die Migration auch
                   // nicht statt finden wird!
                   return;
                 }

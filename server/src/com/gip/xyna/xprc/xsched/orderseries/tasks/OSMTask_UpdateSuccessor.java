@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.gip.xyna.xprc.xsched.orderseries.OSMRemoteInterface.Result;
 /**
  * OSMTask_UpdateSuccessor:
  * <br>
- * Wird von OSMLocalImpl gerufen, wenn für den Aufruf updateSuccessor das nötige Lock nicht erhalten wurde,
+ * Wird von OSMLocalImpl gerufen, wenn fï¿½r den Aufruf updateSuccessor das nï¿½tige Lock nicht erhalten wurde,
  * oder von OSMRemoteProxyImpl, wenn anderer Knoten nicht erreichbar ist
  * <br>
  * Hier in dem separaten Task kann dann solange gewartet werden, bis das Lock erhalten wird. Dann muss
@@ -37,7 +37,7 @@ import com.gip.xyna.xprc.xsched.orderseries.OSMRemoteInterface.Result;
  * 2) Auswertung Ergebnis updateSuccessorWithNormalLock
  * 2.1) Success:  Successor ist gefunden und evtl. gestartet. 
  *                Nichts weiter zu tun, Predecessor ist bereits angepasst.
- * 2.1) later:    Operation wird später wiederholt, nichts weiter zu tun
+ * 2.1) later:    Operation wird spï¿½ter wiederholt, nichts weiter zu tun
  * 2.2) sonstige: nicht erlaubt -&gt; IllegalStateException
  * </pre>
  *

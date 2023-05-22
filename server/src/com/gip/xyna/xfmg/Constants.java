@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,12 +44,12 @@ public class Constants {
   public static final String PERSISTENCE_GEN_CLASSES_PACKAGE = "com.gip.xyna.xnwh.persistence.memory.gen";
   public static final String CLUSTER_PROVIDER_BASE_PACKAGE = "com.gip.xyna.xfmg.xclusteringservices.clusterprovider";
   
-  //TODO schöner für tests wäre, wenn man wie im memory-PL nicht den lib ordner hardcoded, sondern statt dessen aus dem appclassloader die jars ermittelt.
+  //TODO schï¿½ner fï¿½r tests wï¿½re, wenn man wie im memory-PL nicht den lib ordner hardcoded, sondern statt dessen aus dem appclassloader die jars ermittelt.
   public static String LIB_DIR = "lib"; //nicht final, weil tests das verbiegen
   public static final String USERLIB_DIR = "userlib";
   public static String SERVER_CLASS_DIR = "bin"; //nicht final, weil tests das verbiegen
   /**
-   * basisverzeichnis des servers - enthält zb MDM verzeichnis(se), server-verzeichnis, usw
+   * basisverzeichnis des servers - enthï¿½lt zb MDM verzeichnis(se), server-verzeichnis, usw
    */
   public static final String BASEDIR = "..";
   public static final String ROOT_DIR_FOR_REPOSITORY = BASEDIR + fileSeparator + "xmomrepository";
@@ -98,14 +98,14 @@ public class Constants {
   public static final String PERSISTENCE_CONFIGURATION_DIR_WITHIN_STORAGE = "persistence";
   
   public static final String GENERATION_DIR = "." + fileSeparator + "gen";
-  public static final boolean GENERATE_CLASSLOADER_PHANTOM_REFERENCES = false; //nur für entwicklungszwecke auf true zu stellen!!
+  public static final boolean GENERATE_CLASSLOADER_PHANTOM_REFERENCES = false; //nur fï¿½r entwicklungszwecke auf true zu stellen!!
   
-  //public static boolean REMOVE_GENERATED_FILES = false; //nur für entwicklungszwecke auf false zu stellen!!
+  //public static boolean REMOVE_GENERATED_FILES = false; //nur fï¿½r entwicklungszwecke auf false zu stellen!!
   //ist nun XynaProperty.REMOVE_GENERATED_FILES
   /**
    * @see Persistable.StorableProperty#PROTECTED
    */
-  public static final boolean PROTECTED_STORABLE_ENABLE = true; //nur für entwicklungszwecke auf false stellen!!
+  public static final boolean PROTECTED_STORABLE_ENABLE = true; //nur fï¿½r entwicklungszwecke auf false stellen!!
 
   public static boolean SHOW_SESSION_ID_IN_DEBUG = false;
 
@@ -158,7 +158,7 @@ public class Constants {
   
   public static final int DEFAULT_CONNECTION_TO_CLUSTER_BROKEN_RETRIES = 3;
   
-  public static final boolean RECORD_THREAD_INFO_CONNECTION_CACHE = false; // ist teuer, nur für Entwicklungszwecke auf true?
+  public static final boolean RECORD_THREAD_INFO_CONNECTION_CACHE = false; // ist teuer, nur fï¿½r Entwicklungszwecke auf true?
   
   /**
    * Path separator character used in java.class.path

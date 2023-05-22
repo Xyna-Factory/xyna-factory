@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,8 +50,8 @@ import com.gip.xyna.xprc.xsched.SchedulingData;
 
 
 /**
- * Wrapper für eine XynaOrderServerExtension.
- * Hält SchedulingData getrennt von der XynaOrder, wenn diese wegen OOM-Schutz gelöscht wird
+ * Wrapper fï¿½r eine XynaOrderServerExtension.
+ * Hï¿½lt SchedulingData getrennt von der XynaOrder, wenn diese wegen OOM-Schutz gelï¿½scht wird
  */
 public class SchedulingOrder {
   
@@ -60,7 +60,7 @@ public class SchedulingOrder {
   public static enum WaitingCause {
     //Reihenfolge ist wichtig: letzter WaitingCause bestimmt angezeigten OrderInstanceStatus
     None(OrderInstanceStatus.SCHEDULING),
-    Locked(OrderInstanceStatus.WAITING_FOR_LOCK), //Auftrag ist gesperrt und darf nicht verändert oder geschedult werden
+    Locked(OrderInstanceStatus.WAITING_FOR_LOCK), //Auftrag ist gesperrt und darf nicht verï¿½ndert oder geschedult werden
     Unlock_RecalculateUrgency(OrderInstanceStatus.WAITING_FOR_LOCK), //Beim Unlock muss Urgency neu berechnet werden
     Unlock_ReaddToScheduler(OrderInstanceStatus.WAITING_FOR_LOCK),   //Beim Unlock muss Auftrag wieder in Scheduler eingestellt werden
     Unlock_Reschedule(OrderInstanceStatus.WAITING_FOR_LOCK),         //Beim Unlock muss Auftrag im Scheduler reschedult werden
@@ -97,7 +97,7 @@ public class SchedulingOrder {
       this.canBeScheduled = canBeScheduled;
     }
     public boolean canChangeTo(ExtendedStatus newState) {
-      return order <= newState.order; //neuer Status muss höhere Order haben
+      return order <= newState.order; //neuer Status muss hï¿½here Order haben
     }
     public boolean canBeScheduled() {
       return canBeScheduled;
@@ -385,7 +385,7 @@ public class SchedulingOrder {
   }
 
   public SchedulingData getSchedulingData() {
-    return schedulingData; //SchedulingOrder istimm Master gegenüber XynaOrder
+    return schedulingData; //SchedulingOrder istimm Master gegenï¿½ber XynaOrder
   }
 
   public boolean canBeRemovedFromOOMProtection() {
@@ -417,7 +417,7 @@ public class SchedulingOrder {
   
   /**
    * Setzt SchedulingStatus auf Scheduling, auch wenn er vorher fehlerhaft war.
-   * Wird z.B. im Falle von BatchProcessMaster benötigt, wenn die Slaves abgebrochen werden, der Master aber weiterlaufen soll
+   * Wird z.B. im Falle von BatchProcessMaster benï¿½tigt, wenn die Slaves abgebrochen werden, der Master aber weiterlaufen soll
    */
   public void clearFailure() {
     extendedStatus = ExtendedStatus.Scheduling;
@@ -426,14 +426,14 @@ public class SchedulingOrder {
 
   /**
    * Backup der XynaOrder: Schreiben ins OrderInstanceBackup, OrderInstanceDetails
-   * @return false, falls Schreiben fehlschlägt
+   * @return false, falls Schreiben fehlschlï¿½gt
    */
   public boolean backup() {
     if (xynaOrder == null) {
       return true; //es gibt nichts zu schreiben
     }
     if( ! isState(ExtendedStatus.Scheduling) ) {
-      return false; //nicht backuppen, da im kurzlebigen Zustand New unsicher und in anderen Zuständen nicht nötig
+      return false; //nicht backuppen, da im kurzlebigen Zustand New unsicher und in anderen Zustï¿½nden nicht nï¿½tig
     }
     if ( ! orderStatus.isInScheduler() ) {
       return true; //es gibt nichts zu schreiben
@@ -455,7 +455,7 @@ public class SchedulingOrder {
 
 
   /**
-   * Entfernen der XynaOrder (nur nach Aufruf von backup() oder nach Ausführung des Auftrags möglich oder beim Canceln)
+   * Entfernen der XynaOrder (nur nach Aufruf von backup() oder nach Ausfï¿½hrung des Auftrags mï¿½glich oder beim Canceln)
    */
   public void removeXynaOrder() {
     if (logger.isTraceEnabled()) {
@@ -463,14 +463,14 @@ public class SchedulingOrder {
     }
     schedulingData = xynaOrder.getSchedulingData(); //siehe getSchedulingData()
     switch( extendedStatus ) {
-      case Backupped: //Auftrag gebackupt, kann daher für OOM-Schutz entfernt werden
+      case Backupped: //Auftrag gebackupt, kann daher fï¿½r OOM-Schutz entfernt werden
       case Remove://Auftrag soll aus Scheduler ausgetragen werden, kann daher auch entfernt werden
         xynaOrder = null;
         return;
       case New:
       case Scheduling:
         if( isAlreadyScheduled() ) {
-          //Auftrag wird nun ausgeführt, da gerade geschedult
+          //Auftrag wird nun ausgefï¿½hrt, da gerade geschedult
           xynaOrder = null;
           return;
         } else {
@@ -530,7 +530,7 @@ public class SchedulingOrder {
         so.xynaOrder = oib.getXynaorder();
         oa.restoreTransientOrderParts(so.xynaOrder, so.getOrderId());
         so.setExtendedStatus(ExtendedStatus.Scheduling);
-        so.xynaOrder.replaceSchedulingData( so.schedulingData ); //SchedulingData wurde evtl in der Backup-Zeit geändert
+        so.xynaOrder.replaceSchedulingData( so.schedulingData ); //SchedulingData wurde evtl in der Backup-Zeit geï¿½ndert
         con.commit();
         return so.xynaOrder;
       } catch (PersistenceLayerException e) {
@@ -563,8 +563,8 @@ public class SchedulingOrder {
   
   public boolean isRelevantForOOMProtection() {
     if( xynaOrder == null ) {
-      //XynaOrder fehlt: dies ist ein schwerer Fehler, der hier aber nicht zu einer NPE führen soll
-      //keine OOMProtection nötig; Scheduler wird sich um dieses Problem kümmern und Auftrag beenden
+      //XynaOrder fehlt: dies ist ein schwerer Fehler, der hier aber nicht zu einer NPE fï¿½hren soll
+      //keine OOMProtection nï¿½tig; Scheduler wird sich um dieses Problem kï¿½mmern und Auftrag beenden
       return false; 
     }
     if( xynaOrder.getParentOrder() != null ) {
@@ -582,7 +582,7 @@ public class SchedulingOrder {
         case Backupped: 
           return null; //nicht nochmal backuppen
         case Remove:
-          return null; //nicht ausgeben, da keine gültige XynaOrder mehr
+          return null; //nicht ausgeben, da keine gï¿½ltige XynaOrder mehr
         case TimedOut: //sollte zwar nur noch kurz existieren, aber noch ein Backup ist sicherer 
         case New:
         case Scheduling:
@@ -608,7 +608,7 @@ public class SchedulingOrder {
 
     public XynaOrderInfo transform(SchedulingOrder from) {
       if( from.isState(ExtendedStatus.Remove) ) { 
-        return null; //keine gültige SchedulingOrder 
+        return null; //keine gï¿½ltige SchedulingOrder 
       }
       if( from.waitingCauses.contains(waitingCause) ||
           (from.waitingCauses.isEmpty() && waitingCause == WaitingCause.None) ) { // None enstspricht leerer Liste
@@ -628,7 +628,7 @@ public class SchedulingOrder {
     
     public XynaOrderInfo transform(SchedulingOrder from) {
       if( from.isState(ExtendedStatus.Remove) ) { 
-        return null; //keine gültige SchedulingOrder 
+        return null; //keine gï¿½ltige SchedulingOrder 
       }
       return new XynaOrderInfo(from);
     }
@@ -638,7 +638,7 @@ public class SchedulingOrder {
     
     public XynaOrderInfo transform(SchedulingOrder from) {
       if( from.isState(ExtendedStatus.Remove) ) { 
-        return null; //keine gültige SchedulingOrder 
+        return null; //keine gï¿½ltige SchedulingOrder 
       }
       if( from.getOrderId().equals(from.rootOrderId) ) {
         return new XynaOrderInfo(from);
@@ -657,7 +657,7 @@ public class SchedulingOrder {
 
     public XynaOrderInfo transform(SchedulingOrder from) {
       if( from.isState(ExtendedStatus.Remove) ) { 
-        return null; //keine gültige SchedulingOrder 
+        return null; //keine gï¿½ltige SchedulingOrder 
       }
       if( from.getDestinationKey().getRuntimeContext().equals(runtimeContext) ) {
         return new XynaOrderInfo(from);
@@ -673,7 +673,7 @@ public class SchedulingOrder {
 
   public void replaceSchedulingData(SchedulingData schedulingData) {
     this.schedulingData = schedulingData;
-    //evtl auch in XynaOrder ändern, wenn diese verfügbar ist
+    //evtl auch in XynaOrder ï¿½ndern, wenn diese verfï¿½gbar ist
     XynaOrderServerExtension xo = xynaOrder;
     if( xo != null ) {
       xo.replaceSchedulingData(schedulingData);

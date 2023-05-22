@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class XynaObjectCodeGenerator {
   
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_CREATE_PATH = Path.class.getDeclaredMethod(_METHODNAME_CREATE_PATH_ORIG, String.class, String.class).getName();
     } catch (Exception e) {
@@ -301,7 +301,7 @@ public class XynaObjectCodeGenerator {
       if (v.isList()) {
         cb.addLine("public void addTo", GenerationBase.buildGetter(v.getVarName()).substring(3), "(",
                    v.getEventuallyQualifiedClassNameNoGenerics(importedClassNames), " e) {");
-        //dieses feature wird in projekten genutzt. bei änderungen also bitte aufpassen
+        //dieses feature wird in projekten genutzt. bei ï¿½nderungen also bitte aufpassen
 
         cb.addLine("if (supportsObjectVersioning()) {");
         generateLazyInitVersionedObject(cb, v, importedClassNames);
@@ -357,7 +357,7 @@ public class XynaObjectCodeGenerator {
   public static void appendGetter(CodeBuffer cb, AVariable v, Set<String> importedClassNames, boolean useListExtendedGenerics) {
     cb.addLine("public ", v.getEventuallyQualifiedClassNameWithGenerics(importedClassNames, useListExtendedGenerics), " ", GenerationBase.buildGetter(v.getVarName()), "() {");
     if (v.isList()) {
-      //wenn listen herausgegeben werden, können diese geändert werden und müssen dann von der versionierung beachtet werden -> also wrappen
+      //wenn listen herausgegeben werden, kï¿½nnen diese geï¿½ndert werden und mï¿½ssen dann von der versionierung beachtet werden -> also wrappen
       cb.addLine("if (supportsObjectVersioning()) {");
       cb.addLine("if (", v.getVarName(), " == null) {");
       cb.addLine("return null");
@@ -389,7 +389,7 @@ public class XynaObjectCodeGenerator {
       case 5 :
       case 4 :
       case 3 :
-        //ausserhalb der factory kein versioning verwenden, weil keine versionsnummern über idgenerator gefunden werden können.
+        //ausserhalb der factory kein versioning verwenden, weil keine versionsnummern ï¿½ber idgenerator gefunden werden kï¿½nnen.
         cb.addLine("if (!", XynaFactory.class.getName(), ".isFactoryServer()) {");
         cb.addLine("return false");
         cb.addLine("}");
@@ -489,7 +489,7 @@ public class XynaObjectCodeGenerator {
       if (!foundValue) {
         //es gab keine values, also hat man nur pfade!
         if (memberVars.get(0).isList()) {
-          //für Listen ein Set erstellen
+          //fï¿½r Listen ein Set erstellen
           generateJavaPathMapMembersSet(cb);
         } else {
           //sonst nur einen einzelnen Pfad
@@ -563,7 +563,7 @@ public class XynaObjectCodeGenerator {
 
     String varNameStartsUpperCase = GenerationBase.buildGetter(rootMemberVar.getVarName()).substring(3);
     cb.addLine("addTo", varNameStartsUpperCase, "(_child)");
-    //TODO hier könnte man auch schöner das objekt nicht hinzufügen, wenn es bereits in der map enthalten ist, und dann nur den value umsetzen
+    //TODO hier kï¿½nnte man auch schï¿½ner das objekt nicht hinzufï¿½gen, wenn es bereits in der map enthalten ist, und dann nur den value umsetzen
     cb.addLine(childType, " _previousValue = ", v.getVarName(), "Map.put(_path, _child)");
     cb.addLine("if (_previousValue != null) {");
     cb.addLine("removeFrom", varNameStartsUpperCase, "(_previousValue)");
@@ -638,16 +638,16 @@ public class XynaObjectCodeGenerator {
     cb.addLine("}").addLB();
   }
 
-  //usecase: das datenmodell kennt metainformationen, die im pathmap objekt automatisch eingetragen werden sollen, wenn der pfad entsprechend gewählt ist
+  //usecase: das datenmodell kennt metainformationen, die im pathmap objekt automatisch eingetragen werden sollen, wenn der pfad entsprechend gewï¿½hlt ist
   //         beispiel: type-information im datenmodell im datenmodell-spezifischen format. z.B. beim SNMPSET will man nicht im mapping selbst den typ angeben
-  //         müssen.
+  //         mï¿½ssen.
   private void addAutomaticFilledValues(CodeBuffer cb, AVariable rootVar, AVariable v) {
     for (AVariable vv :rootVar.getDomOrExceptionObject().getMemberVars()) {
       if (dom.getPathMapInformation() != null) {
         String childPath = rootVar.getVarName() + "." + vv.getVarName();
         if (dom.getPathMapInformation().getInheritFromDataModel(childPath) != null) {
           if (!vv.isJavaBaseType() && !vv.isList()) {
-            //TODO mehr als eine automatisch erstellte membervariable unterstützen
+            //TODO mehr als eine automatisch erstellte membervariable unterstï¿½tzen
 
             cb.addLine("if (fqDataModelName != null) {");
             cb.addLine(DataModelInformation.class.getSimpleName(), " _dataModel = ", Path.class.getName(),
@@ -755,7 +755,7 @@ public class XynaObjectCodeGenerator {
     if (memberVars.size() > 0 && calcLengthOfParameters(memberVars) < 255) {
       cb.addLine("/**");
       cb.addLine("* Creates a new instance using locally defined member variables.");
-      //TODO javadoc für alle membervars mit doku aus xml?
+      //TODO javadoc fï¿½r alle membervars mit doku aus xml?
       cb.addLine("*/");
       cb.add("public ", dom.getSimpleClassName(), "(");
       for (AVariable v : memberVars) {
@@ -982,7 +982,7 @@ public class XynaObjectCodeGenerator {
     String superClassName;
     boolean hasSuperObjectVersionClass = fqSuperClassName != null;
     if (hasSuperObjectVersionClass) {
-      superClassName = fqSuperClassName + ".ObjectVersion"; //TODO klassenname könnte bei nicht-generiertem code anders sein?!
+      superClassName = fqSuperClassName + ".ObjectVersion"; //TODO klassenname kï¿½nnte bei nicht-generiertem code anders sein?!
     } else {
       superClassName = XOUtils.ObjectVersionBase.class.getCanonicalName();
     }
@@ -1016,7 +1016,7 @@ public class XynaObjectCodeGenerator {
             cb.addLine("if (", var, " != ", otherVar, ") {");
           }
         } else if (v.isList()) {
-          //FIXME zyklencheck: ähnlich wie bei hashcode berechnung stack von einem der objekte durchreichen
+          //FIXME zyklencheck: ï¿½hnlich wie bei hashcode berechnung stack von einem der objekte durchreichen
           cb.addLine("if (!listEqual(", var, ", ", otherVar, ", this.version, other.version, changeSetsOfMembers)) {");
         } else {
           //FIXME zyklencheck
@@ -1052,7 +1052,7 @@ public class XynaObjectCodeGenerator {
             cb.addLine("hash = hash * 31 + ", v.getJavaTypeEnum().getObjectClassOfType(), ".valueOf(", v.getVarName(), ").hashCode()");
           }
         } else if (v.isList()) {
-          //TODO zyklen check: stack beachten. falls stack objekt enthält, dann den abstand im stack zu dem eigenen objekt als für den hash relevante zahl verwenden.
+          //TODO zyklen check: stack beachten. falls stack objekt enthï¿½lt, dann den abstand im stack zu dem eigenen objekt als fï¿½r den hash relevante zahl verwenden.
           //also A-B-A -> hash*31+2, A-B-C-A -> hash*31+3 usw
           cb.addLine("hash = hash * 31 + hashList(", v.getVarName(), ", this.version, changeSetsOfMembers, stack)");
         } else {
@@ -1197,7 +1197,7 @@ public class XynaObjectCodeGenerator {
 
       if (hasImplInstanceVar) {
         //variable existiert nur einmal in der hierarchie, die subklassen verwenden diese mit
-        //volatile für die lazy initialisierung
+        //volatile fï¿½r die lazy initialisierung
         cb.addLine("protected volatile transient ", dom.getImplClassName(), " ", DOM.INSTANCE_METHODS_IMPL_VAR).addLB();
         cb.addLine("protected void ", GenerationBase.buildSetter(DOM.INSTANCE_METHODS_IMPL_VAR), "(", dom.getImplClassName(),
                    " ", DOM.INSTANCE_METHODS_IMPL_VAR, ") {");
@@ -1212,7 +1212,7 @@ public class XynaObjectCodeGenerator {
            * usecase: hierarchy A -> B -> C
            * A hat methode
            * B ist abstrakt
-           * C wird instanziiert und ruft methode auf. dann darf in B und C init() nicht überschrieben sein
+           * C wird instanziiert und ruft methode auf. dann darf in B und C init() nicht ï¿½berschrieben sein
            */
           cb.addLine("protected abstract void ", DOM.INIT_METHODNAME, "()");
         }
@@ -1228,11 +1228,11 @@ public class XynaObjectCodeGenerator {
         cb.addLine("}"); //if
         cb.addLine("}").addLB();
 
-      } else if (hasJavaImpl //äquivalent zu: (hasImpl && !libraryExists()) || (!hasImpl && !abstract && hasOnlyAbstractBla())
+      } else if (hasJavaImpl //ï¿½quivalent zu: (hasImpl && !libraryExists()) || (!hasImpl && !abstract && hasOnlyAbstractBla())
           || (!isAbstract && hasOnlyAbstractSuperTypesUntilFirstTypeWithJavaImpl())) {
-        //init wird lokal nicht benötigt, aber weil die methode abstrakt ist, muss sie definiert sein
+        //init wird lokal nicht benï¿½tigt, aber weil die methode abstrakt ist, muss sie definiert sein
 
-        //kann zustand beim ersten speichern von der gui aus sein -> soll kompilieren. TODO über irgendein flag steuern, ob das
+        //kann zustand beim ersten speichern von der gui aus sein -> soll kompilieren. TODO ï¿½ber irgendein flag steuern, ob das
         //hier eine runtimeexception zur laufzeit oder zur deployzeit wirft.
         cb.addLine("protected void ", DOM.INIT_METHODNAME, "() {");
         cb.addLine("throw new ", RuntimeException.class.getName(), "(\"Unexpected call of ", DOM.INIT_METHODNAME,
@@ -1240,7 +1240,7 @@ public class XynaObjectCodeGenerator {
         cb.addLine("}");
         cb.addLB();
 
-        //keine impl -> kein getter benötigt
+        //keine impl -> kein getter benï¿½tigt
       }
       
       if (hasJavaImpl && dom.libraryExists()) {
@@ -1288,10 +1288,10 @@ public class XynaObjectCodeGenerator {
                                            Set<ExceptionVariable> transientExceptionVariables, boolean hasImplInstanceVar) {
     //irgendwie muss man bei der deserialisierung wieder an die classloader der causes von exceptions kommen => dazu serializableclassloadedobject verwenden
     
-    //für die instanzen der impls muss man auch serializableclassloaded object verwenden, weil die impl-klassen dem classloader, der die serialisierung
-    //gestartet hat (vgl. ContainerClass), nicht bekannt sein müssen.
+    //fï¿½r die instanzen der impls muss man auch serializableclassloaded object verwenden, weil die impl-klassen dem classloader, der die serialisierung
+    //gestartet hat (vgl. ContainerClass), nicht bekannt sein mï¿½ssen.
 
-    //TODO sortierung derart, dass eine umbenennung einer variablen nicht zur inkompatibilität mit dem alten stand führt.
+    //TODO sortierung derart, dass eine umbenennung einer variablen nicht zur inkompatibilitï¿½t mit dem alten stand fï¿½hrt.
     //sortieren, damit die reihenfolge immer gleich ist:
     List<ExceptionVariable> exceptionVariables = new ArrayList<ExceptionVariable>(transientExceptionVariables);
     Collections.sort(exceptionVariables, ScopeStep.comparatorForExceptionVariableSerialization);

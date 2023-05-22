@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public class ProtocolMessageStoreServiceOperationImpl implements ExtendedDeploym
                                                                                    new XynaPropertyMessageFilterBuilder(),
                                                                                    new XynaPropertyMessageFilterBuilder.GlobalMessageFilter(false));
     storeProtocolMessages.setDefaultDocumentation(DocumentationLanguage.EN, "Controls storage of messages. Either true or false for all or none respectivly or a comma seperated list of protcol types that should be allowed to be stored.")
-                         .setDefaultDocumentation(DocumentationLanguage.DE, "Kontrolliert die Speicherung von Nachrichten. Entweder true oder fals um respektive alle oder keine Nachrichten zu speichern oder eine Komma separierte Liste von Protokollen für welche Nachrichten gespeichert werden dürfen.")
+                         .setDefaultDocumentation(DocumentationLanguage.DE, "Kontrolliert die Speicherung von Nachrichten. Entweder true oder fals um respektive alle oder keine Nachrichten zu speichern oder eine Komma separierte Liste von Protokollen fï¿½r welche Nachrichten gespeichert werden dï¿½rfen.")
                          .registerDependency(UserType.Service, ProtocolMessageStore.class.getName());
     messageTimeout = new XynaPropertyDuration("xfmg.xfmon.protocolmsg.messagetimeout", Duration.valueOf("180", TimeUnit.SECONDS));
     messageTimeout.setDefaultDocumentation(DocumentationLanguage.EN, "The amount of time messages are kept alive.")

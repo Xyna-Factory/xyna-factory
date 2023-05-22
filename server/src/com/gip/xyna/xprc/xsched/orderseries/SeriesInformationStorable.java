@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class SeriesInformationStorable extends ClusteredStorable<SeriesInformati
 
   public static final String TABLE_NAME = "seriesinformation";
 
-  public static final int SIZE_ID_LIST = 100000; //viel zu groß, soll Speicherung als Clob bewirken
+  public static final int SIZE_ID_LIST = 100000; //viel zu groï¿½, soll Speicherung als Clob bewirken
   
   public static final String COL_ID = "id";
   public static final String COL_CORRELATION_ID = "correlationId";
@@ -59,7 +59,7 @@ public class SeriesInformationStorable extends ClusteredStorable<SeriesInformati
   public enum OrderStatus implements StringSerializable<OrderStatus> {
     WAITING(false,false),
     RUNNING(false,false),
-    CANCELING(false,false), //kein Fehler, da Successoren noch nicht gecancelt werden dürfen
+    CANCELING(false,false), //kein Fehler, da Successoren noch nicht gecancelt werden dï¿½rfen
     SUCCEEDED(true,false),
     FAILED(true,true),
     CANCELED(true,true);

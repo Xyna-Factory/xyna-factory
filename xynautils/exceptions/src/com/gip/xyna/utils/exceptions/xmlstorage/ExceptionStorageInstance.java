@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ public abstract class ExceptionStorageInstance {
   }
   
   /**
-   * erstellt javaklassen für alle exceptioninformationen dieser instanz (ohne includes)
+   * erstellt javaklassen fï¿½r alle exceptioninformationen dieser instanz (ohne includes)
    * @param loadFromResource 
    * @return
    * @throws Exception 
@@ -87,7 +87,7 @@ public abstract class ExceptionStorageInstance {
   public abstract JavaClass[] generateJavaClasses(boolean loadFromResource, ExceptionEntryProvider provider, String xmlFile) throws InvalidValuesInXMLException;
   
   /**
-   * die exceptioninformationen aller includes werden rekursiv zu dieser instanz hinzugefügt.
+   * die exceptioninformationen aller includes werden rekursiv zu dieser instanz hinzugefï¿½gt.
    * @return
    */
   public void mergeWithIncludes() {

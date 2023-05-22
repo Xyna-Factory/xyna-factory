@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,12 +47,12 @@ import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 
 
 /**
- * CapacityCache enthält Informationen zu allen vorhandenen Capacities in einer 
+ * CapacityCache enthï¿½lt Informationen zu allen vorhandenen Capacities in einer 
  * Map (CapacityName -&gt; {@link CapacityEntry}) sowie alle derzeit vergebenen Capacities in einer
  * Map (OrderId -&gt; List&lt;{@link CapacityInstance}&gt;).
  *
- * Über die Liste der vergebenen Capacities kann effizient geprüft werden, ob und welche Capacities 
- * freigegeben werden müssen. 
+ * ï¿½ber die Liste der vergebenen Capacities kann effizient geprï¿½ft werden, ob und welche Capacities 
+ * freigegeben werden mï¿½ssen. 
  *
  */
 public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
@@ -62,11 +62,11 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
   private final ReentrantLock cacheLock = new ReentrantLock();
   
   /**
-   * Zu jedem CapacityNamen gehören mehrere CapacityInstance-Instanzen, je nach Kardinalität.
+   * Zu jedem CapacityNamen gehï¿½ren mehrere CapacityInstance-Instanzen, je nach Kardinalitï¿½t.
    * In dieser CapacityInstance wird protokolliert, ob die Capacity verwendbar ist oder von 
    * welchem Auftrag sie verwendet wird. 
    * 
-   * Die Capacity kann folgende Statusübergänge machen:
+   * Die Capacity kann folgende Statusï¿½bergï¿½nge machen:
    * <ul>
    * <li> {@link #allocate(long, String, boolean)}</li>
    * <li> {@link #free()}</li>
@@ -74,15 +74,15 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
    * <li> {@link #transfer(long, long, String, boolean)}</li>
    * <li> {@link #delete()}</li>
    * </ul>
-   * Diese Statusübergänge wirken auf den CapacityEntry zurück.
+   * Diese Statusï¿½bergï¿½nge wirken auf den CapacityEntry zurï¿½ck.
    */
   private static class CapacityInstance {
     private static enum State {
       Free(false),   //Capacity ist frei
       Used(true),   //Capacity wird benutzt von orderId, orderType
       Transferable(true), //Capacity wird benutzt von orderId, orderType, ist transferierbar
-      Reserved(false),  //Capacity ist reserviert für binding
-      Deleted(false)    //Capacity ist gelöscht worden (sollte nie bemerkt werden)
+      Reserved(false),  //Capacity ist reserviert fï¿½r binding
+      Deleted(false)    //Capacity ist gelï¿½scht worden (sollte nie bemerkt werden)
       ;
       
       private boolean used;
@@ -293,7 +293,7 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
     }
 
     /**
-     * @return Anzahl der freien Caps, die zum Schedulen werwendet werden können
+     * @return Anzahl der freien Caps, die zum Schedulen werwendet werden kï¿½nnen
      */
     public int getNumberOfFreeCapsForScheduling() {
       return usable;
@@ -337,9 +337,9 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
 
   /**
    * CapacityEntry ist der Eintrag zu jedem CapacityNamen im CapacityCache.
-   * CapacityEntry hält alle zu der Capacity bekannten Daten, wie Name, Kardinalität, Status, etc.
+   * CapacityEntry hï¿½lt alle zu der Capacity bekannten Daten, wie Name, Kardinalitï¿½t, Status, etc.
    * Es wird eine Liste mit CapacityInstance-Instanzen gehalten, darin finden sich dann Informationen,
-   * ob die Capacity gerade von einem Auftrag verwendet wird, frei ist oder für einen anderen Knoten 
+   * ob die Capacity gerade von einem Auftrag verwendet wird, frei ist oder fï¿½r einen anderen Knoten 
    * reserviert ist.
    *
    */
@@ -353,8 +353,8 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
     private Iterator<CapacityInstance> freeCapIter; //effizientere Suche nach freier Cap: gecachter Iterator
     private int binding;
     private CapacityCache cache;
-    private long lastFreedCopy; //freigegebene Capacities dürfen nur einmal pro Schedulerlauf den 
-                                //verwendbaren Capacities zugeführt werden. Ob dies bereits geschehen ist, wird hier vermerkt.
+    private long lastFreedCopy; //freigegebene Capacities dï¿½rfen nur einmal pro Schedulerlauf den 
+                                //verwendbaren Capacities zugefï¿½hrt werden. Ob dies bereits geschehen ist, wird hier vermerkt.
     
     public CapacityEntry(CapacityCache cache, CapacityStorables capacityStorables) {
       this.cache = cache;
@@ -400,8 +400,8 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
         }
         if (ownCardinality > sum) {
           //wahrscheinlich gibt anderer Thread gerade Capacity frei:
-          //dann ist used verringert und freed noch nicht erhöht 
-          //um nicht unnötig eine Warnung zu schreiben, wird hier kurz gewartet und dann nochmal gelesen
+          //dann ist used verringert und freed noch nicht erhï¿½ht 
+          //um nicht unnï¿½tig eine Warnung zu schreiben, wird hier kurz gewartet und dann nochmal gelesen
           if (checkInvariant_warnLess) {
             Thread.yield();
           } else {
@@ -427,10 +427,10 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
         int newOwnCardinality = own.getCardinality();
         if( this.ownCardinality != newOwnCardinality ) {
           int change = newOwnCardinality - this.ownCardinality;
-          //ownCardinality wurde geändert. Daraus ergeben sich Änderungen
+          //ownCardinality wurde geï¿½ndert. Daraus ergeben sich ï¿½nderungen
           changeCapList( change );
           if( change > 0 ) {
-            //freedCounter ist bereits erhöht worden
+            //freedCounter ist bereits erhï¿½ht worden
           } else {
             //die Anzahl der verwendbaren Caps hat abgenommen, usable kann hier sogar negativ werden!
             usable += change;
@@ -452,7 +452,7 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
         }
         this.freeCapIter = capList.iterator(); //durch add ist Iterator kaputt
       } else {
-        //weniger Caps, d.h. freie Caps löschen
+        //weniger Caps, d.h. freie Caps lï¿½schen
         int removed = 0;
         for( int r=0; r <-change; ++r ) {
           CapacityInstance cap = getNextFreeCap();
@@ -465,7 +465,7 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
           }
         }
         if( removed < -change ) {
-          //Unerwartet: es gibt keine freien Caps, die gelöscht werden könnten, daher auch verwendete entfernen
+          //Unerwartet: es gibt keine freien Caps, die gelï¿½scht werden kï¿½nnten, daher auch verwendete entfernen
           logger.warn( "More capacities used than allowed: "+this);
           for( int r=removed; r <-change; ++r ) {
             CapacityInstance cap = capList.remove(0);
@@ -477,21 +477,21 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
     }
 
     /**
-     * Prüft nicht nur, ob genügend Caps vorliegen, sonder besorgt nach Möglichkeit alle vorhandenen
+     * Prï¿½ft nicht nur, ob genï¿½gend Caps vorliegen, sonder besorgt nach Mï¿½glichkeit alle vorhandenen
      * @param demand
      * @return
      */
     public boolean checkAllocationPossible(int demand) {
       try {
         if( demand <= usable ) {
-          return true; //genügend frei
+          return true; //genï¿½gend frei
         } else {
           long csr = cache.getCurrentSchedulingRun();
           if( lastFreedCopy != csr ) {
             lastFreedCopy = csr;
             int freed = freedCounter.getAndSet(0);
             usable += freed;
-            //Freed wurde umkopiert auf Usable, daher könnte Allocation nun möglich sein
+            //Freed wurde umkopiert auf Usable, daher kï¿½nnte Allocation nun mï¿½glich sein
             return demand <= usable;
           } else {
             //Freed wurde bereits in diesem Scheduling-Lauf umkopiert, dies darf kein zweites Mal geschehen
@@ -527,8 +527,8 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
     }
 
     /**
-     * Reservieren aller zum Schedulen verwendbaren Caps, damit diese nicht für 
-     * Aufträge mit niedrigerer Urgency verwendet werden
+     * Reservieren aller zum Schedulen verwendbaren Caps, damit diese nicht fï¿½r 
+     * Auftrï¿½ge mit niedrigerer Urgency verwendet werden
      */
     public void reserveAllRemainingCaps() {
       try {
@@ -574,7 +574,7 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
           return cap;
         }
       }
-      //freeCapIter ist erschöpft, daher Suche von vorne beginnen
+      //freeCapIter ist erschï¿½pft, daher Suche von vorne beginnen
       freeCapIter = capList.iterator();
       while( freeCapIter.hasNext() ) {
         CapacityInstance cap = freeCapIter.next();
@@ -678,11 +678,11 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
           }
           ++transfered;
           if (transfered == cap.getCardinality()) {
-            return true; //gewünschte Anzahl transferiert
+            return true; //gewï¿½nschte Anzahl transferiert
           }
         }
       }
-      return false; //weniger als gewünschte Anzahl transferiert
+      return false; //weniger als gewï¿½nschte Anzahl transferiert
 
     }
 
@@ -751,7 +751,7 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
       notTransferables = notFreed;
 
       synchronized (this) {
-        //spezielle Caps, könnten auch in anderen Schedulerläufen allokiert worden sein
+        //spezielle Caps, kï¿½nnten auch in anderen Schedulerlï¿½ufen allokiert worden sein
         if (transferables != null) {
           notFreed = new ArrayList<CapacityCache.CapacityInstance>(1);
           for (CapacityInstance ci : transferables) {
@@ -790,7 +790,7 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
           ++count;
         } else {
           logger.warn("Unexpected binding "+binding+", expected "+this.binding);
-          //FIXME für mehrere Bindings implementieren
+          //FIXME fï¿½r mehrere Bindings implementieren
         }
       }
     }
@@ -842,7 +842,7 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
 
 
   /**
-   * Refresh aller CapacityStorable -&gt; im Cache befinden sich anschließend nur die übergebenen CapacityStorables
+   * Refresh aller CapacityStorable -&gt; im Cache befinden sich anschlieï¿½end nur die ï¿½bergebenen CapacityStorables
    * @param capStorables
    * @param ownBinding
    */
@@ -872,7 +872,7 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
   }
   
   /**
-   * Refresh des einen übergebenen CapacityStorable, evtl. Neuanlage
+   * Refresh des einen ï¿½bergebenen CapacityStorable, evtl. Neuanlage
    * @param capacityStorables
    */
   public void refresh(CapacityStorables capacityStorables) {
@@ -1004,8 +1004,8 @@ public class CapacityCache implements Iterable<CapacityCache.CapacityEntry> {
   
   /**
    * Versucht, die Capacities zu transferieren.
-   * Diese Funktion ist tolerant gegenüber fehlenden Cap-Namen und fehlenden transferierbaren Caps. Die normale 
-   * Capacity-Allokation muss danach noch benötigte Capacities besorgen bzw. den Fehler des Capacity-Fehlens behandeln. 
+   * Diese Funktion ist tolerant gegenï¿½ber fehlenden Cap-Namen und fehlenden transferierbaren Caps. Die normale 
+   * Capacity-Allokation muss danach noch benï¿½tigte Capacities besorgen bzw. den Fehler des Capacity-Fehlens behandeln. 
    * @return true, wenn alle Caps transferiert wurden, ansonsten false
    */
   public boolean transferCaps( Capacity cap, long fromOrderId, OrderInformation toOrder, boolean transferable ) {

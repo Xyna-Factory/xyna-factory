@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class DefaultSQLUtilsLogger extends XynaSQLUtilsLogger {
   }
 
   /**
-   * sorgt dafür, dass bei jedem sql fehler eine RuntimeException geworfen wird.
+   * sorgt dafï¿½r, dass bei jedem sql fehler eine RuntimeException geworfen wird.
    */
   public void logException(Exception e) {
     internalLog(Level.ERROR, "", e);

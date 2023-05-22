@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * AtomicEnum führt atomare Operationen auf Enums aus.
+ * AtomicEnum fï¿½hrt atomare Operationen auf Enums aus.
  *
  */
 public class AtomicEnum<E extends Enum<E>> implements Serializable {

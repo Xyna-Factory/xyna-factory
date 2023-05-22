@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,9 +66,9 @@ public abstract class DefaultSubworkflowCall<T extends Scope> extends FractalPro
 
   private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
     //readobject methode wegen bug 20384
-    //passiert genau dann, wenn durch klassenänderung ein ehemals teilausgeführter nicht-subworkflow-step beim deserialisieren durch einen subworkflow-step ersetzt wird
-    //dann ist firstExecution == false und subworkflow == null. wenn man diesen fix nicht einbaut, würde beim resume der subworkflow kein planning durchführen.
-    //trifft zwar auch bereits beendete detached subworkflow-aufrufe, aber das macht nichts. da ist dann halt das flag merkwürdig gesetzt...
+    //passiert genau dann, wenn durch klassenï¿½nderung ein ehemals teilausgefï¿½hrter nicht-subworkflow-step beim deserialisieren durch einen subworkflow-step ersetzt wird
+    //dann ist firstExecution == false und subworkflow == null. wenn man diesen fix nicht einbaut, wï¿½rde beim resume der subworkflow kein planning durchfï¿½hren.
+    //trifft zwar auch bereits beendete detached subworkflow-aufrufe, aber das macht nichts. da ist dann halt das flag merkwï¿½rdig gesetzt...
     s.defaultReadObject();
     if (subworkflow == null && !firstExecution) {
       firstExecution = true;
@@ -85,6 +85,6 @@ public abstract class DefaultSubworkflowCall<T extends Scope> extends FractalPro
   
   //passiert in der compensation irgendwas im subworkflow?
   //true, falls bei der compensation in den subworkflow hinabgestiegen werden muss
-  //false, falls compensation überschrieben ist, oder der subworkflow (rekursiv) selbst keine compensation-schritte enthält
+  //false, falls compensation ï¿½berschrieben ist, oder der subworkflow (rekursiv) selbst keine compensation-schritte enthï¿½lt
   public abstract boolean compensationRecursive();
 }

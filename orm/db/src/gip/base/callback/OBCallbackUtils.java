@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class OBCallbackUtils {
 
   static {
     OBException.addErrorMessage(inputToShort2(),"Der Inhalt des Feldes {0} muss mindestens {1} Zeichen lang sein."); //$NON-NLS-1$
-    OBException.addErrorMessage(inputToLong2(),"Der Inhalt des Feldes {0} darf höchstens {1} Zeichen lang sein."); //$NON-NLS-1$
+    OBException.addErrorMessage(inputToLong2(),"Der Inhalt des Feldes {0} darf hï¿½chstens {1} Zeichen lang sein."); //$NON-NLS-1$
     OBException.addErrorMessage(inputWrongChar2(),"Der Inhalt des Feldes {0} darf das Zeichen {1} nicht enthalten. Bitte verwenden Sie nur Zeichen aus der Menge {2}."); //$NON-NLS-1$
     OBException.addErrorMessage(inputWrongString2(),"Der Inhalt des Feldes {0} darf die Zeichenfolge {1} nicht enthalten."); //$NON-NLS-1$
     OBException.addErrorMessage(inputWrongRegexp2(),"Der Inhalt des Feldes {0} entspricht nicht dem Ausdruck {1}."); //$NON-NLS-1$
@@ -46,7 +46,7 @@ public class OBCallbackUtils {
     OBException.addErrorMessage(inputWrongStartChar2(),"Der Inhalt des Feldes {0} darf nicht mit dem Zeichen {1} beginnen."); //$NON-NLS-1$
     OBException.addErrorMessage(inputWrongNotRegexp2(),"Der Inhalt des Feldes {0} darf nicht dem Ausdruck {1} entsprechen."); //$NON-NLS-1$
     OBException.addErrorMessage(inputNoNeededChars3(),"Der Inhalt des Feldes {0} muss mindestens {1} Zeichen aus der Menge {2} enthalten."); //$NON-NLS-1$
-    OBException.addErrorMessage(inputToLong3(),"Der Inhalt des Feldes {0} darf höchstens {1} Zeilen enthalten."); //$NON-NLS-1$
+    OBException.addErrorMessage(inputToLong3(),"Der Inhalt des Feldes {0} darf hï¿½chstens {1} Zeilen enthalten."); //$NON-NLS-1$
   }
 
   /**

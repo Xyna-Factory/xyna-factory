@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ public class RepeatedExceptionCheck {
     } else if( ste1.length != ste2.length ) {
       return false; //StackTraces ungleich
     } else {
-      //zeilenweises Überprüfen des StackTraces
+      //zeilenweises ï¿½berprï¿½fen des StackTraces
       for( int i=0; i<ste1.length; ++i ) {
         if( ! ste1[i].equals(ste2[i]) ) {
           return false; //StackTraces ungleich

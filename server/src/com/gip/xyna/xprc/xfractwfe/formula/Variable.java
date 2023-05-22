@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -153,7 +153,7 @@ public class Variable {
 
 
   /**
-   * erzeugt getter für die variable bis zu der pfad-tiefe der durch depth angegeben ist
+   * erzeugt getter fï¿½r die variable bis zu der pfad-tiefe der durch depth angegeben ist
    */
   public String toJavaCodeGetter(int depth, boolean withListAccess, long uniqueId) {
     VariableInfo vi = getBaseVariable();
@@ -167,7 +167,7 @@ public class Variable {
   
 
   static void buildGetterForOwnIndexAndAccessParts(int depth, boolean withListAccess, Expression indexDef, List<VariableAccessPart> parts, StringBuilder getter, long uniqueId) {
-    if (indexDef != null && depth >= -1) { //Basiselement ist Liste, daher "get(index)" ergänzen
+    if (indexDef != null && depth >= -1) { //Basiselement ist Liste, daher "get(index)" ergï¿½nzen
       if( depth == -1 && !withListAccess) {
         //Listenzugriff auf das Basiselement, daher kein get(index)
       } else {        
@@ -202,8 +202,8 @@ public class Variable {
 
 
   /**
-   * erzeugt setter für die variable bis zu der pfad-tiefe der durch depth angegeben ist
-   * @param depth maximaler index von parts, der noch berücksichtigt werden soll
+   * erzeugt setter fï¿½r die variable bis zu der pfad-tiefe der durch depth angegeben ist
+   * @param depth maximaler index von parts, der noch berï¿½cksichtigt werden soll
    * @param setterOfWholeList spielt nur eine rolle, falls variable listenwertig
    *   true -&gt; setList(value)
    *   false -&gt; getList().set(indexDef, value)
@@ -217,7 +217,7 @@ public class Variable {
     if (depth >= 0) {
       VariableAccessPart p = parts.get(depth);
       if (p.getIndexDef() != null && !setterOfWholeList) {
-        //nach list casten, weil die definition immer ? extends <type> ist und damit unveränderlich.
+        //nach list casten, weil die definition immer ? extends <type> ist und damit unverï¿½nderlich.
         setter.insert(0, "((List)");
         setter.append(".").append(GenerationBase.buildGetter(p.getName())).append("()");
         setter.append(")");
@@ -237,7 +237,7 @@ public class Variable {
       }
     } else {
       if (indexDef != null && !setterOfWholeList) {
-        //nach list casten, weil die definition immer ? extends <type> ist und damit unveränderlich.
+        //nach list casten, weil die definition immer ? extends <type> ist und damit unverï¿½nderlich.
         setter.insert(0, "((List)");
         setter.append(").set(");
         if (indexDef instanceof LiteralExpression) {
@@ -264,7 +264,7 @@ public class Variable {
   public void setTargetType(TypeInfo type) throws XPRC_InvalidVariableMemberNameException {
     TypeInfo ti = getTypeOfExpression();
     if (type.isModelledType() && ti.isModelledType()) {
-      //targettype auf originaltype ändern, falls kompatibel
+      //targettype auf originaltype ï¿½ndern, falls kompatibel
       boolean isSuperClass = type.getModelledType().isSuperClassOf(ti.getModelledType());
       if (isSuperClass) {
         this.targetType = ti;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class RedirectionXynaOrder extends XynaOrderServerExtension {
   public RedirectionXynaOrder(DestinationKey dk, GeneralXynaObject payload, XynaOrderServerExtension redirectedOrder,
                               List<ManualInteractionResponse> allowedResponses) {
     super(dk, payload);
-  // TODO geht so nicht  setRevision(redirectedOrder.getRevision()); idee: revision in auftrag=runtimecontext im orderarchive. revision im destinationkey=revision fürs auflösen von destinations. wo werden inputs aufgelöst? responselistener?
+  // TODO geht so nicht  setRevision(redirectedOrder.getRevision()); idee: revision in auftrag=runtimecontext im orderarchive. revision im destinationkey=revision fï¿½rs auflï¿½sen von destinations. wo werden inputs aufgelï¿½st? responselistener?
     this.redirectedOrder = redirectedOrder;
     this.allowedResponses = allowedResponses;
   }

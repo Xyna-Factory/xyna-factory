@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,7 +157,7 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
         constructorAllParasWithException.add(") {").addLB();
         constructorAllParasNoException.add("super(new String[]{");
         constructorAllParasWithException.add("super(new String[]{");
-        CodeBuffer refreshArgsMethod = new CodeBuffer("Utils"); //args müssen nachträgliche änderungen nach dem konstruktor sinnvoll mitbekommen
+        CodeBuffer refreshArgsMethod = new CodeBuffer("Utils"); //args mï¿½ssen nachtrï¿½gliche ï¿½nderungen nach dem konstruktor sinnvoll mitbekommen
         refreshArgsMethod.addLine("protected void refreshArgs() {");
         if (entry.getBaseExceptionName() != null) {
           refreshArgsMethod.addLine("super.refreshArgs()");
@@ -210,7 +210,7 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
         }
 
 
-        //protected constructor mit allen parametern für vererbung
+        //protected constructor mit allen parametern fï¿½r vererbung
         CodeBuffer constructorOnlyStringsNoException = new CodeBuffer("Utils");
         CodeBuffer constructorOnlyStringsWithException = new CodeBuffer("Utils");
         constructorOnlyStringsNoException.addLine("protected " + jc.getSimpleClassName() + "(String[] args) {");
@@ -292,7 +292,7 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
       if (entry == null) {
         throw new InvalidValuesInXMLException(getXmlFile(), "Did not find information to exception " + path + "." + name);
       }
-      //vorne einfügen
+      //vorne einfï¿½gen
       paras.addAll(0, entry.getParameter());
     }
     return paras;

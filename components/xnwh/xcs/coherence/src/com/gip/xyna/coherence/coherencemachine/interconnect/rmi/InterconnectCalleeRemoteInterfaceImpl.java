@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import com.gip.xyna.coherence.utils.logging.LoggerFactory;
 
 /**
  * "Server" - Implementierung des RMI-spezifischen Interconnects. Wird als Instanz innerhalb von
- *  {@link InterconnectCalleeRMI} verwendet, nämlich per Reflection instanziiert. 
+ *  {@link InterconnectCalleeRMI} verwendet, nï¿½mlich per Reflection instanziiert. 
  *  Deshalb ist der Konstruktor nirgends referenziert.
  */
 public class InterconnectCalleeRemoteInterfaceImpl implements InterconnectProtocolRemoteInterface {
@@ -128,7 +128,7 @@ public class InterconnectCalleeRemoteInterfaceImpl implements InterconnectProtoc
 
   public LockAwaitResponse awaitLock(long objectId, long priority, boolean tryLock, long nanoTimeout) throws RemoteException,
       ObjectNotInCacheException, InterruptedException {
-    //rücktransformation von timeout, siehe NodeConnectionRMI
+    //rï¿½cktransformation von timeout, siehe NodeConnectionRMI
     return impl.awaitLock(objectId, priority, tryLock, System.nanoTime() + nanoTimeout);
   }
 
@@ -145,7 +145,7 @@ public class InterconnectCalleeRemoteInterfaceImpl implements InterconnectProtoc
 
   public LockRequestResponse requestLock(long objectId, long priority, boolean tryLock, long nanoTimeout)
       throws RemoteException, ObjectNotInCacheException, InterruptedException {
-    //rücktransformation von timeout, siehe NodeConnectionRMI
+    //rï¿½cktransformation von timeout, siehe NodeConnectionRMI
     return impl.requestLock(objectId, priority, tryLock, System.nanoTime() + nanoTimeout);
   }
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -424,7 +424,7 @@ public class StepFunctionJson extends XMOMGuiJson implements HasXoRepresentation
   
   /**
    * Erzeugt eine Variable anhand der SelectionMask.
-   * Diese wird von der GUI benötigt, um in den Formeln mit dem Datentyp arbeiten zu können.
+   * Diese wird von der GUI benï¿½tigt, um in den Formeln mit dem Datentyp arbeiten zu kï¿½nnen.
    * @return
    */
   private Data createFakeStorableFromSelectionMask(SelectionMask selectionMask) {
@@ -511,7 +511,7 @@ public class StepFunctionJson extends XMOMGuiJson implements HasXoRepresentation
     try {
       functionGBSubObject = view.getGenerationBaseObject().getObject(stepId.getObjectId());
     } catch (UnknownObjectIdException | MissingObjectException | XynaException e) {
-      // kann eigentlich nicht vorkommen, da die Prüfung isQueryWithHelperMapping() dann vorher schon nicht erfolgreich gewesen war
+      // kann eigentlich nicht vorkommen, da die Prï¿½fung isQueryWithHelperMapping() dann vorher schon nicht erfolgreich gewesen war
       Utils.logError(e);
       return null;
     }

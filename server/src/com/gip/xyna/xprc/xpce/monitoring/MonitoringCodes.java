@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class MonitoringCodes {
 
   
   /**
-   * Konstante für ein MinimumMonitoringLevel, die dazu führt, dass kein valides MonitoringLevel passt
+   * Konstante fï¿½r ein MinimumMonitoringLevel, die dazu fï¿½hrt, dass kein valides MonitoringLevel passt
    */
   public static final Integer TOO_HIGH = 25;
 

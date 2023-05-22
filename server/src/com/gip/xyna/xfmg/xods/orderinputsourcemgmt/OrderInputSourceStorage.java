@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -213,7 +213,7 @@ public class OrderInputSourceStorage {
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement()
             .get(OrderInputSourceManagement.convertNameToUniqueDeploymentItemStateName(name), revision);
     if (deploymentItemState == null) {
-      //keine abhängigkeiten zu xmom objekten - gibts eigtl gar nicht?!
+      //keine abhï¿½ngigkeiten zu xmom objekten - gibts eigtl gar nicht?!
       return "OK";
     }
     Set<DeploymentItemInterface> inconsistencies =
@@ -239,7 +239,7 @@ public class OrderInputSourceStorage {
     try {
       PreparedQuery<OrderInputSourceStorable> pq =
           queryCache.getQueryFromCache(QUERY_GET_ORDER_INPUT_SOURCE_BY_NAME, con, OrderInputSourceStorable.reader);
-      //nulls werden nicht unterstützt, deshalb hier etwas tricksen und in der query mit "or" arbeiten
+      //nulls werden nicht unterstï¿½tzt, deshalb hier etwas tricksen und in der query mit "or" arbeiten
       List<OrderInputSourceStorable> list =
           con.query(pq,
                     new Parameter(inputSource.getName(), notNull(inputSource.getApplicationName()), notNull(inputSource.getVersionName()),
@@ -274,7 +274,7 @@ public class OrderInputSourceStorage {
   }
   
   /**
-   * Alle OrderInputSources einer Revision löschen
+   * Alle OrderInputSources einer Revision lï¿½schen
    */
   public List<OrderInputSourceStorable> deleteOrderInputSourcesForRevision(long revision) throws PersistenceLayerException {
     List<OrderInputSourceStorable> toDelete = getOrderInputSourcesForRevision(revision);
@@ -354,7 +354,7 @@ public class OrderInputSourceStorage {
     try {
       PreparedQuery<OrderInputSourceStorable> pq =
           queryCache.getQueryFromCache(QUERY_GET_ORDER_INPUT_SOURCE_BY_NAME, con, OrderInputSourceStorable.reader);
-      //nulls werden nicht unterstützt, deshalb hier etwas tricksen und in der query mit "or" arbeiten
+      //nulls werden nicht unterstï¿½tzt, deshalb hier etwas tricksen und in der query mit "or" arbeiten
       List<OrderInputSourceStorable> list =
           con.query(pq, new Parameter(name, notNull(applicationName), notNull(versionName), notNull(workspaceName)), 1);
       if (list.size() > 0) {
@@ -371,7 +371,7 @@ public class OrderInputSourceStorage {
   }
 
   /**
-   * enthält nicht die specifics
+   * enthï¿½lt nicht die specifics
    */
   public OrderInputSourceStorable getOrderInputSourceById(long orderInputSourceId) throws PersistenceLayerException,
       XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {

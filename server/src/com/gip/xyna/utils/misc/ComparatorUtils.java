@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Vereinfacht den Bau von Comparatoren.
- * Ermöglicht auch Vergleich null mit Objekt mit definierter Sortierung.
+ * Ermï¿½glicht auch Vergleich null mit Objekt mit definierter Sortierung.
  *
  */
 public class ComparatorUtils {
@@ -149,7 +149,7 @@ public class ComparatorUtils {
   
   /**
    * Comparator, der zwei Objects miteinander vergleicht, wenn diese Comparable sind.
-   * Ansonsten wird die (notwendige) Implementierung von NotComparableHandler ausgeführt.
+   * Ansonsten wird die (notwendige) Implementierung von NotComparableHandler ausgefï¿½hrt.
    *
    */
   public static class ObjectComparator implements Comparator<Object> {
@@ -179,7 +179,7 @@ public class ComparatorUtils {
   
   /**
    * ComparatorList ist ein Comparator, der nacheinander mehrere Comparatoren auf die
-   * zu vergleichenden T-Objekte anwendet, bis diese einen Wert != 0 zurückgeben.
+   * zu vergleichenden T-Objekte anwendet, bis diese einen Wert != 0 zurï¿½ckgeben.
    * Damit kann recht einfach eine Comparator-Kette realisiert werden.
    *
    */

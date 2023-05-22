@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class OSMTask_Reschedule extends OSMTask {
   @Override
   protected void executeInternal() {
     if( ! canBeStarted() ) {
-      return; //sollte erst gar nicht hierhergelangen, prüft bspw., dass orderStatusGuess gesetzt ist
+      return; //sollte erst gar nicht hierhergelangen, prï¿½ft bspw., dass orderStatusGuess gesetzt ist
     }
     osmCache.lock( correlationId );
     try {
@@ -94,7 +94,7 @@ public class OSMTask_Reschedule extends OSMTask {
           //Auftrag war bei Erstellung des Tasks bereits fertig
           solution = handleFinished(sis);
         } else {
-          //Auftrag wartete bei Erstellung des Tasks noch, ist nun aber bereits fertig: das Problem hat sich von alleine gelöst
+          //Auftrag wartete bei Erstellung des Tasks noch, ist nun aber bereits fertig: das Problem hat sich von alleine gelï¿½st
           solution = Solution.Disappeared;
         }
       }
@@ -116,23 +116,23 @@ public class OSMTask_Reschedule extends OSMTask {
         //konsistenter Zustand: als Waiting gemeldet, als WAITING im SeriesInformationStorable eingetragen
         return checkPredecessorsAndTryStarting(sis);
       case RUNNING:
-        //Auftrag läuft bereits, ist aber stillWaiting.
+        //Auftrag lï¿½uft bereits, ist aber stillWaiting.
         if( force ) {
-          //Achtung: damit könnte Auftrag zweimal laufen!
+          //Achtung: damit kï¿½nnte Auftrag zweimal laufen!
           return finishOrder( sis, OrderStatus.SUCCEEDED, false );
         } else {
           problem = Problem.OrderSeemsRunning;
           return Solution.None;
         }
       case CANCELED:
-      case CANCELING: //sollte eigentlich nicht auftreten können
+      case CANCELING: //sollte eigentlich nicht auftreten kï¿½nnen
       case FAILED:
       case SUCCEEDED:
         //Auftrag ist bereits fertig, wartet aber auch noch.
         if( force ) {
           finishOrder( sis, sisStatus, false );
           //aus OrderSeriesManagement und AllOrdersList austragen
-          orderSeriesManagement.removeOrder(orderId); //Achtung: damit könnte Auftrag zweimal laufen!
+          orderSeriesManagement.removeOrder(orderId); //Achtung: damit kï¿½nnte Auftrag zweimal laufen!
           return Solution.RemovedFromOSM;
         } else {
           problem = Problem.OrderAlreadyFinished;
@@ -152,7 +152,7 @@ public class OSMTask_Reschedule extends OSMTask {
       case RUNNING:
       case WAITING:
         //Auftrag ist bereits fertig, aber immer noch als wartend eingetragen.
-        //der zugehörige OSMTask_Finish ist also verloren gegegangen, dies nun nachholen
+        //der zugehï¿½rige OSMTask_Finish ist also verloren gegegangen, dies nun nachholen
         SeriesInformationStorable.OrderStatus newStatus = null;
         if( mws != null ) {
           switch( mws ) {
@@ -180,7 +180,7 @@ public class OSMTask_Reschedule extends OSMTask {
           //er aber noch auf Predecessoren wartet
           return Solution.NoProblem;
         } else {
-          //dies sollte nicht auftreten können
+          //dies sollte nicht auftreten kï¿½nnen
           comment = "SeriesInformationStorable is in state "+sisStatus+" but order is in state "+mws+" ("+archiveStatus+")";
           problem = Problem.Unimplemented;
           return Solution.None;
@@ -188,7 +188,7 @@ public class OSMTask_Reschedule extends OSMTask {
       case CANCELED:
       case FAILED:
       case SUCCEEDED:
-        //Auftrag ist bereits fertig, daher war der Aufruf "RescheduleSeriesOrder" überflüssig. Aber er war evtl.
+        //Auftrag ist bereits fertig, daher war der Aufruf "RescheduleSeriesOrder" ï¿½berflï¿½ssig. Aber er war evtl.
         //so gemeint, dass wartende Successoren gestartet werden sollen
         return finishOrder( sis, sisStatus, true );
     }
@@ -213,7 +213,7 @@ public class OSMTask_Reschedule extends OSMTask {
         if( sisPre.getOrderStatus().isFinished() ) {
           ++countFinishedPredecessors;
         } else {
-          ++countWaitingPredecessors; //evtl. genauer nachschauen? Aber Anwender kann auch rescheduleseriesorder für die Predecessoren aufrufen
+          ++countWaitingPredecessors; //evtl. genauer nachschauen? Aber Anwender kann auch rescheduleseriesorder fï¿½r die Predecessoren aufrufen
         }
       }
     }
@@ -263,7 +263,7 @@ public class OSMTask_Reschedule extends OSMTask {
                                OrderStatus status, boolean startOnlySuccessors ) {
     String correlationId = sis.getCorrelationId();
     if( sis.getBinding() != orderSeriesManagement.getBinding() ) {
-      problem = Problem.OtherBinding; //nicht Daten zu fremdem Binding verändern!
+      problem = Problem.OtherBinding; //nicht Daten zu fremdem Binding verï¿½ndern!
       return Solution.None;
     }
     OSMTask_Finish finish = new OSMTask_Finish(correlationId, status );
@@ -305,7 +305,7 @@ public class OSMTask_Reschedule extends OSMTask {
       return false; //Problem ist aufgetreten -> Task darf nicht laufen
     }
     if( solution != null ) {
-      return false; //Problem (teilweise) gelöst -> Task sollte nicht laufen
+      return false; //Problem (teilweise) gelï¿½st -> Task sollte nicht laufen
     }
     if( orderStatusGuess == null ) {
       return false; //Task kann nicht laufen
@@ -319,7 +319,7 @@ public class OSMTask_Reschedule extends OSMTask {
   }
 
   /**
-   * Suchen der Daten zur im Konstruktor übergebenen OrderId
+   * Suchen der Daten zur im Konstruktor ï¿½bergebenen OrderId
    * @param osmCache
    */
   public void searchOrder(OSMCache osmCache) {
@@ -331,7 +331,7 @@ public class OSMTask_Reschedule extends OSMTask {
         orderStatusGuess = OrderStatus.WAITING;
       } else {
         if( force ) {
-          //Fehlen sollte kein Problem darstellen: Verhalten so, als ob Auftrag erfolgreich gewesen wäre
+          //Fehlen sollte kein Problem darstellen: Verhalten so, als ob Auftrag erfolgreich gewesen wï¿½re
           orderStatusGuess = OrderStatus.SUCCEEDED;
         } else {
           problem = Problem.OrderNotFound;
@@ -391,7 +391,7 @@ public class OSMTask_Reschedule extends OSMTask {
     } else {
       //XynaOrder nicht auffindbar
       if( force ) {
-        //unlesbare XynaOrder -> nichts mehr zu machen außer Auftrag zu entfernen
+        //unlesbare XynaOrder -> nichts mehr zu machen auï¿½er Auftrag zu entfernen
         orderSeriesManagement.removeOrder(orderId);
         solution = Solution.RemovedFromOSM;
       } else {

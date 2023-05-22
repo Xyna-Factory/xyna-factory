@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class FractalCleanupProcessor extends AFractalWorkflowProcessor {
     runningProcesses.put(xo.getId(), Pair.of(xo, p));
     DeploymentManagement.getInstance().countDownOrderThatKnowsAboutDeployment(xo.getIdOfLatestDeploymentFromOrder());
     try {
-      //workflowinput ist optional mit execution input verknüpft.
+      //workflowinput ist optional mit execution input verknï¿½pft.
       GeneralXynaObject input = p.getNeededInputVarsCount() == 0 ? new Container() : xo.getInputPayload();
       p.execute(input, xo);
     } finally {

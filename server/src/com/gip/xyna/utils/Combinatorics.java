@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public class Combinatorics {
 
 
   /**
-   * Ruft den CombinationHandler für jede Kombination von n Zahlen zwischen 0 und propertyCounts[i] auf.
+   * Ruft den CombinationHandler fï¿½r jede Kombination von n Zahlen zwischen 0 und propertyCounts[i] auf.
    * <br>
    * Beispiel: propertyCounts={2,3}
    * <br>
@@ -42,7 +42,7 @@ public class Combinatorics {
    * {1,2}<p>
    * ]
    * <br>
-   * Bricht ab, wenn der CombinationHandler false zurückgibt.
+   * Bricht ab, wenn der CombinationHandler false zurï¿½ckgibt.
    */
   public static void iterateOverCombinations(CombinationHandler c, int[] propertyCounts) {
     int[] properties = new int[propertyCounts.length];

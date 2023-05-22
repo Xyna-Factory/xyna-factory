@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-15" ?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 	<xsd:element name="ExceptionStore">
 		<xsd:annotation>
 			<xsd:documentation>
-				Hält eine Liste von Nachrichten in
+				Hï¿œlt eine Liste von Nachrichten in
 				unterschiedlichen Sprachen.
 			</xsd:documentation>
 		</xsd:annotation>
@@ -41,7 +41,7 @@
 				<xsd:element name="Include" minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
-							Angabe von anderen Xmls, die zusätzliche Fehlermeldungen definieren.
+							Angabe von anderen Xmls, die zusï¿œtzliche Fehlermeldungen definieren.
 							werden generiert.
 						</xsd:documentation>
 					</xsd:annotation>
@@ -52,7 +52,7 @@
 				<xsd:element name="Import" minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
-							Referenz auf andere Xmls, die zusätzliche Fehlermeldungen definieren, von
+							Referenz auf andere Xmls, die zusï¿œtzliche Fehlermeldungen definieren, von
 							denen z.B. abgeleitet werden kann.
 							werden nicht generiert, sondern werden als bereits existent
 							vorausgesetzt.

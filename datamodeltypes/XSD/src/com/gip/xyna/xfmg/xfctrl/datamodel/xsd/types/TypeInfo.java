@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,17 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmomType;
 
 
 /**
- * TypeInfoMember sammelt Informationen über einen Datentyps.
+ * TypeInfoMember sammelt Informationen ï¿½ber einen Datentyps.
  */
 public class TypeInfo {
   
-  //Basisdaten für equals und hashCode
+  //Basisdaten fï¿½r equals und hashCode
   private final FQName name;      //Namespace und Name
   private TypeInfo baseTypeInfo;  //TypeInfo des Parents
   private final Type type;        //Simple, Complex, Anonymous, Any
   private final List<TypeInfoMember> members = new ArrayList<TypeInfoMember>(); //Membervariablen
   
-  //Erweiterungen, die nachträglich gesetzt werden und nicht in equals und hashCode verwendet werden dürfen
+  //Erweiterungen, die nachtrï¿½glich gesetzt werden und nicht in equals und hashCode verwendet werden dï¿½rfen
   private XmomType xmomType; //Umsetzung im XMOM-Pfade, Namen und Labels
   private final List<FQName> rootElements = new ArrayList<FQName>(); //Type wird von diesen Root-Elementen verwendet  
   

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -213,7 +213,7 @@ import com.healthmarketscience.rmiio.SimpleRemoteInputStream;
 //FIXME keine logik in rmichannel: rmi channel sollte nur weiterleiten!
 
 //diese klasse sollte nur per reflection mit dem rmiclassloader instanziiert werden
-//und bei Änderungen an mdmklassen erneut mit einer neuen rmiclassloader instanz instanziiert werden.
+//und bei ï¿½nderungen an mdmklassen erneut mit einer neuen rmiclassloader instanz instanziiert werden.
 public class RMIChannelImpl extends Section implements XynaRMIChannelBase, InitializableRemoteInterface {
 
   public final static String DEFAULT_NAME = "Xyna RMI Channel";
@@ -850,7 +850,7 @@ public class RMIChannelImpl extends Section implements XynaRMIChannelBase, Initi
         payloadXynaObject = XynaObject.generalFromXml(payload, revision);
       }
       if (payloadXynaObject == null) {
-        //fromXml kann auch null zurückgeben
+        //fromXml kann auch null zurï¿½ckgeben
         payloadXynaObject = new Container();
       }
 
@@ -1258,7 +1258,7 @@ public class RMIChannelImpl extends Section implements XynaRMIChannelBase, Initi
   
   public boolean changePassword(String user, String password, String id, String oldPassword, String newPassword, boolean isNewPasswordHashed)
                   throws RemoteException {
-    boolean passwordExpirationAllowed = user.equals(id); //das eigene Passwort darf auch geändert werden, wenn es bereits abgelaufen ist
+    boolean passwordExpirationAllowed = user.equals(id); //das eigene Passwort darf auch geï¿½ndert werden, wenn es bereits abgelaufen ist
     Role role = authenticate(user, password, passwordExpirationAllowed);
     
     return changePasswordInternally(id, oldPassword, newPassword, isNewPasswordHashed, role);
@@ -2031,7 +2031,7 @@ public class RMIChannelImpl extends Section implements XynaRMIChannelBase, Initi
       xocp.setTransientCreationRole(role);
       return getSecuredPortal().startOrder(xocp, role);
     } catch (XynaRuntimeException e) {
-      //wegen abwärtskompatibilität wird in XynaProcessing eine derartige exception in eine runtimeexception gewrapped
+      //wegen abwï¿½rtskompatibilitï¿½t wird in XynaProcessing eine derartige exception in eine runtimeexception gewrapped
       transformXynaException(e.getXynaExceptions().get(0));
       return null;
     } catch (XynaException e) {
@@ -3815,7 +3815,7 @@ public class RMIChannelImpl extends Section implements XynaRMIChannelBase, Initi
     Role role = authenticate(credentials);
     if (XynaFactory.getInstance().getFactoryManagementPortal().hasRight(UserManagement.Rights.WORKINGSET_MANAGEMENT.toString(), role)) {
       ClearworkingsetImpl cwsi = new ClearworkingsetImpl();
-      Clearworkingset paras = new Clearworkingset() { //TODO generierten code anpassen, damit das schöner zu setzen ist....
+      Clearworkingset paras = new Clearworkingset() { //TODO generierten code anpassen, damit das schï¿½ner zu setzen ist....
   
         @Override
         public boolean getForce() {

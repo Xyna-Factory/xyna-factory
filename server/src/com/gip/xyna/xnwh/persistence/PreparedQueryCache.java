@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import com.gip.xyna.xnwh.exceptions.XNWH_IncompatiblePreparedObjectException;
 
 
 /**
- * queries für zb memory persistencelayer sind sehr teuer zu erstellen (generierte klasse, compile etc).
+ * queries fï¿½r zb memory persistencelayer sind sehr teuer zu erstellen (generierte klasse, compile etc).
  */
 public class PreparedQueryCache {
 
@@ -80,8 +80,8 @@ public class PreparedQueryCache {
 
 
   /**
-   * achtung, diese queries hören nicht auf änderungen an persistencelayers und werden durch änderungen an dem
-   * zugehörigen persistencelayer ungültig. Das ist aber nicht so schlimm, weil man die
+   * achtung, diese queries hï¿½ren nicht auf ï¿½nderungen an persistencelayers und werden durch ï¿½nderungen an dem
+   * zugehï¿½rigen persistencelayer ungï¿½ltig. Das ist aber nicht so schlimm, weil man die
    * {@link XNWH_IncompatiblePreparedObjectException} fangen kann und dann den cache einfach leeren mit {@link #clear()}.
    */
   public <E> PreparedQuery<E> getQueryFromCache(Object keyForQueryIdentification,

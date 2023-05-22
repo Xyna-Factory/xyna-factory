@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,10 @@ import com.gip.xyna.xact.exceptions.XACT_NoNetworkInterfacePresentException;
 
 
 /**
- * Diese Klasse enthält Methoden um die zu einer Netzwerk Interfacenummer gehörende 
+ * Diese Klasse enthï¿½lt Methoden um die zu einer Netzwerk Interfacenummer gehï¿½rende 
  * IP-Adresse und Hostname zu bestimmen.
  * Da die Namen und die Reihenfolge der Netzwerk-Interfaces vom Betriebssystem und der Konfiguration 
- * abhängig sind, werden die Netzwerk-Interface-Namen alphabetisch sortiert und beginnend mit 0 durchnummeriert.
+ * abhï¿½ngig sind, werden die Netzwerk-Interface-Namen alphabetisch sortiert und beginnend mit 0 durchnummeriert.
  * Loopback Interfaces werden ausgeklammert.
  */
 public class NetworkInterfaceUtils {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.gip.xyna.xnwh.persistence.TableConfiguration;
 /**
  * updated das orderarchive:
  * 1. alte WorkflowInstanceObjekte werden umgestellt auf OrderInstanceObjekte
- * 2. fertige aufträge wandern ins archiv
+ * 2. fertige auftrï¿½ge wandern ins archiv
  */
 public class UpdateCorrectConfigurationMemoryPersistenceLayerInstance extends UpdateJustVersion {
 

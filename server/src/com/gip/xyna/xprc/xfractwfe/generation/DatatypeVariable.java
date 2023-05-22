@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ public class DatatypeVariable extends AVariable {
         }
       } else if (getParentVariableInXml() != null) {
         isJavaBaseType = true;
-        //wird bei fillvariablecontents noch weiter gefüllt
+        //wird bei fillvariablecontents noch weiter gefï¿½llt
       } else {
         // any type
         setFQClassName(XynaObject.class.getName());
@@ -227,7 +227,7 @@ public class DatatypeVariable extends AVariable {
 
   
   /**
-   * erzeugt code, der &lt;data&gt;&lt;/data&gt; element für diese variable erzeugt
+   * erzeugt code, der &lt;data&gt;&lt;/data&gt; element fï¿½r diese variable erzeugt
    */
   public void generateJavaXml(CodeBuffer cb, boolean usingCache) {
     String cacheString;
@@ -258,7 +258,7 @@ public class DatatypeVariable extends AVariable {
           cb.addLine(XMLHelper.class.getSimpleName(), ".appendDataList(xml, ", "\"", getVarName(), "\", ", "\"AnyType\", ", "\"base\", ",
                      getter, cacheString, ")");
         } else {
-        //braucht den cache nicht übergeben, weil hier nichts referenziert wird, und keine rekursion stattfinden kann
+        //braucht den cache nicht ï¿½bergeben, weil hier nichts referenziert wird, und keine rekursion stattfinden kann
         cb.addLine(XMLHelper.class.getSimpleName(), ".appendDataList(xml, ",
                    "\"", getVarName(), "\", ", getter, ", ",
                    javaType.getClassOfType(),".class)");

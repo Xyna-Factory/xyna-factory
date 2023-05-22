@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,17 +45,17 @@ import com.gip.xyna.xprc.xprcods.workflowdb.WorkflowDatabase;
 
 
 /**
- * Falls das Update vor der Initialisierung der Factory-Komponenten ausgeführt wird (ExecutionTime.initialUpdate),
- * werden die Objekte redeployed ohne die deploymenthandler durchzuführen.
+ * Falls das Update vor der Initialisierung der Factory-Komponenten ausgefï¿½hrt wird (ExecutionTime.initialUpdate),
+ * werden die Objekte redeployed ohne die deploymenthandler durchzufï¿½hren.
  * also nur codegenerierung und compile, etc.
- * ACHTUNG: das funktioniert auch nur, wenn es nicht codegenerierungsänderungen gibt, die vorher in abhängigen objekten durchgeführt werden müssen.
+ * ACHTUNG: das funktioniert auch nur, wenn es nicht codegenerierungsï¿½nderungen gibt, die vorher in abhï¿½ngigen objekten durchgefï¿½hrt werden mï¿½ssen.
  *          es gab z.b. den bug, dass dieses update fehlschlug, weil super-aufrufe nicht gefunden wurden (die super-typen hatten noch
  *          alten code-stand, weil regenerate-deployed noch nicht gelaufen ist). 
  * 
  * objekte, die vorher nicht deployed waren, werden nicht deployed (wegen den fehlenden deploymenthandlern macht das meist sinn).
- * @deprecated durch modularisierung benötigt man das nicht mehr. statt dessen werden neue versionen von entsprechenden modulen geliefert
+ * @deprecated durch modularisierung benï¿½tigt man das nicht mehr. statt dessen werden neue versionen von entsprechenden modulen geliefert
  *   die klasse wird noch aufgehoben. es gibt zumindest noch den usecase, dass projekte die basiskomponenten im defaultworkspace haben
- *   und die installation derart ausführen, dass, die objekte geupdated werden können.
+ *   und die installation derart ausfï¿½hren, dass, die objekte geupdated werden kï¿½nnen.
  */
 @Deprecated
 public class UpdateDeployMDMs extends Update {
@@ -120,7 +120,7 @@ public class UpdateDeployMDMs extends Update {
   }
 
   /**
-   * führt dazu, dass die objekte auch deployed werden, wenn sie noch nicht deployed sind.
+   * fï¿½hrt dazu, dass die objekte auch deployed werden, wenn sie noch nicht deployed sind.
    */
   public void setDeployNew() {
     deployNew = true;
@@ -129,12 +129,12 @@ public class UpdateDeployMDMs extends Update {
 
   @Override
   protected void update() throws XynaException {
-    //bei Erstinstallationen darf das Update nicht ausgeführt werden, da die Objekte durch die Modularisierung nicht vorhanden sind
+    //bei Erstinstallationen darf das Update nicht ausgefï¿½hrt werden, da die Objekte durch die Modularisierung nicht vorhanden sind
     if (Updater.getInstance().isInitialInstallation()) {
       return;
     }
     
-    //falls Ausführung vor Initialisierung der DeplyomentHandler, dann
+    //falls Ausfï¿½hrung vor Initialisierung der DeplyomentHandler, dann
     //objekte nur deployen, wenn vorher bereits deployed gewesen. ansonsten werden sie lazy deployed
     //wenn sie das erste mal verwendet werden
 
@@ -236,7 +236,7 @@ public class UpdateDeployMDMs extends Update {
 
       try {
         GenerationBase.deploy(toDeploy, DeploymentMode.codeChanged, inheritCodeChanged, WorkflowProtectionMode.FORCE_KILL_DEPLOYMENT);
-        copyImpls(implsToCopy); //kann nach dem deploy passieren, weil keine deploymenthandler aufgerufen werden, die schimpfen würden, dass noch das alte jar beim deployment in deployed liegt.
+        copyImpls(implsToCopy); //kann nach dem deploy passieren, weil keine deploymenthandler aufgerufen werden, die schimpfen wï¿½rden, dass noch das alte jar beim deployment in deployed liegt.
       } catch (MDMParallelDeploymentException e) {
         if (!deploymentIsOptional) {
           throw e;
@@ -271,7 +271,7 @@ public class UpdateDeployMDMs extends Update {
   
   
   private void copyImpls(Collection<String> fqNames) {
-    if (getCurrentExecutionTime().mustMockFactory()) { //äquivalent zu: offenbar gibts noch keine deploymenthandler und deshalb müssen jars manuell kopiert wrden
+    if (getCurrentExecutionTime().mustMockFactory()) { //ï¿½quivalent zu: offenbar gibts noch keine deploymenthandler und deshalb mï¿½ssen jars manuell kopiert wrden
       for (String fqName : fqNames) {
         String fqClassName;
         try {

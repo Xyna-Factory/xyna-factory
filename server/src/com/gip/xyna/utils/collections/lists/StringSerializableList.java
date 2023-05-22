@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,10 @@ import com.gip.xyna.utils.misc.StringTransformation;
  * Datenbank als String abgespeichert wird und beim Auslesen aus der DB wieder in eine Liste
  * verwandelt wird.<br>
  * <ul>
- * <li>Intern werden die Daten in einer ArrayList oder der im Konstruktor übergebenen List 
+ * <li>Intern werden die Daten in einer ArrayList oder der im Konstruktor ï¿½bergebenen List 
  *     gespeichert.</li>
  * <li>Eintragen von null ist nicht erlaubt, da dies Probleme beim Deserialisieren macht. Beim
- *     Versuch, null im Konstruktor oder über <code>add</code> einzutragen, wird eine 
+ *     Versuch, null im Konstruktor oder ï¿½ber <code>add</code> einzutragen, wird eine 
  *     IllegalArgumentException geworfen.</li>
  * <li>Um die Listenwerte in einzelne Strings und umgekehrt zu verwandeln, werden die 
  *     Transformationen aus {@link com.gip.xyna.utils.misc.StringTransformation StringTransformation}
@@ -51,19 +51,19 @@ import com.gip.xyna.utils.misc.StringTransformation;
  * <li>Um die einzelnen Strings zu einem String zusammenzufassen bzw. einen String wieder zu 
  *     EinzelStrings aufzuspalten, wird eine Implementierung des Interfaces 
  *     {@link com.gip.xyna.utils.collections.lists.StringSerializableList.SerializeAlgorithm SerializeAlgorithm}
- *     verwendet. Drei Implementierungen sind bereits vorhanden, weitere könnten im Konstruktor 
- *     übergeben werden:
+ *     verwendet. Drei Implementierungen sind bereits vorhanden, weitere kï¿½nnten im Konstruktor 
+ *     ï¿½bergeben werden:
  *     <ul>
  *     <li>SeparatorSerializeAlgorithm ist eine zur bisherigen StringSerializableList aus 
  *         com.gip.xyna.utils.db.types kompatible Implementierung mit einem festen Trennstring (default ", ").
- *         Die einzelnen Listenwerte dürfen daher beim Umwandeln in einen String diesen 
+ *         Die einzelnen Listenwerte dï¿½rfen daher beim Umwandeln in einen String diesen 
  *         Trennstring nicht produzieren!</li>
  *     <li>CSVSerializeAlgorithm erzeugt einen CSV-String, der mit beliebigen 
- *         Listenwerten (außer null) umgehen kann.</li>
- *     <li>AutoSeparatorSerializeAlgorithm sucht sich selbständig ein Trennzeichen, welches nicht 
+ *         Listenwerten (auï¿½er null) umgehen kann.</li>
+ *     <li>AutoSeparatorSerializeAlgorithm sucht sich selbstï¿½ndig ein Trennzeichen, welches nicht 
  *         in den umgewandelten Strings der Listenelemente vorkommt.</li>
  *     </ul></li>
- * <li>Um den komplizierten Konstruktor nicht verwenden zu müssen gibt es statische Methoden:
+ * <li>Um den komplizierten Konstruktor nicht verwenden zu mï¿½ssen gibt es statische Methoden:
  *    <ul>
  *    <li>separator(Class&lt;E&gt; entryClass)</li>
  *    <li>separator(Class&lt;E&gt; entryClass, String separator)</li>
@@ -72,7 +72,7 @@ import com.gip.xyna.utils.misc.StringTransformation;
  *    <li>autoSeparator(Class&lt;E&gt; entryClass, String allAllowedSeparators)</li>
  *    <li>autoSeparator(Class&lt;E&gt; entryClass, String allAllowedSeparators, char defaultSeparator)</li>
  *    </ul></li>
- * <li>Zur Umgehung der hier genannten Einschränkungen wäre die direkte Implementierung von 
+ * <li>Zur Umgehung der hier genannten Einschrï¿½nkungen wï¿½re die direkte Implementierung von 
  *     {@link com.gip.xyna.utils.db.types.StringSerializable StringSerializable} die Alternative.</li>
  * </ul> 
  * <br>
@@ -113,7 +113,7 @@ public class StringSerializableList<E> extends WrappedList<E> implements StringS
   }
   
   /*
-  Vor Aktivierung dieses Konstruktors muss geklärt werden, wie die Serialierung in readObject wieder die 
+  Vor Aktivierung dieses Konstruktors muss geklï¿½rt werden, wie die Serialierung in readObject wieder die 
   Transformationen wiederherstellen kann!
   public StringSerializableList( List<E> entries, 
       SerializeAlgorithm serializeAlgorithm, Transformation<E,String> toStringTransformation, Transformation<String,E> toValueTransformation) {
@@ -208,7 +208,7 @@ public class StringSerializableList<E> extends WrappedList<E> implements StringS
   /**
    * Serialisieren einer String-Liste nach String und Deserialisieren von String zur String-Liste
    * mit einem festen Trennstring.
-   * Die einzelnen Listenwerte dürfen daher diesen Trennstring nicht enthalten!
+   * Die einzelnen Listenwerte dï¿½rfen daher diesen Trennstring nicht enthalten!
    */
   public static class SeparatorSerializeAlgorithm implements SerializeAlgorithm {
     private static final long serialVersionUID = 1L;

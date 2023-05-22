@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public class ApplicationXmlHandler extends DefaultHandler {
     //ist Child "qName" aktuell erlaubt?
     current.checkTag(locator, qName);
     
-    //neue Action für den Child erzeugen
+    //neue Action fï¿½r den Child erzeugen
     Action<?> child = current.childElement(qName); 
     if( child == null ) {
       child = valueAction;
@@ -144,7 +144,7 @@ public class ApplicationXmlHandler extends DefaultHandler {
     }
     
     /**
-     * Prüfung, ob der childTag erwartet wird
+     * Prï¿½fung, ob der childTag erwartet wird
      * @param locator
      * @param childTag
      * @throws SAXException 
@@ -159,7 +159,7 @@ public class ApplicationXmlHandler extends DefaultHandler {
     }
    
     /**
-     * Gibt die entsprechende Action für den childTag zurück
+     * Gibt die entsprechende Action fï¿½r den childTag zurï¿½ck
      * @param childTag
      * @return
      * @throws SAXException
@@ -176,7 +176,7 @@ public class ApplicationXmlHandler extends DefaultHandler {
       //leere Basis-Implementierung
     }
     /**
-     * End-Tag des Childs: Übernahme der Daten in eigene Speicherung
+     * End-Tag des Childs: ï¿½bernahme der Daten in eigene Speicherung
      * @param childTag
      * @param value
      * @param started
@@ -188,7 +188,7 @@ public class ApplicationXmlHandler extends DefaultHandler {
     
     
     /**
-     * Rückgabe des gebauten Objects
+     * Rï¿½ckgabe des gebauten Objects
      * @return
      */
     public T getValue() {
@@ -456,7 +456,7 @@ public class ApplicationXmlHandler extends DefaultHandler {
       } else if(TAG_AI_BUILDDATE.equals(childTag)) {
         applicationInfoEntry.setBuildDate(value);
       } else if( TAG_RUNTIMECONTEXT_REQUIREMENTS.equals(childTag) ) {
-        //ListAction hat Daten bereits übertragen
+        //ListAction hat Daten bereits ï¿½bertragen
       } else if (TAG_AI_ISREMOTESTUB.equals(childTag)) {
         applicationInfoEntry.setIsRemoteStub(Boolean.valueOf(value));
       }
@@ -1061,7 +1061,7 @@ public class ApplicationXmlHandler extends DefaultHandler {
   
   protected static final String ATTRIBUTE_AI_D_LANG = "Lang";
   
-  protected final static String XMLVERSION = "1.1"; //bei änderungen beachte abwärtskompatibilität: man soll auch alte applications importieren können (s.o.)
+  protected final static String XMLVERSION = "1.1"; //bei ï¿½nderungen beachte abwï¿½rtskompatibilitï¿½t: man soll auch alte applications importieren kï¿½nnen (s.o.)
   
   
  

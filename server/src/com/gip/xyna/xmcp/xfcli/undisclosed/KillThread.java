@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ public class KillThread implements CommandExecution {
       return;
     }
 
-    //TODO parametrisierung über parameter die bei kill -3 sichtbar sind. 
-    //"VM Thread" prio=10 tid=0x000000005f7cf800 nid=0x7d96 runnable  -> weder tid (adresse des threads) noch nid hängen eindeutig mit der thread id zusammen.
+    //TODO parametrisierung ï¿½ber parameter die bei kill -3 sichtbar sind. 
+    //"VM Thread" prio=10 tid=0x000000005f7cf800 nid=0x7d96 runnable  -> weder tid (adresse des threads) noch nid hï¿½ngen eindeutig mit der thread id zusammen.
     
     
     Entry<Thread, StackTraceElement[]> targetThread = getThreadByID(p.id);

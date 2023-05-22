@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,18 +44,18 @@ import com.gip.xyna.xprc.xsched.capacities.CapacityManagementReservationInterfac
 
 /**
  * Implementation der CapacityReservation, die vor der Versendung des CapacityDemands diesen filtert.
- * Diese Filterung dient dazu, überflüssigen Demand nicht kommunizieren und den anderen Scheduler 
- * wecken zu müssen. (Ungefiltertes Verschicken kann zu dem Problem führen, dass sich zwei Scheduler 
- * gegenseitig mit unerfüllbaren CapacityDemands wachhalten.)
+ * Diese Filterung dient dazu, ï¿½berflï¿½ssigen Demand nicht kommunizieren und den anderen Scheduler 
+ * wecken zu mï¿½ssen. (Ungefiltertes Verschicken kann zu dem Problem fï¿½hren, dass sich zwei Scheduler 
+ * gegenseitig mit unerfï¿½llbaren CapacityDemands wachhalten.)
  *
  * Ablauf der CapacityDemand-Sammlung:
- * 1) Scheduler meldet Bedarf an durch Übergabe eines CapacityAllocationResult an 
+ * 1) Scheduler meldet Bedarf an durch ï¿½bergabe eines CapacityAllocationResult an 
  *    {@link #addDemand(CapacityAllocationResult, long)}
  * 2) Falls CapacityDemand noch nicht in ownDemands bekannt ist, wird neuer CapacityDemand angelegt.
- *    Dabei wird in {@link #createNewCapacityDemand(String)} berücksichtigt, wieviele Capacities überhaupt 
- *    gefordert werden können
+ *    Dabei wird in {@link #createNewCapacityDemand(String)} berï¿½cksichtigt, wieviele Capacities ï¿½berhaupt 
+ *    gefordert werden kï¿½nnen
  * 3) Eintragen der CapacityAllocationResult-Daten in den CapacityDemand;
- *    Rückgabe, ob CapacityDemand noch weiter erhöht werden kann oder ob alle forderbaren 
+ *    Rï¿½ckgabe, ob CapacityDemand noch weiter erhï¿½ht werden kann oder ob alle forderbaren 
  *    Capacities bereits gefordert werden.
  *
  *
@@ -65,31 +65,31 @@ import com.gip.xyna.xprc.xsched.capacities.CapacityManagementReservationInterfac
  * b) lastSentDemand: beim letzen Mal verschickte Demands
  * c) ignoredDemand: bereits verschickte und daher zu ignorierende Demands
  * 
- * 1) Untersuchung aller Einträge in ignoredDemand: Fehlt Demand (Namensgleichheit) in ownDemand?
+ * 1) Untersuchung aller Eintrï¿½ge in ignoredDemand: Fehlt Demand (Namensgleichheit) in ownDemand?
  *    Wenn ja: Demand muss nicht mehr in ignoredDemand gespeichert werden, da kein Bedarf 
- *             mehr vorliegt, daher aus ignoredDemand löschen. 
- *             Leeren Eintrag in ownDemand anlegen, damit anderer Knoten von der Bedarfsdeckung erfährt.
- * 2) Untersuchung aller Einträge in lastSentDemand: Fehlt Demand (Namensgleichheit) in ownDemand?
+ *             mehr vorliegt, daher aus ignoredDemand lï¿½schen. 
+ *             Leeren Eintrag in ownDemand anlegen, damit anderer Knoten von der Bedarfsdeckung erfï¿½hrt.
+ * 2) Untersuchung aller Eintrï¿½ge in lastSentDemand: Fehlt Demand (Namensgleichheit) in ownDemand?
  *    Wenn ja: Falls lastSentDemand-Demand leer ist:
- *             Leeren Eintrag in ownDemand anlegen, damit anderer Knoten von der Bedarfsdeckung erfährt.
- * 3) Untersuchung aller Einträge in ownDemand: Ist Demand (Gleichheit) auch in ignoredDemands enthalten?
+ *             Leeren Eintrag in ownDemand anlegen, damit anderer Knoten von der Bedarfsdeckung erfï¿½hrt.
+ * 3) Untersuchung aller Eintrï¿½ge in ownDemand: Ist Demand (Gleichheit) auch in ignoredDemands enthalten?
  *    wenn ja: aus der ownDemand-Map entfernen, da bereits verschickt
- * 4) Untersuchung aller Einträge in ownDemand: Ist Demand (Gleichheit) auch in lastSentDemand enthalten?
+ * 4) Untersuchung aller Eintrï¿½ge in ownDemand: Ist Demand (Gleichheit) auch in lastSentDemand enthalten?
  *    wenn ja: aus der ownDemand-Map entfernen, da bereits verschickt;
  *             in ignoredDemand-Map aufnehmen, damit auch in Zukunft ignoriert
- * 5) Verschicken der verbliebenen Einträge in ownDemand
- * 6) lastSentDemand ist nun ownDemand; ownDemand wird für nächsten Schedulerlauf geleert
+ * 5) Verschicken der verbliebenen Eintrï¿½ge in ownDemand
+ * 6) lastSentDemand ist nun ownDemand; ownDemand wird fï¿½r nï¿½chsten Schedulerlauf geleert
  * 
- * Die Untersuchungen auf Gleichheit der CapacityDemands bewirken, dass Änderungen an der maximalen Urgency,
- * der Gesamtzahl der wartenden Aufträge und der maximal forderbaren Anzahl zu einem erneuten 
- * Verschicken führen.
+ * Die Untersuchungen auf Gleichheit der CapacityDemands bewirken, dass ï¿½nderungen an der maximalen Urgency,
+ * der Gesamtzahl der wartenden Auftrï¿½ge und der maximal forderbaren Anzahl zu einem erneuten 
+ * Verschicken fï¿½hren.
  *    
- * Überlegungen:
+ * ï¿½berlegungen:
  * 1) Was passiert bei gedecktem Bedarf? 
  *    A: Demand wurde vor langer Zeit geschickt, ist daher in ignoredDemands enthalten
  *    B: Demand wurde beim letzten Lauf geschickt, ist daher in lastSentDemand enthalten
- *       * ownDemand enthält den Demand nicht mehr
- *       * Schritt 1: A: aus ignoredDemand gelöscht und leer in ownDemand eingetragen
+ *       * ownDemand enthï¿½lt den Demand nicht mehr
+ *       * Schritt 1: A: aus ignoredDemand gelï¿½scht und leer in ownDemand eingetragen
  *                    B: kein Treffer
  *       * Schritt 2: A: kein Treffer
  *                    B: Demand in lastSentDemand ist nicht leer, daher leer in ownDemand eingetragen 
@@ -97,12 +97,12 @@ import com.gip.xyna.xprc.xsched.capacities.CapacityManagementReservationInterfac
  *       * Schritt 4: kein Treffer
  *       * Schritt 5: leerer Demand wird verschickt
  *       * Schritt 6: leerer Demand wird in lastSentDemand eingetragen
- *       * Beim nächsten Aufruf:
+ *       * Beim nï¿½chsten Aufruf:
  *       * Schritt 2: kein leerer Eintrag in ownDemand, daher kein erneutes Verschicken
- * 2) Was passiert bei geändertem Bedarf?
+ * 2) Was passiert bei geï¿½ndertem Bedarf?
  *    A: Demand wurde vor langer Zeit geschickt, ist daher in ignoredDemands enthalten
  *    B: Demand wurde beim letzten Lauf geschickt, ist daher in lastSentDemand enthalten
- *       * ownDemand enthält geänderten Demand
+ *       * ownDemand enthï¿½lt geï¿½nderten Demand
  *       * Schritt 1: A: kein Treffer (Namensgleichheit)
  *                    B: kein Treffer (kein Eintrag in ignoredDemand)
  *       * Schritt 2: A: kein Treffer (kein Eintrag in lastSentDemand)
@@ -111,10 +111,10 @@ import com.gip.xyna.xprc.xsched.capacities.CapacityManagementReservationInterfac
  *       * Schritt 4: kein Treffer (keine Gleicheit)
  *       * Schritt 5: Demand wird verschickt
  *       * Schritt 6: Demand wird in lastSentDemand eingetragen
- * 3) Was passiert, wenn anderer Knoten Bedarf nicht erfüllt?
+ * 3) Was passiert, wenn anderer Knoten Bedarf nicht erfï¿½llt?
  *    A: Demand wurde vor langer Zeit geschickt, ist daher in ignoredDemands enthalten
  *    B: Demand wurde beim letzten Lauf geschickt, ist daher in lastSentDemand enthalten
- *       * ownDemand enthält bereits bekannten Demand
+ *       * ownDemand enthï¿½lt bereits bekannten Demand
  *       * Schritt 1: A: kein Treffer (Namensgleichheit)
  *                    B: kein Treffer (kein Eintrag in ignoredDemand)
  *       * Schritt 2: A: kein Treffer (kein Eintrag in lastSentDemand)
@@ -154,15 +154,15 @@ public class FilteredCapacityReservation implements CapacityReservation {
   public int reserveCap(int binding, Capacity capacity) {
     int reserved = capacityManagement.reserveCapForForeignBinding(binding, capacity);
     if( reserved > 0 ) {
-      //Capacity wurde für anderen Knoten reserviert.
-      //daher kann sie auch wieder zurückgefordert werden: CapacityDemand hat einen Platz mehr
+      //Capacity wurde fï¿½r anderen Knoten reserviert.
+      //daher kann sie auch wieder zurï¿½ckgefordert werden: CapacityDemand hat einen Platz mehr
       CapacityDemand cd = ownDemand.get(capacity.getCapName());
       if( cd != null ) {
         cd.increaseMaxDemand(reserved);
       } else {
         //Problem: reservierte Caps sind in createNewCapacityDemand(..) noch nicht sichtbar, 
         //daher wird dort zu niedriger maxDemand erzeugt.
-        //hier createNewCapacityDemand(..) ist aber auchg nicht gut, da dies dann evtl. unnötigen
+        //hier createNewCapacityDemand(..) ist aber auchg nicht gut, da dies dann evtl. unnï¿½tigen
         //leeren Demand verschickt.
       }
       
@@ -223,45 +223,45 @@ public class FilteredCapacityReservation implements CapacityReservation {
   
 
   public List<CapacityDemand> communicateOwnDemand() {
-    //* 1) Untersuchung aller Einträge in ignoredDemand: Fehlt Demand (Namensgleichheit) in ownDemand?
+    //* 1) Untersuchung aller Eintrï¿½ge in ignoredDemand: Fehlt Demand (Namensgleichheit) in ownDemand?
     //*    Wenn ja: Demand muss nicht mehr in ignoredDemand gespeichert werden, da kein Bedarf 
-    //*             mehr vorliegt, daher aus ignoredDemand löschen. 
-    //*             Leeren Eintrag in ownDemand anlegen, damit anderer Knoten von der Bedarfsdeckung erfährt.
+    //*             mehr vorliegt, daher aus ignoredDemand lï¿½schen. 
+    //*             Leeren Eintrag in ownDemand anlegen, damit anderer Knoten von der Bedarfsdeckung erfï¿½hrt.
     for( String capName : missingInOwnDemand(ignoredDemand) ) {
       ignoredDemand.remove(capName);
       ownDemand.put( capName, new CapacityDemand(capName) );
     }
     
-    //* 2) Untersuchung aller Einträge in lastSentDemand: Fehlt Demand (Namensgleichheit) in ownDemand?
+    //* 2) Untersuchung aller Eintrï¿½ge in lastSentDemand: Fehlt Demand (Namensgleichheit) in ownDemand?
     //*    Wenn ja: Falls lastSentDemand-Demand leer ist:
-    //*             Leeren Eintrag in ownDemand anlegen, damit anderer Knoten von der Bedarfsdeckung erfährt.
+    //*             Leeren Eintrag in ownDemand anlegen, damit anderer Knoten von der Bedarfsdeckung erfï¿½hrt.
     for( String capName : missingInOwnDemand(lastSentDemand) ) {
       ownDemand.put( capName, new CapacityDemand(capName) );
     }
     
-    //* 3) Untersuchung aller Einträge in ownDemand: Ist Demand (Gleichheit) auch in ignoredDemands enthalten?
+    //* 3) Untersuchung aller Eintrï¿½ge in ownDemand: Ist Demand (Gleichheit) auch in ignoredDemands enthalten?
     //*    wenn ja: aus der ownDemand-Map entfernen, da bereits verschickt
     for( String capName : commonInOwnDemand(ignoredDemand) ) {
       ownDemand.remove(capName);
     }
     
-    //* 4) Untersuchung aller Einträge in ownDemand: Ist Demand (Gleichheit) auch in lastSentDemand enthalten?
+    //* 4) Untersuchung aller Eintrï¿½ge in ownDemand: Ist Demand (Gleichheit) auch in lastSentDemand enthalten?
     //*    wenn ja: aus der ownDemand-Map entfernen, da bereits verschickt;
     //*             in ignoredDemand-Map aufnehmen, damit auch in Zukunft ignoriert, wenn Demand nicht leer ist
     for( String capName : commonInOwnDemand(lastSentDemand) ) {
       CapacityDemand cd = ownDemand.remove(capName);
       if (cd.isFullfilled()) {
         //Demand ist leer: nicht ignorieren, da Demand auch nicht mehr erzeugt wird
-        //(ansonsten wird beim nächsten Lauf durch Punkt 1) wieder ein leerer Demand erzeugt und verschickt.)
+        //(ansonsten wird beim nï¿½chsten Lauf durch Punkt 1) wieder ein leerer Demand erzeugt und verschickt.)
       } else {
         CapacityDemand sent = lastSentDemand.get(capName);
         if( sent != null ) {
-          ignoredDemand.put(capName,sent); //(get: nur lastSentDemand enthält SentTime)
+          ignoredDemand.put(capName,sent); //(get: nur lastSentDemand enthï¿½lt SentTime)
         }
       }
     }
     
-    //* 5) Verschicken der verbliebenen Einträge in ownDemand
+    //* 5) Verschicken der verbliebenen Eintrï¿½ge in ownDemand
     List<CapacityDemand> demandToSend = new ArrayList<CapacityDemand>(ownDemand.values());
     if (demandToSend.isEmpty()) {
       logger.trace( "demandToSend is empty" );
@@ -275,7 +275,7 @@ public class FilteredCapacityReservation implements CapacityReservation {
       }
       boolean success;
       if( Math.random() < XynaProperty.CAPACITY_DEMAND_IGNORING_PERCENTAGE.get() ) {
-        success = false; //zufällig aussetzen, um Livelocks zu verhindern
+        success = false; //zufï¿½llig aussetzen, um Livelocks zu verhindern
       } else {
         success = capacityManagement.communicateDemand(capacityManagement.getOwnBinding(), demandToSend);
         if( !success ) {
@@ -288,7 +288,7 @@ public class FilteredCapacityReservation implements CapacityReservation {
       }
     }
     
-    //* 6) lastSentDemand ist nun ownDemand; ownDemand wird für nächsten Schedulerlauf geleert
+    //* 6) lastSentDemand ist nun ownDemand; ownDemand wird fï¿½r nï¿½chsten Schedulerlauf geleert
     Map<String,CapacityDemand> map = lastSentDemand;
     lastSentDemand = ownDemand;
     ownDemand = map;
@@ -323,8 +323,8 @@ public class FilteredCapacityReservation implements CapacityReservation {
 
   
   /**
-   * Eintragen einer neuen Demand-Liste zu einem bestimmten Knoten. An frühere Demands des gleichen Knotens wird die
-   * neue Liste angehängt, damit die Information, dass der Bedarf gestillt ist, auf jeden Fall ankommt.
+   * Eintragen einer neuen Demand-Liste zu einem bestimmten Knoten. An frï¿½here Demands des gleichen Knotens wird die
+   * neue Liste angehï¿½ngt, damit die Information, dass der Bedarf gestillt ist, auf jeden Fall ankommt.
    */
   public void setForeignDemand(int binding, List<CapacityDemand> demand) {
     newCapacityDemandsLock.lock();
@@ -423,7 +423,7 @@ public class FilteredCapacityReservation implements CapacityReservation {
   public void refreshCapacity(String capName) {
     //Achtung: wird von anderem Thread aufgerufen
     //Capacity-Eintrag wird nun aus beiden Maps entfernt, damit CapacityDemand beim 
-    //nächsten Scheduling auf jeden Fall verschickt wird.
+    //nï¿½chsten Scheduling auf jeden Fall verschickt wird.
     lastSentDemand.remove(capName);
     ignoredDemand.remove(capName);
   }

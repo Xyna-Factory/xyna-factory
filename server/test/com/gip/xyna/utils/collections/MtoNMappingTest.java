@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ public class MtoNMappingTest extends TestCase {
           for (String s : map.getAllKeys()) {
             Set<Integer> values = map.getValues(s);
             //checken, dass andersrum auch mapping besteht
-            //npe nicht zu überprüfen, weil values darf nicht null sein!
+            //npe nicht zu ï¿½berprï¿½fen, weil values darf nicht null sein!
             for (Integer v : values) {
               assertTrue(map.getKeys(v).contains(s));
             }
@@ -127,7 +127,7 @@ public class MtoNMappingTest extends TestCase {
           for (Integer i : map.getAllValues()) {
             Set<String> keys = map.getKeys(i);
             //checken, dass andersrum auch mapping besteht
-            //npe nicht zu überprüfen, weil values darf nicht null sein!
+            //npe nicht zu ï¿½berprï¿½fen, weil values darf nicht null sein!
             for (String k : keys) {
               assertTrue(map.getValues(k).contains(i));
             }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ public class LocalCacheMemoryImpl implements StorageInterface {
 
   public void update(CoherenceObject updatedObject) throws ObjectNotInCacheException {
     // TODO prio2: performance: kann man das hier einfach weglassen? Wenn alle Objekte, die hier reingegeben werden
-    // immer die Objekte sind, die vorher per "read" geholt wurden, dann ist das ein überflüssiger HashMap-Zugriff.
+    // immer die Objekte sind, die vorher per "read" geholt wurden, dann ist das ein ï¿½berflï¿½ssiger HashMap-Zugriff.
     CoherenceObject previousValue = data.put(updatedObject.getId(), updatedObject);
     if (previousValue == null) {
       data.remove(updatedObject.getId());
@@ -141,7 +141,7 @@ public class LocalCacheMemoryImpl implements StorageInterface {
 
 
   /**
-   * überschreibt vorhandene objekte
+   * ï¿½berschreibt vorhandene objekte
    */
   public void importShapShot(List<CoherenceObject> metadata) {
     for (CoherenceObject o : metadata) {

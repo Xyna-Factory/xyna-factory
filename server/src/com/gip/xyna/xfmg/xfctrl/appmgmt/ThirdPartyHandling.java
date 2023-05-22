@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class ThirdPartyHandling {
     public Set<String> allLicensesIn(String dir) {
       Set<String> licences = new HashSet<String>();   //gesammelte Lizenzen
       Set<String> additional = new HashSet<String>(); //weitere Dateien
-      Set<String> groups = new HashSet<String>();     //temporär gesammelte Lizenz-Gruppen
+      Set<String> groups = new HashSet<String>();     //temporï¿½r gesammelte Lizenz-Gruppen
       for( String f : new File(dir).list() ) {
         if( f.startsWith(prefix) && ! f.toLowerCase().endsWith(".jar") ) {
           
@@ -124,7 +124,7 @@ public class ThirdPartyHandling {
         //Lizenzen ermitteln
         List<File> licences = new ArrayList<File>();
         FileUtils.findFilesRecursively(thirdPartiesApp, licences, licenceFilter.learn() );
-        //zugehörige JARs suchen
+        //zugehï¿½rige JARs suchen
         List<File> jars = new ArrayList<File>();
         FileUtils.findFilesRecursively(applicationDir, jars, licenceFilter.jars() );
         

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public class SimpleXMLParser {
 
    /**
     * Liefert die Anzahl gefundener Tags (maximal darf pos-1 an getKey bzw.
-    * getValue übergeben werden)
+    * getValue ï¿½bergeben werden)
     * 
     * @return Anzahl der gefundenen Tags
     */
@@ -121,7 +121,7 @@ public class SimpleXMLParser {
    }
 
    /**
-    * Sucht nach den Daten, die zum Tag gehören Achtung: nur das erste Datum
+    * Sucht nach den Daten, die zum Tag gehï¿½ren Achtung: nur das erste Datum
     * wird gefunden, weitere Tags mit gleichem Namen werden nicht gefunden
     * 
     * @param tagname
@@ -158,20 +158,20 @@ public class SimpleXMLParser {
    
 
    /**
-    * Ist dieses Tag ein öffnendes Tag?
+    * Ist dieses Tag ein ï¿½ffnendes Tag?
     * 
     * @param pos
-    * @return true, wenn Tag öffnet
+    * @return true, wenn Tag ï¿½ffnet
     */
    public boolean isOpenTag(int pos) {
       return values.get(pos) == OPENTAG; // == ist richtig!
    }
 
    /**
-    * Ist dieses Tag einschließendes Tag?
+    * Ist dieses Tag einschlieï¿½endes Tag?
     * 
     * @param pos
-    * @return true, wenn Tag schließt
+    * @return true, wenn Tag schlieï¿½t
     */
    public boolean isCloseTag(int pos) {
       return values.get(pos) == CLOSETAG;// == ist richtig!
@@ -220,7 +220,7 @@ public class SimpleXMLParser {
     * &gt; &lt; &apos; &quote;
     * 
     * @param string
-    * @return neuer String mit ursprünglichen Zeichen
+    * @return neuer String mit ursprï¿½nglichen Zeichen
     */
    public String decodeString(String string) {
       if (string == null || string.length() == 0) {
@@ -289,10 +289,10 @@ public class SimpleXMLParser {
                   addKeyValue(tag, null);
                } else {
                   // Nun kann noch ein Leerstring enthalten sein, dann das
-                  // schließende Tag
+                  // schlieï¿½ende Tag
                   String closeTag = ((String) vector.get(p + 2));
                   if (closeTag.startsWith("/") ) {
-                  //tatsächlich ein schließendes Tag
+                  //tatsï¿½chlich ein schlieï¿½endes Tag
                   String startTag = tag;
                     int pos = startTag.indexOf(" ");
                     if( pos != -1 ) {
@@ -303,17 +303,17 @@ public class SimpleXMLParser {
                       addKeyValue(tag, "");
                       p += 2;
                     } else {
-                      //Fehler: Tag hätte schließen sollen
+                      //Fehler: Tag hï¿½tte schlieï¿½en sollen
                       System.err.println("CloseTag erwartet!");
                     }
                   } else {
-                     // es ist nur öffnendes Tag
+                     // es ist nur ï¿½ffnendes Tag
                      addKeyValue(tag, OPENTAG);
                   }
                }
             }
          } else {
-            // jetzt sollten direkt Daten folgen, danach das schließende Tag
+            // jetzt sollten direkt Daten folgen, danach das schlieï¿½ende Tag
             String closeTag = ((String) vector.get(p + 2));
             if (!closeTag.startsWith("/")) {
                // kein CloseTag

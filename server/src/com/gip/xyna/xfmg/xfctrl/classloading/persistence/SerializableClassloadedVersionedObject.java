@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 
 
 /**
- * Befähigt die Serialisierung eines VersionedObjects als SerializableClassLoadedObject.
+ * Befï¿½higt die Serialisierung eines VersionedObjects als SerializableClassLoadedObject.
  * Typische Verwendung: Serverinternes Objekt Referenz auf modelliertes VersionedObject von modelliertem Objekt.
  * Beispiel: Datentyp im Server hat Membervariable die zur Laufzeit von abgeleiteten Typ sein kann, der modelliert ist.
  * 

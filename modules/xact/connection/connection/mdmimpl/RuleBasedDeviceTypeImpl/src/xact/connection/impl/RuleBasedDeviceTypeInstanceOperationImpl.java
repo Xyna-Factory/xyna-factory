@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,8 +78,8 @@ public class RuleBasedDeviceTypeInstanceOperationImpl extends RuleBasedDeviceTyp
                                    "Comma separated list of device names (as used in the config file names). Whenever one of these devices evaluates rules the results will be logged on debug level.");
   private static final XynaPropertyInt restrictionLength = 
       new XynaPropertyInt("xact.connection.rulebaseddevicetype.promptMaxLength", -1)
-          .setDefaultDocumentation(DocumentationLanguage.DE, "Maximale Länge des Ausgabeausschnitts welcher zur Prompt-Prüfung herrangezogen wird."
-                                                           + " Die Eingabe von negative Werte deaktiviert die Beschränkung.")
+          .setDefaultDocumentation(DocumentationLanguage.DE, "Maximale Lï¿½nge des Ausgabeausschnitts welcher zur Prompt-Prï¿½fung herrangezogen wird."
+                                                           + " Die Eingabe von negative Werte deaktiviert die Beschrï¿½nkung.")
           .setDefaultDocumentation(DocumentationLanguage.EN, "Maximum Length of the output excerpt to be used during prompt detection."
                                                            + " Use negative values for an unresticted prompt checking.");
 
@@ -97,7 +97,7 @@ public class RuleBasedDeviceTypeInstanceOperationImpl extends RuleBasedDeviceTyp
    * reihenfolge entspricht der auswertung
    * leeres command -> command ist einfach nur enter
    * command = .* -> alle commands
-   * achtung: response enthält meist noch das echo, das muss im regulären ausdruck berücksichtigt werden
+   * achtung: response enthï¿½lt meist noch das echo, das muss im regulï¿½ren ausdruck berï¿½cksichtigt werden
    *PROMPTS
     <liste von 
        <command>;<prompt>[;<resultierender state>[;<autoresponse>]]
@@ -107,8 +107,8 @@ public class RuleBasedDeviceTypeInstanceOperationImpl extends RuleBasedDeviceTyp
       <multiline command start>; <multiline content>; <multiline command end>
         d.h. es wird in dem document nach zeilen gesucht, die mit multiline command <start> beginnen und mit <end> enden und dazwischen nur <content> haben.
     >
-    -> prompts und commands sind jeweils reguläre ausdrücke
-    -> semikolons escapen (\;), zeilenumbrüche escapen (\n, \r), backslashes escapen (\\), \t ist erlaubt, kann aber auch direkt eingegeben werden
+    -> prompts und commands sind jeweils regulï¿½re ausdrï¿½cke
+    -> semikolons escapen (\;), zeilenumbrï¿½che escapen (\n, \r), backslashes escapen (\\), \t ist erlaubt, kann aber auch direkt eingegeben werden
     -> # zu beginn der zeile sind kommentare
    */
 
@@ -555,7 +555,7 @@ public class RuleBasedDeviceTypeInstanceOperationImpl extends RuleBasedDeviceTyp
 
 
   /*
-   * TODO echos besser ausblenden - dann kann man die regulären ausdrücke für die prompterkennung verbessern
+   * TODO echos besser ausblenden - dann kann man die regulï¿½ren ausdrï¿½cke fï¿½r die prompterkennung verbessern
    *      achtung: echos gibt es nicht immer, typischer usecase: password-eingabe wird nicht geechoed
    * 
    */
@@ -723,7 +723,7 @@ public class RuleBasedDeviceTypeInstanceOperationImpl extends RuleBasedDeviceTyp
               }
               continue parts;
             }
-            //war kein multiline -> part zurücksetzen
+            //war kein multiline -> part zurï¿½cksetzen
             part = split[i];
           }
         }
@@ -741,9 +741,9 @@ public class RuleBasedDeviceTypeInstanceOperationImpl extends RuleBasedDeviceTyp
   public CommandResponseTuple removeDeviceSpecifics(CommandResponseTuple response) {
 
     /*
-     * ergänze response um eventuelle autoresponses von oben.
+     * ergï¿½nze response um eventuelle autoresponses von oben.
      * dazu suche in der response nach der ersten zeile, die in der response von der autoresponse nicht vorgekommen war. das muss der index in der response sein, 
-     * wo die autoresponse eingefügt werden muss
+     * wo die autoresponse eingefï¿½gt werden muss
      */
     if (sentAutoResponses != null) {
       String[] lines = splitLinePattern.split(response.getResponse().getContent());

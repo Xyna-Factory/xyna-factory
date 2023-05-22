@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,29 +23,29 @@ import com.gip.xyna.utils.collections.Pair;
 
 
 /**
- * JoinedExecutor führt eine Operation aus und gibt das Ergebnis an andere Threads weiter, 
- * die zeitgleich die gleiche Operation ausführen wollen.
+ * JoinedExecutor fï¿½hrt eine Operation aus und gibt das Ergebnis an andere Threads weiter, 
+ * die zeitgleich die gleiche Operation ausfï¿½hren wollen.
  * <br><br>
  * Die Idee dabei ist, dass eine langdauernde Operation nicht von mehreren Thread gleichzeitig 
- * durchgeführt werden muss, wenn sie eh das gleiche Ergebnis erhalten würden. Stattdessen muss 
- * nur ein Thread die Operation ausführen, die anderen Threads warten einfach.
- * Die Threads können während der ganzen Ausführungszeit hinzukommen. Für spät hinzukommende 
- * Threads ergibt sich darüber hinaus der Vorteil, dass sie das Ergebnis wesentlich schneller 
- * erhalten, als wenn sie die Operation selbst ausführen müssten.
+ * durchgefï¿½hrt werden muss, wenn sie eh das gleiche Ergebnis erhalten wï¿½rden. Stattdessen muss 
+ * nur ein Thread die Operation ausfï¿½hren, die anderen Threads warten einfach.
+ * Die Threads kï¿½nnen wï¿½hrend der ganzen Ausfï¿½hrungszeit hinzukommen. Fï¿½r spï¿½t hinzukommende 
+ * Threads ergibt sich darï¿½ber hinaus der Vorteil, dass sie das Ergebnis wesentlich schneller 
+ * erhalten, als wenn sie die Operation selbst ausfï¿½hren mï¿½ssten.
  * <br>
- * Voraussetzung ist, dass das Ergebnis der Operation nicht vom Thread und der genauen Startzeit abhängt.
+ * Voraussetzung ist, dass das Ergebnis der Operation nicht vom Thread und der genauen Startzeit abhï¿½ngt.
  * <br><br>
  * Verhalten bei Exceptions:
  * <ul>
  * <li>DeclaredExceptions sind nicht zugelassen</li>
  * <li>RuntimeExceptions werden an alle wartenden Threads verteilt und weitergeworfen</li>
- * <li>Errors und übrige Throwables erhält nur der ausführende Thread; die anderen 
- *     Threads versuchen die Ausführung noch einmal</li>
+ * <li>Errors und ï¿½brige Throwables erhï¿½lt nur der ausfï¿½hrende Thread; die anderen 
+ *     Threads versuchen die Ausfï¿½hrung noch einmal</li>
  * </ul>
  * <br>
- * Mögliche Anwendungsfälle:
+ * Mï¿½gliche Anwendungsfï¿½lle:
  * <ul>
- * <li>Datenbank-Lookup von sich selten ändernden Daten</li>
+ * <li>Datenbank-Lookup von sich selten ï¿½ndernden Daten</li>
  * <li>Ermittlung des Status einer Software-Komponente</li> 
  * </ul>
  * Verwendung:
@@ -64,7 +64,7 @@ import com.gip.xyna.utils.collections.Pair;
   
   JoinedExecutorCounter jec = new JoinedExecutorCounter();
   jec.execute(); 
-  //wenn nun ein anderer Thread in den nächsten 10 ms jec.execute() aufruft, 
+  //wenn nun ein anderer Thread in den nï¿½chsten 10 ms jec.execute() aufruft, 
   //erhalten beide den gleichen Wert
  * </pre>
  */
@@ -89,23 +89,23 @@ public abstract class JoinedExecutor<R> {
   }
   
   /**
-   * eigentlich Ausführung der Operation
+   * eigentlich Ausfï¿½hrung der Operation
    * Behandlung der Exceptions:
    * <ul>
    * <li>DeclaredExceptions sind nicht zugelassen</li>
    * <li>RuntimeExceptions werden an alle wartenden Threads verteilt und weitergeworfen</li>
-   * <li>Errors und übrige Throwables erhält nur der ausführende Thread; die anderen
-   * Threads versuchen die Ausführung noch einmal</li>  
+   * <li>Errors und ï¿½brige Throwables erhï¿½lt nur der ausfï¿½hrende Thread; die anderen
+   * Threads versuchen die Ausfï¿½hrung noch einmal</li>  
    * </ul> 
    * @return
    */
   protected abstract R executeInternal();
   
   /**
-   * Ausführung der Operation.
-   * Diese Methode sammelt alle Threads, die diese Methode gleichzeitig ausführen wollen. Der erste Thread
-   * muss die Operation ausführen, alle anderen Threads erhalten das gleiche Ergebnis.
-   * Evtl. müssen die wartenden Threads die Operation wiederholen, wenn der ausführende Thread mit einen 
+   * Ausfï¿½hrung der Operation.
+   * Diese Methode sammelt alle Threads, die diese Methode gleichzeitig ausfï¿½hren wollen. Der erste Thread
+   * muss die Operation ausfï¿½hren, alle anderen Threads erhalten das gleiche Ergebnis.
+   * Evtl. mï¿½ssen die wartenden Threads die Operation wiederholen, wenn der ausfï¿½hrende Thread mit einen 
    * schweren Fehler beendet wird. 
    * @return
    */
@@ -115,10 +115,10 @@ public abstract class JoinedExecutor<R> {
       Pair<CountDownLatch,Boolean> pair = checkExecutionState();
       CountDownLatch localLatch = pair.getFirst();
       if( pair.getSecond() ) {
-        //erster Thread muss Task ausführen
+        //erster Thread muss Task ausfï¿½hren
         result = executeAndCountDown(localLatch);
       } else {
-        //weitere Threads hängen sich an und übernehmen das Ergebnis
+        //weitere Threads hï¿½ngen sich an und ï¿½bernehmen das Ergebnis
         result = awaitExecution(localLatch);
       }
     } while( result.hasToRetry );
@@ -130,7 +130,7 @@ public abstract class JoinedExecutor<R> {
 
 
   /**
-   * Diese Methode entscheidet, welcher Thread der erste ist und legt dafür das Latch an
+   * Diese Methode entscheidet, welcher Thread der erste ist und legt dafï¿½r das Latch an
    * @return Pair<Latch,Boolean> mit true -> erster Thread
    */
   private Pair<CountDownLatch, Boolean> checkExecutionState() {
@@ -154,7 +154,7 @@ public abstract class JoinedExecutor<R> {
   }
   
   /**
-   * Erster Thread muss die Operation ausführen und das Latch freigeben
+   * Erster Thread muss die Operation ausfï¿½hren und das Latch freigeben
    * @param localLatch
    * @return
    */
@@ -177,7 +177,7 @@ public abstract class JoinedExecutor<R> {
   }
 
   /**
-   * Alle anderen Threads warten auf die Freigabe des Latch und übernehmen das Ergebnis
+   * Alle anderen Threads warten auf die Freigabe des Latch und ï¿½bernehmen das Ergebnis
    * @param localLatch 
    * @return
    * @throws InterruptedException 

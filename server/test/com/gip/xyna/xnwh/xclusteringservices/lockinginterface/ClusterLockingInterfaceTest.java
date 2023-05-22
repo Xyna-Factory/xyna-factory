@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -398,10 +398,10 @@ public class ClusterLockingInterfaceTest extends TestCase {
     
     Thread ta = new Thread( new LockingThread(databaseLock, 1000, "A", actions ) );
     Thread tb = new Thread( new LockingThread(databaseLock, 1000, "B", actions ) );
-    //ta und tb können wegen gleichem ReentrantLock im databaseLock nie gleichzeitig locken
+    //ta und tb kï¿½nnen wegen gleichem ReentrantLock im databaseLock nie gleichzeitig locken
     
     Thread tc = new Thread( new LockingThread(databaseLock2, 1000, "C", actions ) );
-    //tc hat nun eigenständiges ReentrantLock, damit wird DB für korrektes Lock benötigt
+    //tc hat nun eigenstï¿½ndiges ReentrantLock, damit wird DB fï¿½r korrektes Lock benï¿½tigt
     
     ta.start();
     tb.start();
@@ -417,7 +417,7 @@ public class ClusterLockingInterfaceTest extends TestCase {
     assertFalse( "lock should not be locked", checkLockIsLocked(lockName) );
    
     System.err.println( actions );
-    //actions sollte jetzt so ähnlich aussehen, Reihenfolge der A, B, C kann variieren
+    //actions sollte jetzt so ï¿½hnlich aussehen, Reihenfolge der A, B, C kann variieren
     //"[A starts, C starts, B starts, B has got lock, B has unlocked, A has got lock, A has unlocked, C has got lock, C has unlocked]"
 
     //Stimmen die 3 Starts?

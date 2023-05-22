@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,13 +34,13 @@ public class ProcessAbortedException extends RuntimeException {
   private Long originOrderId;
 
   /**
-   * @deprecated wegen serialisierungs-abwärtskompatibilität noch drin
+   * @deprecated wegen serialisierungs-abwï¿½rtskompatibilitï¿½t noch drin
    */
   @Deprecated
   final private boolean needToFreeCapacities = true;
   
   /**
-   * @deprecated wegen serialisierungs-abwärtskompatibilität noch drin
+   * @deprecated wegen serialisierungs-abwï¿½rtskompatibilitï¿½t noch drin
    */
   @Deprecated
   final private boolean needToFreeVetos = true;

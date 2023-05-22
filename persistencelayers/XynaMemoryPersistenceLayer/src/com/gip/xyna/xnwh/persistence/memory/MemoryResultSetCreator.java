@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class MemoryResultSetCreator {
   private static final String METHODNAME_NVLSTRING;
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_ENSURE_IDX = BaseResultSet.class.getDeclaredMethod(_METHODNAME_ENSURE_IDX_ORIG).getName();
     } catch (Exception e) {
@@ -106,13 +106,13 @@ public class MemoryResultSetCreator {
   }
   
   /**
-   * erstellt code für className extends superClassName mit konstruktor, der persistencelayer erwartet.
+   * erstellt code fï¿½r className extends superClassName mit konstruktor, der persistencelayer erwartet.
    * dabei werden resultset methoden implementiert, die zu den spalten in tableinfo passen.
    * 
    * die oberklasse muss von {@link BaseResultSet} abgeleitet sein.
    */
   public static void create(CodeBuffer cb, TableInfo t, String className, String superClassName) {
-    //TODO JavaClass verwenden, um dynamischer imports definieren zu können, etc
+    //TODO JavaClass verwenden, um dynamischer imports definieren zu kï¿½nnen, etc
     // extend resultset
     cb.addLine("public class ", className, " extends ", superClassName, " {").addLB();
 
@@ -120,8 +120,8 @@ public class MemoryResultSetCreator {
     cb.addLine("super(pl, isForUpdate)");
     cb.addLine("}").addLB();
 
-    // FIXME: eigtl müssten nur die spalten verfügbar gemacht werden, die im sqlstatement angegeben sind
-    // in der implementierung werden derzeit immer alle verfügbar gemacht.
+    // FIXME: eigtl mï¿½ssten nur die spalten verfï¿½gbar gemacht werden, die im sqlstatement angegeben sind
+    // in der implementierung werden derzeit immer alle verfï¿½gbar gemacht.
     HashMap<String, ArrayList<Integer>> colTypesToIndices = new HashMap<String, ArrayList<Integer>>();
     for (int i = 0; i < t.getColTypes().length; i++) {
       ColumnDeclaration colType = t.getColTypes()[i];
@@ -130,7 +130,7 @@ public class MemoryResultSetCreator {
         compatibleJavaTypes.add("Object");
       }
       compatibleJavaTypes.add(getResultTypeJavaType(colType.getJavaType()));
-      compatibleJavaTypes.add("String"); //getString sollte immer möglich sein
+      compatibleJavaTypes.add("String"); //getString sollte immer mï¿½glich sein
       for (String javaType : compatibleJavaTypes) {
         ArrayList<Integer> indices = colTypesToIndices.get(javaType);
         if (indices == null) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.gip.xyna.coherence.management.ClusterMember;
 
 
 /**
- * zählt anzahl threads die {@link #checkLock()} aufgerufen haben aber noch nicht {@link #decrementThreadCount()). 
+ * zï¿½hlt anzahl threads die {@link #checkLock()} aufgerufen haben aber noch nicht {@link #decrementThreadCount()). 
  * threads werden durch {@link #checkLock()} durchgelassen, falls das lock nicht gelockt ist, ansonsten warten sie dort,
  * bis unlocked wird.
  */
@@ -38,7 +38,7 @@ public class ThreadLock implements ThreadLockInterface {
   private AtomicInteger threadCnt = new AtomicInteger(0);
   private long objectId;
   private long objectId_t;
-  private CacheControllerImpl controller; //TODO interface nehmen, wenn push veröffentlicht wird
+  private CacheControllerImpl controller; //TODO interface nehmen, wenn push verï¿½ffentlicht wird
 
 
   public ThreadLock(long id, long id_t, CacheControllerImpl controller) {
@@ -82,7 +82,7 @@ public class ThreadLock implements ThreadLockInterface {
         threadCnt.decrementAndGet();
         getSharedLock(objectId_t);
         unlockSharedLock(objectId_t);
-        //wenn der thread hier hängt, wird er nicht mitgezählt. das ist nur dann schlimm, falls das global lock ein zweites mal vergeben wurde
+        //wenn der thread hier hï¿½ngt, wird er nicht mitgezï¿½hlt. das ist nur dann schlimm, falls das global lock ein zweites mal vergeben wurde
         //ist das global lock nicht mehr gesetzt, ist lockCnt = oldCnt und der thread darf gefahrlos laufen.
         threadCnt.incrementAndGet();
       }
@@ -98,7 +98,7 @@ public class ThreadLock implements ThreadLockInterface {
 
 
   public void lockAll() {
-    //auf alle knoten "locked" versenden. realisierung über push von boolean innerhalb von payload von objectId
+    //auf alle knoten "locked" versenden. realisierung ï¿½ber push von boolean innerhalb von payload von objectId
     //dort wartet dann ein trigger der darauf reagiert und das lokale lock setzt.
     getSharedLock(objectId_t);
     

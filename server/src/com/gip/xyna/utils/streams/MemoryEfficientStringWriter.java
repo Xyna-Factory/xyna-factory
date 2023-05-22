@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ import com.gip.xyna.CentralFactoryLogging;
 
 
 /**
- * stringwriter/-buffer expandieren das interne character array immer um faktor 2. dadurch hat man bei großen strings ggf.
- * einen sehr hohen overhead. (kurzfristig faktor 3, um die daten in das neue array zu übertragen).
+ * stringwriter/-buffer expandieren das interne character array immer um faktor 2. dadurch hat man bei groï¿½en strings ggf.
+ * einen sehr hohen overhead. (kurzfristig faktor 3, um die daten in das neue array zu ï¿½bertragen).
  *
- * diese implementierung hat als overhead nur die länge des größten in den writer geschriebenen teilstrings, und kurzfristig faktor 2 (bei getString()).
+ * diese implementierung hat als overhead nur die lï¿½nge des grï¿½ï¿½ten in den writer geschriebenen teilstrings, und kurzfristig faktor 2 (bei getString()).
  */
 public class MemoryEfficientStringWriter extends Writer {
 
@@ -158,9 +158,9 @@ public class MemoryEfficientStringWriter extends Writer {
     if (len == 0) {
       return "";
     }
-    //idee: erzeuge großes bytearray für den konktatenierten zielstring.    
+    //idee: erzeuge groï¿½es bytearray fï¿½r den konktatenierten zielstring.    
     
-    StringBuilder sb = new StringBuilder(len); //erzeugt intern das große ziel byte-array
+    StringBuilder sb = new StringBuilder(len); //erzeugt intern das groï¿½e ziel byte-array
     int l = parts.size();
     for (int i = 0; i<l; i++) {
       String s = parts.get(i);
@@ -168,8 +168,8 @@ public class MemoryEfficientStringWriter extends Writer {
       sb.append(s);
     }
 
-    //StringBuilder.toString erstellt eine zusätzliche kopie des arrays. das will man sich sparen...
-    //es wäre eine methode StringBuilder.toStringAndDestroy() nötig, die müsste dann keine defensive bytearray-kopie erzeugen.
+    //StringBuilder.toString erstellt eine zusï¿½tzliche kopie des arrays. das will man sich sparen...
+    //es wï¿½re eine methode StringBuilder.toStringAndDestroy() nï¿½tig, die mï¿½sste dann keine defensive bytearray-kopie erzeugen.
     String ret = null;
     if (easyStringConstructor != null) {
       try {
@@ -180,7 +180,7 @@ public class MemoryEfficientStringWriter extends Writer {
         ret = null;
       }
     }
-    len = 0; //erneutes getString soll leeren string zurückgeben
+    len = 0; //erneutes getString soll leeren string zurï¿½ckgeben
 
     if (ret == null) {
       ret = sb.toString();

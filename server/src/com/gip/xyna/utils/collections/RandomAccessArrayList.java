@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ import java.util.ListIterator;
 
 
 /**
- * RandomAccessArrayList bietet anders als die übliche ArrayList einen beliebigen Zugriff über den Index,
+ * RandomAccessArrayList bietet anders als die ï¿½bliche ArrayList einen beliebigen Zugriff ï¿½ber den Index,
  * ohne eine Exception zu werfen, wenn der Index zu hoch ist. 
- * Stattdessen werden sinnvolle Operationen durchgeführt:
- * - set(index,E element) und add(int index, E element) vergrößern die Liste entsprechend
- * - get(index) und remove(index) geben null zurück
- * Negative Indexe führen zum gewohnten Fehler
+ * Stattdessen werden sinnvolle Operationen durchgefï¿½hrt:
+ * - set(index,E element) und add(int index, E element) vergrï¿½ï¿½ern die Liste entsprechend
+ * - get(index) und remove(index) geben null zurï¿½ck
+ * Negative Indexe fï¿½hren zum gewohnten Fehler
  * 
- * FIXME vollständig implementieren! listIterator, subList, ?resize()?
+ * FIXME vollstï¿½ndig implementieren! listIterator, subList, ?resize()?
  * 
  */
 public class RandomAccessArrayList<E> extends WrappedList<E> implements Serializable {

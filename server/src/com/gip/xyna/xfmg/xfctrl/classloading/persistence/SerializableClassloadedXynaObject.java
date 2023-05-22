@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,8 @@ public class SerializableClassloadedXynaObject implements Serializable {
 
 
   /**
-   * Für Container und Listen genügt ein mdm classloader. Falls die liste auch abgeleitete klassen enthält, muss der
-   * classloader die klassen durch delegation finden können.
+   * Fï¿½r Container und Listen genï¿½gt ein mdm classloader. Falls die liste auch abgeleitete klassen enthï¿½lt, muss der
+   * classloader die klassen durch delegation finden kï¿½nnen.
    */
   private void getRelevantClassLoadersRecursively(GeneralXynaObject xo, Set<ClassLoader> classloaders) {
 
@@ -101,7 +101,7 @@ public class SerializableClassloadedXynaObject implements Serializable {
       classloaders.add(xo.getClass().getClassLoader());
     } else {
       // SchedulerBean or other internally loaded classes that are not reloadable. 
-      // Achtung, es muss in solchen Objekten z.b. über writeObject sichergestellt werden, dass membervariablen korrekt behandelt werden
+      // Achtung, es muss in solchen Objekten z.b. ï¿½ber writeObject sichergestellt werden, dass membervariablen korrekt behandelt werden
     }
   }
 

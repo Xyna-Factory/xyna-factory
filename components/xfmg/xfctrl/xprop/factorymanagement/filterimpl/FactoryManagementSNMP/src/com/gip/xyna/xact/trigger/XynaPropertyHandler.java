@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class XynaPropertyHandler extends AbstractOidSingleHandler {
   
   private static final Logger logger = CentralFactoryLogging.getLogger(XynaPropertyHandler.class);
 
-  public final static OID base = new OID("1.3.6.1.4.1.28747.1.11.4.1"); //TODO aus konstanten zusammenbauen - konstanten für departments etc anlegen.
+  public final static OID base = new OID("1.3.6.1.4.1.28747.1.11.4.1"); //TODO aus konstanten zusammenbauen - konstanten fï¿½r departments etc anlegen.
 
   public VarBind get(OID oid, int i) {
     //oid => string
@@ -61,7 +61,7 @@ public class XynaPropertyHandler extends AbstractOidSingleHandler {
   private int lastModifiedCount = -1;
   
   /**
-   * bei unterschiedlichlangen strings ist der kürzere string "vor" dem längeren string.
+   * bei unterschiedlichlangen strings ist der kï¿½rzere string "vor" dem lï¿½ngeren string.
    * bei gleichlangen strings wird der string "normal" mit string.compareto() verglichen
    */
   private Comparator<String> comparator = new Comparator<String>() {

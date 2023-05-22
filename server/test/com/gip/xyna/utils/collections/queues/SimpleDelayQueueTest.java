@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public class SimpleDelayQueueTest extends TestCase {
     try {
       Thread.sleep(millis);
     } catch (InterruptedException e) {
-      //dann halt kürzer
+      //dann halt kï¿½rzer
     }
   }
   
@@ -36,7 +36,7 @@ public class SimpleDelayQueueTest extends TestCase {
     SimpleDelayQueue<String> sdq = new SimpleDelayQueue<String>();
     
     sdq.add("A");
-    sleep(10); //Für Reihenfolge
+    sleep(10); //Fï¿½r Reihenfolge
     sdq.add("B");
     
     assertEquals("[A, B]", sdq.toString() );

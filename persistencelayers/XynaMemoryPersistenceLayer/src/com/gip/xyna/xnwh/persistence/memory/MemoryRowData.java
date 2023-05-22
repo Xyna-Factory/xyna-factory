@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public abstract class MemoryRowData<T extends Storable> implements RowDataInterf
 
 
   /**
-   * füllt das übergebene objekt
+   * fï¿½llt das ï¿½bergebene objekt
    */
   public void fillFromData(PersistenceLayer pl, Storable<? super T> storable) throws UnderlyingDataNotFoundException {
     storable.setAllFieldsFromData(getData(pl));

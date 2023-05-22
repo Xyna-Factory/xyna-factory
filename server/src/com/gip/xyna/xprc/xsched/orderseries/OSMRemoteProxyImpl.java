@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,18 +35,18 @@ import com.gip.xyna.xprc.xsched.orderseries.tasks.OSMTask;
 
 /**
  * OSMRemoteProxyImpl:
- * Implementierung des Interfaces OSMRemoteInterface, die die notwendigen Änderungen an den
- * SeriesInformationStorable remote durchführt.<br>
+ * Implementierung des Interfaces OSMRemoteInterface, die die notwendigen ï¿½nderungen an den
+ * SeriesInformationStorable remote durchfï¿½hrt.<br>
  * <br>
- * Algorithmus für update{Successor/Predecessor}<br>
+ * Algorithmus fï¿½r update{Successor/Predecessor}<br>
  * 1) Ist <code>clustered==true</code><br>
- * 1.1) Ja: Remote-Aufruf über RMIClusterProviderTools<br>
+ * 1.1) Ja: Remote-Aufruf ï¿½ber RMIClusterProviderTools<br>
  * 1.2) Nein: Aufruf update{Successor/Predecessor}Later<br>
  * <br>
- * Algorithmus für update{Successor/Predecessor}Later<br>
+ * Algorithmus fï¿½r update{Successor/Predecessor}Later<br>
  * 1) Lesen des SeriesInformationStorable <code>sis</code> zu {successor/predecessor}CorrId<br>
  * 2) Eintragen eines neuen OSMTask_Update{Successor/Predecessor} mit Binding aus <code>sis</code> in die Taskqueue<br>
- * 3) Rückgabe Result.Later<br>
+ * 3) Rï¿½ckgabe Result.Later<br>
  */
 public class OSMRemoteProxyImpl implements OSMRemoteInterface {
   
@@ -151,14 +151,14 @@ public class OSMRemoteProxyImpl implements OSMRemoteInterface {
   private Result updateSuccessorLater(int binding, String successorCorrId, String predecessorCorrId,
                                       long predecessorOrderId, boolean cancel) {
     
-    //Binding überprüfen, da sonst Endlosschleife auftritt, falls Knoten mit dem binding <code>binding</code> nicht wiederkommt
+    //Binding ï¿½berprï¿½fen, da sonst Endlosschleife auftritt, falls Knoten mit dem binding <code>binding</code> nicht wiederkommt
     SeriesInformationStorable sis = osmCache.get(successorCorrId);
     return executeLater( OSMTask.updateSuccessor(sis.getBinding(),successorCorrId,predecessorCorrId,predecessorOrderId,cancel) );
   }
   
   private Result updatePredecessorLater(int binding, String predecessorCorrId, String successorCorrId,
                                         long successorOrderId) {
-    //Binding überprüfen, da sonst Endlosschleife auftritt, falls Knoten mit dem binding <code>binding</code> nicht wiederkommt
+    //Binding ï¿½berprï¿½fen, da sonst Endlosschleife auftritt, falls Knoten mit dem binding <code>binding</code> nicht wiederkommt
     SeriesInformationStorable sis = osmCache.get(successorCorrId);
     return executeLater( OSMTask.updatePredecessor(sis.getBinding(),predecessorCorrId, successorCorrId, successorOrderId) );
   }
@@ -168,10 +168,10 @@ public class OSMRemoteProxyImpl implements OSMRemoteInterface {
    * @return
    */
   private Result executeLater(OSMTask osmTask) {
-    //Mit Verzögerung einstellen zur Lastbegrenzung
-    //2 Anwendungsfälle:
+    //Mit Verzï¿½gerung einstellen zur Lastbegrenzung
+    //2 Anwendungsfï¿½lle:
     //a) kurzfristiger Ausfall der RMI-Verbindung
-    //b) Ordermigration: Predecessor ist bereits migriert, und möchte nun updateSuccessor ausführen,
+    //b) Ordermigration: Predecessor ist bereits migriert, und mï¿½chte nun updateSuccessor ausfï¿½hren,
     //dieser ist aber noch nicht migriert
     retryLaterTimer.schedule( new Later(queue, osmTask), 500); //TODO delay konfigurierbar
     return Result.Later; 
@@ -217,7 +217,7 @@ public class OSMRemoteProxyImpl implements OSMRemoteInterface {
       Logger.getLogger(getClass()).info("Foreign node failed to answer, retrying later");
       return Result.Later; //einer der Knoten antwortete nicht, andere Knoten antworten nur Result.NotFound
     } else {
-      return Result.NotFound; //Result.NotFound war einzige Rückmeldung
+      return Result.NotFound; //Result.NotFound war einzige Rï¿½ckmeldung
     }
   }
 

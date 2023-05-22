@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -235,7 +235,7 @@ public class ProcessManagement extends FunctionGroup implements IPropertyChangeL
             if (o instanceof WF) {
               clearInstancePool(new FractalWorkflowDestination(o.getFqClassName()), o.getRevision());
             } else if (o instanceof DOM) {
-              //für nicht statische methoden merken, ob die methoden als workflow implementiert sind, oder nicht
+              //fï¿½r nicht statische methoden merken, ob die methoden als workflow implementiert sind, oder nicht
               DOM dom = (DOM) o;
               ConcurrentMap<String, ConcurrentMap<String, Boolean>> map = XynaProcess.instanceMethodTypes.get(o.getRevision());
               if (map == null) {

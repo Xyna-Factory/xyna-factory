@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class VM_Cache implements VetoManagementInterface {
 
   public VetoAllocationResult allocateVetos(OrderInformation usingOrder, List<String> vetos, long urgency) {
     boolean reallocate = false;
-    //erste Prüfung, die häufig fehlschlägt
+    //erste Prï¿½fung, die hï¿½ufig fehlschlï¿½gt
     for( String v : vetos ) {
       VetoInformation existing = vetoCache.get(v);
       if( existing != null ) {
@@ -134,7 +134,7 @@ public class VM_Cache implements VetoManagementInterface {
       if( vi != null ) {
         if( vi.getUsingOrderId() == orderId ) {
           if( ! vetoCache.remove(v, vi) ) {
-            //TODO wer sollte den Eintrag ändern?
+            //TODO wer sollte den Eintrag ï¿½ndern?
           }
         }
       } else {

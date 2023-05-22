@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -285,17 +285,17 @@ public class PersistenceStrategyImpl implements PersistenceStrategy, ProcessingS
         while (storableIt.hasNext()) {
           StorableWrapper s = storableIt.next();
 
-          //ermittle nächstens clusterInfoStorable
+          //ermittle nï¿½chstens clusterInfoStorable
           if (nextClusterInfo == null) {
             if (ciIt.hasNext()) {
               nextClusterInfo = ciIt.next();
             }
           }
 
-          //gehe solange weiter, bis es größergleich dem storable ist.
+          //gehe solange weiter, bis es grï¿½ï¿½ergleich dem storable ist.
           while (nextClusterInfo != null && nextClusterInfo.getPk().compareTo(s.pkAsString) < 0) {
             if (ciIt.hasNext()) {
-              //d.h. das jetzige wird übersprungen
+              //d.h. das jetzige wird ï¿½bersprungen
               logger.warn("Found unnecessary entry in " + ClusterInfoStorable.TABLE_NAME + ": "
                   + nextClusterInfo.getPk());
               nextClusterInfo = ciIt.next();
@@ -471,8 +471,8 @@ public class PersistenceStrategyImpl implements PersistenceStrategy, ProcessingS
     @SuppressWarnings("rawtypes")
     Class<Storable> clazzStorable = getStorableClass(clazz);
 
-    //TODO eigtl will man die clearen, aber dann müsste man genaugenommen unterscheiden,
-    //zu welchem table die einzelnen elemente des queueprocessors gehören...
+    //TODO eigtl will man die clearen, aber dann mï¿½sste man genaugenommen unterscheiden,
+    //zu welchem table die einzelnen elemente des queueprocessors gehï¿½ren...
     queueProcessor.persistRemainingDataSynchronously();
 
     ODSConnection con = ods.openConnection(connectionType);

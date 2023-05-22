@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class UpdateRightDescriptionsToLocalizedVersion extends UpdateJustVersion
     ods.registerStorable(Localization.class);
     try {
       List<Localization> localizedRights = new ArrayList<Localization>();
-      long id = -1; //negative zahlen verwenden, damit man später nicht mit den vom idgenerator erzeugten zahlen kollidiert.
+      long id = -1; //negative zahlen verwenden, damit man spï¿½ter nicht mit den vom idgenerator erzeugten zahlen kollidiert.
       for (com.gip.xyna.update.outdatedclasses_7_0_2_7.Right r : oldRights) {
         id--;
         Localization l = new Localization(id, Localization.Type.RIGHT.toString(), r.getName(), "EN", r.getDescription());
@@ -92,7 +92,7 @@ public class UpdateRightDescriptionsToLocalizedVersion extends UpdateJustVersion
   private static class TransformRightScope implements Transformation<com.gip.xyna.update.outdatedclasses_7_0_2_7.RightScope, RightScope> {
 
     public RightScope transform(com.gip.xyna.update.outdatedclasses_7_0_2_7.RightScope from) {
-      List<ScopePart> oldParts = from.getParts(); //weil die parts javaserialisiert gespeichert sind, stimmen sie vom typ überein.
+      List<ScopePart> oldParts = from.getParts(); //weil die parts javaserialisiert gespeichert sind, stimmen sie vom typ ï¿½berein.
       String definition = from.getDefinition();
       if (from.getName().equals(ScopedRight.APPLICATION_DEFINITION.getKey())) {
         definition = ScopedRight.APPLICATION_DEFINITION.getDefinition();

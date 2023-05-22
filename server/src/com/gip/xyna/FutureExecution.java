@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,23 +36,23 @@ import com.gip.xyna.xfmg.extendedstatus.XynaExtendedStatusManagement;
 
 
 /**
- * Klasse zur Abarbeitung von Aufgaben, die voneinander abhängig sind und deshalb in einer bestimmten Reihenfolge
- * ausgeführt werden müssen.
+ * Klasse zur Abarbeitung von Aufgaben, die voneinander abhï¿½ngig sind und deshalb in einer bestimmten Reihenfolge
+ * ausgefï¿½hrt werden mï¿½ssen.
  * <p>
  * Idee: Man registriert in einer beliebigen Reihenfolge Aufgaben in der Form von {@link FutureExecutionTask}s. Diese
- * definieren ihre Abhängigkeiten derart, dass sie bestimmen, welche anderen Tasks vor ihnen und welche nach ihnen
- * ausgeführt werden müssen.
+ * definieren ihre Abhï¿½ngigkeiten derart, dass sie bestimmen, welche anderen Tasks vor ihnen und welche nach ihnen
+ * ausgefï¿½hrt werden mï¿½ssen.
  * <p>
- * Normalerweise darf man Aufgaben nie sofort starten, auch wenn alle angegebenen Abhängigkeiten erfüllt sind, weil es
- * sein könnte, dass zu einem späteren Zeitpunkt noch eine Aufgabe registriert wird, die vor der aktuellen Aufgabe
- * ausgeführt werden muss.<br>
+ * Normalerweise darf man Aufgaben nie sofort starten, auch wenn alle angegebenen Abhï¿½ngigkeiten erfï¿½llt sind, weil es
+ * sein kï¿½nnte, dass zu einem spï¿½teren Zeitpunkt noch eine Aufgabe registriert wird, die vor der aktuellen Aufgabe
+ * ausgefï¿½hrt werden muss.<br>
  * Deshalb schliesst man die Registrierungsphase manuell mittels {@link #finishedRegistrationProcess()} ab.<br>
- * Falls man das warten auf {@link #finishedRegistrationProcess()} umgehen möchte, kann man die frühstmögliche
- * Ausführung einer Aufgabe erzwingen, indem man {@link FutureExecutionTask#waitForOtherTasksToRegister()} überschreibt
- * und <code>false</code> zurückgibt.<p>
- * Nach dem Aufruf von {@link #finishedRegistrationProcess()} können weitere Aufgaben hinzugefügt werden. Diese werden
- * genauso behandelt wie vorher, d.h. erst ausgeführt, wenn erneut {@link #finishedRegistrationProcess()} aufgerufen wird mit oben erwähnten Ausnahmen..
- * Bereits ausgeführte Aufgaben gelten weiterhin als bereits ausgeführt (für zukünftige Aufgaben, die davon abhängig sind).
+ * Falls man das warten auf {@link #finishedRegistrationProcess()} umgehen mï¿½chte, kann man die frï¿½hstmï¿½gliche
+ * Ausfï¿½hrung einer Aufgabe erzwingen, indem man {@link FutureExecutionTask#waitForOtherTasksToRegister()} ï¿½berschreibt
+ * und <code>false</code> zurï¿½ckgibt.<p>
+ * Nach dem Aufruf von {@link #finishedRegistrationProcess()} kï¿½nnen weitere Aufgaben hinzugefï¿½gt werden. Diese werden
+ * genauso behandelt wie vorher, d.h. erst ausgefï¿½hrt, wenn erneut {@link #finishedRegistrationProcess()} aufgerufen wird mit oben erwï¿½hnten Ausnahmen..
+ * Bereits ausgefï¿½hrte Aufgaben gelten weiterhin als bereits ausgefï¿½hrt (fï¿½r zukï¿½nftige Aufgaben, die davon abhï¿½ngig sind).
  */
 public class FutureExecution {
 
@@ -144,15 +144,15 @@ public class FutureExecution {
 
 
   /**
-   * Führt das {@link FutureExecutionTask} auf jeden Fall vor allen in {@link FutureExecutionTask#before()} angegebenen
+   * Fï¿½hrt das {@link FutureExecutionTask} auf jeden Fall vor allen in {@link FutureExecutionTask#before()} angegebenen
    * {@link FutureExecutionTask}s aus. <br>
    * Ausserdem erst dann, wenn alle in {@link FutureExecutionTask#after()} angegebenen {@link FutureExecutionTask}s
-   * bereits ausgeführt worden sind und zusätzlich entweder 
+   * bereits ausgefï¿½hrt worden sind und zusï¿½tzlich entweder 
    * <ul><li>
    * {@link #finishedRegistrationProcess()} aufgerufen wird</li></ul>
    * oder<br>
-   * <ul><li>{@link FutureExecutionTask#waitForOtherTasksToRegister()} gibt false zurück.</li></ul> <br>
-   * Der Aufruf wartet nicht auf die Ausführung, wenn die Ausführung nicht direkt stattfinden kann.
+   * <ul><li>{@link FutureExecutionTask#waitForOtherTasksToRegister()} gibt false zurï¿½ck.</li></ul> <br>
+   * Der Aufruf wartet nicht auf die Ausfï¿½hrung, wenn die Ausfï¿½hrung nicht direkt stattfinden kann.
    */
   public void execAsync(FutureExecutionTask task) {
     if (task.waitForOtherTasksToRegister()) {
@@ -200,7 +200,7 @@ public class FutureExecution {
 
   private boolean isBlockedByOtherTasks(FutureExecutionTask task) {
     synchronized (tasks) {
-      //task muss "after" otherTask durchgeführt werden? => sicherstellen, dass diese bereits durchgeführt wurden
+      //task muss "after" otherTask durchgefï¿½hrt werden? => sicherstellen, dass diese bereits durchgefï¿½hrt wurden
       for (TaskId afterId : task.afterTasks()) {
         boolean foundAfterTaskHasBeenExecuted = false;
         for (TaskId executedTaskId : alreadyExecutedTasks) {
@@ -214,7 +214,7 @@ public class FutureExecution {
         }
       }
 
-      // otherTask muss "before" task durchgeführt werden? => sicherstellen, dass die otherTasks bereits durchgeführt
+      // otherTask muss "before" task durchgefï¿½hrt werden? => sicherstellen, dass die otherTasks bereits durchgefï¿½hrt
       // wurden
       for (List<FutureExecutionTask> taskList : tasks.values()) {
         for (FutureExecutionTask otherTask : taskList) {
@@ -224,7 +224,7 @@ public class FutureExecution {
 
           for (TaskId beforeId : otherTask.beforeTasks()) {
             if (beforeId.equals(task.getId())) {
-              // d.h. otherTask muss zuerst durchgeführt werden.
+              // d.h. otherTask muss zuerst durchgefï¿½hrt werden.
               return true;
             }
           }
@@ -252,7 +252,7 @@ public class FutureExecution {
 
 
   /**
-   * Wie {@link #execAsync(FutureExecutionTask)}, nur dass auf die Ausführung gewartet wird.
+   * Wie {@link #execAsync(FutureExecutionTask)}, nur dass auf die Ausfï¿½hrung gewartet wird.
    * @param task
    */
   public void execSync(FutureExecutionTask task) {
@@ -313,8 +313,8 @@ public class FutureExecution {
   
  
   /**
-   * Beginnt die Abarbeitung aller bisher noch nicht gestarteten {@link FutureExecutionTask}s unter Berücksichtigung
-   * ihrer Abhängigkeiten. Durch die Ausführung der Tasks können noch weitere Tasks dazukommen.
+   * Beginnt die Abarbeitung aller bisher noch nicht gestarteten {@link FutureExecutionTask}s unter Berï¿½cksichtigung
+   * ihrer Abhï¿½ngigkeiten. Durch die Ausfï¿½hrung der Tasks kï¿½nnen noch weitere Tasks dazukommen.
    */
   public void finishedRegistrationProcess() {
     if( logger.isDebugEnabled() ) {
@@ -325,14 +325,14 @@ public class FutureExecution {
     //printFutureExecutions();
     
     
-    // FutureExecution order in debug monitoren für Fehlerfall, aber per default nur auf Trace ausgeben
+    // FutureExecution order in debug monitoren fï¿½r Fehlerfall, aber per default nur auf Trace ausgeben
     StringBuilder sb = new StringBuilder();
     if(logger.isDebugEnabled()) {
       sb.append("Execution order of the FutureExecution ").append(name).append(":\n");
     }
     
     while(true) {
-      // mit größter Prio anfangen
+      // mit grï¿½ï¿½ter Prio anfangen
       ArrayList<Integer> sortedprios = new ArrayList<Integer>(tasks.keySet());
       if(sortedprios.size() == 0) {
         // fertig
@@ -356,7 +356,7 @@ public class FutureExecution {
         copyOfTasks.addAll(tasks.get(prio));
         if(executeTaskList(copyOfTasks, prio, sb)) {
           executedAtLeastOneTask = true;
-          // Abbruch der for-Schleife, damit höherpriorisierte Task zu erst weiter abgearbeitet werden. 
+          // Abbruch der for-Schleife, damit hï¿½herpriorisierte Task zu erst weiter abgearbeitet werden. 
           break;
         }
       }
@@ -670,7 +670,7 @@ public class FutureExecution {
     }
     
     /**
-     * Task auch ausführen, wenn normale Task-Ausführung bereits abgeschlossen ist
+     * Task auch ausfï¿½hren, wenn normale Task-Ausfï¿½hrung bereits abgeschlossen ist
      * @param runnable
      */
     public void execNowOrAsync(final Runnable runnable) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@ public class StopapplicationImpl extends XynaCommandImplementation<Stopapplicati
     public boolean accept(ApplicationInformation value) {
       boolean isDefinition = value instanceof ApplicationDefinitionInformation;
       if( isDefinition ) {
-        return false; //keine Definition gewünscht
+        return false; //keine Definition gewï¿½nscht
       }
       if( ! namePattern.matcher( value.getName() ).matches() ) {
         return false; //Name passt nicht

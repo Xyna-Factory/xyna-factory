@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package com.gip.xyna.utils.xml.schema;
 
 /**
  * Ein Teilfragment eines Schemas, welches aus einem Schema ausgeschnitten und
- * in ein anderes eingefügt werden kann. Ein Fragment an sich kann gar nichts.
- * Wenn es in ein Schema eingefügt wird, erhält es dessen Namespace.
+ * in ein anderes eingefï¿½gt werden kann. Ein Fragment an sich kann gar nichts.
+ * Wenn es in ein Schema eingefï¿½gt wird, erhï¿½lt es dessen Namespace.
  */
 public class XynaSchemaFragment {
 

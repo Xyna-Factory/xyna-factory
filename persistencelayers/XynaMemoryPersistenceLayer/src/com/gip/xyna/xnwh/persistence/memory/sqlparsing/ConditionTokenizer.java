@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class ConditionTokenizer {
 
   //keine whitespaces
   public enum TokenType {
-    OR, AND, NOT, IN, LIKE, IS, NULL, WORD, BRACE_OPEN, BRACE_CLOSE, GT, GTE, LT, LTE, EQ, NEQ, /* string in anführungszeichen */ESCAPED, /* ? */PARAMETER, COMMA;
+    OR, AND, NOT, IN, LIKE, IS, NULL, WORD, BRACE_OPEN, BRACE_CLOSE, GT, GTE, LT, LTE, EQ, NEQ, /* string in anfï¿½hrungszeichen */ESCAPED, /* ? */PARAMETER, COMMA;
 
     private String lowercase;
 
@@ -188,7 +188,7 @@ public class ConditionTokenizer {
   }
 
 
-  //parse von startIdx bis zum nächsten nicht escapten vorkommnis von escapechar
+  //parse von startIdx bis zum nï¿½chsten nicht escapten vorkommnis von escapechar
   private int parseEscapedString(char escapeChar, int startIdx, String condition) throws SQLTokenizerException {
     int idx = startIdx;
     int len = condition.length();
@@ -233,7 +233,7 @@ public class ConditionTokenizer {
   }
 
 
-  //parse bis zum nächsten zeichen, welches das wort beendet, d.h. es sind nur buchstaben und zahlen und underscore erlaubt
+  //parse bis zum nï¿½chsten zeichen, welches das wort beendet, d.h. es sind nur buchstaben und zahlen und underscore erlaubt
   private int nextWord(String condition, int idx) {
     int len = condition.length();
     while (idx < len - 1) {

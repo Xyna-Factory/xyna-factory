@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,12 +38,12 @@ import com.gip.xyna.xfmg.Constants;
 /**
  * Wiederverwendbare Objekte cachen<p>
  * 
- * Es werden nur Objekte verwaltet, die gerade frei sind, d.h. mit get() herausgegeben können. sobald sie herausgegeben wurden, kann der Verwender
+ * Es werden nur Objekte verwaltet, die gerade frei sind, d.h. mit get() herausgegeben kï¿½nnen. sobald sie herausgegeben wurden, kann der Verwender
  * mit den Objekten machen was er will.<p>
  * 
- * Objekte im Pool werden aufgeräumt, wenn sie so lange wie der angegebene Timeout nicht verwendet wurden.
- * Dabei wird nicht garantiert, dass die Identität der Objekte berücksichtigt wird, d.h. alle Objekte sind gleichwertig. 
- * Es kann also sein, dass ein Objekt aufgeräumt wird, welches kurze Zeit vorher noch verwendet worden ist.
+ * Objekte im Pool werden aufgerï¿½umt, wenn sie so lange wie der angegebene Timeout nicht verwendet wurden.
+ * Dabei wird nicht garantiert, dass die Identitï¿½t der Objekte berï¿½cksichtigt wird, d.h. alle Objekte sind gleichwertig. 
+ * Es kann also sein, dass ein Objekt aufgerï¿½umt wird, welches kurze Zeit vorher noch verwendet worden ist.
  * <p>
  * 
  * Intendierte Verwendung:
@@ -69,7 +69,7 @@ import com.gip.xyna.xfmg.Constants;
     }
     </pre>
     Das success-Flag ist optional - ist hier nur beispielhaft als Schutz vor kaputt gegangenen Objekten im Cache.
-    Alternativ kann man es natürlich auch jedes Mal testen oder sowas
+    Alternativ kann man es natï¿½rlich auch jedes Mal testen oder sowas
  *
  */
 public class UnboundedObjectPool<T extends Closeable> {
@@ -84,18 +84,18 @@ public class UnboundedObjectPool<T extends Closeable> {
    * [0] -> vor 15 min benutzt
    * [1] -> vor 10 min benutzt
    * [2] -> vor 5 min benutzt
-   * falls timeout nun 18 min ist, wird in 3 min das älteste objekt aufgeräumt, d.h. danach ist der stand dann:
+   * falls timeout nun 18 min ist, wird in 3 min das ï¿½lteste objekt aufgerï¿½umt, d.h. danach ist der stand dann:
    * [0] -> vor 13 min genutzt
    * [1] -> vor 8 min genutzt
    * 
-   * beim get() wird immer der niedrigste eintrag (höchster index) entfernt
-   * beim addIfNeeded() wird ein neuer eintrag angelegt (höchster index) mit (vor 0 min genutzt)
+   * beim get() wird immer der niedrigste eintrag (hï¿½chster index) entfernt
+   * beim addIfNeeded() wird ein neuer eintrag angelegt (hï¿½chster index) mit (vor 0 min genutzt)
    */
   private final List<Long> lastAccess = new ArrayList<>();
-  private final int timeoutClose; //wenn ein objekt solange nicht benutzt wurde, wird es aufgeräumt
-  private final int minSize; //wenn weniger objekte im pool sind, wird beim addIfNeeded sicher hinzugefügt.
+  private final int timeoutClose; //wenn ein objekt solange nicht benutzt wurde, wird es aufgerï¿½umt
+  private final int minSize; //wenn weniger objekte im pool sind, wird beim addIfNeeded sicher hinzugefï¿½gt.
   //objekte beim addIfNeeded ablehnen, falls es ein objekt gibt, was so lange nicht in verwendung ist. muss <= timeoutClose sein
-  //idee: wieso neues objekt hinzufügen, wenn es noch so lange nicht verwendete objekte gibt...
+  //idee: wieso neues objekt hinzufï¿½gen, wenn es noch so lange nicht verwendete objekte gibt...
   private final int timeoutDenyNew;
   private static final Timer timer = new Timer("UnboundedObjectPool-" + Constants.defaultUTCSimpleDateFormat().format(new Date()), true);
   private TimerTask timertask;
@@ -157,8 +157,8 @@ public class UnboundedObjectPool<T extends Closeable> {
 
 
   /**
-   * Fügt Objekt zu Pool hinzu, wenn minSize nicht erreicht ist, oder wenn das älteste Objekt weniger lange als timeoutDenyNew wartet.
-   * @return gibt false zurück, falls Objekt nicht zum Pool hinzugefügt worden ist. In diesem Fall ist der Aufrufer für das Objekt zuständig (close aufrufen)
+   * Fï¿½gt Objekt zu Pool hinzu, wenn minSize nicht erreicht ist, oder wenn das ï¿½lteste Objekt weniger lange als timeoutDenyNew wartet.
+   * @return gibt false zurï¿½ck, falls Objekt nicht zum Pool hinzugefï¿½gt worden ist. In diesem Fall ist der Aufrufer fï¿½r das Objekt zustï¿½ndig (close aufrufen)
    */
   public boolean addIfNeeded(T t) {
     long time = System.currentTimeMillis();
@@ -237,7 +237,7 @@ public class UnboundedObjectPool<T extends Closeable> {
 
 
   /**
-   * räumt alle objekte im pool auf
+   * rï¿½umt alle objekte im pool auf
    */
   public void close() {
     synchronized (objects) {

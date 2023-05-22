@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import oracle.jms.AQjmsQueueConnectionFactory;
 import oracle.jms.AQjmsSession;
 
 /**
- *         übergeben. Entsprechend gibt es die Methoden close und commit um die ggfs interne Connection zu schliessen.
+ *         ï¿½bergeben. Entsprechend gibt es die Methoden close und commit um die ggfs interne Connection zu schliessen.
  * @deprecated use JMSQueueUtils
  */
 public class AQConnector implements JMSConnector {
@@ -61,12 +61,12 @@ public class AQConnector implements JMSConnector {
   private QueueConnection connection = null;
 
   /**
-   * Konstruktor für direktes AQ-ing speziell fuer RAC geeignet Beispiel: new AQConnector("jdbc:oracle:thin@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = gipsun162-vip)(PORT = 1521)) (ADDRESS = (PROTOCOL = TCP)(HOST = gipsun163-vip)(PORT = 1521))(LOAD_BALANCE = yes) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = pallasha2) (FAILOVER_MODE = (TYPE = SELECT) (METHOD = BASIC) (RETRIES = 180) (DELAY =5)))"
+   * Konstruktor fï¿½r direktes AQ-ing speziell fuer RAC geeignet Beispiel: new AQConnector("jdbc:oracle:thin@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = gipsun162-vip)(PORT = 1521)) (ADDRESS = (PROTOCOL = TCP)(HOST = gipsun163-vip)(PORT = 1521))(LOAD_BALANCE = yes) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = pallasha2) (FAILOVER_MODE = (TYPE = SELECT) (METHOD = BASIC) (RETRIES = 180) (DELAY =5)))"
    * "user", "user");
    * 
    * @param jdbcUrl url
    * @param dbUser benutzer, mit dem man auf queue zugreifen kann
-   * @param dbPassword zugehöriges pw
+   * @param dbPassword zugehï¿½riges pw
    * @throws Exception
    */
   public AQConnector(String jdbcUrl, String dbUser, String dbPassword) throws JMSException {
@@ -79,13 +79,13 @@ public class AQConnector implements JMSConnector {
   }
 
   /**
-   * Konstruktor für direktes AQ-ing.
+   * Konstruktor fï¿½r direktes AQ-ing.
    * 
    * @param dbHost ip des datenbank rechners
-   * @param dbPort port des datenbank rechners für datenbank zugriff
+   * @param dbPort port des datenbank rechners fï¿½r datenbank zugriff
    * @param dbSid SID der datenbank
    * @param dbUser benutzer, mit dem man auf queue zugreifen kann
-   * @param dbPassword zugehöriges pw
+   * @param dbPassword zugehï¿½riges pw
    * @throws Exception
    */
   public AQConnector(String dbHost, String dbPort, String dbSid, String dbUser, String dbPassword)

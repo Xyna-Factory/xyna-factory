@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,15 +63,15 @@ public class FractalWorkflowParallelExecutorData<S extends Step> implements Seri
 
   public void addTasksToParallelExecutor(ParallelExecutor parallelExecutor, Set<String> laneIds) {
     /*
-     * fälle:
-     * 1. suspended laneids starten (PE war vollständig suspendiert und dann kam resume)
+     * fï¿½lle:
+     * 1. suspended laneids starten (PE war vollstï¿½ndig suspendiert und dann kam resume)
      * 2. initial alle starten
      * 3. resume von allem (z.b. serverstart, oder resume auf CLI) => (alles verbleibende starten -> laneIds=all_suspended)
      */
     if (laneIds.contains(ALL_UNTREATED)) {
       if (untreatedLaneIds == null) {
         //2
-        //Initiale Füllung
+        //Initiale Fï¿½llung
         parallelExecutor.addTasks(tasks);
       } else {
         for (SuspendableParallelTask<S> task : tasks) {
@@ -87,7 +87,7 @@ public class FractalWorkflowParallelExecutorData<S extends Step> implements Seri
       if (suspendedTasks != null) {
         parallelExecutor.addTasks(suspendedTasks.values());
       }
-      //3 planned wurde noch nicht ausgeführt und gilt deshalb auch als "all_suspended"
+      //3 planned wurde noch nicht ausgefï¿½hrt und gilt deshalb auch als "all_suspended"
       for (SuspendableParallelTask<S> task : tasks) {
         if (task.getState() == State.Planned) {
           parallelExecutor.addTask(task);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,9 +43,9 @@ import com.gip.xyna.xnwh.securestorage.SecureStorage;
 public class XynaPropertyUtils {
   
   /**
-   * Interface, über das XynaPropertyUtils unabhängig wird von der Existenz einer laufenden XynaFactory.
-   * Die Datenquelle der XynaProperties kann damit unabhängig implementiert werden. 
-   * Über XynaPropertyUtils.exchangeXynaPropertySource(new XynaPropertySource(){...} ); kann dann die Datenquelle 
+   * Interface, ï¿½ber das XynaPropertyUtils unabhï¿½ngig wird von der Existenz einer laufenden XynaFactory.
+   * Die Datenquelle der XynaProperties kann damit unabhï¿½ngig implementiert werden. 
+   * ï¿½ber XynaPropertyUtils.exchangeXynaPropertySource(new XynaPropertySource(){...} ); kann dann die Datenquelle 
    * der Properties konfiguriert werden. 
    * Besser AbstractXynaPropertySource verwenden!
    */
@@ -83,8 +83,8 @@ public class XynaPropertyUtils {
   
   
   /**
-   * Weitgehende Implementierung des Interface XynaPropertySource, so dass alle Methoden außer 
-   * {@link XynaPropertySource#getProperty(String)} für die meisten Zwecke ausreichend implementiert sind.  
+   * Weitgehende Implementierung des Interface XynaPropertySource, so dass alle Methoden auï¿½er 
+   * {@link XynaPropertySource#getProperty(String)} fï¿½r die meisten Zwecke ausreichend implementiert sind.  
    *
    */
   public static abstract class AbstractXynaPropertySource implements XynaPropertySource {
@@ -231,8 +231,8 @@ public class XynaPropertyUtils {
   
   /**
    * 
-   * FIXME hat nichts mit dem Rest der XynaPropertyUtils zu tun, daher ist der Platz hier völlig ungeeignet!
-   * Refactoring leider aufwändig...
+   * FIXME hat nichts mit dem Rest der XynaPropertyUtils zu tun, daher ist der Platz hier vï¿½llig ungeeignet!
+   * Refactoring leider aufwï¿½ndig...
    */
   public static class XynaPropertyWithDefaultValue implements Serializable {
     
@@ -438,7 +438,7 @@ public class XynaPropertyUtils {
     }
     
     /**
-     * Liest die XynaProperty einmalig und gibt diese als Typ <code>&lt;T&gt;</code> zurück.
+     * Liest die XynaProperty einmalig und gibt diese als Typ <code>&lt;T&gt;</code> zurï¿½ck.
      * @return
      */
     public T readOnlyOnce() {
@@ -453,7 +453,7 @@ public class XynaPropertyUtils {
     }
     
     /**
-     * Liest die XynaProperty und gibt diese als Typ <code>&lt;T&gt;</code> zurück
+     * Liest die XynaProperty und gibt diese als Typ <code>&lt;T&gt;</code> zurï¿½ck
      * @return
      */
     public T read() {
@@ -488,8 +488,8 @@ public class XynaPropertyUtils {
     protected abstract T fromString(String string) throws Exception;
     
     /**
-     * Gibt den zuletzt gelesenen, gecachten Wert der XynaProperty als Typ <code>&lt;T&gt;</code> zurück. 
-     * Der Wert wird aktualisiert, wenn sich die XynaProperty ändert.
+     * Gibt den zuletzt gelesenen, gecachten Wert der XynaProperty als Typ <code>&lt;T&gt;</code> zurï¿½ck. 
+     * Der Wert wird aktualisiert, wenn sich die XynaProperty ï¿½ndert.
      * @return
      */
     public T get() {
@@ -734,7 +734,7 @@ public class XynaPropertyUtils {
     }
     
     /**
-     * Konstruktor für StringSerializable-Objekte, keine Angabe des Builders nötig
+     * Konstruktor fï¿½r StringSerializable-Objekte, keine Angabe des Builders nï¿½tig
      * @param name
      * @param defValue
      * @throws IllegalArgumentException wenn defValue null oder nicht stringSerializable ist
@@ -791,13 +791,13 @@ public class XynaPropertyUtils {
   }
 
   /**
-   * XynaProperty für Zeitdauern, mit wählbarer Zeiteinheit (Sekunde, Millisekunde etc.)
+   * XynaProperty fï¿½r Zeitdauern, mit wï¿½hlbarer Zeiteinheit (Sekunde, Millisekunde etc.)
    *
    */
   public static class XynaPropertyDuration extends XynaPropertyBase<Duration,XynaPropertyDuration> {
     
     private TimeUnit defaultTimeUnit;
-    private Duration durationInMillis; //In den meisten Fällen wird die Zeit in ms benötigt, dies spart die Extra-Umrechnung bei jedem getMillis()-Aufruf 
+    private Duration durationInMillis; //In den meisten Fï¿½llen wird die Zeit in ms benï¿½tigt, dies spart die Extra-Umrechnung bei jedem getMillis()-Aufruf 
     
     public XynaPropertyDuration(String name, Duration duration, TimeUnit defaultTimeUnit ) {
       super(name, duration, "duration");
@@ -833,7 +833,7 @@ public class XynaPropertyUtils {
     }
         
     /**
-     * Ausgabe der Zeit in Millisekunden, optimiert für häufige Verwendung
+     * Ausgabe der Zeit in Millisekunden, optimiert fï¿½r hï¿½ufige Verwendung
      * @return
      */
     public long getMillis() {
@@ -843,13 +843,13 @@ public class XynaPropertyUtils {
   }
 
   /**
-   * TODO abwärtskompatible Variante der XynaPropertyDuration
+   * TODO abwï¿½rtskompatible Variante der XynaPropertyDuration
    * @param <T> nur Long und Integer erlaubt!
    */
   public static class XynaPropertyDurationCompatible<T extends Number> extends XynaPropertyBase<T,XynaPropertyDurationCompatible<T>> {
     private TimeUnit defaultTimeUnit;
     private Duration duration; 
-    private Duration durationInMillis; //In den meisten Fällen wird die Zeit in ms benötigt, dies spart die Extra-Umrechnung bei jedem getMillis()-Aufruf 
+    private Duration durationInMillis; //In den meisten Fï¿½llen wird die Zeit in ms benï¿½tigt, dies spart die Extra-Umrechnung bei jedem getMillis()-Aufruf 
     private Class<T> type; 
     
     @SuppressWarnings("unchecked")
@@ -883,7 +883,7 @@ public class XynaPropertyUtils {
     }
      
     /**
-     * Ausgabe der Zeit in Millisekunden, optimiert für häufige Verwendung
+     * Ausgabe der Zeit in Millisekunden, optimiert fï¿½r hï¿½ufige Verwendung
      * @return
      */
     public long getMillis() {

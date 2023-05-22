@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@ import org.apache.log4j.Logger;
 
 /**
  * ziel:<br>
- * jms wrapper klasse, die leicht zu bedienen ist und trotzdem flexibel gegenüber neuen anforderungen ist.<br>
+ * jms wrapper klasse, die leicht zu bedienen ist und trotzdem flexibel gegenï¿½ber neuen anforderungen ist.<br>
  *
- * enqueue und dequeue methoden werden unterstützt.<br>
+ * enqueue und dequeue methoden werden unterstï¿½tzt.<br>
  * codebeispiele:<br>
  * <code>
  *    //mit datenbank-connection<br>
@@ -69,7 +69,7 @@ import org.apache.log4j.Logger;
       jms.commit();<br>
       jms.close();<br>
       <br>
-      //über JNDI<br>
+      //ï¿½ber JNDI<br>
       JMSQueueUtils jms = new JMSQueueUtils(ctx, "jms/QueueConnectionFactory", true);<br>
       jms.enqueueJNDI("jms/demoQueue", "cl123", xmlString);<br>
       jms.rollback();<br>
@@ -83,26 +83,26 @@ import org.apache.log4j.Logger;
    </code>
    benutzt, sollte man darauf achten, dass man mit "close()" alle verbindungen schliesst. hierbei
    werden dann jms- und datenbank connections geschlossen.<br>
-   datenbank-connections werden nicht geschlossen, wenn die connection im konstruktor übergeben wird,
-   allerdings wirken sich rollback() und commit() nicht nur auf die jms-connection, sondern (natürlich)
+   datenbank-connections werden nicht geschlossen, wenn die connection im konstruktor ï¿½bergeben wird,
+   allerdings wirken sich rollback() und commit() nicht nur auf die jms-connection, sondern (natï¿½rlich)
    auch auf die db-connection aus.
  * <p>
  * wie funktioniert jms?<br>
  * 1. queue connection holen<br>
- *    das funktioniert meist über eine connectionfactory. implementierungen von connectionfactories
- *    sind zb standardmässig im applicationserver über JNDI zu finden. im hintergrund hängt im AQ
+ *    das funktioniert meist ï¿½ber eine connectionfactory. implementierungen von connectionfactories
+ *    sind zb standardmï¿½ssig im applicationserver ï¿½ber JNDI zu finden. im hintergrund hï¿½ngt im AQ
  *    fall an der queueconnection auch eine db connection.<br>
  *    bei transaktionen auf der queueconnection wird automatisch die db connection committed/rollbacked.<br>
- * 2. queue session eröffnen<br>
- *    über die queue connection<br>
+ * 2. queue session erï¿½ffnen<br>
+ *    ï¿½ber die queue connection<br>
  * 3. queue objekt bauen<br>
  *    siehe setQueue()<br>
  * 4. queue sender/receiver<br>
- *    die session stellt meist methoden zur verfügung um sender/receiver objekte zu erstellen. diese
- *    ermöglichen dann das eigentliche enqueue oder dequeue.
+ *    die session stellt meist methoden zur verfï¿½gung um sender/receiver objekte zu erstellen. diese
+ *    ermï¿½glichen dann das eigentliche enqueue oder dequeue.
  * <p>
- * TODO: topics, falls benötigt. <br>
- *       usePLSQL für bessere abwärtskompatibilität mit älteren aqjms-libs/db-versionen implementieren.<br>
+ * TODO: topics, falls benï¿½tigt. <br>
+ *       usePLSQL fï¿½r bessere abwï¿½rtskompatibilitï¿½t mit ï¿½lteren aqjms-libs/db-versionen implementieren.<br>
  *       exceptions mit xynaexceptionhandling
  */
 /**
@@ -129,7 +129,7 @@ public class JMSQueueUtils {
   private boolean usePLSQL = false;
 
   /**
-   * beim browsen werden Nachrichten für andere Consumer gelockt. Ähnlich einem Select for update.
+   * beim browsen werden Nachrichten fï¿½r andere Consumer gelockt. ï¿½hnlich einem Select for update.
    * @see oracle.jms.AQjmsSession#createBrowser(javax.jms.Queue, java.lang.String, boolean)
    */
   private boolean lockBrowsedMessages = false;
@@ -137,9 +137,9 @@ public class JMSQueueUtils {
   //----------------------------------- diverse konstruktoren
 
   /**
-   * baut QueueConnection und QueueSession auf. Transactions-Modus ist defaultmässig aus.
+   * baut QueueConnection und QueueSession auf. Transactions-Modus ist defaultmï¿½ssig aus.
    * @param ctx
-   * @param jndiQConnectionFactory wird über einen lookup im InitialContext versucht zu finden.
+   * @param jndiQConnectionFactory wird ï¿½ber einen lookup im InitialContext versucht zu finden.
    * Dortiges Object muss Instanz einer Klasse sein, die javax.jms.QueueConnectionFactory implementiert.
    * @throws NamingException falls jndi-location nicht gefunden wird
    * @throws JMSException
@@ -153,7 +153,7 @@ public class JMSQueueUtils {
   /**
    * baut QueueConnection und QueueSession auf.
    * @param ctx
-   * @param jndiQConnectionFactory wird über einen lookup im InitialContext versucht zu finden.
+   * @param jndiQConnectionFactory wird ï¿½ber einen lookup im InitialContext versucht zu finden.
    * Dortiges Object muss Instanz einer Klasse sein, die javax.jms.QueueConnectionFactory implementiert.
    * @param transacted true um transaktions-klammern zu erlauben
    * @throws NamingException falls jndi-location nicht gefunden wird
@@ -171,7 +171,7 @@ public class JMSQueueUtils {
 
   /**
    * baut QueueConnection und QueueSession auf. (In der Implementierung AQjmsQueueConnection/AQjmsSession).<br>
-   * Transaktions-Modus defaultmässig ausgeschaltet.<br>
+   * Transaktions-Modus defaultmï¿½ssig ausgeschaltet.<br>
    * Achtung: DBConnection wird automatisch committed!
    * @param dbCon
    * @throws JMSException
@@ -202,8 +202,8 @@ public class JMSQueueUtils {
    * "jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = gipsun162-vip)(PORT = 1521))
    * (ADDRESS = (PROTOCOL = TCP)(HOST = gipsun163-vip)(PORT = 1521))(LOAD_BALANCE = yes) (CONNECT_DATA = (SERVER = DEDICATED)
    * (SERVICE_NAME = pallasha2) (FAILOVER_MODE = (TYPE = SELECT) (METHOD = BASIC) (RETRIES = 180) (DELAY =5)))"
-   * @param dbUser benutzername für die datenbank verbindung
-   * @param dbPassword password für die datenbank verbindung
+   * @param dbUser benutzername fï¿½r die datenbank verbindung
+   * @param dbPassword password fï¿½r die datenbank verbindung
    * @param transacted
    * @throws JMSException
    */
@@ -219,7 +219,7 @@ public class JMSQueueUtils {
   /**
    * zentrale Enqueue Methode. Alle Anderen Enqueue Methoden rufen diese auf. <br>
    * CorrelationId wird die der
-   * Message übernommen. Falls sie null ist, wird die in dieser Klasse gesetzte CorrelationId benutzt.<br>
+   * Message ï¿½bernommen. Falls sie null ist, wird die in dieser Klasse gesetzte CorrelationId benutzt.<br>
    * Es wird mit Priority eingestellt, falls sie vorher gesetzt wurde.
    * <p>
    * Eine Message bekommt man typischerweise mit:<br>
@@ -268,7 +268,7 @@ public class JMSQueueUtils {
    * Timeout, falls sie gesetzt wurden. Benutzt als MessageSelector die CorrelationId, falls kein
    * MessageSelector gesetzt wurde, aber die CorrelationId schon. Dabei wird aber das MessageSelector
    * Feld nicht gesetzt, man kann also zb mehrfach mit unterschiedlicher CorrelationId dequeuen, ohne
-   * den MessageSelector benutzen zu müssen:<br>
+   * den MessageSelector benutzen zu mï¿½ssen:<br>
    * <code>
    * JMSQueueUtils jms = new JMSQueueUtils(...);<br>
    * for (int i = 0; i&lt;100; i++) {<br>
@@ -347,7 +347,7 @@ public class JMSQueueUtils {
   }
 
   /**
-   * gibt die verwendete QueueSession zurück. Mit dieser kann man zb Message oder Queue oder
+   * gibt die verwendete QueueSession zurï¿½ck. Mit dieser kann man zb Message oder Queue oder
    * Consumer/Producer -Objekte erstellen.
    * @return
    */
@@ -356,7 +356,7 @@ public class JMSQueueUtils {
   }
 
   /**
-   * gibt die verwendete QueueConnection zurück.
+   * gibt die verwendete QueueConnection zurï¿½ck.
    * @return
    */
   public QueueConnection getConnection() {
@@ -373,7 +373,7 @@ public class JMSQueueUtils {
   }
 
   /**
-   * Welche Nachrichten sollen dequeued werden? Format ist SQL-ähnlich:<br>
+   * Welche Nachrichten sollen dequeued werden? Format ist SQL-ï¿½hnlich:<br>
    * <code>
    * JMSCorrelationID = '123'<br>
    * </code> oder<br>
@@ -381,7 +381,7 @@ public class JMSQueueUtils {
    * JMSCorrelationID LIKE '123%' AND myvalue > 0<br>
    * </code>
    * <p>
-   * Hierbei gibt es zu beachten, dass die Validität/Syntax von MessageSelektoren abhängig von der
+   * Hierbei gibt es zu beachten, dass die Validitï¿½t/Syntax von MessageSelektoren abhï¿½ngig von der
    * benutzten JMS Implementierung ist. So geht bei AQ nicht <code>JMSTimestamp &gt; 1234567890</code>, bei
    * in-Memory Queueing hingegen schon. Bei AQ muss man das dann z.B. 
    * <code>JMSTimestamp &gt; to_timestamp('2009-03-25 14:50:44', 'YYYY-MM-DD HH24:MI:SS')</code> 
@@ -402,7 +402,7 @@ public class JMSQueueUtils {
   }
 
   /**
-   * mit dieser Priority wird enqueued. Kleiner 0 für Default priority (implementierungsabhängig)
+   * mit dieser Priority wird enqueued. Kleiner 0 fï¿½r Default priority (implementierungsabhï¿½ngig)
    * @param prio
    */
   public void setPriority(int prio) {
@@ -419,7 +419,7 @@ public class JMSQueueUtils {
   }
 
   /**
-   * generischer Queue-setter. Das Queue-Objekt bekommt man meistens über die Session. Meistens sollten
+   * generischer Queue-setter. Das Queue-Objekt bekommt man meistens ï¿½ber die Session. Meistens sollten
    * die Convenience Methoden setQueueAQ(String) oder setQueueJNDI(String, String) ausreichen.<br>
    * Beispiel um ein Queueobjekt zu bekommen:<br>
    * <code>
@@ -487,15 +487,15 @@ public class JMSQueueUtils {
   }
 
   /**
-   * Gibt Nachrichten zurück, die sich in der Queue befinden, ohne sie zu dequeuen. Sie werden auf
-   * Wunsch gelockt (nur bei AQ unterstützt), so dass sie niemand anderes auslesen kann, solange bis
+   * Gibt Nachrichten zurï¿½ck, die sich in der Queue befinden, ohne sie zu dequeuen. Sie werden auf
+   * Wunsch gelockt (nur bei AQ unterstï¿½tzt), so dass sie niemand anderes auslesen kann, solange bis
    * die QueueSession beendet wird (unklar, ob auch schon bei commit/rollback das lock aufgegeben wird).<br>
-   * Dieses Verhalten kann über {@link com.gip.xyna.utils.jms.JMSQueueUtils#setLockBrowsedMessages(boolean)}
+   * Dieses Verhalten kann ï¿½ber {@link com.gip.xyna.utils.jms.JMSQueueUtils#setLockBrowsedMessages(boolean)}
    * gesteuert werden. Default ist <code>false</code>.<br>
    * Benutzt MessageSelector.<br>
    * Setzt voraus, dass Queue gesetzt ist.<br>
    * @see javax.jms.QueueBrowser
-   * @param maxMessages Es werden maximal soviele Nachrichten ausgelesen und zurückgegeben.
+   * @param maxMessages Es werden maximal soviele Nachrichten ausgelesen und zurï¿½ckgegeben.
    * @return Array von Messages
    * @throws JMSException
    */
@@ -522,13 +522,13 @@ public class JMSQueueUtils {
 
   /**
    * leert die queue durch wiederholtes dequeue mit nowait.<br>
-   * benutzt den eingestellten MessageSelector, d.h. es werden nur Nachrichten gelöscht, die
+   * benutzt den eingestellten MessageSelector, d.h. es werden nur Nachrichten gelï¿½scht, die
    * diesem entsprechen. Ist kein MessageSelector gesetzt (null), werden alle Nachrichten
-   * gelöscht.<br>
-   * nachrichten, die nicht dequeued werden können, werden nicht gelöscht.
+   * gelï¿½scht.<br>
+   * nachrichten, die nicht dequeued werden kï¿½nnen, werden nicht gelï¿½scht.
    * //FIXME methode ist recht langsam <<100 nachrichten/sekunde.
    * @param timeout methode bricht nach soviel millisekunden ab.
-   * @return Anzahl der gelöschten Nachrichten
+   * @return Anzahl der gelï¿½schten Nachrichten
    * @throws JMSException
    */
   public int empty(long timeout) throws JMSException {
@@ -556,7 +556,7 @@ public class JMSQueueUtils {
 
   /**
    * baut aus CorrelationId und Dates einen MessageSelector. Falls einer der Parameter null ist, wird
-   * er nicht berücksichtigt. Der generierte MessageSelector selektiert nach CorrelationId-Gleichheit
+   * er nicht berï¿½cksichtigt. Der generierte MessageSelector selektiert nach CorrelationId-Gleichheit
    * und selektiert nur Nachrichten, deren Einstell-Zeitpunkt (JMSTimestamp) nach minDate und vor maxDate liegt.
    * @param dateAsTimeStamp {@link com.gip.xyna.utils.jms.JMSQueueUtils#setMessageSelector(String)}
    * @param correlationId
@@ -598,8 +598,8 @@ public class JMSQueueUtils {
 
   /**
    * enqueue Convenience Methode.<br>
-   * Queue und CorrelationId (optional) müssen vorher gesetzt worden sein.<br>
-   * enqueued eine TextMessage mit der übergebenen message als Inhalt.
+   * Queue und CorrelationId (optional) mï¿½ssen vorher gesetzt worden sein.<br>
+   * enqueued eine TextMessage mit der ï¿½bergebenen message als Inhalt.
    * @param message
    * @throws JMSException
    */
@@ -611,8 +611,8 @@ public class JMSQueueUtils {
   /**
    * enqueue Convenience Methode.<br>
    * Queue muss vorher gesetzt worden sein.<br>
-   * setzt die CorrelationId für zukünftige Operationen.<br>
-   * enqueued eine TextMessage mit der übergebenen message als Inhalt.
+   * setzt die CorrelationId fï¿½r zukï¿½nftige Operationen.<br>
+   * enqueued eine TextMessage mit der ï¿½bergebenen message als Inhalt.
    * @param correlationId
    * @param message
    * @throws JMSException
@@ -624,7 +624,7 @@ public class JMSQueueUtils {
 
   /**
    * enqueue Convenience Methode<br>
-   * setzt auch die Queue für zukünftige Operationen.<br>
+   * setzt auch die Queue fï¿½r zukï¿½nftige Operationen.<br>
    * setzt auch die CorrelationId.<br>
    * AQ-spezifische Methode, d.h. funktioniert nur in Verbindung mit
    * AQ spezifischem Konstruktor
@@ -642,7 +642,7 @@ public class JMSQueueUtils {
 
   /**
    * enqueue Convenience Methode.<br>
-   * setzt auch die Queue für zukünftige Operationen.<br>
+   * setzt auch die Queue fï¿½r zukï¿½nftige Operationen.<br>
    * setzt auch die CorrelationId.<br>
    * JNDI-spezifische Methode, d.h. funktioniert nur in Verbindung mit
    * JNDI spezifischem Konstruktor (die, die einen InitialContext als Parameter haben).<br>
@@ -667,7 +667,7 @@ public class JMSQueueUtils {
    */
   public void setQueueJNDI(String jndiQueueDestination) throws JMSException, NamingException {
     if (aq) {
-      throw new JMSException("Die Queue kann nur über JNDI bestimmt werden, wenn die QueueConnection auch über JNDI besteht.");
+      throw new JMSException("Die Queue kann nur ï¿½ber JNDI bestimmt werden, wenn die QueueConnection auch ï¿½ber JNDI besteht.");
     }
     q = (Queue)ctx.lookup(jndiQueueDestination);
   }
@@ -687,8 +687,8 @@ public class JMSQueueUtils {
   }
 
   /**
-   * Gibt die erste Nachricht aus der gesetzten Queue zurück, die innerhalb des timeouts mit der correlationId
-   * gefunden wird. Falls keine gefunden wird, wird <code>null</code> zurückgegeben.<br>
+   * Gibt die erste Nachricht aus der gesetzten Queue zurï¿½ck, die innerhalb des timeouts mit der correlationId
+   * gefunden wird. Falls keine gefunden wird, wird <code>null</code> zurï¿½ckgegeben.<br>
    * die Queue muss vorher mit setQueue(), setQueueAQ oder setAQJNDI gesetzt werden.<br>
    * Falls die Nachricht keine TextMessage ist, wird ein Fehler geworfen.
    * @param correlationId
@@ -715,7 +715,7 @@ public class JMSQueueUtils {
 
 
  /* public static void main(String[] args) {
-    //junit tests bräuchten eine datenbank und einen application server... TODO mit 10.0.10.11 als junittest
+    //junit tests brï¿½uchten eine datenbank und einen application server... TODO mit 10.0.10.11 als junittest
     //1. AQ
     
     Logger logger = Logger.getLogger("213");
@@ -790,7 +790,7 @@ public class JMSQueueUtils {
   }*/
 
   /**
-   * überschreibt den default logger, der mit Logger.getLogger("xyna.utils.jms") definiert wurde.
+   * ï¿½berschreibt den default logger, der mit Logger.getLogger("xyna.utils.jms") definiert wurde.
    * @param _logger
    */
   public void setLogger(Logger _logger) {
@@ -798,7 +798,7 @@ public class JMSQueueUtils {
   }
 
   /**
-   * in Verbindung mit AQ-spezifischem Konstruktor wird enqueue und dequeue mit PLSQL durchgeführt.
+   * in Verbindung mit AQ-spezifischem Konstruktor wird enqueue und dequeue mit PLSQL durchgefï¿½hrt.
    * ist derzeit nicht implementiert!
    * @param usePLSQL
    * @throws JMSException

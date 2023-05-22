@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class ImportParameter {
       StringParameter.typeBoolean("overwrite").
       documentation(Documentation.
                     en("Overwrites existing types").
-                    de("Überschreiben bereits existierender Datentypen").
+                    de("ï¿½berschreiben bereits existierender Datentypen").
                     build()).
       defaultValue(defaults.getOverwrite()).build();
   

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public class BatchProcess {
   private InputGenerator inputGenerator;
   private XynaOrderServerExtension masterOrder; //Master-Auftrag
   private ReentrantLock startSlavesLock = new ReentrantLock(); //Lock, damit Slaves nur von einem Thread gleichzeitig gestartet werden
-  private ReentrantLock managementOperationLock = new ReentrantLock(); //Lock, damit nur eine Operation, wie z.B. Cancel, Pause oder Continue, gleichzeitig ausgeführt wird
+  private ReentrantLock managementOperationLock = new ReentrantLock(); //Lock, damit nur eine Operation, wie z.B. Cancel, Pause oder Continue, gleichzeitig ausgefï¿½hrt wird
   private AtomicInteger started = new AtomicInteger(0);
   private boolean masterInCleanup = false; //true, wenn sich der Master im Cleanup befindet
   private BatchProcessScheduling batchProcessScheduling;
@@ -128,7 +128,7 @@ public class BatchProcess {
   }
   
   public BatchProcess(BatchProcessInput input) throws XynaException {
-    //überprüfen, ob die Application existiert und nicht im Zustand AUDIT_MODE ist
+    //ï¿½berprï¿½fen, ob die Application existiert und nicht im Zustand AUDIT_MODE ist
     checkApplication(input.getMasterOrder().getDestinationKey().getApplicationName(),
                      input.getMasterOrder().getDestinationKey().getVersionName());
 
@@ -143,7 +143,7 @@ public class BatchProcess {
     
     createInputGenerator(input.getInputGeneratorData(), false);
     
-    //ParallelExecutor anlegen und Limitierung prüfen
+    //ParallelExecutor anlegen und Limitierung prï¿½fen
     batchProcessScheduling.createParallelExecutorAndCheckLimitation(
         createSlaveOrderTypeInfo(), restartInformation.getSlaveExecutionPeriod(), 
         restartInformation.getTotal(), getMaxParallelism() );
@@ -211,7 +211,7 @@ public class BatchProcess {
   }
   
   /**
-   * Legt eine XynaOrder für den Master an.
+   * Legt eine XynaOrder fï¿½r den Master an.
    * @param masterOrderCreationParameter
    * @return batchProcessId
    * @throws XynaException
@@ -219,21 +219,21 @@ public class BatchProcess {
   private Long createMasterOrder(RemoteXynaOrderCreationParameter masterOrderCreationParameter) throws XynaException{
     this.masterOrderCreationParameter = masterOrderCreationParameter;
     
-    //XynaObject für InputPayload aus dem XML erstellen
+    //XynaObject fï¿½r InputPayload aus dem XML erstellen
     masterOrderCreationParameter.convertInputPayload();
     
     //XynaOrder anlegen
     XynaOrderServerExtension xo = new XynaOrderServerExtension(masterOrderCreationParameter);
     
     //XynaObject-InputPayload wieder entfernen, damit die masterOrderCreationParameter
-    //auch wieder außerhalb der Factory deserialisiert werden können
+    //auch wieder auï¿½erhalb der Factory deserialisiert werden kï¿½nnen
     masterOrderCreationParameter.removeXynaObjectInputPayload();
     
     //BatchProcessMarker erstellen
     BatchProcessMarker batchProcessMarker = new BatchProcessMarker(xo.getId(), true);
     xo.setBatchProcessMarker(batchProcessMarker);
     
-    //Priorität für den Master setzen
+    //Prioritï¿½t fï¿½r den Master setzen
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS()
       .getPriorityManagement().discoverPriority(xo);
     
@@ -257,21 +257,21 @@ public class BatchProcess {
 
 
   /**
-   * Legt eine XynaOrder für einen Slave an.
+   * Legt eine XynaOrder fï¿½r einen Slave an.
    */
   public XynaOrderServerExtension createSlaveOrder(GeneralXynaObject inputPayload) {  
     XynaOrderServerExtension xo = new XynaOrderServerExtension(batchProcessArchiveData.getDestinationKey(), inputPayload);
     
-    //markieren, dass zu BatchProcess gehörend
+    //markieren, dass zu BatchProcess gehï¿½rend
     BatchProcessMarker batchProcessMarker = new BatchProcessMarker(batchProcessId, false);
     xo.setBatchProcessMarker(batchProcessMarker);
     
-    //ExecutionTimeouts und TimeConstraints für die Slaves setzen, falls vorhanden
+    //ExecutionTimeouts und TimeConstraints fï¿½r die Slaves setzen, falls vorhanden
     xo.setWorkflowExecutionTimeout(absRelTimeToExecutionTimeout(restartInformation.getSlaveWorkflowExecTimeout()));
     xo.setOrderExecutionTimeout(absRelTimeToExecutionTimeout(restartInformation.getSlaveOrderExecTimeout()));
     xo.getSchedulingData().setTimeConstraint(restartInformation.getSlaveTimeConstraint());
     
-    //Custom-Felder vom Master auf den Slave übertragen
+    //Custom-Felder vom Master auf den Slave ï¿½bertragen
     xo.setCustom0(masterOrder.getCustom0());
     xo.setCustom1(masterOrder.getCustom1());
     xo.setCustom2(masterOrder.getCustom2());
@@ -313,7 +313,7 @@ public class BatchProcess {
     if( inputGeneratorData != null ) {
       inputGenerator = inputGeneratorData.createInputGenerator(batchProcessArchiveData.getRevision() );
     } else {
-      //Default kein Input, wenn nichts übergeben wurde
+      //Default kein Input, wenn nichts ï¿½bergeben wurde
       inputGenerator = new ConstantInputGenerator("", 0, batchProcessArchiveData.getRevision() );
     }
     if( restart ) {
@@ -327,7 +327,7 @@ public class BatchProcess {
   }  
   
   /**
-   * Liefert das Minimum der maximalen Parallelität aus restartInformation und der 
+   * Liefert das Minimum der maximalen Parallelitï¿½t aus restartInformation und der 
    * XynaProperty "xyna.xprc.xbatchmgmt.max.parallelism".
    * @return
    */
@@ -364,15 +364,15 @@ public class BatchProcess {
   
  
   public SlaveTask createSlaveTask(TransferCapacities transferCapacities) {
-    //es darf immer nur ein Thread gleichzeitig den nächsten Input holen
+    //es darf immer nur ein Thread gleichzeitig den nï¿½chsten Input holen
     startSlavesLock.lock();
     try {
-      //Können und dürfen weitere Slaves gestartet werden?
+      //Kï¿½nnen und dï¿½rfen weitere Slaves gestartet werden?
       if( ! batchProcessScheduling.canSlaveBeStarted(inputGenerator.hasNext()) ) {
         return null;
       }
       
-      //es gibt noch Inputs, also den nächsten holen
+      //es gibt noch Inputs, also den nï¿½chsten holen
       Pair<String,GeneralXynaObject> input = inputGenerator.next();
       //vergebenen Input persistieren
       RuntimeInformationUpdater updater = updateRuntimeInformation();
@@ -386,8 +386,8 @@ public class BatchProcess {
       
       return new SlaveTask(this, xynaOrder, input.getFirst(), transferCapacities);
     } catch (Throwable t) {
-      //beim Bestimmen des nächsten Inputs ist ein Fehler aufgetreten
-      //-> Batch Process pausieren, damit er später wieder fortgesetzt werden kann
+      //beim Bestimmen des nï¿½chsten Inputs ist ein Fehler aufgetreten
+      //-> Batch Process pausieren, damit er spï¿½ter wieder fortgesetzt werden kann
       logger.warn("Exception on creating SlaveTasks -> pause batch process", t);
       handleThrowable(t);
       return null;
@@ -397,7 +397,7 @@ public class BatchProcess {
   }
   
   /**
-   * überprüfen, ob beim nächsten Scheduling überhaupt noch weitere Slaves
+   * ï¿½berprï¿½fen, ob beim nï¿½chsten Scheduling ï¿½berhaupt noch weitere Slaves
    * gestartet werden sollen, ansonsten wird der SchedulingState jetzt schon
    * auf Ignore gesetzt
    */
@@ -408,7 +408,7 @@ public class BatchProcess {
     }
     catch (Exception e) {
       //nichts machen
-      //beim nächsten Scheduling wird dann erneut versucht Slaves zu starten,
+      //beim nï¿½chsten Scheduling wird dann erneut versucht Slaves zu starten,
       //tritt hierbei die Exception wieder auf, wird sie durch createSlaveTask(...) behandelt
       logger.warn("Exception on creating SlaveTasks", e);
     } finally {
@@ -417,8 +417,8 @@ public class BatchProcess {
   }
   
   /**
-   * Legt eine XynaOrder mit dem übergebenen Input für einen Slave an,
-   * überträgt die Kapazitäten vom Master auf den Slave und startet diesen.
+   * Legt eine XynaOrder mit dem ï¿½bergebenen Input fï¿½r einen Slave an,
+   * ï¿½bertrï¿½gt die Kapazitï¿½ten vom Master auf den Slave und startet diesen.
    * @param xynaOrder
    * @param inputId
    * @param transferCapacities
@@ -428,12 +428,12 @@ public class BatchProcess {
     ResponseListener rl = createSlaveResponseListener();
     OrderContext ctx = createSlaveOrderContext(xynaOrder, inputId);
     
-    //Übertragen der vom Master reservierten Kapazitäten auf den Slave
+    //ï¿½bertragen der vom Master reservierten Kapazitï¿½ten auf den Slave
     batchProcessScheduling.transferCapacities(xynaOrder,transferCapacities); 
     
     currentSlaves.put(xynaOrder.getId(), OrderInstanceStatus.RUNNING_PLANNING);
     
-    //XynaOrder für Slave starten
+    //XynaOrder fï¿½r Slave starten
     XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().startOrder(xynaOrder, rl, ctx);
   }
   
@@ -600,9 +600,9 @@ public class BatchProcess {
   }
 
   /**
-   * Anzeige von sämtlichen Informationen zu dem BatchProcess.
-   * Von den Storables werden Kopien angelegt, damit die interen Storables geschützt gegen Änderungen sind
-   * Daten, die noch nicht in den Storables abgelegt sind, werden ergänzt. 
+   * Anzeige von sï¿½mtlichen Informationen zu dem BatchProcess.
+   * Von den Storables werden Kopien angelegt, damit die interen Storables geschï¿½tzt gegen ï¿½nderungen sind
+   * Daten, die noch nicht in den Storables abgelegt sind, werden ergï¿½nzt. 
    * @return
    */
   public BatchProcessInformation getBatchProcessInformation() {
@@ -612,12 +612,12 @@ public class BatchProcess {
     bpi.setRestartInformation(new BatchProcessRestartInformationStorable(restartInformation));
     bpi.setMasterOrderCreationParameter(masterOrderCreationParameter);
     
-    //Ergänzungen
+    //Ergï¿½nzungen
     OrderInstanceStatus currentStatus = batchProcessScheduling.getOrderStatus(masterInCleanup);
     bpi.setBatchProcessStatus( getBatchProcessStatus() );
     bpi.setSchedulingState( batchProcessScheduling.getSchedulingState() );
     bpi.getArchive().setOrderStatus(currentStatus);
-    //falls Zeitfenster nicht speziell für BatchProcess angelegt wurde, soll Definition trotzdem angezeigt werden 
+    //falls Zeitfenster nicht speziell fï¿½r BatchProcess angelegt wurde, soll Definition trotzdem angezeigt werden 
     bpi.getRestartInformation().setTimeWindowDefinition(batchProcessScheduling.getTimeWindowDefinition());
     
     return bpi;
@@ -658,7 +658,7 @@ public class BatchProcess {
     } else {
       orderStatus = success ? OrderInstanceStatus.FINISHED : OrderInstanceStatus.XYNA_ERROR;
     }
-    //Zeitfenster noch ermitteln, damit später nachlesbar ist, welche TimeWindowDefinition verwendet wurde
+    //Zeitfenster noch ermitteln, damit spï¿½ter nachlesbar ist, welche TimeWindowDefinition verwendet wurde
     restartInformation.setTimeWindowDefinition(batchProcessScheduling.getTimeWindowDefinition());
 
     ArchiveBatchProcess abp = new ArchiveBatchProcess(batchProcessArchiveData, runtimeInformation, customizationData, restartInformation, orderStatus);
@@ -688,7 +688,7 @@ public class BatchProcess {
     InputGeneratorData inputGeneratorData = new InputGeneratorData(restartInformation);
     createInputGenerator(inputGeneratorData, true);
     
-    //ParallelExecutor wieder anlegen und Limitierung prüfen
+    //ParallelExecutor wieder anlegen und Limitierung prï¿½fen
     batchProcessScheduling.createParallelExecutorAndCheckLimitation(
         createSlaveOrderTypeInfo(), restartInformation.getSlaveExecutionPeriod(), 
         restartInformation.getTotal(), getMaxParallelism() );
@@ -742,7 +742,7 @@ public class BatchProcess {
   public void cancelSlaves(boolean onlyScheduling, long callerOrderId) {
     //FIXME direkt nach einem Neustart der Factory sind evtl. noch nicht
     //alle Slaves wieder in die Map aufgenommen worden. Dies ist erst nach 
-    //einem vollständigen Scheduler-Durchlauf der Fall.
+    //einem vollstï¿½ndigen Scheduler-Durchlauf der Fall.
     for (Long id : currentSlaves.keySet()) {
       if (id.equals(callerOrderId)) {
         continue; //nicht versuchen den slave abzubrechen, der das cancel selbst aufruft.
@@ -798,7 +798,7 @@ public class BatchProcess {
   }
 
   /**
-   * Überprüft, der batchProcess zur angegebenen Revision gehört
+   * ï¿½berprï¿½ft, der batchProcess zur angegebenen Revision gehï¿½rt
    * @param revision
    * @return
    */
@@ -840,7 +840,7 @@ public class BatchProcess {
   }
   
   /**
-   * Pausiert den Batch Process, falls er zur angegebenen Revision gehört und nicht
+   * Pausiert den Batch Process, falls er zur angegebenen Revision gehï¿½rt und nicht
    * bereits pausiert ist
    * @param revision
    */
@@ -852,13 +852,13 @@ public class BatchProcess {
   
   /**
    * Startet der Batch Prozess zur Zeit neue Slaves in der Revision?
-   * D.h. er gehört zur Revision, ist nicht pausiert und hat noch nicht alle Slaves gestartet.
+   * D.h. er gehï¿½rt zur Revision, ist nicht pausiert und hat noch nicht alle Slaves gestartet.
    * @param revision
    * @return
    */
   public boolean startsCurrentlySlaves(Long revision) {
     if (!isInRevision(revision)) {
-      return false; //BatchProcess gehört nicht zur Revision
+      return false; //BatchProcess gehï¿½rt nicht zur Revision
     }
     
     if (isPaused()) {
@@ -885,7 +885,7 @@ public class BatchProcess {
   }
 
   /**
-   * Überprüft, ob die Application existiert und nicht im Zustand AUDIT_MODE ist.
+   * ï¿½berprï¿½ft, ob die Application existiert und nicht im Zustand AUDIT_MODE ist.
    * @param applicationName
    * @param versionName
    */
@@ -946,7 +946,7 @@ public class BatchProcess {
   }
   
   /**
-   * Setzt den Batch Process wieder fort, falls er zur angegebenen Revision gehört
+   * Setzt den Batch Process wieder fort, falls er zur angegebenen Revision gehï¿½rt
    * @param revision
    */
   public void continueBatchProcess(Long revision) throws PersistenceLayerException {
@@ -956,10 +956,10 @@ public class BatchProcess {
   }
   
   /**
-   * Überprüft, ob der BatchProcess mit dem erwarteten PauseCause pausiert wurde.
+   * ï¿½berprï¿½ft, ob der BatchProcess mit dem erwarteten PauseCause pausiert wurde.
    * @param expectedPauseCause
    * @return true, wenn der aktuelle PauseCause aus der RuntimeInformation mit 
-   *   expectedPauseCause übereinstimmt
+   *   expectedPauseCause ï¿½bereinstimmt
    */
   public boolean pausedWith(PauseCause expectedPauseCause) {
     if (runtimeInformation.getPauseCause() == null) {
@@ -971,14 +971,14 @@ public class BatchProcess {
   
   
   /**
-   * Ändert die Werte des BatchProcesses, die im übergebenen Input ungleich null sind.
+   * ï¿½ndert die Werte des BatchProcesses, die im ï¿½bergebenen Input ungleich null sind.
    * @param input
    * @throws PersistenceLayerException 
    */
   public boolean modifyBatchProcess(BatchProcessInput input) throws PersistenceLayerException {
     managementOperationLock.lock(); //Warten bis andere Operationen fertig sind
     try {
-      //Batch Process pausieren, falls er noch läuft
+      //Batch Process pausieren, falls er noch lï¿½uft
       if (!isPaused()) {
         if (!pauseBatchProcess(PauseCause.MODIFY.getCause())) {
           return false;
@@ -987,13 +987,13 @@ public class BatchProcess {
       
       changeSchedulingData(input);
       
-      //MasterOrder ändern
+      //MasterOrder ï¿½ndern
       changeMasterOrder(input.getMasterOrder());
       
-      //Daten im BatchProcessArchive ändern
+      //Daten im BatchProcessArchive ï¿½ndern
       changeArchiveData(input);
       
-      //TODO weitere Änderungen ermöglichen (z.B. InputDaten für Slaves)
+      //TODO weitere ï¿½nderungen ermï¿½glichen (z.B. InputDaten fï¿½r Slaves)
       //changeInputGenerator, changeSlave
       
       //Batch Process fortsetzen, falls er nicht schon vorher pausiert war
@@ -1036,14 +1036,14 @@ public class BatchProcess {
   }
   
   /**
-   * Ändert die MasterOrder
-   * TODO weitere Änderungen, im Moment werden nur die CustomFelder geändert
+   * ï¿½ndert die MasterOrder
+   * TODO weitere ï¿½nderungen, im Moment werden nur die CustomFelder geï¿½ndert
    * @param newMasterOrder
    * @throws PersistenceLayerException
    */
   private void changeMasterOrder(RemoteXynaOrderCreationParameter newMasterOrder) throws PersistenceLayerException {
     if (newMasterOrder != null) {
-      //Custom-Felder ändern
+      //Custom-Felder ï¿½ndern
       changeCustomFields(newMasterOrder);
     }
     
@@ -1053,7 +1053,7 @@ public class BatchProcess {
   }
   
   /**
-   * Ändert die Custom-Felder in der MasterOrder
+   * ï¿½ndert die Custom-Felder in der MasterOrder
    * @param newMasterOrder
    */
   private void changeCustomFields(RemoteXynaOrderCreationParameter newMasterOrder) {
@@ -1077,7 +1077,7 @@ public class BatchProcess {
   
 
   /**
-   * Ändert Label und Component im BatchProcessArchive
+   * ï¿½ndert Label und Component im BatchProcessArchive
    * @param BatchProcessInput
    * @throws PersistenceLayerException 
    */
@@ -1091,7 +1091,7 @@ public class BatchProcess {
    * Bricht einen Batch Process ab. D.h. es werden keine neuen Slaves mehr gestartet und die
    * laufenden Slaves werden abgebrochen. Bei CancelMode == WAIT wird vor dem Abbrechen gewartet,
    * ob die Slaves innerhalb ihres OrderExecutionTimeouts fertig werden.
-   * Anschließend geht der Master in die Execution-Phase über. Das ist ein entscheidender Unterschied zum Cancel im Scheduler.
+   * Anschlieï¿½end geht der Master in die Execution-Phase ï¿½ber. Das ist ein entscheidender Unterschied zum Cancel im Scheduler.
    * @param cancelMode
    * @param ignoreTimeConstraintsOfMaster falls true, werden die master timeconstraints auf "immediately" umgestellt werden?
    * @return true, falls der Batch Process abgebrochen wurde
@@ -1162,20 +1162,20 @@ public class BatchProcess {
   
   public boolean migrateBatchProcess(RuntimeContext to) throws XynaException {
     if (to instanceof Application) {
-      //überprüfen, ob die Application existiert und nicht im Zustand AUDIT_MODE ist
+      //ï¿½berprï¿½fen, ob die Application existiert und nicht im Zustand AUDIT_MODE ist
       checkApplication(((Application)to).getName(), ((Application)to).getVersionName());
     }
     
     managementOperationLock.lock();
     try{
-      //Batch Process pausieren, falls er noch läuft
+      //Batch Process pausieren, falls er noch lï¿½uft
       if (!isPaused()) {
         if (!pauseBatchProcess(PauseCause.MIGRATE.getCause())) {
           return false;
         }
       }
       
-      //es dürfen keine Slaves mehr laufen
+      //es dï¿½rfen keine Slaves mehr laufen
       if (runtimeInformation.getRunning() > 0) {
         if (pausedWith(PauseCause.MIGRATE)) {
           continueBatchProcess();
@@ -1184,7 +1184,7 @@ public class BatchProcess {
       }
       
       if (to instanceof Application) {
-        //Application und Version im BatchProcessArchive ändern
+        //Application und Version im BatchProcessArchive ï¿½ndern
         batchProcessArchiveData.setApplication(((Application)to).getName());
         batchProcessArchiveData.setVersion(((Application)to).getVersionName());
         batchProcessArchiveData.setWorkspace(null);
@@ -1207,7 +1207,7 @@ public class BatchProcess {
         finallyClose(con);
       }
       
-      //Application und Version in SlaveOrderTypeInfo ändern
+      //Application und Version in SlaveOrderTypeInfo ï¿½ndern
       batchProcessScheduling.getSlaveOrderTypeInfo().fillFromBatchProcessArchive(batchProcessArchiveData);
       
       //InputGenerator aktualisieren, damit Objekte mit dem richtigen ClassLoader geladen werden
@@ -1336,7 +1336,7 @@ public class BatchProcess {
     managementOperationLock.lock();
     try {
       //nun kann sicher auf isPaused() zugegriffen werden 
-      //TODO Wenn startBatchProcess per managementOperationLock geschützt wird, darf hier Lock nicht verwendet werden
+      //TODO Wenn startBatchProcess per managementOperationLock geschï¿½tzt wird, darf hier Lock nicht verwendet werden
       batchProcessScheduling.acknowledgeMasterBackup(isPaused());
     } finally {
       managementOperationLock.unlock();

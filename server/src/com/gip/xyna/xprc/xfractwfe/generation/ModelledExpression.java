@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,29 +82,29 @@ import com.gip.xyna.xprc.xfractwfe.generation.VariableContextIdentification.Vari
 
 
 /**
- * Klasse für Parsing, Typisierung und Codegenerierung von Formel-Ausdrücken, wie sie in 
- * Conditional Choices und Mappings modelliert und verwendet werden können.
+ * Klasse fï¿½r Parsing, Typisierung und Codegenerierung von Formel-Ausdrï¿½cken, wie sie in 
+ * Conditional Choices und Mappings modelliert und verwendet werden kï¿½nnen.
  * 
- * Das Parsing geschieht im Parser, die Typisierung und Codegenerierung passiert hauptsächlich über
+ * Das Parsing geschieht im Parser, die Typisierung und Codegenerierung passiert hauptsï¿½chlich ï¿½ber
  * ein Visitor-Pattern.
  * 
- * Formel-Ausdrücke haben folgenden Syntax
+ * Formel-Ausdrï¿½cke haben folgenden Syntax
  * <pre>
- * Expr := ValueExpr | ValueExpr mit AND/OR und klammerungen verknüpft
+ * Expr := ValueExpr | ValueExpr mit AND/OR und klammerungen verknï¿½pft
  * ValueExpr := SingleValueExpr | Function(ValueExpr, ...) | ValueExpr Operator ValueExpr | Prefix ValueExpr
  * Prefix := - | !/not |
  * Operator := + | - | &lt; | &gt; | == | &lt;= | &gt;= | != 
  * SingleValueExpr := PathExpr | "Constant/Literal" | null
  * PathExpr := % VariableIndex % ( [ValueExpr] )? (. (MemberName | InstanceFunctionName\( ( Expr (, Expr)* )? \) ) ( [ValueExpr ] )?)*
  * VariableIndex := Index der Variable im lokalen Workflow-Context (step.getInputIds, step.getLocalIds, 
- *   step.getOutputIds werden in dieser Reihenfolge durchgezählt)
+ *   step.getOutputIds werden in dieser Reihenfolge durchgezï¿½hlt)
  * MemberName := Name einer Membervariable der Variable
  * Mapping := PathExpr = Expr
  * </pre>
  * 
  * Beispiel: 
  *   %13%.bool=contains("hello 3netordernumber" , concat(%5%["1"].data[%2%.containsSimpleList.data[%2%.containsSimpleList.data["1"]]], "1"+"2", "net", "order","number" ))
- * könnte true ergeben.
+ * kï¿½nnte true ergeben.
  */
 public class ModelledExpression {
 
@@ -257,7 +257,7 @@ public class ModelledExpression {
   }
   
   /**
-   * visitor für die erzeugung des xfl strings aus den javaobjekten
+   * visitor fï¿½r die erzeugung des xfl strings aus den javaobjekten
    */
   public static class IdentityCreationVisitor extends EmptyVisitor {
     
@@ -544,13 +544,13 @@ public class ModelledExpression {
                 expression.getVar1().setTargetType(new TypeInfo(BaseType.STRING));
                 expression.getVar2().setTargetType(new TypeInfo(BaseType.STRING));
               } else {
-                //unknown übernimmt typ vom anderen
+                //unknown ï¿½bernimmt typ vom anderen
                 expression.getVar1().setTargetType(expression.getVar2().getOriginalType());
                 expression.getVar2().setTargetType(expression.getVar2().getOriginalType());
               }
             } else {
               if (expression.getVar2().getOriginalType().isUnknown()) {
-                //unknown übernimmt typ vom anderen
+                //unknown ï¿½bernimmt typ vom anderen
                 expression.getVar1().setTargetType(expression.getVar1().getOriginalType());
                 expression.getVar2().setTargetType(expression.getVar1().getOriginalType());
               } else {
@@ -634,7 +634,7 @@ public class ModelledExpression {
         }
         if (!variable.getTargetType().isUnknown()) {
           if (!variable.getTypeOfExpression().equals(variable.getTargetType(), true)) {
-            //TODO inkompatible typen erkennen und fehler werfen. passiert aber ansosnten später beim compile
+            //TODO inkompatible typen erkennen und fehler werfen. passiert aber ansosnten spï¿½ter beim compile
           }
         } else {
           variable.setTargetType(variable.getTypeOfExpression());
@@ -829,13 +829,13 @@ public class ModelledExpression {
     
     /**
      * @return zwei-elementiges array. erstes element ist der start der transformation, zweites element die beendenden klammern.
-     * grund für die teilung: dazwischen werden andere expressions vom visitor besucht. 
+     * grund fï¿½r die teilung: dazwischen werden andere expressions vom visitor besucht. 
      */
     private String[] transformation(String value, TypeInfo fromType, TypeInfo toType) {
       if (fromType.equals(toType, true)) {
         return new String[] {value, ""};
       } else if (toType.isModelledType() && fromType.isModelledType() && !toType.isList() && !fromType.isList()) {
-        //wenn beide listenwertig sind, wurde es obendrüber abgefangen.
+        //wenn beide listenwertig sind, wurde es obendrï¿½ber abgefangen.
         //wenn nur eines davon listenwertig ist, passt es nicht zusammen
         if (toType.getModelledType().isSuperClassOf(fromType.getModelledType())) {
           return new String[] {value, ""};
@@ -928,7 +928,7 @@ public class ModelledExpression {
           return new String[] {"Double.parseDouble(String.valueOf(" + value, "))"};
         }
       } else if (toType.isList()) {
-        //FIXME hier die information verarbeiten, welchen typ die listenelemente haben müssen.       
+        //FIXME hier die information verarbeiten, welchen typ die listenelemente haben mï¿½ssen.       
         return new String[] {"new ArrayList(Arrays.asList(new Object[]{" + value, "}))"};
       } else if (toType.isAny() && fromType.isModelledType()) {
         return new String[] {value, ""};
@@ -1296,7 +1296,7 @@ public class ModelledExpression {
           part.setIndexDef(lev);
           locals.add(lev);          
         } else if (ctx instanceof CastExpression) {
-          //TODO offenbar sollten castexpression und variable ein gemeinsames interface implementieren, wenn die verwendung hier so ähnlich ist!
+          //TODO offenbar sollten castexpression und variable ein gemeinsames interface implementieren, wenn die verwendung hier so ï¿½hnlich ist!
           CastExpression cast = (CastExpression) ctx;
           String uniqueSuffix = String.valueOf(cast.getFirstIdx());
           int partIndex = cast.getPartIndex(part);
@@ -1307,7 +1307,7 @@ public class ModelledExpression {
           part.setIndexDef(lev);
           locals.add(lev);       
         } else {
-          //new könnte theoretisch auch indexdef haben, macht aber wenig sinn
+          //new kï¿½nnte theoretisch auch indexdef haben, macht aber wenig sinn
           throw new RuntimeException("Unsupported index def at " + ctx);
         }
         
@@ -1517,19 +1517,19 @@ public class ModelledExpression {
 
 
   /**
-   * bestimmt die typen aller teil-ausdrücke und befüllt den maptree mit informationen zu den variablen-zugriffen des
+   * bestimmt die typen aller teil-ausdrï¿½cke und befï¿½llt den maptree mit informationen zu den variablen-zugriffen des
    * ziel ausdrucks.
-   * damit variablen-teile nicht überschrieben werden, muss für alle an einem mapping beteiligten einzelmappings 
-   * die gleiche maptree an diese methode übergeben werden.
+   * damit variablen-teile nicht ï¿½berschrieben werden, muss fï¿½r alle an einem mapping beteiligten einzelmappings 
+   * die gleiche maptree an diese methode ï¿½bergeben werden.
    * 
-   * erläuterung: damit beim befüllen des ziel types keine NPEs zur laufzeit passieren, wird der code generiert,
+   * erlï¿½uterung: damit beim befï¿½llen des ziel types keine NPEs zur laufzeit passieren, wird der code generiert,
    * der sicherstellt, dass entsprechende objekte erstellt werden. wenn man in verschiedenen einzelmappings auf
    * gleiche pfade in der variablen hierarchie zugreift, sollen die entsprechenden objekte aber nur einmal
    * erstellt werden.
    * 
    * @param importedClassNames
-   * @param varPathsAlreadyCreated enthält informationen zu allen variablen-teilen des target-types, und ob diese
-   *   bei der codegenerierung noch erstellt werden müssen, oder ob sie bereits vorhanden sind.
+   * @param varPathsAlreadyCreated enthï¿½lt informationen zu allen variablen-teilen des target-types, und ob diese
+   *   bei der codegenerierung noch erstellt werden mï¿½ssen, oder ob sie bereits vorhanden sind.
    */
   public void initTypesOfParsedFormula(Set<String> importedClassNames, MapTree varPathsAlreadyCreated)
       throws XPRC_InvalidVariableIdException, XPRC_InvalidVariableMemberNameException,
@@ -1566,7 +1566,7 @@ public class ModelledExpression {
       return;
     }
 
-    //um auf index-def von basisvariable zugreifen zu können, müssen cast-funktionen ausgepackt werden 
+    //um auf index-def von basisvariable zugreifen zu kï¿½nnen, mï¿½ssen cast-funktionen ausgepackt werden 
     FollowableType ft = sve;
     while (ft instanceof CastExpression) {
       ft = (FollowableType) ((CastExpression) ft).getWrappedAccessPath();
@@ -1656,13 +1656,13 @@ public class ModelledExpression {
       createEmptyChildObjects(cb, sve, -1, var, importedClassNames, uniqueId);
       cb.addLine();
     } else {
-      //default konstruktor genügt
+      //default konstruktor genï¿½gt
     }
 
     // for typeless mappings
     boolean needSetterInvocation = true;
     
-    //temporäre variable anlegen, die später über den setter dem target zugewiesen wird
+    //temporï¿½re variable anlegen, die spï¿½ter ï¿½ber den setter dem target zugewiesen wird
     String uniqueVarName = TEMP_VARIABLE_PREFIX + uniqueId;
     if (type.isList()) {
       //FIXME bessere sonderbehandlung von null?
@@ -1678,7 +1678,7 @@ public class ModelledExpression {
         cb.addLine("} else {");
         cb.addLine(uniqueVarName, " = new ArrayList(", (cloneObjects ? ")" : uniqueVarName + "_1)"));
         if (cloneObjects) {
-          //eigtl müsste man für o hier die typinformation der liste in code nehmen, da kommt man aber nicht gut dran. so funktioniert es auch...
+          //eigtl mï¿½sste man fï¿½r o hier die typinformation der liste in code nehmen, da kommt man aber nicht gut dran. so funktioniert es auch...
 
           cb.addLine("for (", Object.class.getSimpleName(), " o : ", uniqueVarName, "_1) {");
           cb.addLine("if (o == null) {");
@@ -1706,7 +1706,7 @@ public class ModelledExpression {
       } else if (sve.isPathMap()) {
         VariableInfoPathMap vipm = (VariableInfoPathMap) sve.getFollowedVariable();
         cb.add(vipm.getJavaCodeForVariableAccess());
-        //TODO mehr als eine value- variable unterstützen?
+        //TODO mehr als eine value- variable unterstï¿½tzen?
         String setter = GenerationBase.buildSetter(vipm.getVarNameOfValue());
         cb.add(setter, "InMap(\"", vipm.getPath(uniqueId), "\", \"", vipm.getDataModel(), "\", ", code, ")");
         cb.addLB();
@@ -1779,9 +1779,9 @@ public class ModelledExpression {
    * @param cb
    * @param sve
    * @param pathDepth
-   * @param varPathsForVariables kinder davon sind kinder von der zugehörigen variable (entsprechend dem path),
-   * d.h. bei depth == -1, wird hier die teilmap der basisvariable übergeben
-   * bei depth == 0 wird hier die teilmap %0% bzw %0%[x] (falls listenwertig) übergeben.
+   * @param varPathsForVariables kinder davon sind kinder von der zugehï¿½rigen variable (entsprechend dem path),
+   * d.h. bei depth == -1, wird hier die teilmap der basisvariable ï¿½bergeben
+   * bei depth == 0 wird hier die teilmap %0% bzw %0%[x] (falls listenwertig) ï¿½bergeben.
    */
   private void createEmptyChildObjects(CodeBuffer cb, FollowableType sve, int pathDepth,
                                        MapTree varPathsForVariables, Set<String> importedClassNames, long unqiueId) throws XPRC_InvalidVariableMemberNameException {
@@ -1823,7 +1823,7 @@ public class ModelledExpression {
       if (listAccess == null) {
         return;
       }
-      //per default ist liste leer -> mit nulls (oder richtigen objekten) befüllen 
+      //per default ist liste leer -> mit nulls (oder richtigen objekten) befï¿½llen 
       int maxIdx = -1;
       for (Entry<String, MapTree> entry : varPathsForVariables.map.entrySet()) {
         if (entry.getKey().equals("d")) { //dynamic
@@ -1847,8 +1847,8 @@ public class ModelledExpression {
     }
 
     if (!varPathsForVariables.generated) {
-      //TODO falls dynamischer listenindex verwendet wird, muss hier darauf zugegriffen werden können. leider wird 
-      //     hier vorausgesetzt, dass der name der gleiche ist, wie bei der späteren codeerzeugung für die eigentliche zuweisung
+      //TODO falls dynamischer listenindex verwendet wird, muss hier darauf zugegriffen werden kï¿½nnen. leider wird 
+      //     hier vorausgesetzt, dass der name der gleiche ist, wie bei der spï¿½teren codeerzeugung fï¿½r die eigentliche zuweisung
       createVar(cb, sve, pathDepth, (StepBasedVariable) varInfo, importedClassNames, unqiueId);
       varPathsForVariables.generated = true;
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class AddconnectionpoolImpl extends XynaCommandImplementation<Addconnecti
       writeLineToCommandLine(statusOutputStream, "ConnectionPool " + tcpp.getName() + " successfully created.");
     } catch (NoConnectionAvailableException e) {
       writeLineToCommandLine(statusOutputStream, "ConnectionPool " + tcpp.getName() + " could not be created.");
-      //TODO schöner ausgeben?s
+      //TODO schï¿½ner ausgeben?s
       throw new RuntimeException(e);
     }
   }

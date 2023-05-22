@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.gip.xyna.utils.collections.Graph.HasUniqueStringIdentifier;
 
 
 //gerichteter graph
-//achtung, knoten nicht ändern, nachdem man darauf berechnungen durchgeführt hat
+//achtung, knoten nicht ï¿½ndern, nachdem man darauf berechnungen durchgefï¿½hrt hat
 public class Graph<C extends HasUniqueStringIdentifier> {
   public interface HasUniqueStringIdentifier {
 
@@ -42,19 +42,19 @@ public class Graph<C extends HasUniqueStringIdentifier> {
   public static class Node<C extends HasUniqueStringIdentifier> {
     /*
      * zkylische gerichtete graphen performant rekursiv die teilgraphen bestimmen lassen. 
-     * etwa faktor 10 schneller als naives "für jeden knoten alle dependencies separat bestimmen"
+     * etwa faktor 10 schneller als naives "fï¿½r jeden knoten alle dependencies separat bestimmen"
      * 
      * idee: bei der rekursion bei allen besuchten knoten bereits die rekursiven dependencies mit speichern.
-     *       dabei gibt es die komplikation bei zyklischen abhängigkeiten. diese wird behandelt, indem alle
-     *       zu einem zyklus gehörenden knoten einen stellvertreter-knoten bestimmen (leader), und nur dieser
-     *       die abhängigkeiten pflegt.
+     *       dabei gibt es die komplikation bei zyklischen abhï¿½ngigkeiten. diese wird behandelt, indem alle
+     *       zu einem zyklus gehï¿½renden knoten einen stellvertreter-knoten bestimmen (leader), und nur dieser
+     *       die abhï¿½ngigkeiten pflegt.
      */
 
     private final Map<String, Node<C>> dependencies = new HashMap<String, Node<C>>();
-    private Map<String, Node<C>> dependenciesRecursively = new HashMap<String, Node<C>>(); //enthält this
+    private Map<String, Node<C>> dependenciesRecursively = new HashMap<String, Node<C>>(); //enthï¿½lt this
     private Node<C> cycleLeader; //stellvertreter der im zyklus befindlichen nodes
     private boolean cycleComplete = false; //alle nodes des cycles haben alle ihre dependencies rekursiv bestimmt
-    private Set<Node<C>> cycleMembers; //welche nodes gehören zum cycle
+    private Set<Node<C>> cycleMembers; //welche nodes gehï¿½ren zum cycle
     private Map<String, Node<C>> parents = new HashMap<String, Node<C>>(); //wer hat den node als direkte dependency? bei cycles sind die parents nur beim leader gesetzt. sie enthalten dann nicht knoten aus dem cycle
     
     private final C content; //content
@@ -93,7 +93,7 @@ public class Graph<C extends HasUniqueStringIdentifier> {
           }
           if (!alreadyCollected.containsKey(e.getKey())) {
             
-            //cycle detection über stack
+            //cycle detection ï¿½ber stack
             for (int i = 0; i < stack.size(); i++) {
               if (stack.get(i).content.getId().equals(e.getKey())) {
                 //cycle -> bei allen in zyklus den cycleleader eintragen und die bisher gesammelten dependencies im cycleleader aggregieren
@@ -112,7 +112,7 @@ public class Graph<C extends HasUniqueStringIdentifier> {
 
             //bestehendem cycle anschliessen?!
             if (e.getValue().cycleLeader != null && !e.getValue().cycleLeader.cycleComplete) {
-              //falls dependency teil von unfertigem cycle ist, muss man selbst dazu gehören (sonst wär der cycle nicht unfertig, sondern fertig)
+              //falls dependency teil von unfertigem cycle ist, muss man selbst dazu gehï¿½ren (sonst wï¿½r der cycle nicht unfertig, sondern fertig)
               Node<C> localCycleLeader;
               if (cycleLeader != null) {
                 if (cycleLeader != e.getValue().cycleLeader) {
@@ -142,7 +142,7 @@ public class Graph<C extends HasUniqueStringIdentifier> {
                 }
               }
               if (localCycleLeader != null) {
-                //ausserdem gehören dann alle stackelemente bis zum cycleleader dazu
+                //ausserdem gehï¿½ren dann alle stackelemente bis zum cycleleader dazu
                 for (int i = 0; i < stack.size(); i++) {
                   if (stack.get(i) == localCycleLeader) {
                     addStackElementsToCycle(localCycleLeader, stack, i + 1);
@@ -158,14 +158,14 @@ public class Graph<C extends HasUniqueStringIdentifier> {
             Map<String, Node<C>> childDepsRecursively = e.getValue().getDependenciesRecursively(stack);
             stack.pop();
 
-            //dependency hinzufügen
+            //dependency hinzufï¿½gen
             if (childDepsRecursively != null) {
               if (cycleLeader != null) {
                 cycleLeader.dependenciesRecursively.putAll(childDepsRecursively);
               } else {
                 dependenciesRecursively.putAll(childDepsRecursively);
               }
-            } //else: wurde bereits im kind dem gleichen leader hinzugefügt
+            } //else: wurde bereits im kind dem gleichen leader hinzugefï¿½gt
           }
         }
 
@@ -197,7 +197,7 @@ public class Graph<C extends HasUniqueStringIdentifier> {
     private void addStackElementsToCycle(Node<C> cycleLeader, Stack<Node<C>> stack, int startIdx) {
       for (int j = startIdx; j < stack.size(); j++) {
         Node<C> stackEl = stack.get(j);
-        //falls der neue cyclemember vorher cycleleader war, dessen members umhängen
+        //falls der neue cyclemember vorher cycleleader war, dessen members umhï¿½ngen
         if (stackEl.cycleMembers != null) {
           for (Node<C> cycleMember : stackEl.cycleMembers) {
             cycleMember.cycleLeader = cycleLeader;
@@ -268,10 +268,10 @@ public class Graph<C extends HasUniqueStringIdentifier> {
   }
 
   /**
-   * gibt die minimale menge an knoten zurück, von denen aus der gesamte graph erreichbar ist
+   * gibt die minimale menge an knoten zurï¿½ck, von denen aus der gesamte graph erreichbar ist
    */
   public List<Node<C>> getRoots() {
-    //achtung, genauso wie oben bei dependencies recursively ermittlung wird hier die datenstruktur geändert, so dass eine nachträgliche änderung
+    //achtung, genauso wie oben bei dependencies recursively ermittlung wird hier die datenstruktur geï¿½ndert, so dass eine nachtrï¿½gliche ï¿½nderung
     //der daten probleme macht!
     if (roots.size() != 0) {
       return roots;

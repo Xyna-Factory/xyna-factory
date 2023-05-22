@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -237,7 +237,7 @@ public class DeviceClass extends Storable<DeviceClass> implements Comparable<Dev
 //  public static boolean evaluateConditionalString(String resultingConditional, Map<String, String> subConditionalHash, List<? extends Node> inputoptions) {
 //    
 //    
-//    String trimmed = resultingConditional.trim();//Abschneiden führender und abschließender Leerzeichen
+//    String trimmed = resultingConditional.trim();//Abschneiden fï¿½hrender und abschlieï¿½ender Leerzeichen
 //    
 //    if (logger.isDebugEnabled()){
 //      logger.debug("## Evaluating conditional string " +resultingConditional);
@@ -259,7 +259,7 @@ public class DeviceClass extends Storable<DeviceClass> implements Comparable<Dev
 //        if (notParts.length > 1){
 //          evaluation = evaluateNOTs(notParts, subConditionalHash, inputoptions);
 //        } else {
-//          // einzelne Einträge wie (...) oder <..>
+//          // einzelne Eintrï¿½ge wie (...) oder <..>
 //          Matcher matcherSubCond = SUBCONDITION_PATTERN.matcher(trimmed);
 //          Matcher matcherCond = CONDITION_PATTERN.matcher(trimmed);
 //          if (matcherSubCond.matches()){// wenn Untercondition drinsteht, d.h. (...)

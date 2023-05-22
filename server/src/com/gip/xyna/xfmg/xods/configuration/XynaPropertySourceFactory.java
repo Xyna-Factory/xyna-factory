@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
  * alle Methoden werden an die richtigen Stellen der Factory weitergereicht:
  * <ul>
  * <li>FactoryManagement zum Lesen und Schreiben der Property</li>
- * <li>DependencyRegister für Verwender-Anzeige</li>
+ * <li>DependencyRegister fï¿½r Verwender-Anzeige</li>
  * </ul>
  */
 public class XynaPropertySourceFactory implements XynaPropertySource, PropertyCacher {
@@ -58,7 +58,7 @@ public class XynaPropertySourceFactory implements XynaPropertySource, PropertyCa
       cxp = new CachedXynaProperty(property,this);
       CachedXynaProperty existing = properties.putIfAbsent(propName, cxp);
       if( existing != null ) {
-        cxp = existing; //jemand anderes war schneller, dessen CachedXynaProperty übernehmen
+        cxp = existing; //jemand anderes war schneller, dessen CachedXynaProperty ï¿½bernehmen
         cxp.addInstance(property);
       }
     } else {
@@ -130,7 +130,7 @@ public class XynaPropertySourceFactory implements XynaPropertySource, PropertyCa
       CachedXynaProperty existing = properties.putIfAbsent(name, cxp);
       if( existing != null ) {
         existing.addDBData(storable);
-        //jemand anderes war schneller, dessen CachedXynaProperty übernehmen
+        //jemand anderes war schneller, dessen CachedXynaProperty ï¿½bernehmen
       }
     }
   }
@@ -143,7 +143,7 @@ public class XynaPropertySourceFactory implements XynaPropertySource, PropertyCa
       CachedXynaProperty existing = properties.putIfAbsent(name, cxp);
       if( existing != null ) {
         cxp = existing;
-        //jemand anderes war schneller, dessen CachedXynaProperty übernehmen
+        //jemand anderes war schneller, dessen CachedXynaProperty ï¿½bernehmen
       }
     }
     cxp.addDBData(storable);

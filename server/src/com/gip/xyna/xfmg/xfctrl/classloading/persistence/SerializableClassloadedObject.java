@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 
 /*
  *FIXME
- *konzept ähnlich zu classloaderobjectinputstream verwenden von apache
+ *konzept ï¿½hnlich zu classloaderobjectinputstream verwenden von apache
  *http://grepcode.com/file/repo1.maven.org/maven2/com.ning/metrics.serialization-all/2.0.0-pre5/org/apache/commons/io/input/ClassLoaderObjectInputStream.java
  */
 public class SerializableClassloadedObject implements Serializable {
@@ -97,7 +97,7 @@ public class SerializableClassloadedObject implements Serializable {
   private final String date = Constants.defaultUTCSimpleDateFormatWithMS().format(new Date());
   
   /**
-   * für {@link SerializableClassloadedObject#deserializationFailedHandler} 
+   * fï¿½r {@link SerializableClassloadedObject#deserializationFailedHandler} 
    */
   private transient boolean objectWasDeserializable;
 
@@ -165,7 +165,7 @@ public class SerializableClassloadedObject implements Serializable {
 
 
   public SerializableClassloadedObject(Serializable object, ClassLoader... classLoaders) {
-    //FIXME revision(s) von serialisierendem root-objekt verwenden, um kompatibilität bei änderung von dependency zu ermöglichen -> problem: service varianten!
+    //FIXME revision(s) von serialisierendem root-objekt verwenden, um kompatibilitï¿½t bei ï¿½nderung von dependency zu ermï¿½glichen -> problem: service varianten!
     if (object == null) {
       classLoaderType = null;
       classLoaderID = null;
@@ -227,8 +227,8 @@ public class SerializableClassloadedObject implements Serializable {
 
 
   /**
-   * Sollen Exceptions beim Deserialisieren in readObject unterdrückt werden, wenn diese
-   * Objekte nur mit einem speziellen ClassLoader angelegt werden können? 
+   * Sollen Exceptions beim Deserialisieren in readObject unterdrï¿½ckt werden, wenn diese
+   * Objekte nur mit einem speziellen ClassLoader angelegt werden kï¿½nnen? 
    * Achtung: normale Einstellung sollte immer false sein! 
    * @param value
    */
@@ -408,7 +408,7 @@ public class SerializableClassloadedObject implements Serializable {
       ByteArrayInputStream bais = new ShrinkableByteArrayInputStream(bytes);
       if (version == 1) { //war nur ein zwischenstand
         return new ObjectInputStream(bais);
-      } else if (version == 2) { //TODO damit peek funktioniert, noch den underlying stream an den ursprünglichen dranhängen?
+      } else if (version == 2) { //TODO damit peek funktioniert, noch den underlying stream an den ursprï¿½nglichen dranhï¿½ngen?
         old = replaceUnderlyingInputStream(in, bais);
         if (old instanceof ShrinkableByteArrayInputStream) {
           ((ShrinkableByteArrayInputStream) old).shrink();
@@ -446,18 +446,18 @@ public class SerializableClassloadedObject implements Serializable {
 
 
   /*
-   * Bugz 19270: Ziel: Fehler beim Deserialisieren sollen nur zu einer Warnung führen. Danach kann die Objektdeserialisierung weiterlaufen.
-   * Das funktioniert nur, wenn der ObjectOutputStream die zu dem fehlerhaften Objekt gehörenden Bytes skippt.
-   * Leider ist uns keine bessere Lösung dafür eingefallen als folgende:
-   * - Serialisiere gefährliche Daten (SerializableClassloadedObject) in ein separates ByteArray, und schreibe dieses als ByteArray 
+   * Bugz 19270: Ziel: Fehler beim Deserialisieren sollen nur zu einer Warnung fï¿½hren. Danach kann die Objektdeserialisierung weiterlaufen.
+   * Das funktioniert nur, wenn der ObjectOutputStream die zu dem fehlerhaften Objekt gehï¿½renden Bytes skippt.
+   * Leider ist uns keine bessere Lï¿½sung dafï¿½r eingefallen als folgende:
+   * - Serialisiere gefï¿½hrliche Daten (SerializableClassloadedObject) in ein separates ByteArray, und schreibe dieses als ByteArray 
    *   in den ObjektOutputStream. Wenn dann beim Deserialisieren ein Fehler auftritt, wird das gesamte ByteArray ausgelesen, also damit
-   *   automatisch alles übersprungen, was dazugehört.
+   *   automatisch alles ï¿½bersprungen, was dazugehï¿½rt.
    * - Bei verschachtelten SerializableClassloadedObjects muss man aufpassen, dass man den "Cache" des ObjectOutputStreams verwendet, damit
-   *   man die serialisierten Daten nicht unnötig redundant aufbläst. Damit der Cache verwendet werden kann, muss man die gleiche ObjectOutputStream
+   *   man die serialisierten Daten nicht unnï¿½tig redundant aufblï¿½st. Damit der Cache verwendet werden kann, muss man die gleiche ObjectOutputStream
    *   Instanz einmal in das bzw verschiedene ByteArrays schreiben lassen und einmal in den zugrundeliegenden Stream. Das kann man nur per Reflection
-   *   oder bei vollständiger Kontrolle über den zugrundeliegenden Stream erreichen.
+   *   oder bei vollstï¿½ndiger Kontrolle ï¿½ber den zugrundeliegenden Stream erreichen.
    * - Bei verschachtelten SerializableClassloadedObjects gibt es beim Deserialisieren auch verschachtelte ByteArrays. Dies kann naiv zu
-   *   starker Redundanz im Speicherverbrauch (temporär) führen. Da man die Teil-Bereiche aus einem ByteArray nur einmal benötigt, wird deshalb
+   *   starker Redundanz im Speicherverbrauch (temporï¿½r) fï¿½hren. Da man die Teil-Bereiche aus einem ByteArray nur einmal benï¿½tigt, wird deshalb
    *   der ShrinkableByteArrayInputStream verwendet, um bereits gelesene Teil-Bereiche aus den ByteArrays zu entfernen. 
    */  
 
@@ -680,7 +680,7 @@ public class SerializableClassloadedObject implements Serializable {
   private static final LruCache<ClassLoadingKey, ClassLoaderWrapperWrapper> cache = new LruCache<>(1000);
 
   /**
-   * Lesen des serialisierten Objects mit dem übergebenen ClassLoader:
+   * Lesen des serialisierten Objects mit dem ï¿½bergebenen ClassLoader:
    * Trick: ContainerClass mit dem ClassLoader laden, diese ContainerClass kann
    *        dann das serialisierte Object mit ihrem ClassLoader deserialisieren.
    * @param loader

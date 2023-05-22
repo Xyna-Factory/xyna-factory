@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ public class XMOMODSMappingUtils {
           }
         }
          
-        //Tablename abschneiden, falls er länger ist als erlaubt
+        //Tablename abschneiden, falls er lï¿½nger ist als erlaubt
         if(tableName.length() > maximumTablenameLength.get() - 3) {
           tableName = tableName.substring(0, maximumTablenameLength.get() - 3); //Leave 3 characters space for a suffix
         }

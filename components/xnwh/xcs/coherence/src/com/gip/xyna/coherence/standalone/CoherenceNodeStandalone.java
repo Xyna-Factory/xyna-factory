@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class CoherenceNodeStandalone {
 
     int port = Integer.valueOf(args[0]);
 
-    CoherenceNode node = new CoherenceNode(port); //FIXME nicht überall den gleichen port
+    CoherenceNode node = new CoherenceNode(port); //FIXME nicht ï¿½berall den gleichen port
     RMIConnectionParametersServer parameters = new RMIConnectionParametersServer(port);
     node.init(parameters);
 

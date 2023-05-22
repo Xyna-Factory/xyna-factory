@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class SRInformationCache<C,O> {
   private volatile ConcurrentHashMap<Long,SRInformation> srInformations;
   private SuspendResumeAdapter<C, O> srAdapter;
   private AdministrativeParallelLock<Long> orderBackupLock; //Lock, mit dem Lesezugriffe auf OrderBackup gesperrt werden, 
-  //solange dort keine verlässlichen Daten lesbar sind
+  //solange dort keine verlï¿½sslichen Daten lesbar sind
 
   /**
    * @param srAdapter
@@ -70,9 +70,9 @@ public class SRInformationCache<C,O> {
 
   /**
    * Gibt die SRInformation zur angegebenen OrderId aus oder erzeugt eine neue SRInformation.
-   * Das Erzeugen ist sicher gegen konkurrierende Aufrufe: beide Aufrufe geben das gleiche Objekt zurück.
-   * Wenn SRInformation neu angelegt wird, ist der status SRState.Unknown, wenn eine Order übergeben wird,
-   * wird der Status auf den übergebenen Status gesetzt (nur der Aufrufer weiß, warum er die Order hat).
+   * Das Erzeugen ist sicher gegen konkurrierende Aufrufe: beide Aufrufe geben das gleiche Objekt zurï¿½ck.
+   * Wenn SRInformation neu angelegt wird, ist der status SRState.Unknown, wenn eine Order ï¿½bergeben wird,
+   * wird der Status auf den ï¿½bergebenen Status gesetzt (nur der Aufrufer weiï¿½, warum er die Order hat).
    * @param orderId
    * @param order
    * @param state  
@@ -88,7 +88,7 @@ public class SRInformationCache<C,O> {
         try {
           return getOrCreateLocked( orderId, rootSRInformation, state);
         } catch (NoSuchChildException e) {
-          throw new RuntimeException(e); //sollte nie auftreten können
+          throw new RuntimeException(e); //sollte nie auftreten kï¿½nnen
         } finally {
           rootSRInformation.unlock();
         }
@@ -109,8 +109,8 @@ public class SRInformationCache<C,O> {
       if( srInformation == null ) {
         srInformation = newSRInformation; //neue SRInformation ist sicher eingetragen
       } else {
-        //konkurrierende Ausführung hat SRInformation zuerst eintragen können, daher 
-        //eigenen "newSRInformation" verwerfen und fremden "srInformation" zurückgeben
+        //konkurrierende Ausfï¿½hrung hat SRInformation zuerst eintragen kï¿½nnen, daher 
+        //eigenen "newSRInformation" verwerfen und fremden "srInformation" zurï¿½ckgeben
         srInformation.lock();
         newSRInformation.unlock();
       }
@@ -128,7 +128,7 @@ public class SRInformationCache<C,O> {
         return rootSRInformation;
       }
       
-      //nicht gefunden oder ungültig, daher neu anlegen
+      //nicht gefunden oder ungï¿½ltig, daher neu anlegen
       rootSRInformation = new RootSRInformation<O>(rootOrderId,state);
       rootSRInformation.lock();
       if (rootOrder != null) {
@@ -141,8 +141,8 @@ public class SRInformationCache<C,O> {
         return rootSRInformation; //neue SRInformation ist sicher eingetragen
       }
       
-      //konkurrierende Ausführung hat SRInformation zuerst eintragen können 
-      //oder es besteht ein ungültiger Eintrag
+      //konkurrierende Ausfï¿½hrung hat SRInformation zuerst eintragen kï¿½nnen 
+      //oder es besteht ein ungï¿½ltiger Eintrag
       rootSRInformation.unlock();
       existing.lock();
       try {
@@ -152,7 +152,7 @@ public class SRInformationCache<C,O> {
         } else if( existing instanceof RootSRInformation ) {
           //RootSRInformation muss konkurrierend eingetragen worden sein, daher nochmal probieren
         } else {
-          //merkwürdiger Zustand
+          //merkwï¿½rdiger Zustand
           logger.warn("Found unexpected root SR Information: " + existing.getState());
         }
       } finally {
@@ -166,7 +166,7 @@ public class SRInformationCache<C,O> {
       try {
         sleepCounter.sleep();
       } catch (InterruptedException e) { 
-        //offenbar für längere zeit invalid gewesen als erwartet.
+        //offenbar fï¿½r lï¿½ngere zeit invalid gewesen als erwartet.
         throw new RuntimeException(e);
       }
     }
@@ -191,7 +191,7 @@ public class SRInformationCache<C,O> {
     SRInformation srInformation = getOrCreateLocked(orderId,state);
     if( srInformation.getRootId() == null ) {
       if (isRootOrderId) {
-        //Order entspricht RootOrder, d.h keine weitere Initialisierung nötig, da bereits in getOrCreateRootSRInformation geschehen
+        //Order entspricht RootOrder, d.h keine weitere Initialisierung nï¿½tig, da bereits in getOrCreateRootSRInformation geschehen
       } else {
         //eingebetteten Auftrag in der RootOrder suchen
         boolean unlock = true;
@@ -213,8 +213,8 @@ public class SRInformationCache<C,O> {
 
   /**
    * Gibt die SRInformation zur RootOrder der angegebenen OrderId aus oder erzeugt eine neue SRInformation.
-   * Das Erzeugen ist sicher gegen konkurrierende Aufrufe: beide Aufrufe geben das gleiche Objekt zurück.
-   * Die zum Ausfüllen der SRInformation benötigten Daten werden aus der DB ermittelt.
+   * Das Erzeugen ist sicher gegen konkurrierende Aufrufe: beide Aufrufe geben das gleiche Objekt zurï¿½ck.
+   * Die zum Ausfï¿½llen der SRInformation benï¿½tigten Daten werden aus der DB ermittelt.
    * @param target
    * @return
    * @throws PersistenceLayerException 
@@ -258,7 +258,7 @@ public class SRInformationCache<C,O> {
       rootSRInformation = getOrCreateLockedRootNotInvalid(rootOrderId, null, SRState.Suspended);
     }
 
-    //Daten zum Root sind unvollständig, da Root auch supendiert ist. Daher RootOrder lesen
+    //Daten zum Root sind unvollstï¿½ndig, da Root auch supendiert ist. Daher RootOrder lesen
     if (rootSRInformation.getOrder() == null) {
       boolean needsUnlock = true; //Unlock der SRInformation, falls Exception geworfen wird
       try {
@@ -289,9 +289,9 @@ public class SRInformationCache<C,O> {
     private static final long serialVersionUID = 1L;
     
     /**
-     * gibt aus performancegründen immer this zurück, macht aber nichts
+     * gibt aus performancegrï¿½nden immer this zurï¿½ck, macht aber nichts
      * <p>
-     * Diese Exception ist kein echter Fehler, daher wird kein Stacktrace benötigt
+     * Diese Exception ist kein echter Fehler, daher wird kein Stacktrace benï¿½tigt
      * <p>
      * siehe zb hier: http://www.javaspecialists.eu/archive/Issue129.html
      */
@@ -359,7 +359,7 @@ public class SRInformationCache<C,O> {
   }
 
   /**
-   * Lockt die srInformation. Falls diese Status Invalid hat, wird Lock entfernt und null zurückgegeben
+   * Lockt die srInformation. Falls diese Status Invalid hat, wird Lock entfernt und null zurï¿½ckgegeben
    * @param srInformation
    * @return gelockte srInformation oder null 
    */
@@ -371,7 +371,7 @@ public class SRInformationCache<C,O> {
       srInformation.lock();
     }
     if( srInformation.getState() != SRState.Invalid ) {
-      return srInformation; //gültigen Eintrag gelockt zurückgeben
+      return srInformation; //gï¿½ltigen Eintrag gelockt zurï¿½ckgeben
     } else {
       //srInformation ist unbrauchbar, daher freigeben
       srInformation.unlock();
@@ -386,14 +386,14 @@ public class SRInformationCache<C,O> {
     try {
       sleepCounter.sleep();
     } catch (InterruptedException e) { 
-      //offenbar für längere zeit invalid gewesen als erwartet. 
+      //offenbar fï¿½r lï¿½ngere zeit invalid gewesen als erwartet. 
       throw new RuntimeException("interrupted during wait for non invalid SR Information, orderId=" + orderId);
     }
     return sleepCounter;
   }
 
   /**
-   * Nur für Ausgabe über ListSuspendResumeInfo
+   * Nur fï¿½r Ausgabe ï¿½ber ListSuspendResumeInfo
    * @param id
    * @return
    */
@@ -414,7 +414,7 @@ public class SRInformationCache<C,O> {
   }
   
   /**
-   * Nur für Ausgabe über ListSuspendResumeInfo
+   * Nur fï¿½r Ausgabe ï¿½ber ListSuspendResumeInfo
    * @return
    */
   public Map<Long, String> getRunningOrders() {
@@ -439,7 +439,7 @@ public class SRInformationCache<C,O> {
   }
   
   /**
-   * Hinzufügen von rootOrderIds, die eine zeitlang nicht im OrderBackup gelesen werden dürfen  
+   * Hinzufï¿½gen von rootOrderIds, die eine zeitlang nicht im OrderBackup gelesen werden dï¿½rfen  
    * @param orderIds
    */
   public void addUnresumeableOrders(Collection<Long> orderIds) {
@@ -464,10 +464,10 @@ public class SRInformationCache<C,O> {
     } else {
       if( srInformation == null ) {
         //keine srInformation gefunden. D.h. dieser RootOrder ist nicht mehr am laufen, entweder suspendiert oder bereits fertig.
-        //Genauer kann das nun nur über eine Suche im OrderBackup ermittelt werden
+        //Genauer kann das nun nur ï¿½ber eine Suche im OrderBackup ermittelt werden
         return Pair.of(null,SRState.Unknown);
       } else {
-        //srInformation ist keine RootSRInformation. Das sollte für eine rootOrderId nicht auftreten dürfen!
+        //srInformation ist keine RootSRInformation. Das sollte fï¿½r eine rootOrderId nicht auftreten dï¿½rfen!
         return Pair.of(null,SRState.Unknown);
       }
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,22 @@ package com.gip.xyna.xnwh.persistence;
 public enum IndexTypeComposite {
   
   /**
-   * unterstützt nur queries bzgl gleichheit
+   * unterstï¿½tzt nur queries bzgl gleichheit
    */
   HASH,
   
   /**
-   * unterstützt nur queries bzgl gleichheit
+   * unterstï¿½tzt nur queries bzgl gleichheit
    * im Gegensatz zu dem einfachen Hash-Type bedeutet diese Kennzeichnung allerdings das die Spalten-Kombination eindeutig einen Datensatz indentifiziert
-   * und das somit das überschreiben bestehender Einträge verhindert werden soll
+   * und das somit das ï¿½berschreiben bestehender Eintrï¿½ge verhindert werden soll
    */
   UNIQUE,
   
   /**
-   * unterstützt queries bzgl "kleiner" oder "größer" bzgl der ordnung, das kann sowas sein wie
+   * unterstï¿½tzt queries bzgl "kleiner" oder "grï¿½ï¿½er" bzgl der ordnung, das kann sowas sein wie
    * col1 = 'a' AND col2 = 'b' AND col3 &lt; 'c', aber nicht
    * col1 &lt; 'a' AND col2 = 'b' AND col3 &lt; 'c',
-   * wenn die ordnung definiert ist über
+   * wenn die ordnung definiert ist ï¿½ber
    * (col1, col2, col3).
    */
   ORDERED_LEX

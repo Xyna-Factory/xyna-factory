@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,8 @@ public class ResultSetWrapperReadingZippedBlobs extends WrappedResultSet {
   public static final String UNSUPPORTED_MESSAGE = "unsupported operation";
 
 
-  //FIXME getBinaryStream überschreiben?
-  //FIXME update-Methoden überschreiben
+  //FIXME getBinaryStream ï¿½berschreiben?
+  //FIXME update-Methoden ï¿½berschreiben
   
   private Class<? extends Storable> storableClass;
 
@@ -83,7 +83,7 @@ public class ResultSetWrapperReadingZippedBlobs extends WrappedResultSet {
   }
 
   /**
-   * unterstützt getBinaryStream zipped, sonst nichts
+   * unterstï¿½tzt getBinaryStream zipped, sonst nichts
    */
   private static class WrappedZippedBlob implements Blob {
 

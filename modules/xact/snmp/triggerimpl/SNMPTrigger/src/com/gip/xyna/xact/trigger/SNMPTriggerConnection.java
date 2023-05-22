@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,8 +117,8 @@ public class SNMPTriggerConnection extends TriggerConnection {
 
 
   /**
-   * ruft requestHandler.x auf, je nachdem um was für einen snmp event es sich handelt und gibt die
-   * im requestHandler gebaute xynaorder zurück.
+   * ruft requestHandler.x auf, je nachdem um was fï¿½r einen snmp event es sich handelt und gibt die
+   * im requestHandler gebaute xynaorder zurï¿½ck.
    * @param requestHandler
    * @return
    * @throws XynaException
@@ -205,7 +205,7 @@ public class SNMPTriggerConnection extends TriggerConnection {
 
   /**
    * ruft die methode vom request handler auf, die dem snmp event entspricht und verschickt danach die snmp response
-   * zurück an den client. nicht geeignet um für einen snmp request eine xynaorder zu erstellen. dafür besser anderes
+   * zurï¿½ck an den client. nicht geeignet um fï¿½r einen snmp request eine xynaorder zu erstellen. dafï¿½r besser anderes
    * handleEvent benutzen.
    * @param requestHandler
    * @throws XynaException
@@ -217,13 +217,13 @@ public class SNMPTriggerConnection extends TriggerConnection {
     }
 
     // PERFORMANCE: bei mehreren filtern passieren hier ggfs dinge mehrfach, da sollte man schauen, ob es sinn hat, das
-    // etwas zu ändern.
-    //TODO bei v1/v2 community überprüfen
+    // etwas zu ï¿½ndern.
+    //TODO bei v1/v2 community ï¿½berprï¿½fen
     PDU command = event.getPDU();
     PDU response = createResponsePdu(command.getRequestID());
 
     if (command.size() == 0) {
-      // kein Fehler, leere Varbind-Liste zurückgeben
+      // kein Fehler, leere Varbind-Liste zurï¿½ckgeben
     } else {
       VarBindList vbl = varBindTypeConverter.toVarBindList(command);
 
@@ -274,7 +274,7 @@ public class SNMPTriggerConnection extends TriggerConnection {
         snmpAgentLogger.setSuccess();
       } catch (NoMatchingOidHandlerFoundException e) {
         snmpAgentLogger.setFailed(e);
-        return; // oid wurde von requesthandler nicht als gültig erkannt => nächsten filter versuchen
+        return; // oid wurde von requesthandler nicht als gï¿½ltig erkannt => nï¿½chsten filter versuchen
       } catch (SnmpRequestHandlerException e) {
         response.setErrorIndex(e.getIndex());
         response.setErrorStatus(e.getState());

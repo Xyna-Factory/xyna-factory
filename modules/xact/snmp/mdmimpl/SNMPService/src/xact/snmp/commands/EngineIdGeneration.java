@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,24 +41,24 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 
 /**
- * Klasse übernimmt die Generierung der EngineId und die Verwaltung der dazu nötigen XynaProperties.
+ * Klasse ï¿½bernimmt die Generierung der EngineId und die Verwaltung der dazu nï¿½tigen XynaProperties.
  *
  * Die EngineId kann zwischen 5 und 32 Bytes lang sein und wird wie folgt generiert (siehe auch RFC 3411 Abschnitt 5 Punkt 3 (http://tools.ietf.org/html/rfc3411)):<br>
  * Byte 1-4: enterpriseId der GIP (wobei das aller erste Bit auf 1 gesetzt wird)<br>
- * Byte 5: gibt das Format der nachfolgenden Bytes an, dies ist von der engineIdVersion abhängig:<br>
+ * Byte 5: gibt das Format der nachfolgenden Bytes an, dies ist von der engineIdVersion abhï¿½ngig:<br>
  *  - set_globally: 5<br>
  *  - set_per_application: 128<br>
  *  - generate_per_revision: 129<br>
- * Byte 6-(max)32: sind abhängig von der engineIdVersion<br>
+ * Byte 6-(max)32: sind abhï¿½ngig von der engineIdVersion<br>
  *  - set_globally: Wert der Property xact.snmp.service.engineId.constant<br>
  *  - set_per_application: <br>
- *    4-16 Bytes für die IP-Adresse der IP aus der Property xact.snmp.service.engineId.ip bzw. aus lokaler IP generiert, falls Property nicht gesetzt<br>
- *    5 Bytes für die Buchstaben ":serv"<br>
+ *    4-16 Bytes fï¿½r die IP-Adresse der IP aus der Property xact.snmp.service.engineId.ip bzw. aus lokaler IP generiert, falls Property nicht gesetzt<br>
+ *    5 Bytes fï¿½r die Buchstaben ":serv"<br>
  *    2 Bytes mit dem Wert der Property xact.snmp.service.engineId.application.<applicationName> bzw. xact.snmp.service.engineId.workspace.<workspaceName><br> 
  *  - generate_per_revision:<br>
- *    4-16 Bytes für die IP-Adresse der IP aus der Property xact.snmp.service.engineId.ip bzw. aus lokaler IP generiert, falls Property nicht gesetzt<br>
- *    5 Bytes für die Buchstaben ":serv"<br>
- *    2 Bytes für die revision
+ *    4-16 Bytes fï¿½r die IP-Adresse der IP aus der Property xact.snmp.service.engineId.ip bzw. aus lokaler IP generiert, falls Property nicht gesetzt<br>
+ *    5 Bytes fï¿½r die Buchstaben ":serv"<br>
+ *    2 Bytes fï¿½r die revision
  *
  */
 public class EngineIdGeneration implements IPropertyChangeListener{
@@ -98,7 +98,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
     public static String documentation(DocumentationLanguage lang) {
       switch( lang ) {
         case DE:
-          return "'generate_per_revision': Für jede Revision wird eine eigene EngineId generiert; "
+          return "'generate_per_revision': Fï¿½r jede Revision wird eine eigene EngineId generiert; "
           +"'set_per_application': Die EngineId wird pro Application bzw. Workspace erzeugt. Dazu wird der Wert der XynaProperty 'xact.snmp.service.engineid.application.<applicationName>' bzw. 'xact.snmp.service.engineid.workspace.<workspaceName>' in die EngineId einbezogen; "
           +"'set_globally': Die letzten (max. 27) Bytes der EngineId werden auf den Wert der XynaProperty 'xact.snmp.service.engineid.constant' gesetzt";
         case EN:
@@ -157,7 +157,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
     RuntimeContext runtimeContext = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRuntimeContext(revision);
     registerApplication(runtimeContext);
     if (revision == RevisionManagement.REVISION_DEFAULT_WORKSPACE) {
-      //wegen Abwärtskompatibilität workingset für default workspace verwenden
+      //wegen Abwï¿½rtskompatibilitï¿½t workingset fï¿½r default workspace verwenden
       registerCurrentValue("workingset", null);
     } else {
       String versionName = (runtimeContext instanceof Application) ? ((Application) runtimeContext).getVersionName() : null;
@@ -204,7 +204,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
         case set_per_application:
           XynaPropertyBuilds<OctetString> applicationProp = application;
           if (application.get().length() == 0 && revision == RevisionManagement.REVISION_DEFAULT_WORKSPACE) {
-            //frühere Version der Property versuchen
+            //frï¿½here Version der Property versuchen
             applicationProp = new XynaPropertyBuilds<OctetString>("xact.snmp.service.engineid.application.workingset", new OctetStringBuilder(2), new OctetString());
           }
           if (applicationProp.get().length() > 0) {
@@ -243,7 +243,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
   
   private byte[] getIp() {
     if (ip.get() != null && ip.get().length() > 0) {
-      //für den ipName aus der XynaProperty 'xact.snmp.service.engineid.ip', die zugehörige IP-Adresse suchen
+      //fï¿½r den ipName aus der XynaProperty 'xact.snmp.service.engineid.ip', die zugehï¿½rige IP-Adresse suchen
       InternetAddressBean iab = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getNetworkConfigurationManagement()
                                 .getInternetAddress(ip.get(), null);
       if (iab != null) {
@@ -271,8 +271,8 @@ public class EngineIdGeneration implements IPropertyChangeListener{
 
     os.append(application); //application
     
-    //darf maximal 27 bytes lang sein. 4-16 für address, 5 service-id, revision 2, macht zusammen 11 - 23
-    //für zukünftige änderungen auf nummer sicher gehen:
+    //darf maximal 27 bytes lang sein. 4-16 fï¿½r address, 5 service-id, revision 2, macht zusammen 11 - 23
+    //fï¿½r zukï¿½nftige ï¿½nderungen auf nummer sicher gehen:
     if (os.length() > 27) {
       byte[] b = os.getValue();
       byte[] b2 = new byte[27];
@@ -280,7 +280,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
       os = new OctetString(b2);
     }
     return os;
-    //FIXME xynainstanz id, damit eindeutigkeit auch bei mehreren instanzen gewährleistet werden kann?
+    //FIXME xynainstanz id, damit eindeutigkeit auch bei mehreren instanzen gewï¿½hrleistet werden kann?
   }
   
   private static byte[] getIntAsByteArray(int i) {
@@ -294,7 +294,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
                                             "Version of engine id generation of the last (max 27) bytes (the first five bytes are constant): "
                                                 +EngineIdVersion.documentation(DocumentationLanguage.EN)).
                     setDefaultDocumentation(DocumentationLanguage.DE,
-                                            "Version der EngineId-Generierung der letzten (max. 27) Bytes (die ersten fünf Bytes sind konstant): "
+                                            "Version der EngineId-Generierung der letzten (max. 27) Bytes (die ersten fï¿½nf Bytes sind konstant): "
                                                 +EngineIdVersion.documentation(DocumentationLanguage.DE)); 
     version.registerDependency(user);
   }
@@ -304,7 +304,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
     constant = new XynaPropertyBuilds<OctetString>("xact.snmp.service.engineid.constant", new OctetStringBuilder(0, 27), new OctetString()).
                     setDefaultDocumentation(DocumentationLanguage.EN, "Constant that is used for the last (max 27) bytes of the engine id if 'xact.snmp.service.engineid.version' = 'set_globally'."
                                             +" (max. 27 bytes in hexadecimal representation with ':' as delimiter)").
-                    setDefaultDocumentation(DocumentationLanguage.DE, "Konstante, die für die letzten (max 27) Bytes der EngineId verwendet wird, falls 'xact.snmp.service.engineid.version' = 'set_globally'." 
+                    setDefaultDocumentation(DocumentationLanguage.DE, "Konstante, die fï¿½r die letzten (max 27) Bytes der EngineId verwendet wird, falls 'xact.snmp.service.engineid.version' = 'set_globally'." 
                                             +" (max. 27 Bytes in Hexadezimal-Darstellung mit ':' als Trennzeichen)");
     constant.registerDependency(user);
   }
@@ -314,7 +314,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
     application =  new XynaPropertyBuilds<OctetString>("xact.snmp.service.engineid." + rc +"." + runtimeContext.getName(), new OctetStringBuilder(2), new OctetString()).
                     setDefaultDocumentation(DocumentationLanguage.EN, "For " + rc + " '" + runtimeContext.getName() + "' this value will be integrated into the engine id if 'xact.snmp.service.engineid.version' = 'set_per_application'." 
                                     + " (2 bytes in hexadecimal representation with ':' as delimiter)").
-                                    setDefaultDocumentation(DocumentationLanguage.DE, "Für " + rc + " '" + runtimeContext.getName() + "' wird dieser Wert in die EngineId integriert, falls 'xact.snmp.service.engineid.version' = 'set_per_application'."
+                                    setDefaultDocumentation(DocumentationLanguage.DE, "Fï¿½r " + rc + " '" + runtimeContext.getName() + "' wird dieser Wert in die EngineId integriert, falls 'xact.snmp.service.engineid.version' = 'set_per_application'."
                                                     + " (2 Bytes in Hexadezimal-Darstellung mit ':' als Trennzeichen)");
     application.registerDependency(user);
   }
@@ -331,7 +331,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
     }
     currentValue =  new XynaPropertyBuilds<OctetString>("xact.snmp.service.engineid.currentvalue.<" + applicationName + ">." + (versionName == null ? "" : "<" + versionName + ">." ) +"readonly", new OctetStringBuilder(5, 32), new OctetString()).
                     setDefaultDocumentation(DocumentationLanguage.EN, "The currently used engineId for " + applicationEN + ". Please do not edit this property.").
-                                    setDefaultDocumentation(DocumentationLanguage.DE, "Aktuell verwendete engine Id für "  + applicationDE +". Bitte diesen Wert nicht ändern.");
+                                    setDefaultDocumentation(DocumentationLanguage.DE, "Aktuell verwendete engine Id fï¿½r "  + applicationDE +". Bitte diesen Wert nicht ï¿½ndern.");
     currentValue.registerDependency(user);
   }
   
@@ -349,7 +349,7 @@ public class EngineIdGeneration implements IPropertyChangeListener{
     props.add(application.getPropertyName());
     props.add(ip.getPropertyName());
     
-    //wegen Abwärtskompatibilität alte Property auch beobachten
+    //wegen Abwï¿½rtskompatibilitï¿½t alte Property auch beobachten
     if (revision == RevisionManagement.REVISION_DEFAULT_WORKSPACE) {
       props.add("xact.snmp.service.engineid.application.workingset");
     }

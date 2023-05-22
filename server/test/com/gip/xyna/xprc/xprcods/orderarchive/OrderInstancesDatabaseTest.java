@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -274,7 +274,7 @@ public class OrderInstancesDatabaseTest extends TestCase {
     }
 
     // test return null when requesting id null 
-    // xxxxxxxxxx derzeit kann man nur long übergeben! xxxxxxxxxxxx
+    // xxxxxxxxxx derzeit kann man nur long ï¿½bergeben! xxxxxxxxxxxx
 /*    boolean gotException = false;
     try {
       wfidb.getCompleteOrder(-1);

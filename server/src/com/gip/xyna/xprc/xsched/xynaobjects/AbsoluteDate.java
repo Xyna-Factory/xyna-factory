@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -471,7 +471,7 @@ public class AbsoluteDate extends Date {
       return;
     }
     if (this.date != null) {
-      //format muss nur zum date passen, wenn vorher kein format gesetzt war. ansonsten darf man es ändern und date wird automatisch geupdated
+      //format muss nur zum date passen, wenn vorher kein format gesetzt war. ansonsten darf man es ï¿½ndern und date wird automatisch geupdated
       if (format == null || format.getFormat() == null) {
         getOrCreateLazyDateFormat().validate(date, format.getFormat());
       }

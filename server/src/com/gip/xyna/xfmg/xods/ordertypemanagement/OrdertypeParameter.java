@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,8 +58,8 @@ public class OrdertypeParameter implements Serializable {
   private boolean monitoringLevelIsCustom = false;
   private Integer priority;
   private boolean priorityIsCustom = false;
-  private String applicationName; //nur noch wegen Abwärtskompatibilität drin
-  private String versionName; //nur noch wegen Abwärtskompatibilität drin
+  private String applicationName; //nur noch wegen Abwï¿½rtskompatibilitï¿½t drin
+  private String versionName; //nur noch wegen Abwï¿½rtskompatibilitï¿½t drin
   private RuntimeContext runtimeContext = RevisionManagement.DEFAULT_WORKSPACE;
   private Map<ParameterType, List<InheritanceRule>> parameterInheritanceRules;
 

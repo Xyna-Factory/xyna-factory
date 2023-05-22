@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ public abstract class AFractalWorkflowProcessor extends EngineSpecificWorkflowPr
       caughtSuspension = true;
       throw e;
     } catch (ThreadDeath t) {
-      //wf-instanz nicht zum pool zurückgeben!
+      //wf-instanz nicht zum pool zurï¿½ckgeben!
       throw t;
     } catch (XynaException e) {
       cleanup(caughtSuspension, instance, xo, dv);
@@ -123,7 +123,7 @@ public abstract class AFractalWorkflowProcessor extends EngineSpecificWorkflowPr
     if (!caughtSuspension && instance != null) {
       if (!xo.getDestinationKey().isCompensate()) {
       
-        //rootauftrag räumt für alle kinder mit auf.
+        //rootauftrag rï¿½umt fï¿½r alle kinder mit auf.
         if (!xo.hasParentOrder()) {
           cleanupExecutionInstancesRecursively(xo, instance, dv);
         }
@@ -146,7 +146,7 @@ public abstract class AFractalWorkflowProcessor extends EngineSpecificWorkflowPr
           instances.put(xoChild.getExecutionDestination(), xoChild.getExecutionProcessInstance());
           xoChild.setExecutionProcessInstance(null);
         } else {
-          // sollte nicht passieren. diese methode wird nur ausgeführt, wenn root fertig ist. dann müssen auch alle kinder fertig sein.
+          // sollte nicht passieren. diese methode wird nur ausgefï¿½hrt, wenn root fertig ist. dann mï¿½ssen auch alle kinder fertig sein.
           logger.warn("Instance of subworkflowcall (ID " + xoChild.getId() + ", order type "
                           + xoChild.getDestinationKey().getOrderType() + ") was null, has not been scheduled?");
         }

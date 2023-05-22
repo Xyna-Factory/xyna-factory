@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@ public final class NonTLVUnsigned1to7ByteIntegerTlvEncoder extends AbstractTypeW
       throw new IllegalArgumentException("Value is not a multiple of <" + multipleOf + ">: <" + value + ">.");
     }
     // target.write(this.getTypeEncoding());
-    // target.write(this.nrBytes); // Kein TLV für DHCPv6
+    // target.write(this.nrBytes); // Kein TLV fï¿½r DHCPv6
     target.write(ByteUtil.toByteArray(unsignedInt), (8 - this.nrBytes), this.nrBytes);
   }
 }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,8 +58,8 @@ public class DeploymentMarkerStorage {
   private ODSImpl ods;
   private PreparedQueryCache queryCache;
   
-  //Lock, damit z.B. der Index nicht gleichzeitg hochgezählt wird 
-  //und beim Löschen aller DeploymentMarker eines DeploymentItems nicht gleichzeitig ein neuer Marker angelegt wird
+  //Lock, damit z.B. der Index nicht gleichzeitg hochgezï¿½hlt wird 
+  //und beim Lï¿½schen aller DeploymentMarker eines DeploymentItems nicht gleichzeitig ein neuer Marker angelegt wird
   private ReentrantLock lock = new ReentrantLock();
   
   private static final String QUERY_GET_TASKS_FOR_DEPLOYMENT_ITEM =

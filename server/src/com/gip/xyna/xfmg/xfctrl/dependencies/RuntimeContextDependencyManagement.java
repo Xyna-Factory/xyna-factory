@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -220,8 +220,8 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
 
   /*
-   * TODO alle verwender sollten aus performancegründen evtl besser auf getDependenciesRecursively umgestellt werden, weil sie sonst selbst
-   * eine behandlung dafür benötigen, die dependencies nicht doppelt zu überprüfen.
+   * TODO alle verwender sollten aus performancegrï¿½nden evtl besser auf getDependenciesRecursively umgestellt werden, weil sie sonst selbst
+   * eine behandlung dafï¿½r benï¿½tigen, die dependencies nicht doppelt zu ï¿½berprï¿½fen.
    */
   public Set<Long> getDependencies(long revision) {
     Set<Long> deps = revDependencies.getValuesUnsafe(revision);
@@ -233,7 +233,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
   
   /**
-   * Welche RuntimeContexte benötigt owner?
+   * Welche RuntimeContexte benï¿½tigt owner?
    * @param owner
    * @return
    */
@@ -340,7 +340,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
-    //für die gui so sortieren, dass immer erst die kinder, dann die parents benachrichtigt werden
+    //fï¿½r die gui so sortieren, dass immer erst die kinder, dann die parents benachrichtigt werden
     sortRuntimeContextsForGUI(runtimeContextsToPublishAsXMOMUpdate);
     return runtimeContextsToPublishAsXMOMUpdate;
   }
@@ -360,7 +360,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         throw new RuntimeException(e);
       }
     }
-    //für die gui so sortieren, dass immer erst die kinder, dann die parents benachrichtigt werden
+    //fï¿½r die gui so sortieren, dass immer erst die kinder, dann die parents benachrichtigt werden
     sortRuntimeContextsForGUI(runtimeContextsToPublishAsXMOMUpdate);
     return runtimeContextsToPublishAsXMOMUpdate;
   }
@@ -400,7 +400,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
 
 
   /**
-   * Überprüft (rekursiv), ob die childRevision in der Abhängigkeitshierarchie der parentRevision enthalten ist
+   * ï¿½berprï¿½ft (rekursiv), ob die childRevision in der Abhï¿½ngigkeitshierarchie der parentRevision enthalten ist
    */
   public boolean isDependency(long parentRevision, long childRevision) {
     Set<Long> requirements = new HashSet<Long>();
@@ -504,7 +504,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   
   
   /**
-   * gibt die revision zurück, in der originalXmlName definiert ist, abhängig von den aktuellen dependencies von parentRevision 
+   * gibt die revision zurï¿½ck, in der originalXmlName definiert ist, abhï¿½ngig von den aktuellen dependencies von parentRevision 
    * 
    * oder null, falls keine revision gefunden, in der das objekt definiert ist.
    */
@@ -722,8 +722,8 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
             for (Long dep : deps) {
               revDependencies.add(ownerRev, dep);
             }
-            //XMOM Updates für den owner und alle Parents
-            //(für Application Definitions muss kein XMOM Update geschickt werden)
+            //XMOM Updates fï¿½r den owner und alle Parents
+            //(fï¿½r Application Definitions muss kein XMOM Update geschickt werden)
             runtimeContextsToPublishAsXMOMUpdate = getParentRuntimeContextsSorted(owner);   
             
             updateDependencyRegister(toRegenerate, runtimeContextsToPublishAsXMOMUpdate, revisionManagement, removedRevisions);
@@ -779,7 +779,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
           deploymentItemRegistry.invalidateCallSites();
         }
 
-        // regenerate der objekte, für die sich der deploymentstatus geändert hat (zum guten oder schlechten)
+        // regenerate der objekte, fï¿½r die sich der deploymentstatus geï¿½ndert hat (zum guten oder schlechten)
         // this would deadlock with the lock
         for (Long revisionToRegenerate : toRegenerate.keySet()) {
           DeploymentItemRegistry dir = dism.getRegistry(revisionToRegenerate);
@@ -870,13 +870,13 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         //ApplicationDefinitions haben keine revision
         modifyDependenciesDirectly(owner, newDependencies);
         
-        //bei Änderungen an Requirements einer ApplicationDefinition muss der ApplicationDefintion-Cache im ApplicationManagement geleert werden
+        //bei ï¿½nderungen an Requirements einer ApplicationDefinition muss der ApplicationDefintion-Cache im ApplicationManagement geleert werden
         ApplicationManagementImpl appMgmt = (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getApplicationManagement();
         appMgmt.handleApplicationDefinitionDependencyChange((ApplicationDefinition)owner);
       }
 
       if (publishChanges) {
-        //Multi-User-Event für Dependency Änderungen am owner
+        //Multi-User-Event fï¿½r Dependency ï¿½nderungen am owner
         Publisher publisher = new Publisher(user);
         publisher.publishRuntimeContextUpdate(owner);
         if (runtimeContextsToPublishAsXMOMUpdate != null) {
@@ -1014,7 +1014,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         deploymentItemRegistry.invalidateCallSites();
       }
       
-      // regenerate der objekte, für die sich der deploymentstatus geändert hat (zum guten oder schlechten)
+      // regenerate der objekte, fï¿½r die sich der deploymentstatus geï¿½ndert hat (zum guten oder schlechten)
       // this would deadlock with the lock
       
       DeploymentItemStateManagementImpl dism =
@@ -1081,15 +1081,15 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         exceptionsDuringModification.add(e);
       }
       /*
-       * callsites in den neu hinzugefügten revision wieder herstellen
-       * am einfachsten wäre: in allen parent-revisions statereports neu berechnen
-       * das wäre aber auch teuer und macht potentiell viel arbeit die unnötig ist.
+       * callsites in den neu hinzugefï¿½gten revision wieder herstellen
+       * am einfachsten wï¿½re: in allen parent-revisions statereports neu berechnen
+       * das wï¿½re aber auch teuer und macht potentiell viel arbeit die unnï¿½tig ist.
        * => wie kann man das reduzieren?
-       * nur für alle invalidierten callsites in den removedrevisions den statereport neu erzeugen. (entweder sind diese objekte in der menge der "toRegenerate", oder
-       * sie sind in den neuen addedrevisions auflösbar).
-       * noch sparsamer wäre: die invalidierten callsites direkt in den addedrevisions eintragen ohne den statereport der betroffenen objekte
-       * neu zu berechnen (für die objekte, die nicht in toRegenerate sind, d.h. ihr call muss ja weiterhin funktionieren).
-       * aber das wäre fehleranfälliger - vielleicht später, falls von der performance her gewünscht.
+       * nur fï¿½r alle invalidierten callsites in den removedrevisions den statereport neu erzeugen. (entweder sind diese objekte in der menge der "toRegenerate", oder
+       * sie sind in den neuen addedrevisions auflï¿½sbar).
+       * noch sparsamer wï¿½re: die invalidierten callsites direkt in den addedrevisions eintragen ohne den statereport der betroffenen objekte
+       * neu zu berechnen (fï¿½r die objekte, die nicht in toRegenerate sind, d.h. ihr call muss ja weiterhin funktionieren).
+       * aber das wï¿½re fehleranfï¿½lliger - vielleicht spï¿½ter, falls von der performance her gewï¿½nscht.
        * 
        */
       for (Long revisionToRegenerate : toRegenerate.keySet()) {
@@ -1122,7 +1122,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
 
         if (publishChanges) {
           for (RuntimeContextDependencyChange change : changes) {
-          //Multi-User-Event für Dependency Änderungen am owner
+          //Multi-User-Event fï¿½r Dependency ï¿½nderungen am owner
             Publisher publisher = new Publisher(user);
             publisher.publishRuntimeContextUpdate(change.getOwner());
             for (RuntimeContext rc : getParentRuntimeContextsSorted(change.owner)) {
@@ -1189,7 +1189,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
       //ApplicationDefinitions haben keine revision
       modifyDependenciesDirectly(change.getOwner(), change.getNewDependencies());
       
-      //bei Änderungen an Requirements einer ApplicationDefinition muss der ApplicationDefintion-Cache im ApplicationManagement geleert werden
+      //bei ï¿½nderungen an Requirements einer ApplicationDefinition muss der ApplicationDefintion-Cache im ApplicationManagement geleert werden
       ApplicationManagementImpl appMgmt = (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getApplicationManagement();
       appMgmt.handleApplicationDefinitionDependencyChange((ApplicationDefinition)change.getOwner());      
     }
@@ -1216,7 +1216,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     private final RuntimeDependencyContext owner;
     private final Collection<RuntimeDependencyContext> newDependencies;
     
-    //transient nur als marker, dass die variablen temporär sind
+    //transient nur als marker, dass die variablen temporï¿½r sind
     private /*transient*/ Long ownerRev;
     private /*transient*/ Set<Long> deps;
     private /*transient*/ Set<Long> previousDeps;
@@ -1378,7 +1378,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   private void updateDependencyRegister(Map<Long, Map<XMOMType, Collection<String>>> toRegenerate,
                                         List<RuntimeContext> runtimeContextsToPublishAsXMOMUpdate, RevisionManagement revisionManagement,
                                         Set<Long> removedRevisions) {
-    //dependencyregister aufräumen, evtl schlägt das unten stehende deployment ja fehl und kommt nicht bis zum deploymenthandler, der das auch tun würde
+    //dependencyregister aufrï¿½umen, evtl schlï¿½gt das unten stehende deployment ja fehl und kommt nicht bis zum deploymenthandler, der das auch tun wï¿½rde
     DependencyRegister dr = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDependencyRegister();
     for (Entry<Long, Map<XMOMType, Collection<String>>> e1 : toRegenerate.entrySet()) {
       Long rev = e1.getKey();
@@ -1398,14 +1398,14 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     }
 
     if (removedRevisions.size() > 0) {
-      //die nicht neu generierten objekte, die dependencyregister einträge haben, müssen diese evtl neu erstellen, weil sie nun auf eine andere revision zeigen
-      //es muss nach benutzten dr-einträgen gesucht werden, die auf eine der gelöschten revs zeigen (oder auf eine der children davon, die nicht mehr erreichbar sind)
+      //die nicht neu generierten objekte, die dependencyregister eintrï¿½ge haben, mï¿½ssen diese evtl neu erstellen, weil sie nun auf eine andere revision zeigen
+      //es muss nach benutzten dr-eintrï¿½gen gesucht werden, die auf eine der gelï¿½schten revs zeigen (oder auf eine der children davon, die nicht mehr erreichbar sind)
       for (RuntimeContext parentRC : runtimeContextsToPublishAsXMOMUpdate) {
         Long rev;
         try {
           rev = revisionManagement.getRevision(parentRC);
         } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e2) {
-          //ignore, das muss oben drüber sicher gestellt werden, dass das hier nicht passiert
+          //ignore, das muss oben drï¿½ber sicher gestellt werden, dass das hier nicht passiert
           continue;
         }
         Set<Long> removedRevisionsAndChildren = collectRevisionsNotReachableAnyMore(rev, removedRevisions);
@@ -1420,7 +1420,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
           }
           for (String name : xmomObjects) {
             if (regeneratedObjects != null && regeneratedObjects.contains(name)) {
-              //deployment hat die dependencyregistereinträge bereits neu angelegt
+              //deployment hat die dependencyregistereintrï¿½ge bereits neu angelegt
               continue;
             }
             if (type.equals(XMOMType.DATATYPE) || type.equals(XMOMType.EXCEPTION) || type.equals(XMOMType.WORKFLOW)) {
@@ -1507,10 +1507,10 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   
 
   /**
-   * s.u. gleichnamige methode. aber berechnung passiert, bevor die dependencies geändert worden sind
+   * s.u. gleichnamige methode. aber berechnung passiert, bevor die dependencies geï¿½ndert worden sind
    */
   private Set<Long> collectRevisionsNotReachableAnyMoreBeforeChange(Long parentRev, Set<Long> removedRevisions, Set<Long> addedRevisions) {
-    // returns {removedRevisions} U {children von removedRevisions} \ {children von parentRev nach änderung}
+    // returns {removedRevisions} U {children von removedRevisions} \ {children von parentRev nach ï¿½nderung}
     Set<Long> result = new HashSet<>(removedRevisions);
     for (Long removed : removedRevisions) {
       getDependenciesRecursivly(removed, result); //added deps  
@@ -1529,7 +1529,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
   
   /**
-   * removedRevisions waren ursprünglich von parentRev erreichbar, aber jetzt nicht mehr.
+   * removedRevisions waren ursprï¿½nglich von parentRev erreichbar, aber jetzt nicht mehr.
    * ermittle alle revisions, die jetzt nicht mehr erreichbar sind. 
    */
   private Set<Long> collectRevisionsNotReachableAnyMore(Long parentRev, Set<Long> removedRevisions) {
@@ -1597,10 +1597,10 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     Workspace parentWorkspace = applicationDefinition.getParentWorkspace();
     
     boolean atLeastOneChange = false;
-    //die Abhängigkeiten der ApplicationDefinition zu den Workspace Abhängigkeiten hinzufügen (falls nicht bereits vorhanden)
+    //die Abhï¿½ngigkeiten der ApplicationDefinition zu den Workspace Abhï¿½ngigkeiten hinzufï¿½gen (falls nicht bereits vorhanden)
     Set<RuntimeDependencyContext> newWorkspaceDeps = new HashSet<RuntimeDependencyContext>(getDependencies(parentWorkspace));
     for (RuntimeDependencyContext rc : newDependencies) {
-      if (hasRevision(rc)) { //nur Abhängigkeiten zu anderen Workspaces und Applications vererben
+      if (hasRevision(rc)) { //nur Abhï¿½ngigkeiten zu anderen Workspaces und Applications vererben
         if (newWorkspaceDeps.add(rc)) {
           atLeastOneChange = true;
         }
@@ -1613,7 +1613,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
   
 
-  // additive Änderungen ohne Sperrung zulassen
+  // additive ï¿½nderungen ohne Sperrung zulassen
   private boolean workflowProtectionNecessary(Long ownerRev, Set<Long> newDependencies) {
     Set<Long> oldDeps = revDependencies.getValues(ownerRev);
     if (oldDeps != null) {
@@ -1637,7 +1637,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   
   
   private ValidationResult validate(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies) throws XFMG_DependencyStillUsedByApplicationDefinitionException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, PersistenceLayerException {
-    //falls Dependencies von Workspaces entfernt werden, dürfen sie nicht als Dependency bei
+    //falls Dependencies von Workspaces entfernt werden, dï¿½rfen sie nicht als Dependency bei
     //einer Application Definition definiert sein
     checkApplicationDefinitionDependencies(owner, newDependencies); //FIXME in problem umwandeln
 
@@ -1694,11 +1694,11 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
 
 /**
- * Überprüft ob eine von einem Workspace zu entfernende Abhängigkeit noch von einer 
+ * ï¿½berprï¿½ft ob eine von einem Workspace zu entfernende Abhï¿½ngigkeit noch von einer 
  * ApplicationDefinition verwendet wird.
  * @param owner
  * @param newDependencies
- * @throws XFMG_DependencyStillUsedByApplicationDefinitionException falls eine zu entfernende Abhängigkeit noch verwendet wird
+ * @throws XFMG_DependencyStillUsedByApplicationDefinitionException falls eine zu entfernende Abhï¿½ngigkeit noch verwendet wird
  */
   private void checkApplicationDefinitionDependencies(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies) throws XFMG_DependencyStillUsedByApplicationDefinitionException {
     if (owner instanceof Workspace) {
@@ -1786,8 +1786,8 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     }
     
     /**
-     * stoppt applications und trigger, um sie nach der dependency-änderung wieder zu starten
-     * locking über DeploymentManagement
+     * stoppt applications und trigger, um sie nach der dependency-ï¿½nderung wieder zu starten
+     * locking ï¿½ber DeploymentManagement
      */
     public void lock(boolean workflowProtectionNecessary) {
       if (workflowProtectionNecessary) {
@@ -1930,13 +1930,13 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     
     /**
      * sammelt 
-     * - trigger instanzen, die in kind-revisionen sind, die wegen dem change neu gestartet werden müssen, damit entweder filter 
-     *   entfernt oder hinzugefügt werden.
+     * - trigger instanzen, die in kind-revisionen sind, die wegen dem change neu gestartet werden mï¿½ssen, damit entweder filter 
+     *   entfernt oder hinzugefï¿½gt werden.
      *   - diese werden gestopped.
      * - triggerinstanzen, filter, filterinstanzen in den parentrevisionen (und eigene), die derzeit nicht funktionieren, weil 
-     *   sie eine abhängigkeit vermissen und nach dem change dann funktionieren könnten.
+     *   sie eine abhï¿½ngigkeit vermissen und nach dem change dann funktionieren kï¿½nnten.
      *   
-     * TODO: objekte, die durch das entfernen von dependencies ungültig werden, sollten nicht nur laufzeitmässig deregistriert 
+     * TODO: objekte, die durch das entfernen von dependencies ungï¿½ltig werden, sollten nicht nur laufzeitmï¿½ssig deregistriert 
      *       werden (passiert durch den oberen ersten punkt), sondern auch in den status ERROR wechseln
      * 
      * beim unlock werden die gesammelten objekte dann behandelt.
@@ -1945,7 +1945,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
       XynaActivationTrigger xat = XynaFactory.getInstance().getActivation().getActivationTrigger();
       try {
         //[0] -> alle objekte (um blacklist zu erzeugen)
-        //[1] -> die objekte, die eigtl entfernt werden müssen (also whitelist)
+        //[1] -> die objekte, die eigtl entfernt werden mï¿½ssen (also whitelist)
         Map<Long, RevisionContentBlackWhiteListBean[]> objectsToReloadMap = new HashMap<Long, RevisionContentBlackWhiteListBean[]>();
         for (Long rev : revisions) {
           RevisionContentBlackWhiteListBean[] objectsToReload = objectsToReloadMap.get(rev);
@@ -2098,15 +2098,15 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
       XynaActivationTrigger xat = XynaFactory.getInstance().getActivation().getActivationTrigger();
       RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
       /*
-       * checken, ob zugehöriger trigger in zu entfernenden revisions (inkl dependencies) enthalten ist.
-       * es genügt, dies für den trigger zu checken, weil triggerinstanz+filter auch den trigger verwenden.
+       * checken, ob zugehï¿½riger trigger in zu entfernenden revisions (inkl dependencies) enthalten ist.
+       * es genï¿½gt, dies fï¿½r den trigger zu checken, weil triggerinstanz+filter auch den trigger verwenden.
        * 
-       * falls ja, ist die filterinstance betroffen, und muss neu geladen werden (inkl zugehöriger triggerinstance)
+       * falls ja, ist die filterinstance betroffen, und muss neu geladen werden (inkl zugehï¿½riger triggerinstance)
        * betroffenheitsarten (austausch oder entfernung. falls die dependency nur entfernt wird, ist es immer richtig, die objekte zu disablen):
        * - trigger austausch -> neue klasse von triggerinstanz notwendig
        * - filter austausch -> neue klasse von filterinstanz notwendig
        * - triggerinstanz austausch -> filterinstanz deregistrieren
-       * alle diese fälle sind durch disable+enable gut abgehandelt.
+       * alle diese fï¿½lle sind durch disable+enable gut abgehandelt.
        */
 
       FilterInformation fi;
@@ -2114,7 +2114,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         try {
           fi = xat.getFilterInformation(fii.getFilterName(), fii.getRevision(), true);
         } catch (XACT_FilterNotFound e) {
-          //ok, evtl wird das ja durch das ändern der dependencies gefixt.
+          //ok, evtl wird das ja durch das ï¿½ndern der dependencies gefixt.
           return true;
         }
 
@@ -2126,7 +2126,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         try {
           ti = xat.getTriggerInformation(fi.getTriggerName(), fii.getRevision(), true);
         } catch (XACT_TriggerNotFound e) {
-          //ok, evtl wird das ja durch das ändern der dependencies gefixt.
+          //ok, evtl wird das ja durch das ï¿½ndern der dependencies gefixt.
           return true;
         }
         if (removedDepsAndChildren.contains(rm.getRevision(ti.getRuntimeContext()))) {
@@ -2176,7 +2176,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     }
   }
   
-  //wird derzeit nicht verwendet, soll später bei der migration laufender aufträge helfen
+  //wird derzeit nicht verwendet, soll spï¿½ter bei der migration laufender auftrï¿½ge helfen
   private static final ThreadLocal<Object> orderReloadingFromDeploymentManagementRunningDuringRCChange = new ThreadLocal<Object>() {
     @Override
     protected Integer initialValue() {
@@ -2186,7 +2186,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   
   
   public static boolean getThreadLocalValueForDeserializationWithNewRevisions() {
-    //hässlich, dass man immer threadlocals anlegt und wieder removen muss. threadlocal benötigt einen getter, der readonly ist.
+    //hï¿½sslich, dass man immer threadlocals anlegt und wieder removen muss. threadlocal benï¿½tigt einen getter, der readonly ist.
     if (orderReloadingFromDeploymentManagementRunningDuringRCChange.get() == null) {
       orderReloadingFromDeploymentManagementRunningDuringRCChange.remove();
       return false;
@@ -2211,7 +2211,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     }
     
     
-    //sortiere statetransitions in die, für die der state sich ändert, und in die, wo objekte invalide werden
+    //sortiere statetransitions in die, fï¿½r die der state sich ï¿½ndert, und in die, wo objekte invalide werden
     public static ValidationResult from(Map<Long, List<StateTransition>> stateTransitions, Collection<RuntimeContextProblem> problems) {
       Map<Long, Map<XMOMType, Collection<String>>> toRegenerate = new HashMap<Long, Map<XMOMType, Collection<String>>>();
       Map<Long, Map<XMOMType, Collection<String>>> invalidAfterChanges = new HashMap<Long, Map<XMOMType, Collection<String>>>();

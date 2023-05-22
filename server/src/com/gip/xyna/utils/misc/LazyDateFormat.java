@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,20 +33,20 @@ import com.gip.xyna.utils.collections.LruCache;
 
 
 /**
- * LazyDateFormat kann Umwandlungen von long-Timestamps in Strings und zurück vornehmen.
- * Die eigentlichen Umwandlungen werden von SimpleDateFormat erledigt. Dafür werden die 
+ * LazyDateFormat kann Umwandlungen von long-Timestamps in Strings und zurï¿½ck vornehmen.
+ * Die eigentlichen Umwandlungen werden von SimpleDateFormat erledigt. Dafï¿½r werden die 
  * SimpleDateFormat threadsafe gekapselt und in einem Cache aufbewahrt.
  * LazyDateFormat ist lazy, da LazyDateFormat die umgewandelten Daten samt Eingabe aufbewahrt,
  * so dass beispielsweise mehrfache toMillis(String date, String format)-Aufrufe date nicht 
- * mehr parsen müssen, solange date und format gleich bleiben.
+ * mehr parsen mï¿½ssen, solange date und format gleich bleiben.
  */
 public class LazyDateFormat implements Serializable {
 
   private static final long serialVersionUID = 3518333764644088872L;
 
-  //lastDate, lastFormat und millis müssen immer konsistent zusammenpassen und bilden dann einen Cache. 
+  //lastDate, lastFormat und millis mï¿½ssen immer konsistent zusammenpassen und bilden dann einen Cache. 
   //falls erneut einer der werte umgerechnet werden soll, kann der cache verwendet werden
-  private String lastDate; //indikator für millis-cache
+  private String lastDate; //indikator fï¿½r millis-cache
   private String lastFormat;
   private long lastMillis;
   private transient DateFormat dateFormat;

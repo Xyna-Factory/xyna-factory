@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * ParenthesisMatcher sucht in einem String nach zusammengehörigen Klammer-Paaren. 
- * Dabei werden maskierte Klammern "\(" oder "\)" nicht berücksichtigt. 
- * Falls die Klammern nicht paarweise matchen (also "(()", "())", oder ähnliches), 
+ * ParenthesisMatcher sucht in einem String nach zusammengehï¿½rigen Klammer-Paaren. 
+ * Dabei werden maskierte Klammern "\(" oder "\)" nicht berï¿½cksichtigt. 
+ * Falls die Klammern nicht paarweise matchen (also "(()", "())", oder ï¿½hnliches), 
  * wirft der Konstruktor eine IllegalArgumentException.
- * Anschließend kann mittels findMatchingClose(int open) oder findMatchingOpen(int close)
- * das jeweilige Gegenstücl des Klammer-Paares.
+ * Anschlieï¿½end kann mittels findMatchingClose(int open) oder findMatchingOpen(int close)
+ * das jeweilige Gegenstï¿½cl des Klammer-Paares.
  */
 public class ParenthesisMatcher {
   HashMap<Integer,Integer> openClose = new HashMap<Integer,Integer>();
@@ -65,8 +65,8 @@ public class ParenthesisMatcher {
 
   /**
    * @param open
-   * @return Index der zugehörigen schließenden Klammer
-   * @throws IllegalArgumentException, falls open nicht die Position einer öffnenden Klammer angibt
+   * @return Index der zugehï¿½rigen schlieï¿½enden Klammer
+   * @throws IllegalArgumentException, falls open nicht die Position einer ï¿½ffnenden Klammer angibt
    */
   public int findMatchingClose(int open) {
     Integer close = openClose.get( open );
@@ -78,8 +78,8 @@ public class ParenthesisMatcher {
   
   /**
    * @param close
-   * @return Index der zugehörigen öffnenden Klammer 
-   * @throws IllegalArgumentException, falls close nicht die Position einer schließenden Klammer angibt
+   * @return Index der zugehï¿½rigen ï¿½ffnenden Klammer 
+   * @throws IllegalArgumentException, falls close nicht die Position einer schlieï¿½enden Klammer angibt
    */
   public int findMatchingOpen(int close) {
     Integer open = closeOpen.get( close );

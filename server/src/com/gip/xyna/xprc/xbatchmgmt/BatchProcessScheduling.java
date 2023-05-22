@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class BatchProcessScheduling {
   private XynaOrderServerExtension masterOrder; //Master-Auftrag
   private SchedulingData masterSchedulingData;
   private ReentrantLock transferCapsLock = new ReentrantLock();
-  private SchedulingData slaveSchedulingData; //SchedulingData. mit denen der Master die Capacities für die Slaves besorgt
+  private SchedulingData slaveSchedulingData; //SchedulingData. mit denen der Master die Capacities fï¿½r die Slaves besorgt
   private SlaveOrderTypeInfo slaveOrderTypeInfo;
   private AtomicBoolean refreshSlaveSchedulingData = new AtomicBoolean(false); //true, wenn die Slaves mit neuen SchedulingData gescheduled werden sollen
   private String timeWindowName;
@@ -109,7 +109,7 @@ public class BatchProcessScheduling {
     /**
      * Der Batch Process wird mit den Scheduling Data des Masters gescheduled.
      * In {@link BatchProcessScheduling#trySchedule(SchedulingOrder, boolean)} wird dann 
-     * auf die Scheduling Data der Slaves gewechselt und der Status geht nach ScheduleSlaves über.
+     * auf die Scheduling Data der Slaves gewechselt und der Status geht nach ScheduleSlaves ï¿½ber.
      */
     ScheduleMaster,
     
@@ -122,12 +122,12 @@ public class BatchProcessScheduling {
     /**
      * Der Batch Process soll im Scheduler ignoriert werden. Dies ist der Fall, wenn keine
      * Slaves mehr gestartet werden sollen, die gestarteten Slaves aber noch nicht alle die vom Master
-     * belegten Kapazitäten abgeholt haben
+     * belegten Kapazitï¿½ten abgeholt haben
      */
     Ignore,
     
     /**
-     * Der Batch Process soll beim nächsten Scheduling aus dem Scheduler entfernt werden.
+     * Der Batch Process soll beim nï¿½chsten Scheduling aus dem Scheduler entfernt werden.
      * Dies ist der Fall, wenn alle Slaves gestartet worden sind, der Batch Process pausieren soll ({@link BatchProcess#pauseBatchProcess(String)})
      * oder abgebrochen wurde ({@link BatchProcess#cancelBatchProcess(CancelMode, boolean, long)}).
      */
@@ -142,7 +142,7 @@ public class BatchProcessScheduling {
     /**
      * Alle Slaves sind fertig. In {@link BatchProcessScheduling#tryScheduleBatch(SchedulingOrder,boolean)}
      * wird daher wieder auf die Scheduling Data des Masters gewechselt und der Status geht
-     * nach ExecuteMaster über.
+     * nach ExecuteMaster ï¿½ber.
      */
     ScheduleForExecution,
     
@@ -154,8 +154,8 @@ public class BatchProcessScheduling {
 
   private enum For {
     Slave,    //Master->Slave
-    Refresh,  //Slave->Slave, prio,caps,timeconstraint können sich ändern
-    FairnessOrRate; //Slave->Slave, timeconstraint kann sich ändern, entranceTimestamp ändert sich auf jeden fall
+    Refresh,  //Slave->Slave, prio,caps,timeconstraint kï¿½nnen sich ï¿½ndern
+    FairnessOrRate; //Slave->Slave, timeconstraint kann sich ï¿½ndern, entranceTimestamp ï¿½ndert sich auf jeden fall
   }
   
   public SchedulingState getSchedulingState() {
@@ -178,7 +178,7 @@ public class BatchProcessScheduling {
   /**
    * Ersetzt die SchedulingData des Masters durch die der Slaves, falls Slaves gestartet werden
    * sollen. Wurden alle Slaves gestartet, wird wieder auf die SchedulingData des Masters
-   * zurückgewechselt und der Master wird aus dem Scheduler entfernt, wenn noch nicht alle
+   * zurï¿½ckgewechselt und der Master wird aus dem Scheduler entfernt, wenn noch nicht alle
    * Slaves beendet sind.
    * @param so
    * @param isMaster
@@ -186,7 +186,7 @@ public class BatchProcessScheduling {
    */
   public TryScheduleResult tryScheduleBatch(SchedulingOrder so, boolean isMaster) {
     if( schedulingState.get() == SchedulingState.ReInit ) {
-      //es ist zu früh, der BatchProcess ist noch nicht wiederhergestellt
+      //es ist zu frï¿½h, der BatchProcess ist noch nicht wiederhergestellt
       //zum Canceln der Slaves deren orderIds sammeln 
       if (!isMaster) {
         batchProcess.setSlaveState(so.getOrderId(), OrderInstanceStatus.SCHEDULING);
@@ -221,7 +221,7 @@ public class BatchProcessScheduling {
             logger.trace("B" + so.getOrderId() + "(" + SchedulingState.Remove + ")->" + SchedulingState.ScheduleForExecution + ". CONTINUE");
           }
           return TryScheduleResult.CONTINUE;
-        //könnte inzwischen schon den Status ScheduleForExecution haben, dann nicht entfernen
+        //kï¿½nnte inzwischen schon den Status ScheduleForExecution haben, dann nicht entfernen
         } else if (schedulingState.compareAndSet(SchedulingState.Remove, SchedulingState.Waiting)){
           masterSchedulingOrder.addWaitingCause(WaitingCause.BatchProcess);
           if (logger.isTraceEnabled()) {
@@ -250,7 +250,7 @@ public class BatchProcessScheduling {
         }
       }
 
-      //evtl. müssen die SchedulingData der Slaves aktualisiert werden
+      //evtl. mï¿½ssen die SchedulingData der Slaves aktualisiert werden
       if (schedulingState.get() == SchedulingState.ScheduleSlaves) {
         if (needsRefresh()) {
           schedulerMasterWith(slaveSchedulingData(For.Refresh));
@@ -261,7 +261,7 @@ public class BatchProcessScheduling {
         }
       }
     } else {
-      //Slave geht nach Scheduling über
+      //Slave geht nach Scheduling ï¿½ber
       batchProcess.setSlaveState(so.getOrderId(), OrderInstanceStatus.SCHEDULING);
     }
     if (logger.isTraceEnabled()) {
@@ -308,7 +308,7 @@ public class BatchProcessScheduling {
   public TryScheduleResult trySchedule(SchedulingOrder so, boolean isCancelled) {
     if (so.getBatchProcessMarker().isBatchProcessMaster()) {
       if (!isCancelled && schedulingState.compareAndSet(SchedulingState.ScheduleMaster, SchedulingState.ScheduleSlaves)) {
-        //Slaves müssen mit eigenen SchedulingData gescheduled werden 
+        //Slaves mï¿½ssen mit eigenen SchedulingData gescheduled werden 
         so.replaceSchedulingData(slaveSchedulingData(For.Slave)); //(Master->Slave)
         if (logger.isTraceEnabled()) {
           logger.trace("S" + so.getOrderId() + "(" + SchedulingState.ScheduleMaster +")->" + SchedulingState.ScheduleSlaves + " (changedSchedulingData->Slave). REORDER");
@@ -324,7 +324,7 @@ public class BatchProcessScheduling {
       }
       
       if (schedulingState.get() == SchedulingState.ScheduleSlaves) {
-        //es müssen noch weitere Slaves gestartet werden
+        //es mï¿½ssen noch weitere Slaves gestartet werden
         parallelExecutor.addTask( new BatchProcessSlaveCreatorTask(batchProcess, parallelExecutor, so.getOrderId(), so.getSchedulingData().getMultiAllocationCapacities() ) );
         try {
           parallelExecutor.execute();
@@ -383,13 +383,13 @@ public class BatchProcessScheduling {
           if (!schedulingState.compareAndSet(state, SchedulingState.ScheduleForExecution)) {
             continue;
           }
-          //beim nächsten schedulingdurchlauf geht es nach "ExecuteMaster" (vgl tryScheduleBatch())
+          //beim nï¿½chsten schedulingdurchlauf geht es nach "ExecuteMaster" (vgl tryScheduleBatch())
           
           if (masterSchedulingOrder.isMarkedAsTimedout()) {
             batchProcess.setTimeoutTransiently();
           }
           schedulerMasterWith(masterSchedulingData);
-          //master unabhängig von zeitfenster starten
+          //master unabhï¿½ngig von zeitfenster starten
           masterSchedulingData.setTimeConstraint(TimeConstraint.immediately());
           if (logger.isTraceEnabled()) {
             logger.trace("F" + masterOrder.getId() + "(?)->" + schedulingState.get() + ": changedSchedulingData->Master/Immediate. REORDER");
@@ -406,9 +406,9 @@ public class BatchProcessScheduling {
           }
           masterSchedulingOrder.removeWaitingCause(WaitingCause.BatchProcess);
           schedulerMasterWith(masterSchedulingData);
-          //master unabhängig von zeitfenster starten
+          //master unabhï¿½ngig von zeitfenster starten
           masterSchedulingData.setTimeConstraint(TimeConstraint.immediately());
-          //beim nächsten schedulingdurchlauf geht es nach "ExecuteMaster" (vgl tryScheduleBatch())
+          //beim nï¿½chsten schedulingdurchlauf geht es nach "ExecuteMaster" (vgl tryScheduleBatch())
           if (logger.isTraceEnabled()) {
             logger.trace("F" + masterOrder.getId() + "(" + SchedulingState.Waiting + ")->" + SchedulingState.ScheduleForExecution
                 + ": changeSchedulingData->Master/Immediate. REORDER");
@@ -442,7 +442,7 @@ public class BatchProcessScheduling {
     if( slaveSchedulingData == null ) {
       slaveSchedulingData = createSlaveSchedulingData();
     }
-    //Eventuelle Änderungen aus slaveOrderTypeInfo nachtragen
+    //Eventuelle ï¿½nderungen aus slaveOrderTypeInfo nachtragen
     if( slaveOrderTypeInfo.hasChangedPriority() ) {
       slaveSchedulingData.setPriority(slaveOrderTypeInfo.getPriority());
     }
@@ -455,11 +455,11 @@ public class BatchProcessScheduling {
         //obiges createSlaveSchedulingData() sollte ausreichen
         break;
       case Refresh:
-        //obige Änderungen reichen
+        //obige ï¿½nderungen reichen
         break;
       case FairnessOrRate:
         slaveSchedulingData.setTimeConstraint( createSlaveTimeConstraintFor(reason) );
-        //EntranceTimestamp ändern, so dass auch bei TimeConstraint.immediately() die StartTime geändert wird.
+        //EntranceTimestamp ï¿½ndern, so dass auch bei TimeConstraint.immediately() die StartTime geï¿½ndert wird.
         //Grund: neue Slaves sollen ihre Capacity fair erhalten, d.h nicht mit der hohen Urgency des ersten Slaves
         slaveSchedulingData.setEntranceTimestamp(System.currentTimeMillis());
         break;
@@ -470,8 +470,8 @@ public class BatchProcessScheduling {
   }
  
   /**
-   * Legt die SchedulingData für einen Slave an. Die SchedulingData für den Master
-   * müssen schon gesetzt sein, da hieraus Daten übernommen werden.
+   * Legt die SchedulingData fï¿½r einen Slave an. Die SchedulingData fï¿½r den Master
+   * mï¿½ssen schon gesetzt sein, da hieraus Daten ï¿½bernommen werden.
    * @return
    */
   public SchedulingData createSlaveSchedulingData() {
@@ -487,15 +487,15 @@ public class BatchProcessScheduling {
   }
   
   /**
-   * Bestimmt die Kapazitäten, die die Slaves benötigen.
+   * Bestimmt die Kapazitï¿½ten, die die Slaves benï¿½tigen.
    * @return
    * @throws PersistenceLayerException 
    */
   private MultiAllocationCapacities getMultiAllocationCapacities() {
     List<Capacity> caps = slaveOrderTypeInfo.getCapacities();
     MultiAllocationCapacities mac = new MultiAllocationCapacities(caps);
-    //es sollen maximal so viele Kapazitäten allokiert werden, wie Slaves parallel
-    //gestartet werden dürfen
+    //es sollen maximal so viele Kapazitï¿½ten allokiert werden, wie Slaves parallel
+    //gestartet werden dï¿½rfen
     mac.setMaxAllocation(batchProcess.getMaxParallelism());
     mac.setTransferable(true);
     return mac;
@@ -535,7 +535,7 @@ public class BatchProcessScheduling {
   }
 
   /**
-   * Gibt alle transferierbaren Kapazitäten frei
+   * Gibt alle transferierbaren Kapazitï¿½ten frei
    */
   public void freeTransferableCapacities () {
     XynaScheduler scheduler = getXynaScheduler();
@@ -570,7 +570,7 @@ public class BatchProcessScheduling {
    */
   public boolean canBeCanceled() {
     return ! schedulingState.isIn( SchedulingState.ScheduleForExecution, //wartet noch auf letztes Scheduling
-                                   SchedulingState.ExecuteMaster ); //Master wird bereits ausgeführt
+                                   SchedulingState.ExecuteMaster ); //Master wird bereits ausgefï¿½hrt
   }
 
   public void restart(SchedulingData newMasterSchedulingData) throws XynaException {
@@ -625,8 +625,8 @@ public class BatchProcessScheduling {
    */
   public boolean cancel() {
     if (schedulingState.compareAndSet(SchedulingState.ScheduleMaster, SchedulingState.ExecuteMaster)) {
-      //Wenn der BatchProcess noch nicht dabei ist Slaves zu starten, soll er direkt in die Execution-Phase übergehen
-      new AllSlavesStartedRunnable().run(); //so tun, als ob alle Slaves gestartet worden wären
+      //Wenn der BatchProcess noch nicht dabei ist Slaves zu starten, soll er direkt in die Execution-Phase ï¿½bergehen
+      new AllSlavesStartedRunnable().run(); //so tun, als ob alle Slaves gestartet worden wï¿½ren
       if (logger.isTraceEnabled()) {
         logger.trace("C" + masterOrder.getId() + "(" + SchedulingState.ScheduleMaster + ")->" + SchedulingState.ExecuteMaster);
       }
@@ -647,7 +647,7 @@ public class BatchProcessScheduling {
         logger.warn("cancel batch process, although parallelExecutor not initialized");
       }
       
-      //es könnte laufende Slaves geben, dies prüfen
+      //es kï¿½nnte laufende Slaves geben, dies prï¿½fen
       if (schedulingState.get() == SchedulingState.Remove || schedulingState.get() == SchedulingState.Waiting) {
         return true;
       }
@@ -656,7 +656,7 @@ public class BatchProcessScheduling {
   }
 
   /**
-   * Übertragen der vom Master reservierten Kapazitäten auf den Slave
+   * ï¿½bertragen der vom Master reservierten Kapazitï¿½ten auf den Slave
    * @param xo
    * @param transferCapacities 
    */
@@ -664,7 +664,7 @@ public class BatchProcessScheduling {
     transferCapsLock.lock();
     try {
       if (!getXynaScheduler().getCapacityManagement().transferCapacities(xo, transferCapacities)) {
-        //unexpected. kann das auftreten, wenn jemand im richtigen moment kapazitätskardinalitäten ändert?
+        //unexpected. kann das auftreten, wenn jemand im richtigen moment kapazitï¿½tskardinalitï¿½ten ï¿½ndert?
         logger.warn("Could not transfer capacities from " + transferCapacities.getFromOrderId() + " to " + xo.getId());
       }
     } finally {
@@ -686,7 +686,7 @@ public class BatchProcessScheduling {
         }
         parallelExecutor.setExecutionFinishedRunnable(new AllSlavesStartedRunnable() );
         if (batchProcess.getStarted() == 0) {
-          //es sind überhaupt keine Input-Daten vorhanden, dadurch werden keine Slaves
+          //es sind ï¿½berhaupt keine Input-Daten vorhanden, dadurch werden keine Slaves
           //gestartet und somit kein SlaveResponseListener aufgerufen, daher hier den
           //Master wieder in den Scheduler einstellen
           terminateSlaves();
@@ -704,14 +704,14 @@ public class BatchProcessScheduling {
   }
   
   /**
-   * Dieses Runnable wird ausgeführt, wenn alle Slaves gestartet wurden
+   * Dieses Runnable wird ausgefï¿½hrt, wenn alle Slaves gestartet wurden
    */
   private class AllSlavesStartedRunnable implements Runnable {
     public void run() {
-      //wenn alle Slaves gestartet wurden, müssen die vom Master bereits belegten Kapazitäten
+      //wenn alle Slaves gestartet wurden, mï¿½ssen die vom Master bereits belegten Kapazitï¿½ten
       //wieder freigeben werden und der BatchProcess aus dem Scheduler entfernt werden    
       
-      //es kann bereits rescheduleMaster (durch SlaveResponseListener) aufgerufen worden sein, dann passiert hier kein zustandsübergang
+      //es kann bereits rescheduleMaster (durch SlaveResponseListener) aufgerufen worden sein, dann passiert hier kein zustandsï¿½bergang
       if (schedulingState.compareAndSet(SchedulingState.Ignore, SchedulingState.Remove)) {
         if (logger.isTraceEnabled()) {
           logger.trace(masterOrder.getId() + "(" + SchedulingState.Ignore + ")->" + SchedulingState.Remove + ": allSlaveTasksFinished");
@@ -745,7 +745,7 @@ public class BatchProcessScheduling {
   }
 
   /**
-   * Gibt die restlichen für Slaves reservierten Capacities frei und stellt den Master wieder
+   * Gibt die restlichen fï¿½r Slaves reservierten Capacities frei und stellt den Master wieder
    * in den Scheduler ein
    */
   public void terminateSlaves() {
@@ -753,7 +753,7 @@ public class BatchProcessScheduling {
     
     //BatchProcess kann im Status ScheduleMaster sein (z.B. wenn nach einem Neustart der letzte
     //Slave vor dem Master geschedult wird und fertig ist, bevor der Master den Zustand 
-    //ScheduleMaster verlässt)
+    //ScheduleMaster verlï¿½sst)
     if (schedulingState.compareAndSet(SchedulingState.ScheduleMaster, SchedulingState.Ignore) && logger.isTraceEnabled()) {
       logger.trace(masterOrder.getId() + "(" + SchedulingState.ScheduleMaster + ")->" + SchedulingState.Ignore);
     }
@@ -763,7 +763,7 @@ public class BatchProcessScheduling {
   
   /**
    * Stellt den Master wieder mit seinen eigenen SchedulingData in den Scheduler ein.
-   * @param executeMaster true, wenn der Master in die Execution-Phase übergehen soll
+   * @param executeMaster true, wenn der Master in die Execution-Phase ï¿½bergehen soll
    */
   public void rescheduleMaster(boolean executeMaster, boolean ignoreTimeConstraintsOfMaster) {
     XynaScheduler scheduler = getXynaScheduler();
@@ -802,10 +802,10 @@ public class BatchProcessScheduling {
     
     //wenn er aus dem Scheduler entfernt wurde, muss er wieder eingestellt werden
     /*
-     * falls Master bereits ausgetimed ist, ist ScheduleMaster am sinnvollsten, damit er dann im tryScheduleMasterFailed den Timeout löscht
-     *   (falls man direkt nach ExecuteMaster gehen würde, würde der Timeout durchschlagen und damit der Master-Workflow nicht mehr durchgeführt werden)
+     * falls Master bereits ausgetimed ist, ist ScheduleMaster am sinnvollsten, damit er dann im tryScheduleMasterFailed den Timeout lï¿½scht
+     *   (falls man direkt nach ExecuteMaster gehen wï¿½rde, wï¿½rde der Timeout durchschlagen und damit der Master-Workflow nicht mehr durchgefï¿½hrt werden)
      * falls Master gecancelt ist, ist wird oben im tryschedule bemerkt, dass nicht wieder slaves gescheduled werden
-     * falls Master keinen Fehler hat, geht er wieder automatisch über ScheduleSlave korrekt weiter
+     * falls Master keinen Fehler hat, geht er wieder automatisch ï¿½ber ScheduleSlave korrekt weiter
      */
     newState = SchedulingState.ScheduleMaster;
     if (schedulingState.compareAndSet(SchedulingState.Waiting, newState)) {
@@ -822,7 +822,7 @@ public class BatchProcessScheduling {
   
   
   /**
-   * Setzt das Flag, das beim nächsten Scheduling die Slaves neue SchedulingData brauchen
+   * Setzt das Flag, das beim nï¿½chsten Scheduling die Slaves neue SchedulingData brauchen
    * und notified den Scheduler.
    */
   public void refreshSlaveSchedulingData() {
@@ -846,13 +846,13 @@ public class BatchProcessScheduling {
     TimeConstraint newTC = createTimeWindow(batchProcessId,plannedTC, newTWD);
     
     if( oldTC.toString().equals(newTC.toString()) ) {
-      //keine Änderung
+      //keine ï¿½nderung
       return oldTC;
     } else {
       if( logger.isDebugEnabled() ) {
         logger.debug( "changeMasterTimeConstraint "+oldTC+" -> "+ newTC);
       }
-      //im XynaScheduler reschedulen, damit Änderungen wirksam werden, wenn Auftrag bereits wartet
+      //im XynaScheduler reschedulen, damit ï¿½nderungen wirksam werden, wenn Auftrag bereits wartet
       getXynaScheduler().changeSchedulingParameter(orderId, newTC);
       setMasterSchedulingData(masterSchedulingOrder.getSchedulingData());
     }
@@ -862,9 +862,9 @@ public class BatchProcessScheduling {
   public TimeConstraint createTimeWindow(Long batchProcessId, TimeConstraint timeContraint, TimeWindowDefinition timeWindowDefinition) {
     
     if( timeWindowDefinition == null ) {
-      //nichts zu tun; TimeConstraint bleibt unverändert
+      //nichts zu tun; TimeConstraint bleibt unverï¿½ndert
       if( timeContraint == null ) {
-        return TimeConstraint.immediately(); //ist äquivalent
+        return TimeConstraint.immediately(); //ist ï¿½quivalent
       } else {
         return timeContraint;
       }
@@ -886,7 +886,7 @@ public class BatchProcessScheduling {
     } catch (XPRC_TimeWindowNotFoundInDatabaseException e) {
       throw new RuntimeException(e); //wird nicht in DB gespeichert
     } catch (XPRC_TimeWindowRemoteManagementException e) {
-      //wird nicht remote benötigt, daher nicht schlimm
+      //wird nicht remote benï¿½tigt, daher nicht schlimm
       logger.warn("Could not create timwindow remotely", e );
     }
     //TimeConstraint origMasterTC = timeContraint;
@@ -923,7 +923,7 @@ public class BatchProcessScheduling {
     try {
       getXynaScheduler().getTimeConstraintManagement().removeTimeWindow(windowName, true);
     } catch (PersistenceLayerException e) {
-      //unerwartet, da TimeWindows für BatchProcesse nicht gespeichert werden
+      //unerwartet, da TimeWindows fï¿½r BatchProcesse nicht gespeichert werden
       throw new RuntimeException(e);
     } catch (XPRC_TimeWindowStillUsedException e) {
       //wegen force=true unerwartet
@@ -957,7 +957,7 @@ public class BatchProcessScheduling {
     parallelExecutor.setThreadLimit(maxParallelism);
     parallelExecutor.setTaskConsumerPreparator( new SimpleXynaRunnableTaskConsumerPreparator(true) );
     
-    //Limitierung prüfen und speichern
+    //Limitierung prï¿½fen und speichern
     this.slaveExecutionPeriod = checkLimitation(batchProcess.getBatchProcessId(), slaveOrderTypeInfo, slaveExecutionPeriod, total);
     this.slaveOrderTypeInfo = slaveOrderTypeInfo;
   }
@@ -969,7 +969,7 @@ public class BatchProcessScheduling {
     if( hasCapacities || hasSlaveExecutionPeriod || hasSmallTotal ) {
       //BatchProcess ist limitiert
     } else {
-      //BatchProcess ist nicht limitiert, dies kann zu Problemen führen (zu viel Last, BatchProcess kann abbrechen)
+      //BatchProcess ist nicht limitiert, dies kann zu Problemen fï¿½hren (zu viel Last, BatchProcess kann abbrechen)
       MissingLimitationReaction reaction = XynaProperty.BATCH_NO_LIMITATION_REACTION.get();
       logger.info("BatchProcess "+batchProcessId+" has no limitation, reaction: "+reaction);
       switch(reaction) {

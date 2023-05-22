@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,14 +54,14 @@ public class DHCPv6OptionList {
   }
 
 
-  // Fuegt Kinder hinzu. Parameter: letzte ID, ID des Elternteils für die Kinder und Encodings von Kindern, die nicht
+  // Fuegt Kinder hinzu. Parameter: letzte ID, ID des Elternteils fï¿½r die Kinder und Encodings von Kindern, die nicht
   // hinzugefuegt werden sollen
   public static void addRelayChildren(int lastID, int parentID) {
     DHCPv6Encoding currentEntry;
     DHCPv6Encoding result;
     int tmpcounter = 1;
 
-    for (int i = 1; i < 21; i++) // Elternoptionen hinzufügen
+    for (int i = 1; i < 21; i++) // Elternoptionen hinzufï¿½gen
     {
       currentEntry = DHCPv6OptionList.liste.get(i);
       result = new DHCPv6Encoding(lastID + tmpcounter, parentID, currentEntry.getTypeName(), currentEntry
@@ -86,7 +86,7 @@ public class DHCPv6OptionList {
   }
 
 
-  // Fuegt Kinder hinzu. Parameter: letzte ID, ID des Elternteils für die Kinder und Encodings von Kindern, die nicht
+  // Fuegt Kinder hinzu. Parameter: letzte ID, ID des Elternteils fï¿½r die Kinder und Encodings von Kindern, die nicht
   // hinzugefuegt werden sollen
   public static void addChildren(int lastID, int parentID, List<Integer> dontadd) {
     DHCPv6Encoding currentEntry;
@@ -95,7 +95,7 @@ public class DHCPv6OptionList {
 
     List<Integer> dontaddids = new ArrayList<Integer>();
 
-    for (int i = 1; i < 21; i++) // Elternoptionen hinzufügen
+    for (int i = 1; i < 21; i++) // Elternoptionen hinzufï¿½gen
     {
       currentEntry = DHCPv6OptionList.liste.get(i);
       if (!dontadd.contains(currentEntry.getTypeEncoding())) {

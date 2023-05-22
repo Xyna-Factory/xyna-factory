@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ public class StatusHandler {
       try {
         return setSignal( DemonSignal.valueOf( value.toUpperCase() ) );
       } catch( IllegalArgumentException e ) {
-        //falschen String als Fehler zurück
+        //falschen String als Fehler zurï¿½ck
         return false;
       }
     }
@@ -162,7 +162,7 @@ public class StatusHandler {
     }
     if( buildDate.length() == 13 && buildDate.startsWith("20") ) {
       //normales buildDate, Format 20091110_1145
-      String bd = buildDate.substring(2); //Substring, da ansonsten zu groß für Integer
+      String bd = buildDate.substring(2); //Substring, da ansonsten zu groï¿½ fï¿½r Integer
       bd = bd.replaceAll("_",""); //Trenner zwischen Datum und Uhrzeit
       try {
         return Integer.valueOf( bd );

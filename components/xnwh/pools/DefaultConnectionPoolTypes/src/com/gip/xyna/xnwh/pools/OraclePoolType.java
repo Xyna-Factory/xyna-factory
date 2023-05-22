@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class OraclePoolType extends ConnectionPoolType {
                     en("timeout until connection must be established").
                     de("Timeout, bis zu dem Verbindung hergestellt sein muss").
                     build()).
-      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung für 0
+      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung fï¿½r 0
       build();
 
   public static final StringParameter<Duration> SOCKET_TIMEOUT = 
@@ -83,7 +83,7 @@ public class OraclePoolType extends ConnectionPoolType {
       label("Durable Statement Cache").
       documentation(Documentation.
                     en("enables the implicit prepared statement cache").
-                    de("ermöglicht die Verwendung des impliziten PreparedStatement-Caches").
+                    de("ermï¿½glicht die Verwendung des impliziten PreparedStatement-Caches").
                     build()).
       defaultValue(false).
       build();

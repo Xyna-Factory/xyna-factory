@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@ import com.gip.xyna.utils.db.types.StringSerializable;
 
 
 /**
- * TimeConstraints für das Scheduling. 
- * Es gibt 3 immutable Subklassen, die jedoch nicht direkt instantiert werden können .
+ * TimeConstraints fï¿½r das Scheduling. 
+ * Es gibt 3 immutable Subklassen, die jedoch nicht direkt instantiert werden kï¿½nnen .
  * <ul>
  * <li> {@link TimeConstraint_Start}</li>
  * <li> {@link TimeConstraint_Start_Timeout}</li>
  * <li> {@link TimeConstraint_Window}</li>
  * </ul>
- * Instantiiert werden sie über die statische Methoden
+ * Instantiiert werden sie ï¿½ber die statische Methoden
  * <ul>
  * <li> {@link #immediately()}</li>
  * <li> {@link #at(long)}</li>
@@ -41,8 +41,8 @@ import com.gip.xyna.utils.db.types.StringSerializable;
  * <li> {@link #schedulingWindow(String)}</li>
  * <li> {@link #schedulingWindow(String, TimeConstraint_Start)}</li>
  * </ul>
- * Die SchedulingTimeouts können für immediately, at und delayed anschließend gesetzt 
- * werden über die Methoden
+ * Die SchedulingTimeouts kï¿½nnen fï¿½r immediately, at und delayed anschlieï¿½end gesetzt 
+ * werden ï¿½ber die Methoden
  * <ul>
  * <li> {@link TimeConstraint_Start#withSchedulingTimeout(long) withSchedulingTimeout(long)} und 
  *      {@link TimeConstraint_Start#withSchedulingTimeout(long, TimeUnit) withSchedulingTimeout(long, TimeUnit)}</li>
@@ -53,12 +53,12 @@ import com.gip.xyna.utils.db.types.StringSerializable;
  * <li> {@link TimeConstraint_Start#withTimeWindow(String) withTimeWindow(String)}</li>
  * <li> {@link TimeConstraint_Start#withTimeWindow(String, TimeConstraint_Start) withTimeWindow(String, TimeConstraint_Start)}</li>
  * </ul>
- * Für die Zeitfenster kann eine weiterer TimeConstraint definiert werden, der innerhalb des Zeitfensters gilt.
- * Damit kann ereicht werden, dass der Auftrag im Zeitfenster verspätet startet oder ein SchedulingTimeout einhält.  
- * TODO dies ist derzeit nur rudimentär möglich!
+ * Fï¿½r die Zeitfenster kann eine weiterer TimeConstraint definiert werden, der innerhalb des Zeitfensters gilt.
+ * Damit kann ereicht werden, dass der Auftrag im Zeitfenster verspï¿½tet startet oder ein SchedulingTimeout einhï¿½lt.  
+ * TODO dies ist derzeit nur rudimentï¿½r mï¿½glich!
  * <br>
- * Da die TimeConstraints immutable sind, können sie problemlos mehrmals verwendet werden 
- * und als Konstanten definiert werden, um häufiges Instantiieren zu vermeiden.
+ * Da die TimeConstraints immutable sind, kï¿½nnen sie problemlos mehrmals verwendet werden 
+ * und als Konstanten definiert werden, um hï¿½ufiges Instantiieren zu vermeiden.
  * <br>
  * Beispiele:
  * <ul>
@@ -67,19 +67,19 @@ import com.gip.xyna.utils.db.types.StringSerializable;
  * <li><code>TimeConstraint.immediately().withSchedulingTimeout(5000);</code>
  *     Auftrag kann sofort starten, SchedulingTimeout 5 s</li>
  * <li><code>TimeConstraint.delayed(10, TimeUnit.SECONDS).withSchedulingTimeout(2500, TimeUnit.MILLISECONDS);</code>
- *     Auftrag kann frühstens 10 Sekunden nach Eingang in die Factory starten, SchedulingTimeout 2.5 s</li>
+ *     Auftrag kann frï¿½hstens 10 Sekunden nach Eingang in die Factory starten, SchedulingTimeout 2.5 s</li>
  * <li><code>long now = System.currentTimeMillis(); TimeConstraint.at( now+5000 ).withAbsoluteSchedulingTimeout( now + 10000);  </code>
- *     Auftrag kann frühstens in genau 5 Sekunden und muss bis spätensten in 10 Sekunden geschedult sein</li>
+ *     Auftrag kann frï¿½hstens in genau 5 Sekunden und muss bis spï¿½tensten in 10 Sekunden geschedult sein</li>
  * <li><code>TimeConstraint.schedulingWindow("saturday_night");</code>
  *     Auftrag darf nur Samstags nachts laufen (richtige TimeWindow-Erzeugung vorausgesetzt</li>
  * <li><code>long nextMonth = now + 31*24*60*60*1000; TimeConstraint.at(nextMonth).withTimeWindow("saturday_night");</code>
- *     Auftrag muss noch einen Monat warten, bevor in der nächsten Samstag-Nacht laufen darf</li>
+ *     Auftrag muss noch einen Monat warten, bevor in der nï¿½chsten Samstag-Nacht laufen darf</li>
  * <li><code>TimeConstraint.delayed(7,TimeUnit.DAYS).withTimeWindow("saturday_night")</code>
- *     Auftrag wird ab nächster Woche und nur Samstags nachts laufen </li>
+ *     Auftrag wird ab nï¿½chster Woche und nur Samstags nachts laufen </li>
  * <li><code>TimeConstraint.schedulingWindow("saturday_night", TimeConstraint.delayed(1,TimeUnit.HOURS) );</code>
- *     Auftrag wird in nächster Samstag-Nacht frühstens eine Stunde nach Beginn der Nacht geschedult</li>
+ *     Auftrag wird in nï¿½chster Samstag-Nacht frï¿½hstens eine Stunde nach Beginn der Nacht geschedult</li>
  * <li><code>TimeConstraint.schedulingWindow("saturday_night", TimeConstraint.immediately().withSchedulingTimeout(1,TimeUnit.HOURS) );</code>
- *     Auftrag darf in nächster Samstag-Nacht in der ersten Stunde geschedult werden</li>
+ *     Auftrag darf in nï¿½chster Samstag-Nacht in der ersten Stunde geschedult werden</li>
  * </ul>
  */
 public abstract class TimeConstraint implements StringSerializable<TimeConstraint>, Serializable {
@@ -129,7 +129,7 @@ public abstract class TimeConstraint implements StringSerializable<TimeConstrain
   }
   
   /**
-   * Auftrag darf nach angegebener Verzögerung nach dem Auftragseingang starten
+   * Auftrag darf nach angegebener Verzï¿½gerung nach dem Auftragseingang starten
    * @param duration in Millisekunden
    * @return
    */
@@ -138,7 +138,7 @@ public abstract class TimeConstraint implements StringSerializable<TimeConstrain
   }
   
   /**
-   * Auftrag darf nach angegebener Verzögerung nach dem Auftragseingang starten
+   * Auftrag darf nach angegebener Verzï¿½gerung nach dem Auftragseingang starten
    * @param duration
    * @param unit
    * @return
@@ -424,7 +424,7 @@ public abstract class TimeConstraint implements StringSerializable<TimeConstrain
     }
 
     /**
-     * Rückgabe der TimeConstraints, die innerhalb des Zeitfensters gelten
+     * Rï¿½ckgabe der TimeConstraints, die innerhalb des Zeitfensters gelten
      * @return
      */
     public TimeConstraint_Start getInnerTimeConstraint() {
@@ -432,7 +432,7 @@ public abstract class TimeConstraint implements StringSerializable<TimeConstrain
     }
     
     /**
-     * Rückgabe der TimeConstraints, die vor dem Zeitfensters gelten
+     * Rï¿½ckgabe der TimeConstraints, die vor dem Zeitfensters gelten
      * @return
      */
     public TimeConstraint_Start getBeforeTimeConstraint() {

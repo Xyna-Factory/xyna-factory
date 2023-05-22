@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -348,7 +348,7 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
     getTransactionCache().clear();
   }
   
-  private static class BLA extends Storable { //FIXME workaround um ant-compiler zum compilieren zu überlisten.
+  private static class BLA extends Storable { //FIXME workaround um ant-compiler zum compilieren zu ï¿½berlisten.
     public Object getPrimaryKey() {
       return null;
     }
@@ -384,16 +384,16 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
 
   protected final void defaultCommit(TransactionCache transactionInformation) throws PersistenceLayerException {
     /*
-     * geänderte zeilen haben zeilenlocks (sustained lock).
+     * geï¿½nderte zeilen haben zeilenlocks (sustained lock).
      * schwierige aufgabe; konsistentes update von sowohl indizes, als auch table/row
      * ausserdem: temporary locks in der gleichen reihenfolge holen, wie es auch queries tun!
      * 
      * usecases:
-     * - gleichzeitige änderung oder queries for update: geschützt durch zeilenlocks (sustained lock)
-     * - gleichzeitige queries NOT for update: überprüfung des temporary locks muss verhindern, dass gleichzeitig die daten rausgegeben werden. 
+     * - gleichzeitige ï¿½nderung oder queries for update: geschï¿½tzt durch zeilenlocks (sustained lock)
+     * - gleichzeitige queries NOT for update: ï¿½berprï¿½fung des temporary locks muss verhindern, dass gleichzeitig die daten rausgegeben werden. 
      * 
-     * problem: gleichzeitige query hat index-readlock, bevor es versucht, auf zeilen zuzugreifen und dafür zeilen-readlocks holt.
-     *          -> ist in preparedqueryformemory durch eine "assumeddeadlockexception" gelöst
+     * problem: gleichzeitige query hat index-readlock, bevor es versucht, auf zeilen zuzugreifen und dafï¿½r zeilen-readlocks holt.
+     *          -> ist in preparedqueryformemory durch eine "assumeddeadlockexception" gelï¿½st
      */
 
     final XynaMemoryPersistenceLayer pl = getContainingPersistenceLayer();
@@ -402,7 +402,7 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
       for (TransactionCacheTable<?> m : transactionCacheData) {
         final TableObject t = this.<BLA, MemoryRowData<BLA>> checkTable(m.getTableName());
 
-        final List<Lock> temporaryLocks = new ArrayList<Lock>(); //TODO benötigt man beim delete die locks auch?
+        final List<Lock> temporaryLocks = new ArrayList<Lock>(); //TODO benï¿½tigt man beim delete die locks auch?
         try {
 
           // TODO bulk updates lazy erstellen

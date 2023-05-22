@@ -2,7 +2,7 @@ package com.gip.xyna.xdnc.dhcpv6.db.storables;
 
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -508,7 +508,7 @@ public class Lease extends Storable<Lease> implements Comparable<Lease>, XSORPay
         newUtil = IPv6AddressUtil.minus(util, diffUtil);
       }
       ip = newUtil.asLongString();
-      addressUtil = null;//damit bei nächster Anfrage mit passender IP neu erzeugt wird
+      addressUtil = null;//damit bei nï¿½chster Anfrage mit passender IP neu erzeugt wird
     } else {
       //falls prefixlength != 128, werden die verbleibenden Stellen auf 0 gesetzt
       IPv6AddressUtil prefixUtil = IPv6SubnetUtil.calculateIPv6PrefixAddress(util, prefixlength);

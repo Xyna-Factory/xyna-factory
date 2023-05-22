@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -222,16 +222,16 @@ import com.gip.xyna.xprc.xsched.xynaobjects.RemoteCall;
  * oberklasse von WF, DOM und ExceptionGeneration.
  *
  * generationbase objekte werden beim deployment und undeployment von
- * mdm objekten benutzt. die objekte kennen die struktur, die im xml angegeben ist und wissen, wie sie den zugehörigen
- * java code erstellen. ausserdem kennen sie die abhängigkeiten zu anderen generationbase objekten.
+ * mdm objekten benutzt. die objekte kennen die struktur, die im xml angegeben ist und wissen, wie sie den zugehï¿½rigen
+ * java code erstellen. ausserdem kennen sie die abhï¿½ngigkeiten zu anderen generationbase objekten.
  *
- * weil im dependency-tree referenzen mehrfach vorkommen können, die objekte aber nicht mehrfach geparst etc werden müssen,
+ * weil im dependency-tree referenzen mehrfach vorkommen kï¿½nnen, die objekte aber nicht mehrfach geparst etc werden mï¿½ssen,
  * gibt es eine singleton-struktur aller generationbase objekte. man erstellt ein neues objekt zb mit
- * DOM.getInstance(name) und erhält ggfs ein objekt aus dem cache, welches bereits geparst ist. dann muss
- * das parsen nicht erneut ausgeführt werden.
+ * DOM.getInstance(name) und erhï¿½lt ggfs ein objekt aus dem cache, welches bereits geparst ist. dann muss
+ * das parsen nicht erneut ausgefï¿½hrt werden.
  *
- * damit operationen wie zb "parse" nicht mehrfach ausgeführt werden, gibt es einen state, der beschreibt, welche
- * operationen bereits ausgeführt wurden.
+ * damit operationen wie zb "parse" nicht mehrfach ausgefï¿½hrt werden, gibt es einen state, der beschreibt, welche
+ * operationen bereits ausgefï¿½hrt wurden.
  */
 public abstract class GenerationBase {
 
@@ -286,7 +286,7 @@ public abstract class GenerationBase {
 
   public static final String COPYRIGHT_HEADER = "<!--\n" + 
       " * - - - - - - - - - - - - - - - - - - - - - - - - - -\n" + 
-      " * Copyright 2022 GIP SmartMercial GmbH, Germany\n" + 
+      " * Copyright 2023 Xyna GmbH, Germany\n" + 
       " *\n" +
       " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
       " * you may not use this file except in compliance with the License.\n" +
@@ -306,10 +306,10 @@ public abstract class GenerationBase {
   
   /**
    * bestimmt die reihenfolge, in der dependencies ermittelt werden
-   * TODO: bisher muss jede GenerationBase Implementierung das freiwillig verwenden, besser wäre, wenn das automatisch geschehen würde
+   * TODO: bisher muss jede GenerationBase Implementierung das freiwillig verwenden, besser wï¿½re, wenn das automatisch geschehen wï¿½rde
    *
-   * die feste reihenfolge ist für die deadlock vermeidung wichtig.
-   * wie die reihenfolge tatsächlich bestimmt ist, ist für die meisten statusübergänge egal. nur beim compile
+   * die feste reihenfolge ist fï¿½r die deadlock vermeidung wichtig.
+   * wie die reihenfolge tatsï¿½chlich bestimmt ist, ist fï¿½r die meisten statusï¿½bergï¿½nge egal. nur beim compile
    * bietet es sich an, mit den workflows zu beginnen.
    * deshalb ist der comparator so gebaut, dass erst alle WFs kommen, dann alle DOMs und dann die Exceptions.
    */
@@ -358,13 +358,13 @@ public abstract class GenerationBase {
 
 
   /**
-   * für diese objekte wird
+   * fï¿½r diese objekte wird
    *  - kein java code generiert und
-   *  - kein compile ausgeführt.
-   *  - die XSD-Validierung gegen die Datei im "saved"-Verzeichnis ausgeführt.
-   * ausserdem können sie nicht undeployed werden.
+   *  - kein compile ausgefï¿½hrt.
+   *  - die XSD-Validierung gegen die Datei im "saved"-Verzeichnis ausgefï¿½hrt.
+   * ausserdem kï¿½nnen sie nicht undeployed werden.
    *
-   * alle andere deployment schritte werden durchgeführt
+   * alle andere deployment schritte werden durchgefï¿½hrt
    */
   private static final BijectiveMap<String, Class<?>> mdmObjectMappingToJavaClasses = new BijectiveMap<String, Class<?>>();
   static {
@@ -481,9 +481,9 @@ public abstract class GenerationBase {
    * true =&gt; beim cleanup wird objekt aus cache entfernt
    * false =&gt; beim cleanup bleibt objekt in cache
    *
-   * wird zb beim serverstart benutzt, damit objekte nicht redundant erzeugt/geparst werden müssen
+   * wird zb beim serverstart benutzt, damit objekte nicht redundant erzeugt/geparst werden mï¿½ssen
    * 
-   * ist heute nicht mehr so wichtig wie früher, weil es das gleichzeitige deployment gibt, wo die objekte eh nicht zwischendurch wieder aus dem cache entfernt weden.
+   * ist heute nicht mehr so wichtig wie frï¿½her, weil es das gleichzeitige deployment gibt, wo die objekte eh nicht zwischendurch wieder aus dem cache entfernt weden.
    */
   public static boolean removeFromCache = true;
 
@@ -504,14 +504,14 @@ public abstract class GenerationBase {
   private static Random random = new Random();
   private static AtomicLong backupCounter = new AtomicLong(0);
 
-  //während kompiliert wird, sollte kein anderer thread gerade classloading betreiben, weil sonst classfiles unvollständig sein
-  //könnten. genauso sind zwei gleichzeitig stattfindende compiles auch nicht gut.
+  //wï¿½hrend kompiliert wird, sollte kein anderer thread gerade classloading betreiben, weil sonst classfiles unvollstï¿½ndig sein
+  //kï¿½nnten. genauso sind zwei gleichzeitig stattfindende compiles auch nicht gut.
   //gleichzeitige classloading geschichten sind ok.
   // => readlock = classloading. writelock = compile (macht aus file-sicht auch sinn)
   private static final ReentrantReadWriteLock classLock = new ReentrantReadWriteLock();
 
-  //löschen von verzeichnissen, compile und erstellen von java-dateien muss synchronisiert sein
-  // readlock = compile und datei-erstellung, writelock = löschen
+  //lï¿½schen von verzeichnissen, compile und erstellen von java-dateien muss synchronisiert sein
+  // readlock = compile und datei-erstellung, writelock = lï¿½schen
   private static final ReentrantReadWriteLock javaFileLock = new ReentrantReadWriteLock();
 
   private static GenerationBaseCache globalCache = new GenerationBaseCache();
@@ -574,7 +574,7 @@ public abstract class GenerationBase {
     //RemoteDispatching
     public static final String REMOTE_DESTINATION = "RemoteDestination";
 
-    //für Audit-Daten
+    //fï¿½r Audit-Daten
     public static final String AUDIT_VERSION = "Version";
     public static final String APPLICATION = "Application";
     public static final String APPLICATION_VERSION = "ApplicationVersion";
@@ -709,7 +709,7 @@ public abstract class GenerationBase {
     public static final String QUERY_FILTER_CONDITION = "Condition";
     public static final String LinkType = "LinkType";
 
-    //für auditdaten
+    //fï¿½r auditdaten
     public static final String COMPENSATIONS = "Compensations";
     public static final String COMPENSATEFUNCTION = "CompensateFunction";
     public static final String STACKTRACE = "StackTrace";
@@ -851,7 +851,7 @@ public abstract class GenerationBase {
     }
 
     /**
-     * gibt zurück, ob targetstate bereits erreicht ist (von zb anderem thread).
+     * gibt zurï¿½ck, ob targetstate bereits erreicht ist (von zb anderem thread).
      *
      *  wirft fehler, falls der derzeitige state einen fehler signalisiert und targetstate
      *  nicht auch error ist.
@@ -938,7 +938,7 @@ public abstract class GenerationBase {
           break;
         case generateJava :
           if (targetState == bulkCompile
-              || targetState == onDeploymentHandler1 //bei implizitem deployment wird compile übersprungen
+              || targetState == onDeploymentHandler1 //bei implizitem deployment wird compile ï¿½bersprungen
               ) {
             return true;
           }
@@ -1136,42 +1136,42 @@ public abstract class GenerationBase {
 
 
   /**
-   * das deployment verläuft in mehreren phasen. je nach deploymentmode werden manche der phasen
-   * nicht ausgeführt und mit anderen parametern.
+   * das deployment verlï¿½uft in mehreren phasen. je nach deploymentmode werden manche der phasen
+   * nicht ausgefï¿½hrt und mit anderen parametern.
    */
   public enum DeploymentMode {
 
     /**
-     * ähnlich wie codechanged, wird automatisch gesetzt, falls xml nicht im deployment ordner vorhanden ist
+     * ï¿½hnlich wie codechanged, wird automatisch gesetzt, falls xml nicht im deployment ordner vorhanden ist
      */
     codeNew(true, true, true, true, true, true, true, true, true),
     /**
-     * wenn von aussen deploy aufgerufen wird. alle schritte werden ausgeführt
+     * wenn von aussen deploy aufgerufen wird. alle schritte werden ausgefï¿½hrt
      */
     codeChanged(true, true, true, true, true, true, true, true, true),
     /**
-     * sollte nur intern aufgerufen werden (falls ein abhängiges objekt deployed wird). führt die schritte "parse"+"ondeploy" aus
+     * sollte nur intern aufgerufen werden (falls ein abhï¿½ngiges objekt deployed wird). fï¿½hrt die schritte "parse"+"ondeploy" aus
      */
     codeUnchanged(false, false, false, false, false, true, true, true, false),
     /**
-     * wie codeUnchanged, wird aber im cleanup aus dem cache entfernt (für specialDependencies). führt die schritte "parse"+"ondeploy" aus
+     * wie codeUnchanged, wird aber im cleanup aus dem cache entfernt (fï¿½r specialDependencies). fï¿½hrt die schritte "parse"+"ondeploy" aus
      * entfernt sich auf jeden fall aus dem cache, auch wenn RemoveFromCache=false
      */
     codeUnchangedClearFromCache(false, false, false, false, false, true, true, true, false),
     /**
-     * beim serverstart. führt schritte "parse" + "ondeploy" aus
+     * beim serverstart. fï¿½hrt schritte "parse" + "ondeploy" aus
      */
     reload(true, false, false, false, false, false, false, true, false),
     /**
-     * beim buildApplication und importApplication. führt schritte "parse" + "ondeploy" aus
+     * beim buildApplication und importApplication. fï¿½hrt schritte "parse" + "ondeploy" aus
      */
     reloadWithXMOMDatabaseUpdate(true, false, false, false, false, false, false, true, false),
     /**
-     * im fehlerfall redeploy. soll nicht im fehlerfall wieder aufgerufen werden. verhält sich ansonsten wie "codeNew"
+     * im fehlerfall redeploy. soll nicht im fehlerfall wieder aufgerufen werden. verhï¿½lt sich ansonsten wie "codeNew"
      */
     deployBackup(true, false, true, true, true, false, false, true, false),
     /**
-     * alle abhängigen objekte neu generieren (aus deployed-dir)
+     * alle abhï¿½ngigen objekte neu generieren (aus deployed-dir)
      */
     regenerateDeployed(false, false, true, true, true, false, false, true, true),
     /**
@@ -1187,21 +1187,21 @@ public abstract class GenerationBase {
      */
     fromXML(false, false, false, false, false, false, false, true, false),
     /**
-     * wie fromXML, nur wird auch fillVariables und validate durchgeführt
+     * wie fromXML, nur wird auch fillVariables und validate durchgefï¿½hrt
      */
     fromXMLWithFillVariables(false, false, false, false, false, false, false, true, false),
     /**
-     * deployed aus dem deployed-verzeichnis neu, führt im gegensatz zum regenerateDeployed auch deploymenthandler aus etc
+     * deployed aus dem deployed-verzeichnis neu, fï¿½hrt im gegensatz zum regenerateDeployed auch deploymenthandler aus etc
      * entfernt sich auf jeden fall aus dem cache, auch wenn RemoveFromCache=false
-     * spezialabhängigkeit stört bei mehrfachen deployment nacheinander im cache
+     * spezialabhï¿½ngigkeit stï¿½rt bei mehrfachen deployment nacheinander im cache
      */
     regenerateDeployedAllFeatures(true, false, true, true, true, true, true, true, true),
     /**
-     * wie regenerateDeployedAllFeatures, aber da das xml sich geändert hat, wird das xmomrepositorymanagement benachrichtigt
+     * wie regenerateDeployedAllFeatures, aber da das xml sich geï¿½ndert hat, wird das xmomrepositorymanagement benachrichtigt
      */
     regenerateDeployedAllFeaturesXmlChanged(true, false, true, true, true, true, true, true, true),
     /**
-     * wie regenerateDeployedAllFeatures, aber mit ermittlung von special deps, obwohl sich kein xml geändert hat. z.b. weil sich runtimecontext-deps geändert haben in richtung parents
+     * wie regenerateDeployedAllFeatures, aber mit ermittlung von special deps, obwohl sich kein xml geï¿½ndert hat. z.b. weil sich runtimecontext-deps geï¿½ndert haben in richtung parents
      * TODO eigtl ist verhalten damit gleich wie regenerateDeployedAllFeaturesXmlChanged
      */
     regenerateDeployedAllFeaturesCollectSpecialDeps(true, false, true, true, true, true, true, true, true);
@@ -1251,7 +1251,7 @@ public abstract class GenerationBase {
     }
 
     /**
-     * @return this muss mehr machen als der übergebene mode
+     * @return this muss mehr machen als der ï¿½bergebene mode
      */
     public boolean moreToDoThan(DeploymentMode mode) {
       if (mode == null) {
@@ -1292,7 +1292,7 @@ public abstract class GenerationBase {
         case doNothing :
           switch (mode) {
             case codeChanged :            
-              //für applications ist es ok, da muss nichts kopiert werden.
+              //fï¿½r applications ist es ok, da muss nichts kopiert werden.
               try {
                 if (XynaFactory.isFactoryServer()) {
                   RuntimeContext rc = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRuntimeContext(revision);
@@ -1314,7 +1314,7 @@ public abstract class GenerationBase {
               return state.isNotFurtherThan(DeploymentState.collectSpecialDependencies);
             case regenerateDeployedAllFeaturesXmlChanged :
             case regenerateDeployedAllFeaturesCollectSpecialDeps :
-              //collect special dependencies muss nun durchgeführt werden, darf also noch nicht gemacht sein!
+              //collect special dependencies muss nun durchgefï¿½hrt werden, darf also noch nicht gemacht sein!
               return state.isNotFurtherThan(DeploymentState.completeDependencies);
             case fromXMLWithFillVariables :
               //fill variables ist ja evtl anders. ausnahme: usedByServerReservedObject -> da gibt fillVars keine zusatzinfos
@@ -1374,26 +1374,26 @@ public abstract class GenerationBase {
 
 
     /**
-     * Abbruch bei Verwendung - Wird festgestellt das ein Workflow in der Ausführung ist welcher von dem Deployment wie
+     * Abbruch bei Verwendung - Wird festgestellt das ein Workflow in der Ausfï¿½hrung ist welcher von dem Deployment wie
      * in (1) betroffen ist wird das Deployment abgebrochen.
      */
     BREAK_ON_USAGE(BREAK_ON_USAGE_IDENTIFIER),
     /**
-     * Abbruch bei Erkennung einer Schnittstellenänderung - Wird festgestellt, dass das deployte Objekt eine
-     * Schnittstellenänderunge einführt und ein Workflow der wie in (2) betroffen ist läuft wird das Deployment
+     * Abbruch bei Erkennung einer Schnittstellenï¿½nderung - Wird festgestellt, dass das deployte Objekt eine
+     * Schnittstellenï¿½nderunge einfï¿½hrt und ein Workflow der wie in (2) betroffen ist lï¿½uft wird das Deployment
      * abgebrochen. Auch wird das Deployment abgebrochen wenn ein wie in (1) betroffener laufender Auftrag sich nicht
-     * suspendieren lässt.
+     * suspendieren lï¿½sst.
      */
     BREAK_ON_INTERFACE_CHANGES(BREAK_ON_INTERFACE_CHANGES_IDENTIFIER),
     /**
-     * Abbruch bei fehlgeschlagener Suspendierung - Fehler aufgrund der Schnittstellenänderungen werden in Kauf
+     * Abbruch bei fehlgeschlagener Suspendierung - Fehler aufgrund der Schnittstellenï¿½nderungen werden in Kauf
      * genommen, das Deployment wird allerdings abgebrochen wenn ein wie in (1) betroffener laufender Auftrag sich nicht
-     * suspendieren lässt.
+     * suspendieren lï¿½sst.
      */
     FORCE_DEPLOYMENT(FORCE_DEPLOYMENT_IDENTIFIER),
     /**
-     * Kein Abbruch - Fehler bei Schnittstellenänderungen werden auch hier in Kauf genommen, auch werden laufende
-     * Aufträge die sich nicht suspendieren lassen zwangsweise (interrupt) beendet.
+     * Kein Abbruch - Fehler bei Schnittstellenï¿½nderungen werden auch hier in Kauf genommen, auch werden laufende
+     * Auftrï¿½ge die sich nicht suspendieren lassen zwangsweise (interrupt) beendet.
      */
     FORCE_KILL_DEPLOYMENT(FORCE_KILL_DEPLOYMENT_IDENTIFIER);
 
@@ -1446,12 +1446,12 @@ public abstract class GenerationBase {
   }
 
   public static enum DependentObjectMode {
-    PROTECT, //beim Undeployment Fehler werfen, falls Abhängigkeiten existieren
-    INVALIDATE, //Undeployment trotz Abhängikeiten durchführen, die abhängigen Objekte werden dadurch invalide
+    PROTECT, //beim Undeployment Fehler werfen, falls Abhï¿½ngigkeiten existieren
+    INVALIDATE, //Undeployment trotz Abhï¿½ngikeiten durchfï¿½hren, die abhï¿½ngigen Objekte werden dadurch invalide
     @Deprecated
-    UNDEPLOY, //abhängige Objekte rekursiv undeployen
+    UNDEPLOY, //abhï¿½ngige Objekte rekursiv undeployen
     @Deprecated
-    DELETE; //abhängige Objekte rekursiv undeployen und löschen
+    DELETE; //abhï¿½ngige Objekte rekursiv undeployen und lï¿½schen
   }
 
 
@@ -1478,7 +1478,7 @@ public abstract class GenerationBase {
 
   private ReentrantLock stateLock = new ReentrantLock();
 
-  //für xmlgenerierung muss man sich name+pfad unverändert merken
+  //fï¿½r xmlgenerierung muss man sich name+pfad unverï¿½ndert merken
   private final String originalPath;
   private final String originalName;
   private final String originalFqName; // keep this as well for performance reasons
@@ -1507,7 +1507,7 @@ public abstract class GenerationBase {
   protected final Long revision;
 
   /**
-   * enthält alle dependencies, inkl sich selbst
+   * enthï¿½lt alle dependencies, inkl sich selbst
    */
   private Dependencies dependencies;
 
@@ -1706,7 +1706,7 @@ public abstract class GenerationBase {
 
 
     /**
-     * fügt element zu normalen deps und allen deps hinzu
+     * fï¿½gt element zu normalen deps und allen deps hinzu
      */
     public void addToBoth(GenerationBase gb) {
       normalDependenciesOnly.add(gb);
@@ -1740,7 +1740,7 @@ public abstract class GenerationBase {
 
   /**
    * sammelt alle wfs und datentypen, die von dem objekt direkt oder indirekt benutzt werden. direkt schliesst die
-   * objekte aus, auf die nur über einen subauftrag referenziert wird. zb. ist this ein workflow, dann sammelt das
+   * objekte aus, auf die nur ï¿½ber einen subauftrag referenziert wird. zb. ist this ein workflow, dann sammelt das
    * objekt alle beteiligten datentypen, services, und die in diesen benutzten typen (membervariablen, methoden
    * signaturen, oberklassen etc) das objekt selbst ist in dem set nicht enthalten.
    */
@@ -1870,7 +1870,7 @@ public abstract class GenerationBase {
         Set<DeploymentItemInterface> invalid_sd = dis.getInconsistencies(source, DeploymentLocation.DEPLOYED, false);
         Set<DeploymentItemInterface> invalid_ss;
         if (generationBase.xmlInputSource.isOfRuntimeContextType(generationBase.getRevision(), RuntimeContextType.Application)) {
-          // es kann in Applications keine Inkonsistenzen zu Saved-Zuständen geben
+          // es kann in Applications keine Inkonsistenzen zu Saved-Zustï¿½nden geben
           invalid_ss = Collections.emptySet();
         } else {
           invalid_ss = dis.getInconsistencies(source, DeploymentLocation.SAVED, false);
@@ -1920,7 +1920,7 @@ public abstract class GenerationBase {
         } else {
           //es gibt saved-saved inkonsistenzen und saved-deployed ebenso. es kann trotzdem sein, dass die mengen disjunkt sind, und deshalb
           //die saved-deployed inkonsistenzen verschwinden
-          //es muss also überprüft werden, dass jede s-d inkonsistenz verschwindet
+          //es muss also ï¿½berprï¿½ft werden, dass jede s-d inkonsistenz verschwindet
           invalid = false;
           for (DeploymentItemInterface diii : invalid_sd) {
             if (!(diii instanceof UnresolvableInterface)) {
@@ -1988,20 +1988,20 @@ public abstract class GenerationBase {
   }
 
   /**
-   * fügt abhängigkeiten zum set dazu.
-   * gibt zurück, ob alle dependencies vollständig ermittelt werden konnten, indem für entsprechende objekte "parsing finished" aufgerufen wird.
+   * fï¿½gt abhï¿½ngigkeiten zum set dazu.
+   * gibt zurï¿½ck, ob alle dependencies vollstï¿½ndig ermittelt werden konnten, indem fï¿½r entsprechende objekte "parsing finished" aufgerufen wird.
    */
   private DependencyCompletion getDependenciesWithCycleDetection(SortedSet<GenerationBase> alreadyAdded) {
     DependencyCompletion result = DependencyCompletion.complete;
-    alreadyAdded.add(this); //damit bei direkten zyklischen abhängigkeiten kein stackoverflow passiert
+    alreadyAdded.add(this); //damit bei direkten zyklischen abhï¿½ngigkeiten kein stackoverflow passiert
     for (GenerationBase gb : getDirectlyDependentObjects()) {
       if (alreadyAdded.add(gb)) {
         if (gb.parsingFinished()) {
           //es ist hier nicht wichtig, was der completionstatus der dependencies von gb ist. z.b. wenn wir oder  ein anderer thread das gb
-          //objekt in completeButUnresolvedCyclicDependencies gesetzt hat. da parsingfinished ist, können wir hier die dependencies korrekt berechnen
+          //objekt in completeButUnresolvedCyclicDependencies gesetzt hat. da parsingfinished ist, kï¿½nnen wir hier die dependencies korrekt berechnen
           result = result.join(gb.getDependenciesWithCycleDetection(alreadyAdded));
         } else if (gb.invalidated || gb.state == DeploymentState.error) {
-          //fehler vor dem parsing, als complete zählen
+          //fehler vor dem parsing, als complete zï¿½hlen
         } else if (gb.stateLock.isHeldByCurrentThread()) {
           //dann ist normal, dass parsing noch nicht finished ist. ok!
           result = result.join(DependencyCompletion.completeButUnresolvedCyclicDependencies);
@@ -2017,13 +2017,13 @@ public abstract class GenerationBase {
   }
 
   /**
-   * sammelt alle direkt abhängigen objekte. zb membervars, etc
+   * sammelt alle direkt abhï¿½ngigen objekte. zb membervars, etc
    */
   public abstract Set<GenerationBase> getDirectlyDependentObjects();
 
 
   /**
-   * nur das xml dieses objekts parsen. rekursion passiert automatisch. abhängige objekte müssen nur instanziiert
+   * nur das xml dieses objekts parsen. rekursion passiert automatisch. abhï¿½ngige objekte mï¿½ssen nur instanziiert
    * (getInstance) werden, so dass man sie per getDependencies ermitteln kann
    */
   protected abstract void parseXmlInternally(Element rootElement) throws XPRC_InvalidPackageNameException,
@@ -2031,8 +2031,8 @@ public abstract class GenerationBase {
 
 
   /**
-   * ruft fillVariableContents aller abhängigen Variablen auf. dies passiert nach dem eigentlichen parsen, weil
-   * fremdreferenzen erst aufgelöst werden müssen, bevor zb membervariablen zugeordnet werden können
+   * ruft fillVariableContents aller abhï¿½ngigen Variablen auf. dies passiert nach dem eigentlichen parsen, weil
+   * fremdreferenzen erst aufgelï¿½st werden mï¿½ssen, bevor zb membervariablen zugeordnet werden kï¿½nnen
    */
   protected abstract void fillVarsInternally() throws XPRC_MEMBER_DATA_NOT_IDENTIFIED,
       XPRC_InvalidXMLMissingListValueException, XPRC_MISSING_ATTRIBUTE, XPRC_JAVATYPE_UNSUPPORTED,
@@ -2146,9 +2146,9 @@ public abstract class GenerationBase {
    * @param mode
    * <ul> 
    *  <li>codeNew wird intern erkannt, falls man codeChanged angibt.
-   *  <li>codeUnchanged führt dazu, dass das xml nicht aus dem saved verzeichnis geholt wird, und, dass weder codegenerierung noch validierung +
-   *          compile passiert (ausser es ist noch nicht deployed, dann wird alles wie bei codeNew ausgeführt)</li>
-   *  <li>Wenn inheritCodeChange true ist, werden codeChanged und codeNew für die abhängigen Objekte übernommen</li>
+   *  <li>codeUnchanged fï¿½hrt dazu, dass das xml nicht aus dem saved verzeichnis geholt wird, und, dass weder codegenerierung noch validierung +
+   *          compile passiert (ausser es ist noch nicht deployed, dann wird alles wie bei codeNew ausgefï¿½hrt)</li>
+   *  <li>Wenn inheritCodeChange true ist, werden codeChanged und codeNew fï¿½r die abhï¿½ngigen Objekte ï¿½bernommen</li>
    * </ul>
    * <br>
    */
@@ -2173,14 +2173,14 @@ public abstract class GenerationBase {
 
       copyXml();
 
-      //wegen deadlock gefahr werden hier nicht die methoden der statusübergänge dieses objekts aufgerufen,
-      //sondern vorher über die dependencies iteriert.
+      //wegen deadlock gefahr werden hier nicht die methoden der statusï¿½bergï¿½nge dieses objekts aufgerufen,
+      //sondern vorher ï¿½ber die dependencies iteriert.
       parseXmlWithDeadlockDetection(mode.parseFromDeploymentLocation());
       collectSpecialDependenciesWithDeadlockDetection(mode.parseFromDeploymentLocation());
 
       boolean pauseLoading = this.mode.mustPauseMigrationLoadingAtStartup() && !XynaFactory.getInstance().isStartingUp();
       if (pauseLoading) {
-        // pausieren vom Laden des OrderBackups ... wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurück
+        // pausieren vom Laden des OrderBackups ... wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurï¿½ck
         OrderStartupAndMigrationManagement.getInstance().pauseLoadingAtStartup();
       }
       try {
@@ -2249,12 +2249,12 @@ public abstract class GenerationBase {
           cleanUpDeploymentProcess();
         }
 
-        //fehlerhafte objekte aufräumen, deren exception nicht an rootobjekte propagiert wurde
+        //fehlerhafte objekte aufrï¿½umen, deren exception nicht an rootobjekte propagiert wurde
         onErrorInCorrectOrderAndBackupDeployment();
       } finally {
         if (pauseLoading) {
           // resumen vom Laden des OrderBackups
-          // wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurück
+          // wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurï¿½ck
           OrderStartupAndMigrationManagement.getInstance().resumeLoadingAtStartup();
         }
       }
@@ -2350,8 +2350,8 @@ public abstract class GenerationBase {
   
 
   /**
-   * Deployt mehrere Objekte parallel. D.h. es wird erst für alle Objekte der erste Schritte des Deployments
-   * durchgeführt, dann für alle der zweite usw.
+   * Deployt mehrere Objekte parallel. D.h. es wird erst fï¿½r alle Objekte der erste Schritte des Deployments
+   * durchgefï¿½hrt, dann fï¿½r alle der zweite usw.
    * @param objects
    * @param mode
    * @param inheritCodeChange
@@ -2387,8 +2387,8 @@ public abstract class GenerationBase {
       generateUncachedDeployedInstance(objects, remode);
       copyXml(objects);
 
-      //wegen deadlock gefahr werden hier nicht die methoden der statusübergänge dieses objekts aufgerufen,
-      //sondern vorher über die dependencies iteriert
+      //wegen deadlock gefahr werden hier nicht die methoden der statusï¿½bergï¿½nge dieses objekts aufgerufen,
+      //sondern vorher ï¿½ber die dependencies iteriert
       parseXmlWithDeadlockDetection(objects, mode.parseFromDeploymentLocation());
       collectSpecialDependenciesInCorrectOrder(objects, mode.parseFromDeploymentLocation());
 
@@ -2400,7 +2400,7 @@ public abstract class GenerationBase {
       if (XynaFactory.hasInstance() && !XynaFactory.getInstance().isStartingUp()) {
         for (GenerationBase gb : objects) {
           if(gb.mode.mustPauseMigrationLoadingAtStartup()) {
-            // pausieren vom Laden des OrderBackups ... wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurück
+            // pausieren vom Laden des OrderBackups ... wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurï¿½ck
             OrderStartupAndMigrationManagement.getInstance().pauseLoadingAtStartup();
             pauseLoading = true;
             break;
@@ -2488,19 +2488,19 @@ public abstract class GenerationBase {
         }
 
         //falls mind. ein Objekt nicht deployed werden konnte, muss eine Fehlerbehandlung
-        //durchgeführt werden
+        //durchgefï¿½hrt werden
         for (GenerationBase gb : objectsWithDependencies) {
           if (gb.invalidated || gb.state == DeploymentState.error) {
             throw new EmptyException();
           }
         }
 
-        //fehlerhafte objekte aufräumen, deren exception nicht an rootobjekte propagiert wurde
+        //fehlerhafte objekte aufrï¿½umen, deren exception nicht an rootobjekte propagiert wurde
         onErrorInCorrectOrder(objectsWithDependencies);
       } finally {
         if (pauseLoading) {
           // resumen vom Laden des OrderBackups
-          // wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurück
+          // wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurï¿½ck
           OrderStartupAndMigrationManagement.getInstance().resumeLoadingAtStartup();
         }
       }
@@ -2561,7 +2561,7 @@ public abstract class GenerationBase {
         } catch (XPRC_ExclusiveDeploymentInProgress ex) {
           throw new RuntimeException(ex);
         } catch (XPRC_MDMUndeploymentException ex) {
-          //dann halt nicht undeployen. aber trotzdem löschen
+          //dann halt nicht undeployen. aber trotzdem lï¿½schen
           logger.warn("could not undeploy object " + gb.getOriginalFqName(), ex);
         }
       }      
@@ -2585,10 +2585,10 @@ public abstract class GenerationBase {
           logger.warn("Error while trying to unregister " + gb.getOriginalFqName(), ex);
         }
 
-        //aus DeploymentItemStateManagement löschen
+        //aus DeploymentItemStateManagement lï¿½schen
         dism.delete(gb.getOriginalFqName(), ctx, gb.getRevision());
 
-        //DeploymentMarker löschen
+        //DeploymentMarker lï¿½schen
         try {
           dmm.deleteDeploymentMarkerForDeploymentItem(new DeploymentItemIdentificationBase(XMOMType.getXMOMTypeByGenerationInstance(gb), gb.getOriginalFqName()), gb.getRevision());
         } catch (PersistenceLayerException e1) {
@@ -2598,7 +2598,7 @@ public abstract class GenerationBase {
 
       for (GenerationBase gb : objects) {
 
-        //aus saved löschen. vorher nicht löschen, weil das unregister noch ein parse macht und evtl andere objekte mit parsen muss...
+        //aus saved lï¿½schen. vorher nicht lï¿½schen, weil das unregister noch ein parse macht und evtl andere objekte mit parsen muss...
         //und Workflows aus saved-Liste in WorkflowDatabase entfernen
         deleteMDMObjectFromSavedFolder(gb.getOriginalFqName(), gb.getRevision());
         if (gb instanceof WF) {
@@ -2639,9 +2639,9 @@ public abstract class GenerationBase {
     /*
      * Datentypen und Exceptions sind evtl doppelt gewesen und werden nun mit der richtigen Classloaderhierarchie repariert
      * oder
-     * Sie funktionieren nun nicht mehr und müssen undeployed werden.
+     * Sie funktionieren nun nicht mehr und mï¿½ssen undeployed werden.
      * 
-     * Da im zweiten Fall das Deployment typischerweise fehlschlägt, sollte das so passen.
+     * Da im zweiten Fall das Deployment typischerweise fehlschlï¿½gt, sollte das so passen.
      */
     for (Entry<Long, Map<XMOMType, Map<String, DeploymentMode>>> entry : additionalObjects.entrySet()) {
       Map<XMOMType, Map<String, DeploymentMode>> revObjects = entry.getValue();
@@ -2761,7 +2761,7 @@ public abstract class GenerationBase {
     }
 
     if (failedObjects.size() == 0) {
-      //nur fehler in nicht deployten objekten -> TODO hier fehlt eine benachrichtigung für den client. exception != benachrichtigung
+      //nur fehler in nicht deployten objekten -> TODO hier fehlt eine benachrichtigung fï¿½r den client. exception != benachrichtigung
       return;
     }
     throw new MDMParallelDeploymentException(failedObjects);
@@ -2817,7 +2817,7 @@ public abstract class GenerationBase {
 
   private void generateUncachedDeployedInstance(WorkflowProtectionMode remode) throws XPRC_InheritedConcurrentDeploymentException,
                   AssumedDeadlockException, XPRC_MDMDeploymentException {
-    //FIXME cache oder deploymentitemstate management für schnittstellenvergleiche verwenden
+    //FIXME cache oder deploymentitemstate management fï¿½r schnittstellenvergleiche verwenden
     if (this.mode == DeploymentMode.codeChanged &&
         xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace) && 
         remode != WorkflowProtectionMode.BREAK_ON_USAGE ) {
@@ -2848,14 +2848,14 @@ public abstract class GenerationBase {
                   throws AssumedDeadlockException, XPRC_MDMDeploymentException {
     final DeploymentMode mode;
     if (isReservedServerObject() && this.mode != null) {
-      //falls der mode initial explizit anders sein soll, so übernehmen! 
-      //er kann aber nicht zu einem späteren zeitpunkt versucht werden auf einen anderen mode zu upgraden außer doNothing
-      //alternativ, und evtl sauberer: weitere deploymenthandler speziell für interne objekte ausführen - vgl onDeploymentHandler()
+      //falls der mode initial explizit anders sein soll, so ï¿½bernehmen! 
+      //er kann aber nicht zu einem spï¿½teren zeitpunkt versucht werden auf einen anderen mode zu upgraden auï¿½er doNothing
+      //alternativ, und evtl sauberer: weitere deploymenthandler speziell fï¿½r interne objekte ausfï¿½hren - vgl onDeploymentHandler()
       mode = DeploymentMode.doNothing;
     } else {
       mode = mode1;
     }
-    //mode auf codeNew ändern, falls file in deploymentverzeichnis nicht existiert. ansonsten mode so belassen wie er war
+    //mode auf codeNew ï¿½ndern, falls file in deploymentverzeichnis nicht existiert. ansonsten mode so belassen wie er war
     final DeploymentState oldState = state;
     executeJobAndIncrementDeploymentState(DeploymentState.initializeDeploymentMode, new StateTransition() {
 
@@ -2888,13 +2888,13 @@ public abstract class GenerationBase {
                   File classFile = new File(classFileLocation + ".class");
                   if (!classFile.exists()) {
                     //inkonsistenter zustand: benutzer will aber offenbar das objekt deployen - also bleibt nichts besseres als codeNew.
-                    //passiert aber immer dann, wenn man eine application importiert, die keine classfiles enthält.
+                    //passiert aber immer dann, wenn man eine application importiert, die keine classfiles enthï¿½lt.
                     if (logger.isDebugEnabled()) {
                       logger.debug(new StringBuilder().append("XML for ").append(fqClassName)
                                                .append(" found at deployment location but a corresponding class file ").append(classFile.getAbsolutePath())
                                                .append(" did not exist.").toString());
                     }
-                    GenerationBase.this.mode = DeploymentMode.codeNew; //nicht codechanged, weil es fragwürdig ist, in einem solchen zustand ein backup anzulegen (und später zu deployen)
+                    GenerationBase.this.mode = DeploymentMode.codeNew; //nicht codechanged, weil es fragwï¿½rdig ist, in einem solchen zustand ein backup anzulegen (und spï¿½ter zu deployen)
                   }
                 }
               }
@@ -2902,7 +2902,7 @@ public abstract class GenerationBase {
           } // else bereits von anderem thread in bearbeitung
           else {
             if (GenerationBase.this.mode != null && GenerationBase.this.mode != mode && !isReservedServerObject()) {
-              //durch das synchronized und dadurch, dass statetransitions immer nur einmal ausgeführt werden, sollte das nicht passieren
+              //durch das synchronized und dadurch, dass statetransitions immer nur einmal ausgefï¿½hrt werden, sollte das nicht passieren
               throw new RuntimeException("Another process is trying to deploy the same or a dependent object ("
                               + getOriginalFqName() + ") and to initialize its deployment mode to " + mode.toString()
                               + ". it is already in state=" + state.toString() + "/mode="
@@ -2926,7 +2926,7 @@ public abstract class GenerationBase {
             logger.debug("changing mode of " + getOriginalFqName() + " from " + this.mode + " to " + mode + " in state " + state);
           }
           //FIXME was ist, wenn ein anderer thread auf dem objekt arbeitet?
-          //      was ist mit den ganzen dependencies? die müssten dann doch jetzt evtl auch nen anderen mode bekommen?
+          //      was ist mit den ganzen dependencies? die mï¿½ssten dann doch jetzt evtl auch nen anderen mode bekommen?
           this.mode = mode;
         } else {
           throw new XPRC_MDMDeploymentException(fqClassName, new RuntimeException("Trying to initialize deployment mode of "
@@ -2976,7 +2976,7 @@ public abstract class GenerationBase {
 
 
   /**
-   * - falls workspace, files in deployed löschen (xml, class, jars)
+   * - falls workspace, files in deployed lï¿½schen (xml, class, jars)
    * - undeploymenthandler aufrufen, zb classloading-dependencies pflegen oder workflowdatabase eintrag entfernen etc
    *
    */
@@ -3001,7 +3001,7 @@ public abstract class GenerationBase {
       
       DependencySourceType dst = getDependencySourceType();
       if (dst == null) {
-        //nicht ordentlich deployed -> aufräumen
+        //nicht ordentlich deployed -> aufrï¿½umen
         parseCallUndeployHandlerAndRemoveFiles();
       } else {
         DependencyRegister dependencyRegister =
@@ -3104,7 +3104,7 @@ public abstract class GenerationBase {
    * Entfernt das Objekt aus dem Cache und ruft Undeploymenthandler auf.
    * Methode wird in Kontext von Applikationen verwendet, um jene zu entfernen.
    *
-   * wenn man alle gewünschten objekte undeployed hat, sollte man {@link #finishUndeploymentHandler()} aufrufen.
+   * wenn man alle gewï¿½nschten objekte undeployed hat, sollte man {@link #finishUndeploymentHandler()} aufrufen.
    */
   public void undeployRudimentarily(boolean removeFiles) {
     if (logger.isInfoEnabled()) {
@@ -3132,7 +3132,7 @@ public abstract class GenerationBase {
   }
 
   /**
-   * undeploymenthandler batch-verarbeitung ermöglichen, indem man sicher nach dem aufruf für alle objekte nochmal finish() aufruft.
+   * undeploymenthandler batch-verarbeitung ermï¿½glichen, indem man sicher nach dem aufruf fï¿½r alle objekte nochmal finish() aufruft.
    */
   public static void finishUndeploymentHandler() {
     Integer[] priorities = DeploymentHandling.allPriorities;
@@ -3181,8 +3181,8 @@ public abstract class GenerationBase {
     } finally {
       // put this into the functions?
       if (xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) {
-        // Dateien aus Revisionen/Applikationen lieber nicht löschen ... XML ist sonst verloren, weil XML aus SAVED
-        // kann schon wieder verändert sein/nicht vorhanden sein
+        // Dateien aus Revisionen/Applikationen lieber nicht lï¿½schen ... XML ist sonst verloren, weil XML aus SAVED
+        // kann schon wieder verï¿½ndert sein/nicht vorhanden sein
         deleteXMLAtDeploymentLocation();
         deleteClassFiles();
         deleteJars();
@@ -3234,7 +3234,7 @@ public abstract class GenerationBase {
           logger.debug("removing xml file " + f.getAbsolutePath());
         }
         f.delete();
-        //leere Verzeichnisse löschen
+        //leere Verzeichnisse lï¿½schen
         //String deployedMdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, revision);
         //FileUtils.deleteEmptyDirectoryRecursively(f.getParentFile(), new File(deployedMdmDir));
       } else {
@@ -3272,7 +3272,7 @@ public abstract class GenerationBase {
 
       public boolean accept(File dir, String name) {
         if (name.endsWith(".class")) {
-          if (name.startsWith(innerclassStart)) { //die klasse selbst wurde oben bereits gelöscht.
+          if (name.startsWith(innerclassStart)) { //die klasse selbst wurde oben bereits gelï¿½scht.
             return true;
           }
         }
@@ -3296,8 +3296,8 @@ public abstract class GenerationBase {
       }
     }
 
-    //leere Verzeichnisse löschen (baseFileLocation ist hier bereits das übergeordnete Verzeichnis der
-    //gelöschten Datei)
+    //leere Verzeichnisse lï¿½schen (baseFileLocation ist hier bereits das ï¿½bergeordnete Verzeichnis der
+    //gelï¿½schten Datei)
     FileUtils.deleteEmptyDirectoryRecursively(baseFileLocation, new File(xmomClassesPath));
   }
 
@@ -3311,7 +3311,7 @@ public abstract class GenerationBase {
 
 
   /**
-   * parst das deployte xml und validiert es. abhängige xmls werden auch aus dem deployed-verzeichnis gelesen
+   * parst das deployte xml und validiert es. abhï¿½ngige xmls werden auch aus dem deployed-verzeichnis gelesen
    */
   public void parse(boolean cleanup) throws XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException {
     parseGeneration(true, cleanup, true);
@@ -3338,7 +3338,7 @@ public abstract class GenerationBase {
       }
       throwExceptionCause(null);
 
-      //fehlerhafte objekte aufräumen, deren exception nicht an rootobjekte propagiert wurde
+      //fehlerhafte objekte aufrï¿½umen, deren exception nicht an rootobjekte propagiert wurde
       onErrorInCorrectOrderAndBackupDeployment();
     } catch (RuntimeException t) {
       this.<RuntimeException> errorHandling(t);
@@ -3366,7 +3366,7 @@ public abstract class GenerationBase {
       cleanupInCorrectOrder();
       throwExceptionCause(null);
 
-      //fehlerhafte objekte aufräumen, deren exception nicht an rootobjekte propagiert wurde
+      //fehlerhafte objekte aufrï¿½umen, deren exception nicht an rootobjekte propagiert wurde
       onErrorInCorrectOrderAndBackupDeployment();
       
       return generatedJava;
@@ -3391,12 +3391,12 @@ public abstract class GenerationBase {
   /*
    * this ist der typ des rootelements vom content.
    * 
-   * membervariablen im content können abgeleitete typen enthalten, deren revision nur über die rootrevision erreichbar ist
+   * membervariablen im content kï¿½nnen abgeleitete typen enthalten, deren revision nur ï¿½ber die rootrevision erreichbar ist
    * 
-   * jedes parseXML auf den GenerationBase-Objekten braucht aber keine Informationen über die rootrevision, weil das unabhängig von der
+   * jedes parseXML auf den GenerationBase-Objekten braucht aber keine Informationen ï¿½ber die rootrevision, weil das unabhï¿½ngig von der
    * content-Struktur ist.
    * 
-   * Bei der Rekursion über den content muss dann aber die rootrevision durchgereicht werden
+   * Bei der Rekursion ï¿½ber den content muss dann aber die rootrevision durchgereicht werden
    * 
    */
   public GeneralXynaObject createObject(AVariable content, boolean cleanup) throws XPRC_MDMObjectCreationException {
@@ -3408,7 +3408,7 @@ public abstract class GenerationBase {
         fillVarsInCorrectOrder();
         validateInCorrectOrder();
         for (GenerationBase gb : content.getDependencies()) {
-          //abhängige objekte sind evtl oben noch nicht drin. beispielsweise wenn der content eine liste von abgeleiteten objekten enthält.
+          //abhï¿½ngige objekte sind evtl oben noch nicht drin. beispielsweise wenn der content eine liste von abgeleiteten objekten enthï¿½lt.
           gb.initializeDeploymentMode(DeploymentMode.fromXML, true, false);
           gb.parseXmlWithDeadlockDetection(true);
           gb.collectSpecialDependenciesWithDeadlockDetection(true);
@@ -3444,13 +3444,13 @@ public abstract class GenerationBase {
             }
           } else if (content instanceof DatatypeVariable) {
             result = XynaObject.instantiate(content.getFQClassName(), true, content.getDomOrExceptionObject().getRevision());
-            // v selbst kann kein javatype sein, in xo müssen die kinder gefüllt werden
+            // v selbst kann kein javatype sein, in xo mï¿½ssen die kinder gefï¿½llt werden
             for (AVariable child : content.getChildren()) {
               child.fillObject(result);
             }
           } else {
             result = XynaObject.instantiate(content.getFQClassName(), false, content.getDomOrExceptionObject().getRevision());
-            // v selbst kann kein javatype sein, in xo müssen die kinder gefüllt werden
+            // v selbst kann kein javatype sein, in xo mï¿½ssen die kinder gefï¿½llt werden
             for (AVariable child : content.getChildren()) {
               child.fillObject(result);
             }
@@ -3462,7 +3462,7 @@ public abstract class GenerationBase {
 
         } finally {
           for (GenerationBase gb : content.getDependencies()) {
-            //nur aufräumen, was den richtigen mode hat, evtl ist eines der objekte vor dem parsen bereits im cache gewesen mit einem anderen deploymentmode?
+            //nur aufrï¿½umen, was den richtigen mode hat, evtl ist eines der objekte vor dem parsen bereits im cache gewesen mit einem anderen deploymentmode?
             if (gb.mode == DeploymentMode.fromXML) {
               if (cleanup) {
                 gb.cleanupInCorrectOrder();
@@ -3474,7 +3474,7 @@ public abstract class GenerationBase {
         throwExceptionCause(content.getDependencies());
 
         if (cleanup) {
-          //fehlerhafte objekte aufräumen, deren exception nicht an rootobjekte propagiert wurde
+          //fehlerhafte objekte aufrï¿½umen, deren exception nicht an rootobjekte propagiert wurde
           onErrorInCorrectOrderAndBackupDeployment();
         }
 
@@ -3499,8 +3499,8 @@ public abstract class GenerationBase {
     Department.handleThrowable(t);
 
     //falls eine unerwartete Exception aufgetreten ist, diese zu allen noch nicht
-    //fertig deployten Objekten hinzufügen (state = cleanup oder ein Schritt vorher,
-    //da Cleanup nochmal durchgeführt wird)
+    //fertig deployten Objekten hinzufï¿½gen (state = cleanup oder ein Schritt vorher,
+    //da Cleanup nochmal durchgefï¿½hrt wird)
     if (!(t instanceof EmptyException)) {
       if (logger.isDebugEnabled()) {
         logger.debug("exception occurred: " + t.getMessage());
@@ -3513,8 +3513,8 @@ public abstract class GenerationBase {
           DeploymentState s = gb.state;
           gb.exceptions.add(t);
 
-          //falls der fehler nicht aus einer statetransition kam, muss der state umgesetzt werden, damit onerror korrekt durchgeführt wird
-          //das sollte für die dependencies nicht notwendig sein
+          //falls der fehler nicht aus einer statetransition kam, muss der state umgesetzt werden, damit onerror korrekt durchgefï¿½hrt wird
+          //das sollte fï¿½r die dependencies nicht notwendig sein
           if (!gb.invalidated && s != DeploymentState.error) {
             gb.invalidate(); //FIXME threadsafety
             if (logger.isDebugEnabled()) {
@@ -3525,7 +3525,7 @@ public abstract class GenerationBase {
       }
     }
 
-    //die nicht invalidierten objekte aufräumen, und dann auf jeden fall noch onerror aufrufen
+    //die nicht invalidierten objekte aufrï¿½umen, und dann auf jeden fall noch onerror aufrufen
     cleanupInCorrectOrder(objectsWithDependencies);
 
     onErrorInCorrectOrder(objectsWithDependencies);
@@ -3557,13 +3557,13 @@ public abstract class GenerationBase {
       }
     }
 
-    //falls der fehler nicht aus einer statetransition kam, muss der state umgesetzt werden, damit onerror korrekt durchgeführt wird
-    //das sollte für die dependencies nicht notwendig sein
+    //falls der fehler nicht aus einer statetransition kam, muss der state umgesetzt werden, damit onerror korrekt durchgefï¿½hrt wird
+    //das sollte fï¿½r die dependencies nicht notwendig sein
     if (!invalidated && s != DeploymentState.error) {
       invalidate(); //FIXME threadsafety
     }
     try {
-      //die nicht invalidierten objekte aufräumen, und dann auf jeden fall noch onerror aufrufen
+      //die nicht invalidierten objekte aufrï¿½umen, und dann auf jeden fall noch onerror aufrufen
       cleanupInCorrectOrder();
     } catch (XPRC_InheritedConcurrentDeploymentException e) {
       logger.warn(null, e);
@@ -3620,7 +3620,7 @@ public abstract class GenerationBase {
                 logger.debug("created backup " + backupXml.getAbsolutePath());
               }
             } else {
-              //müsste codeNew sein!
+              //mï¿½sste codeNew sein!
               throw new Ex_FileAccessException(f.getAbsolutePath());
             }
           }
@@ -3654,7 +3654,7 @@ public abstract class GenerationBase {
     }
 
     // TODO this is nasty.
-    //validierung nicht für exceptions, weil die werden von den exceptionutils mit einem anderen xsd validiert
+    //validierung nicht fï¿½r exceptions, weil die werden von den exceptionutils mit einem anderen xsd validiert
     if (GenerationBase.this instanceof ExceptionGeneration) {
       return;
     }
@@ -3728,7 +3728,7 @@ public abstract class GenerationBase {
   // sollte nicht mit false aufgerufen werden wenn der globale cache verwendete wird
   private void parseXml(final boolean fileFromDeploymentLocation) throws AssumedDeadlockException {
     // parse into object.
-    // rekursiv für alle abhängigen objekte aufrufen: copyXml + parseXml
+    // rekursiv fï¿½r alle abhï¿½ngigen objekte aufrufen: copyXml + parseXml
 
     final GenerationBase parent = this;
 
@@ -3784,11 +3784,11 @@ public abstract class GenerationBase {
             dataModelInformation = DataModelInformation.parse(rootMetaElement);
 
             if (XMLUtils.getChildElementByName(rootMetaElement, GenerationBase.EL.DATAMODEL) != null) {
-              //dieser Type gehört zu einem DatenModell. Ob deployt werden darf oder nicht muss genauer untersucht werden
+              //dieser Type gehï¿½rt zu einem DatenModell. Ob deployt werden darf oder nicht muss genauer untersucht werden
               if (RevisionManagement.REVISION_DATAMODEL.equals(revision)) {
                 //darf nicht deployt werden
 
-                //deploymentlock freigeben, falls es bereits geholt wurde, weil der deploymentmode geändert wird
+                //deploymentlock freigeben, falls es bereits geholt wurde, weil der deploymentmode geï¿½ndert wird
                 // und damit das cleanup nicht mehr das lock freigibt
                 if (mode.shouldCopyXMLFromSavedToDeployed()) {
                   if (xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) {
@@ -3814,10 +3814,10 @@ public abstract class GenerationBase {
           internalParsingDone = true;
         }
 
-        //rekursion über die abhängigen objekte und versuchen von copy und parseXml:
+        //rekursion ï¿½ber die abhï¿½ngigen objekte und versuchen von copy und parseXml:
         Dependencies dependenciesLocal;
         while (true) {
-          //liefert anfangs nicht unbedingt vollständige menge, weil das parse von den deps noch nicht durchgeführt wurde.
+          //liefert anfangs nicht unbedingt vollstï¿½ndige menge, weil das parse von den deps noch nicht durchgefï¿½hrt wurde.
           dependenciesLocal = recalcDependencies();
           for (GenerationBase gb : dependenciesLocal.getDependencies(false)) {
             gb.xmlInputSource = xmlInputSource;
@@ -3857,7 +3857,7 @@ public abstract class GenerationBase {
             }
           }
 
-          //rekursion über die normalen dependencies
+          //rekursion ï¿½ber die normalen dependencies
           for (GenerationBase gb : dependenciesLocal.getDependencies(false)) {
             if (fileFromDeploymentLocation && !gb.internalParsingDone) {
               gb.copyXml();
@@ -3870,13 +3870,13 @@ public abstract class GenerationBase {
 
           if (dependenciesLocal.complete == DependencyCompletion.notComplete) {
             /*
-             * die erste berechnung der abhängigkeiten ist im normalfall nicht komplett, erst durch die rekursion gibt es die
-             * möglichkeit, die abhängigkeiten komplett zu finden (bis auf zyklische).
+             * die erste berechnung der abhï¿½ngigkeiten ist im normalfall nicht komplett, erst durch die rekursion gibt es die
+             * mï¿½glichkeit, die abhï¿½ngigkeiten komplett zu finden (bis auf zyklische).
              * hier ist jetzt die stelle, wo die rekursion geschehen ist, also jetzt nochmal die kompletten dependencies
              * bestimmen.
              *
              * es kann nicht sein, dass eines der dependency objekte von einem anderen thread bearbeitet wird, weil der parsexml
-             * aufruf von diesem thread auf das andere objekt dann auf den zustandsübergang warten würde (schlimmstenfalls
+             * aufruf von diesem thread auf das andere objekt dann auf den zustandsï¿½bergang warten wï¿½rde (schlimmstenfalls
              * assumeddeadlockexception)
              *
              * deshalb macht es hier auch keinen sinn, zu warten. man kann direkt erneut das recalcDependencies versuchen
@@ -3884,7 +3884,7 @@ public abstract class GenerationBase {
             continue;
           } else if (dependenciesLocal.complete == DependencyCompletion.completeButUnresolvedCyclicDependencies) {
             /*
-             * dependencies sind komplett (bis auf zyklische abhängigkeiten)
+             * dependencies sind komplett (bis auf zyklische abhï¿½ngigkeiten)
              *
              * usecase:
              * A -> B -> A
@@ -3894,15 +3894,15 @@ public abstract class GenerationBase {
              * -> dependencies von B enthalten C nicht, weil C erst nach B geparst wird
              * -> B's dependencies werden als incomplete bzgl cyclic dependencies markiert.
              *
-             * wenn später A fertig wird, werden seine abhängigkeiten in B integriert.
+             * wenn spï¿½ter A fertig wird, werden seine abhï¿½ngigkeiten in B integriert.
              * vgl parseXmlWithDeadlockDetection
              *
              */
-            //ok -> zurück zum parentobjekt
+            //ok -> zurï¿½ck zum parentobjekt
             break;
           } else {
             //1. selbst complete, aber kind nicht -> d.h. der thread hat selbst das kind am fertigwerden gehindert.
-            //es sollte erneut versucht werden, die kind dependencies fertigzustellen -> passiert im nächsten zustandsübergang
+            //es sollte erneut versucht werden, die kind dependencies fertigzustellen -> passiert im nï¿½chsten zustandsï¿½bergang
             //2. selbst complete und kinder auch
             break;
           }
@@ -4005,9 +4005,9 @@ public abstract class GenerationBase {
   private void collectSpecialDependencies(final boolean fileFromDeploymentLocation) throws AssumedDeadlockException {
     /*
      * spezialdependencies haben eigenen deploymentstate, weil sichergestellt werden soll, dass alle objekte in den
-     * normalen dependencies bereits ermittelt sind, bevor die spezialdependencies hinzugefügt werden.
+     * normalen dependencies bereits ermittelt sind, bevor die spezialdependencies hinzugefï¿½gt werden.
      *
-     * wenn das nicht der fall ist, müsste der deploymentmode evtl von regenerateDeployedAllFeatures auf einen höheren
+     * wenn das nicht der fall ist, mï¿½sste der deploymentmode evtl von regenerateDeployedAllFeatures auf einen hï¿½heren
      * (z.b. codechanged) geupgraded werden. das geht nicht.
      */
     executeJobAndIncrementDeploymentState(DeploymentState.collectSpecialDependencies, new StateTransition() {
@@ -4031,8 +4031,8 @@ public abstract class GenerationBase {
               //sollte eigtl nicht vorkommen? sicher ist sicher.
               gb.initializeDeploymentMode(DeploymentMode.doNothing, fileFromDeploymentLocation, false);
             } else if (gb.regenerateBecauseSpecialDependency) {
-              //bei instanzmethoden müssen auch abgeleitete doms neu generiert werden
-              //bei parentstorables müssen diese auch neu generiert werden
+              //bei instanzmethoden mï¿½ssen auch abgeleitete doms neu generiert werden
+              //bei parentstorables mï¿½ssen diese auch neu generiert werden
               gb.initializeDeploymentMode(DeploymentMode.regenerateDeployedAllFeatures, fileFromDeploymentLocation, true);
             } else {
               gb.initializeDeploymentMode(DeploymentMode.doNothing, fileFromDeploymentLocation, false);
@@ -4040,7 +4040,7 @@ public abstract class GenerationBase {
           }
 
           for (GenerationBase gb : newDeps.getDependencies(true)) {
-            //für die meisten dependencies sind copyXml und parseXml bereis geschehen. macht aber nichts.
+            //fï¿½r die meisten dependencies sind copyXml und parseXml bereis geschehen. macht aber nichts.
 
             if (fileFromDeploymentLocation && !gb.internalParsingDone) {
               gb.copyXml();
@@ -4052,24 +4052,24 @@ public abstract class GenerationBase {
           }
 
         } else {
-          //rekursion trotzdem durchführen
+          //rekursion trotzdem durchfï¿½hren
           for (GenerationBase gb : dependencies.getDependencies(false)) {
             gb.collectSpecialDependencies(fileFromDeploymentLocation);
           }
         }
 
         /*
-         * auch wenn es lokal keine special dependencies gibt, müssen in die gesamt-dependencies von this die neuen dependencies von kindern mit aufgenommen werden!
-         * oben ist eine rekursion passiert über this.dependencies, und die haben ggf special dependencies hinzu gefügt bekommen
+         * auch wenn es lokal keine special dependencies gibt, mï¿½ssen in die gesamt-dependencies von this die neuen dependencies von kindern mit aufgenommen werden!
+         * oben ist eine rekursion passiert ï¿½ber this.dependencies, und die haben ggf special dependencies hinzu gefï¿½gt bekommen
          * 
          * wenn das nicht passiert, kann es sowohl zu reihenfolgenproblemen kommen (was bei mehreren threads deadlocks nach sich ziehen kann), als auch zu
-         * relikten im cache, weil das cleanup nicht rekursiv über den gesamten baum geht, sondern bei do-nothing abbricht.
+         * relikten im cache, weil das cleanup nicht rekursiv ï¿½ber den gesamten baum geht, sondern bei do-nothing abbricht.
          */
         for (GenerationBase gb : new TreeSet<GenerationBase>(newDeps.getDependencies(true))) {
           if (gb.dependencies != null) {
             newDeps.addAdditionalObjectsForCodeRegeneration(gb.dependencies.additionalObjectsForCodeRegeneration);
             newDeps.addSubTypes(gb.dependencies.subTypeDeps);
-            //normale dependencies können auch dazu gekommen sein (vorwärts-deps von special deps)
+            //normale dependencies kï¿½nnen auch dazu gekommen sein (vorwï¿½rts-deps von special deps)
             for (GenerationBase ngb : gb.dependencies.normalDependenciesOnly) {
               newDeps.addToBoth(ngb);
             }
@@ -4149,7 +4149,7 @@ public abstract class GenerationBase {
         case FORCE_DEPLOYMENT :
         case FORCE_KILL_DEPLOYMENT :
           if (oldInstance != null) {
-            //TODO eigtl müsste man das für alle objekte sammeln, die das xml von saved nach deployed kopieren
+            //TODO eigtl mï¿½sste man das fï¿½r alle objekte sammeln, die das xml von saved nach deployed kopieren
             if (detectInterfaceChangesBetweenThisAndOldVersion(oldInstance)) {
               Set<WorkflowRevision> relevantSetForInterfaceChanges = getAllRelevantWorkflowsForInterfaceChanges();
               DeploymentManagement.getInstance().addDeployment(relevantSetForClassloadingChanges, remode, relevantSetForInterfaceChanges);
@@ -4182,7 +4182,7 @@ public abstract class GenerationBase {
   }
 
 
-  // ermittelt alle WFs die dieses Objekt verwenden, diese (bzw. Objekte welche Sie verwenden) sind betroffen von Interface-Änderungen
+  // ermittelt alle WFs die dieses Objekt verwenden, diese (bzw. Objekte welche Sie verwenden) sind betroffen von Interface-ï¿½nderungen
   private Set<WorkflowRevision> getAllRelevantWorkflowsForInterfaceChanges() {
 
     DependencyRegister dr = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
@@ -4236,7 +4236,7 @@ public abstract class GenerationBase {
     //suche die workflows, die deployed werden und ihre parent-workflows
     DependencyRegister dr = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDependencyRegister();
     for (GenerationBase gb : this.dependencies.getDependencies(true)) {
-      if (gb.mode != null && gb.mode.mustExecuteDeploymentHandler) { //wenn mustExecuteDeploymentHandler false ist, wurde nichts an classloading geändert
+      if (gb.mode != null && gb.mode.mustExecuteDeploymentHandler) { //wenn mustExecuteDeploymentHandler false ist, wurde nichts an classloading geï¿½ndert
         DependencyNode node = dr.getDependencyNode(gb.originalFqName, gb.retrieveDependencySourceType(), gb.revision);
         if (node != null) {
           Set<DependencyNode> deps = dr.getDependencies(node.getUniqueName(), node.getType(), gb.revision, true);
@@ -4279,7 +4279,7 @@ public abstract class GenerationBase {
 
 
   private void fillVars() throws AssumedDeadlockException {
-    //rekursiv für alle abhängigen objekte aufrufen: fillVars
+    //rekursiv fï¿½r alle abhï¿½ngigen objekte aufrufen: fillVars
     executeJobAndIncrementDeploymentState(DeploymentState.fillVars, new StateTransition() {
 
       public void exec() throws XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException,
@@ -4399,8 +4399,8 @@ public abstract class GenerationBase {
 
 
   private void cleanup() throws AssumedDeadlockException {
-    //instance-hashmap aufräumen
-    //ggfs backup löschen
+    //instance-hashmap aufrï¿½umen
+    //ggfs backup lï¿½schen
     executeJobAndIncrementDeploymentState(DeploymentState.cleanup, new StateTransition() {
 
       public void exec() throws XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException,
@@ -4429,7 +4429,7 @@ public abstract class GenerationBase {
           return;
         }
 
-        //erst machen, wenn alles andere gutgegangen ist, damit man ggfs wieder zurück kann.
+        //erst machen, wenn alles andere gutgegangen ist, damit man ggfs wieder zurï¿½ck kann.
         if (backupXml != null && backupXml.exists()) {
           if (!FileUtils.deleteFileWithRetries(backupXml)) {
             logger.warn("backup could not be deleted " + backupXml.getAbsolutePath());
@@ -4475,7 +4475,7 @@ public abstract class GenerationBase {
   private void generateJava() throws AssumedDeadlockException {
     // nur falls mode == direct
     // falls javagen im speicher, dann auch bei indirect.
-    // rekursiv für alle abhängigen objekte aufrufen: generateJava (indirect)
+    // rekursiv fï¿½r alle abhï¿½ngigen objekte aufrufen: generateJava (indirect)
     executeJobAndIncrementDeploymentState(DeploymentState.generateJava, new StateTransition() {
 
       public void exec() throws XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException,
@@ -4528,8 +4528,8 @@ public abstract class GenerationBase {
 
 
   private void compile(final InMemoryCompilationSet cs, final boolean collectOnly) throws AssumedDeadlockException {
-    // nicht rekursiv aufrufen ausser für abhaengige workflows, weil das java-compile automatisch
-    // abhängige objekte mit kompiliert.
+    // nicht rekursiv aufrufen ausser fï¿½r abhaengige workflows, weil das java-compile automatisch
+    // abhï¿½ngige objekte mit kompiliert.
     executeJobAndIncrementDeploymentState(collectOnly ? DeploymentState.bulkCompile : DeploymentState.compile, new StateTransition() {
 
       public void exec() throws XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException,
@@ -4538,7 +4538,7 @@ public abstract class GenerationBase {
           return;
         }
 
-        compileInCorrectOrder(cs, collectOnly); //PERFORMANCE: hier muss man eigtl nicht alle überprüfen
+        compileInCorrectOrder(cs, collectOnly); //PERFORMANCE: hier muss man eigtl nicht alle ï¿½berprï¿½fen
         if (dependentObjectHadError()) {
           return;
         }
@@ -4573,7 +4573,7 @@ public abstract class GenerationBase {
             long timeStampBeforeCompile = determineLastModified(classFileName);
             try {
               HashSet<String> jars = new HashSet<String>();
-              if (GenerationBase.this instanceof DOM) { // wfs haben keine abhängigen jars
+              if (GenerationBase.this instanceof DOM) { // wfs haben keine abhï¿½ngigen jars
                 // tryFromSaved = mode.shouldCopyXMLFromSavedToDeployed: impls are copied during deploymentHandler execution
                 //                                                       saved does currently contain the jar to compile against
                 DOM dom = ((DOM) GenerationBase.this);
@@ -4657,14 +4657,14 @@ public abstract class GenerationBase {
 
   private void onDeploymentHandler(final int prio) throws AssumedDeadlockException {
 
-    // immer aufrufen, rekursiv für alle abhängigen objekte: onDeploy(indirect)
+    // immer aufrufen, rekursiv fï¿½r alle abhï¿½ngigen objekte: onDeploy(indirect)
     DeploymentState targetState = DeploymentState.getTargetStateForDeploymentHandler(prio);
     executeJobAndIncrementDeploymentState(targetState, new StateTransition() {
 
       public void exec() throws XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException,
                       XPRC_MDMDeploymentException {
         if (mode == DeploymentMode.doNothing) {
-          //serverinterne objekte bei deploymenthandlern registrieren. TODO schöner wäre, wenn man den deploymenthandler fragen könnte, ob er serverreservierte objekte behandeln will.
+          //serverinterne objekte bei deploymenthandlern registrieren. TODO schï¿½ner wï¿½re, wenn man den deploymenthandler fragen kï¿½nnte, ob er serverreservierte objekte behandeln will.
           if (prio == DeploymentHandling.PRIORITY_DEPENDENCY_CREATION && isReservedServerObject() /*&& !reservedObjectIsInitialized()*/) { // TODO reservedObjectIsInitialized requires a fix for the current calling pattern
             onDeploymentHandlerInCorrectOrder(prio);
             try {
@@ -4690,7 +4690,7 @@ public abstract class GenerationBase {
         }
         generatedJava = null;
 
-        if (mode.mustExecuteDeploymentHandler()) { //falls einmal false, sind auch alle abhängigen objekte false! das gilt zumindest für "mustExecuteDeploymentHandler"
+        if (mode.mustExecuteDeploymentHandler()) { //falls einmal false, sind auch alle abhï¿½ngigen objekte false! das gilt zumindest fï¿½r "mustExecuteDeploymentHandler"
 
           if (!hasRegisteredDeploymentHandler) {
             synchronized (GenerationBase.class) {
@@ -4777,7 +4777,7 @@ public abstract class GenerationBase {
       try {
         gb.onError(backupDeploymentSet);
       } catch (Throwable t) {
-        //sollte eigentlich nicht auftreten, aber auf jeden Fall onError für alle Objekte durchführen
+        //sollte eigentlich nicht auftreten, aber auf jeden Fall onError fï¿½r alle Objekte durchfï¿½hren
         Department.handleThrowable(t);
         gb.exceptionsWhileOnError.add(t);
       }
@@ -4835,7 +4835,7 @@ public abstract class GenerationBase {
 
   private void onError(final List<GenerationBase> backupDeploymentSet) throws AssumedDeadlockException {
     // ggfs backup einspielen
-    // rekursiv für alle abhängigen objekte aufrufen: onError (indirect)
+    // rekursiv fï¿½r alle abhï¿½ngigen objekte aufrufen: onError (indirect)
     StateTransition st = new StateTransition() {
 
       public void exec() throws XPRC_BackupFileException, XPRC_DeploymentCleanupException {
@@ -4872,15 +4872,15 @@ public abstract class GenerationBase {
                 || mode == DeploymentMode.regenerateDeployedAllFeatures || mode == DeploymentMode.regenerateDeployedAllFeaturesXmlChanged 
                 || mode == DeploymentMode.regenerateDeployedAllFeaturesCollectSpecialDeps 
                 || backupXml != null || backupExistedBefore) {
-              //objekt war ehemals vorhanden, nun ist ein inkonsistenter zustand entstanden. andere objekte benötigen this ja noch!
+              //objekt war ehemals vorhanden, nun ist ein inkonsistenter zustand entstanden. andere objekte benï¿½tigen this ja noch!
 
-              //bei einem fixenden redeployment von this gibt es das objekt zwar wieder, aber die classloading-deps können nicht mehr
-              //korrekt (für die anderen verwendenden objekte) hergestellt werden!
+              //bei einem fixenden redeployment von this gibt es das objekt zwar wieder, aber die classloading-deps kï¿½nnen nicht mehr
+              //korrekt (fï¿½r die anderen verwendenden objekte) hergestellt werden!
               // -> classloading-deps jetzt merken
               XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
                   .backupClassloadingDeps(GenerationBase.this);
             }
-            //classloading inkonsistenzen aufräumen. andere undeploymenthandler nicht aufrufen, weil der benutzer das objekt nicht undeployen wollte
+            //classloading inkonsistenzen aufrï¿½umen. andere undeploymenthandler nicht aufrufen, weil der benutzer das objekt nicht undeployen wollte
             try {
               XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
                   .executeUndeploymentHandler(DeploymentHandling.PRIORITY_CLASS_LOADER_UNDEPLOY_OLD, GenerationBase.this);
@@ -4910,11 +4910,11 @@ public abstract class GenerationBase {
             }
 
             if (rollbackXmlOnly) {
-              //es genügt einfach das xml wieder zu rollbacken, sonst wurde noch nichts geändert, was man rollbacken müsste
+              //es genï¿½gt einfach das xml wieder zu rollbacken, sonst wurde noch nichts geï¿½ndert, was man rollbacken mï¿½sste
               deployBackup = false;
             }
           } else if (mode == DeploymentMode.codeNew) {
-            //TODO undeploymenthandler durchführen, falls deployment passiert ist...
+            //TODO undeploymenthandler durchfï¿½hren, falls deployment passiert ist...
             deleteXMLAtDeploymentLocation();
           }
 
@@ -4926,7 +4926,7 @@ public abstract class GenerationBase {
           } else {
             clearFromCache(); //spezial dependencies rauswerfen
           }
-          onErrorInCorrectOrder(backupDeploymentSet); //wenn die methode beendet ist, haben auch alle abhängigen objekte ihr backup-xml restored.
+          onErrorInCorrectOrder(backupDeploymentSet); //wenn die methode beendet ist, haben auch alle abhï¿½ngigen objekte ihr backup-xml restored.
 
           if (deployBackup) {
             backupDeploymentSet.add(instanceForBackupDeployment);
@@ -5110,9 +5110,9 @@ public abstract class GenerationBase {
   }
 
   /**
-   * Führt einen Schritt des Deplyoments für alle übergebenen GenerationBase-Objekte durch.
+   * Fï¿½hrt einen Schritt des Deplyoments fï¿½r alle ï¿½bergebenen GenerationBase-Objekte durch.
    * Tritt bei einem Objekt ein Fehler auf, so wird dieser gefangen und das Objekt invalidiert,
-   * so dass der Schritt für die anderen Objekte auch noch durchgeführt werden kann.
+   * so dass der Schritt fï¿½r die anderen Objekte auch noch durchgefï¿½hrt werden kann.
    */
   private static void executeStep(Collection<GenerationBase> objects, DeploymentStep step) {
     for (GenerationBase gb : objects) {
@@ -5135,10 +5135,10 @@ public abstract class GenerationBase {
 
 
   /**
-   * führt den job aus, führt den statusübergang bei erfolgreicher job ausführung durch und verhindert,
-   * dass andere threads in die quere kommen. falls der statusübergang bereits (von einem anderen thread)
-   * durchgeführt wurde, wird nichts gemacht. falls ein anderer thread dieses objekt in errorstatus
-   * überführt hat, wird ein entsprechender fehler geworfen.
+   * fï¿½hrt den job aus, fï¿½hrt den statusï¿½bergang bei erfolgreicher job ausfï¿½hrung durch und verhindert,
+   * dass andere threads in die quere kommen. falls der statusï¿½bergang bereits (von einem anderen thread)
+   * durchgefï¿½hrt wurde, wird nichts gemacht. falls ein anderer thread dieses objekt in errorstatus
+   * ï¿½berfï¿½hrt hat, wird ein entsprechender fehler geworfen.
    *
    * threadsafe
    */
@@ -5146,11 +5146,11 @@ public abstract class GenerationBase {
       throws AssumedDeadlockException {
 
     if (alreadyInvalidated_NoExecutionNecessary(targetState))  {
-      //bereits ungültig. später cleanup/errorhandling durchführen
+      //bereits ungï¿½ltig. spï¿½ter cleanup/errorhandling durchfï¿½hren
       return;
     }
     if (targetState == DeploymentState.error && !invalidated) {
-      //vorher wurde bereits cleanup ausgeführt...
+      //vorher wurde bereits cleanup ausgefï¿½hrt...
       return;
     }
 
@@ -5167,18 +5167,18 @@ public abstract class GenerationBase {
       int retryCount = 0;
       while (!gotLock && retryCount < 20) {
         retryCount++;
-        //hier könnte ein deadlock passieren.
-        //beispiel: zyklische abhängigkeiten A -> B -> A. deploy(A) und deploy(B) simultan
+        //hier kï¿½nnte ein deadlock passieren.
+        //beispiel: zyklische abhï¿½ngigkeiten A -> B -> A. deploy(A) und deploy(B) simultan
         //          deploy(A) lockt A und wartet auf B, deploy(B) lockt B und wartet auf A.
 
         //handling von deadlocks:
         //falls bei parsexml ein deadlock passiert, wird es einfach nochmal versucht.
         //nachdem parsexml erfolgreich war, werden alle folgenden state-transitions in der
-        //gleichen reihenfolge über die menge aller dependencies (inkl dem objekt selbst) durchgeführt.
-        //(bei parsexml ist das noch nicht möglich, weil die dependencies dort erst ermittelt werden)
+        //gleichen reihenfolge ï¿½ber die menge aller dependencies (inkl dem objekt selbst) durchgefï¿½hrt.
+        //(bei parsexml ist das noch nicht mï¿½glich, weil die dependencies dort erst ermittelt werden)
         //in dem obigen beispiel heisst das, dass deploy(A) und deploy(B) in beiden threads in der gleichen
-        //reihenfolge durchgeführt werden, und deshalb keine deadlocks passieren können.
-        //(unter last kann es aber sehr wohl passieren, dass die threads mal warten müssen. dann sollen
+        //reihenfolge durchgefï¿½hrt werden, und deshalb keine deadlocks passieren kï¿½nnen.
+        //(unter last kann es aber sehr wohl passieren, dass die threads mal warten mï¿½ssen. dann sollen
         //sie aber keinen deadlock fehler werfen, sondern weiter warten)
         long lockTimeout;
         if (targetState.supportsDeadLockDetection()) {
@@ -5193,16 +5193,16 @@ public abstract class GenerationBase {
       }
       if (!gotLock) { //nicht handlebar, sollte nicht passieren
         //TODO kann auch passieren, wenn ein anderer thread zb wegen I/O problemen nicht fertig wird. passiert
-        //in der entwicklung zb gelegentlich, wenn afs hängt.
+        //in der entwicklung zb gelegentlich, wenn afs hï¿½ngt.
         throw new AssumedDeadlockException("dead lock occurred, please try again. [" + originalFqName + "]");
       }
     } catch (InterruptedException e1) {
       throw new RuntimeException("could not get lock", e1);
     }
     try {
-      // nochmal überprüfen, für den fall, dass thread gerade warten musste. dann ist das bereits geschehen
+      // nochmal ï¿½berprï¿½fen, fï¿½r den fall, dass thread gerade warten musste. dann ist das bereits geschehen
       if (alreadyInvalidated_NoExecutionNecessary(targetState)) {
-        //bereits ungültig. später errorhandling durchführen
+        //bereits ungï¿½ltig. spï¿½ter errorhandling durchfï¿½hren
         return;
       }
 
@@ -5214,7 +5214,7 @@ public abstract class GenerationBase {
         return;
       }
       // state == running => der gleiche thread bearbeitet das objekt bereits und ist durch rekursion erneut hier angekommen.
-      // ein anderer thread kann nicht auf running stehen, weil dann das synchronized diesen thread nicht durchgelassen hätte.
+      // ein anderer thread kann nicht auf running stehen, weil dann das synchronized diesen thread nicht durchgelassen hï¿½tte.
       if (state.isRunning()) {
         return;
       }
@@ -5239,7 +5239,7 @@ public abstract class GenerationBase {
           stateTransitionJob.exec();
           gotException = false;
           state = state.finishRun();
-          if (state.isNotFurtherThan(DeploymentState.cleanup) && !invalidated) { //cleanup wird auch für fehlerhafte objekte aufgerufen, nachdem der fehler passiert war
+          if (state.isNotFurtherThan(DeploymentState.cleanup) && !invalidated) { //cleanup wird auch fï¿½r fehlerhafte objekte aufgerufen, nachdem der fehler passiert war
             stateBeforeError = state;
           }
         } finally {
@@ -5253,7 +5253,7 @@ public abstract class GenerationBase {
       }
 
       if (state.hasRun(mode.getLastParsingStep())) {
-        //vorher passiert noch parsing - da ist es blöd, wenn der fehler sich vererbt, weil die folge-parsing schritte dann nicht ausgeführt werden
+        //vorher passiert noch parsing - da ist es blï¿½d, wenn der fehler sich vererbt, weil die folge-parsing schritte dann nicht ausgefï¿½hrt werden
         if (dependentObjectHadError()) {
           if (state != DeploymentState.error) {
             invalidate();
@@ -5273,7 +5273,7 @@ public abstract class GenerationBase {
         } else {
           state = DeploymentState.error;
         }
-        //enthält maximal 2 objekte: erste exception in der "hinrichtung" beim deployment. zweite exception maximal wenn beim
+        //enthï¿½lt maximal 2 objekte: erste exception in der "hinrichtung" beim deployment. zweite exception maximal wenn beim
         // deploymentstate-job nach error nochmal ein fehler auftritt
         if (logger.isTraceEnabled()) {
           logger.trace("invalidated " + getOriginalFqName(), e);
@@ -5609,7 +5609,7 @@ public abstract class GenerationBase {
   }
 
   /**
-   * löscht javafile aus mdmclasses verzeichnis, sofern nicht {@link XynaProperty#REMOVE_GENERATED_FILES} auf false
+   * lï¿½scht javafile aus mdmclasses verzeichnis, sofern nicht {@link XynaProperty#REMOVE_GENERATED_FILES} auf false
    * gesetzt ist
    */
   public static void deleteGeneratedJava(String fqClassName, boolean fromDeployed, Long revision) {
@@ -5645,13 +5645,13 @@ public abstract class GenerationBase {
       f.delete();
     } else {
       //kann zb passieren, weil java noch nicht generiert wurde
-      //oder weil die methode in onerror aufgerufen wird, nach einem fehler in cleanup, nachdem das file dort bereits gelöscht wurde.
+      //oder weil die methode in onerror aufgerufen wird, nach einem fehler in cleanup, nachdem das file dort bereits gelï¿½scht wurde.
       if (logger.isDebugEnabled()) {
         logger.debug("could not remove " + fileLocation + ", did not exist");
       }
     }
 
-    //leere Verzeichnisse löschen
+    //leere Verzeichnisse lï¿½schen
     FileUtils.deleteEmptyDirectoryRecursively(f.getParentFile(), new File(Constants.GENERATION_DIR));
   }
 
@@ -5686,7 +5686,7 @@ public abstract class GenerationBase {
 
 
   /**
-   * benötigt validen packagename
+   * benï¿½tigt validen packagename
    */
   public static String getFileLocationForSavingStaticHelper(String fqXMLName, Long revision) {
     return new StringBuilder(RevisionManagement.getPathForRevision(PathType.XMOM, revision, false)).append(Constants.fileSeparator)
@@ -5790,7 +5790,7 @@ public abstract class GenerationBase {
         continue;
       }
       if (pmi.getInheritFromDataModel(localPath) != null) {
-        //benötigt keine map-setter/getter, weil nicht in mappings verwendet
+        //benï¿½tigt keine map-setter/getter, weil nicht in mappings verwendet
         continue;
       }
       if (v.getDomOrExceptionObject() != null) {
@@ -5806,7 +5806,7 @@ public abstract class GenerationBase {
       //hat simple type!
       if (pathValuePath == null || pathValuePath.equals(localPath)) {
         //-> das ist der value!
-        //null ist für abwärtskompatibilität der alte fall: es darf nur genau ein solcher pfad existieren. wird hier aber nicht validiert
+        //null ist fï¿½r abwï¿½rtskompatibilitï¿½t der alte fall: es darf nur genau ein solcher pfad existieren. wird hier aber nicht validiert
         return Triple.of(v, v, localPath);
       }
       //weitersuchen
@@ -5966,10 +5966,10 @@ public abstract class GenerationBase {
   }
 
   /**
-   * @param packagesOrFiles packages müssen "a.b.c" angegeben werden, files als relativ oder absolute fileaddresse (a/b/c) zum aktuellen verzeichnis (nicht sourcepath!)
+   * @param packagesOrFiles packages mï¿½ssen "a.b.c" angegeben werden, files als relativ oder absolute fileaddresse (a/b/c) zum aktuellen verzeichnis (nicht sourcepath!)
    * @param targetDir wohin wird javadoc erzeugt
-   * @param sourcePath optional. nur für packages relevant
-   * @param classPath auflösen von verwendeten klassen
+   * @param sourcePath optional. nur fï¿½r packages relevant
+   * @param classPath auflï¿½sen von verwendeten klassen
    */
   public static void createJavaDoc(String[] packagesOrFiles, String targetDir, String sourcePath, String classPath) {
     String[] args;
@@ -6022,14 +6022,14 @@ public abstract class GenerationBase {
 
 
   /**
-   * kompiliert alle files die in javaFilesToCompile angegeben werden (und alle weiteren, die davon abhängen, falls sie
+   * kompiliert alle files die in javaFilesToCompile angegeben werden (und alle weiteren, die davon abhï¿½ngen, falls sie
    * im sourcepath vorgefunden werden).
    */
   public static void compileJavaFiles(String fqClassName, String[] javaFilesToCompile, String classPath,
                                       String classDir, String sourcepath, boolean useTargetVersion, String targetVersion, boolean compileWithDebug)
       throws XPRC_CompileError {
 
-    //TODO hässlich, dass hier der fqclassname übergeben werden muss für die exceptions
+    //TODO hï¿½sslich, dass hier der fqclassname ï¿½bergeben werden muss fï¿½r die exceptions
     StringWriter sw = new StringWriter();
 
     int errorCode;
@@ -6322,9 +6322,9 @@ public abstract class GenerationBase {
 
 
   /**
-   * falls ein xmom objekt existiert, welches diesen fqclassname hat, wird der fqxmlname des xmom objekts zurückgegeben.
+   * falls ein xmom objekt existiert, welches diesen fqclassname hat, wird der fqxmlname des xmom objekts zurï¿½ckgegeben.
    * 
-   * falls kein derartiges xmom objekt gefunden wird, wird der ursprüngliche fqclassname zurückgegeben.
+   * falls kein derartiges xmom objekt gefunden wird, wird der ursprï¿½ngliche fqclassname zurï¿½ckgegeben.
    */
   public static String lookupXMLNameByJavaClassName(String fqClassName, final long revision,
                                                     final boolean followRuntimeContextDependencies) {
@@ -6382,7 +6382,7 @@ public abstract class GenerationBase {
                 return false;
               }
             }
-            return true; //nächste kombination
+            return true; //nï¿½chste kombination
           }
 
         }, propertyCounts);
@@ -6401,8 +6401,8 @@ public abstract class GenerationBase {
   
   
   /**
-   * xmom objekt aus saved ordner löschen und evtl vorhandenes verzeichnis
-   * aus revisions/rev_workingset/saved/services löschen
+   * xmom objekt aus saved ordner lï¿½schen und evtl vorhandenes verzeichnis
+   * aus revisions/rev_workingset/saved/services lï¿½schen
    */
   public static void deleteMDMObjectFromSavedFolder(String originalFqName, Long revision) {
     String fileLocation = getFileLocationForSavingStaticHelper(originalFqName, revision) + ".xml";
@@ -6413,7 +6413,7 @@ public abstract class GenerationBase {
         logger.debug("Removing " + fileLocation);
       }
       object.delete();
-      //leere Verzeichnisse löschen
+      //leere Verzeichnisse lï¿½schen
       String savedMdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, revision, false);
       FileUtils.deleteEmptyDirectoryRecursively(object.getParentFile(),  new File(savedMdmDir));
     }
@@ -6570,7 +6570,7 @@ public abstract class GenerationBase {
 
 
   /**
-   * methode ist dafür gedacht auch zu funktionieren, wenn das objekt noch nciht geparst wurde oder einen fehler dabei hatte
+   * methode ist dafï¿½r gedacht auch zu funktionieren, wenn das objekt noch nciht geparst wurde oder einen fehler dabei hatte
    **/
   private Dependencies getDepsLazyCreateSafely(boolean warnIfStateIsUnexpectedLow) {
     Dependencies localDependencies;
@@ -6640,7 +6640,7 @@ public abstract class GenerationBase {
 
 
   private static long hash(String s) {
-    //von string.hashcode kopiert, soll aber unabhängig von jvm impl funktionieren
+    //von string.hashcode kopiert, soll aber unabhï¿½ngig von jvm impl funktionieren
     int h = 1;
     int len = s.length();
     for (int i = 0; i < len; i++) {
@@ -6767,7 +6767,7 @@ public abstract class GenerationBase {
   }
 
   /*
-   * falls man code für die reservierten objekte neu generieren will, kann man sich hiermit für das deploymultiple die namen ausgeben lassen 
+   * falls man code fï¿½r die reservierten objekte neu generieren will, kann man sich hiermit fï¿½r das deploymultiple die namen ausgeben lassen 
   public static void main(String[] args) {
     List<String> datatypes = new ArrayList<String>();
     List<String> exceptions = new ArrayList<String>();

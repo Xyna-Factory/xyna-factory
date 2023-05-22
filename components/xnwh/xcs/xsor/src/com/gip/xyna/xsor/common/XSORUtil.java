@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ public class XSORUtil {
        if (state==0 && data[position]!=0){//0->1
          byteArrayOutputStream.write(0);
          
-         byteArrayOutputStream.write((byte)((position-from)%256));//2 Byte für Lauflaenge
+         byteArrayOutputStream.write((byte)((position-from)%256));//2 Byte fï¿½r Lauflaenge
          byteArrayOutputStream.write((byte)((position-from)/256));
          from=position;
          state=1;

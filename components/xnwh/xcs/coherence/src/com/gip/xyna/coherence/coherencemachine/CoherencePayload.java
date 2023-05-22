@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public class CoherencePayload implements Serializable {
   private static final long serialVersionUID = 1L;
 
   /**
-   * diese Methode wird bei allen möglichen Änderungs Events auf dem Objekt aufgerufen. 
+   * diese Methode wird bei allen mï¿½glichen ï¿½nderungs Events auf dem Objekt aufgerufen. 
    * Auf jedem Knoten, der das Objekt kennt. 
    */
   protected void onChange(ObjectChangeEvent event, CacheController controller) {

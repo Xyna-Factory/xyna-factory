@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,10 @@ public abstract class Update {
   
   private List<AllowedVersionRange> allowedVersions;
   
-  //wann soll das update ausgeführt werden
+  //wann soll das update ausgefï¿½hrt werden
   protected ExecutionTime executionTime = ExecutionTime.initialUpdate;
   
-  //wann wird das update gerade ausgeführt?
+  //wann wird das update gerade ausgefï¿½hrt?
   private ExecutionTime currentExecutionTime;
 
   public static enum ExecutionTime {
@@ -52,8 +52,8 @@ public abstract class Update {
   }
 
   /**
-   * gibt neue version zurück falls update durchgeführt werden soll und es das auch wurde. ansonsten
-   * wird currentVersion zurückgegeben. 
+   * gibt neue version zurï¿½ck falls update durchgefï¿½hrt werden soll und es das auch wurde. ansonsten
+   * wird currentVersion zurï¿½ckgegeben. 
    */
   public Version update(Version currentVersion) throws XynaException {
     return update(currentVersion, ExecutionTime.initialUpdate);
@@ -118,9 +118,9 @@ public abstract class Update {
 
 
   /**
-   * falls &lt;= 4, werden beim ausführen der update methode alle versionen, die in ihren 
-   * ersten (index-1) stellen übereinstimmen und insgesamt größergleich getAllowedVersionForUpdate sind,
-   * als passend erkannt und das update wird durchgeführt.
+   * falls &lt;= 4, werden beim ausfï¿½hren der update methode alle versionen, die in ihren 
+   * ersten (index-1) stellen ï¿½bereinstimmen und insgesamt grï¿½ï¿½ergleich getAllowedVersionForUpdate sind,
+   * als passend erkannt und das update wird durchgefï¿½hrt.
    * 
    * z.B. index = 4 und getAllowedVersionForUpdate = 3.2.5.7
    * =&gt; das update wird angewandt, falls currentVersion = 3.2.5.7, oder 3.2.5.8 oder 3.2.5.10, oder 3.2.5.111 ist,
@@ -136,7 +136,7 @@ public abstract class Update {
   }
   
   /**
-   * erlaubt die Angabe zusätzlicher Versionen, auf die das Update ausgeführt werden kann. Dabei sind alle
+   * erlaubt die Angabe zusï¿½tzlicher Versionen, auf die das Update ausgefï¿½hrt werden kann. Dabei sind alle
    * Versionen enthalten, die sich zwischen den beiden Versionen befinden, inkl der angegebenen Versionen.
    * 
    *  z.B. startVersion = 3.1.5.2, endVersion = 3.3.1.4

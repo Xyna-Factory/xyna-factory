@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,10 +53,10 @@ public class PoolOption extends Storable<PoolOption> {
   private String value;//menschenlesbar
   
   @Column(name = COL_OPTIONGUIIDCOLLECTION, type = ColumnType.BLOBBED_JAVAOBJECT)
-  private Collection<String> optionGuiIdCollection;//es können mehrere Optionen zu einem Pool gehören - nicht menschenlesbar beim abspeichern
+  private Collection<String> optionGuiIdCollection;//es kï¿½nnen mehrere Optionen zu einem Pool gehï¿½ren - nicht menschenlesbar beim abspeichern
   
   @Column(name = COL_VALUECOLLECTION, type = ColumnType.BLOBBED_JAVAOBJECT)
-  private Collection<String> valueCollection;//es können mehrere Optionen zu einem Pool gehören - nicht menschenlesbar beim abspeichern
+  private Collection<String> valueCollection;//es kï¿½nnen mehrere Optionen zu einem Pool gehï¿½ren - nicht menschenlesbar beim abspeichern
   
   @Override
   public Object getPrimaryKey() {

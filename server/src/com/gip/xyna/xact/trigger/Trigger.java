@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ public class Trigger implements Serializable {
       //Beim Anlegen eines noch nicht vorhandenen Triggers und beim Factory-Neustart
       //wird reload_dependencies nicht aufgerufen (weil kein alter TriggerClassLoder vorhanden ist),
       //daher hier manuell auf hasBeenDeployed setzen.
-      //Ansonsten wird bei einem anschließenden reloadSharedLib reload_undeploy nicht
+      //Ansonsten wird bei einem anschlieï¿½enden reloadSharedLib reload_undeploy nicht
       //aufgerufen und es kommt zu einer ClassCastException, weil der classCache nicht
       //geleert wird.
       tcl.setHasBeenDeployed();
@@ -317,8 +317,8 @@ public class Trigger implements Serializable {
 
 
   /**
-   * Instantiieren einer EventListenerInstance: dazu gehört Instantiieren des EventListener, der StartParameter und
-   * möglicherweise eine Konvertierung der übergeben StartParameter in das neue Key-Value-Format.
+   * Instantiieren einer EventListenerInstance: dazu gehï¿½rt Instantiieren des EventListener, der StartParameter und
+   * mï¿½glicherweise eine Konvertierung der ï¿½bergeben StartParameter in das neue Key-Value-Format.
    * @param instanceName
    * @param startParameters
    * @param description
@@ -372,7 +372,7 @@ public class Trigger implements Serializable {
 
 
   /**
-   * Bau der StartParameter-Instanz, möglicherweise eine Konvertierung der übergeben StartParameter in das neue Key-Value-Format
+   * Bau der StartParameter-Instanz, mï¿½glicherweise eine Konvertierung der ï¿½bergeben StartParameter in das neue Key-Value-Format
    * @param espi
    * @param startParameterList
    * @return
@@ -381,7 +381,7 @@ public class Trigger implements Serializable {
    */
   private Pair<StartParameter, List<String>> buildStartParameter(EnhancedStartParameter espi,
                                                                  List<String> startParameterList) throws XACT_InvalidStartParameterCountException, XACT_InvalidTriggerStartParameterValueException {
-    //Versuch einer FormatErkennung: nese Format, wenn mehr als die Hälfte aller Parameter ein "=" enthalten
+    //Versuch einer FormatErkennung: nese Format, wenn mehr als die Hï¿½lfte aller Parameter ein "=" enthalten
     int cntEqualsSign = 0;
     for( String param : startParameterList ) {
       if( param.indexOf('=') > 0 ) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -195,14 +195,14 @@ import xmcp.yggdrasil.GetEventsResponse;
 public class SessionBasedData {
 
   public static final XynaPropertyInt UNDO_LIMIT = new XynaPropertyInt("xyna.processmodeller.undo.limit", 50).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Einträgen der Undo-Historie.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintrï¿½gen der Undo-Historie.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of entries in the undo history.");
   public static final XynaPropertyInt REDO_LIMIT = new XynaPropertyInt("xyna.processmodeller.redo.limit", 50).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Einträgen der Redo-Historie.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintrï¿½gen der Redo-Historie.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of entries in the redo history.");
 
   public static final XynaPropertyInt CLIENT_POLLING_TIMEOUT_FACTOR = new XynaPropertyInt("xyna.messagebus.modeller.clientpollingtimeoutfactor", 10).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Faktor, der mit xyna.messagebus.request.timeout.millis multipliziert die Zeit ergibt, nach der spätestens ein neuer Polling-Request eines GUI-Tabs folgen muss, um nicht als verwaist gelöscht zu werden.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Faktor, der mit xyna.messagebus.request.timeout.millis multipliziert die Zeit ergibt, nach der spï¿½testens ein neuer Polling-Request eines GUI-Tabs folgen muss, um nicht als verwaist gelï¿½scht zu werden.").
       setDefaultDocumentation(DocumentationLanguage.EN, "Factor that gives, multiplied by xyna.messagebus.request.timeout.millis, the maximum amount of time allowed between two polling requests for a GUI tab. Exceeding the limit leads to the tab being treated as orphaned.");
 
   public static final long MESSAGE_BUS_UPDATE_SLEEP_TIME = 100;

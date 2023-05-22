@@ -1,5 +1,5 @@
 -----------------------------------------------------
--- Copyright 2022 GIP SmartMercial GmbH, Germany
+-- Copyright 2023 Xyna GmbH, Germany
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ BEGIN
   --Versuch, alle invaliden Objekte neu zu kompilieren
   DBMS_UTILITY.compile_schema( '&_USER' );
 
-  --Übriggebliebene invalide Objekte ausgeben
+  --ï¿½briggebliebene invalide Objekte ausgeben
   SELECT count(*) INTO num FROM User_Objects WHERE status='INVALID';
   IF num != 0 THEN
     DBMS_OUTPUT.put_line( num||' Objekte sind invalid!' );

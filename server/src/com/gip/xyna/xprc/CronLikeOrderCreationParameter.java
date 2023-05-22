@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class CronLikeOrderCreationParameter extends XynaOrderCreationParameter {
   private static final long serialVersionUID = -4336481768584885822L;
 
   private String label;
-  //Startzeitpunkt und Intervall zwischen zwei Events für periodische Vorgänge
+  //Startzeitpunkt und Intervall zwischen zwei Events fï¿½r periodische Vorgï¿½nge
   private Long startTime;
   private String originTimeZoneID;
   private Long interval;
@@ -82,8 +82,8 @@ public class CronLikeOrderCreationParameter extends XynaOrderCreationParameter {
   private Long rootOrderId;
   
   //TODO diese customfelder sind hier irgendwie redundant zu den customfeldern in der oberklasse.
-  //evtl will man aber unterscheiden zwischen customfeldern für die clo-tabelle und customfeldern für die gespawnten aufträge
-  //dann benötigt man einen speicherort... derzeit werden die in der gui angegebenen customfelder für beides verwendet.
+  //evtl will man aber unterscheiden zwischen customfeldern fï¿½r die clo-tabelle und customfeldern fï¿½r die gespawnten auftrï¿½ge
+  //dann benï¿½tigt man einen speicherort... derzeit werden die in der gui angegebenen customfelder fï¿½r beides verwendet.
   private String cronLikeOrderCustom0;
   private String cronLikeOrderCustom1;
   private String cronLikeOrderCustom2;
@@ -219,7 +219,7 @@ public class CronLikeOrderCreationParameter extends XynaOrderCreationParameter {
   }
   
   /**
-   * Setzt die Startzeit. Wird null oder 0 übergeben, so 
+   * Setzt die Startzeit. Wird null oder 0 ï¿½bergeben, so 
    * wird die startTime auf System.currentTimeMillis() und 
    * executeImmediately auf true gesetzt.
    */
@@ -265,7 +265,7 @@ public class CronLikeOrderCreationParameter extends XynaOrderCreationParameter {
   
   /**
    * Setzt das Intervall. Dabei wird auch die calendarDefinition neu berechnet,
-   * falls ein neuer Wert größer als 0 übergeben wird.
+   * falls ein neuer Wert grï¿½ï¿½er als 0 ï¿½bergeben wird.
    * @param interval
    */
   public void setInterval(Long interval) {
@@ -274,7 +274,7 @@ public class CronLikeOrderCreationParameter extends XynaOrderCreationParameter {
         throw new IllegalArgumentException("interval must be positive (got " + interval + ")");
       }
       if (interval != 0 && !interval.equals(this.interval)) {
-        //calendarDefinition neu berechnen, falls sich das Intervall geändert hat
+        //calendarDefinition neu berechnen, falls sich das Intervall geï¿½ndert hat
         this.calendarDefinition = generateCalendarDefinition(interval);
       }
       this.interval = interval;
@@ -474,7 +474,7 @@ public class CronLikeOrderCreationParameter extends XynaOrderCreationParameter {
   
   
   /**
-   * Wandelt ein Millisekunden-Intervall in eine CalendarDefinition für ein RestrictionBasedTimeWindow um.
+   * Wandelt ein Millisekunden-Intervall in eine CalendarDefinition fï¿½r ein RestrictionBasedTimeWindow um.
    * @param interval
    * @return
    */
@@ -521,10 +521,10 @@ public class CronLikeOrderCreationParameter extends XynaOrderCreationParameter {
   
   
   /**
-   * Baut ein CronLikeOrderCreationParameter-Objekt. Dabei kann über Type gesteuert werden, ob
-   * die CronLikeOrderCreationParameter für ein Create oder ein Modify verwendet werden sollen.
+   * Baut ein CronLikeOrderCreationParameter-Objekt. Dabei kann ï¿½ber Type gesteuert werden, ob
+   * die CronLikeOrderCreationParameter fï¿½r ein Create oder ein Modify verwendet werden sollen.
    * 
-   * Zum Beispiel können CronLikeOrderCreationParameter zum Ändern des Labels und der calendarDefinition
+   * Zum Beispiel kï¿½nnen CronLikeOrderCreationParameter zum ï¿½ndern des Labels und der calendarDefinition
    * wie folgt erzeugt werden: 
    * 
    * {@code 

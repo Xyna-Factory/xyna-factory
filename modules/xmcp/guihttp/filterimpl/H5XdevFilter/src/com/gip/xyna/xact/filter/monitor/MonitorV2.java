@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -400,7 +400,7 @@ public class MonitorV2 {
     }
     
     // use a non-breaking space in case the label is empty to make sure the GUI element keeps its minimal size
-    return ( (label != null) && (label.length() > 0) ) ? label : " ";
+    return ( (label != null) && (label.length() > 0) ) ? label : "ï¿½";
   }
   
   private Map<String, AVariable> parameterByInstanceId;

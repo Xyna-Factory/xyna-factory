@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -409,10 +409,10 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
   }
 
 
-  private Map<BasicApplicationName, Application> basicApplications; //cache für Basis-Applications (enthält immer die aktuellste Version)
+  private Map<BasicApplicationName, Application> basicApplications; //cache fï¿½r Basis-Applications (enthï¿½lt immer die aktuellste Version)
 
-  //Cache, um für ein XMOMObject zu ermitteln, in welchen ApplicationDefinitions es (expl. oder impl.)
-  //enthalten ist (war für die Anzeige von Informationen zu XMOM-Objekten im ProcessModeller gedacht,
+  //Cache, um fï¿½r ein XMOMObject zu ermitteln, in welchen ApplicationDefinitions es (expl. oder impl.)
+  //enthalten ist (war fï¿½r die Anzeige von Informationen zu XMOM-Objekten im ProcessModeller gedacht,
   //ist in der GUI aber noch nicht umgesetzt)
   private Map<Long, Map<XMOMDatabaseType, Map<String, Set<ApplicationDefinitionInformation>>>> applicationDefinitionCache;
 
@@ -566,7 +566,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
       ODSConnection con = ods.openConnection();
       try {
-        //für gestoppte Applications die RMI/CLI-Schnittstelle sperren
+        //fï¿½r gestoppte Applications die RMI/CLI-Schnittstelle sperren
         Collection<ApplicationStorable> allApplications = con.loadCollection(ApplicationStorable.class);
         for (ApplicationStorable app : allApplications) {
           if (app.getStateAsEnum() == ApplicationState.STOPPED || app.getStateAsEnum() == ApplicationState.AUDIT_MODE) {
@@ -617,7 +617,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
             public void exec(GenerationBase object) throws XPRC_UnDeploymentHandlerException {
               //beim Undeployment sollen die Objekte noch in den Application-Definitionen
-              //erhalten bleiben und erst beim endgültigen Löschen entfernt werden
+              //erhalten bleiben und erst beim endgï¿½ltigen Lï¿½schen entfernt werden
 
               clearApplicationDefinitionCache(object.getRevision());
               synchronized (changedRevisions) {
@@ -805,7 +805,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * Liefert die Revision der aktuellsten Version der BasisApplication mit übergebenem Namen.
+   * Liefert die Revision der aktuellsten Version der BasisApplication mit ï¿½bergebenem Namen.
    * @param applicationName
    * @return Revision, falls die BasisApplication existiert, sonst null
    */
@@ -888,7 +888,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       }
     }
     
-    //Überprüfung, dass die Application(Definition) nicht von einem anderen RuntimeContext referenziert wird
+    //ï¿½berprï¿½fung, dass die Application(Definition) nicht von einem anderen RuntimeContext referenziert wird
     RuntimeContextDependencyManagement rcdMgmt =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     Set<RuntimeDependencyContext> parentRuntimeContexts = rcdMgmt.getParentRuntimeContexts(rc);
@@ -941,7 +941,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       throw new RuntimeException(failure.getFirst() + " could not be locked because it is locked by another process of type "
           + failure.getSecond() + ".");
     }
-    //TODO bei Cluster auch Applications Remote mit Lock gegen Änderungen schützen
+    //TODO bei Cluster auch Applications Remote mit Lock gegen ï¿½nderungen schï¿½tzen
 
     try {
       ODSConnection con = ods.openConnection();
@@ -953,10 +953,10 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
           checkApplicationStopped(applicationStorable, params.isGlobal(), params.stopIfRunning());
         }
 
-        //Behandlung laufender Aufträge lokal
+        //Behandlung laufender Auftrï¿½ge lokal
         revisionManagement.handleRunningOrders(revision, params.isForce());
 
-        //Behandlung laufender Aufträge auf anderen Knoten
+        //Behandlung laufender Auftrï¿½ge auf anderen Knoten
         if (params.isGlobal() && currentClusterState == ClusterState.CONNECTED) {
           if (logger.isDebugEnabled()) {
             logger.debug("Call handleRunningOrders on other cluster nodes.");
@@ -989,8 +989,8 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
             getAllImplicitApplicationEntries(appEntries, applicationName, versionName, null, params.isExtraForce());
         appEntries.addAll(implicitEntries);
 
-        //undeployte Trigger werden über die impliziten Abhängigkeiten evtl. nicht gefunden,
-        //daher hier nochmal nach allen Triggern suchen, um auch alle davon abhängigen objekte korrekt zu finden
+        //undeployte Trigger werden ï¿½ber die impliziten Abhï¿½ngigkeiten evtl. nicht gefunden,
+        //daher hier nochmal nach allen Triggern suchen, um auch alle davon abhï¿½ngigen objekte korrekt zu finden
         Set<ApplicationEntryStorable> alreadyProcessedEntries = new TreeSet<ApplicationEntryStorable>(ApplicationEntryStorable.COMPARATOR);
         alreadyProcessedEntries.addAll(implicitEntries);
         XynaActivationTrigger xynaActivationTrigger = XynaFactory.getInstance().getActivation().getActivationTrigger();
@@ -1089,7 +1089,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
             XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement();
         dism.removeRegistry(revision);
 
-        //OrderInputSources löschen
+        //OrderInputSources lï¿½schen
         OrderInputSourceManagement oism =
             XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getOrderInputSourceManagement();
         oism.deleteOrderInputSourcesForRevision(revision);
@@ -1166,7 +1166,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
             .cleanClassLoaderMapsForRevision(revision);
 
-        //RuntimeContext Dependencies löschen (muss vor dem Löschen der Revision gemacht werden)
+        //RuntimeContext Dependencies lï¿½schen (muss vor dem Lï¿½schen der Revision gemacht werden)
         rcdMgmt.deleteRuntimeContext(RuntimeContextDependencyManagement.asRuntimeDependencyContext(rc));
 
         if (!keepForAudits) {
@@ -1176,7 +1176,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
           revisionManagement.deleteRevision(revision);
 
           //Revision aus Liste der gesperrten RMI/CLI-Schnittstellen entfernen,
-          //falls die Application endgültig gelöscht wird
+          //falls die Application endgï¿½ltig gelï¿½scht wird
           RevisionOrderControl roc = new RevisionOrderControl(revision);
           roc.openRMICLI();
         }
@@ -1201,7 +1201,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       }
 
       if (publishRuntimeContextModificationChanges) {
-        //Multi-User-Event für RuntimeContext Änderung
+        //Multi-User-Event fï¿½r RuntimeContext ï¿½nderung
         Publisher publisher = new Publisher(params.getUser());
         publisher.publishRuntimeContextDelete(rc.getGUIRepresentation());
       }
@@ -1276,7 +1276,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
           output(statusOutputStream, "Removed filter " + filter.getName() + " and undeployed all instances");
         }
       } catch (XACT_FilterNotFound e) {
-        // schon gelöscht ... ignore
+        // schon gelï¿½scht ... ignore
         logger.debug("Unable to remove filter. This must not be an error!", e);
       }
     }
@@ -1304,12 +1304,12 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
               output(statusOutputStream, "Undeployed trigger instance " + triggerInstanceName);
             }
           } catch (XACT_TriggerInstanceNotFound e) {
-            // schon gelöscht ... ignore
+            // schon gelï¿½scht ... ignore
             if (logger.isDebugEnabled()) {
               logger.debug("Unable to remove trigger instance " + triggerInstanceName + ". This must not be an error!", e);
             }
           } catch (XACT_TriggerNotFound e) {
-            // schon gelöscht ... ignore
+            // schon gelï¿½scht ... ignore
             if (logger.isDebugEnabled()) {
               logger.debug("Unable to remove trigger instance " + triggerInstanceName + ". This must not be an error!", e);
             }
@@ -1325,7 +1325,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
             output(statusOutputStream, "Removed trigger " + triggerName);
           }
         } catch (XACT_TriggerNotFound e) {
-          // schon gelöscht ... ignore
+          // schon gelï¿½scht ... ignore
           if (logger.isDebugEnabled()) {
             logger.debug("Unable to remove trigger " + triggerName + ". This must not be an error!", e);
           }
@@ -1340,8 +1340,8 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     RuntimeContextDependencyManagement rcdMgmt =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
 
-    // wenn die Arbeitskopie (oder inkonsistente RuntimeApplication) gelöscht werden soll,
-    // müssen nur die Einträge aus den ApplicationEntries entfernt werden
+    // wenn die Arbeitskopie (oder inkonsistente RuntimeApplication) gelï¿½scht werden soll,
+    // mï¿½ssen nur die Eintrï¿½ge aus den ApplicationEntries entfernt werden
     ODSConnection con = ods.openConnection();
     try {
       Long parentRevision = revisionManagement.getRevision(params.getParentWorkspace());
@@ -1420,10 +1420,10 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       repositoryEvent.addEvent(new ProjectCreationOrChangeProvider.BasicProjectCreationOrChangeEvent(EventType.APPLICATION_REMOVE,
                                                                                                      applicationName));
 
-      //RuntimeContext Dependencies löschen
+      //RuntimeContext Dependencies lï¿½schen
       rcdMgmt.deleteRuntimeContext(rc);
       
-      //Multi-User-Event für RuntimeContext Änderung
+      //Multi-User-Event fï¿½r RuntimeContext ï¿½nderung
       Publisher publisher = new Publisher(params.getUser());
       publisher.publishRuntimeContextDelete(rc);
     } catch (PersistenceLayerException ep) {
@@ -1441,8 +1441,8 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * RMIRunnable, um festzustellen, ob auf einem anderen Knoten noch laufende Aufträge
-   * für die Application existieren und diese ggf. abbrechen.
+   * RMIRunnable, um festzustellen, ob auf einem anderen Knoten noch laufende Auftrï¿½ge
+   * fï¿½r die Application existieren und diese ggf. abbrechen.
    *
    */
   private static class IsApplicationInUseRunnable implements RMIRunnable<Boolean, ApplicationRemoteInterface, XynaException> {
@@ -1487,7 +1487,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * ApplicationRemoteRunnable, um eine Application auf den anderen Knoten zu löschen.
+   * ApplicationRemoteRunnable, um eine Application auf den anderen Knoten zu lï¿½schen.
    *
    */
   private static class RemoveApplicationRunnable extends ApplicationRemoteRunnable {
@@ -1536,7 +1536,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
   }
 
   /**
-   * RMIRunnable, um die laufenden Aufträge auf den anderen Knoten zu bestimmen.
+   * RMIRunnable, um die laufenden Auftrï¿½ge auf den anderen Knoten zu bestimmen.
    *
    */
   private static class ListActiveOrdersRunnable implements RMIRunnable<OrdersInUse, ApplicationRemoteInterface, XynaException> {
@@ -1578,7 +1578,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       }
     }
 
-    //Status auf anderen Knoten überprüfen, falls application global entfernt werden soll
+    //Status auf anderen Knoten ï¿½berprï¿½fen, falls application global entfernt werden soll
     if (global && currentClusterState == ClusterState.CONNECTED) {
       if (logger.isDebugEnabled()) {
         logger.debug("Call checkApplicationStopped on other cluster nodes.");
@@ -1603,7 +1603,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * Stoppt die Applikation, indem die zugehörigen Trigger und Filter angehalten werden.
+   * Stoppt die Applikation, indem die zugehï¿½rigen Trigger und Filter angehalten werden.
    */
   public void stopApplication(String applicationName, String versionName, boolean clusterwide) throws XFMG_CouldNotStopApplication {
     stopApplication(applicationName, versionName, clusterwide, Optional.<EnumSet<OrderEntranceType>> empty());
@@ -1647,8 +1647,8 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       }
 
       boolean allInterfacesClosed;
-      //Inzwischen könnte eine Auftragseingangsschnittstelle wieder aktiviert worden sein
-      //daher jetzt (mit Lock) überprüfen, ob noch alle geschlossen sind
+      //Inzwischen kï¿½nnte eine Auftragseingangsschnittstelle wieder aktiviert worden sein
+      //daher jetzt (mit Lock) ï¿½berprï¿½fen, ob noch alle geschlossen sind
       Pair<Operation, Operation> failure =
           CommandControl.wlock(CommandControl.Operation.APPLICATION_STOP,
                                CommandControl.Operation.allExcept(CommandControl.Operation.APPLICATION_STOP), revision);
@@ -1700,7 +1700,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * Startet die Applikation, indem die zugehörigen Trigger und Filter gestartet werden.
+   * Startet die Applikation, indem die zugehï¿½rigen Trigger und Filter gestartet werden.
    */
   public void startApplication(String applicationName, String versionName, boolean force, boolean clusterwide)
       throws XFMG_CouldNotStartApplication {
@@ -1713,7 +1713,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * Startet die Applikation, indem die zugehörigen Trigger und Filter gestartet werden.
+   * Startet die Applikation, indem die zugehï¿½rigen Trigger und Filter gestartet werden.
    */
   public void startApplication(String applicationName, String versionName, StartApplicationParameters params)
       throws XFMG_CouldNotStartApplication {
@@ -1733,7 +1733,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     if (currentClusterState != ClusterState.NO_CLUSTER && currentClusterState != ClusterState.SINGLE
         && !params.isForceStartInInconsistentCluster()) {
       // check, ob die Application im Cluster auf dem anderen Knoten installiert ist ... wenn dies nicht der Fall ist, darf nicht gestartet werden
-      // -> sonst ist nicht sichergestellt, das die Migration erfolgreich funktionieren würde
+      // -> sonst ist nicht sichergestellt, das die Migration erfolgreich funktionieren wï¿½rde
       if (currentClusterState == ClusterState.CONNECTED) {
         logger.debug("Check on other nodes whether the application is installed there.");
         try {
@@ -1778,13 +1778,13 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       //Status auf RUNNING setzen
       changeState(con, application, ApplicationState.RUNNING);
 
-      //RMI/CLI-Schnittstellen öffnen
+      //RMI/CLI-Schnittstellen ï¿½ffnen
       RevisionOrderControl roc = new RevisionOrderControl(revision);
       roc.openRMICLI(convertOrderEntranceTypes(params.getOnlyEnableOrderEntrance()));
       RevisionOrderControl.openCustomOrderEntries(revision);
 
       if (params.getOnlyEnableOrderEntrance() == null) {
-        //andere Schnittstellen sollen auch geöffnet werden
+        //andere Schnittstellen sollen auch geï¿½ffnet werden
         //Trigger/Filter aktivieren
         Map<String, Set<String>> triggerFilterInstances = getTriggerAndFilterInstances(con, runtimeContext);
         enableTriggerAndFilter(triggerFilterInstances, revision);
@@ -1889,7 +1889,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
     for (String triggerInstanceName : triggerFilterInstances.keySet()) {
       for (String filterInstanceName : triggerFilterInstances.get(triggerInstanceName)) {
-        //Filterinstanzen einzeln enablen, da enableTriggerInstance nur ausgeführt wird,
+        //Filterinstanzen einzeln enablen, da enableTriggerInstance nur ausgefï¿½hrt wird,
         //wenn die Triggerinstanz nicht bereits enabled ist
         if (logger.isDebugEnabled()) {
           logger.debug("Enable filter instance " + filterInstanceName);
@@ -1914,7 +1914,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * Ändert den Status der Application
+   * ï¿½ndert den Status der Application
    * @param revision
    * @param newState
    */
@@ -1931,7 +1931,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * Ändert den Status der Application
+   * ï¿½ndert den Status der Application
    * @param applicationName
    * @param versionName
    * @param newState
@@ -1956,7 +1956,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-   * Ändert den Status der Application
+   * ï¿½ndert den Status der Application
    * @param con
    * @param application
    * @param newState
@@ -2173,7 +2173,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     clearApplicationDefinitionCache(targetRevision);
     updateApplicationDetailsCache(targetRevision);
 
-    //Multi-User-Event für RuntimeContext Änderung
+    //Multi-User-Event fï¿½r RuntimeContext ï¿½nderung
     Publisher publisher = new Publisher(params.getUser());
     publisher.publishRuntimeContextCreate(new ApplicationDefinition(applicationName, params.getTargetWorkspace()));
 
@@ -2183,7 +2183,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
   private void saveFiles(List<ApplicationEntryStorable> appEntries, long revisionFrom, long revisionTo, RepositoryEvent repositoryEvent)
       throws XynaException {
-    //wenn command von gui aus angestossen wurde, nicht den dortigen user verwenden. TODO es wäre aber vermutlich richtig, seine rolle zu übernehmen
+    //wenn command von gui aus angestossen wurde, nicht den dortigen user verwenden. TODO es wï¿½re aber vermutlich richtig, seine rolle zu ï¿½bernehmen
 
     String fromPathXMOM = RevisionManagement.getPathForRevision(PathType.XMOM, revisionFrom);
 
@@ -2368,7 +2368,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
         try {
           oism.createOrderInputSource(inputSource);
         } catch (XFMG_InputSourceNotUniqueException e) {
-          //InputSource existiert bereits -> mit neuen Daten überschreiben
+          //InputSource existiert bereits -> mit neuen Daten ï¿½berschreiben
           inputSource.setId(-1); //korrekte id anhand des namens suchen
           oism.modifyOrderInputSource(inputSource);
         }
@@ -2383,7 +2383,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
    * neuste Version der entsprechenden Runtime-Applications umgewandelt.
    * @param source
    * @param target
-   * @throws XFMG_NoCorrespondingApplicationException falls für ein Requirement zu einer ApplicationDefinition keine entsprechende RuntimeApplication existiert
+   * @throws XFMG_NoCorrespondingApplicationException falls fï¿½r ein Requirement zu einer ApplicationDefinition keine entsprechende RuntimeApplication existiert
    * @throws PersistenceLayerException
    * @throws XFMG_CouldNotModifyRuntimeContextDependenciesException
    */
@@ -2397,14 +2397,14 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
     for (RuntimeDependencyContext req : sourceRequirements) {
       if (req instanceof Application || req instanceof Workspace) {
-        //Requirement übernehmen
+        //Requirement ï¿½bernehmen
         targetRequirements.add(req);
       }
       if (req instanceof ApplicationDefinition) {
         //Requirement zu ApplicationDefinition in Requirement auf die neuste Version
-        //der entsprechenden RuntimeApplication ändern
+        //der entsprechenden RuntimeApplication ï¿½ndern
         try {
-          Long revision = revisionManagement.getRevision(new Application(req.getName(), null)); //liefert die höchste Revision
+          Long revision = revisionManagement.getRevision(new Application(req.getName(), null)); //liefert die hï¿½chste Revision
           targetRequirements.add(RuntimeContextDependencyManagement.asRuntimeDependencyContext(revisionManagement.getRuntimeContext(revision)));
         } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
           throw new XFMG_NoCorrespondingApplicationException(req.toString());
@@ -2477,11 +2477,11 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
             .addCapacity(capacity.getName(), capacity.getCardinality(), state);
       } catch (XPRC_CAPACITY_ALREADY_DEFINED e) {
         //Capacity existiert bereits
-        //Kardinalität übernehmen
+        //Kardinalitï¿½t ï¿½bernehmen
         XynaFactory.getInstance().getProcessing().getXynaScheduler().getCapacityManagement()
             .changeCardinality(capacity.getName(), capacity.getCardinality());
         if (capacity.getState() != null) {
-          //Status übernehmen, falls er im Export gesetzt wurde
+          //Status ï¿½bernehmen, falls er im Export gesetzt wurde
           XynaFactory.getInstance().getProcessing().getXynaScheduler().getCapacityManagement()
               .changeState(capacity.getName(), capacity.getState());
         }
@@ -2972,7 +2972,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       deployTriggerAndFilter(applicationXml, revision, true, importParameter.isVerbose(), importParameter.getStatusOutputStream());
       
       if (parentRuntimeContexts != null) {
-        //falls es parentruntimecontexte gibt, wieder hinzufügen
+        //falls es parentruntimecontexte gibt, wieder hinzufï¿½gen
         for (RuntimeDependencyContext parentRC : parentRuntimeContexts) {
           List<RuntimeDependencyContext> requirements = new ArrayList<RuntimeDependencyContext>(rcdMgmt.getRequirements(parentRC));
           if (importParameter.isVerbose()) {
@@ -3044,13 +3044,13 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       throw new XFMG_CouldNotImportApplication(importParameter.getFileName(), e);
     }
 
-    //Multi-User-Event für RuntimeContext Änderung
+    //Multi-User-Event fï¿½r RuntimeContext ï¿½nderung
     Publisher publisher = new Publisher(importParameter.getUser());
     if (parentRuntimeContexts == null) {
       //neue application
       publisher.publishRuntimeContextCreate(app);
     } else {
-      //überschreiben existierender application
+      //ï¿½berschreiben existierender application
       RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
       List<RuntimeContext> runtimeContextsToPublishAsXMOMUpdate = rcdm.getParentRuntimeContextsSorted(app);
       if (runtimeContextsToPublishAsXMOMUpdate != null) {
@@ -3112,7 +3112,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       RevisionManagement.createNewRevisionDirectory(revision);
       File[] files = FileUtils.saveZipToDir(zis, applicationDir);
 
-      //application.xml löschen, damit es bei erneutem Export nicht stört
+      //application.xml lï¿½schen, damit es bei erneutem Export nicht stï¿½rt
       for (File file : files) {
         if (file.getName().equals(XML_APPLICATION_FILENAME)) {
           FileUtils.deleteFileWithRetries(file);
@@ -3135,7 +3135,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
   private void modifyRuntimeContextDependencies(String user, RuntimeDependencyContext rc, boolean verbose, PrintStream statusOutputStream,
                                                 RuntimeContextDependencyManagement rcdMgmt, Set<RuntimeDependencyContext> parentRuntimeContexts, boolean publishChanges) {
-    //sortieren: erst von appdefs entfernen, danach von zugehörigen workspaces, ansonsten gibts fehler
+    //sortieren: erst von appdefs entfernen, danach von zugehï¿½rigen workspaces, ansonsten gibts fehler
     List<RuntimeDependencyContext> sorted = new ArrayList<RuntimeDependencyContext>(parentRuntimeContexts);
     Collections.sort(sorted, new Comparator<RuntimeDependencyContext>() {
 
@@ -3394,7 +3394,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
     con.persistCollection(appEntriesToStore);
 
-    //hier schon committen, damit das removeapplication im fehlerfall danach die einträge finden kann
+    //hier schon committen, damit das removeapplication im fehlerfall danach die eintrï¿½ge finden kann
     //ausserdem kann es sein, dass beim deployment crons gestartet werden, die den appstate auf running setzen. 
     con.commit();
   }
@@ -3637,7 +3637,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           }
         } catch (XNWH_ODSNameMustBeUniqueException e) {
           if (allowStorableNameGeneration == XMOMODSNameImportSetting.ALLOW_REGENERATION) {
-            // ok, dann kann man also die konfig so nicht importieren -> fehler loggen, dann kann der benutzer später den odsnamen manuell umkonfigurieren
+            // ok, dann kann man also die konfig so nicht importieren -> fehler loggen, dann kann der benutzer spï¿½ter den odsnamen manuell umkonfigurieren
             boolean tableName = entry.colName == null;
             String msg = "ODS name not unique. Failed to import configured ODS name '" + 
                             entry.getOdsName() + 
@@ -3654,7 +3654,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             throw e;
           }
         }
-        // restliche fehler sollten nicht vorkommen, oder sind exceptions die zum abbruch des imports führen sollen.
+        // restliche fehler sollten nicht vorkommen, oder sind exceptions die zum abbruch des imports fï¿½hren sollen.
       }
     }
 
@@ -3664,7 +3664,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     redeploy(revision, xmomEntries, regenerateCode ? DeploymentMode.codeChanged : DeploymentMode.reloadWithXMOMDatabaseUpdate, false,
              statusOutputStream, comment);
     if (!regenerateCode) { //else: deploymenthandler speichert
-      //damit beim Factory-Neustart die Objekte wieder deployed werden, müssen sie in WorkflowDatabase persistiert werden,
+      //damit beim Factory-Neustart die Objekte wieder deployed werden, mï¿½ssen sie in WorkflowDatabase persistiert werden,
       //wenn sie hier mit DeploymentMode = reload deployed werden
       WorkflowDatabase wdb = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getWorkflowDatabase();
       wdb.persistDeployedObjects();
@@ -3672,7 +3672,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
     OrdertypeManagement orderTypeManagement =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getOrderTypeManagement();
-    //nach dem deployment ausführen, damit die defaultdestinations bereits existieren
+    //nach dem deployment ausfï¿½hren, damit die defaultdestinations bereits existieren
     try {
       orderTypeManagement.createOrUpdateOrdertypes(orderTypeParams.values(), false); //FIXME oben wurde bereits manches geupdated
     } catch (Exception e) {
@@ -3772,7 +3772,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         return true;
       } else {
         if (revision != null) { //es ist eine alte revision vorhanden
-          //zugehöriges revision-Verzeichnis suchen
+          //zugehï¿½riges revision-Verzeichnis suchen
           File revFolder = new File(RevisionManagement.getPathForRevision(PathType.ROOT, revision));
           if (!revFolder.exists()) {
             //kein revisions-Verzeichnis da -> inkonsistenter Zustand -> Application-Reste sollen entfernt werden
@@ -3783,12 +3783,12 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             throw new XFMG_DuplicateVersionForApplicationName(applicationName, versionName);
           }
         } else {
-          //alte revision ist nicht bekannt -> nach überflüssigen revisions-Verzeichnissen suchen
+          //alte revision ist nicht bekannt -> nach ï¿½berflï¿½ssigen revisions-Verzeichnissen suchen
           String path = ".." + Constants.fileSeparator + Constants.REVISION_PATH;
           File revisions = new File(path);
           if (revisions.listFiles().length - 1 > con.loadCollection(XMOMVersionStorable.class).size()) {
             //es gibt mindestens einen revisions-Ordner (ohne rev_workingset) mehr als xmomversions
-            //-> Application nicht löschen, damit diese Informationen nicht verloren gehen
+            //-> Application nicht lï¿½schen, damit diese Informationen nicht verloren gehen
             throw new XFMG_DuplicateVersionForApplicationName(applicationName, versionName);
           }
           for (File file : revisions.listFiles()) {
@@ -3798,12 +3798,12 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                 revisionManagement.getApplication(Long.valueOf(revisionString));
               } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
                 //es gibt einen revisions-Ordner ohne xmomversion-Eintrag
-                //-> Application nicht löschen, damit diese Informationen nicht verloren gehen
+                //-> Application nicht lï¿½schen, damit diese Informationen nicht verloren gehen
                 throw new XFMG_DuplicateVersionForApplicationName(applicationName, versionName);
               }
             }
           }
-          //es gibt keinen überflüssigen revisions-Ordner -> Application-Reste können entfernt werden
+          //es gibt keinen ï¿½berflï¿½ssigen revisions-Ordner -> Application-Reste kï¿½nnen entfernt werden
           //neue xmomversion anlegen, damit remove funktioniert
           logger.warn("Data is inconsistent. XMOMVersion knows application " + applicationName + " (" + versionName
               + ") but revision folder is missing.");
@@ -3819,7 +3819,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
   private String repairPath(String path, String lastPathEntry) {
     // 1. suche nach vorkommen von <lastPathEntry>
-    // 2. lösche alles vor <lastPathEntry> inkl. <lastPathEntry>/
+    // 2. lï¿½sche alles vor <lastPathEntry> inkl. <lastPathEntry>/
     // Bsp. ./filter/DHCPFilter/DHCPFilter.jar --> DHCPFilter/DHCPFilter.jar
     int index = path.indexOf(lastPathEntry);
     if (index < 0) {
@@ -3948,13 +3948,13 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
         dependentRuntimeContexts = rcdMgmt.getRequirements(runtimeContext);
 
-        //erzeuge xmlentries, wobei die impliziten abhängigkeiten entsprechend markiert werden, damit beim import dafür 
+        //erzeuge xmlentries, wobei die impliziten abhï¿½ngigkeiten entsprechend markiert werden, damit beim import dafï¿½r 
         //nicht neue app entries gespeichert werden
         createXMLEntries(appEntries, verbose, statusOutputStream, applicationXmlEntry, revision, false, false, createStub);
         createXMLEntries(implicitDependencies, verbose, statusOutputStream, applicationXmlEntry, revision, true, false, createStub);
       }
 
-      //die RuntimeContextRequirements sind nicht in den ApplicationEntries enthalten, daher extra hinzufügen
+      //die RuntimeContextRequirements sind nicht in den ApplicationEntries enthalten, daher extra hinzufï¿½gen
       addRuntimeContextRequirementXMLEntries(dependentRuntimeContexts, applicationXmlEntry, verbose, statusOutputStream);
 
       File file =  new File(fileName);
@@ -3966,7 +3966,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       if (!createStub && repositoryAccess != null) {
         XMOMAccess xmomAccess = new XMOMAccess(repositoryAccess.getName(), revision, repositoryAccess);
 
-        //neuen Branch erstellen, falls Konfigurationsänderungen vorhanden sind
+        //neuen Branch erstellen, falls Konfigurationsï¿½nderungen vorhanden sind
         if (hasApplicationConfigurationChanged(applicationName, applicationXmlEntry, xmomAccess)) {
           if (localBuild) {
             file = new File(file.getParent(), "localBuild_" + file.getName());
@@ -3978,7 +3978,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
               //ok, es gibt noch keine Version 'newVersion'
             }
 
-            //VersionName auf newVersion ändern
+            //VersionName auf newVersion ï¿½ndern
             applicationXmlEntry.versionName = newVersion;
 
             //Branch erstellen
@@ -4034,7 +4034,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       //falls eine neue Version angelegt wurde, diese importieren und TimeControlledOrders migrieren
       if (!createStub && newBranch != null) {
         importApplication(fileName, false, false, true, true, false, false, !local, false, verbose, user, statusOutputStream, true, true);
-        // RepositoryAccess für neue Version anlegen
+        // RepositoryAccess fï¿½r neue Version anlegen
         Long newRevision = revisionManagement.getRevision(new Application(applicationName, newVersion));
         RepositoryAccess newRepositoryAccess =
             instantiateRepositoryAccess(repositoryAccess, getBranchName(applicationName, newVersion), newBranch, newRevision);
@@ -4128,14 +4128,14 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
     }
     if (atLeastOneWorkflow) {
-      //Base Application benötigt für XynaExceptionBase etc
+      //Base Application benï¿½tigt fï¿½r XynaExceptionBase etc
       Long rev = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
           .getRevisionDefiningXMOMObject(GenerationBase.CORE_XYNAEXCEPTIONBASE, revision);
       if (rev != null) {
         revisionsToKeep.add(rev);
       }
     }
-    //Datentypen nur mitnehmen, wenn sie in den Workflowschnittstellen verwendet werden. Wenn man sie trotzdem verwenden möchte, gehören sie in eine separate Application.
+    //Datentypen nur mitnehmen, wenn sie in den Workflowschnittstellen verwendet werden. Wenn man sie trotzdem verwenden mï¿½chte, gehï¿½ren sie in eine separate Application.
     return dependencies.values();
   }
 
@@ -4290,7 +4290,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       findDependenciesOfType(statusOutputStream, memVar.getType(), dependencies, revisionsToKeep, revision, app, verbose, stack);
       stack.pop();
     }
-    // TODO rewrite this later if we try to exclude operations. Achtung, dann auch unten bei createStubForFile berücksichtigen
+    // TODO rewrite this later if we try to exclude operations. Achtung, dann auch unten bei createStubForFile berï¿½cksichtigen
     for (OperationInterface operation : published.getAllOperations()) {
       stack.push("Operation " + operation.getName());
       findDependenciesOfOperation(statusOutputStream, operation, dependencies, revisionsToKeep, revision, app, verbose, stack);
@@ -4349,14 +4349,14 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
               dom.getDocumentElement().removeChild(el);
             }
             /*
-             * eigtl würde man gerne den gesamten Service entfernen. Das kann aber dazu führen, dass der typ eigtl abstrakt sein müsste, weil ein basetype
+             * eigtl wï¿½rde man gerne den gesamten Service entfernen. Das kann aber dazu fï¿½hren, dass der typ eigtl abstrakt sein mï¿½sste, weil ein basetype
              * abstrakte operations definiert und man selbst nicht abstrakt ist.
              */
             Element serviceEl = XMLUtils.getChildElementByName(dom.getDocumentElement(), GenerationBase.EL.SERVICE);
             /*
              * TODO
-             * für jede operation prüfen, ob sie entfernt werden kann:
-             * - nein, wenn der erste basistyp in der vererbungshierarchie der die operation definiert/überschreibt, der ausserhalb des stubs liegt die operation als abstrakt definiert.
+             * fï¿½r jede operation prï¿½fen, ob sie entfernt werden kann:
+             * - nein, wenn der erste basistyp in der vererbungshierarchie der die operation definiert/ï¿½berschreibt, der ausserhalb des stubs liegt die operation als abstrakt definiert.
              * - ja, sonst
              * 
              * TODO
@@ -4461,7 +4461,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
               List<Element> targetDataInAssign = new ArrayList<Element>();
               List<Element> sourceDataInAssign = new ArrayList<Element>();
               
-              //  erst dataelemente auf operationebene anlegen, dann assign dafür erzeugen
+              //  erst dataelemente auf operationebene anlegen, dann assign dafï¿½r erzeugen
               for (Element output : outputDatas) {
                 Element outputCopy = (Element) output.cloneNode(true);
                 operation.appendChild(outputCopy);
@@ -4520,7 +4520,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
               }
             }
           }
-          //abgespecktes dom zurückgeben
+          //abgespecktes dom zurï¿½ckgeben
           StringWriter sw = new StringWriter();
           XMLUtils.saveDomToWriter(sw, dom);
           try {
@@ -4565,8 +4565,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Ermittelt dependencies für RuntimeApplications
-   * @return zurückgegebene liste enthält alle dependencies, aber nicht die elemente, die bereits übergeben werden
+   * Ermittelt dependencies fï¿½r RuntimeApplications
+   * @return zurï¿½ckgegebene liste enthï¿½lt alle dependencies, aber nicht die elemente, die bereits ï¿½bergeben werden
    */
   private List<ApplicationEntryStorable> findDependencies(List<? extends ApplicationEntryStorable> appEntries, Long revision)
       throws PersistenceLayerException {
@@ -4575,7 +4575,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       return result;
     }
 
-    //extrabehandlung für dependencies von objekten, die sich nicht über das dependencyregister ergeben
+    //extrabehandlung fï¿½r dependencies von objekten, die sich nicht ï¿½ber das dependencyregister ergeben
     Set<String> capacities = new HashSet<String>();
     Set<String> existingCapacities = new HashSet<String>();
     Set<DependencyNode> processedEntries = new HashSet<DependencyNode>();
@@ -4597,7 +4597,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         node = dependencyRegister.getDependencyNode(entry.getName(), depType, revision);
       }
       if (node == null) {
-        //sonderbehandlung für filter- und triggerinstanzen, weil es dafür keine dependencynodes gibt
+        //sonderbehandlung fï¿½r filter- und triggerinstanzen, weil es dafï¿½r keine dependencynodes gibt
         if (entry.getTypeAsEnum() == ApplicationEntryType.FILTERINSTANCE) {
           //filter und triggerinstance bestimmen
           Triple<String, Long, DependencyNode> triple = getFilterDependencyNodeForFilterInstance(entry.getName(), revision);
@@ -4681,9 +4681,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       findOrderInputSourceDependencies(inputSource, processedEntries, processedInputSources, revision);
     }
 
-    //Evtl. werden nicht alle XMOMEntries über das DependencyRegister gefunden (z.B. weil ein
-    //Ordertype umkonfiguriert wurde und der ursprüngliche Workflow von keinem Objekt mehr abhängt).
-    //Daher hier alle deployed XMOMEntries und deren Abhängigkeiten suchen
+    //Evtl. werden nicht alle XMOMEntries ï¿½ber das DependencyRegister gefunden (z.B. weil ein
+    //Ordertype umkonfiguriert wurde und der ursprï¿½ngliche Workflow von keinem Objekt mehr abhï¿½ngt).
+    //Daher hier alle deployed XMOMEntries und deren Abhï¿½ngigkeiten suchen
     List<ApplicationEntryStorable> xmomEntries = getAllXMOMEntries(applicationName, version);
     for (ApplicationEntryStorable entry : xmomEntries) {
       DependencyNode node = null;
@@ -4711,7 +4711,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     }
     capacities.removeAll(existingCapacities);
 
-    //nur die nodes zurückgeben, die nicht oben reingegeben wurden
+    //nur die nodes zurï¿½ckgeben, die nicht oben reingegeben wurden
     processedEntries.removeAll(startEntries);
 
     for (DependencyNode node : processedEntries) {
@@ -4737,7 +4737,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     Set<DependencyNode> depNodes =
         dependencyRegister.getAllUsedNodesSameRevision(node.getUniqueName(), node.getType(), false, false, revision);
 
-    //default-ordertypes zu workflows findet man so nicht, weil die abhängigkeit andersherum ist
+    //default-ordertypes zu workflows findet man so nicht, weil die abhï¿½ngigkeit andersherum ist
     if (node.getType() == DependencySourceType.WORKFLOW) {
       String ordertype;
       try {
@@ -5107,7 +5107,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Baut eine neue Revision für die Applikation unter dem neuen Versionsname.
+   * Baut eine neue Revision fï¿½r die Applikation unter dem neuen Versionsname.
    */
   @SuppressWarnings("unchecked")
   public void buildApplicationVersion(String applicationName, String versionName, BuildApplicationVersionParameters params,
@@ -5173,7 +5173,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         }
 
         if (xmomAccess != null) {
-          //Überprüfung ob der Branch bereits existiert
+          //ï¿½berprï¿½fung ob der Branch bereits existiert
           List<String> branches = xmomAccess.listBranches();
           if (branches.contains(branchName)) {
             throw new XDEV_AlreadyExistsException("Branch '" + branchName + "' already exists");
@@ -5223,28 +5223,28 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             appEntriesForAllDependencies.add(ApplicationEntryStorable.create(aes.getApplication(), aes.getVersion(), aes.getName(),
                                                                           ApplicationEntryType.FILTERINSTANCE));
 
-            //filter instances und trigger instances stehen nicht im dependency register -> zugehörigen filter ermitteln und dann rekursiv weiter
+            //filter instances und trigger instances stehen nicht im dependency register -> zugehï¿½rigen filter ermitteln und dann rekursiv weiter
             Triple<String, Long, DependencyNode> triple = getFilterDependencyNodeForFilterInstance(aes.getName(), parentRevision);
 
             if (triple != null) {
               if (triple.getSecond().equals(parentRevision)) {
-                //trigger instance hinzufügen
+                //trigger instance hinzufï¿½gen
                 appEntriesForAllDependencies.add(ApplicationEntryStorable.create(aes.getApplication(), aes.getVersion(), triple.getFirst(),
                                                                               ApplicationEntryType.TRIGGERINSTANCE));
 
               } else {
-                //andere revision -> ok, gehört nicht zur application
+                //andere revision -> ok, gehï¿½rt nicht zur application
               }
 
               if (triple.getThird() != null) {
                 if (triple.getThird().getRevision().equals(parentRevision)) {
-                  appEntriesForAllDependencies.add(aes); //filter instance hinzufügen
+                  appEntriesForAllDependencies.add(aes); //filter instance hinzufï¿½gen
                   aes =
                       ApplicationEntryStorable.create(aes.getApplication(), aes.getVersion(), triple.getThird().getUniqueName(),
                                                    ApplicationEntryType.FILTER);
                   sourceType = DependencySourceType.FILTER;
                 } else {
-                  //andere revision -> ok, gehört nicht zur application
+                  //andere revision -> ok, gehï¿½rt nicht zur application
                   continue;
                 }
               } else {
@@ -5258,17 +5258,17 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             appEntriesForAllDependencies.add(ApplicationEntryStorable.create(aes.getApplication(), aes.getVersion(), aes.getName(),
                                                                           ApplicationEntryType.TRIGGERINSTANCE));
 
-            //trigger instances stehen nicht im dependency register -> zugehörigen trigger ermitteln und dann rekursiv weiter
+            //trigger instances stehen nicht im dependency register -> zugehï¿½rigen trigger ermitteln und dann rekursiv weiter
             DependencyNode trigger = getTriggerDependencyNodeForTriggerInstance(aes.getName(), parentRevision);
             if (trigger != null) {
               if (trigger.getRevision().equals(parentRevision)) {
-                appEntriesForAllDependencies.add(aes); //trigger instance hinzufügen
+                appEntriesForAllDependencies.add(aes); //trigger instance hinzufï¿½gen
                 aes =
                     ApplicationEntryStorable.create(aes.getApplication(), aes.getVersion(), trigger.getUniqueName(),
                                                  ApplicationEntryType.TRIGGER);
                 sourceType = DependencySourceType.TRIGGER;
               } else {
-                //andere revision -> ok, gehört nicht zur application
+                //andere revision -> ok, gehï¿½rt nicht zur application
                 continue;
               }
             } else {
@@ -5294,9 +5294,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         }
 
         //Die Subtypen von Output-Parametern von Java-Services sollen automatisch mitgenommen werden,
-        //damit man hierfür nicht extra additionalDependencies angeben muss.
+        //damit man hierfï¿½r nicht extra additionalDependencies angeben muss.
         //Die in excludeSubtypes enthaltenen Subtypen werden nicht explizit mitgenommen. Ist "*" enthalten,
-        //so werden keine Subtypen mitgenommen, die nicht bereits über das DependencyRegister gefunden wurden.
+        //so werden keine Subtypen mitgenommen, die nicht bereits ï¿½ber das DependencyRegister gefunden wurden.
         Set<String> subTypes =
             getSubTypesOfOutputVars(applicationName, versionName, parentRevision, processedDependencies, params.getExcludeSubtypesOf());
         for (String subType : subTypes) {
@@ -5306,7 +5306,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         }
 
         //falls storables enthalten und forms enthalten sind, sollen auch die default storable-workflows mitgenommen werden.
-        //TODO das könnte man hier wegnehmen, wenn man statt dessen die forms korrekt parst und auf dependencies analysiert
+        //TODO das kï¿½nnte man hier wegnehmen, wenn man statt dessen die forms korrekt parst und auf dependencies analysiert
         //dort sollte dann diese dependency enthalten sein
         Set<String> storableWFs = getStorableWFs(processedDependencies, parentRevision);
         for (String storableWF : storableWFs) {
@@ -5377,7 +5377,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         copyXMOMOdsNameMapping(appEntriesForAllDependencies, parentRevision, revision);
         
         redeploy(revision, appEntriesForAllDependencies, DeploymentMode.reloadWithXMOMDatabaseUpdate, true, statusOutputStream, "Build Application");
-        //damit beim Factory-Neustart die Objekte wieder deployed werden, müssen sie in WorkflowDatabase persistiert werden
+        //damit beim Factory-Neustart die Objekte wieder deployed werden, mï¿½ssen sie in WorkflowDatabase persistiert werden
         WorkflowDatabase wdb = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getWorkflowDatabase();
         wdb.persistDeployedObjects();
 
@@ -5429,7 +5429,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         throw new XFMG_CouldNotBuildNewVersionForApplication(applicationName, versionName, t);
       }
 
-      //Multi-User-Event für RuntimeContext Änderung
+      //Multi-User-Event fï¿½r RuntimeContext ï¿½nderung
       Publisher publisher = new Publisher(params.getUser());
       publisher.publishRuntimeContextCreate(new Application(applicationName, versionName));
     } finally {
@@ -5538,7 +5538,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   private RepositoryAccess instantiateRepositoryAccess(RepositoryAccess oldRepositoryAccess, String newRepositoryAccessInstanceName,
                                                        String newPath, Long newRevision) throws XDEV_CodeAccessInitializationException,
       StringParameterParsingException {
-    //Parameter aus oldRepositoryAccess übernehmen und den ServerPath auf newPath ändern
+    //Parameter aus oldRepositoryAccess ï¿½bernehmen und den ServerPath auf newPath ï¿½ndern
     Map<String, Object> paramMap = new HashMap<String, Object>(oldRepositoryAccess.getParamMap());
 
     // "svn://" + paramMap.get("serverName") + "/" abschneiden;
@@ -5601,7 +5601,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
   /**
    * Liefert die Subtypen der Output-Parameter der Services, deren Basistypen nicht in exludeSubtypesOf enthalten sind.
-   * Falls in excludeSubtypesOf '*' enthalten ist, werden überhaupt keine Subtypen gesucht.
+   * Falls in excludeSubtypesOf '*' enthalten ist, werden ï¿½berhaupt keine Subtypen gesucht.
    * @param appEntries
    * @param excludeSubtypesOf
    * @return
@@ -5616,7 +5616,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       exclude.addAll(excludeSubtypesOf);
     }
 
-    //Für die in der XynaProperty 'xfmg.xfctrl.appmgmt.excludedsubtypesof' angegeben Basistypen
+    //Fï¿½r die in der XynaProperty 'xfmg.xfctrl.appmgmt.excludedsubtypesof' angegeben Basistypen
     //sollen ebenfalls keine Subtypen mitgenommen werden
     exclude.addAll(getPropertyAsList(excludedSubtypesOfProperties.get(parentRevision)));
 
@@ -5631,7 +5631,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       if (entry.getTypeAsEnum() == ApplicationEntryType.DATATYPE) {
         File deployedFile = new File(GenerationBase.getFileLocationForDeploymentStaticHelper(entry.getName(), parentRevision) + ".xml");
         if (!deployedFile.exists()) {
-          continue; //Entry ist nicht deployed, daher müssen auch keine Subtypen bestimmt werden (implizite ApplicationEntries werden auf dem Deployed-Stand ermittelt)
+          continue; //Entry ist nicht deployed, daher mï¿½ssen auch keine Subtypen bestimmt werden (implizite ApplicationEntries werden auf dem Deployed-Stand ermittelt)
         }
         try {
           DOM dom = DOM.getOrCreateInstance(entry.getName(), cache, parentRevision);
@@ -5672,7 +5672,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           }
         }
 
-        //für alle MemberVars ebenfalls die Subtypen bestimmen
+        //fï¿½r alle MemberVars ebenfalls die Subtypen bestimmen
         List<AVariable> memberVars = ((DOM) gb).getAllMemberVarsIncludingInherited();
         for (AVariable memberVar : memberVars) {
           subTypes.addAll(getSubTypesRecursively(memberVar, excludeSubtypesOf, processedOutputs, cache, parentRevision));
@@ -5740,8 +5740,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     if (logger.isDebugEnabled()) {
       logger.debug("Predicting " + predictedAdditionalOpenFiles + " additional open files in application. Checking open files.");
     }
-    //TODO trigger könnte man auch noch mitzählen (offene ports)
-    //     oder eine application könnte angeben, wieviele offene files sie maximal hat
+    //TODO trigger kï¿½nnte man auch noch mitzï¿½hlen (offene ports)
+    //     oder eine application kï¿½nnte angeben, wieviele offene files sie maximal hat
     int possibleOpenFiles = ListsysteminfoImpl.getNumberOfPossibleOpenFiles();
     if (possibleOpenFiles > 0) {
       if (possibleOpenFiles < predictedAdditionalOpenFiles + OPEN_FILES_SAFETY_MARGIN.get()) {
@@ -5813,8 +5813,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * fügt die trigger/filter in targetrevision hinzu, wobei die informationen über name, jars, fqclassname und sharedlibs, etc aus der sourcerevision
-   * verwendet werden. die eigtl jars werden aber aus der targetrevision genommen, müssen also zu diesem zeitpunkt bereits existieren
+   * fï¿½gt die trigger/filter in targetrevision hinzu, wobei die informationen ï¿½ber name, jars, fqclassname und sharedlibs, etc aus der sourcerevision
+   * verwendet werden. die eigtl jars werden aber aus der targetrevision genommen, mï¿½ssen also zu diesem zeitpunkt bereits existieren
    * @param copyFromWorkingSetToRevision true, falls von ws nach revision kopiert wird, false, wenn von revision nach ws kopiert wird.
    */
   private void copyTriggerAndFilterAndInstances(Collection<? extends ApplicationEntryStorable> appEntries, long sourceRevision,
@@ -5870,7 +5870,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
     if (group.get(ApplicationEntryType.TRIGGERINSTANCE) != null) {
       for (ApplicationEntryStorable triggerInstanceEntry : group.get(ApplicationEntryType.TRIGGERINSTANCE)) {
-        //finde und kopiere zugehörige triggerinstanceinformation
+        //finde und kopiere zugehï¿½rige triggerinstanceinformation
         TriggerInstanceInformation triggerinstanceinformation =
             xynaActivationTrigger.getTriggerInstanceInformation(triggerInstanceEntry.getName(), sourceRevision);
         if (triggerinstanceinformation == null) {
@@ -6003,8 +6003,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   private static class ThrowableScanner {
 
     /**
-     * gibt ein ggfs reduziertes throwable zurück, welches exceptions/causes, denen vorher bereits begegnet wurde ersetzt durch
-     * kürzere referenzierende causes.
+     * gibt ein ggfs reduziertes throwable zurï¿½ck, welches exceptions/causes, denen vorher bereits begegnet wurde ersetzt durch
+     * kï¿½rzere referenzierende causes.
      */
     public Throwable scan(Throwable t) {
       return t;
@@ -6060,7 +6060,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
       gb.setDeploymentComment(comment);
       objects.add(gb);
-      //datatypes und exceptions rauswerfen, die benötigt man in späteren schritten nicht mehr
+      //datatypes und exceptions rauswerfen, die benï¿½tigt man in spï¿½teren schritten nicht mehr
       iter.remove();
     }
 
@@ -6140,7 +6140,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /*
-   * Methode prüft Verzeichnis auf generierte innere Klassen (com.bla.Blubber$UnpraktsicheInnereKlasse.class)
+   * Methode prï¿½ft Verzeichnis auf generierte innere Klassen (com.bla.Blubber$UnpraktsicheInnereKlasse.class)
    */
   private void checkInnerClasses(String fqName, String fileName, String pathToNewRevisionXMOMClasses, List<Pair<String, String>> copyList,
                                  PredictionValues predictionValues) throws XPRC_InvalidPackageNameException {
@@ -6233,9 +6233,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       } else if (appEntry.getTypeAsEnum() == ApplicationEntryType.TRIGGER) {
         String simpleClassName = getSimpleTriggerClassName(appEntry.getName(), revisionFrom);
         Pair<String, String> copyD = copyFromDeployedToDeployed(PathType.TRIGGER, revisionFrom, revisionTo, simpleClassName, null );
-        //für den kollisionscheck die deployed-lokation verwenden
+        //fï¿½r den kollisionscheck die deployed-lokation verwenden
         checkCollision(appEntry.getTypeAsEnum(), appEntry.getName(), copyD.getSecond(), overrideChanges, whiteList, revisionTo);
-        //xmls müssen in die deployed-lokation kopiert werden (da nur hier bei addTrigger gesucht wird)
+        //xmls mï¿½ssen in die deployed-lokation kopiert werden (da nur hier bei addTrigger gesucht wird)
         copyList.addAll(getCopyXmlList(copyD.getFirst(), copyD.getSecond()));
         //nach saved kopieren
         Pair<String, String> copyS = copyFromDeployedToSaved(PathType.TRIGGER, revisionFrom, revisionTo, simpleClassName );
@@ -6243,9 +6243,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       } else if (appEntry.getTypeAsEnum() == ApplicationEntryType.FILTER) {
         String simpleClassName = getSimpleFilterClassName(appEntry.getName(), revisionFrom);
         Pair<String, String> copyD = copyFromDeployedToDeployed(PathType.FILTER, revisionFrom, revisionTo, simpleClassName, null );
-        //für den kollisionscheck die deployed-lokation verwenden
+        //fï¿½r den kollisionscheck die deployed-lokation verwenden
         checkCollision(appEntry.getTypeAsEnum(), appEntry.getName(), copyD.getSecond(), overrideChanges, whiteList, revisionTo);
-        //xmls müssen in die deployed-lokation kopiert werden (da nur hier bei addFilter gesucht wird)
+        //xmls mï¿½ssen in die deployed-lokation kopiert werden (da nur hier bei addFilter gesucht wird)
         copyList.addAll(getCopyXmlList(copyD.getFirst(), copyD.getSecond()));
         //nach saved kopieren
         Pair<String, String> copyS = copyFromDeployedToSaved(PathType.FILTER, revisionFrom, revisionTo, simpleClassName );
@@ -6521,7 +6521,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Liefert true, wenn das übergebene Objekt "deployed" ist.
+   * Liefert true, wenn das ï¿½bergebene Objekt "deployed" ist.
    */
   private boolean isObjectDeployed(String uniqueName, DependencySourceType sourceType, Long revision)
       throws XPRC_InvalidPackageNameException, PersistenceLayerException {
@@ -6613,7 +6613,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   }
 
 
-  //übergebenes objekt ist hier bereits gelockt
+  //ï¿½bergebenes objekt ist hier bereits gelockt
   private void recursiveLockAndCopyDependencies(final String uniqueName, final DependencySourceType sourceType, Long fromRevision,
                                                 Long toRevision, boolean verbose, PrintStream statusOutputStream,
                                                 Set<DependencyNode> processedDependencies, PredictionValues predictionValues,
@@ -6626,22 +6626,22 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
       DependencyNode eigenNode = dependencyRegister.getDependencyNode(uniqueName, sourceType, fromRevision);
       if (eigenNode == null) {
-        //sollte eigentlich nicht vorkommen (außer bei XynaProperties) da vorher überprüft wurde, dass
+        //sollte eigentlich nicht vorkommen (auï¿½er bei XynaProperties) da vorher ï¿½berprï¿½ft wurde, dass
         //die Objekte deployed sind.
         if (sourceType == DependencySourceType.XYNAPROPERTY) {
           return; //ntbd
         } else {
           logger.warn("did not find dependency node " + uniqueName + " of type " + sourceType + " in revision " + fromRevision);
-          //FIXME das ist gefährlich, weil jetzt das unlock passiert, aber das objekt als nicht processed gilt. d.h. es kann für dieses objekt zu einem späteren zeitpunkt nochmal diese methode aufgerufen werden
+          //FIXME das ist gefï¿½hrlich, weil jetzt das unlock passiert, aber das objekt als nicht processed gilt. d.h. es kann fï¿½r dieses objekt zu einem spï¿½teren zeitpunkt nochmal diese methode aufgerufen werden
         }
       } else {
-        //Objekte, die explizit oder implizit in einer verwendeten Application Definition enthalten sind, dürfen nicht kopiert werden
+        //Objekte, die explizit oder implizit in einer verwendeten Application Definition enthalten sind, dï¿½rfen nicht kopiert werden
         if (reqAppEntries.contains(ApplicationEntryStorable.create(null, null, uniqueName, convertXMOMTypeToApplicationEntryType(eigenNode)))) { //applicationName und versionName sind hier egal, da nur name und type verglichen werden
           return;
         }
 
         if (!processedDependencies.add(eigenNode)) {
-          //für die nicht rekursiven aufrufe dieser methode
+          //fï¿½r die nicht rekursiven aufrufe dieser methode
           return;
         }
       }
@@ -6724,7 +6724,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             //Exceptions:
             //wurde geunlocked, aber ist evtl nicht in processedDependencies enthalten.
           } else {
-            //bei einer früheren rekursion behandelt - auch geunlocked, aber nur mit dem dort zugeordneten lock, nicht mit dem hiesigen
+            //bei einer frï¿½heren rekursion behandelt - auch geunlocked, aber nur mit dem dort zugeordneten lock, nicht mit dem hiesigen
             DeploymentLocks.readUnlock(node.getUniqueName(), node.getType(), fromRevision);
           }
         } catch (XynaException e) {
@@ -6751,10 +6751,10 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Fügt ein Objekt (Workflow, Datentyp, Exception) und alle Abhängigkeiten zu einer Applikation hinzu. Dies kann nur
+   * Fï¿½gt ein Objekt (Workflow, Datentyp, Exception) und alle Abhï¿½ngigkeiten zu einer Applikation hinzu. Dies kann nur
    * auf der Arbeitsversion geschehen.
    * 
-   * Falls RepositoryAccess konfiguriert ist, werden die Änderungen eingecheckt
+   * Falls RepositoryAccess konfiguriert ist, werden die ï¿½nderungen eingecheckt
    */
   public void addXMOMObjectToApplication(String fqName, String applicationName, Long parentRevision)
       throws XFMG_FailedToAddObjectToApplication {
@@ -6763,7 +6763,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Fügt ein Objekt (Workflow, Datentyp, Exception) und alle Abhängigkeiten zu einer Applikation hinzu. Dies kann nur
+   * Fï¿½gt ein Objekt (Workflow, Datentyp, Exception) und alle Abhï¿½ngigkeiten zu einer Applikation hinzu. Dies kann nur
    * auf der Arbeitsversion geschehen.
    */
   public void addXMOMObjectToApplication(String fqName, String applicationName, Long parentRevision, RepositoryEvent repositoryEvent)
@@ -6773,7 +6773,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Fügt ein Objekt (Workflow, Datentyp, Exception) und alle Abhängigkeiten zu einer Applikation hinzu.
+   * Fï¿½gt ein Objekt (Workflow, Datentyp, Exception) und alle Abhï¿½ngigkeiten zu einer Applikation hinzu.
    */
   public void addXMOMObjectToApplication(String fqName, String applicationName, Long parentRevision, RepositoryEvent repositoryEvent,
                                          boolean verbose, PrintStream statusOutputStream) throws XFMG_FailedToAddObjectToApplication {
@@ -6865,7 +6865,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
     if (!parentIsRTA) {
       try {
-        //Überprüfen, ob das Anlegen des neuen ApplicationEntries zu Zugehörigkeitskonflikt führen würde
+        //ï¿½berprï¿½fen, ob das Anlegen des neuen ApplicationEntries zu Zugehï¿½rigkeitskonflikt fï¿½hren wï¿½rde
         checkObjectNotInDependencyHierarchy(con, appEntry, parentRevision);
       } catch (XynaException e) {
         throw new XFMG_FailedToAddObjectToApplication(applicationName, name, e);
@@ -6878,7 +6878,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   ApplicationEntryType getApplicationEntryTypeForXMOMObject(String fqName, Long revision) throws PersistenceLayerException {
-    //zunächst im DependencyRegister suchen
+    //zunï¿½chst im DependencyRegister suchen
     DependencyNode depNodeDataType = dependencyRegister.getDependencyNode(fqName, DependencySourceType.DATATYPE, revision);
     DependencyNode depNodeWorkflow = dependencyRegister.getDependencyNode(fqName, DependencySourceType.WORKFLOW, revision);
     DependencyNode depNodeException = dependencyRegister.getDependencyNode(fqName, DependencySourceType.XYNAEXCEPTION, revision);
@@ -6902,7 +6902,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   
 
   /**
-   * Liefert für eine Application Definition rekursiv alle benötigten Application Definitions.
+   * Liefert fï¿½r eine Application Definition rekursiv alle benï¿½tigten Application Definitions.
    * @param applicationName
    * @param parentRevision
    * @return
@@ -6957,7 +6957,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Liefert für eine ApplicationDefinition rekursiv alle ApplicationDefinitions die sie verwenden.
+   * Liefert fï¿½r eine ApplicationDefinition rekursiv alle ApplicationDefinitions die sie verwenden.
    * @param applicationName
    * @param parentRevision
    * @return
@@ -6982,7 +6982,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         }
 
       }, thisappdef, true);
-      ret.remove(thisappdef); //zyklen nicht berücksichtigen
+      ret.remove(thisappdef); //zyklen nicht berï¿½cksichtigen
       return ret;
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       // wenn es die Revision nicht gibt, kann sie auch keine Parents haben
@@ -6992,7 +6992,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Überprüft, ob 
+   * ï¿½berprï¿½ft, ob 
    *  - der ApplicationEntry schon in einer verwendeten Application Definition (impl. oder expl.) enthalten ist
    *  - der ApplicationEntry oder ein hiervon verwendetes Objekt in einer Parent Application Definition explizit enthalten ist
    * @param con
@@ -7000,7 +7000,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
    * @param parentRevision
    * @return
    * @throws PersistenceLayerException
-   * @throws XFMG_ObjectAlreadyInDependencyHierarchyException falls das Objekt (oder ein hiervon verwendetes) bereits in der Abhängigkeitshierarchie enthalten ist
+   * @throws XFMG_ObjectAlreadyInDependencyHierarchyException falls das Objekt (oder ein hiervon verwendetes) bereits in der Abhï¿½ngigkeitshierarchie enthalten ist
    * @throws XPRC_InvalidXmlMissingRequiredElementException 
    * @throws XPRC_XmlParsingException 
    * @throws Ex_FileAccessException 
@@ -7018,7 +7018,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Überprüft, ob der ApplicationEntry schon in einer verwendeten Application Definition (impl. oder expl.) enthalten ist
+   * ï¿½berprï¿½ft, ob der ApplicationEntry schon in einer verwendeten Application Definition (impl. oder expl.) enthalten ist
    */
   private void checkObjectNotInRequirements(ODSConnection con, ApplicationEntryStorable appEntry, Long parentRevision)
       throws PersistenceLayerException, XFMG_ObjectAlreadyInDependencyHierarchyException {
@@ -7035,7 +7035,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Überprüft, ob der ApplicationEntry oder ein hiervon verwendetes Objekt in einer Parent Application Definition explizit enthalten ist
+   * ï¿½berprï¿½ft, ob der ApplicationEntry oder ein hiervon verwendetes Objekt in einer Parent Application Definition explizit enthalten ist
    */
   private void checkObjectNotInParents(ODSConnection con, ApplicationEntryStorable appEntry, Long parentRevision)
       throws PersistenceLayerException, XFMG_ObjectAlreadyInDependencyHierarchyException, Ex_FileAccessException, XPRC_XmlParsingException,
@@ -7090,9 +7090,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Fügt ein Objekt (XynaProperty, SharedLibs, Capcities) und alle Abhängigkeiten zu einer Applikation hinzu.
+   * Fï¿½gt ein Objekt (XynaProperty, SharedLibs, Capcities) und alle Abhï¿½ngigkeiten zu einer Applikation hinzu.
    * 
-   * Falls RepositoryAccess konfiguriert ist, werden die Änderungen eingecheckt
+   * Falls RepositoryAccess konfiguriert ist, werden die ï¿½nderungen eingecheckt
    */
   public void addNonModelledObjectToApplication(String objectName, String applicationName, String version, ApplicationEntryType entryType,
                                                 Long parentRevision, boolean verbose, PrintStream statusOutputStream)
@@ -7103,7 +7103,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Fügt ein Objekt (XynaProperty, SharedLibs, Capcities, OrderInputSource) und alle Abhängigkeiten zu einer Applikation hinzu.
+   * Fï¿½gt ein Objekt (XynaProperty, SharedLibs, Capcities, OrderInputSource) und alle Abhï¿½ngigkeiten zu einer Applikation hinzu.
    */
   public void addNonModelledObjectToApplication(String objectName, String applicationName, String version, ApplicationEntryType entryType,
                                                 Long parentRevision, RepositoryEvent repositoryEvent, boolean verbose,
@@ -7134,9 +7134,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Löscht ein XMOM Objekt aus einer Applicationdefinition.
+   * Lï¿½scht ein XMOM Objekt aus einer Applicationdefinition.
    * 
-   * Falls RepositoryAccess konfiguriert ist, werden die Änderungen eingecheckt
+   * Falls RepositoryAccess konfiguriert ist, werden die ï¿½nderungen eingecheckt
    */
   public void removeXMOMObjectFromApplication(String applicationName, String fqName, Long parentRevision)
       throws XFMG_FailedToRemoveObjectFromApplication, XFMG_FailedToRemoveObjectFromApplicationBecauseHasDependentObjects,
@@ -7146,7 +7146,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Löscht ein XMOM Objekt aus einer Applicationdefinition.
+   * Lï¿½scht ein XMOM Objekt aus einer Applicationdefinition.
    */
   public void removeXMOMObjectFromApplication(String applicationName, String fqName, Long parentRevision, RepositoryEvent repositoryEvent)
       throws XFMG_FailedToRemoveObjectFromApplication, XFMG_FailedToRemoveObjectFromApplicationBecauseHasDependentObjects,
@@ -7156,7 +7156,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Löscht ein XMOM Objekt aus einer Applicationdefinition.
+   * Lï¿½scht ein XMOM Objekt aus einer Applicationdefinition.
    */
   public void removeXMOMObjectFromApplication(String applicationName, String fqName, Long parentRevision, RepositoryEvent repositoryEvent,
                                               boolean verbose, PrintStream statusOutputStream)
@@ -7272,10 +7272,10 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   }
   
   /**
-   * Löscht ein Objekt (XynaProperty, SharedLibs, Capacities, Ordertype) aus einer Applikation, falls sie nicht nur implizit
+   * Lï¿½scht ein Objekt (XynaProperty, SharedLibs, Capacities, Ordertype) aus einer Applikation, falls sie nicht nur implizit
    * vorhanden ist
    * 
-   * Falls RepositoryAccess konfiguriert ist, werden die Änderungen eingecheckt
+   * Falls RepositoryAccess konfiguriert ist, werden die ï¿½nderungen eingecheckt
    */
   public void removeNonModelledObjectFromApplication(String applicationName, String version, String objectName,
                                                      ApplicationEntryType entryType, Long parentRevision, boolean verbose,
@@ -7286,10 +7286,10 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Löscht ein Objekt (XynaProperty, SharedLibs, Capacities, Ordertype) aus einer Applikation, falls sie nicht nur implizit
+   * Lï¿½scht ein Objekt (XynaProperty, SharedLibs, Capacities, Ordertype) aus einer Applikation, falls sie nicht nur implizit
    * vorhanden ist
    * 
-   * Falls RepositoryAccess konfiguriert ist, werden die Änderungen eingecheckt
+   * Falls RepositoryAccess konfiguriert ist, werden die ï¿½nderungen eingecheckt
    */
   public void removeNonModelledObjectFromApplication(String applicationName, String version, String objectName,
                                                      ApplicationEntryType entryType, Long parentRevision, RepositoryEvent repositoryEvent,
@@ -7352,7 +7352,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         removeObjectFromApplicationDefinition(uniqueName, type, applicationName, parentRevision, new SingleRepositoryEvent(parentRevision), false,
                                     null);
       } catch (XFMG_FailedToRemoveObjectFromApplicationBecauseOfMissingWorkingset e) {
-        //nichts zu tun, objekt gehört also nicht zu applikation
+        //nichts zu tun, objekt gehï¿½rt also nicht zu applikation
         if (logger.isTraceEnabled()) {
           logger.trace("object not contained in application " + applicationName, e);
         }
@@ -7489,10 +7489,10 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   }
   
   /*
-   * bei allen änderungen, die die listappdetails betreffen, muss diese methode aufgerufen werden
+   * bei allen ï¿½nderungen, die die listappdetails betreffen, muss diese methode aufgerufen werden
    * TODO
-   * - ordertype änderungen
-   * - inputsource änderungen
+   * - ordertype ï¿½nderungen
+   * - inputsource ï¿½nderungen
    */
   public void updateApplicationDetailsCache(long changedRevision) {
     List<AppDetailsKey> remove = new ArrayList<AppDetailsKey>();
@@ -7540,7 +7540,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   }
 
   /**
-   * Listet die Details für eine Applikation auf.
+   * Listet die Details fï¿½r eine Applikation auf.
    */
   public List<ApplicationEntryStorable> listApplicationDetails(String applicationName, String version, boolean includingDependencies,
                                                                List<String> excludeSubtypesOf, Long parentRevision, boolean ignoreErrorsDuringDependencySearch) {
@@ -7588,7 +7588,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         Set<ApplicationEntryStorable> implAppEntries = new TreeSet<ApplicationEntryStorable>(ApplicationEntryStorable.COMPARATOR);
         implAppEntries = getAllImplicitApplicationEntries(appEntries, applicationName, version, parentRevision, ignoreErrorsDuringDependencySearch);
 
-        //im Workspace zusätzlich die Subtypen der Outputs von Java-Services bestimmen
+        //im Workspace zusï¿½tzlich die Subtypen der Outputs von Java-Services bestimmen
         if (parentRevision != null) {
           Set<ApplicationEntryStorable> alreadyProcessedEntries =
               new TreeSet<ApplicationEntryStorable>(ApplicationEntryStorable.COMPARATOR);
@@ -7602,7 +7602,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                 ApplicationEntryStorable.create(applicationName, version, parentRevision, subType, ApplicationEntryType.DATATYPE);
             implAppEntries.add(appEntry);
             alreadyProcessedEntries.add(appEntry);
-            //abhängige Objekte der Subtypen auch noch einsammeln
+            //abhï¿½ngige Objekte der Subtypen auch noch einsammeln
             implAppEntries.addAll(getXMOMDependencies(subType, DependencySourceType.DATATYPE, applicationName, version, parentRevision,
                                                       alreadyProcessedEntries));
           }
@@ -7618,7 +7618,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                                                       alreadyProcessedEntries));
           }
 
-          //Objekte, die bereits explizit oder implizit in einer verwendeten Application Definition enthalten sind, dürfen auch nicht hinzugefügt werden
+          //Objekte, die bereits explizit oder implizit in einer verwendeten Application Definition enthalten sind, dï¿½rfen auch nicht hinzugefï¿½gt werden
           if (parentRevision != null) {
             Set<ApplicationEntryStorable> depAppEntries = getRequiredApplicationDefinitionEntries(applicationName, parentRevision);
             implAppEntries.removeAll(depAppEntries);
@@ -7663,8 +7663,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     Set<ApplicationEntryStorable> allEntries = new TreeSet<ApplicationEntryStorable>(ApplicationEntryStorable.COMPARATOR);
     allEntries.addAll(appEntries);
 
-    //Evtl. werden nicht alle XMOMEntries über das DependencyRegister gefunden (z.B. weil ein
-    //Ordertype umkonfiguriert wurde und der ursprüngliche Workflow von keinem Objekt mehr abhängt).
+    //Evtl. werden nicht alle XMOMEntries ï¿½ber das DependencyRegister gefunden (z.B. weil ein
+    //Ordertype umkonfiguriert wurde und der ursprï¿½ngliche Workflow von keinem Objekt mehr abhï¿½ngt).
     //Daher hier alle deployed XMOMEntries suchen (falls wir nicht in einem Workspace sind)
     if (parentRevision == null) {
       List<ApplicationEntryStorable> xmomEntries = getAllXMOMEntries(applicationName, version);
@@ -7672,8 +7672,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       allEntries.addAll(xmomEntries);
 
       /*
-       * es können objekte deployed sein, die nicht in den appentries enthalten sind, und auch nicht von den appentries
-       * über das dependencyregister erreichbar sind und die nicht in der workflowdatabase enthalten sind.
+       * es kï¿½nnen objekte deployed sein, die nicht in den appentries enthalten sind, und auch nicht von den appentries
+       * ï¿½ber das dependencyregister erreichbar sind und die nicht in der workflowdatabase enthalten sind.
        * beispiel:
        * bei importapplication funktioniert das deployment eines services nicht
        * die (alleinigen) expliziten appentries sind workflows, die noch nicht deployed sind
@@ -7704,11 +7704,11 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         allEntries.add(appEntry);
       }
     } else {
-      //übergebene version muss nicht stimmen - macht aber nichts.
+      //ï¿½bergebene version muss nicht stimmen - macht aber nichts.
       version = getWorkingsetVersionName(applicationName, parentRevision);
     }
 
-    //Abhängigkeiten für alle explitziten ApplicationEntries und alle XMOMEntries suchen
+    //Abhï¿½ngigkeiten fï¿½r alle explitziten ApplicationEntries und alle XMOMEntries suchen
     for (ApplicationEntryStorable aes : allEntries) {
       try {
         dependencies.addAll(getDependencies(aes, parentRevision, alreadyProcessedEntries));
@@ -8122,7 +8122,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           revision = parentRevision;
         } else { // RuntimeApplication
           runtimeContext = new Application(applicationName, version);
-          revision = revisionManagement.getRevision(runtimeContext); // Überprüfung, ob Revision existiert
+          revision = revisionManagement.getRevision(runtimeContext); // ï¿½berprï¿½fung, ob Revision existiert
         }
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
         throw new IllegalArgumentException("application unknown", e);
@@ -8182,7 +8182,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       appEntries.add(appEntry);
       alreadyProcessedEntries.add(appEntry);
 
-      //alle verwendeten Ordertypes mit ihren Dependencies hinzufügen
+      //alle verwendeten Ordertypes mit ihren Dependencies hinzufï¿½gen
       String deploymentItemStateName = OrderInputSourceManagement.convertNameToUniqueDeploymentItemStateName(appEntry.getName());
 
       long revision = getRevision(applicationName, versionName, parentRevision);
@@ -8433,7 +8433,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
         for (RuntimeContextProblem problem : problems) {
           if (problem.causeErrorStatus()) {
-            //es gibt mindestens ein Problem, das zum Zustand ERROR führt
+            //es gibt mindestens ein Problem, das zum Zustand ERROR fï¿½hrt
             state = ApplicationState.ERROR;
             break;
           }
@@ -8486,8 +8486,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Führt Aktionen aus die nach Änderungen von Dependencies mit ApplicationDefintions nötig sind.
-   * Es wird der ApplicationDefintion-Cache für den ParentWorkspace geleert.
+   * Fï¿½hrt Aktionen aus die nach ï¿½nderungen von Dependencies mit ApplicationDefintions nï¿½tig sind.
+   * Es wird der ApplicationDefintion-Cache fï¿½r den ParentWorkspace geleert.
    * @param owner
    * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY
    */
@@ -8500,14 +8500,14 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
   /**
    * Suche nach ApplicationDefinitions. Im Moment wird nur die Suche mit einem 
-   * XMOMDatabase-Objekt (fqname, type, workspace) als Filter unterstützt.
+   * XMOMDatabase-Objekt (fqname, type, workspace) als Filter unterstï¿½tzt.
    * 
    * TODO Da diese Suchfunktion von der GUI nicht verwendet wird, ist sie momentan "ausgeschaltet",
-   * damit nicht unnötig ApplicationDefinitionInformation-Objekte im Memory gehalten werden.
-   * Wenn die Funktionalität verwendet werden soll, sollte der Code angepasst werden, so dass nicht
+   * damit nicht unnï¿½tig ApplicationDefinitionInformation-Objekte im Memory gehalten werden.
+   * Wenn die Funktionalitï¿½t verwendet werden soll, sollte der Code angepasst werden, so dass nicht
    * die kompletten ApplicationDefinitionInformation gecached werden, da z.B. Requirements und Problems
    * an dieser Stelle uninteressant sind.
-   * (MethodenImpl gelöscht, siehe rev &lt; 194447)
+   * (MethodenImpl gelï¿½scht, siehe rev &lt; 194447)
    */
   public SearchResult<ApplicationDefinitionInformation> searchApplicationDefinitions(SearchRequestBean searchRequest)
       throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
@@ -8570,7 +8570,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
     ODSConnection con = ods.openConnection();
     try {
-      // prüfen, ob eine Applikation mit diesem Namen in diesem workspace schon existiert?
+      // prï¿½fen, ob eine Applikation mit diesem Namen in diesem workspace schon existiert?
       Collection<ApplicationStorable> allApplications = con.loadCollection(ApplicationStorable.class);
       for (ApplicationStorable app : allApplications) {
         if (applicationName.equals(app.getName()) && parentRevision.equals(app.getParentRevision())) {
@@ -8600,7 +8600,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
     }
 
-    //Multi-User-Event für RuntimeContext Änderung
+    //Multi-User-Event fï¿½r RuntimeContext ï¿½nderung
     try {
       Workspace parentWorkspace = revisionManagement.getWorkspace(parentRevision);
       Publisher publisher = new Publisher(user);
@@ -8941,7 +8941,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   }
 
 
-  // ######## Clusterfunktionalität ########
+  // ######## Clusterfunktionalitï¿½t ########
 
   private Map<String, Object> mapOfWaitObjects = new HashMap<String, Object>();
   private Map<String, Throwable> mapOfThrowables = new ConcurrentHashMap<String, Throwable>();
@@ -9011,7 +9011,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         }
 
         if (mapOfWaitObjects.containsKey(requestId)) {
-          // offensichtlich ist die Abarbeitung schon fertig -> müssen nicht warten
+          // offensichtlich ist die Abarbeitung schon fertig -> mï¿½ssen nicht warten
           if (logger.isDebugEnabled()) {
             logger.debug("The request with id " + requestId + " has already been finished");
           }
@@ -9044,8 +9044,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /*
-   * Die Ausführung von einigen RMI-Aufrufen soll auf dem Remote-Knoten asynchron erfolgen, weil sonst das RMI-Timeout zuschlangen könnte, wenn die
-   * Ausführung zu lange dauert. 
+   * Die Ausfï¿½hrung von einigen RMI-Aufrufen soll auf dem Remote-Knoten asynchron erfolgen, weil sonst das RMI-Timeout zuschlangen kï¿½nnte, wenn die
+   * Ausfï¿½hrung zu lange dauert. 
    */
   private String startRequestInThread(final ApplicationRunnable runnable) {
     final int ownBinding = new XMOMVersionStorable().getLocalBinding(ODSConnectionType.DEFAULT);
@@ -9235,14 +9235,14 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       try {
         revision = revisionManagement.getRevision(applicationName, versionName, null);
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-        // wenn nicht bekannt, können auch keine Workflows in Benutzung sein!
+        // wenn nicht bekannt, kï¿½nnen auch keine Workflows in Benutzung sein!
         return false;
       }
 
-      //Behandlung laufender Aufträge
+      //Behandlung laufender Auftrï¿½ge
       revisionManagement.handleRunningOrders(revision, force);
 
-      return false; //es liefen keine Aufträge mehr oder sie wurden abgebrochen
+      return false; //es liefen keine Auftrï¿½ge mehr oder sie wurden abgebrochen
     } catch (PersistenceLayerException e) {
       throw new RemoteException("Unable to load ApplicationEntries to check whether they are in use.", e);
     } catch (XPRC_TimeoutWhileWaitingForUnaccessibleOrderException e) {
@@ -9253,7 +9253,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
   /**
    * Liefert den Status einer Application. Falls die Application nicht vorhanden ist,
-   * wird null zurückgegeben
+   * wird null zurï¿½ckgegeben
    * @param applicationName
    * @param versionName
    * @throws RemoteException 
@@ -9269,7 +9269,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
   /**
    * Liefert den Status einer Runtime Application. Falls die Application nicht vorhanden ist,
-   * wird null zurückgegeben
+   * wird null zurï¿½ckgegeben
    * @param applicationName
    * @param versionName
    * @throws PersistenceLayerException 
@@ -9460,7 +9460,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       throw new IllegalArgumentException("version " + sourceVersion + " not found im application " + applicationName, e2);
     }
 
-    //Applications dürfen nicht im Zustand AUDIT_MODE sein
+    //Applications dï¿½rfen nicht im Zustand AUDIT_MODE sein
     try {
       ApplicationState sourceState = getApplicationState(applicationName, sourceVersion);
       if (sourceState == ApplicationState.AUDIT_MODE) {
@@ -9615,7 +9615,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       throw new IllegalArgumentException(); //sollte nicht so aufgerufen werden
     }
 
-    //Applications dürfen nicht im Zustand AUDIT_MODE sein
+    //Applications dï¿½rfen nicht im Zustand AUDIT_MODE sein
     try {
       if (from instanceof Application) {
         ApplicationState sourceState = getApplicationState((Application)from);
@@ -9655,7 +9655,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     //falls global: wenn CONNECTED -> auf anderem knoten die mit dem entsprechenden binding behandeln
     //              wenn DISCONNECTED -> auf diesem knoten beide bindings behandeln
 
-    //für die crons so vorgehen wie bei der migration: lesen, locken, versions-migrieren
+    //fï¿½r die crons so vorgehen wie bei der migration: lesen, locken, versions-migrieren
 
     boolean allBindings = false;
     CopyCLOResult result = new CopyCLOResult();
@@ -9812,7 +9812,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     try {
       con.queryOneRowForUpdate(clo);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      // offensichtlich ist CLO schon ausgeführt wurden? Jedenfalls ist nichts zu tun.
+      // offensichtlich ist CLO schon ausgefï¿½hrt wurden? Jedenfalls ist nichts zu tun.
       con.executeAfterCommit(new Runnable() {
 
         public void run() {
@@ -9843,7 +9843,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       String asXML = gxo.toXml();
       if (asXML.length() > 0) {
         if (gxo instanceof Container) {
-          //bei Containern noch ein umschließendes Tag einbauen, damit das xml valide ist
+          //bei Containern noch ein umschlieï¿½endes Tag einbauen, damit das xml valide ist
           asXML = "<container>" + asXML + "</container>";
         }
         try {
@@ -9944,7 +9944,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Legt die "exludedSubtypesOf-Property" für einen Workspace an
+   * Legt die "exludedSubtypesOf-Property" fï¿½r einen Workspace an
    */
   public void addExcludedSubtypesOfProperty(String workspaceName, Long revision) {
     String suffix = "";
@@ -9962,7 +9962,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
 
   /**
-   * Liefert die "exludedSubtypesOf-Property" für einen Workspace
+   * Liefert die "exludedSubtypesOf-Property" fï¿½r einen Workspace
    */
   public XynaPropertyString getExcludedSubtypesOfProperty(Long revision) {
     return excludedSubtypesOfProperties.get(revision);
@@ -9987,7 +9987,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     private final boolean localBuild;
     private final String newVersion;
     private final boolean local;
-    private final String user; //für Multi-User-Events
+    private final String user; //fï¿½r Multi-User-Events
 
 
     public ExportApplicationBuildParameter() {
@@ -10170,13 +10170,13 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
   }
   
-  //aus abwärtskompatibilitätsgründen: xtf benutzt das
+  //aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden: xtf benutzt das
   public void addObjectToApplication(String objectName, String applicationName, String version, ApplicationEntryType entryType,
                                      Long parentRevision, boolean verbose, PrintStream statusOutputStream) throws XFMG_FailedToAddObjectToApplication {
     addObjectToApplicationDefinition(objectName, entryType, applicationName, parentRevision, verbose, statusOutputStream, new SingleRepositoryEvent(parentRevision));
   }  
   
-  //aus abwärtskompatibilitätsgründen: xtf benutzt das
+  //aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden: xtf benutzt das
   public void addObjectToApplication(String fqName, String applicationName, Long parentRevision) throws XFMG_FailedToAddObjectToApplication {
     addXMOMObjectToApplication(fqName, applicationName, parentRevision, new SingleRepositoryEvent(parentRevision), false, null);
   }

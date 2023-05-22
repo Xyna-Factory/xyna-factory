@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,8 +59,8 @@ import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
  * die in CMLocal und CMClustered erweitert wird. Diese werden dann zusammen mit CMUnsupported 
  * im CapacityManagement verwendet.
  * 
- * TODO: XynaProperty mit MaxCardinality, damit nicht zu große Capacity-Cardinalities angelegt 
- * oder geändert werden. Grund ist die neue Implementation des CapacityCaches mit CapacityInstances.
+ * TODO: XynaProperty mit MaxCardinality, damit nicht zu groï¿½e Capacity-Cardinalities angelegt 
+ * oder geï¿½ndert werden. Grund ist die neue Implementation des CapacityCaches mit CapacityInstances.
  * 
  */
 public abstract class CMAbstract implements CapacityManagementInterface {
@@ -79,9 +79,9 @@ public abstract class CMAbstract implements CapacityManagementInterface {
   protected CapacityStorableQueries capacityStorableQueries;
   
   //Locks in dieser Reihenfolge (cacheLock,managementLock) holen! 
-  //Leider zuerst das teure managementLock, da sonst über die
+  //Leider zuerst das teure managementLock, da sonst ï¿½ber die
   //Remote-Aufrufe, die ein CacheLock brauchen, ein DeadLock entstehen kann (Bug 11971)
-  //Sicherung gegen Änderungen an Capacity-Namen, Anzahl etc.
+  //Sicherung gegen ï¿½nderungen an Capacity-Namen, Anzahl etc.
   protected DatabaseLock managementLock;
   // threadsicherer zugriff auf interne arrays
   protected ReentrantLock cacheLock;
@@ -116,7 +116,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
       return CapacityAllocationResult.SUCCESS;
     }
  
-    cacheLock.lock(); //Lock, um Änderungen am CapacityCache durch andere Threads auszuschließen, bis Allocation fertig ist
+    cacheLock.lock(); //Lock, um ï¿½nderungen am CapacityCache durch andere Threads auszuschlieï¿½en, bis Allocation fertig ist
     try {
       if( schedulingData.getTransferCapacities() != null ) {
         transferCapacities(schedulingData.getTransferCapacities(),orderInformation);
@@ -152,7 +152,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
 
   }
 
-  //package private, nur für CMUnsupported und lokal
+  //package private, nur fï¿½r CMUnsupported und lokal
   static void internalCheckAllocate(OrderInformation orderInformation, SchedulingData schedulingData, CapacityManagementInterface cmi, Logger logger ) {
     if (schedulingData == null) {
       throw new IllegalArgumentException("SchedulingData may not be null when allocating capacity");
@@ -176,7 +176,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
                                                       List<Capacity> capacities, OrderInformation orderInformation) {
     CapacityAllocationResult car = null;
     
-    //Allocation füllen
+    //Allocation fï¿½llen
     ArrayList<CapacityAllocation> allocList = new ArrayList<>();
     for( Capacity cap : capacities ) {
       CapacityAllocation allocation = new CapacityAllocation(cap, previouslyAllocated.get(cap.getCapName()));
@@ -186,10 +186,10 @@ public abstract class CMAbstract implements CapacityManagementInterface {
       }
       allocList.add(allocation);
     }
-    //TODO allocList könnte nun transient in schedulingData stehen, dann müsste dieses Anlegen 
+    //TODO allocList kï¿½nnte nun transient in schedulingData stehen, dann mï¿½sste dieses Anlegen 
     //nur einmal geschehen. Problem: was wenn Cap aus Cache verschwindet oder hinzukommt oder disabled wird?
     
-    //Überprüfen
+    //ï¿½berprï¿½fen
     for( CapacityAllocation allocation : allocList ) {
       car = allocation.checkAllocationPossible();
       if( car != null ) {
@@ -223,7 +223,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
   private CapacityAllocationResult multiAllocateCapacities(MultiAllocationCapacities mac, OrderInformation orderInformation) {
     CapacityAllocationResult car = null;
     
-    //Allocation füllen
+    //Allocation fï¿½llen
     ArrayList<CapacityAllocation> allocList = new ArrayList<>();
     for( Capacity cap : mac.getCapacities() ) {
       CapacityAllocation allocation = new CapacityAllocation(cap);
@@ -233,12 +233,12 @@ public abstract class CMAbstract implements CapacityManagementInterface {
       }
       allocList.add(allocation);
     }
-    //TODO allocList könnte nun transient in schedulingData stehen, dann müsste dieses Anlegen 
+    //TODO allocList kï¿½nnte nun transient in schedulingData stehen, dann mï¿½sste dieses Anlegen 
     //nur einmal geschehen. Problem: was wenn Cap aus Cache verschwindet oder hinzukommt oder disabled wird?
     
     for( int allocations=1; allocations<=mac.getMaxAllocation(); ++allocations ) {
 
-      //Überprüfen
+      //ï¿½berprï¿½fen
       for( CapacityAllocation allocation : allocList ) {
         car = allocation.checkAllocationPossible();
         if( car != null ) {
@@ -290,7 +290,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
       cacheLock.unlock();
     }
 
-    // Neue CapacityStorables außerhalb des Locks ziehen, um den Scheduler möglichst wenig zu beeinträchtigen
+    // Neue CapacityStorables auï¿½erhalb des Locks ziehen, um den Scheduler mï¿½glichst wenig zu beeintrï¿½chtigen
 
     List<Integer> allBindings = getAllBindings();
     
@@ -298,7 +298,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
     
      int cardForeign = isClustered() ? (cardinality / allBindings.size()) : 0;  // Cardinality der fremden Bindings, 
     //dabei faires Teilen nur im Clustered-Zustand 
-    int cardOwn = cardinality - cardForeign * (allBindings.size() - 1); //Rest für eigene Cardinality
+    int cardOwn = cardinality - cardForeign * (allBindings.size() - 1); //Rest fï¿½r eigene Cardinality
 
     for (Integer binding : allBindings) {
       long newId = XynaFactory.getInstance().getIDGenerator().getUniqueId(); // langsam: IDGenerator braucht potentiell IO calls
@@ -316,13 +316,13 @@ public abstract class CMAbstract implements CapacityManagementInterface {
 
       defCon.ensurePersistenceLayerConnectivity(CapacityStorable.class);
 
-      managementLock.lock(); //throws LockFailedException ok, da Aufruf über CLI
+      managementLock.lock(); //throws LockFailedException ok, da Aufruf ï¿½ber CLI
       try {
         cacheLock.lock();
         try {
 
-          //lokal existierte die Capacity nicht, das wurde schon oben im Cache geprüft.
-          //Ist sie bereits für ein anderes Binding eingerichtet?
+          //lokal existierte die Capacity nicht, das wurde schon oben im Cache geprï¿½ft.
+          //Ist sie bereits fï¿½r ein anderes Binding eingerichtet?
           Collection<CapacityStorable> existingCapacities = capacityStorableQueries.loadAllByName(defCon, name);
           if (existingCapacities != null && !existingCapacities.isEmpty()) {
             throw new XPRC_CAPACITY_ALREADY_DEFINED(name);
@@ -400,7 +400,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
     try {
 
       defCon.ensurePersistenceLayerConnectivity(CapacityStorable.class);
-      managementLock.lock(); //throws LockFailedException ok, da Aufruf über CLI
+      managementLock.lock(); //throws LockFailedException ok, da Aufruf ï¿½ber CLI
       try {
 
         cacheLock.lock();
@@ -419,7 +419,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
           if (reliableCi.getInuse() != 0) {
             logger.info("Tried to rename a capacity that is in use");
 
-            //Wenn der bisherige Status ACTIVE war, muß der Status nochmal zurückgesetzt werden
+            //Wenn der bisherige Status ACTIVE war, muï¿½ der Status nochmal zurï¿½ckgesetzt werden
             rci.resetState(defCon);
             return false;
           }
@@ -442,7 +442,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
           defCon.commit();
           finallyClose(defCon);
 
-          //frühere Capacity aus Cache entfernen
+          //frï¿½here Capacity aus Cache entfernen
           cache.remove(oldName);
           refreshRemoteCapacityCache(oldName);
           //aktuelle Capacity neu laden
@@ -499,7 +499,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
 
       defCon.ensurePersistenceLayerConnectivity(CapacityStorable.class);
 
-      managementLock.lock(); //throws LockFailedException ok, da Aufruf über CLI
+      managementLock.lock(); //throws LockFailedException ok, da Aufruf ï¿½ber CLI
       try {
         cacheLock.lock();
         try {
@@ -521,11 +521,11 @@ public abstract class CMAbstract implements CapacityManagementInterface {
           if (newOverallCardinality == currentCardinality) {
             //nichts zu tun
           } else if (newOverallCardinality > currentCardinality) {
-            //Erhöhen der Cardinality ist immer möglich
+            //Erhï¿½hen der Cardinality ist immer mï¿½glich
             increaseCaps(defCon, allCs, capName, newOverallCardinality - currentCardinality);
             notifyScheduler();
           } else {
-            //Verringern der Cardinality ist nicht immer möglich -> Abbruch durch Werfen einer Exception
+            //Verringern der Cardinality ist nicht immer mï¿½glich -> Abbruch durch Werfen einer Exception
             decreaseCaps(defCon, allCs, capName, currentCardinality - newOverallCardinality);
           }
           return true;
@@ -551,7 +551,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
 
 
   /**
-   * Erhöhen der Gesamt-Cardinality um addCard
+   * Erhï¿½hen der Gesamt-Cardinality um addCard
    * @param defCon
    * @param allCaps
    * @param capName
@@ -597,13 +597,13 @@ public abstract class CMAbstract implements CapacityManagementInterface {
       defCon.ensurePersistenceLayerConnectivity(CapacityStorable.class);
 
       // TODO suspend/resume orders that use this capacity
-      //Besser 3 Zustände: ACTIVE, PAUSED, DISABLED
+      //Besser 3 Zustï¿½nde: ACTIVE, PAUSED, DISABLED
       //ACTIVE wie bisher
-      //PAUSED wie bisheriger DISABLED: keine neuen Aufträge gescheduledt, aber bisherige dürfen weiterlaufen
+      //PAUSED wie bisheriger DISABLED: keine neuen Auftrï¿½ge gescheduledt, aber bisherige dï¿½rfen weiterlaufen
       //                                -> alle Stellen hier anpassen, die momentan DISABLED benutzen
-      //DISABLED: Cap darf nicht mehr verwendet werden und alles Aufträge, die diese Cap verwenden, 
-      //          müssen ebenfalls angehalten werden
-      managementLock.lock(); //throws LockFailedException ok, da Aufruf über CLI
+      //DISABLED: Cap darf nicht mehr verwendet werden und alles Auftrï¿½ge, die diese Cap verwenden, 
+      //          mï¿½ssen ebenfalls angehalten werden
+      managementLock.lock(); //throws LockFailedException ok, da Aufruf ï¿½ber CLI
       try {
         cacheLock.lock();
         try {
@@ -681,7 +681,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
 
       defCon.ensurePersistenceLayerConnectivity(CapacityStorable.class);
 
-      managementLock.lock(); //throws LockFailedException ok, da Aufruf über CLI
+      managementLock.lock(); //throws LockFailedException ok, da Aufruf ï¿½ber CLI
       try {
 
         cacheLock.lock();
@@ -696,12 +696,12 @@ public abstract class CMAbstract implements CapacityManagementInterface {
           if (reliableCi.getInuse() != 0) {
             logger.info("Tried to remove a capacity that is in use");
 
-            //Wenn der bisherige Status ACTIVE war, muß der Status nochmal zurückgesetzt werden
+            //Wenn der bisherige Status ACTIVE war, muï¿½ der Status nochmal zurï¿½ckgesetzt werden
             rci.resetState(defCon);
             return false;
           }
 
-          //Ok, die Capacity existiert und wird derzeit nicht verwendet, daher löschen
+          //Ok, die Capacity existiert und wird derzeit nicht verwendet, daher lï¿½schen
 
           Collection<CapacityStorable> lockedEntriesToBeDeleted =
               capacityStorableQueries.loadAllByNameForUpdate(defCon, capName);
@@ -773,7 +773,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
 
       defCon.ensurePersistenceLayerConnectivity(CapacityStorable.class);
 
-      managementLock.lock(); //throws LockFailedException ok, da Aufruf bislang nur über JUnitTest
+      managementLock.lock(); //throws LockFailedException ok, da Aufruf bislang nur ï¿½ber JUnitTest
       try {
 
         cacheLock.lock();
@@ -813,8 +813,8 @@ public abstract class CMAbstract implements CapacityManagementInterface {
   
   /**
    * Free up capacities that have previously been allocated to that XynaOrder.
-   * unabhängig vom rückgabewert hat der auftrag danach keine capacities mehr.
-   * @return true, falls caps freigegeben wurden, ansonsten false. kann nur false zurückgeben, falls auftrag keine capacities entnommen hatte.
+   * unabhï¿½ngig vom rï¿½ckgabewert hat der auftrag danach keine capacities mehr.
+   * @return true, falls caps freigegeben wurden, ansonsten false. kann nur false zurï¿½ckgeben, falls auftrag keine capacities entnommen hatte.
    */
   public boolean freeCapacities(final XynaOrderServerExtension xo) {
     return internalFreeCapacities(xo,cache,logger,false,false);
@@ -826,7 +826,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
   }
   
 
-  //package private, nur für CMUnsupported und lokal
+  //package private, nur fï¿½r CMUnsupported und lokal
   static boolean internalFreeCapacities(XynaOrderServerExtension xo,
                                         CapacityCache cache, Logger logger, 
                                         boolean onlyTransferable, boolean undoAllocation ) {
@@ -837,7 +837,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
     return internalFreeCapacities( new OrderInformation(xo), xo.getSchedulingData(), cache, logger, onlyTransferable, undoAllocation);
   }
   
-  //package private, nur für CMUnsupported und lokal
+  //package private, nur fï¿½r CMUnsupported und lokal
   static boolean internalFreeCapacities(OrderInformation orderInformation, SchedulingData schedulingData, 
                                         CapacityCache cache, Logger logger, 
                                         boolean onlyTransferable, boolean undoAllocation ) {
@@ -856,7 +856,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
       return true;
     }
  
-    //Kein Lock nötig, cache.freeCapForOrderIdXXX ist threadsafe.
+    //Kein Lock nï¿½tig, cache.freeCapForOrderIdXXX ist threadsafe.
     if( onlyTransferable ) {
       cache.freeCapForOrderIdOnlyTransferable(orderId);
     } else {
@@ -864,7 +864,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
       if( schedulingData.isHasAcquiredCapacities()) {
         schedulingData.setHasAcquiredCapacities(false);
       } else {
-        //eigentlich nichts zu tun, daher nur prüfen, ob das stimmt
+        //eigentlich nichts zu tun, daher nur prï¿½fen, ob das stimmt
         if( freed == 0 ) {
           if (logger.isDebugEnabled()) {
             logger.debug("No capacities to be freed for order id " + orderId );
@@ -875,7 +875,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
         }
       }
     }
-    return ! schedulingData.isHasAcquiredCapacities(); //fast immer true="Caps zurückgegeben", außer bei onlyTransferable=true    
+    return ! schedulingData.isHasAcquiredCapacities(); //fast immer true="Caps zurï¿½ckgegeben", auï¿½er bei onlyTransferable=true    
   }
 
 
@@ -884,10 +884,10 @@ public abstract class CMAbstract implements CapacityManagementInterface {
   }
 
 
-  //package private, nur für CMUnsupported und lokal
+  //package private, nur fï¿½r CMUnsupported und lokal
   static boolean internalForceFreeCapacities(long orderId, CapacityCache cache, Logger logger) {
     
-    //Kein Lock nötig, cache.freeCapForOrderId ist threadsafe.
+    //Kein Lock nï¿½tig, cache.freeCapForOrderId ist threadsafe.
     return cache.freeCapForOrderId(orderId) != 0;
   }
 
@@ -946,8 +946,8 @@ public abstract class CMAbstract implements CapacityManagementInterface {
 
 
   /**
-   * ReliableCapacityInformation bietet eine "verlässliche" CapacityInformation an. Verlässlich heißt, dass sich die
-   * Anzahl der benutzten Capacities nicht erhöhen kann. Dies kann bei einer Clustere-Implementierung nur erreicht
+   * ReliableCapacityInformation bietet eine "verlï¿½ssliche" CapacityInformation an. Verlï¿½sslich heiï¿½t, dass sich die
+   * Anzahl der benutzten Capacities nicht erhï¿½hen kann. Dies kann bei einer Clustere-Implementierung nur erreicht
    * werden, indem die Capacity-Vergabe kurz angehalten wird (State wird auf DISABLED gesetzt). Es wird davon
    * ausgegangen, dass die lokalen Locks beide schon geholt wurden.
    */
@@ -983,7 +983,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
       previousState = localCi.getState();
       if (cmAlgorithm.isClustered()) {
         if (previousState == State.ACTIVE) {
-          //aktive Caps können noch vom Scheduler remote vergeben werden, lokal nicht mehr
+          //aktive Caps kï¿½nnen noch vom Scheduler remote vergeben werden, lokal nicht mehr
           //daher nun Statuswechsel auf DISABLED, damit auch remote die Capacity nicht vergeben wird
           cmAlgorithm.changeStateInternal(defCon, capName, State.DISABLED);
         }
@@ -999,7 +999,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
 
   public void refreshLocalCapacityCache(String capName) {
 
-    //Achtung: kein managementLock, da keine Änderung in der DB; Aufrufer hat (evtl. Remote) bereits 
+    //Achtung: kein managementLock, da keine ï¿½nderung in der DB; Aufrufer hat (evtl. Remote) bereits 
     //das managementLock erhalten
     if (logger.isDebugEnabled()) {
       logger.debug("refreshLocalCapacityCache(" + capName + ")");
@@ -1087,7 +1087,7 @@ public abstract class CMAbstract implements CapacityManagementInterface {
   }
   
   public CapacityReservation getCapacityReservation() {
-    return null; //sinnvoller Default für nicht geclusteret: keine CapacityReservation
+    return null; //sinnvoller Default fï¿½r nicht geclusteret: keine CapacityReservation
   }
 
   

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,19 +25,19 @@ import com.gip.xyna.xprc.xbatchmgmt.storables.BatchProcessRuntimeInformationStor
 
 
 public enum BatchProcessTable {
-  //abgeschlossene Aufträge aus der Tabelle BatchProcessArchive
+  //abgeschlossene Auftrï¿½ge aus der Tabelle BatchProcessArchive
   Archive(BatchProcessArchiveStorable.TABLE_NAME, BatchProcessArchiveStorable.COL_ORDER_ID, BatchProcessArchiveStorable.idReader) {
     @Override
     public String convertColumnName(String columnName) {
       if (columnName.equals(BatchProcessRuntimeInformationStorable.COL_RUNNING)) {
-        return "0";  //running gibt es im Archive nicht als Spalte, aber für abgeschlossene wäre sie immer "0"
+        return "0";  //running gibt es im Archive nicht als Spalte, aber fï¿½r abgeschlossene wï¿½re sie immer "0"
       }
       
       return columnName;
     }
   },
 
-  //laufende Aufträge aus der Tabelle BatchProcessArchive
+  //laufende Auftrï¿½ge aus der Tabelle BatchProcessArchive
   ArchiveRunning(BatchProcessArchiveStorable.TABLE_NAME, BatchProcessArchiveStorable.COL_ORDER_ID, BatchProcessArchiveStorable.idReader),
   
   //Tabelle BPRestartInformation
@@ -77,7 +77,7 @@ public enum BatchProcessTable {
   }
   
   /**
-   * Konvertiert den übergebenen columName in den entsprechenden Spaltennamen der Tabelle
+   * Konvertiert den ï¿½bergebenen columName in den entsprechenden Spaltennamen der Tabelle
    * @param columnName
    * @return
    */

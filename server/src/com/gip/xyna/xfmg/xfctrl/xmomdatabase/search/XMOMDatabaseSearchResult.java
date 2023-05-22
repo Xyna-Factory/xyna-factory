@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
 public class XMOMDatabaseSearchResult implements Serializable {
 
   private static final long serialVersionUID = -3805824936993314898L;
-  private int count; //summe über counts
+  private int count; //summe ï¿½ber counts
   private Map<XMOMDatabaseType, Integer> counts;
   private List<XMOMDatabaseSearchResultEntry> result;
   

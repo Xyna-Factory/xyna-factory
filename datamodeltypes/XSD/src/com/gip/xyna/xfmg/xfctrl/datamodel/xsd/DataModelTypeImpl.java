@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -194,17 +194,17 @@ public class DataModelTypeImpl implements DataModelType {
     }
   
     if (parameter.getDistributeToWorkspaces()) {
-      //Prüfen, ob DatenModell angelegt werden darf
+      //Prï¿½fen, ob DatenModell angelegt werden darf
       if( oldDataModel != null ) {
         if( ! parameter.isOverwriteModel() ) {
           dataModelResult.fail("\nDataModel \""+parameter.getDataModelName()+"\" already exists and overwrite-flag is not set" );
           return;
         } else {
-          //altes Datenmodel entfernen, aber erst, nachdem Konflikt mit anderen Datentypen geprüft wurden 
+          //altes Datenmodel entfernen, aber erst, nachdem Konflikt mit anderen Datentypen geprï¿½ft wurden 
         }
       }
 
-      //Prüfen, ob einzelne Datentypen (durch andere Data Model) bereits existieren
+      //Prï¿½fen, ob einzelne Datentypen (durch andere Data Model) bereits existieren
       List<Datatype> alreadyExisting = tg.listAlreadyExistingDatatypes();
       if( ! alreadyExisting.isEmpty() ) {
         List<String> alreadyExistingTypes = new ArrayList<String>(); 
@@ -212,8 +212,8 @@ public class DataModelTypeImpl implements DataModelType {
           alreadyExistingTypes.add(dt.getFQTypeName());
         }
         if( oldDataModel != null ) {
-          //Die meisten bereits existierenden Datentypen dürften zum alten Model gehören.
-          //Diese dürfen jedoch überschrieben werden und zählen daher nicht
+          //Die meisten bereits existierenden Datentypen dï¿½rften zum alten Model gehï¿½ren.
+          //Diese dï¿½rfen jedoch ï¿½berschrieben werden und zï¿½hlen daher nicht
           Set<String> oldDataTypes = DataModelUtils.listDatatypes(oldDataModel);
           alreadyExistingTypes.removeAll(oldDataTypes);
         }
@@ -258,7 +258,7 @@ public class DataModelTypeImpl implements DataModelType {
     
     boolean success = tg.saveDataTypes_persistDataModel(dataModelResult, dataModelStorage, dataModel, parameter);
     if( success ) {
-      //TODO noch nötig?
+      //TODO noch nï¿½tig?
       if (storeTypeMappingsProperty.get()) {
         tg.storeTypeMappings(null, parameter.getDataModelName());
       }
@@ -389,7 +389,7 @@ public class DataModelTypeImpl implements DataModelType {
 
   public void modifyDataModel(DataModelResult dataModelResult, DataModelStorage dataModelStorage,
                               DataModel dataModel, Map<String, Object> paramMap) {
-    //Derzeit können nur Workspaces geändert werden
+    //Derzeit kï¿½nnen nur Workspaces geï¿½ndert werden
     ImportParameter parameter = ImportParameter.parameterForModify(dataModelTypeName, paramMap);
     
     if (distributesToWorkspaces(dataModel)) {
@@ -413,7 +413,7 @@ public class DataModelTypeImpl implements DataModelType {
       Set<String> workspaces = DataModelUtils.getWorkspaces(dataModel);
       
       if( ! workspaces.isEmpty() ) {
-        //evtl. hat der Benutzer nichts zum Löschen gewählt, dies melden
+        //evtl. hat der Benutzer nichts zum Lï¿½schen gewï¿½hlt, dies melden
         if( ! parameter.isRemoveComplete() ) {
           dataModelResult.fail( "DataModel is used in workspaces");
           dataModelResult.addMessageGroup("Workspaces", new ArrayList<String>(workspaces));
@@ -428,7 +428,7 @@ public class DataModelTypeImpl implements DataModelType {
         return;
       }
       
-      //DatenModell existiert in keinem Workspace mehr, daher DatenModell komplett löschen
+      //DatenModell existiert in keinem Workspace mehr, daher DatenModell komplett lï¿½schen
       try {
         wh.removeFromWorkspace(RevisionManagement.REVISION_DATAMODEL);
       } catch (XynaException e) {
@@ -471,7 +471,7 @@ public class DataModelTypeImpl implements DataModelType {
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement().removeApplicationVersion(dataModel.getType().getName(), dataModel.getVersion(), rap, null);
       } catch (XFMG_CouldNotRemoveApplication e) {
         try {
-          //checken, ob application überhaupt noch existiert
+          //checken, ob application ï¿½berhaupt noch existiert
           XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
               .getRevision(dataModel.getType().getName(), dataModel.getVersion(), null);
           logger.debug("Could not remove application", e);
@@ -599,7 +599,7 @@ public class DataModelTypeImpl implements DataModelType {
               }
             }
           } catch (Exception e) {
-            logger.warn("Failed to check für XSD-Datamodel update.", e);
+            logger.warn("Failed to check fï¿½r XSD-Datamodel update.", e);
           }
         }
   }

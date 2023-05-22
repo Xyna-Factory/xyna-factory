@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,35 +126,35 @@ public class ProcessMonitorServicesServiceOperationImpl {
   public static String CUSTOM_FIELD_PROPERTY_LABEL   = "label";
 
   public static final XynaPropertyBoolean CUSTOM_COLUMN0_ENABLED = new XynaPropertyBoolean(CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_ENABLED, false)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 1. Custom Column in der Auftragsübersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 1. Custom Column in der Auftragsï¿½bersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Controls whether the 1st Custom Column is shown in Order Overview, using the label defined by " + CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_LABEL + ".");
   public static final XynaPropertyString CUSTOM_COLUMN0_LABEL = new XynaPropertyString(CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_LABEL, "Custom 1")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Das Label, das für die 1. Custom Column in der Order Overview angezeigt werden soll, wenn " + CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_ENABLED + " auf true gesetzt ist.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Das Label, das fï¿½r die 1. Custom Column in der Order Overview angezeigt werden soll, wenn " + CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_ENABLED + " auf true gesetzt ist.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "The label to show for 1st Custom Column in Order Overview in case " + CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_ENABLED + " is set to true.");
 
   public static final XynaPropertyBoolean CUSTOM_COLUMN1_ENABLED = new XynaPropertyBoolean(CUSTOM_FIELD_PROPERTY_PREFIX + "1." + CUSTOM_FIELD_PROPERTY_ENABLED, false)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 2. Custom Column in der Auftragsübersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "1." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 2. Custom Column in der Auftragsï¿½bersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "1." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Controls whether the 2nd Custom Column is shown in Order Overview, using the label defined by " + CUSTOM_FIELD_PROPERTY_PREFIX + "1." + CUSTOM_FIELD_PROPERTY_LABEL + ".");
   public static final XynaPropertyString CUSTOM_COLUMN1_LABEL = new XynaPropertyString(CUSTOM_FIELD_PROPERTY_PREFIX + "1." + CUSTOM_FIELD_PROPERTY_LABEL, "Custom 2")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Das Label, das für die 2. Custom Column in der Order Overview angezeigt werden soll, wenn " + CUSTOM_FIELD_PROPERTY_PREFIX + "1." + CUSTOM_FIELD_PROPERTY_ENABLED + " auf true gesetzt ist.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Das Label, das fï¿½r die 2. Custom Column in der Order Overview angezeigt werden soll, wenn " + CUSTOM_FIELD_PROPERTY_PREFIX + "1." + CUSTOM_FIELD_PROPERTY_ENABLED + " auf true gesetzt ist.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "The label to show for 2nd Custom Column in Order Overview in case " + CUSTOM_FIELD_PROPERTY_PREFIX + "1." + CUSTOM_FIELD_PROPERTY_ENABLED + " is set to true.");
 
   public static final XynaPropertyBoolean CUSTOM_COLUMN2_ENABLED = new XynaPropertyBoolean(CUSTOM_FIELD_PROPERTY_PREFIX + "2." + CUSTOM_FIELD_PROPERTY_ENABLED, false)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 3. Custom Column in der Auftragsübersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "2." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 3. Custom Column in der Auftragsï¿½bersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "2." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Controls whether the 3rd Custom Column is shown in Order Overview, using the label defined by " + CUSTOM_FIELD_PROPERTY_PREFIX + "2." + CUSTOM_FIELD_PROPERTY_LABEL + ".");
   public static final XynaPropertyString CUSTOM_COLUMN2_LABEL = new XynaPropertyString(CUSTOM_FIELD_PROPERTY_PREFIX + "2." + CUSTOM_FIELD_PROPERTY_LABEL, "Custom 3")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Das Label, das für die 3. Custom Column in der Order Overview angezeigt werden soll, wenn " + CUSTOM_FIELD_PROPERTY_PREFIX + "2." + CUSTOM_FIELD_PROPERTY_ENABLED + " auf true gesetzt ist.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Das Label, das fï¿½r die 3. Custom Column in der Order Overview angezeigt werden soll, wenn " + CUSTOM_FIELD_PROPERTY_PREFIX + "2." + CUSTOM_FIELD_PROPERTY_ENABLED + " auf true gesetzt ist.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "The label to show for 3rd Custom Column in Order Overview in case " + CUSTOM_FIELD_PROPERTY_PREFIX + "2." + CUSTOM_FIELD_PROPERTY_ENABLED + " is set to true.");
 
   public static final XynaPropertyBoolean CUSTOM_COLUMN3_ENABLED = new XynaPropertyBoolean(CUSTOM_FIELD_PROPERTY_PREFIX + "3." + CUSTOM_FIELD_PROPERTY_ENABLED, false)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 4. Custom Column in der Auftragsübersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "3." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 4. Custom Column in der Auftragsï¿½bersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "3." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Controls whether the 4th Custom Column is shown in Order Overview, using the label defined by " + CUSTOM_FIELD_PROPERTY_PREFIX + "3." + CUSTOM_FIELD_PROPERTY_LABEL + ".");
   public static final XynaPropertyString CUSTOM_COLUMN3_LABEL = new XynaPropertyString(CUSTOM_FIELD_PROPERTY_PREFIX + "3." + CUSTOM_FIELD_PROPERTY_LABEL, "Custom 4")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Das Label, das für die 4. Custom Column in der Order Overview angezeigt werden soll, wenn " + CUSTOM_FIELD_PROPERTY_PREFIX + "3." + CUSTOM_FIELD_PROPERTY_ENABLED + " auf true gesetzt ist.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Das Label, das fï¿½r die 4. Custom Column in der Order Overview angezeigt werden soll, wenn " + CUSTOM_FIELD_PROPERTY_PREFIX + "3." + CUSTOM_FIELD_PROPERTY_ENABLED + " auf true gesetzt ist.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "The label to show for 4th Custom Column in Order Overview in case " + CUSTOM_FIELD_PROPERTY_PREFIX + "3." + CUSTOM_FIELD_PROPERTY_ENABLED + " is set to true.");
 
   public static final XynaPropertyInt ORDEROVERVIEW_LIMIT = new XynaPropertyInt("xyna.processmonitor.orderoverview.limit", 100).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Einträgen, die für die Order Overview zurück gegeben wird.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintrï¿½gen, die fï¿½r die Order Overview zurï¿½ck gegeben wird.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of table entries to be returned for the Order Overview.");
 
   private static XynaMultiChannelPortal multiChannelPortal = ((XynaMultiChannelPortal)XynaFactory.getInstance().getXynaMultiChannelPortal());
@@ -609,7 +609,7 @@ public class ProcessMonitorServicesServiceOperationImpl {
     }
     
     // use a non-breaking space in case the label is empty to make sure the GUI element keeps its minimal size
-    return ( (label != null) && (label.length() > 0) ) ? label : " ";
+    return ( (label != null) && (label.length() > 0) ) ? label : "ï¿½";
   }
   
   private Map<String, AVariable> parameterByInstanceId;

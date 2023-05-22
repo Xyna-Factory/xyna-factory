@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public abstract class AbstractPersistenceLayerTest extends TestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    // Erzeugung von 1 MB-großen Teststrings
+    // Erzeugung von 1 MB-groï¿½en Teststrings
     for(int i = 0; i < STRINGNUM; i++) {
       TESTSTRINGS[i] = getRandomString(STRINGSIZE);
     }
@@ -259,7 +259,7 @@ public abstract class AbstractPersistenceLayerTest extends TestCase {
     
     for(int k = 10; k < 12; k++) {
       for(int j = 0; j < 30; j++) {
-       // wenn Test hier fehlschlägt, war das Löschen erfolgreich --> Testziel verfehlt ....
+       // wenn Test hier fehlschlï¿½gt, war das Lï¿½schen erfolgreich --> Testziel verfehlt ....
        Assert.assertTrue(connection.containsObject(new PersistenceLayerTestStoreable(Integer.toString(k) + "," + Integer.toString(j), null, null)));
       }
     }
@@ -267,7 +267,7 @@ public abstract class AbstractPersistenceLayerTest extends TestCase {
   }
 
   
-  // Threadklasse, die ein sehr großes Objekt persistieren will.
+  // Threadklasse, die ein sehr groï¿½es Objekt persistieren will.
   private class DeleteObjectThread extends Thread {
     
     Connection connection;

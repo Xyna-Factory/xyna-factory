@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import com.gip.xyna.xprc.xsched.timeconstraint.windows.TimeConstraintWindow;
 
 /**
  * TimeConstraintExecutor startet den Thread, der sich um die rechtzeitige Bearbeitung von 
- * zeitabhängigen Aufgaben kümmert.
+ * zeitabhï¿½ngigen Aufgaben kï¿½mmert.
  * Diese Aufgaben sind
  * <ul>
  * <li> {@link SchedulingTimeout}</li>
@@ -56,7 +56,7 @@ public class TimeConstraintExecutor implements Executor<TimeConstraintExecutor.T
   }
 
   /**
-   * Hinzufügen eines neuen Tasks
+   * Hinzufï¿½gen eines neuen Tasks
    * @param task
    */
   public void add(TimeConstraintTask task) {
@@ -81,7 +81,7 @@ public class TimeConstraintExecutor implements Executor<TimeConstraintExecutor.T
   }
 
   /**
-   * Frühzeitiger Timeout aller Aufträge, die ihren regulären Timeout innerhalb der nächsten timeout ms hätten
+   * Frï¿½hzeitiger Timeout aller Auftrï¿½ge, die ihren regulï¿½ren Timeout innerhalb der nï¿½chsten timeout ms hï¿½tten
    * @param timeout
    */
   public void earlyTimeout(long timeout) {
@@ -98,7 +98,7 @@ public class TimeConstraintExecutor implements Executor<TimeConstraintExecutor.T
   }
   
   /**
-   * Entfernen des SchedulingTimeout für den wartenden Auftrag
+   * Entfernen des SchedulingTimeout fï¿½r den wartenden Auftrag
    * @param orderId
    * @return
    */
@@ -118,12 +118,12 @@ public class TimeConstraintExecutor implements Executor<TimeConstraintExecutor.T
 
   
   /**
-   * Basisklasse für alle hier verwendeten {@link TimedTasks}. 
-   * Die vollständige Implementation dieser Klasse ist sowohl der TimedTasks-Task als auch 
-   * über die execute-Methode die eigentliche {@link TimedTasks.Executor}-Implementierung.
-   * (Die übliche Trennung im TimedTasks zwischen einem Executor und simplen Task-Objekten 
+   * Basisklasse fï¿½r alle hier verwendeten {@link TimedTasks}. 
+   * Die vollstï¿½ndige Implementation dieser Klasse ist sowohl der TimedTasks-Task als auch 
+   * ï¿½ber die execute-Methode die eigentliche {@link TimedTasks.Executor}-Implementierung.
+   * (Die ï¿½bliche Trennung im TimedTasks zwischen einem Executor und simplen Task-Objekten 
    * musste hier aufgegeben werden, damit die derzeit drei verschiedenen Task-Typen in einem 
-   * TimedTasks laufen können.
+   * TimedTasks laufen kï¿½nnen.
    */
   public static abstract class TimeConstraintTask {
 
@@ -185,10 +185,10 @@ public class TimeConstraintExecutor implements Executor<TimeConstraintExecutor.T
   }
   
   /**
-   * Abbrechen der Aufträge mit Timeout
+   * Abbrechen der Auftrï¿½ge mit Timeout
    * Achtung, diese TimeConstraintTasks werden derzeit nicht aus der TaskListe entfernt, da 
-   * das Suchen in der TaskListe aufwändig ist, die überflüssige Arbeit dagegen gering ist 
-   * und die unnötige Referenz auf die SchedulingOrder nur wenig Speicher benötigt.
+   * das Suchen in der TaskListe aufwï¿½ndig ist, die ï¿½berflï¿½ssige Arbeit dagegen gering ist 
+   * und die unnï¿½tige Referenz auf die SchedulingOrder nur wenig Speicher benï¿½tigt.
    */
   public static class SchedulingTimeout extends TimeConstraintTaskWithOrder {
 
@@ -233,7 +233,7 @@ public class TimeConstraintExecutor implements Executor<TimeConstraintExecutor.T
   }
 
   /**
-   * Aufträge, die auf ihren Startzeitpunkt warten, werden hierüber wieder in den Scheduler eingestellt.
+   * Auftrï¿½ge, die auf ihren Startzeitpunkt warten, werden hierï¿½ber wieder in den Scheduler eingestellt.
    *
    */
   public static class StartTime extends TimeConstraintTaskWithOrder {
@@ -269,7 +269,7 @@ public class TimeConstraintExecutor implements Executor<TimeConstraintExecutor.T
   }
 
   /**
-   * TimeWindows werden über diesen TimeConstraintTask geöffnet und geschlossen.
+   * TimeWindows werden ï¿½ber diesen TimeConstraintTask geï¿½ffnet und geschlossen.
    *
    */
   public static class TimeWindowChanger extends TimeConstraintTask {
@@ -290,7 +290,7 @@ public class TimeConstraintExecutor implements Executor<TimeConstraintExecutor.T
     
     @Override
     public void execute(TimeConstraintManagement timeConstraintManagement, AllOrdersList allOrders) {
-      timeWindow.lock(); //gegen gleichzeitige Verwendung im Scheduler schützen
+      timeWindow.lock(); //gegen gleichzeitige Verwendung im Scheduler schï¿½tzen
       try {
         this.timestamp = timeWindow.getNextChange(System.currentTimeMillis());
         if( timeWindow.isOpen() ) {

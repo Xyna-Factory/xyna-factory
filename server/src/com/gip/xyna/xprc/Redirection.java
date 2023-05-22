@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,10 +68,10 @@ public class Redirection extends ResponseListener implements Serializable {
   private String failedProcess;
   private String reason;
   private final boolean threadWasStoppedForcefully;
-  //TODO was passiert, wenn redirectionauftrag am laufen ist, und neu gestartet wird mit der wfabstraction? für die execution braucht sie einen verweis auf die xynaorder!
+  //TODO was passiert, wenn redirectionauftrag am laufen ist, und neu gestartet wird mit der wfabstraction? fï¿½r die execution braucht sie einen verweis auf die xynaorder!
 
   private WorkflowAbstractionLayer<RedirectionBean, RedirectionAnswer> wfAbstraction;
-  private XynaOrderServerExtension parentRootOrder; //root of stuck workflowfamily TODO wird heir doppelt gespeichert: einmal reguläres OrderBackup der parentRootOrder, zum zweiten hier im MI-Auftrag
+  private XynaOrderServerExtension parentRootOrder; //root of stuck workflowfamily TODO wird heir doppelt gespeichert: einmal regulï¿½res OrderBackup der parentRootOrder, zum zweiten hier im MI-Auftrag
 
 
   public Redirection(int step, String process,
@@ -105,8 +105,8 @@ public class Redirection extends ResponseListener implements Serializable {
   
 
   /**
-   * startet den über die wfAbstraction definierten auftrag asynchron.
-   * der ursprüngliche Auftrag wird erst danach fortgesetzt.
+   * startet den ï¿½ber die wfAbstraction definierten auftrag asynchron.
+   * der ursprï¿½ngliche Auftrag wird erst danach fortgesetzt.
    * der redirection auftrag hat keinen parentauftrag gesetzt.
    */
   public final Long redirectOrder(XynaOrderServerExtension xo, ODSConnection con) throws PersistenceLayerException {
@@ -144,15 +144,15 @@ public class Redirection extends ResponseListener implements Serializable {
 1.1 redirectionMI -> cancel
  TODO
 - fehlerzustand behalten, bzw fehler erneut werfen
-  das ist nicht so einfach! man will ja auch kompensation. man müsste dazu alle steps, die einen fehler geworfen haben, erneut durchlaufen, bis auf den letzten - 
+  das ist nicht so einfach! man will ja auch kompensation. man mï¿½sste dazu alle steps, die einen fehler geworfen haben, erneut durchlaufen, bis auf den letzten - 
   der sollte den fehler dann wieder werfen. 
   in fractalprocessstep haben aber alle diese steps den fehler als "hab ich geworfen/gefangen" markiert (oder nicht markiert)
 1.2. redirection MI -> ignore
-- schritt überspringen
+- schritt ï¿½berspringen
 1.3. redirection MI -> retry
-- schritt erneut ausführen
+- schritt erneut ausfï¿½hren
 
-fall 2: wf step hängt weiter
+fall 2: wf step hï¿½ngt weiter
 2.1 redirectionMI -> cancel
 - neuen fehler werfen
 2.2. redirection MI -> ignore
@@ -233,13 +233,13 @@ fall 2: wf step hängt weiter
             throw new RuntimeException("unsupported mi answer " + answer);
         }
         
-        //ParentRootOrder nun so backuppen, dabei Redirection entfernen, da bereits ausgeführt.
+        //ParentRootOrder nun so backuppen, dabei Redirection entfernen, da bereits ausgefï¿½hrt.
         parentRootOrder.setRedirection(null);
         parentRootOrder.setHasBeenBackuppedAfterChange(false);
         XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive()
             .backup(parentRootOrder, BackupCause.SUSPENSION, con);
         
-        //Fortsetzen des ursprünglichen Auftrags, beim Commit dann in den Scheduler aufnehmen
+        //Fortsetzen des ursprï¿½nglichen Auftrags, beim Commit dann in den Scheduler aufnehmen
         SuspendResumeManagement srm = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getSuspendResumeManagement();
         Pair<ResumeResult, String> result = srm.resumeOrder(parentRootOrder, con);
         switch( result.getFirst() ) {

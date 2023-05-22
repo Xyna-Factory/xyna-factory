@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class ForEachScopeStep extends ScopeStep {
 
   
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     // ForEachScope
     try {
       METHODNAME_FOREACH_SCOPE_GET_FOREACH_INDEX = ForEachScope.class.getDeclaredMethod(_METHODNAME_FOREACH_SCOPE_GET_FOREACH_INDEX_ORIG).getName();

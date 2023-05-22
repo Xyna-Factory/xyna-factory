@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.Path.PathCreationVisitor;
 
 public class TR069PathCreationVisitor implements PathCreationVisitor {
 
-  //TODO nicht immer stringbuilder mitbauen, wenn man ihn nicht benötigt
+  //TODO nicht immer stringbuilder mitbauen, wenn man ihn nicht benï¿½tigt
   private final StringBuilder sb = new StringBuilder();
   private final DOM dom;
   private DOM currentDom;

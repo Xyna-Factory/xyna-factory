@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import java.util.concurrent.TimeUnit;
 
 
 
-//http://stackoverflow.com/questions/3802370/java-time-based-map-cache-with-expiring-keys -> könnte man auch ersetzen
-//so ist es aber simpler - aber auch nicht voll implementiert. z.b. würde man annehmen, dass man auch andere methoden verwenden kann...
+//http://stackoverflow.com/questions/3802370/java-time-based-map-cache-with-expiring-keys -> kï¿½nnte man auch ersetzen
+//so ist es aber simpler - aber auch nicht voll implementiert. z.b. wï¿½rde man annehmen, dass man auch andere methoden verwenden kann...
 /**
- * nach der angegebenen zeit verschwinden einträge aus der map.
+ * nach der angegebenen zeit verschwinden eintrï¿½ge aus der map.
  * konfigurierbar, ob lesende zugriffe den zeitstempel updaten oder nicht.
  * ACHTUNG: nur {@link ExpiringMap#put(Object, Object)}, {@link ExpiringMap#remove(Object)}, {@link ExpiringMap#get(Object)} 
  * und {@link ExpiringMap#putIfAbsent(Object, Object)} verwenden. rest ist nicht implementiert.
@@ -113,7 +113,7 @@ public class ExpiringMap<K, V> extends ConcurrentHashMap<K, V> {
           Set<K> removed = timeKeys.remove(t);
           for (K k : removed) {
             Long lastChange = keyTimes.get(k);
-            if (lastChange != null && lastChange <= t) { //falls null, ist der key bereits entfernt. falls > t, gibt es einen neueren eintrag in timeKeys und deshalb wird der key noch nicht gelöscht
+            if (lastChange != null && lastChange <= t) { //falls null, ist der key bereits entfernt. falls > t, gibt es einen neueren eintrag in timeKeys und deshalb wird der key noch nicht gelï¿½scht
               remove(k, false); //keine rekursion!
             }
           }
@@ -136,7 +136,7 @@ public class ExpiringMap<K, V> extends ConcurrentHashMap<K, V> {
   }
 
   /**
-   * nicht überschreiben, statt dessen die variante mit boolean check
+   * nicht ï¿½berschreiben, statt dessen die variante mit boolean check
    */
   @Override
   public final V remove(Object key) {

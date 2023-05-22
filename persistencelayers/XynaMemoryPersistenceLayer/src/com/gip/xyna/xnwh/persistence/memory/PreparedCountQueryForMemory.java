@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,9 +64,9 @@ public abstract class PreparedCountQueryForMemory<E> implements IPreparedQueryFo
 
 
   /**
-   * achtung, nachdem diese methode aufgerufen wird, müssen die angesammelten readlocks wieder freigegeben werden!!
-   * (rs.unlockReadLocks();) TODO: in diese methode mit reinnehmen und dafür den dazwischen auszuführenden code
-   * übergeben (irgendein handler oder sowas)
+   * achtung, nachdem diese methode aufgerufen wird, mï¿½ssen die angesammelten readlocks wieder freigegeben werden!!
+   * (rs.unlockReadLocks();) TODO: in diese methode mit reinnehmen und dafï¿½r den dazwischen auszufï¿½hrenden code
+   * ï¿½bergeben (irgendein handler oder sowas)
    */
   public <T extends Storable, X extends MemoryRowData<T>> IMemoryBaseResultSet execute(TableObject<T, X> t,
                                                                                        Parameter p, boolean forUpdate,

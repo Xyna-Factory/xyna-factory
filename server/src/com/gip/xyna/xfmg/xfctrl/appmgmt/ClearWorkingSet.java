@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,10 +105,10 @@ public class ClearWorkingSet extends RevisionOrderControl {
   }
 
 
-  //TODO beim berücksichtigen laufender aufträge die blacklist beachten:
-  //     evtl verwenden laufende aufträge nur objekte aus der blacklist und dürfen deshalb weiterhin laufen
-  //TODO clear verhindern, wenn es noch "ungespeicherte" (was auch immer das bedeutet?) änderungen im workingset gibt,
-  //     die durch das clear gelöscht würden.
+  //TODO beim berï¿½cksichtigen laufender auftrï¿½ge die blacklist beachten:
+  //     evtl verwenden laufende auftrï¿½ge nur objekte aus der blacklist und dï¿½rfen deshalb weiterhin laufen
+  //TODO clear verhindern, wenn es noch "ungespeicherte" (was auch immer das bedeutet?) ï¿½nderungen im workingset gibt,
+  //     die durch das clear gelï¿½scht wï¿½rden.
 
 
   public interface RevisionContentBlackWhiteList {
@@ -256,13 +256,13 @@ public class ClearWorkingSet extends RevisionOrderControl {
 
 
   /**
-   * entfernt alle objekte aus dem workingset ausser denen, die über {@link #setBlackList(RevisionContentBlackWhiteList)} 
+   * entfernt alle objekte aus dem workingset ausser denen, die ï¿½ber {@link #setBlackList(RevisionContentBlackWhiteList)} 
    * angegeben wurden.
    * Die Subtypen von Output-Parametern von Java-Services von geblacklisteten Applications werden nicht
-   * entfernt, außer sie sind in 'removeSubtypes' enthalten.
-   * @throws XFMG_ClearWorkingSetFailedBecauseOfRunningOrders falls noch aufträge am laufen sind (force = false)
+   * entfernt, auï¿½er sie sind in 'removeSubtypes' enthalten.
+   * @throws XFMG_ClearWorkingSetFailedBecauseOfRunningOrders falls noch auftrï¿½ge am laufen sind (force = false)
    * @throws OrderEntryInterfacesCouldNotBeClosedException falls auftragseingangsschnittstellen nicht geschlossen werden konnten
-   * @throws XPRC_TimeoutWhileWaitingForUnaccessibleOrderException wenn aufträge unerwartet hängen
+   * @throws XPRC_TimeoutWhileWaitingForUnaccessibleOrderException wenn auftrï¿½ge unerwartet hï¿½ngen
    * @throws PersistenceLayerException wenn beim entfernen der objekte ein persistencelayerproblem auftritt
    */
   public void clear(boolean forceKillRunningOrders, List<String> removeSubtypesOf) throws XFMG_ClearWorkingSetFailedBecauseOfRunningOrders, OrderEntryInterfacesCouldNotBeClosedException,
@@ -273,8 +273,8 @@ public class ClearWorkingSet extends RevisionOrderControl {
       throw new RuntimeException("The workspace can not be cleared, because it is still referenced from another runtime context.");
     }
     /*
-     * davor schützen, dass nicht gleichzeitig andere clearworkingsets aufgerufen werden, oder deployments durchgeführt werden, etc
-     * CommandControl.wlock und closeorderentryinterfaces haben ähnliche funktionalität.
+     * davor schï¿½tzen, dass nicht gleichzeitig andere clearworkingsets aufgerufen werden, oder deployments durchgefï¿½hrt werden, etc
+     * CommandControl.wlock und closeorderentryinterfaces haben ï¿½hnliche funktionalitï¿½t.
      * 
      * CommandControl.wlock betrifft:
      *  - andere clearworkingsets
@@ -293,7 +293,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
      *    - undeployment/remove
      *  - applicationbezogene befehle (build, addObjectTo, etc)
      *  - packagebezogene befehle
-     *  - anlegen und ändern von crons
+     *  - anlegen und ï¿½ndern von crons
      *  - anlegen von frequencycontrolled tasks
      *  - xmomstorable config
      *  
@@ -308,7 +308,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
           + failure.getSecond() + ".");
     }
     try {
-      closeOrderEntryInterfaces(blackList, true); //TODO hier könnte man auch die blacklist verwenden, die weiter unten erstellt wird
+      closeOrderEntryInterfaces(blackList, true); //TODO hier kï¿½nnte man auch die blacklist verwenden, die weiter unten erstellt wird
       try {
         int timeout = 0;
         while (true) {
@@ -319,7 +319,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
             throw new XFMG_ClearWorkingSetFailedBecauseOfRunningOrders();
           }
           if (forceKillRunningOrders) {
-            //TODO wenn ein auftrag nach dem kill in der compensation länger braucht, wird er darin erneut gekillt.
+            //TODO wenn ein auftrag nach dem kill in der compensation lï¿½nger braucht, wird er darin erneut gekillt.
             killRunningOrders();
           }
           timeout = 1000;
@@ -349,8 +349,8 @@ public class ClearWorkingSet extends RevisionOrderControl {
 
   private void clearOrdertypes() throws PersistenceLayerException {
     /*
-     * alle ordertypes (inkl zugehöriger konfig) wegräumen, deren executiondestination auf ein nicht (mehr) vorhandenes xmom objekt (wf/service) zeigt.
-     * falls executiondestination nicht gelöscht wurde, aber planning/cleanup, bleibt der ordertype bestehen.
+     * alle ordertypes (inkl zugehï¿½riger konfig) wegrï¿½umen, deren executiondestination auf ein nicht (mehr) vorhandenes xmom objekt (wf/service) zeigt.
+     * falls executiondestination nicht gelï¿½scht wurde, aber planning/cleanup, bleibt der ordertype bestehen.
      */
     List<OrdertypeParameter> listOrdertypes =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getOrderTypeManagement()
@@ -478,7 +478,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
             am.removeApplicationVersion(app.getName(), app.getVersion(), params, repositoryEvent);
             it.remove();
           } catch (XFMG_CouldNotRemoveApplication e) {
-            //evtl existiert eine abhängigkeit auf eine nicht zu entfernende appdef
+            //evtl existiert eine abhï¿½ngigkeit auf eine nicht zu entfernende appdef
           }
         }
       }
@@ -577,12 +577,12 @@ public class ClearWorkingSet extends RevisionOrderControl {
     }
 
     /*
-     * Beim Entfernen von XMOM Objekten müssen die Abhängigkeiten beachtet werden.
-     * Es dürfen nur XMOM Objekte entfernt werden, bei denen alle Abhängigkeiten auch entfernt werden dürfen.
+     * Beim Entfernen von XMOM Objekten mï¿½ssen die Abhï¿½ngigkeiten beachtet werden.
+     * Es dï¿½rfen nur XMOM Objekte entfernt werden, bei denen alle Abhï¿½ngigkeiten auch entfernt werden dï¿½rfen.
      * 
-     * In erster Linie geht es um die Abhängigkeiten im Saved-Ordner. Manche dieser Objekte können aber auch
-     * deployed sein, und müssen dann undeployed werden. Im Deployed-Stand können die Objekte aber
-     * anders definiert sein als im Saved-Stand und deshalb muss man für alle diese Objekte
+     * In erster Linie geht es um die Abhï¿½ngigkeiten im Saved-Ordner. Manche dieser Objekte kï¿½nnen aber auch
+     * deployed sein, und mï¿½ssen dann undeployed werden. Im Deployed-Stand kï¿½nnen die Objekte aber
+     * anders definiert sein als im Saved-Stand und deshalb muss man fï¿½r alle diese Objekte
      * die Deployed-Dependencies nochmal separat untersuchen.
      */
     allXMOMToDelete = new HashSet<String>(toDelete.keySet());
@@ -657,7 +657,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
       GenerationBase.undeployAndDelete(objects, disableChecksForRunningOrders, DependentObjectMode.INVALIDATE, true, revision, event,
                                        false);
     } catch (XPRC_EXISTING_DEPENDENCY_ONUNDEPLOYMENT e) {
-      //sollte nicht passieren. wir haben ja extra nur objekte gewählt, die nicht mehr von anderen nicht-zu-löschenden objekten verwendet werden
+      //sollte nicht passieren. wir haben ja extra nur objekte gewï¿½hlt, die nicht mehr von anderen nicht-zu-lï¿½schenden objekten verwendet werden
       //ausserdem wird die exception wohl nur geworfen, wenn der DependentObjectMode auf "Protect" steht
       logger.warn("Could not delete all objects", e);
     }
@@ -666,7 +666,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
 
 
   /**
-   * wirft fehler, wenn objekte in den dependencies gefunden werden, die nicht entfernt werden dürfen
+   * wirft fehler, wenn objekte in den dependencies gefunden werden, die nicht entfernt werden dï¿½rfen
    */
   private Set<XMOMDatabaseSearchResultEntry> getSavedDependencies(String fullXmlName, boolean deleteDependencies, XMOMDBSearchResultCache cache)
       throws PersistenceLayerException, XPRC_EXISTING_DEPENDENCY_ONUNDEPLOYMENT {
@@ -681,7 +681,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
   }
 
 
-  //enthält wraps und groups, weil dadurch keine falschen haupttypen (datentypen, exceptions, workflows) ermittelt werden,
+  //enthï¿½lt wraps und groups, weil dadurch keine falschen haupttypen (datentypen, exceptions, workflows) ermittelt werden,
   //sondern nur falsche zwischentypen.
   private static XMOMDatabaseEntryColumn[][] columns = {
       //exception
@@ -704,7 +704,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
   
   
   private PreparedXMOMDatabaseSelect prepareSearch(List<XMOMDatabaseSelect> selects) {
-    //das prepare cachen: dafür ist es egal, was für werte in den whereclauses stecken
+    //das prepare cachen: dafï¿½r ist es egal, was fï¿½r werte in den whereclauses stecken
     if (preparedSearch == null) {
       preparedSearch = xmomDatabase.prepareSearch(selects);
     }
@@ -747,7 +747,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
         allFoundDeps.add(e);
         searchSavedDepsRecursively(e.getFqName(), allFoundDeps, deleteDependencies, cache);
       } else {
-        //dependency gefunden, aber dependencies sollen nicht gelöscht werden.dependency ist offenbar blacklisted
+        //dependency gefunden, aber dependencies sollen nicht gelï¿½scht werden.dependency ist offenbar blacklisted
         throw new XPRC_EXISTING_DEPENDENCY_ONUNDEPLOYMENT(fullXmlName, new RuntimeException(fullXmlName + " is used by " + e.getFqName() + "."));
       }
     }
@@ -756,9 +756,9 @@ public class ClearWorkingSet extends RevisionOrderControl {
 
 
   /**
-   * exception, falls objekt nicht undeployed werden darf, weil es abhängigkeiten besitzt, die nicht in toDelete enthalten sind.
-   * abhängigkeiten werden zu allFoundDependencies hinzugefügt.
-   * das objekt selbst wird zu toUndeploy hinzugefügt.
+   * exception, falls objekt nicht undeployed werden darf, weil es abhï¿½ngigkeiten besitzt, die nicht in toDelete enthalten sind.
+   * abhï¿½ngigkeiten werden zu allFoundDependencies hinzugefï¿½gt.
+   * das objekt selbst wird zu toUndeploy hinzugefï¿½gt.
    * @param fullXmlName
    * @param type
    * @throws XPRC_MDMUndeploymentException
@@ -791,7 +791,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
           dependencies.size() == 0 || existingDeployedDependenciesMustBeDeleted(dependencies);
 
       if (undeploy) {
-        //alle dependencies wurden damit überprüft und müssen nicht nochmal überprüft werden
+        //alle dependencies wurden damit ï¿½berprï¿½ft und mï¿½ssen nicht nochmal ï¿½berprï¿½ft werden
         cache.checkedForUndeployment.addAll(dependencies);
         cache.checkedForUndeployment.add(fullXmlName);
       } else {
@@ -803,7 +803,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
 
 
   /**
-   * @return true falls das xmom objekte auch gelöscht werden muss. false sonst 
+   * @return true falls das xmom objekte auch gelï¿½scht werden muss. false sonst 
    */
   private boolean existingSavedDependencyMustBeDeleted(String parent, XMOMDatabaseSearchResultEntry e) {
     switch (e.getType()) {
@@ -831,7 +831,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
 
 
   /**
-   * @return true falls alle dependencies auch gelöscht werden müssen, false sonst
+   * @return true falls alle dependencies auch gelï¿½scht werden mï¿½ssen, false sonst
    */
   private boolean existingDeployedDependenciesMustBeDeleted(Set<String> dependencies) {
     for (String dep : dependencies) {
@@ -850,7 +850,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
     Set<String> gbDeps = new HashSet<String>();
     for (DependencyNode dn : nodes) {
       if (!dn.getRevision().equals(revision) || (dn.getUniqueName().equals(node.getUniqueName()) && dn.getType() == node.getType())) {
-        //eigenes objekt nicht zurückgeben, andere revision nicht zurückgeben
+        //eigenes objekt nicht zurï¿½ckgeben, andere revision nicht zurï¿½ckgeben
         continue;
       }
       switch (dn.getType()) {
@@ -953,7 +953,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
 
 
   private void clearTrigger(RepositoryEvent repositoryEvent) throws PersistenceLayerException {
-    //alle trigger entfernen, die nicht in der blacklist stehen und die keine existierenden abhängigen objekte besitzen (filter, triggerinstanzen)
+    //alle trigger entfernen, die nicht in der blacklist stehen und die keine existierenden abhï¿½ngigen objekte besitzen (filter, triggerinstanzen)
     for (Trigger t : xt.getTriggers(revision)) {
       if (!blackListWithApplicationContent.getTriggersNames().contains(t.getTriggerName())) {
         try {
@@ -965,7 +965,7 @@ public class ClearWorkingSet extends RevisionOrderControl {
               try {
                 xt.removeTrigger(t.getTriggerName(), revision, repositoryEvent);
               } catch (XACT_TriggerMayNotBeRemovedIsDeployedException e) {
-                //oben geprüft, dass dem nicht so ist
+                //oben geprï¿½ft, dass dem nicht so ist
                 throw new RuntimeException(e);
               }
             } else {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import gip.base.common.OBException;
 import gip.base.db.drivers.OBDriverInterface;
 
 /**
- * Allgemeingültiger Context für eine Session
- * für die Basis-Klassen.
+ * Allgemeingï¿½ltiger Context fï¿½r eine Session
+ * fï¿½r die Basis-Klassen.
  */
 public class OBContext implements OBContextInterface {
   
@@ -239,7 +239,7 @@ public class OBContext implements OBContextInterface {
   }
 
   /**
-   * Der Session-Identifier ist eine eindeutige ID für die angemeldete Session. 
+   * Der Session-Identifier ist eine eindeutige ID fï¿½r die angemeldete Session. 
    * @return Session-Identifier
    */
   public String getSessionIdentifier() {
@@ -247,7 +247,7 @@ public class OBContext implements OBContextInterface {
   }
   
   /**
-   * Setzen der Session-Identifier (eindeutige ID für die angemeldete Session.) 
+   * Setzen der Session-Identifier (eindeutige ID fï¿½r die angemeldete Session.) 
    * @param sessionId Session-Identifier
    */
   public void setSessionIdentifier(String sessionId) {

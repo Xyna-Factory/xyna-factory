@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,15 @@ import java.util.Date;
 import com.gip.xyna.utils.db.TimeUtils;
 
 /**
- * Übertragung eines Timestamps in die Datenbank.
+ * ï¿½bertragung eines Timestamps in die Datenbank.
  *
- * Diese Klasse ist nur ein Wrapper für ein Date. Anhand des Klassennamens kann dann
+ * Diese Klasse ist nur ein Wrapper fï¿½r ein Date. Anhand des Klassennamens kann dann
  * jedoch festgestellt werden, dass der Date als Timestamp in die DB eingetragen werden
  * soll.
  * 
  * Timestamps werden in die DB als UTC eingetragen und beim Auslesen auch so erwartet.
  *
- * Dies ist unabhängig davon, ob der Timestamp-Typ in der DB nun "TIMESTAMP", 
+ * Dies ist unabhï¿½ngig davon, ob der Timestamp-Typ in der DB nun "TIMESTAMP", 
  * "TIMESTAMP WITH TIME ZONE" oder "TIMESTAMP WITH LOCAL TIME ZONE" ist.
  * 
  * Die unterschiedliche Behandlung der Timestamps in der DB hat zur Folge, dass bei 
@@ -53,7 +53,7 @@ public class Timestamp {
   }
   
   /**
-   * Konstruktor, der gegebenes Date übernimmt 
+   * Konstruktor, der gegebenes Date ï¿½bernimmt 
    * @param date
    */
   public Timestamp( Date date) {
@@ -61,7 +61,7 @@ public class Timestamp {
   }
   
   /**
-   * Konstruktor, der gegebenes Datum aus den Millisekunden seit 1970 übernimmt. 
+   * Konstruktor, der gegebenes Datum aus den Millisekunden seit 1970 ï¿½bernimmt. 
    * @param milli
    */
   public Timestamp( long milli ) {
@@ -69,7 +69,7 @@ public class Timestamp {
   }
 
   /**
-   * Konstruktor, der gegebenen Calendar übernimmt 
+   * Konstruktor, der gegebenen Calendar ï¿½bernimmt 
    * @param date
    */
   public Timestamp( Calendar calendar ) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,11 +83,11 @@ public class User extends Storable<User> {
   }
   
   public User() {
-    //für storable
+    //fï¿½r storable
   }
   
   
-  User(String name) {    //für usermanagement
+  User(String name) {    //fï¿½r usermanagement
     this();
     this.name = name;
   }
@@ -174,14 +174,14 @@ public class User extends Storable<User> {
 
   public void throwPasswordExpiredException() throws XFMG_UserAuthenticationFailedException {
     if (XynaProperty.PASSWORD_EXPIRATION_EXCPETION_UNIQUE.get()) {
-      throw new XFMG_PasswordExpiredException(name); //eindeutige Exception für abgelaufene Passwörter
+      throw new XFMG_PasswordExpiredException(name); //eindeutige Exception fï¿½r abgelaufene Passwï¿½rter
     }
     throw new XFMG_UserAuthenticationFailedException(name);
   }
   
   
   /**
-   * Überprüft, ob das Passwort bereits einmal verwendet wurde.
+   * ï¿½berprï¿½ft, ob das Passwort bereits einmal verwendet wurde.
    * @param newPassword
    * @param isPasswordHashed
    * @return
@@ -255,8 +255,8 @@ public class User extends Storable<User> {
   }
 
   /**
-   * Setzt das Passwort im User. Wird auch aufgerufen, wenn das Passwort nur neu verschlüsselt wird, ohne
-   * dass es geändert wurde.
+   * Setzt das Passwort im User. Wird auch aufgerufen, wenn das Passwort nur neu verschlï¿½sselt wird, ohne
+   * dass es geï¿½ndert wurde.
    */
   public void setPassword(String password, boolean isPassHashed) {
     if (!isPassHashed) {

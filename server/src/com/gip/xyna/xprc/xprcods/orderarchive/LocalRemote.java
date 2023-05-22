@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class LocalRemote implements RemoteInterface {
     try {
       select.selectRootId();
       select.selectLastUpdate(); // for sorting
-      if (connectionType == ODSConnectionType.DEFAULT) { //ändert das select und braucht nur einmal geändert zu werden
+      if (connectionType == ODSConnectionType.DEFAULT) { //ï¿½ndert das select und braucht nur einmal geï¿½ndert zu werden
         if (propertyUseAdditionalLastUpdateQuery.get()) {
           boolean foundLastUpdateCondition = false;
           // this is a hint for oracle/mysql to use an index to avoid a full table scan
@@ -107,7 +107,7 @@ public class LocalRemote implements RemoteInterface {
           }
         }
 
-        //dafür sorgen, dass man nicht in HISTORY ganz neue aufträge findet (wenn die dann auch noch partiell committed sind, macht das probleme)
+        //dafï¿½r sorgen, dass man nicht in HISTORY ganz neue auftrï¿½ge findet (wenn die dann auch noch partiell committed sind, macht das probleme)
         if (select.getWhereClauses().size() > 0) {
           select =
               select.getWhereClauses().get(select.getWhereClauses().size() - 1).and().whereStartTime().isSmallerThan(startTime)
@@ -142,7 +142,7 @@ public class LocalRemote implements RemoteInterface {
 
     SortedMap<OrderInstance, Collection<OrderInstance>> resultMap =
         new TreeMap<OrderInstance, Collection<OrderInstance>>(lastUpdateComperator);
-    //vollständige familien nachselektieren, falls notwendig
+    //vollstï¿½ndige familien nachselektieren, falls notwendig
     con = ods.openConnection(connectionType);
     try {
       for (Map<Long, OrderInstance> family : families.values()) {
@@ -165,14 +165,14 @@ public class LocalRemote implements RemoteInterface {
             wholeFamily = null;
           }
           for (OrderInstance o : family.values()) {
-            //jedes mal die gleiche family, weil gleicher root - spart speicher und wird später eh geflattet.
+            //jedes mal die gleiche family, weil gleicher root - spart speicher und wird spï¿½ter eh geflattet.
             
             resultMap.put(o, gatherFamilyForOrder(rootId, o, wholeFamily, searchMode));
           }
         } finally {
           if (checkForPreCommits) {
             if (preCommitted.get()) {
-              //es wurde zwischenzeitlich ein teil der zugehörigen auftragsfamilie archiviert -> nochmal in HISTORY suchen
+              //es wurde zwischenzeitlich ein teil der zugehï¿½rigen auftragsfamilie archiviert -> nochmal in HISTORY suchen
               if (logger.isDebugEnabled()) {
                 logger.debug("found partial committed order family (root=" + rootId + ").");
               }
@@ -207,7 +207,7 @@ public class LocalRemote implements RemoteInterface {
   }
 
 
-  //FIXME gleiche selektion von spalten verwenden, wie beim übergebenen select an "searchConnectionType"
+  //FIXME gleiche selektion von spalten verwenden, wie beim ï¿½bergebenen select an "searchConnectionType"
   private Collection<OrderInstance> gatherFamilyForOrder(long rootId, OrderInstance parent, List<OrderInstance> wholeFamily,
                                                          SearchMode searchMode) throws PersistenceLayerException {
     switch (searchMode) {
@@ -217,7 +217,7 @@ public class LocalRemote implements RemoteInterface {
       case HIERARCHY :
         return wholeFamily;
       case CHILDREN :
-        // nun alle Aufträge enternen, die nicht Kinder vom gesuchten Auftrag sind
+        // nun alle Auftrï¿½ge enternen, die nicht Kinder vom gesuchten Auftrag sind
         return orderarchive.findChildOrders(parent, wholeFamily);
       default :
         throw new RuntimeException("Unsupported searchMode: " + searchMode);
@@ -264,7 +264,7 @@ public class LocalRemote implements RemoteInterface {
 
 
   /**
-   * gibt auftrag mit auditdetails in xml form zurück. falls auftrag noch laufend ist, werden auditdetails in xml form
+   * gibt auftrag mit auditdetails in xml form zurï¿½ck. falls auftrag noch laufend ist, werden auditdetails in xml form
    * erst erzeugt (aber nicht gespeichert)
    */
   public OrderInstanceDetails getCompleteOrder(long id) throws PersistenceLayerException,

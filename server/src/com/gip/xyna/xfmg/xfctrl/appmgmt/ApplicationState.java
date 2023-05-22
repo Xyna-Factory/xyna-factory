@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +22,18 @@ public enum ApplicationState {
 
   RUNNING(true),
   STOPPED(false),
-  OK(false), //für Application Definitions
+  OK(false), //fï¿½r Application Definitions
   @Deprecated
-  //wird noch für alte in diesem zustand befindliche applications verwendet.
+  //wird noch fï¿½r alte in diesem zustand befindliche applications verwendet.
   AUDIT_MODE(false),
   
   @Deprecated
-  //wird nur noch im ApplicationStorable verwendet, aber eigentlich nicht mehr benötigt;
+  //wird nur noch im ApplicationStorable verwendet, aber eigentlich nicht mehr benï¿½tigt;
   //ob es sich um eine Application Definition handelt kann daran erkannt werden dass es eine parentRevision gibt
   WORKINGCOPY(false),
 
   
-  //folgende werden nicht persistiert, sondern nur bei listApplications zurückgegeben, falls ein Objekt fehlerhaft ist
+  //folgende werden nicht persistiert, sondern nur bei listApplications zurï¿½ckgegeben, falls ein Objekt fehlerhaft ist
   WARNING(true), //TODO isRunning?
   ERROR(true),  //TODO isRunning?
   

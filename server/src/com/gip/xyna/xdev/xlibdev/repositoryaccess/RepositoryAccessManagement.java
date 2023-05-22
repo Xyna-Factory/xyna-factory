@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,10 +134,10 @@ public class RepositoryAccessManagement extends FunctionGroup {
         instantiateRepositoryAccessInstanceInternally(cais.getName(), cais.getTypename(), cais.getLocalRepositoryBase(), cais.getParameters());
       } catch (XDEV_CodeAccessInitializationException e) {
         logger.warn("could not initialize repository access instance named " + cais.getName(), e);
-        //FIXME disabled merken, damit man später manuell erneut versuchen kann zu enablen!
+        //FIXME disabled merken, damit man spï¿½ter manuell erneut versuchen kann zu enablen!
       } catch (RuntimeException e) {
         logger.warn("could not initialize repository access instance named " + cais.getName(), e);
-        //FIXME disabled merken, damit man später manuell erneut versuchen kann zu enablen!
+        //FIXME disabled merken, damit man spï¿½ter manuell erneut versuchen kann zu enablen!
       }
     }
   }

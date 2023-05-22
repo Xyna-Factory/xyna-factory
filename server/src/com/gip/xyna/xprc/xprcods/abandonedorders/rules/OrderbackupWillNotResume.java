@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class OrderbackupWillNotResume extends AbandonedOrderDetectionRule<Abando
     //          ==> z.B. mit select id, rootId from orderbackup alle relevanten IDs ermitteln und dann die inmemory-Checks
     //              mit Hilfe von listschedulerinfo(verbose) und
     //              XynaFactory.getInstance().getProcessing().getWorkflowEngine().getPlanningProcessor().getOrdersOfRunningProcesses();
-    //              etc. durchführen
+    //              etc. durchfï¿½hren
     //              Wunsch: XynaFactory.getInstance().getProcessing().getWorkflowEngine().getSpecialPurposeHelper().containsResumerForOrder(con, id)
 
     int targetBinding = new OrderInstanceBackup().getLocalBinding(ODSConnectionType.DEFAULT);
@@ -111,7 +111,7 @@ public class OrderbackupWillNotResume extends AbandonedOrderDetectionRule<Abando
             .listSchedulerInformation(SchedulerInformationBean.Mode.Consistent);
 
 
-    // Aus Performancegründen die Liste hier halten und nicht im SpecialPurposeHelper (evt. TODO)
+    // Aus Performancegrï¿½nden die Liste hier halten und nicht im SpecialPurposeHelper (evt. TODO)
     Set<Long> synchronizationEntries =
         getIdsOfSynchronizationEntries(((XynaFractalWorkflowEngine) XynaFactory.getInstance().getProcessing()
             .getWorkflowEngine()).getSynchronizationManagement().listCurrentSynchronizationEntries());
@@ -248,7 +248,7 @@ public class OrderbackupWillNotResume extends AbandonedOrderDetectionRule<Abando
     ODSConnection con = ODSImpl.getInstance().openConnection(ODSConnectionType.DEFAULT);
     try {
 
-      // Aus Performancegründen die Liste hier halten und nicht im SpecialPurposeHelper (evt. TODO)
+      // Aus Performancegrï¿½nden die Liste hier halten und nicht im SpecialPurposeHelper (evt. TODO)
       Set<Long> synchronizationEntries =
           getIdsOfSynchronizationEntries(((XynaFractalWorkflowEngine) XynaFactory.getInstance().getProcessing()
               .getWorkflowEngine()).getSynchronizationManagement().listCurrentSynchronizationEntries());

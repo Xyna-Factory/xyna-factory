@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -283,14 +283,14 @@ public class XMLUtils {
   }
 
   public static void initialize() {
-    // wird nur benötigt, um in XynaFactory die statische Initialisierung zu einem bestimmten Zeitpunkt ausführen zu können
+    // wird nur benï¿½tigt, um in XynaFactory die statische Initialisierung zu einem bestimmten Zeitpunkt ausfï¿½hren zu kï¿½nnen
   }
   
   
 
   public static interface PositionDecider {
     /**
-     * ist die position zwischen den beiden übergebenen elementen die gewünschte?
+     * ist die position zwischen den beiden ï¿½bergebenen elementen die gewï¿½nschte?
      * predecessor == null =&gt; beginn der liste
      * successor == null =&gt; ende der liste
      * beides null =&gt; liste ist leer
@@ -299,7 +299,7 @@ public class XMLUtils {
   }
   
   /**
-   * fügt newChild als kind von parent an der stelle ein, die von decider als true ermittelt wird (anhand der benachbarten geschwister)
+   * fï¿½gt newChild als kind von parent an der stelle ein, die von decider als true ermittelt wird (anhand der benachbarten geschwister)
    * @param parent
    * @param newChild
    * @param decider
@@ -342,7 +342,7 @@ public class XMLUtils {
 
   /**
    * liefert direkten text-inhalt der node. falls mehrere textnodes direkte kinder sind, werden die inhalte aneinander
-   * gehängt. falls das übergebene element null ist, wird ein leerer string zurückgegeben.
+   * gehï¿½ngt. falls das ï¿½bergebene element null ist, wird ein leerer string zurï¿½ckgegeben.
    * @param el
    * @return
    */
@@ -379,17 +379,17 @@ public class XMLUtils {
   }
 
   /**
-   * wie {@link #getTextContent(Element)}, nur wird null zurückgegeben, wenn element null ist.
-   *  &lt;ELEMENT&gt;&lt;/ELEMENT&gt; ist äquivalent zu &lt;ELEMENT/&gt;. beide geben leerstring ("") zurück
-   * wie {@link #getTextContent(Element)}, nur wird für den String {@link #escapeXMLValueAndInvalidChars(String)} aufgerufen, um alle in XML nicht akzeptierten Zeichen zu ersetzen.
+   * wie {@link #getTextContent(Element)}, nur wird null zurï¿½ckgegeben, wenn element null ist.
+   *  &lt;ELEMENT&gt;&lt;/ELEMENT&gt; ist ï¿½quivalent zu &lt;ELEMENT/&gt;. beide geben leerstring ("") zurï¿½ck
+   * wie {@link #getTextContent(Element)}, nur wird fï¿½r den String {@link #escapeXMLValueAndInvalidChars(String)} aufgerufen, um alle in XML nicht akzeptierten Zeichen zu ersetzen.
    */
   public static String getTextContentEscaped(Element el) {
     return escapeXMLValueAndInvalidChars(getTextContent(el));
   }
 
   /**
-   * wie {@link #getTextContent(Element)}, nur wird null zurückgegeben, wenn element null ist.
-   *  &lt;ELEMENT&gt;&lt;/ELEMENT&gt; ist äquivalent zu &lt;ELEMENT/&gt;. beide geben leerstring ("") zurück
+   * wie {@link #getTextContent(Element)}, nur wird null zurï¿½ckgegeben, wenn element null ist.
+   *  &lt;ELEMENT&gt;&lt;/ELEMENT&gt; ist ï¿½quivalent zu &lt;ELEMENT/&gt;. beide geben leerstring ("") zurï¿½ck
    */
   public static String getTextContentOrNull(Element el) {
     if (el == null) {
@@ -520,7 +520,7 @@ public class XMLUtils {
   }
   
   /**
-   * gibt zurück, ob das Attribut mit dem Namen attributeName existiert und den Wert "true" hat.
+   * gibt zurï¿½ck, ob das Attribut mit dem Namen attributeName existiert und den Wert "true" hat.
    */
   public static boolean isTrue(Element e, String attributeName) {
     if (e == null) {
@@ -556,8 +556,8 @@ public class XMLUtils {
   }
   
   
-  //FIXME wieso wirft diese methode eine fielaccessexception?? -> ACHTUNG, erst ändern, wenn klar ist, dass diese schnittstellenänderung okay ist.
-  //kann bei aufrufern zu compilefehlern führen, wenn man das ändert.
+  //FIXME wieso wirft diese methode eine fielaccessexception?? -> ACHTUNG, erst ï¿½ndern, wenn klar ist, dass diese schnittstellenï¿½nderung okay ist.
+  //kann bei aufrufern zu compilefehlern fï¿½hren, wenn man das ï¿½ndert.
   public static Document parseString(String xml, boolean namespaceAware) throws XPRC_XmlParsingException, Ex_FileAccessException {
 
     DocumentBuilderInstance builder = DocumentBuilderInstance.getDocumentBuilder(namespaceAware);
@@ -722,7 +722,7 @@ public class XMLUtils {
 
 
   /**
-   * ermittelt nächstes geschwister element. falls keines existiert, wird null zurückgegeben
+   * ermittelt nï¿½chstes geschwister element. falls keines existiert, wird null zurï¿½ckgegeben
    */
   public static Element getNextElementSibling(Element el) {
     Node next = el.getNextSibling();
@@ -761,7 +761,7 @@ public class XMLUtils {
   /**
    * ersetzt alle chars &lt; 0x20 ausser \n, \r, \t durch [&lt;char als int&gt;]
    * 
-   * alle anderen nicht erlaubten zeichen müssen separat escaped werden.
+   * alle anderen nicht erlaubten zeichen mï¿½ssen separat escaped werden.
    */
   public static String replaceIllegalXMLChars(String string) {
     if (string == null) {

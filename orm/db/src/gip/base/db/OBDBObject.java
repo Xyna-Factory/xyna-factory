@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -743,7 +743,7 @@ public abstract class OBDBObject extends OBObject  {
       @param example Beispielobjekt, benoetigt fuer Typ-Informationen
       @param sqlStringArray SQL-Statement ohne ORDER BY-Clause fuer select[0] und count[1]
       @param orderBy ORDER BY-Clause
-   * @param ignoreFirstLines Anzahl der Zeilen, die am Anfang übersprungen werden sollen
+   * @param ignoreFirstLines Anzahl der Zeilen, die am Anfang ï¿½bersprungen werden sollen
       @param maxRows Maximale Anzahl selektierter Zeilen
       @param attribs Array zu Selektierender Spalten - null bedeutet: Nimm default
       @return ListenObject mit gefundenen Werten
@@ -922,7 +922,7 @@ public abstract class OBDBObject extends OBObject  {
       @param example Beispielobjekt, benoetigt fuer Typ-Informationen
       @param sqlStringArray SQL-Statement ohne ORDER BY-Clause fuer select[0] und count[1]
       @param orderBy ORDER BY-Clause
-   * @param ignoreFirstLines Anzahl der Zeilen, die am Anfang übersprungen werden sollen
+   * @param ignoreFirstLines Anzahl der Zeilen, die am Anfang ï¿½bersprungen werden sollen
       @param maxRows Maximale Anzahl selektierter Zeilen
       @param attribs Array zu Selektierender Spalten - null bedeutet: Nimm default
       @return ListenObject mit gefundenen Werten
@@ -1406,7 +1406,7 @@ public abstract class OBDBObject extends OBObject  {
       back = context.getMessageGenerator().generateOraMessage(OBException.OBErrorNumber.insertedValueToLarge);
     }
     else if (e.getErrorCode()==2091) {
-      // Transaktion wurde zurückgesetzt, kommt bei Deferable-Constraints vor
+      // Transaktion wurde zurï¿½ckgesetzt, kommt bei Deferable-Constraints vor
       back = handleTransaktionsRollback(context, e, con);
     }
     else if (e.getErrorCode()==2290) {
@@ -1552,7 +1552,7 @@ public abstract class OBDBObject extends OBObject  {
     secOraMsg=secOraMsg.replaceFirst("ORA-......", ""); //$NON-NLS-1$ //$NON-NLS-2$
     
     SQLException secExp=new SQLException(secOraMsg, "", vendorNr); //$NON-NLS-1$
-    String back = "DB-Transaktion wird zurückgesetzt.\n" + handleSQLException(context, secExp, con); //$NON-NLS-1$
+    String back = "DB-Transaktion wird zurï¿½ckgesetzt.\n" + handleSQLException(context, secExp, con); //$NON-NLS-1$
 
     return back;
   }

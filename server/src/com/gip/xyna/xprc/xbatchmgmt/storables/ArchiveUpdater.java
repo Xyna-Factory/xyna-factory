@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceStatus;
 
 
 /**
- * ArchiveUpdater führt ein Update auf einem BatchProcessArchiveStorable aus.
+ * ArchiveUpdater fï¿½hrt ein Update auf einem BatchProcessArchiveStorable aus.
  *
  */
 public class ArchiveUpdater implements WarehouseRetryExecutableNoResult {
@@ -77,7 +77,7 @@ public class ArchiveUpdater implements WarehouseRetryExecutableNoResult {
       execute(this);
     } catch (PersistenceLayerException e) {
       logger.warn("Could not update Archive for batchProcess "+ archive.getOrderId() );
-      //FIXME Exception wird hier unterdrückt
+      //FIXME Exception wird hier unterdrï¿½ckt
     } finally {
       lock.unlock();
     }

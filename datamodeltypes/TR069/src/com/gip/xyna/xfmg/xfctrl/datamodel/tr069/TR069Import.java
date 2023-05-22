@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class TR069Import {
     
     if( parameter.hasModelRestrictions() ) {
       for( String modelRestriction : parameter.getModelRestrictions() ) {
-        //TODO weitere Einschränkung
+        //TODO weitere Einschrï¿½nkung
         TRModel model = modelMap.get(modelRestriction);
         if( model == null ) {
           //TODO Fehler
@@ -78,7 +78,7 @@ public class TR069Import {
       }
     }
     
-    //Sonderbehandlung für Services:
+    //Sonderbehandlung fï¿½r Services:
     // TODO: Services should be generated with a Services Basetype and a list of themself
     /*if( modelImports.containsKey("VoiceService:1.0") ) {
       prepareServiceImport("VoiceService:1.0");
@@ -140,7 +140,7 @@ public class TR069Import {
   }*/
 
   public List<String> getSelectedModels() {
-    //TODO schöner mit Ausgabe ob partiell
+    //TODO schï¿½ner mit Ausgabe ob partiell
     return new ArrayList<String>(modelImports.keySet());
   }
 

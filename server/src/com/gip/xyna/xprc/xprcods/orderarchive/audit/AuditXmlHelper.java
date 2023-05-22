@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,8 +167,8 @@ public class AuditXmlHelper {
             if (mapIntoWfRtc) {
               String isDep = imp.getAttribute(ATT.AUDIT_RC_IS_DEPENDENCY);
               if (!isDep.equals("false")) { // TODO: nur bei alter GUI
-                //indep attribute ist nicht gesetzt oder auf true gesetzt => runtimecontext von workflow übernehmen
-                //grund: GUI kennt für audits nicht die rc-dependency-hierarchie. und im xml sind objekte aus der hierarchie in den parametern nicht anders ausgezeichnet
+                //indep attribute ist nicht gesetzt oder auf true gesetzt => runtimecontext von workflow ï¿½bernehmen
+                //grund: GUI kennt fï¿½r audits nicht die rc-dependency-hierarchie. und im xml sind objekte aus der hierarchie in den parametern nicht anders ausgezeichnet
                 rc = rcWorkflow;
               }
             }
@@ -180,7 +180,7 @@ public class AuditXmlHelper {
         }
       }
 
-      //für Modellierung wichtige Datentypen zum Audit hinzufügen
+      //fï¿½r Modellierung wichtige Datentypen zum Audit hinzufï¿½gen
       imports.addAll(BasicAuditImport.getAuditImports(mapIntoWfRtc));
     } else if (doc.getDocumentElement().getNodeName().equals(EL.ORDER_ITEM)) { // Import Flash Audit-Export
       Element e = XMLUtils.getChildElementByName(doc.getDocumentElement(), EL.AUDIT);
@@ -252,7 +252,7 @@ public class AuditXmlHelper {
    * Hohe Prio) Resultierend aus Service-Operations einer ServiceGroup, die nicht aufgerufen werden
    * Niedrigere Prio) Resultierend aus Membervariablen, die null sind
    * 
-   * Dazu muss sowohl die Ermittlung der Imports angepasst werden als auch das spätere Auswerten der Imports (Service-Groups müssen dann in 
+   * Dazu muss sowohl die Ermittlung der Imports angepasst werden als auch das spï¿½tere Auswerten der Imports (Service-Groups mï¿½ssen dann in 
    *   "readAndOptimizeXml" beschnitten werden)
    */
 
@@ -389,10 +389,10 @@ public class AuditXmlHelper {
                 String name = xmlReader.getLocalName();
 
                 if (write == false && ignoreElement == null) {
-                  write = true; //erst hier und nicht schon bei endElement umsetzen, da sonst zu viele Zeilenumbrüche geschrieben werden
+                  write = true; //erst hier und nicht schon bei endElement umsetzen, da sonst zu viele Zeilenumbrï¿½che geschrieben werden
                 }
 
-                //für Workflows nur Input, Output und Throws behalten
+                //fï¿½r Workflows nur Input, Output und Throws behalten
                 if (elementStack.size() > 0 && elementStack.firstElement().equals(EL.SERVICE)) {
                   type = DependencySourceType.WORKFLOW;
                   if (elementStack.peek().equals(EL.OPERATION)) {
@@ -405,7 +405,7 @@ public class AuditXmlHelper {
                   }
                 }
 
-                //für ServiceGroups und Instanzmethoden nur verwendete Operations behalten
+                //fï¿½r ServiceGroups und Instanzmethoden nur verwendete Operations behalten
                 /*TODOif (elementStack.size() > 0 && elementStack.firstElement().equals(EL.DATATYPE)) {
                   type = DependencySourceType.DATATYPE;
                   if (elementStack.peek().equals(EL.SERVICE)) {
@@ -466,7 +466,7 @@ public class AuditXmlHelper {
                 }
                 break;
               case XMLStreamReader.COMMENT :
-                //ignore für audit
+                //ignore fï¿½r audit
                 break;
               case XMLStreamReader.START_DOCUMENT :
                 //processing instruction wird oben bereits geschrieben
@@ -477,7 +477,7 @@ public class AuditXmlHelper {
               case XMLStreamReader.NAMESPACE :
                 //ntbd
                 break;
-              case XMLStreamReader.CHARACTERS : //Zeilenumbrüche
+              case XMLStreamReader.CHARACTERS : //Zeilenumbrï¿½che
                 if (write) {
                   if (!elementStack.peek().equals(EL.CODESNIPPET)) { //codesnippets braucht man nicht rauszuschreiben
                     xmlWriter.writeCharacters(xmlReader.getText());

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,29 +30,29 @@ import com.gip.xyna.utils.collections.ConvertingIterator;
 
 /**
  * TimedTasks ist eine Speicherung von Work-Objekten, die zu bestimmten Zeiten von einem Executor
- * bearbeitet werden müssen.<br>
- * Im Unterschied zu den üblichen Timer und TaskQueue-Implementierungen werden hier keine Runnable-
+ * bearbeitet werden mï¿½ssen.<br>
+ * Im Unterschied zu den ï¿½blichen Timer und TaskQueue-Implementierungen werden hier keine Runnable-
  * oder TimerTask-Implementierungen gespeichert, sondern einfachere Work-Objekte. Damit ergibt sich 
- * die Einschränkung, dass nicht völlig verschiedene Algorithmen ausgeführt werden, sondern immer 
- * die gleiche {@link com.gip.xyna.utils.timing.TimedTasks.Executor Executor}-Implementierung für 
- * alle Work-Objekte. Dafür kann das Work-Objekt aber auch so etwas einfaches sein wie ein Long.
+ * die Einschrï¿½nkung, dass nicht vï¿½llig verschiedene Algorithmen ausgefï¿½hrt werden, sondern immer 
+ * die gleiche {@link com.gip.xyna.utils.timing.TimedTasks.Executor Executor}-Implementierung fï¿½r 
+ * alle Work-Objekte. Dafï¿½r kann das Work-Objekt aber auch so etwas einfaches sein wie ein Long.
  *  
  */
 public class TimedTasks<W> implements Iterable<W> {
 
   /**
-   * Executor wird für jedes Work-Objekt aufgerufen, um dieses zu bearbeiten.
+   * Executor wird fï¿½r jedes Work-Objekt aufgerufen, um dieses zu bearbeiten.
    */
   public interface Executor<W> {
     
     /**
-     * Ausführen der übergeben Arbeit
+     * Ausfï¿½hren der ï¿½bergeben Arbeit
      * @param work
      */
     public void execute(W work);
     
     /**
-     * Falls beim Ausführen von execute irgenein Fehler auftritt, muss dieser behandelt werden, 
+     * Falls beim Ausfï¿½hren von execute irgenein Fehler auftritt, muss dieser behandelt werden, 
      * da sonst der Thread stirbt.
      * Falls handleThrowable eine weitere Exception wirft, stirbt der Thread.
      * @param executeFailed
@@ -74,7 +74,7 @@ public class TimedTasks<W> implements Iterable<W> {
 
   
   /**
-   * Task-Objekt speichert Work und Ausführungszeitpunkt timestamp und kümmert sich um
+   * Task-Objekt speichert Work und Ausfï¿½hrungszeitpunkt timestamp und kï¿½mmert sich um
    * die richtige Sortierung.
    */
   private static class Task<W> implements Comparable<Task<W>> {
@@ -136,8 +136,8 @@ public class TimedTasks<W> implements Iterable<W> {
   }
   
   /**
-   * Implementierung des zugrundeliegenden Threads, der solange wartet, bis eine Work ausgeführt werde muss 
-   * und dann den Executor diese Work ausführen lässt.
+   * Implementierung des zugrundeliegenden Threads, der solange wartet, bis eine Work ausgefï¿½hrt werde muss 
+   * und dann den Executor diese Work ausfï¿½hren lï¿½sst.
    */
   private class Runner implements Runnable {
 
@@ -147,12 +147,12 @@ public class TimedTasks<W> implements Iterable<W> {
         while( running ) {
           //warten, bis Tasks vorhanden sind
           waitForTasks();
-          //warten, bis aktueller Task ausgeführt werden darf
+          //warten, bis aktueller Task ausgefï¿½hrt werden darf
           Task<W> task = waitForTask();    
           if( ! running ) {
             break;
           }
-          //Task erhalten, diesen ausführen
+          //Task erhalten, diesen ausfï¿½hren
           if( task != null ) {
             try {
               executor.execute(task.work);
@@ -173,7 +173,7 @@ public class TimedTasks<W> implements Iterable<W> {
     }
     
     /**
-     * Wartet, bis Tasks verfügbar sind
+     * Wartet, bis Tasks verfï¿½gbar sind
      */
     private void waitForTasks() {
       synchronized (tasks) {
@@ -182,15 +182,15 @@ public class TimedTasks<W> implements Iterable<W> {
             tasks.wait();
           }
           catch (InterruptedException e) {
-            //dann halt kürzer warten
+            //dann halt kï¿½rzer warten
           }
         }
       }
     }
 
     /**
-     * Wartet, bis der Task mit der höchsten Priorität ausgeführt werden darf  
-     * @return auszuführender Task<W> oder null
+     * Wartet, bis der Task mit der hï¿½chsten Prioritï¿½t ausgefï¿½hrt werden darf  
+     * @return auszufï¿½hrender Task<W> oder null
      */
     private Task<W> waitForTask() {
       synchronized (tasks) {
@@ -204,17 +204,17 @@ public class TimedTasks<W> implements Iterable<W> {
           if( timeToWait <= 0 ) {
             return tasks.poll();
           } else {
-            //warten auf Ausführungszeit
+            //warten auf Ausfï¿½hrungszeit
             try {
               tasks.wait(timeToWait);
             }
             catch (InterruptedException e) {
-              //dann halt kürzer warten
+              //dann halt kï¿½rzer warten
             }
-            //Warten beendet, Gründe sind:
+            //Warten beendet, Grï¿½nde sind:
             //1. TimedTaskList wurde gestoppt, running == false ==> Abbruch durch while, return null
             //2. neuer Task wurde eingestellt oder 3. unbeabsichtigtes wecken:
-            //=> einfach im nächsten Schleifendurchlauf  tasks.peek() auswerten und weiterwarten oder Task zurückgeben
+            //=> einfach im nï¿½chsten Schleifendurchlauf  tasks.peek() auswerten und weiterwarten oder Task zurï¿½ckgeben
           }
         }
       }
@@ -263,7 +263,7 @@ public class TimedTasks<W> implements Iterable<W> {
   }
   
   /**
-   * Entfernen eines Work-Objekts, welches equals(..) zu dem übergebenen work ist
+   * Entfernen eines Work-Objekts, welches equals(..) zu dem ï¿½bergebenen work ist
    * @param work
    * @return entfernte Work
    */
@@ -315,7 +315,7 @@ public class TimedTasks<W> implements Iterable<W> {
   }
   
   /**
-   * Zählen aller Work-Objekte, die vom Filter als passend erkannt werden
+   * Zï¿½hlen aller Work-Objekte, die vom Filter als passend erkannt werden
    * @param filter
    * @return
    */
@@ -324,7 +324,7 @@ public class TimedTasks<W> implements Iterable<W> {
   }
 
   /**
-   * Stoppen des ausführenden Threads
+   * Stoppen des ausfï¿½hrenden Threads
    */
   public void stop() {
     synchronized (tasks) {
@@ -335,14 +335,14 @@ public class TimedTasks<W> implements Iterable<W> {
   
   
   /**
-   * Starten des ausführenden Threads (in einem neuen Thread)
+   * Starten des ausfï¿½hrenden Threads (in einem neuen Thread)
    */
   public void restart() {
     restart(false);
   }
   
   /**
-   * Starten des ausführenden Threads (in einem neuen Thread)
+   * Starten des ausfï¿½hrenden Threads (in einem neuen Thread)
    */
   public void restart(boolean asDeamon) {
     if( ! running ) {
@@ -398,7 +398,7 @@ public class TimedTasks<W> implements Iterable<W> {
 
   
   /**
-   * Ausführen aller Works bis zum übergebenen Zeitstempel 
+   * Ausfï¿½hren aller Works bis zum ï¿½bergebenen Zeitstempel 
    * @param timestamp
    */
   public void executeAllUntil( long timestamp ) {
@@ -409,12 +409,12 @@ public class TimedTasks<W> implements Iterable<W> {
           task.timestamp = now; //kann hier trivial umgesetzt werden, da Reihenfolge erhalten bleibt!
         }
       }
-      tasks.notify(); //Wecken des ausführenden Threads
+      tasks.notify(); //Wecken des ausfï¿½hrenden Threads
     }
   }
 
   /**
-   * Ausführen aller vom Filter getroffenen Works bis zum übergebenen Zeitstempel
+   * Ausfï¿½hren aller vom Filter getroffenen Works bis zum ï¿½bergebenen Zeitstempel
    * @param timestamp
    */
   public void executeAllUntil( long timestamp, Filter<W> filter ) {
@@ -427,14 +427,14 @@ public class TimedTasks<W> implements Iterable<W> {
         }
         tasks.addAll(removed);
       }
-      tasks.notify(); //Wecken des ausführenden Threads
+      tasks.notify(); //Wecken des ausfï¿½hrenden Threads
     }
   }
 
   
   private List<Task<W>> removeTasks(TaskFilter<W> filter) {
     ArrayList<Task<W>> removed = new ArrayList<Task<W>>();
-    //Remove über iterator und iterator.remove ist O(N^2)!
+    //Remove ï¿½ber iterator und iterator.remove ist O(N^2)!
     synchronized (tasks) {
       ArrayList<Task<W>> allTasks = new ArrayList<Task<W>>(tasks.size());
       tasks.drainTo(allTasks); //O(N logN)

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
   private PersistenceStrategy persistenceStrategy;
 
   private String nodeId; //id des knotens
-  private boolean nodePreference; //bei konfliktauflösung als letzter ausweg verwendet. muss auf beiden knoten unterschiedlich sein.
+  private boolean nodePreference; //bei konfliktauflï¿½sung als letzter ausweg verwendet. muss auf beiden knoten unterschiedlich sein.
 
   private InterconnectSender interconnectSender;
   private InterconnectServer interconnectServer;
@@ -420,13 +420,13 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
   }
 
   /**
-   * lockt das objekt, welches zum PK der übergebenen payload passt und die internalId hat.
-   * da sich die letztere aber während des wartens auf das lock ändern kann, wird die internalId
-   * nach dem locken überprüft und ggfs erneut ermittelt.
+   * lockt das objekt, welches zum PK der ï¿½bergebenen payload passt und die internalId hat.
+   * da sich die letztere aber wï¿½hrend des wartens auf das lock ï¿½ndern kann, wird die internalId
+   * nach dem locken ï¿½berprï¿½ft und ggfs erneut ermittelt.
    * @param returnImmediatelyWhenIdChanged 
    * 
    * @return gelockte internalId
-   * @throws RetryDueToPendingCreateAction falls objekt gelöscht wurde oder zumindest dieser PK nicht mehr existiert
+   * @throws RetryDueToPendingCreateAction falls objekt gelï¿½scht wurde oder zumindest dieser PK nicht mehr existiert
    */
   int txLock(TransactionContext transactionContext, int internalId, XSORPayload payload, boolean returnImmediatelyWhenIdChanged) throws RetryDueToPendingCreateAction {
     while (true) {
@@ -444,7 +444,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
           return -1;
         }
         if (currentInternalId == -1) {
-          throw new RetryDueToPendingCreateAction(); //führt weiter oben im stack zum retry + create. FIXME fehlername irreführend
+          throw new RetryDueToPendingCreateAction(); //fï¿½hrt weiter oben im stack zum retry + create. FIXME fehlername irrefï¿½hrend
         }
         internalId = currentInternalId;
       }
@@ -483,7 +483,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
     protected abstract boolean lockInternally(TransactionContext transactionContext, int internalId, String tableName);
     
     /**
-     * @return internalId des gelockten objekts (evtl hat sie sich geändert) oder -1 falls nicht gelockt
+     * @return internalId des gelockten objekts (evtl hat sie sich geï¿½ndert) oder -1 falls nicht gelockt
      */
     public int lock(TransactionContext transactionContext, int internalId, XSORPayload payload, XSORPayloadPrimaryKeyIndex index) {
       while (true) {
@@ -714,7 +714,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
     }
     int uniqueClusterWideTableId = ci.uniqueId();
     int recordSize = ci.recordSize();
-    //FIXME maxtablesize ist irreführend, weil writecopys auch platz benötigen.
+    //FIXME maxtablesize ist irrefï¿½hrend, weil writecopys auch platz benï¿½tigen.
     return new XSORMemory(recordSize, maxTableSize, uniqueClusterWideTableId, nodeId, nodePreference, exampleInstance,
                         indices);
   }
@@ -738,7 +738,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
           messagesSentLastSync = 0;
         } else if (newState.isSync()) {
           syncFinished = false;
-          messagesSentLastSync = Integer.MAX_VALUE; //wird beim zustandsübergang dann korrekt gesetzt.
+          messagesSentLastSync = Integer.MAX_VALUE; //wird beim zustandsï¿½bergang dann korrekt gesetzt.
         }
         
         if (newState == ClusterState.NEVER_CONNECTED) {
@@ -804,12 +804,12 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
       }
 
 
-      //vor dem zustandsübergang
+      //vor dem zustandsï¿½bergang
       private void prepareToShutdown() {
-        //(TODO dafür muss derzeit die applikation sorgen)
+        //(TODO dafï¿½r muss derzeit die applikation sorgen)
         //"auftrags(requests an CC)"-eingang unterbinden
 
-        //der andere knoten ist nach shutdown auf disc_master und redet nicht mehr mit uns. diese letzte chance nutzen aufzuräumen
+        //der andere knoten ist nach shutdown auf disc_master und redet nicht mehr mit uns. diese letzte chance nutzen aufzurï¿½umen
 
         //auf antworten wartende threads notifizieren
 
@@ -817,7 +817,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
       }
 
 
-      //nach dem zustandsübergang
+      //nach dem zustandsï¿½bergang
       private void changeToShutdown() {
         //eingehende requests abarbeiten (TODO siehe todo bei prepareToShutdown)
         
@@ -834,7 +834,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
         debugger.debug("Going to disconnect: pausing interconnect, signalling clusterstatechange to all waiting threads.");
         for (Table table : tables.values()) {
           XSORMemory xsorMem = table.getXSORMemory();
-          //sender in aufräum-modus bringen (merging von einträgen zum gleichen objekt)
+          //sender in aufrï¿½um-modus bringen (merging von eintrï¿½gen zum gleichen objekt)
           xsorMem.changeQueueModeToMerging();
 
           //auf remote-antwort wartende application-threads mit passendem ergebnis (disconnected!) notifzieren
@@ -844,7 +844,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
         //incoming replies receiver umstellen, so dass eingehende anfragen sofort negativ notifiziert werden
         //?????
 
-        //abarbeitung der incoming queue aufhören
+        //abarbeitung der incoming queue aufhï¿½ren
         interconnectServer.pauseWorking();
 
         //versenden der outgoing replies einstellen
@@ -853,7 +853,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
 
 
       private void changeToConnected() {
-        //ggfs rückgängig machen, was man für sync an besonderen einstellungen brauchte
+        //ggfs rï¿½ckgï¿½ngig machen, was man fï¿½r sync an besonderen einstellungen brauchte
       }
 
 
@@ -975,7 +975,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
         }
 
         //outgoing replies versenden
-        //wenn man zu früh daten empfängt, ist xcmemory evtl noch nicht korrekt registriert.
+        //wenn man zu frï¿½h daten empfï¿½ngt, ist xcmemory evtl noch nicht korrekt registriert.
         interconnectServer.continueWorking();
         
         //nach interconnectServer.continueWorking(); damit ist einer der Server immer empfangsbereit
@@ -986,7 +986,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
 
       private void addAllObjectsToOutgoingQueue(boolean insertAtHeadOfQueue) {
         debugger.debug("Adding all local objects to outgoing queue for later sync.");
-        //für alle lokal vorhandenen objekte einen eintrag in die outgoing queue schreiben (falls noch nicht vorhanden)
+        //fï¿½r alle lokal vorhandenen objekte einen eintrag in die outgoing queue schreiben (falls noch nicht vorhanden)
         for (Table table : tables.values()) {
           XSORMemory xsorMem = table.getXSORMemory();
           xsorMem.addAllObjectsToOutgoingQueue(insertAtHeadOfQueue);
@@ -1000,7 +1000,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
         for (String tableName : tableNames) {
 
           //neues (leeres) xcmemory erstellen
-          //aus speichergründen wiederverwendung des vorhandenen byte-arrays
+          //aus speichergrï¿½nden wiederverwendung des vorhandenen byte-arrays
           Table oldTable = tables.get(tableName);
           XSORMemory oldXSORMem = oldTable.getXSORMemory();
           XSORMemory newXSORMem = new XSORMemory(oldXSORMem, indices);
@@ -1013,14 +1013,14 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
           //xc memory austauschen
           tables.put(tableName, newTable);
 
-          //FIXME gleichzeitig ankommende requests sehen noch die alten indizes => besser wäre, diese neu anzulegen, so dass sie erst
+          //FIXME gleichzeitig ankommende requests sehen noch die alten indizes => besser wï¿½re, diese neu anzulegen, so dass sie erst
           //mit dem ersetzen von XCMemory sichtbar werden.
           indices.clear(tableName);
 
           //altes xcmemory leeren
-          //TODO hilft es hier noch etwas zu tun, oder genügt es, die referenz zu vergessen und gc tun zu lassen?
+          //TODO hilft es hier noch etwas zu tun, oder genï¿½gt es, die referenz zu vergessen und gc tun zu lassen?
 
-          //alles aus backingstore löschen
+          //alles aus backingstore lï¿½schen
           try {
             persistenceStrategy.clearAllData(tableName, newXSORMem.getExample().getClass());
           } catch (PersistenceException e) {
@@ -1157,7 +1157,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
     //xcMemoryMap.get(tableName).unlockAllObjectsForTransactionId()
   }
 
-  //TODO unschön, die folgenden beiden methoden zu veröffentlichen
+  //TODO unschï¿½n, die folgenden beiden methoden zu verï¿½ffentlichen
   public int getNumberOfMessagesSentLastSync() {
     return messagesSentLastSync;
   }
@@ -1172,9 +1172,9 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
   }
 
   /**
-   * sucht objekte ohne reihenfolge zu gewährleisten. z.b. können so zwei select for updates gleichzeitig mit
-   * gleicher bedingung durchgeführt werden, wenn die summe der maxrows kleinergleich der menge passender objekte ist, weil
-   * dann jeder thread einfach die bereits gelockten objekte überspringt.
+   * sucht objekte ohne reihenfolge zu gewï¿½hrleisten. z.b. kï¿½nnen so zwei select for updates gleichzeitig mit
+   * gleicher bedingung durchgefï¿½hrt werden, wenn die summe der maxrows kleinergleich der menge passender objekte ist, weil
+   * dann jeder thread einfach die bereits gelockten objekte ï¿½berspringt.
    * 
    * usecase: dhcp lease vergabe -> ziehen eines freien leases.
    */
@@ -1196,7 +1196,7 @@ public class XynaScalableObjectRepositoryImpl implements XynaScalableObjectRepos
           sisri.addFittingPayload(payload);
         }
         
-        //eigtl soll jetzt das nächste objekt gelesen werden, nur wenn man mal alle hat, will man die evtl noch locken, und deshalb
+        //eigtl soll jetzt das nï¿½chste objekt gelesen werden, nur wenn man mal alle hat, will man die evtl noch locken, und deshalb
         //passiert hier viel innerhalb der iteration
         if ((maxResults > -1 && sisri.fittingResultSize() >= maxResults) || !sisri.hasNext()) {
           if (!lockResults) {

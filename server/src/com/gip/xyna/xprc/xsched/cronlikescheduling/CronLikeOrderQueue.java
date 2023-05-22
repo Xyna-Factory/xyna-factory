@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,36 +35,36 @@ public class CronLikeOrderQueue {
   
   /*
    * Priority queue for cron like orders.
-   * comparator wird im konstruktor übergeben
+   * comparator wird im konstruktor ï¿½bergeben
    */
-  // TODO: wahrscheinlich ist eine sorted Linked List performanter ... vllt. noch ändern
+  // TODO: wahrscheinlich ist eine sorted Linked List performanter ... vllt. noch ï¿½ndern
   private final PriorityBlockingQueue<CronLikeOrder> queue;
   
   //Crons, die nicht wieder aus der Datenbank in die Queue geladen werden sollen, weil ...
   private final Set<Long> notToSchedule; //... sie schon aus der Queue, aber noch nicht aus der Datenbank entfernt wurden
-  private final Set<Long> deletedOrModified; //... sie inzwischen aus der Datenbank entfernt wurden oder sich der Ausführungszeitpunkt geändert hat, aber der CronLikeTimer sie evtl. bereits ausgelesen hat
-  private AtomicBoolean collectDeletedOrModified = new AtomicBoolean(false); //während readNextFromPersistenceLayer müssen die aus der DB gelöschten/geänderten Crons eingesammelt werden
+  private final Set<Long> deletedOrModified; //... sie inzwischen aus der Datenbank entfernt wurden oder sich der Ausfï¿½hrungszeitpunkt geï¿½ndert hat, aber der CronLikeTimer sie evtl. bereits ausgelesen hat
+  private AtomicBoolean collectDeletedOrModified = new AtomicBoolean(false); //wï¿½hrend readNextFromPersistenceLayer mï¿½ssen die aus der DB gelï¿½schten/geï¿½nderten Crons eingesammelt werden
   
   private volatile long latestExecutionTimeInQueue;
   private Integer currentBinding;
   
   private volatile boolean readAllFromDBFlag;
   
-  private AtomicBoolean cleared = new AtomicBoolean(false); //gibt an, ob während dem readNextFromPersistenceLayer die Queue geleert wurde
+  private AtomicBoolean cleared = new AtomicBoolean(false); //gibt an, ob wï¿½hrend dem readNextFromPersistenceLayer die Queue geleert wurde
   
   public CronLikeOrderQueue(int initialCapacity, Comparator<CronLikeOrder> comparator) {
     queue = new PriorityBlockingQueue<CronLikeOrder>(initialCapacity, comparator);
     notToSchedule = new HashSet<Long>();
     deletedOrModified = new HashSet<Long>();
     latestExecutionTimeInQueue = -1;
-    readAllFromDBFlag = true; //beim einfügen keinen check durchführen, dass der startzeitpunkt des crons größer als latestexecutiontime ist
+    readAllFromDBFlag = true; //beim einfï¿½gen keinen check durchfï¿½hren, dass der startzeitpunkt des crons grï¿½ï¿½er als latestexecutiontime ist
   }
   
   /**
    * checks:
    * - binding ok?
    * - executiontime weiter in der zukunft als bisherige elemente der queue? (ausser readAllFromDBFlag ist false)
-   * - nottoschedule enthält id?
+   * - nottoschedule enthï¿½lt id?
    * 
    */
   public boolean addCronLikeOrderToQueue(CronLikeOrder order) {
@@ -79,8 +79,8 @@ public class CronLikeOrderQueue {
     }
     
     //Crons, die der CronLikeTimer aus der Datenbank ausgelesen hat, sollen auf jeden Fall in die Queue
-    //eingefügt werden. Ansonsten nur, wenn alle Crons aus der DB sind auch in der Queue vorhanden sind
-    //oder der Ausführungszeitpunkt vor dem letzten in der Queue liegt und die Queue nicht leer ist (latestExecutionTimeInQueue = -1)
+    //eingefï¿½gt werden. Ansonsten nur, wenn alle Crons aus der DB sind auch in der Queue vorhanden sind
+    //oder der Ausfï¿½hrungszeitpunkt vor dem letzten in der Queue liegt und die Queue nicht leer ist (latestExecutionTimeInQueue = -1)
     if (!addFromPersistenceLayer) {
       if(!readAllFromDBFlag && latestExecutionTimeInQueue < order.getNextExecution()) {
         return false;
@@ -90,8 +90,8 @@ public class CronLikeOrderQueue {
       return false;
     }
     
-    //wenn Crons aus der Datenbank wieder in die Queue geladen werden, muss überprüft werden,
-    //dass sie nicht bereits gelöscht wurden oder sich ihr Ausführungszeitpunkt geändert hat
+    //wenn Crons aus der Datenbank wieder in die Queue geladen werden, muss ï¿½berprï¿½ft werden,
+    //dass sie nicht bereits gelï¿½scht wurden oder sich ihr Ausfï¿½hrungszeitpunkt geï¿½ndert hat
     if (addFromPersistenceLayer) {
       if (deletedOrModified.contains(order.getId())) {
         return false;
@@ -225,7 +225,7 @@ public class CronLikeOrderQueue {
   public void unmarkCronLikeOrderAsNotToSchedule(Long orderId) {
     if (collectDeletedOrModified.get()) {
       //beim Auslesen aus der Datenbank (CronLikeScheduler.readNextFromPersistenceLayer()) darf
-      //der Auftrag nicht noch einmal in die Queue eingetragen werden, da bereits gelöscht oder geändert
+      //der Auftrag nicht noch einmal in die Queue eingetragen werden, da bereits gelï¿½scht oder geï¿½ndert
       deletedOrModified.add(orderId);
     }
     notToSchedule.remove(orderId);
@@ -241,19 +241,19 @@ public class CronLikeOrderQueue {
   }
 
   /**
-   * Startet das Einsammeln der Crons, die bereits aus der DB gelöscht / geändert wurden
+   * Startet das Einsammeln der Crons, die bereits aus der DB gelï¿½scht / geï¿½ndert wurden
    * und setzt cleared auf false.
    */
   public void prepareReadNext() {
     if (!collectDeletedOrModified.get()) {
       deletedOrModified.clear();
-      collectDeletedOrModified.set(true); //darf erst nach dem clear auf true gesetzt werden, da ab jetzt neue Crons eingetragen werden können
+      collectDeletedOrModified.set(true); //darf erst nach dem clear auf true gesetzt werden, da ab jetzt neue Crons eingetragen werden kï¿½nnen
     }
     cleared.set(false);
   }
 
   /**
-   * Stoppt das Einsammeln der Crons, die bereits aus der DB gelöscht / geändert wurden.
+   * Stoppt das Einsammeln der Crons, die bereits aus der DB gelï¿½scht / geï¿½ndert wurden.
    */
   public void finishReadNext() {
     collectDeletedOrModified.set(false);

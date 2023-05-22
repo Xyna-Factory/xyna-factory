@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ public class Demon {
   
   /**
    * Starts the Demon.
-   * In einer Endlosschleife wird versucht, den Demon zu starten. Die Bemühungen werden alle
+   * In einer Endlosschleife wird versucht, den Demon zu starten. Die Bemï¿½hungen werden alle
    * 5 Sekunden wiederholt und ins Log ausgegeben. Dies verhindert das permanente Starten durch
    * den Respawn-Mechanismus.
    * @throws IOException
@@ -236,7 +236,7 @@ public class Demon {
         }
       };
       t.setName( demonWorker.getName() );
-      t.setDaemon( false ); //demonWorker darf kein Daemon-Thread sein, damit das Programm weiterläuft
+      t.setDaemon( false ); //demonWorker darf kein Daemon-Thread sein, damit das Programm weiterlï¿½uft
       t.start();
       logger.debug( "DemonWorker has started");
       return true;

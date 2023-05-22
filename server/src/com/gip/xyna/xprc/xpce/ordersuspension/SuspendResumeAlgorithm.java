@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,37 +53,37 @@ import com.gip.xyna.xprc.xpce.ordersuspension.suspensioncauses.SuspensionCause;
 
 
 /**
- * SuspendResumeAlgorithm führt die Suspends und Resumes durch. Es ist so implementiert, dass es 
- * unabhängig von der XynaFactory in JUnit-Tests lauffähig ist, indem alle Abhängigkeiten 
- * entweder über Interfaces oder die generischen Typen abgegeben werden. Besonders wichtig ist da die 
+ * SuspendResumeAlgorithm fï¿½hrt die Suspends und Resumes durch. Es ist so implementiert, dass es 
+ * unabhï¿½ngig von der XynaFactory in JUnit-Tests lauffï¿½hig ist, indem alle Abhï¿½ngigkeiten 
+ * entweder ï¿½ber Interfaces oder die generischen Typen abgegeben werden. Besonders wichtig ist da die 
  * Implementierung des Interfaces {@link SuspendResumeAdapter}. Generische Typen mussten 
  * verwendet werden, damit die XynaOrderServerExtension und die ODSConnection kein Interface 
- * implementieren müssen.
+ * implementieren mï¿½ssen.
  * 
- * Ein möglicher Ablauf für einen Aufruf:
+ * Ein mï¿½glicher Ablauf fï¿½r einen Aufruf:
  * <ul>
- * <li>Der Auftrag startet und führt {@link #addStartedOrder(Long, Object) addStartedOrder} aus. 
+ * <li>Der Auftrag startet und fï¿½hrt {@link #addStartedOrder(Long, Object) addStartedOrder} aus. 
  *     Durch das Anlegen des SRInformation-Eintrags ist der Auftrag nun als laufend bekannt.</li>
- * <li>Der Auftrag führt eine Parallelität aus und ruft zu Beginn 
+ * <li>Der Auftrag fï¿½hrt eine Parallelitï¿½t aus und ruft zu Beginn 
  *     {@link #addParallelExecutor(Long, Object, ResumableParallelExecutor) addParallelExecutor} auf.
- *     Der ParallelExecutor wird für Resumes in der SRInformation hinterlegt.</li>
- * <li>In dieser Parallelität wird eine ProcessSuspendedExcpetion geworfen: Über 
+ *     Der ParallelExecutor wird fï¿½r Resumes in der SRInformation hinterlegt.</li>
+ * <li>In dieser Parallelitï¿½t wird eine ProcessSuspendedExcpetion geworfen: ï¿½ber 
  *     {@link #handleSuspensionEventInParallelStep(ProcessSuspendedException, Long, Step) handleSuspensionEventInParallelStep}
- *     wird der ParallelExecutor für Resumes in der SRInformation hinterlegt.</li>
- * <li>Ein {@link #resume(ResumeTarget) resume} findet nun die Parallelität und 
- *     kann die eine Lane fortführen.</li>
- * <li>Eine weitere Suspendierung wird von der Parallelität weitergeworfen, sie führt zum Aufruf
+ *     wird der ParallelExecutor fï¿½r Resumes in der SRInformation hinterlegt.</li>
+ * <li>Ein {@link #resume(ResumeTarget) resume} findet nun die Parallelitï¿½t und 
+ *     kann die eine Lane fortfï¿½hren.</li>
+ * <li>Eine weitere Suspendierung wird von der Parallelitï¿½t weitergeworfen, sie fï¿½hrt zum Aufruf
  *     {@link #handleSuspensionEvent(ProcessSuspendedException, Long, Object, boolean) handleSuspensionEvent}.
  *     Hier wird nun die Suspendierung vorbereitet, da keine weiteren Resumes eingegangen sind. 
  *     {@link #cleanupSuspensionData(Long) cleanupSuspensionData} entfernt den SRInformation-Eintrag.</li>
  * <li>Eine weiteres {@link #resume(ResumeTarget) resume} muss den Auftrag neu in 
- *     den Scheduler einstellen, da der Auftrag nicht mehr läuft (kein SRInformation-Eintrag gefunden).
+ *     den Scheduler einstellen, da der Auftrag nicht mehr lï¿½uft (kein SRInformation-Eintrag gefunden).
  *     Ein neuer SRInformation-Eintrag wird angelegt.</li>
- * <li>Der Auftrag führt die Parallelität erneut aus und ruft zu Beginn (nach addParallelExecutor)
+ * <li>Der Auftrag fï¿½hrt die Parallelitï¿½t erneut aus und ruft zu Beginn (nach addParallelExecutor)
  *     {@link #getLaneIdsToResume(Long, ResumableParallelExecutor) getLaneIdsToResume} auf, nun kann 
- *     er die noch fehlenden Lanes erneut ausführen.</li> 
- * <li>Der Auftrag kann fertig ausgeführt werden. Im Cleanup wird der SRInformation-Eintrag über
- *     {@link #cleanupSuspensionData(Long) cleanupSuspensionData} wieder gelöscht</li> 
+ *     er die noch fehlenden Lanes erneut ausfï¿½hren.</li> 
+ * <li>Der Auftrag kann fertig ausgefï¿½hrt werden. Im Cleanup wird der SRInformation-Eintrag ï¿½ber
+ *     {@link #cleanupSuspensionData(Long) cleanupSuspensionData} wieder gelï¿½scht</li> 
  * </ul>
  * 
  * 
@@ -99,7 +99,7 @@ public class SuspendResumeAlgorithm<C,O> {
    
   /**
    * Nur zum Testen des Verhaltens bei Concurrency: 
-   * hierüber können künstlich Race-Conditions erzeugt werden
+   * hierï¿½ber kï¿½nnen kï¿½nstlich Race-Conditions erzeugt werden
    */
   static interface DebugConcurrency {
     void resume();
@@ -108,8 +108,8 @@ public class SuspendResumeAlgorithm<C,O> {
   }
   
   /**
-   * Temporärer Speicher der SuspendResume-Informationen {@link SRInformation}. Dieser Speicher ist derzeit 
-   * das einzige Wissen der XynaFactory über laufende Aufträge. Siehe auch LAZY_SRINFORMATION_CREATION
+   * Temporï¿½rer Speicher der SuspendResume-Informationen {@link SRInformation}. Dieser Speicher ist derzeit 
+   * das einzige Wissen der XynaFactory ï¿½ber laufende Auftrï¿½ge. Siehe auch LAZY_SRINFORMATION_CREATION
    */
   private SRInformationCache<C,O> srInformationCache;
   private SuspendResumeAdapter<C,O> srAdapter;
@@ -165,7 +165,7 @@ public class SuspendResumeAlgorithm<C,O> {
   }
   
   /**
-   * Der ParallelExecutor wird für Resumes in der SRInformation hinterlegt.
+   * Der ParallelExecutor wird fï¿½r Resumes in der SRInformation hinterlegt.
    * @param order
    * @param parallelExecutor
    */
@@ -183,7 +183,7 @@ public class SuspendResumeAlgorithm<C,O> {
 
   
   /**
-   * Der ParallelExecutor wird für Resumes in der SRInformation hinterlegt. FIXME raus?
+   * Der ParallelExecutor wird fï¿½r Resumes in der SRInformation hinterlegt. FIXME raus?
    * @param e
    * @param step
    */
@@ -198,9 +198,9 @@ public class SuspendResumeAlgorithm<C,O> {
   
   
   /**
-   * Der Workflow soll suspendiert werden. Da in der Zwischenzeit Resumes eingegangen sein können,
+   * Der Workflow soll suspendiert werden. Da in der Zwischenzeit Resumes eingegangen sein kï¿½nnen,
    * kann es sein, dass der Workflow sofort fortgesetzt werden kann. In diesem Fall wird er sofort
-   * wieder dem Scheduler übergeben.
+   * wieder dem Scheduler ï¿½bergeben.
    * @param suspendedException
    * @param orderId
    * @param order
@@ -214,8 +214,8 @@ public class SuspendResumeAlgorithm<C,O> {
       srInformation.setState(SRState.Suspending);
       srInformation.setSuspensionCause(suspendedException.getSuspensionCause());
       //Mit dem Lock in den SRInformation und dem Umtragen des States nach Suspending
-      //ist sichergestellt, dass keine weiteren Resumes zeitgleich erfolgen können.
-      //Alle Resumes, die noch eingegangen sind, haben keine ausführbaren ParallelExecutoren
+      //ist sichergestellt, dass keine weiteren Resumes zeitgleich erfolgen kï¿½nnen.
+      //Alle Resumes, die noch eingegangen sind, haben keine ausfï¿½hrbaren ParallelExecutoren
       //gefunden und ihre Lanes nur gesammelt.
             
       if( logger.isDebugEnabled() ) {
@@ -228,7 +228,7 @@ public class SuspendResumeAlgorithm<C,O> {
       if( rescheduleImmediately && resumeAllowed ) {
         //es gab Resumes, daher sollte der Auftrag fortgesetzt werden
         srInformation.setState(SRState.Resuming); //Resuming muss fortgesetzt werden
-        //die resumten Einträge in srInformation.lanesToResume bleiben bestehen, da die Workflow-Ausführung 
+        //die resumten Eintrï¿½ge in srInformation.lanesToResume bleiben bestehen, da die Workflow-Ausfï¿½hrung 
         //genau bei diesen Schritten fortfahren muss
         if( logger.isDebugEnabled() ) {
           logger.debug("readding workflow "+order.toString());
@@ -312,7 +312,7 @@ public class SuspendResumeAlgorithm<C,O> {
   /**
    * Resume des Auftrags mit angebener OrderId und Lane.
    * @param target
-   * @return Pair&lt;ResumeResult,String&gt; letzteres ist optionale Begründung
+   * @return Pair&lt;ResumeResult,String&gt; letzteres ist optionale Begrï¿½ndung
    * @throws PersistenceLayerException 
    */
   public Pair<ResumeResult,String> resume(ResumeTarget target) throws PersistenceLayerException {
@@ -320,7 +320,7 @@ public class SuspendResumeAlgorithm<C,O> {
     try {
       rootSRInformation = srInformationCache.getOrCreateLockedRootNotInvalid(target);
     } catch (OrderBackupNotFoundException e) {
-      //das muss kein problem sein, sondern kann z.b. im cluster daran liegen, dass der auftrag auf dem anderen knoten läuft und noch nicht fertig suspendiert ist
+      //das muss kein problem sein, sondern kann z.b. im cluster daran liegen, dass der auftrag auf dem anderen knoten lï¿½uft und noch nicht fertig suspendiert ist
       logger.debug("Could not read OrderBackup for "+target, e );
       cleanupSuspensionData(target.getRootId());
       return Pair.of(ResumeResult.Failed, SuspendResumeManagement.FAILED_ORDERBACKUP_NOT_FOUND );
@@ -399,8 +399,8 @@ public class SuspendResumeAlgorithm<C,O> {
   }
 
   /**
-   * Erzeugt alle ResumeTargets auf dem Pfad rückwärts von dem übergebenen ResumeTarget
-   * bis zum Root und trägt alle ResumeTargets in die dabei gefundenen oder erzeugten SRInformations ein.
+   * Erzeugt alle ResumeTargets auf dem Pfad rï¿½ckwï¿½rts von dem ï¿½bergebenen ResumeTarget
+   * bis zum Root und trï¿½gt alle ResumeTargets in die dabei gefundenen oder erzeugten SRInformations ein.
    */
   private class ResumeTargetExecutable implements RetryExecutor.Executable {
     private ResumeTarget target;
@@ -455,7 +455,7 @@ public class SuspendResumeAlgorithm<C,O> {
         if( state == SRState.Running ) {
           ResumeState resume = resumeRunning(srInformation, lane);
           if( resume == ResumeState.Resumed ) {
-            return true; //laufendes Target resumt, daher müssen Parents nicht mehr resumt werden
+            return true; //laufendes Target resumt, daher mï¿½ssen Parents nicht mehr resumt werden
           } else {
             failure = "resumeRunning failed "+resume;
             return false; //Retry
@@ -478,7 +478,7 @@ public class SuspendResumeAlgorithm<C,O> {
   /**
    * Auftrag ist am laufen
    * Fall 1: geeigneter PE ist am laufen und Task in ihm wird gestartet
-   * Fall 2: Es ist kein zu benachrichtigender PE am laufen, aber es wird dafür gesorgt, dass 
+   * Fall 2: Es ist kein zu benachrichtigender PE am laufen, aber es wird dafï¿½r gesorgt, dass 
    *            - der PE beim Starten das Task als zu resumen findet und
    *            - handleSuspensionEvent sieht, dass der Auftrag wieder neu zu starten ist
    *  
@@ -498,7 +498,7 @@ public class SuspendResumeAlgorithm<C,O> {
     } else {
       //Kann evtl. eine einzelne Lane resumt werden?
       return resumeParallelExecutor(srInformation,lane);
-      //sollte eigentlich immer möglich sein. In seltenen Fällen ist der ParallelExecutor 
+      //sollte eigentlich immer mï¿½glich sein. In seltenen Fï¿½llen ist der ParallelExecutor 
       //noch nicht fertig initialisiert, dann sollte das Resume nach kurzer Wartezeit nochmal probiert werden
     }
   }
@@ -522,8 +522,8 @@ public class SuspendResumeAlgorithm<C,O> {
         if( logger.isDebugEnabled() ) {
           logger.debug("ParallelExecutor "+lp.getParallelExecutorId()+" does not exist in "+srInformation);
         }
-        //PE noch nicht initialisiert, dann passiert das gleich oder es gibt eine suspendierung. in beiden fällen 
-        //halten wir gerade das lock und können die lane als zu resumen im srinfo objekt hinterlegen.
+        //PE noch nicht initialisiert, dann passiert das gleich oder es gibt eine suspendierung. in beiden fï¿½llen 
+        //halten wir gerade das lock und kï¿½nnen die lane als zu resumen im srinfo objekt hinterlegen.
         srInformation.getResumedLanes().addLaneToResume(lane);
         return ResumeState.Resumed;
       } else {
@@ -546,24 +546,24 @@ public class SuspendResumeAlgorithm<C,O> {
           //falls sie bereits von einem anderen thread resumed wurde, ist nichts zu tun, weil im kind-PE/-auftrag haben wir bereits
           //die lane als zu resumen eingetragen (passiert beim hochhangeln).
           
-          //um das unterscheiden zu können, müssten wir den state der lane speichern (resuming, suspending). das ist kompliziert.
+          //um das unterscheiden zu kï¿½nnen, mï¿½ssten wir den state der lane speichern (resuming, suspending). das ist kompliziert.
           if (true) {
           
             //stattdessen machen wir es uns (auf kosten von etwas memory speicherverbrauch) einfach und merken uns einfach immer, dass
-            //die lane resumed werden muss. falls das zu häufig passiert, ist das nicht schlimm.
+            //die lane resumed werden muss. falls das zu hï¿½ufig passiert, ist das nicht schlimm.
             //hat zur folge, dass im logfile bei ausgaben von den resumedlanes zu viele da stehen.
             
             //andere negative folgeerscheinung ist, dass das handlesuspensionevent vom auftrag immer denkt, dass es noch etwas zu resumen gibt
-            //   dann wird das resume probiert und nichts gefunden. wichtig ist, dass hierbei die resumedlanes aufgeräumt werden!
-            //   bei foreach-PEs ist das nicht einfach über "getLaneIdsToResume" möglich, weil die tasks des foreaches evtl gar nicht
-            //   mehr gestartet werden. => behandlung dieses falles über "handleParallelExecutorFinished()"
+            //   dann wird das resume probiert und nichts gefunden. wichtig ist, dass hierbei die resumedlanes aufgerï¿½umt werden!
+            //   bei foreach-PEs ist das nicht einfach ï¿½ber "getLaneIdsToResume" mï¿½glich, weil die tasks des foreaches evtl gar nicht
+            //   mehr gestartet werden. => behandlung dieses falles ï¿½ber "handleParallelExecutorFinished()"
             srInformation.getResumedLanes().addLaneToResume(lane);
             return ResumeState.Resumed;
           } else {
-            //TODO (falls code-komplexität handhabbar und den aufwand wert)
+            //TODO (falls code-komplexitï¿½t handhabbar und den aufwand wert)
            // if (getLaneState() == LaneState.Suspending) {
               //der zustand suspending muss genau dann bekannt sein, wenn der kind-pe (oder kind-auftrag) nicht resumebar war
-              // (ansonsten hätten wir uns hierhin gar nicht hingehangelt)
+              // (ansonsten hï¿½tten wir uns hierhin gar nicht hingehangelt)
               /*
                *            Parent PE (hier)
                *                 |   ^
@@ -577,14 +577,14 @@ public class SuspendResumeAlgorithm<C,O> {
                *                 ...
                *                 
                *      LaneState
-               *        (1) resuming (oder starting, für uns uninteressant, deshalb nicht zu unterscheiden)
-               *        (2) suspending (oder finishing, für uns uninteressant, deshalb nicht zu unterscheiden)
-               *        (3) executingchild (uninteressant, weil in dem fall würden wir hier gar nicht auf den parent-PE schauen, weil dann hätten wir 
+               *        (1) resuming (oder starting, fï¿½r uns uninteressant, deshalb nicht zu unterscheiden)
+               *        (2) suspending (oder finishing, fï¿½r uns uninteressant, deshalb nicht zu unterscheiden)
+               *        (3) executingchild (uninteressant, weil in dem fall wï¿½rden wir hier gar nicht auf den parent-PE schauen, weil dann hï¿½tten wir 
                *            beim hochhangeln bereits beim kind-PE/-auftrag erfolgreich abgebrochen
                *            
                *            
                * D.h. bei handleSuspensionEvent und handleSuspensionEventinParallelStep state (in parentlane) auf suspending setzen
-               *  und beim resume von lanes/aufträgen die suspending-lane-infos wieder clearen.
+               *  und beim resume von lanes/auftrï¿½gen die suspending-lane-infos wieder clearen.
                */          
             //  srInformation.getResumedLanes().addLaneToResume(lane);
            // }
@@ -611,7 +611,7 @@ public class SuspendResumeAlgorithm<C,O> {
       return ResumeState.NoParallelExecutorFound;
     } else {
       //Das Lock in SRInformation wird noch gehalten, d.h die Lane kann sicher eingetragen 
-      //werden und wird in handleSuspensionEvent dann berücksichtigt werden.
+      //werden und wird in handleSuspensionEvent dann berï¿½cksichtigt werden.
       //Daher kann hier ResumeState.Resumed gemeldet werden
       srInformation.getResumedLanes().addLaneToResume(lane);
       return ResumeState.Resumed;
@@ -620,8 +620,8 @@ public class SuspendResumeAlgorithm<C,O> {
 
   
   /**
-   * Liefert die LaneIds, die vom ParallelExecutor benötigt werden, um nach einem Neustart des Auftrags
-   * resumte Lanes wieder auszuführen.
+   * Liefert die LaneIds, die vom ParallelExecutor benï¿½tigt werden, um nach einem Neustart des Auftrags
+   * resumte Lanes wieder auszufï¿½hren.
    * @param orderId
    * @param parallelExecutor
    * @return
@@ -723,9 +723,9 @@ public class SuspendResumeAlgorithm<C,O> {
   }
   
   /**
-   * Suspendieren der übergebenen Root-Aufträge
+   * Suspendieren der ï¿½bergebenen Root-Auftrï¿½ge
    * @param suspendRootOrderData
-   * @return gleiches suspendRootOrderData, mit Result-Daten befüllt
+   * @return gleiches suspendRootOrderData, mit Result-Daten befï¿½llt
    */
   public SuspendRootOrderData suspendRootOrders(SuspendRootOrderData suspendRootOrderData) {
     if( logger.isDebugEnabled() ) {
@@ -733,14 +733,14 @@ public class SuspendResumeAlgorithm<C,O> {
     }
     long started = System.currentTimeMillis();
     
-    //Dafür sorgen, dass suspendierte Aufträge nicht wieder resumt werden
+    //Dafï¿½r sorgen, dass suspendierte Auftrï¿½ge nicht wieder resumt werden
     srInformationCache.addUnresumeableOrders(suspendRootOrderData.getRootOrderIds());
     
     //Suspendieren aller rootOrderIds
     SuspendRootOrders suspendRootOrders = new SuspendRootOrders(suspendRootOrderData.getRootOrderIds(),
                                                                 suspendRootOrderData.getSuspensionCause(),
                                                                 suspendRootOrderData.isFailFast() );
-    //Ausführen der Suspendierungen mit Retries
+    //Ausfï¿½hren der Suspendierungen mit Retries
     RetryExecutor.retryUntil(started + suspendRootOrderData.getTimeout()).sleep(50).execute(suspendRootOrders);
     
     Map<Long,String> suspensionFailed = suspendRootOrders.getSuspensionFailed();
@@ -748,9 +748,9 @@ public class SuspendResumeAlgorithm<C,O> {
     List<RootOrderSuspension> allOrders = suspendRootOrders.getAllOrders();
         
     if( suspensionFailed.isEmpty() ) {
-      //bei allen Aufträgen konnte Suspendierung begonnen werden (oder waren bereits suspendiert oder fertig)
+      //bei allen Auftrï¿½gen konnte Suspendierung begonnen werden (oder waren bereits suspendiert oder fertig)
       
-      //sind die Aufträge nun alle suspendiert?       
+      //sind die Auftrï¿½ge nun alle suspendiert?       
       if( ! suspending.isEmpty() ) {
         //es konnten nicht alle suspendiert werden
         suspending = handleSuspensionTimedOut(suspendRootOrderData, suspending, started);
@@ -780,7 +780,7 @@ public class SuspendResumeAlgorithm<C,O> {
         handleSuspensionFailed(suspendRootOrderData, allOrders, SuspensionResult.Timeout);
       }
     } else {
-      //es konnten nicht alle Suspendierungen begonnen werden, da Aufträge im falschen Zustand waren
+      //es konnten nicht alle Suspendierungen begonnen werden, da Auftrï¿½ge im falschen Zustand waren
       logger.warn( suspensionFailed.size() +" of "
           +suspendRootOrderData.getRootOrderIds().size()+" orders could not be suspended -> "
           +suspendRootOrderData.getSuspensionFailedAction());
@@ -803,7 +803,7 @@ public class SuspendResumeAlgorithm<C,O> {
     
     switch( suspendRootOrderData.getSuspensionFailedAction() ) {
       case UndoSuspensions:
-        //Wenn nicht alle supendiert wurden, müssen die Suspendierungen rückgängig gemacht werden
+        //Wenn nicht alle supendiert wurden, mï¿½ssen die Suspendierungen rï¿½ckgï¿½ngig gemacht werden
         List<Triple<RootOrderSuspension,String,PersistenceLayerException>> failedResumes = 
             srAdapter.resumeRootOrdersWithRetries(suspendingOrders);
             
@@ -830,7 +830,7 @@ public class SuspendResumeAlgorithm<C,O> {
         suspendRootOrderData.suspensionResult(suspensionResult);
         break;
       case KeepSuspending:
-        //kein Undo der Suspendierungen gewünscht, daher nun Rückgabe der Aufträge, die noch nicht suspendiert sind
+        //kein Undo der Suspendierungen gewï¿½nscht, daher nun Rï¿½ckgabe der Auftrï¿½ge, die noch nicht suspendiert sind
         for( RootOrderSuspension ros : suspendingOrders) {
           if( ros.isSuspending() ) {
             suspendRootOrderData.addSuspensionNotFinished(ros.getRootOrderId());
@@ -958,7 +958,7 @@ public class SuspendResumeAlgorithm<C,O> {
         if( logger.isDebugEnabled() ) {
           logger.debug("Starting RetryExecutor to start suspension of "+suspensionNotStarted.size()+" root orders" ); 
         }
-        //beim ersten Mal continueSuspension nicht ausführen
+        //beim ersten Mal continueSuspension nicht ausfï¿½hren
         startSuspension();
       } else {
         if( logger.isDebugEnabled() ) {
@@ -1072,7 +1072,7 @@ public class SuspendResumeAlgorithm<C,O> {
         srAdapter.suspendInScheduler(rootSRInformation, rootOrderSuspension);
         return true;
       } else {
-        //Process nicht gefunden, sollte nicht auftreten können, da Root-Auftrag ja nicht eben erst in die Execution gelangte
+        //Process nicht gefunden, sollte nicht auftreten kï¿½nnen, da Root-Auftrag ja nicht eben erst in die Execution gelangte
         return false;
       }
     }
@@ -1094,7 +1094,7 @@ public class SuspendResumeAlgorithm<C,O> {
    */
   public Pair<ResumeResult,String> resumeRootOrder(Long rootOrderId, List<ResumeTarget> targets, C con) throws PersistenceLayerException {
     ResumeTarget rootTarget = new ResumeTarget(rootOrderId,rootOrderId,null);
-    //OrderBackup-Suche ist für die bereits suspendierten Aufträge nötig
+    //OrderBackup-Suche ist fï¿½r die bereits suspendierten Auftrï¿½ge nï¿½tig
     RootSRInformation<O> rootSRInformation;
     if (logger.isDebugEnabled()) {
       logger.debug("Resuming root order "+rootOrderId+" with targets "+targets);
@@ -1103,7 +1103,7 @@ public class SuspendResumeAlgorithm<C,O> {
       rootSRInformation = srInformationCache.getOrCreateLockedRootNotInvalid(rootTarget);
     } catch (OrderBackupNotFoundException e) {
       //Suspendierung nicht geklappt, deswegen fertig geworden?
-      return Pair.of(ResumeResult.Resumed,"OrderBackupNotFound"); //TODO prüfen, ob korrekt?
+      return Pair.of(ResumeResult.Resumed,"OrderBackupNotFound"); //TODO prï¿½fen, ob korrekt?
     } catch (ResumeLockedException e) {
       return Pair.of(ResumeResult.Unresumeable, SuspendResumeManagement.UNRESUMABLE_LOCKED );
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public interface DataInterface<T extends Storable, X extends MemoryRowData<T>> {
    * abgesehen von gleichzeitig stattfindenden neuen inserts etc:
    * - zeile wird aus tabelle entfernt, d.h. darauf folgende zugriffe darauf finden es nicht mehr
    * - vorhandene referenzen auf objekt sind noch valide
-   * - vorhandene referenzen auf das {@link MemoryRowLock} werden ungültig, d.h. ein lock-versuch auf das sustainedlock wirft eine {@link UnderlyingDataNotFoundException}.
+   * - vorhandene referenzen auf das {@link MemoryRowLock} werden ungï¿½ltig, d.h. ein lock-versuch auf das sustainedlock wirft eine {@link UnderlyingDataNotFoundException}.
    * @return previous value
    */
   public X remove(PersistenceLayer pl, Object pk);

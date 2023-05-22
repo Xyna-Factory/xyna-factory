@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,17 +32,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 // what are the benefits over using ScheduledExecutorService.schedule(command, delay, timeunit) ?
 /**
  * CancelableDelayedTask kann Runnable-Implementierungen speichern und nach 
- * einer vorher definierten Wartezeit ausführen. Dabei können die eingestellten 
- * Tasks über cancel() abgebrochen werden oder ein Thread kann über join() auf 
- * die Ausführung warten.
- * Es können mehrere Runnables gleichzeitig aktiv sein
+ * einer vorher definierten Wartezeit ausfï¿½hren. Dabei kï¿½nnen die eingestellten 
+ * Tasks ï¿½ber cancel() abgebrochen werden oder ein Thread kann ï¿½ber join() auf 
+ * die Ausfï¿½hrung warten.
+ * Es kï¿½nnen mehrere Runnables gleichzeitig aktiv sein
  * 
  *  CancelableDelayedTask cdt = new CancelableDelayedTask("Threadname");
  *  int id = cdt.schedule( 500, new Runnable() { public void run(){
  *   //exec
  *    } );
  *  if( cdt.cancel(id) != State.Canceled ) {
- *    //Task konnte nicht mehr gecancelt werden, daher auf vollständige Ausführung warten
+ *    //Task konnte nicht mehr gecancelt werden, daher auf vollstï¿½ndige Ausfï¿½hrung warten
  *    cdt.Join(id);
  *  }
  */
@@ -55,7 +55,7 @@ public class CancelableDelayedTask {
   }
   
   /**
-   * @param name Name der ausführenden Threads
+   * @param name Name der ausfï¿½hrenden Threads
    */
   public CancelableDelayedTask(final String name) {
     pool = new ThreadPoolExecutor(0, Integer.MAX_VALUE,
@@ -113,7 +113,7 @@ public class CancelableDelayedTask {
    * Einstellen eines neuen Runnable
    * @param delay
    * @param task
-   * @return Id, mit der cancel oder join aufgerufen werden können
+   * @return Id, mit der cancel oder join aufgerufen werden kï¿½nnen
    */
   public Integer schedule( long delay, Runnable task ) {
     if( delay < 0 ) {
@@ -128,8 +128,8 @@ public class CancelableDelayedTask {
   }
   
   /**
-   * Abbrechen des über schedule(...) eingestellten Runnable. Achtung: ausführender Thread 
-   * wird interupted, dies kann auch das ausgeführte Runnable treffen.
+   * Abbrechen des ï¿½ber schedule(...) eingestellten Runnable. Achtung: ausfï¿½hrender Thread 
+   * wird interupted, dies kann auch das ausgefï¿½hrte Runnable treffen.
    * @param id
    * @return Status, ob Abbrechen erfolgreich war
    */
@@ -151,7 +151,7 @@ public class CancelableDelayedTask {
   /**
    * Warten auf die Beendiugn des eingestellten Runnables
    * @param id
-   * @return Status, ob Auftrag ausgeführt wurde
+   * @return Status, ob Auftrag ausgefï¿½hrt wurde
    * @throws InterruptedException
    */
   public State join(Integer id) throws InterruptedException {

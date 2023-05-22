@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ import com.gip.xyna.coherence.utils.threadpool.ObjectPool.ObjectFactory;
 /**
  * alternative implementierung zu {@link ThreadPoolExecutor}.
  * <p>
- * diente hauptsächlich zum vergleich der performance.
+ * diente hauptsï¿½chlich zum vergleich der performance.
  * <p>
  * ergebnis: dieser threadpool ist ca 10-20% schneller, hat aber auch weniger features. <br>
- * TODO prio4: threads auch beenden, wenn sie noch in der ausführung befindlich sind? z.b. ein flag im pool setzen, was
- * dann zurückkehrende objekte auch shutdowned.
+ * TODO prio4: threads auch beenden, wenn sie noch in der ausfï¿½hrung befindlich sind? z.b. ein flag im pool setzen, was
+ * dann zurï¿½ckkehrende objekte auch shutdowned.
  */
 public class ThreadPool {
 
@@ -47,7 +47,7 @@ public class ThreadPool {
 
       public ExecutorThread create() {
         final ExecutorThread t = new ExecutorThread();
-        //nach ausführung des runnables den thread wieder zum pool zurückgeben.
+        //nach ausfï¿½hrung des runnables den thread wieder zum pool zurï¿½ckgeben.
         t.setFinishedListener(new Runnable() {
 
           public void run() {
@@ -64,7 +64,7 @@ public class ThreadPool {
   }
 
   /**
-   * beendet alle threads, die sich im pool befinden, und die sich nicht gerade in der ausführung befinden.
+   * beendet alle threads, die sich im pool befinden, und die sich nicht gerade in der ausfï¿½hrung befinden.
    */
   public void shutdown() {
     pool.shutdown();

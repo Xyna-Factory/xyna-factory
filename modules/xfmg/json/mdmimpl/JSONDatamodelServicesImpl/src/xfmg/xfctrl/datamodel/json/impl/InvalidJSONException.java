@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ public class InvalidJSONException extends RuntimeException {
 
 
   public InvalidJSONException(int pos, String cause) {
-    //pos+1, weil pos bei 0 anfängt zu zählen
+    //pos+1, weil pos bei 0 anfï¿½ngt zu zï¿½hlen
     super("JSON string invalid at position " + (pos + 1) + ". Cause: " + cause);
   }
 }

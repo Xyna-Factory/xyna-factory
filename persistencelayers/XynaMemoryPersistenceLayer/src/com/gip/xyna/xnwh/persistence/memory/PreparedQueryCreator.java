@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -160,7 +160,7 @@ public class PreparedQueryCreator {
   private static final String _METHODNAME_GET_INDEXED_CONDITION_TYPE_ORIG = "getIndexedConditionType";
   private static final String METHODNAME_GET_INDEXED_CONDITION_TYPE;
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_IS_FOR_UPDATE = PreparedQueryForMemory.class.getDeclaredMethod(_METHODNAME_IS_FOR_UPDATE_ORIG).getName();
     } catch (Exception e) {
@@ -496,8 +496,8 @@ public class PreparedQueryCreator {
       if (subconditions != null) {
         conditionsLoop : for (int i = 0; i < subconditions.size(); i++) {
           if (subconditions.size() > i + 1 && condition.getOperators().get(i) == Operator.JAVA_OPERATOR_OR) {
-            //falls conditions mit OR verbunden sind, kann man sie nicht für den index nutzen
-            //trotzdem rest der condition parsen, um parameterpositionhelper korrekt zu zählen
+            //falls conditions mit OR verbunden sind, kann man sie nicht fï¿½r den index nutzen
+            //trotzdem rest der condition parsen, um parameterpositionhelper korrekt zu zï¿½hlen
             skipCodeGen = true;
           }
           Condition con = subconditions.get(i);
@@ -626,7 +626,7 @@ public class PreparedQueryCreator {
 
   private void compile(String fqClassName, ClassLoader... additionalClassLoader) throws PersistenceLayerException,
       PreparedQueryCompilationException {
-    //erst urls sammeln für den classpath fürs compile.
+    //erst urls sammeln fï¿½r den classpath fï¿½rs compile.
     //ausserdem bei dem hiesigen classloader alle additionalclassloader registrieren, 
 
     ClassLoader thisClassLoader = getClass().getClassLoader();
@@ -680,7 +680,7 @@ public class PreparedQueryCreator {
 
 
   /**
-   * zusätzliche url um generierte klassen zu finden
+   * zusï¿½tzliche url um generierte klassen zu finden
    */
   private static class GeneratedMemoryClassesClassLoader extends URLClassLoader {
 

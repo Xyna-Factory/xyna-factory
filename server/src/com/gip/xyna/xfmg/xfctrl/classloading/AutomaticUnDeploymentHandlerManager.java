@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.utils.exceptions.XynaException;
 
 /**
- * verwaltet undeploymenthandler, die automatisch ausgeführt werden, wenn der classloader eines
+ * verwaltet undeploymenthandler, die automatisch ausgefï¿½hrt werden, wenn der classloader eines
  * deploygegenstands entfernt wird
  */
 public class AutomaticUnDeploymentHandlerManager extends FunctionGroup {

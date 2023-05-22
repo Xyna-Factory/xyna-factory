@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -232,7 +232,7 @@ public abstract class RuntimeContextProblem implements Serializable {
   
   public static class Collision extends RuntimeContextProblem {
     
-    // TODO Übergabe String mit GUI-Menschen klären
+    // TODO ï¿½bergabe String mit GUI-Menschen klï¿½ren
     public enum RuntimeContextCollisionType {
       ORDERTYPE,
       ACTIVATION,
@@ -301,7 +301,7 @@ public abstract class RuntimeContextProblem implements Serializable {
     private ErroneousOrderEntrance(OrderEntrance orderEntrance) {
       super(RuntimeContextProblemType.ERRONEOUS_ORDER_ENTRANCE);
       add(NAME_KEY, orderEntrance.getName());
-      add(TYPE_KEY, orderEntrance.getType().toString()); // TODO mit GUI-Menschen klären
+      add(TYPE_KEY, orderEntrance.getType().toString()); // TODO mit GUI-Menschen klï¿½ren
     }
     
   }
@@ -321,7 +321,7 @@ public abstract class RuntimeContextProblem implements Serializable {
     
     private DeploymentState(DeploymentItemState dis, RuntimeDependencyContext rc, Throwable e) {
       super(RuntimeContextProblemType.DEPLOYMENT_ITEM_STATE);
-      //TODO exception übergeben? loggen?
+      //TODO exception ï¿½bergeben? loggen?
       add(NAME_KEY, dis.getName());
       add(TYPE_KEY, dis.getType().getNiceName());
       add(STATE_KEY, DisplayState.INVALID.name());

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,11 @@ public class CsvUtils {
     if( list.size() == 0 ) {
       return "";
     }
-    //Stringlänge abschätzen
+    //Stringlï¿½nge abschï¿½tzen
     int estimate = list.size() * String.valueOf( list.get(0) ).length();
     StringBuilder sb = new StringBuilder( estimate );
     
-    //nun anhängen
+    //nun anhï¿½ngen
     String sep = "";
     for( T t : list ) {
       sb.append(sep);
@@ -194,9 +194,9 @@ public class CsvUtils {
         if (masked) {
 
           /*
-           * Wenn jetzt kein Anführungszeichen kommt
-           *    1.1 Wenn vorher ungerade Anzahl kam => Änderung Masker-Flag
-           *    1.2 Wenn vorher gerade Anzahl kam => Keine Änderung Masker-Flag
+           * Wenn jetzt kein Anfï¿½hrungszeichen kommt
+           *    1.1 Wenn vorher ungerade Anzahl kam => ï¿½nderung Masker-Flag
+           *    1.2 Wenn vorher gerade Anzahl kam => Keine ï¿½nderung Masker-Flag
            */
           if (!nextIsMaskerSequence) {
             // ordinary character case
@@ -297,7 +297,7 @@ public class CsvUtils {
     public CSVIterator(String csv, String separator, String masker) {
       this.separator = separator;
       this.masker = masker;
-      this.subCsv = csv != null ? separator + csv : null; //separator vorne anfügen, dann kann man immer bis zum nächsten separator suchen und die behandlung am ende der zeile ist einfacher
+      this.subCsv = csv != null ? separator + csv : null; //separator vorne anfï¿½gen, dann kann man immer bis zum nï¿½chsten separator suchen und die behandlung am ende der zeile ist einfacher
       this.sepLength = separator.length();
       this.maskLength = masker.length();
     }
@@ -415,7 +415,7 @@ public class CsvUtils {
   }
   
   public static Iterable<String> iterate(String csv) {
-    //aus abwärtskompatibilitätsgründen leere strings als null behandeln
+    //aus abwï¿½rtskompatibilitï¿½tsgrï¿½nden leere strings als null behandeln
     return iterate(csv, false); 
   }
   

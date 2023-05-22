@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package com.gip.xyna.xprc.xfractwfe.base;
 public interface DetachedCall {
   
   /**
-   * gibt die id des subauftrags zurück, nicht den gesamten auftrag, weil dieser bei detached nicht referenziert werden soll 
+   * gibt die id des subauftrags zurï¿½ck, nicht den gesamten auftrag, weil dieser bei detached nicht referenziert werden soll 
    */
   public long getChildOrderId();
 

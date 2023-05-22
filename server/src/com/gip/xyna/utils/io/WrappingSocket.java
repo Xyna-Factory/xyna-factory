@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class WrappingSocket extends Socket {
   public WrappingSocket(Socket innerSocket) {
     this.innerSocket = innerSocket;
     try {
-      //leerer konstruktor erzeugt unbenötigten kram in oberklasse...
+      //leerer konstruktor erzeugt unbenï¿½tigten kram in oberklasse...
       super.close();
     } catch (IOException e) {
       throw new RuntimeException();

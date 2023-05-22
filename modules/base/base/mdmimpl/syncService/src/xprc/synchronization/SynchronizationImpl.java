@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ public class SynchronizationImpl {
 
     WorkflowEngine we = XynaFactory.getInstance().getProcessing().getWorkflowEngine();
     if (we instanceof XynaFractalWorkflowEngine) {      
-      //Für alle Objekte die nicht im RuntimeContext des Root-Auftrags aufgelöst werden können (oder abhängige), 
+      //Fï¿½r alle Objekte die nicht im RuntimeContext des Root-Auftrags aufgelï¿½st werden kï¿½nnen (oder abhï¿½ngige), 
       //muss beim toXML explizit der RuntimeContext inkludiert werden. Vgl. XynaObject.XMLHelper
       String xml = answer == null ? NULL_VALUE : answer
           .toXml(null, false, -1, GeneralXynaObject.XMLReferenceCache.getCacheObjectWithoutCaching(xo.getRootOrder().getRevision()));

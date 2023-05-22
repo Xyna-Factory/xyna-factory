@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class Version {
       return true;
     }
     if (equals(otherVersion)) {
-      //ohne diese abfrage muss die schleife vollständig durchlaufen werden um equals zu bestimmen.
+      //ohne diese abfrage muss die schleife vollstï¿½ndig durchlaufen werden um equals zu bestimmen.
       return false;
     }
     int len = Math.min(parts.length, otherVersion.parts.length);
@@ -129,7 +129,7 @@ public class Version {
         return true;
       }
       
-      //else == => nächsten versions-part testen
+      //else == => nï¿½chsten versions-part testen
     }
 
     //bisher gleich
@@ -139,7 +139,7 @@ public class Version {
       return false;
     }
     
-    //nicht equals und nicht kleiner oder größer...
+    //nicht equals und nicht kleiner oder grï¿½ï¿½er...
     throw new RuntimeException("versions are not comparable");
   }
   
@@ -195,13 +195,13 @@ public class Version {
   /**
    * major version = version, die mit nullen endet.
    * 
-   * erhöht die i-te versionsstelle um &lt;increment&gt; (bei 1 anfangen zu zählen). die darauffolgenden versionstellen werden auf 0 gesetzt.
-   * zb für i=4, increment=1 aus 3.0.0.12 mache 3.0.0.13
+   * erhï¿½ht die i-te versionsstelle um &lt;increment&gt; (bei 1 anfangen zu zï¿½hlen). die darauffolgenden versionstellen werden auf 0 gesetzt.
+   * zb fï¿½r i=4, increment=1 aus 3.0.0.12 mache 3.0.0.13
    * oder aus 3.0.0.alpha9 mache 3.0.0.alpha10
    * oder aus 3.0.0.bla mache 3.0.0.bla0
    * 
-   * zb für i = 2, increment = 3 aus 3.0.0.12 mache 3.3.0.0
-   * @return geändertes versionsobjekt
+   * zb fï¿½r i = 2, increment = 3 aus 3.0.0.12 mache 3.3.0.0
+   * @return geï¿½ndertes versionsobjekt
    */
   public Version increaseToMajorVersion(int i, int increment) {
     increase(i, increment);
@@ -225,7 +225,7 @@ public class Version {
 
   /**
    * funktioniert wie {@link #increaseToMajorVersion(int, int)}, nur dass nicht alle darauffolgenden versionsstellen auf 0 gesetzt werden.
-   * es wird also nur die angegebene stelle um den angegebenen wert erhöht.
+   * es wird also nur die angegebene stelle um den angegebenen wert erhï¿½ht.
    */
   public void increase(int index, int value) {
     if (index > parts.length) {

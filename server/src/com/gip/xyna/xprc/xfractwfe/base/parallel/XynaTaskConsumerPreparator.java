@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ import com.gip.xyna.xprc.xpce.OrderContextServerExtension;
 
 
 /**
- * XynaTaskConsumerPreparator modifiziert den ParallelExecutor folgendermaßen:
+ * XynaTaskConsumerPreparator modifiziert den ParallelExecutor folgendermaï¿½en:
  * 
- * 1) {@link #newTaskConsumer()} baut TaskConsumer, der vor und nach der Ausführung 
+ * 1) {@link #newTaskConsumer()} baut TaskConsumer, der vor und nach der Ausfï¿½hrung 
  * des SupendableParallelTasks diesen im XynaProcess an und abmeldet<br>
  * 2) {@link #prepareExecutorRunnable(TaskConsumer)} liefert ein Runnable, welches im 
- * XynaExecutor lauffähig ist (XynaRunnable). Dieses XynaExecutorRunnable meldet den Thread
+ * XynaExecutor lauffï¿½hig ist (XynaRunnable). Dieses XynaExecutorRunnable meldet den Thread
  * im XynaProcess an und ab und setzt das NDC-Logging
  */
 public class XynaTaskConsumerPreparator implements TaskConsumerPreparator {
@@ -109,21 +109,21 @@ public class XynaTaskConsumerPreparator implements TaskConsumerPreparator {
     }
     
     /**
-     * Wird vor jeder Task-Ausführung gerufen
+     * Wird vor jeder Task-Ausfï¿½hrung gerufen
      */
     public void beforeExecution(ParallelTask task) {
       process.addActiveParallelTaskThread(currentThread, task);
     }
 
     /**
-     * Wird nach jeder Task-Ausführung gerufen
+     * Wird nach jeder Task-Ausfï¿½hrung gerufen
      */
     public void afterExecution(ParallelTask task) {
       process.removeActiveParallelTaskThread(task);
     }
 
     /**
-     * Wird vor Ausführung des TaskConsumer aufgerufen:
+     * Wird vor Ausfï¿½hrung des TaskConsumer aufgerufen:
      * NDC-Logging und Registrierung des Threads in XynaProcess
      */
     private void beforeExecutionOfTaskConsumer() {
@@ -142,7 +142,7 @@ public class XynaTaskConsumerPreparator implements TaskConsumerPreparator {
     }
 
     /**
-     * Wird nach Ausführung des TaskConsumer aufgerufen:
+     * Wird nach Ausfï¿½hrung des TaskConsumer aufgerufen:
      * NDC-Logging und Deregistrierung des Threads in XynaProcess
      * @param currentThread 
      * @param suspendableParallelTask 

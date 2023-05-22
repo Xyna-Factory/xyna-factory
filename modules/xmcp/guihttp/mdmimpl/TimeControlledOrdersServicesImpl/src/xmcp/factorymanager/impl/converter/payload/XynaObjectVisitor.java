@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
       this.isComplexListWrapper = true; //wir befinden uns in dem complexlist-fall in dem objekt mit $meta und $list
       return new XynaObjectVisitor(); //ein komplexes listenelement
     } else {
-      return new XynaObjectVisitor(); //komplexe membervariable oder das künstliche json-objekt für die complexlist (welches $meta und $list enthält)
+      return new XynaObjectVisitor(); //komplexe membervariable oder das kï¿½nstliche json-objekt fï¿½r die complexlist (welches $meta und $list enthï¿½lt)
     }
   }
 
@@ -126,7 +126,7 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
       field.setAccessible(true);
       try {
         Class<?> listElType = XynaObjectJsonBuilder.getGenericTypeOfList(field);
-        //FIXME eigtl müsste man den typ über generationbase herausbekommen. hier kann man boxed/unboxed listen nicht unterscheiden
+        //FIXME eigtl mï¿½sste man den typ ï¿½ber generationbase herausbekommen. hier kann man boxed/unboxed listen nicht unterscheiden
         PrimitiveType primitiveType = PrimitiveType.createOrNull(listElType.getSimpleName());
         if (primitiveType != null) {
           List typedList = new ArrayList();
@@ -253,7 +253,7 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
       if(label == null) {
         object = new Container(values.toArray(new GeneralXynaObject[] {}));
       } else {
-        //TODO was ist das für ein fall?
+        //TODO was ist das fï¿½r ein fall?
         try {
           Field field = findField(getObject().getClass(), label);
           if (field != null) {
@@ -272,14 +272,14 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
   public void emptyList(String label) throws UnexpectedJSONContentException {
     /*
      * listen leer initialisieren
-     * falls complexListWrapper, ist das boolean-flag leider nicht auf true gesetzt, weil dazu hätte man einem listenelement begegnen müssen (gibt aber ja dann keine)
+     * falls complexListWrapper, ist das boolean-flag leider nicht auf true gesetzt, weil dazu hï¿½tte man einem listenelement begegnen mï¿½ssen (gibt aber ja dann keine)
      * => man muss jetzt herausfinden, ob es sich um eine complexe oder eine simple list handelt.
      * 
      * fall1: complexe liste
      *   dann zeigt metainfo auf den typ der listenelemente
      *   label = $list
      * fall2: simple liste
-     *   dann zeigt metainfo auf den typ des complexen typs, der die simple liste enthält
+     *   dann zeigt metainfo auf den typ des complexen typs, der die simple liste enthï¿½lt
      *   label = <membervarname der simple-list>
      */
     if (WRAPPED_LIST_TAG.equals(label)) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ public class XynaFactoryManagement extends XynaFactoryManagementBase {
       ((Configuration) getSection(XynaFactoryManagementODS.DEFAULT_NAME).getFunctionGroup(Configuration.DEFAULT_NAME))
                       .setProperty(key, value);
     } catch (XFMG_IllegalPropertyValueException e) {
-      throw new RuntimeException(e); //TODO Abwärtskompatibilität, besser deklarieren!
+      throw new RuntimeException(e); //TODO Abwï¿½rtskompatibilitï¿½t, besser deklarieren!
     }
   }
 
@@ -143,7 +143,7 @@ public class XynaFactoryManagement extends XynaFactoryManagementBase {
       ((Configuration) getSection(XynaFactoryManagementODS.DEFAULT_NAME).getFunctionGroup(Configuration.DEFAULT_NAME))
                       .setProperty(property);
     } catch (XFMG_IllegalPropertyValueException e) {
-      throw new RuntimeException(e); //TODO Abwärtskompatibilität, besser deklarieren!
+      throw new RuntimeException(e); //TODO Abwï¿½rtskompatibilitï¿½t, besser deklarieren!
     }
   }
 

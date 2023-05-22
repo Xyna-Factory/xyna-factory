@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class SerialVersionIgnoringOrderInstanceBackup extends OrderInstanceBacku
 
     public SerialVersionIgnoringOrderInstanceBackup read(ResultSet rs) throws SQLException {
 
-      // FIXME die Felder werden hier teilweise leer gelassen, obwohl man das Entry dann später benutzt, um wieder
+      // FIXME die Felder werden hier teilweise leer gelassen, obwohl man das Entry dann spï¿½ter benutzt, um wieder
       //       in die DB zu schreiben. Dadurch verliert man ggf. Daten!
       SerialVersionIgnoringOrderInstanceBackup svioib = new SerialVersionIgnoringOrderInstanceBackup();
 

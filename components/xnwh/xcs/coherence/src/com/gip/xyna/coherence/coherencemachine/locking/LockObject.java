@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,12 +90,12 @@ public class LockObject implements Serializable {
 
 
   /**
-   * lokal verwendetes lock um konsistenz in der klasse zu gewährleisten.
+   * lokal verwendetes lock um konsistenz in der klasse zu gewï¿½hrleisten.
    */
   private transient ReentrantLock lockObjectProtection = new ReentrantLock();
 
   /**
-   * liste der locks, von denen der höchste (meist) gewinnt und damit auf remote knoten implizit das lock besitzt.
+   * liste der locks, von denen der hï¿½chste (meist) gewinnt und damit auf remote knoten implizit das lock besitzt.
    */
   private SortedMap<Long, LockToken> locks; // initialized lazily
 
@@ -105,7 +105,7 @@ public class LockObject implements Serializable {
   private transient ReentrantLock localRequestLock;
 
   /**
-   * lokale oder remote priority die gerade das lock hält. dazu muss ein eintrag in der map {@link #locks} existieren
+   * lokale oder remote priority die gerade das lock hï¿½lt. dazu muss ein eintrag in der map {@link #locks} existieren
    */
   private volatile Long currentlyLockingPriority;
 
@@ -118,41 +118,41 @@ public class LockObject implements Serializable {
   private AtomicInteger waitingForNonReentrantLockTokensCount; // initialized lazily
 
   /**
-   * anzahl von verbleibenden knoten im lockzirkel. ist ggfs anders als die größe der liste {@link #locks}, weil der
+   * anzahl von verbleibenden knoten im lockzirkel. ist ggfs anders als die grï¿½ï¿½e der liste {@link #locks}, weil der
    * zirkel halb offen sein kann und sich hier bereits weitere knoten gemeldet haben.
    * <p>
    * oder es kann sein, dass der wert bereits vom gewinner an alle knoten propagiert wurde, diese aber noch nicht
    * untereinander ihre kommunikation beendet haben - im schlimmsten fall kann also sowas passieren wie
    * {@link #currentLockCircleSize} == 100, {@link #locks}.size == 0.
    */
-  private volatile int currentLockCircleSize; // TODO volatile notwendigkeit überprüfen
+  private volatile int currentLockCircleSize; // TODO volatile notwendigkeit ï¿½berprï¿½fen
 
   /**
    * anzahl von knoten, die am lock beteiligt sind. wird vom gewinnerknoten ermittelt, dann als
    * {@link #currentLockCircleSize} auf alle knoten verteilt.
    * <p>
    * TODO: eigtl braucht man den nicht und kann direkt currentLockCircleSize benutzen oder? => nein, sonst kann man
-   * nicht unterscheiden, ob man bereits die lockcirclesize propagiert hat. evtl würde ein boolean ausreichen.<br>
+   * nicht unterscheiden, ob man bereits die lockcirclesize propagiert hat. evtl wï¿½rde ein boolean ausreichen.<br>
    * ACHTUNG: hat nichts mit {@link #preliminaryLock} zu tun.
    */
   private int preliminaryCircleSize = -1;
 
   /**
-   * zählt anzahl von zurückgenommen locks. wirkt sich auf die {@link #currentLockCircleSize} aus, die beim nächsten
+   * zï¿½hlt anzahl von zurï¿½ckgenommen locks. wirkt sich auf die {@link #currentLockCircleSize} aus, die beim nï¿½chsten
    * {@link #closeLockCircle()} gesetzt wird.
    */
   private int recalledLocksCounter = 0;
 
   /**
-   * benutzt im fall, dass {@link #currentLockCircleSize} bereits gesetzt ist, aber keine einträge in {@link #locks}
+   * benutzt im fall, dass {@link #currentLockCircleSize} bereits gesetzt ist, aber keine eintrï¿½ge in {@link #locks}
    * vorhanden sind, auf die man locken kann. die hierauf wartenden threads werden dann notified, wenn
    * {@link #currentLockCircleSize} den wert 0 erreicht.
    */
   private LockToken lockCircleProtection = new LockToken(LockTokenType.CIRCLE_PROTECTION);
 
   /**
-   * falls ein read auf ein objekt aufgerufen wird, welches z.B. im status shared ist, müssen die remote cluster members
-   * davon nichts wissen. das gleiche gilt für updates auf modified objekten.
+   * falls ein read auf ein objekt aufgerufen wird, welches z.B. im status shared ist, mï¿½ssen die remote cluster members
+   * davon nichts wissen. das gleiche gilt fï¿½r updates auf modified objekten.
    */
   private ReentrantLock preliminaryLock;
 
@@ -164,7 +164,7 @@ public class LockObject implements Serializable {
  
 
   // kann weg
-  private final long objectId; // TODO prio4: nur für logging!
+  private final long objectId; // TODO prio4: nur fï¿½r logging!
   private final boolean logTrace;
 
 
@@ -236,14 +236,14 @@ public class LockObject implements Serializable {
 
 
   /**
-   * kommt zurück, falls kein preliminary lock mehr vergeben ist. ansonsten wartet es, bis das derzeitig vergebene
+   * kommt zurï¿½ck, falls kein preliminary lock mehr vergeben ist. ansonsten wartet es, bis das derzeitig vergebene
    * preliminary lock frei wird. <br>
    * nicht reentrant! (muss es auch nicht sein)
    * 
    * @param timeoutNano = System.nanoTime equivalent
    */
   private boolean checkPreliminaryLock(boolean tryLock, long timeoutNano) throws ObjectDeletedWhileWaitingForLockException {
-    // TODO methode verallgemeinern für beliebiges checkReentrantLock
+    // TODO methode verallgemeinern fï¿½r beliebiges checkReentrantLock
     Lock oldPreliminaryLock;
     lazyCreateWaitingForNonReentrantLockTokensCount();
     while ((oldPreliminaryLock = preliminaryLock) != null) {
@@ -333,10 +333,10 @@ public class LockObject implements Serializable {
     lockObjectProtection.lock();
     try {
       if (currentlyLockingPriority != null && currentlyLockingPriority == priority) {
-        // state ist genauso als wäre das lock erfolgreich.
+        // state ist genauso als wï¿½re das lock erfolgreich.
         releaseLockLocally(false);
       } else {
-        // anderer thread hält das lock
+        // anderer thread hï¿½lt das lock
         localRequestLock.unlock();
         localRequestPriorityHoldingLock = -1;
         
@@ -359,10 +359,10 @@ public class LockObject implements Serializable {
         countedInLockCircle = true;
       } else {
         /*
-         * falls lockzirkelgröße gleich 0 ist, kann es sein, dass man beim warten auf ein preliminary lock ein timeout
-         * hatte und gar kein lockzirkel existiert. in dem fall darf man den counter nicht hochzählen. da die remote
-         * knoten den lokalen lockrequest (der recalled werden soll) erst bemerken (und zum lockzirkel dazuzählen), wenn
-         * sie den lokalen knoten versuchen zu locken, muss man hier nur überprüfen, ob bereits ein remote request
+         * falls lockzirkelgrï¿½ï¿½e gleich 0 ist, kann es sein, dass man beim warten auf ein preliminary lock ein timeout
+         * hatte und gar kein lockzirkel existiert. in dem fall darf man den counter nicht hochzï¿½hlen. da die remote
+         * knoten den lokalen lockrequest (der recalled werden soll) erst bemerken (und zum lockzirkel dazuzï¿½hlen), wenn
+         * sie den lokalen knoten versuchen zu locken, muss man hier nur ï¿½berprï¿½fen, ob bereits ein remote request
          * angekommen ist
          */
         if (currentlyLockingPriority != null) {
@@ -401,17 +401,17 @@ public class LockObject implements Serializable {
 
 
   /**
-   * räumt das lockobjekt derart auf, dass der vorher hier angekommene lockrequest entfernt wird. z.b. falls bei einem
+   * rï¿½umt das lockobjekt derart auf, dass der vorher hier angekommene lockrequest entfernt wird. z.b. falls bei einem
    * knoten ein lock-timeout passiert ist.
    */
   public void recallRemoteLockRequest(long priority, long priorityOfLockInOldLockCircle, boolean countedInLockCircle, int lockCircleSize) {
     lockObjectProtection.lock();
     try {
       if (currentlyLockingPriority != null && currentlyLockingPriority.longValue() == priority) {
-        // remote state ist genauso als wäre das lock erfolgreich.
+        // remote state ist genauso als wï¿½re das lock erfolgreich.
         releaseLockRemotely(false, priority);
       } else {
-        // jemand anderes hält das lock
+        // jemand anderes hï¿½lt das lock
         if (locks != null) { // kann null sein, wenn in diesem knoten der timeout passiert ist
           LockToken removedRemoteToken = locks.remove(priority);
           if (removedRemoteToken != null) {
@@ -422,14 +422,14 @@ public class LockObject implements Serializable {
 
 
       /*
-       * fallunterscheidung für circlesize anpassungen: 
-       * 1. alter lockzirkel, d.h. lockrequest gehört nicht zum
-       * lockzirkel. => der timeout, der zum recall führte ist passiert, als auf einen alten lockzirkel gewartet wurde
-       * 2. lockrequest gehört zum lockzirkel. => der timeout ist passiert, als auf ein element des aktuellen
+       * fallunterscheidung fï¿½r circlesize anpassungen: 
+       * 1. alter lockzirkel, d.h. lockrequest gehï¿½rt nicht zum
+       * lockzirkel. => der timeout, der zum recall fï¿½hrte ist passiert, als auf einen alten lockzirkel gewartet wurde
+       * 2. lockrequest gehï¿½rt zum lockzirkel. => der timeout ist passiert, als auf ein element des aktuellen
        * lockzirkels gewartet wurde. oder aus 3. entstanden 3a. es gibt keinen lockzirkel => es wurde auf ein remote
        * preliminary lock gewartet, dass nicht geupgradet wurde zu einem richtigen lock. kann sich zu 2. wandeln, wenn
        * das preliminary lock geupgradet wird. 3b. es gibt keinen lockzirkel => es wurde auf ein lock eines alten
-       * lockzirkels gewartet in fällen 2 und 3 kann es sein, dass der lockzirkel noch nicht geschlossen ist. fall 1
+       * lockzirkels gewartet in fï¿½llen 2 und 3 kann es sein, dass der lockzirkel noch nicht geschlossen ist. fall 1
        * kann nur sein, wenn circlesize = 1 ist. => circlesize = 1 => fall 1 oder fall 2. circlesize > 1 => fall 2
        * circlesize = 0 => fall 1 oder fall 3.
        */
@@ -445,13 +445,13 @@ public class LockObject implements Serializable {
 
         if (priorityOfLockInOldLockCircle > -1) {
           if (currentlyLockingPriority != null && currentlyLockingPriority == priorityOfLockInOldLockCircle) {
-            // alter lockzirkel noch aktiv => dort wird man nicht mitgezählt.
-            // im neuen zirkel wird man aber mitgezählt
+            // alter lockzirkel noch aktiv => dort wird man nicht mitgezï¿½hlt.
+            // im neuen zirkel wird man aber mitgezï¿½hlt
             if (countedInLockCircle) {
               recalledLocksCounter++;
             }
           } else {
-            // alter lockzirkel inzwischen weg => dann gehört man offenbar zum neuen und ist das letzte zirkelmitglied
+            // alter lockzirkel inzwischen weg => dann gehï¿½rt man offenbar zum neuen und ist das letzte zirkelmitglied
             currentLockCircleSize = 0;
             recalledLocksCounter = 0;
             recalled = false;
@@ -468,9 +468,9 @@ public class LockObject implements Serializable {
         }
       } else {
         /*
-         * falls lockzirkelgröße gleich 0 ist, kann es sein, dass man beim warten auf ein preliminary lock ein timeout
-         * hatte und gar kein lockzirkel existiert. in dem fall darf man den counter nicht hochzählen, bzw
-         * lockzirclesize darf später nicht runtergezählt werden. falls beim entfernen des lokalen locks nicht in
+         * falls lockzirkelgrï¿½ï¿½e gleich 0 ist, kann es sein, dass man beim warten auf ein preliminary lock ein timeout
+         * hatte und gar kein lockzirkel existiert. in dem fall darf man den counter nicht hochzï¿½hlen, bzw
+         * lockzirclesize darf spï¿½ter nicht runtergezï¿½hlt werden. falls beim entfernen des lokalen locks nicht in
          * lockzirkel gewesen, dann jetzt immer noch nicht.
          */
         if (countedInLockCircle) {
@@ -801,9 +801,9 @@ public class LockObject implements Serializable {
                   throws ObjectDeletedWhileWaitingForLockException, InterruptedException {
     /* @Depreacted ?
      * FIXME - falls der thread auf den gewartet wurde, wegen eines timeouts verschwindet, muss das await nun umziehen
-     *         und auf die nächsthöhere priority warten 
-     * - falls die prio auf die gewartet werden soll, bereits nicht mehr existiert, könnte sie aber durch einen timeout verschwunden sein.
-     *   dann hat man das lock nicht und muss auf die nächsthöhere priority warten.
+     *         und auf die nï¿½chsthï¿½here priority warten 
+     * - falls die prio auf die gewartet werden soll, bereits nicht mehr existiert, kï¿½nnte sie aber durch einen timeout verschwunden sein.
+     *   dann hat man das lock nicht und muss auf die nï¿½chsthï¿½here priority warten.
      */
 
     lockObjectProtection.lock();
@@ -977,7 +977,7 @@ public class LockObject implements Serializable {
 
       // if locks is null here, this is a bug and the NPE is ok
       final LockToken releasedLocalLockToken = locks.remove(localRequestPriorityHoldingLock);
-      final long oldLockingPrio = localRequestPriorityHoldingLock; // TODO prio4: die Variable existiert hier nur für logging!
+      final long oldLockingPrio = localRequestPriorityHoldingLock; // TODO prio4: die Variable existiert hier nur fï¿½r logging!
       currentlyLockingPriority = locks.isEmpty() ? null : locks.lastKey();
       localRequestPriorityHoldingLock = -1;
       
@@ -1023,7 +1023,7 @@ public class LockObject implements Serializable {
 
     // "locks" cannot be null here if the releaseLock method isnt called due to a bug
     final LockToken removedRemoteToken = locks.remove(priorityToRelease);
-    final long oldLockingPrio = priorityToRelease; // TODO prio4: die Variable existiert hier nur für logging!
+    final long oldLockingPrio = priorityToRelease; // TODO prio4: die Variable existiert hier nur fï¿½r logging!
     currentlyLockingPriority = locks.isEmpty() ? null : locks.lastKey();
     if (countdownCircleOfTrustCounter) {
       decrementLockCircleSize();
@@ -1257,13 +1257,13 @@ public class LockObject implements Serializable {
     }
     if (currentLockCircleSize > 1 && locksSize > currentLockCircleSize) {
       //zirkel kann noch nicht halboffen sein. kleiner kann locksSize sein, falls die requests noch nicht angekommen sind.
-      //größer ist auf jeden fall falsch
+      //grï¿½ï¿½er ist auf jeden fall falsch
       
       // Inkonsistenzstatus auskommentiert.
-      // Beispielszenario bei dem Konsistenzprüfung fehlschlägt, obwohl Zustand nicht falsch ist:
+      // Beispielszenario bei dem Konsistenzprï¿½fung fehlschlï¿½gt, obwohl Zustand nicht falsch ist:
       // Es gibt 3 Nodes, es entsteht ein Lockzirkel aus zwei Nodes, wobei bei einem Node das Lock austimed. Der Node, der gewonnen hat,
       // bekommt den recall allerdings noch nicht mit und versendet nach Abarbeitung sein release. Der dritte Node, der beim Lockzirkel
-      // außen vor blieb, hat recall und release bereits erhalten und macht nun einen neuen Zirkel auf.
+      // auï¿½en vor blieb, hat recall und release bereits erhalten und macht nun einen neuen Zirkel auf.
       
       //inconsistent = 7;
       debugger.debug("checkConsistency() detect locksSize > currentLockCircleSize - perhaps an inconsistent, perhaps not");

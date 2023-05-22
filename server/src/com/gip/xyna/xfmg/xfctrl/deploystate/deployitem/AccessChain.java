@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,7 +183,7 @@ public class AccessChain extends TypeInterface {
       }
       if (hasNext()) {
         if (result.resolvedType.isList()) {
-          //resolvedType ist nur dann listenwertig, wenn kein listen-access ([...]) folgt (das wird bereits in resolveinternally aufgelöst)
+          //resolvedType ist nur dann listenwertig, wenn kein listen-access ([...]) folgt (das wird bereits in resolveinternally aufgelï¿½st)
           //die accesschain darf bei einem ausdruck, der listenwertig endet, also keinen folgenden accesspart haben 
           return new ResolutionResult(InterfaceEmployment.of(type, next), false);
         } else {
@@ -421,9 +421,9 @@ public class AccessChain extends TypeInterface {
       InterfaceResolutionContext.updateCtx(dis);
       try {
         /*
-         * TODO unschön, hier jedesmal (aus performancegründen) clonen zu müssen. 
+         * TODO unschï¿½n, hier jedesmal (aus performancegrï¿½nden) clonen zu mï¿½ssen. 
          * verbesserungsidee:
-         * 1) instanzmethoden haben den ersten parameter nie in der signatur - dazu müsste man bei alle step-function aufrufen
+         * 1) instanzmethoden haben den ersten parameter nie in der signatur - dazu mï¿½sste man bei alle step-function aufrufen
          *    und bei den service-definition den ersten parameter entsprechend entfernen
          */
         OperationInterface clonedOperation = wrapped.clone();
@@ -556,7 +556,7 @@ public class AccessChain extends TypeInterface {
       if (unresolvedResult.inconsistency instanceof InterfaceEmployment) {
         InterfaceEmployment ie = (InterfaceEmployment)unresolvedResult.inconsistency;
         if (ie.unwrap() instanceof MemberVariableInterface) {
-          ie.cloneWrapped(); //unten stehendes type-infer muss auf clone passieren, weil die information von der auflösbarkeit der typen abhängt. die ist nicht immer gegeben.
+          ie.cloneWrapped(); //unten stehendes type-infer muss auf clone passieren, weil die information von der auflï¿½sbarkeit der typen abhï¿½ngt. die ist nicht immer gegeben.
           untypedInterface = (MemberVariableInterface) ie.unwrap();
         } else {
           return;

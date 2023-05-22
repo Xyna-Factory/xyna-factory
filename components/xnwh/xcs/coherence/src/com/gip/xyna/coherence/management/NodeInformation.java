@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import com.gip.xyna.coherence.coherencemachine.interconnect.rmi.RMIConnectionCli
 
 
 /**
- * Hält Informationen zu einem Cluster Knoten, z.B. was für Verbindungen kann der Knoten aufmachen, etc
+ * Hï¿½lt Informationen zu einem Cluster Knoten, z.B. was fï¿½r Verbindungen kann der Knoten aufmachen, etc
  */
 public class NodeInformation implements Serializable {
 

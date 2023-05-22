@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import com.gip.xyna.xnwh.persistence.memory.index.tree.LockedSubTreeNode;
 import com.gip.xyna.xnwh.persistence.memory.index.tree.Root;
 
 
-//TODO locks sind als reentrantlocks threadbasiert. das bedeutet, dass der gleiche thread mit einer anderen connection auf objekte zugreifen kann, was er eigl nicht tun können sollte!
+//TODO locks sind als reentrantlocks threadbasiert. das bedeutet, dass der gleiche thread mit einer anderen connection auf objekte zugreifen kann, was er eigl nicht tun kï¿½nnen sollte!
 public abstract class XynaMemoryPersistenceLayer implements PersistenceLayer {
 
   protected static final Logger logger = CentralFactoryLogging.getLogger(XynaMemoryPersistenceLayer.class);
@@ -69,7 +69,7 @@ public abstract class XynaMemoryPersistenceLayer implements PersistenceLayer {
   public <T extends Storable> void createIndicesForTable(TableObject<T, MemoryRowData<T>> tableObject, boolean useMapIndex) {
     for (ColumnDeclaration c : tableObject.getColTypes()) {
       if (c.getIndexType() != IndexType.NONE) {
-        // TODO code generieren, der die getter auf die storables für die zu indizierende spalte enthält.
+        // TODO code generieren, der die getter auf die storables fï¿½r die zu indizierende spalte enthï¿½lt.
         Index<? extends Comparable<?>, MemoryRowData<T>> newIndex;
         if (useMapIndex) {
           newIndex = new IndexImplMap(new ReentrantReadWriteLock());
@@ -77,7 +77,7 @@ public abstract class XynaMemoryPersistenceLayer implements PersistenceLayer {
           NodeCreator<? extends Comparable<?>, MemoryRowData<?>> tmp = getNodeCreator(this);
           newIndex = new IndexImplTree(tmp);
         }
-        // TODO index für bereits existierende objekte aufbauen. für LocalMemory spielt das keine Rolle,
+        // TODO index fï¿½r bereits existierende objekte aufbauen. fï¿½r LocalMemory spielt das keine Rolle,
         //      weil vorher noch nichts drin sein kann.
         tableObject.addIndex(c, newIndex);
       }

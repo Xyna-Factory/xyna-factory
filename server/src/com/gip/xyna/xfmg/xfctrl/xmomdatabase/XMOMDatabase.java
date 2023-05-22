@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -417,10 +417,10 @@ public class XMOMDatabase extends FunctionGroup {
     XynaProperty.XMOMDISCOVERY_ON_STARTUP.registerDependency(DEFAULT_NAME);
 
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
-    //Achtung: Diese Deploymenthandler müssen beim Serverstart nicht registriert sein bevor die WFDatabase geladen wird,       
+    //Achtung: Diese Deploymenthandler mï¿½ssen beim Serverstart nicht registriert sein bevor die WFDatabase geladen wird,       
     //         weil die Objekte alle vorher irgendwann manuell deployed wurden und deshalb keine Informationen verloren gehen.
-    //         Deshalb wären die Deploymenthandler beim Serverstart-Deployment sogar redundant und schlecht für die Performance.
-    //Deshalb ist hier eine Abhängigkeit auf WFDatabase ok.
+    //         Deshalb wï¿½ren die Deploymenthandler beim Serverstart-Deployment sogar redundant und schlecht fï¿½r die Performance.
+    //Deshalb ist hier eine Abhï¿½ngigkeit auf WFDatabase ok.
     fExec.addTask(XMOMDatabase.class, "XMOMDatabase").
          after(WorkflowDatabase.FUTURE_EXECUTION_ID).
          after(XynaProperty.class).
@@ -440,7 +440,7 @@ public class XMOMDatabase extends FunctionGroup {
                    }
                  };
                  
-                 //das registrieren der XMOMObjekte soll immer nur ein Thread pro Revision machen, da ein Cache für die GenerationBase-Objekte verwendet wird
+                 //das registrieren der XMOMObjekte soll immer nur ein Thread pro Revision machen, da ein Cache fï¿½r die GenerationBase-Objekte verwendet wird
                  HashParallelReentrantLock<Long> finishLock = new HashParallelReentrantLock<Long>(5);
 
                  public void exec(final GenerationBase object, DeploymentMode mode) throws XPRC_DeploymentHandlerException {
@@ -489,21 +489,21 @@ public class XMOMDatabase extends FunctionGroup {
            
            
            if (XynaProperty.XMOMDISCOVERY_ON_STARTUP.get()) {
-             //XMOMDiscovery ausführen
+             //XMOMDiscovery ausfï¿½hren
              XynaExecutor.getInstance(false)
                .executeRunnableWithUnprioritizedPlanningThreadpool(new XynaRunnable() {
                  
                  public void run() {
                    try {
                      discovery();
-                     discoveryOnStartupValueAfterSchutdown = false; //Discovery war erfolgreich, daher muss es beim nächsten Server-Start nicht wiederholt werden
+                     discoveryOnStartupValueAfterSchutdown = false; //Discovery war erfolgreich, daher muss es beim nï¿½chsten Server-Start nicht wiederholt werden
                    } catch (XynaException e) {
                      logger.warn("XMOM-Discovery failed, the command 'xmomdiscovery' can be used to manually trigger a discovery.",e);
                    }
                  }
                });
            } else {
-             //beim nächsten Server-Start soll kein Discovery ausgeführt werden, falls das Shutdown durchgeführt wurde
+             //beim nï¿½chsten Server-Start soll kein Discovery ausgefï¿½hrt werden, falls das Shutdown durchgefï¿½hrt wurde
              discoveryOnStartupValueAfterSchutdown = false;
            }
            
@@ -641,8 +641,8 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
   /**
-   * Registriert die übergebenen XMOMObjects. Falls ein hierzu in Beziehung stehendes Objekt noch
-   * nicht in der XMOMDatabase vorhanden ist, wird es ebenfalls vollständig registriert.
+   * Registriert die ï¿½bergebenen XMOMObjects. Falls ein hierzu in Beziehung stehendes Objekt noch
+   * nicht in der XMOMDatabase vorhanden ist, wird es ebenfalls vollstï¿½ndig registriert.
    */
   private void registerMOMObjects(XMOMObjectSet xmomObjectsToRegister, Long revision, GenerationBaseCache generationBaseCache) throws PersistenceLayerException, AssumedDeadlockException {
     while (!xmomObjectsToRegister.isEmpty()) {
@@ -852,7 +852,7 @@ public class XMOMDatabase extends FunctionGroup {
           return StorageAction.discard;
         }
         
-        //alte Backward-Relations in neuen Eintrag übernehmen
+        //alte Backward-Relations in neuen Eintrag ï¿½bernehmen
         retrievePreviousBackwardRelations(previousEntry, newEntry);
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
         //noch kein Eintrag vorhanden
@@ -951,7 +951,7 @@ public class XMOMDatabase extends FunctionGroup {
           if (action == StorageAction.create) {
             XMOMOperationDatabaseEntry previousEntry = previousEntries.get(entry.getId());
             if (previousEntry != null) {
-              //Entry wurde durch registerDatatypeAndServiceGroup entfernt -> alte Rückwärtsbeziehungen müssen erhalten bleiben
+              //Entry wurde durch registerDatatypeAndServiceGroup entfernt -> alte Rï¿½ckwï¿½rtsbeziehungen mï¿½ssen erhalten bleiben
               retrievePreviousBackwardRelations(previousEntry, entry);
             }
           }
@@ -1435,7 +1435,7 @@ public class XMOMDatabase extends FunctionGroup {
   
   
   /**
-   * Discovery für alle Workspaces.
+   * Discovery fï¿½r alle Workspaces.
    */
   public void discovery() throws PersistenceLayerException, Ex_FileAccessException, XPRC_XmlParsingException,
       XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException,
@@ -1447,9 +1447,9 @@ public class XMOMDatabase extends FunctionGroup {
 
   /**
    * Alle XMOMEntries werden neu geparst und in der XMOMDatabase aktualisiert.
-   * Alle Einträge, die nicht existieren und nur Backward-Relations enthalten auf Objekte, die auch nicht existieren (auf fileebene),
+   * Alle Eintrï¿½ge, die nicht existieren und nur Backward-Relations enthalten auf Objekte, die auch nicht existieren (auf fileebene),
    * werden entfernt.
-   * Falls sie nicht existieren, aber auch nicht gelöscht werden können, wird das Label auf null gesetzt
+   * Falls sie nicht existieren, aber auch nicht gelï¿½scht werden kï¿½nnen, wird das Label auf null gesetzt
    * 
    * @param all gibt an, ob nur workspaces (all=false) oder auch applications (all=true) aktualisiert werden
    */
@@ -1458,12 +1458,12 @@ public class XMOMDatabase extends FunctionGroup {
   XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException,
   XNWH_NoPersistenceLayerConfiguredForTableException,
   XNWH_PersistenceLayerInstanceIdUnknownException {
-    //Zunächst alle Zeitstempel auf -1 setzen
+    //Zunï¿½chst alle Zeitstempel auf -1 setzen
     updateAllTimestamps(XMOMState.missing_xml.getTimestamp(), all);
     
-    //Dann das Discovery durchführen. Dabei werden alle Entries, deren xml noch existiert,
+    //Dann das Discovery durchfï¿½hren. Dabei werden alle Entries, deren xml noch existiert,
     //mit einem aktuellen Zeitstempel eingetragen.
-    //Für alle Entries die nicht existieren, aber in die eine Backward-Relation eingetragen wird,
+    //Fï¿½r alle Entries die nicht existieren, aber in die eine Backward-Relation eingetragen wird,
     //wird der Zeitstempel auf 0 gesetzt
     RevisionManagement revisionManagement =
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
@@ -1480,8 +1480,8 @@ public class XMOMDatabase extends FunctionGroup {
       }
     }
     
-    //Nun können alle Einträge mit Zeitstempel -1 deregistriert werden (dabei werden auch die entsprechenden Backward-Relations entfernt)
-    //und für alle Einträge mit Zeitstempel 0 das Label auf null gesetzt werden
+    //Nun kï¿½nnen alle Eintrï¿½ge mit Zeitstempel -1 deregistriert werden (dabei werden auch die entsprechenden Backward-Relations entfernt)
+    //und fï¿½r alle Eintrï¿½ge mit Zeitstempel 0 das Label auf null gesetzt werden
     handleNonExistingEntries();    
   }
   
@@ -1629,7 +1629,7 @@ public class XMOMDatabase extends FunctionGroup {
 
   
   /**
-   * suche für mehrfache wiederverwendung vorbereiten. achtung: dabei sind die whereclauses der selects irrelevant.
+   * suche fï¿½r mehrfache wiederverwendung vorbereiten. achtung: dabei sind die whereclauses der selects irrelevant.
    * wichtig sind nur die 
    * - desired result types
    * - selektierte spalten
@@ -1696,8 +1696,8 @@ public class XMOMDatabase extends FunctionGroup {
         for (int i = 0; i < archiveTypesPerSelect.size(); i++) {
           currentSelect = selects.get(i);
           for (XMOMDatabaseType archiveType : archiveTypesPerSelect.get(i)) {
-            //mit maxRows = -1 suchen, damit Ergebnisse gezählt werden können
-            //TODO zur Performance-Verbesserung wieder mit maxrows suchen und mit "select count(*)" zählen,
+            //mit maxRows = -1 suchen, damit Ergebnisse gezï¿½hlt werden kï¿½nnen
+            //TODO zur Performance-Verbesserung wieder mit maxrows suchen und mit "select count(*)" zï¿½hlen,
             //dabei muss aber die Selection dann aus den einzelnen selects richtig kombiniert werden
             for (Long relevantRevision : allRelevantRevisions) {
               ArchiveSearchTask request = new ArchiveSearchTask(currentSelect, archiveType, ods, -1, relevantRevision, searchDependentRevisions);
@@ -1721,7 +1721,7 @@ public class XMOMDatabase extends FunctionGroup {
           } else {
             prunedResults.add(currentEntry);
             
-            //neues Objekt zählen
+            //neues Objekt zï¿½hlen
             XMOMDatabaseType type = currentEntry.getType();
             //analog zu XMOMSearchDispatcher.searchDeploymentItemManagement
             if (type == XMOMDatabaseType.WORKFLOW || type == XMOMDatabaseType.OPERATION) {
@@ -1767,7 +1767,7 @@ public class XMOMDatabase extends FunctionGroup {
 
     //objekte, die nicht existieren, haben zwar relationen, aber kein label - und sollen nicht gefunden werden
     for (XMOMDatabaseSelect s : selects) {
-      //FIXME das and unterstützt hier keine sinnvolle klammerung - derzeit aber auch nicht unbedingt notwendig, weil wir keine entsprechenden statements verwenden
+      //FIXME das and unterstï¿½tzt hier keine sinnvolle klammerung - derzeit aber auch nicht unbedingt notwendig, weil wir keine entsprechenden statements verwenden
       s.and(s.newWhereClause().whereNumber(XMOMDatabaseEntryColumn.REVISION).isEqual(revision));
       s.and(s.newWhereClause().whereNot(s.newWhereClause().where(XMOMDatabaseEntryColumn.LABEL).isNull()));
     }
@@ -1859,7 +1859,7 @@ public class XMOMDatabase extends FunctionGroup {
     for (XMOMDatabaseEntry xmomCacheEntry : searchResult) {
       boolean foundRelation = false;
       for (XMOMDatabaseEntryColumn column : selection) {
-        if (column.hasReversedColumn()) { //nur dann ist es eine spalte, zu der man die referenz auf das andere/die anderen objekt auflösen will
+        if (column.hasReversedColumn()) { //nur dann ist es eine spalte, zu der man die referenz auf das andere/die anderen objekt auflï¿½sen will
           foundRelation = true;
           String value = null;
           try {

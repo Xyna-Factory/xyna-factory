@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -232,7 +232,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
             s.connect(new InetSocketAddress(host, port), connectionTimeout);
           } catch (SocketTimeoutException e) {
             if (legacyErrorMessage.get()) {
-              //abwärtskompatiblere fehlermeldung erzeugen. jsch erzeugt die fehlermeldung mittels Util.createSocket und eigenem thread...
+              //abwï¿½rtskompatiblere fehlermeldung erzeugen. jsch erzeugt die fehlermeldung mittels Util.createSocket und eigenem thread...
               throw (SocketTimeoutException)(new SocketTimeoutException("timeout: socket is not established").initCause(e));
             } else {
               throw e;
@@ -491,7 +491,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     boolean byLineBreak = sendPartitionByLineBreak.get();
     while (offset < bytes.length) {
       if (offset > 0) {
-        //TODO das ist eigtl ein Workaround für Bug 21939. Schöner wäre es, wenn wir das Buffering besser verstehen und konfigurieren würden
+        //TODO das ist eigtl ein Workaround fï¿½r Bug 21939. Schï¿½ner wï¿½re es, wenn wir das Buffering besser verstehen und konfigurieren wï¿½rden
         readNewInput(getInputStream(), accumulatedResponse);
         if (millis > 0) {
           try {
@@ -646,7 +646,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
         if (isCanceled) {
           throw new RuntimeException("Send has been cancelled with cause: " + cause.toString());
         }
-        try { sleep.sleep(); } catch(Exception ee){ } //interruption soll über cancel geschehen
+        try { sleep.sleep(); } catch(Exception ee){ } //interruption soll ï¿½ber cancel geschehen
       }
       return responseBuilder.toString();
     } finally {

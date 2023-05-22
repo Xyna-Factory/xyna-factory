@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class XynaTreeTest extends TestCase {
          assertEquals("generiertes XSD", xsd1.replaceAll("\\n", ""), xsd
                .replaceAll("\\n", ""));
          String xml = StringCreator.generateXMLFromXSD(xsd, root.getName());
-         // gehört nicht zum testcase. XML kann nicht generiert werden => ok,
+         // gehï¿½rt nicht zum testcase. XML kann nicht generiert werden => ok,
          // weil basetype nicht bekannt.
          System.out
                .println("----------------------------------------------------------");

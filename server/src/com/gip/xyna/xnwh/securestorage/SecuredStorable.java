@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class SecuredStorable extends Storable<SecuredStorable> {
     JAVAOBJECT, STRING, INTEGER, LONG, BYTE, SHORT, FLOAT, DOUBLE;
   }
   
-  @Column(name="id", size=255) //achtung bei höheren werten. bei mysql können indizes maximal 767 bytes lang sein (encoding utf8 kann die stringlänger vervielfachen)
+  @Column(name="id", size=255) //achtung bei hï¿½heren werten. bei mysql kï¿½nnen indizes maximal 767 bytes lang sein (encoding utf8 kann die stringlï¿½nger vervielfachen)
   private String id;
   @Column(name="encryptedData", type=ColumnType.BYTEARRAY)
   private byte[] encryptedData;
@@ -54,7 +54,7 @@ public class SecuredStorable extends Storable<SecuredStorable> {
   }
   
   public SecuredStorable() {
-    //für storable benötigt
+    //fï¿½r storable benï¿½tigt
   }
   
   

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,7 +185,7 @@ public class TRDocument extends TRDataModelDefinition {
   
   
   public void parse(DataModelParseContext context) {
-    //Imports auflösen
+    //Imports auflï¿½sen
     for( TRImport imp : getImports() ) {
       TRDataModelDefinition referenced = context.getDocument(imp.getReference());
       if( referenced == null ) {
@@ -264,7 +264,7 @@ public class TRDocument extends TRDataModelDefinition {
   
   
   private void parseComponents(ChildElementsByName components, DataModelParseContext context) {
-    //Components können nicht direkt geparst werden, da Referenzen darin nicht sauber angeben sind
+    //Components kï¿½nnen nicht direkt geparst werden, da Referenzen darin nicht sauber angeben sind
     //Beispiel: Auszug aus tr-106-1-1-0.xml:
     //<import file="tr-106-1-0.xml" spec="urn:broadband-forum-org:tr-106-1-0">
     //  <component name="_ManagementServer" ref="ManagementServer"/>
@@ -283,7 +283,7 @@ public class TRDocument extends TRDataModelDefinition {
     //  <component path="Device." ref="ManagementServerDiffs"/>
     //</model>
     //
-    //Logischer wäre folgendes:
+    //Logischer wï¿½re folgendes:
     //<import file="tr-106-1-0.xml" spec="urn:broadband-forum-org:tr-106-1-0">
     //  <component name="ManagementServer" />
     //</import>
@@ -295,7 +295,7 @@ public class TRDocument extends TRDataModelDefinition {
     //<model name="Device:1.1" base="Device:1.0">
     //</model>
     //
-    //Nun wird versucht, trotz obigem das untere auszuführen
+    //Nun wird versucht, trotz obigem das untere auszufï¿½hren
     
     
     List<Pair<String, Element>> componentsToParse = new ArrayList<Pair<String, Element>>();

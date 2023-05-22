@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public class OrderStatus {
     try {
       changeMasterWorkflowStatus(xo, newState, con);
     } catch (XynaException e) {
-      //TODO oder nur an order hängen?
+      //TODO oder nur an order hï¿½ngen?
       logger.error("error updating status of order " + xo + " to " + newState, e);
     }
   }

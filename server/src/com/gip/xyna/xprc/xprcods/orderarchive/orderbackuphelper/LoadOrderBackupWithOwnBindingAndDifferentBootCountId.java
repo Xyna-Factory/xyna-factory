@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,11 +65,11 @@ public class LoadOrderBackupWithOwnBindingAndDifferentBootCountId extends OrderB
         
         refreshCursorAfterPause: while(true) {
           
-          // Gesamtanzahl der zu migrierenden Aufträge ermitteln ermitteln
+          // Gesamtanzahl der zu migrierenden Auftrï¿½ge ermitteln ermitteln
           OrderCount orderCount = con.queryOneRow(prepareQueryCountOrders,  new Parameter(XynaFactory.getInstance().getBootCntId(), lastId, ownBinding));
           orderBackupLoadCounter = 0;
           
-          // Sortierung nach rootid, damit Auftragsfamilien zusammenhängend sind und zusammen verarbeitet werden
+          // Sortierung nach rootid, damit Auftragsfamilien zusammenhï¿½ngend sind und zusammen verarbeitet werden
           // select * from orderbackup where not (bootcntid = ?) and binding = ? order by rootid asc
           FactoryWarehouseCursor<OrderInstanceBackup> cursor = con.getCursor("select * from " + OrderInstanceBackup.TABLE_NAME + 
                      " where not (" + OrderInstanceBackup.COL_BOOTCNTID + "=?) and " + OrderInstanceBackup.COL_ID + " > ? and "
@@ -84,17 +84,17 @@ public class LoadOrderBackupWithOwnBindingAndDifferentBootCountId extends OrderB
               break;
             }
             
-            //komplette Root-Familien extrahieren, unvollständige Familien aufbewahren
+            //komplette Root-Familien extrahieren, unvollstï¿½ndige Familien aufbewahren
             List<OrderInstanceBackup> completeFamilies = extractCompleteOrderFamilies( incompleteFamily, nextOBs );
             
-            //priorisierte OrderBackups ergänzen
+            //priorisierte OrderBackups ergï¿½nzen
             completeFamilies.addAll( retrievePrioritized(con, getLastRootId(completeFamilies), 
                                                          "LoadOrderBackupWithOwnBindingAndDifferentBootCountId" ) );
             
-            //Aufträge starten
+            //Auftrï¿½ge starten
             loadOrderBackup(con, completeFamilies);
             
-            //Zwischencommit: falls viele Einträge im OrderBackup liegen darf Hauptspeicher nicht platzen
+            //Zwischencommit: falls viele Eintrï¿½ge im OrderBackup liegen darf Hauptspeicher nicht platzen
             con.commit();
             
             XynaExtendedStatusManagement xesm = XynaFactory.getInstance().getFactoryManagement().getXynaExtendedStatusManagement();
@@ -120,7 +120,7 @@ public class LoadOrderBackupWithOwnBindingAndDifferentBootCountId extends OrderB
             
           }
           if( ! stop ) {
-            //restliche Aufträge starten
+            //restliche Auftrï¿½ge starten
             loadOrderBackup(con, incompleteFamily);
             con.commit();
           }
@@ -149,7 +149,7 @@ public class LoadOrderBackupWithOwnBindingAndDifferentBootCountId extends OrderB
       return; //nichts zu tun
     }
     
-    //Migration durchführen
+    //Migration durchfï¿½hren
     Pair<List<OrderInstanceBackup>,List<OrderInstanceBackup>> pair = loadOrderBackup(completeFamilies, con, "migration loop");
     
     //Fehlerhafte OrderBackups abbrechen
@@ -169,7 +169,7 @@ public class LoadOrderBackupWithOwnBindingAndDifferentBootCountId extends OrderB
     List<OrderInstanceBackup> loaded = new ArrayList<OrderInstanceBackup>();
     List<OrderInstanceDetails> orderArchive = new ArrayList<OrderInstanceDetails>();
     for( OrderInstanceBackup oib : backupOrders ) {
-      // Prüfung, ob orderbackup nicht vllt. doch schon geladen wurde ... sollte eigentlich nicht passieren
+      // Prï¿½fung, ob orderbackup nicht vllt. doch schon geladen wurde ... sollte eigentlich nicht passieren
       boolean alreadyLoaded = alreadyProcessedIds.contains( oib.getRootId() ); 
       boolean bootCountDiffers = oib.getBootCntId() != XynaFactory.getInstance().getBootCntId();
       if (bootCountDiffers && ! alreadyLoaded) {
@@ -194,8 +194,8 @@ public class LoadOrderBackupWithOwnBindingAndDifferentBootCountId extends OrderB
     
     con.persistCollection(orderArchive);
     con.persistCollection(loaded); //TODO persist notwendig wenn nicht im SAFE-mode  
-    // nicht unbedingt nötig, da jedes weitere ...
-    //...Backup den einzig geänderten Wert BootCntId schreibt
+    // nicht unbedingt nï¿½tig, da jedes weitere ...
+    //...Backup den einzig geï¿½nderten Wert BootCntId schreibt
     
     return Pair.of(loaded, failed);
   }

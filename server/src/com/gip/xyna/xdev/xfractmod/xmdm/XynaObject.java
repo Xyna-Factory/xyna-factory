@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public abstract class XynaObject implements GeneralXynaObject {
   }
   
   /**
-   * cache fürs fromXML, damit da nicht jedes mal die xmls geparst werden müssen. wird bei jeden deployment invalidiert.
+   * cache fï¿½rs fromXML, damit da nicht jedes mal die xmls geparst werden mï¿½ssen. wird bei jeden deployment invalidiert.
    */
   private static final GenerationBaseCache generationCache = new GenerationBaseCache();
 
@@ -111,7 +111,7 @@ public abstract class XynaObject implements GeneralXynaObject {
 
 
   public void onDeployment() throws XynaException {
-    // defaultmässig passiert hier nichts. abgeleitete objekte können hier:
+    // defaultmï¿½ssig passiert hier nichts. abgeleitete objekte kï¿½nnen hier:
     // - trigger registrieren
     if (logger.isTraceEnabled()) {
       logger.trace("deploying " + this);
@@ -139,14 +139,14 @@ public abstract class XynaObject implements GeneralXynaObject {
     }
   }
 
-  //ACHTUNG: wenn neue (auch abstrakte) instanzmethoden hinzugefügt werden, auch in JavaServiceImplementation im generierten code beachten! am besten mal abstrakten instanzservice testen
+  //ACHTUNG: wenn neue (auch abstrakte) instanzmethoden hinzugefï¿½gt werden, auch in JavaServiceImplementation im generierten code beachten! am besten mal abstrakten instanzservice testen
 
   public static XynaObject fromXml(String xmlString) throws XPRC_XmlParsingException,
       XPRC_InvalidXMLForObjectCreationException, XPRC_MDMObjectCreationException {
     return fromXml(xmlString, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
   }
 
-  //abwärtskompatible version from generalFromXml, die nur xynaobjekte zurückgibt
+  //abwï¿½rtskompatible version from generalFromXml, die nur xynaobjekte zurï¿½ckgibt
   public static XynaObject fromXml(String xmlString, Long revision) throws XPRC_XmlParsingException,
       XPRC_InvalidXMLForObjectCreationException, XPRC_MDMObjectCreationException {
     GeneralXynaObject result = generalFromXml(xmlString, revision);
@@ -168,7 +168,7 @@ public abstract class XynaObject implements GeneralXynaObject {
 
   /**
    * erstellt ein xynaobject aus einem xml, welches das format &lt;Data&gt;...&lt;/Data&gt; hat, oder ein beliebiges rootelement
-   * hat, welches aber mehrere solcher Data-Elemente enthält. im letzeren fall wird ein container-objekt um die
+   * hat, welches aber mehrere solcher Data-Elemente enthï¿½lt. im letzeren fall wird ein container-objekt um die
    * einzelnen xynaobjects erstellt.
    * Wenn das umschliessende Container-Objekt fehlt, funktioniert es auch.
    */
@@ -209,8 +209,8 @@ public abstract class XynaObject implements GeneralXynaObject {
 
 
   /**
-   * falls e eine liste beschreibt, wird eine xynaobjectlist zurückgegeben, 
-   * falls ReferenceName und ReferencePath fehlen, wird null zurückgegeben, 
+   * falls e eine liste beschreibt, wird eine xynaobjectlist zurï¿½ckgegeben, 
+   * falls ReferenceName und ReferencePath fehlen, wird null zurï¿½ckgegeben, 
    * ansonsten eine instanz eines normalen mdm objekts
    */
   private static GeneralXynaObject createObject(Element e, Long revision) throws XPRC_MDMObjectCreationException,
@@ -257,7 +257,7 @@ public abstract class XynaObject implements GeneralXynaObject {
           isDom = tagName.equals(GenerationBase.EL.DATA);
           if (isDom) {
             dom = DOM.getOrCreateInstance(originalFqName, generationCache, revision);
-            //revision separat übergeben, weil die ist evtl anders als dom.getRevision und kann kind-members auflösen
+            //revision separat ï¿½bergeben, weil die ist evtl anders als dom.getRevision und kann kind-members auflï¿½sen
             v = new DatatypeVariable(dom, revision);
             v.parseXML(e);
           } else {
@@ -378,7 +378,7 @@ public abstract class XynaObject implements GeneralXynaObject {
     return toXml(null);
   }
   
-  //TODO unversionedSet unterstützen. z.b. für xmompersistence
+  //TODO unversionedSet unterstï¿½tzen. z.b. fï¿½r xmompersistence
   public static void set(GeneralXynaObject target, String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND, InvalidObjectPathException {
     if (path.contains(".")) {
       int lastIdx = path.lastIndexOf(".");
@@ -501,8 +501,8 @@ public abstract class XynaObject implements GeneralXynaObject {
           logger.error("Error while undeploying datatype " + clazz.getName() + ". Ignoring it and continue undeployment.", t);
         }
       }
-      // deploymenttask ausführen und entfernen.
-      //abwärtskompatibilität. früher konnte man deploymenttasks bei xynaobject registrieren
+      // deploymenttask ausfï¿½hren und entfernen.
+      //abwï¿½rtskompatibilitï¿½t. frï¿½her konnte man deploymenttasks bei xynaobject registrieren
       List<DeploymentTask> tasks = deploymentTasks.get(clazz);
       if (tasks != null) {
         deploymentTasks.remove(clazz);
@@ -574,7 +574,7 @@ public abstract class XynaObject implements GeneralXynaObject {
       if (command == DeployCommand.DEPLOY) {
         throw new RuntimeException(errorMsg, e);
       } else {
-        //kein fehler werfen, weil beim undeploment dann inkonsistenzen entstehen können
+        //kein fehler werfen, weil beim undeploment dann inkonsistenzen entstehen kï¿½nnen
         logger.error(errorMsg, e);
         return;
       }
@@ -619,8 +619,8 @@ public abstract class XynaObject implements GeneralXynaObject {
         case KILLTHREAD :
           Thread thread = unDeploymentRunnable.getThread();
           if (thread != null) {
-            // hoffen wir, dass wir das richtige Runnable töten und nicht ein anderen Undeployment-Handler
-            // abschießen, weil unseres gerade fertig geworden ist?
+            // hoffen wir, dass wir das richtige Runnable tï¿½ten und nicht ein anderen Undeployment-Handler
+            // abschieï¿½en, weil unseres gerade fertig geworden ist?
             if (logger.isDebugEnabled()) {
               debug(unDeploymentRunnable, "Kill " + command + " thread for object " + task.getClass().getName()
                   + ". Continue the " + command + ".");
@@ -696,7 +696,7 @@ public abstract class XynaObject implements GeneralXynaObject {
         }
       }
     }
-    //abwärtskompatibilität. früher konnte man deploymenttasks bei xynaobject registrieren
+    //abwï¿½rtskompatibilitï¿½t. frï¿½her konnte man deploymenttasks bei xynaobject registrieren
     List<DeploymentTask> tasks = deploymentTasks.get(cl);
     if (tasks != null) {
       try {
@@ -829,7 +829,7 @@ public abstract class XynaObject implements GeneralXynaObject {
     public static <T extends XynaObject> void appendDataList(StringBuilder xml, String variableName, String referenceName, String referencePath, List<? extends T> values, long version, GeneralXynaObject.XMLReferenceCache cache) {
       appendDataList(xml, variableName, referenceName, referencePath, values, version, 0, cache);
     }    
-    //GeneralXynaObject zulässig für AnyType-Listen
+    //GeneralXynaObject zulï¿½ssig fï¿½r AnyType-Listen
     public static <T extends GeneralXynaObject> void appendDataList(StringBuilder xml, String variableName, String referenceName, String referencePath, List<? extends T> values, long version, long revision, GeneralXynaObject.XMLReferenceCache cache) {
       xml.append("<Data VariableName=\"").append(variableName);
       xml.append("\" ReferenceName=\"").append(referenceName);
@@ -878,7 +878,7 @@ public abstract class XynaObject implements GeneralXynaObject {
         if (e instanceof GeneralXynaObject) {
           xml.append(((GeneralXynaObject) e).toXml(varName, false, version, cache));
         } else if (e instanceof XynaException) {
-          //spezialbehandlung für spezielle exceptions
+          //spezialbehandlung fï¿½r spezielle exceptions
           beginExceptionType(xml, varName, "XynaException", "core.exception", -1, -1, Integer.MAX_VALUE, cache);
           xml.append("<" + GenerationBase.EL.ERRORMESSAGE + ">");
           try {
@@ -906,7 +906,7 @@ public abstract class XynaObject implements GeneralXynaObject {
 
     public static void appendData(StringBuilder xml, String variableName, XynaObject value, long version, XMLReferenceCache cache) {
       if (value != null) {
-        xml.append(value.toXml(variableName, false, version, cache)); //TODO schöner wäre es, den StringBuilder zu übergeben
+        xml.append(value.toXml(variableName, false, version, cache)); //TODO schï¿½ner wï¿½re es, den StringBuilder zu ï¿½bergeben
       }
     }
 
@@ -1005,7 +1005,7 @@ public abstract class XynaObject implements GeneralXynaObject {
 
   //TODO kann weg?
   public ObjectVersionBase createObjectVersion(long version, IdentityHashMap<GeneralXynaObject, DataRangeCollection> changeSetsOfMembers) {
-    //default-implementierung (schlechte performance) für nicht codegenerierte objekte
+    //default-implementierung (schlechte performance) fï¿½r nicht codegenerierte objekte
     return new ObjectVersionBase(this, version, changeSetsOfMembers) {
 
       @Override

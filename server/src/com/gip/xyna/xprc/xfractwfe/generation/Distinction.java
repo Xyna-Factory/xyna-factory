@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.Step.DistinctionType;
 
 
 public interface Distinction {
-  public static final String FORMULA_GUI_DELIMITER_START = "¿";
+  public static final String FORMULA_GUI_DELIMITER_START = "ï¿½";
   public static final String FORMULA_GUI_DELIMITER_END = "?";
 
 
@@ -45,7 +45,7 @@ public interface Distinction {
 
 
   /**
-   * kapselt attribute, die an case element hängen, also eine lane
+   * kapselt attribute, die an case element hï¿½ngen, also eine lane
    */
   public static class CaseInfo {
     /**

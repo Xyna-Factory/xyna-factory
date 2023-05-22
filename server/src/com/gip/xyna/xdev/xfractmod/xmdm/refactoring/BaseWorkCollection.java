@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -158,7 +158,7 @@ public abstract class BaseWorkCollection<E extends RefactoringElement> {
           }
         }
         if (changed) {
-          //filtername wird später gesetzt, weil man ihn hier nicht weiss
+          //filtername wird spï¿½ter gesetzt, weil man ihn hier nicht weiss
           XMOMObjectRefactoringResult result = new XMOMObjectRefactoringResult(null, RefactoringTargetType.FILTER);
           return new DocumentOrder(DocumentOrderType.SAVE, result);
         }
@@ -413,7 +413,7 @@ public abstract class BaseWorkCollection<E extends RefactoringElement> {
             caseElement.setAttribute(GenerationBase.ATT.CASECOMPLEXNAME, oldFqXmlNames.get(premise).fqXmlNameNew);
             caseElement.setAttribute(GenerationBase.ATT.LABEL, oldFqXmlNames.get(premise).labelNew);
             changed = true;
-            //kann zusätzlich auch als alias definiert sein, deshalb hier kein break
+            //kann zusï¿½tzlich auch als alias definiert sein, deshalb hier kein break
           } else {
             String alias = caseElement.getAttribute(GenerationBase.ATT.CASEALIAS);
             if (alias != null && oldFqXmlNames.containsKey(alias)) {
@@ -468,7 +468,7 @@ public abstract class BaseWorkCollection<E extends RefactoringElement> {
   
   /*
    * XFL: instanceof
-   * wo gibt es überall XFLs?
+   * wo gibt es ï¿½berall XFLs?
    * - conditional choices
    * 
    *   <Case Label="true" Premise="typeof(%0%,&quot;base.IPv6&quot;)">
@@ -478,7 +478,7 @@ public abstract class BaseWorkCollection<E extends RefactoringElement> {
    * <Mappings ID="22" Label="Mapping">
    *   <Mapping>%2%["0"].value=typeof(%0%,"base.IPv6")</Mapping>
    * 
-   * - query filtercondition NICHT! (unterstützt die funktion nicht)
+   * - query filtercondition NICHT! (unterstï¿½tzt die funktion nicht)
    * 
    * - conditional branching
    * <Choice ID="6" TypeName="BaseChoiceTypeFormula" TypePath="server">

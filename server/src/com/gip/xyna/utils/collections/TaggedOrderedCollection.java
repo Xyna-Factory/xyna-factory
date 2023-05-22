@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,17 +31,17 @@ import java.util.Set;
 
 
 /**
- * Collection, die <code>Comparable</code>-Einträge geordnet speichert und über einen Tag verwalten kann.
- * Diese Einträge können der Reihe nach über einen Iterator abgefragt werden. Dieser Iterator
- * hat die Eigenschaft, nicht nur mit remove() den jeweils letzten Eintrag löschen zu können, 
- * sondern auch über tag(String) mit einem Tag versehen zu können. 
- * Jedem Eintrag kann nur ein Tag zugeordnet werden, eine Neuzuordnung eines Tags löscht die 
+ * Collection, die <code>Comparable</code>-Eintrï¿½ge geordnet speichert und ï¿½ber einen Tag verwalten kann.
+ * Diese Eintrï¿½ge kï¿½nnen der Reihe nach ï¿½ber einen Iterator abgefragt werden. Dieser Iterator
+ * hat die Eigenschaft, nicht nur mit remove() den jeweils letzten Eintrag lï¿½schen zu kï¿½nnen, 
+ * sondern auch ï¿½ber tag(String) mit einem Tag versehen zu kï¿½nnen. 
+ * Jedem Eintrag kann nur ein Tag zugeordnet werden, eine Neuzuordnung eines Tags lï¿½scht die 
  * vorherige Zuordnung. Der Default-Tag (auch vergebbar) ist null.
- * Über die Methoden hide(String) und show(String) kann über die TaggedOrderedCollection gesteuert werden,
- * ob der nächste Iterator Einträge zu einem bestimmten Tag verstecken soll (hide) oder ob dies rückgängig
+ * ï¿½ber die Methoden hide(String) und show(String) kann ï¿½ber die TaggedOrderedCollection gesteuert werden,
+ * ob der nï¿½chste Iterator Eintrï¿½ge zu einem bestimmten Tag verstecken soll (hide) oder ob dies rï¿½ckgï¿½ngig
  * gemacht werden soll (show).
- * Der Iterator hat während der Iteration ebenfalls die Möglichkeit über hide(String), alle folgenden
- * Einträge eines Tags zu überspringen.
+ * Der Iterator hat wï¿½hrend der Iteration ebenfalls die Mï¿½glichkeit ï¿½ber hide(String), alle folgenden
+ * Eintrï¿½ge eines Tags zu ï¿½berspringen.
  *
  */
 public class TaggedOrderedCollection<E extends Comparable<E>> extends AbstractCollection<E> {
@@ -168,20 +168,20 @@ public class TaggedOrderedCollection<E extends Comparable<E>> extends AbstractCo
       
       @Override
       final public boolean equals(Object o) {
-        return super.equals(o); //Iteratoren können nie gleich sein -> nur Object-Identity als gleich ansehen
+        return super.equals(o); //Iteratoren kï¿½nnen nie gleich sein -> nur Object-Identity als gleich ansehen
       }
       
       @Override
       final public int hashCode() {
-        return super.hashCode(); //Iteratoren können nie gleich sein -> nur Object-Identity als gleich ansehen
+        return super.hashCode(); //Iteratoren kï¿½nnen nie gleich sein -> nur Object-Identity als gleich ansehen
       }
      
    }
 
     
     /**
-     * Spezieller Iterator für die TaggedOrderedCollection, der nicht nur über remove Einträge löschen kann, 
-     * sondern auch mit tag(String) Einträge taggen kann und die weitere Iteration über hide(String) 
+     * Spezieller Iterator fï¿½r die TaggedOrderedCollection, der nicht nur ï¿½ber remove Eintrï¿½ge lï¿½schen kann, 
+     * sondern auch mit tag(String) Eintrï¿½ge taggen kann und die weitere Iteration ï¿½ber hide(String) 
      * beeinflussen kann. 
      *
      */
@@ -264,7 +264,7 @@ public class TaggedOrderedCollection<E extends Comparable<E>> extends AbstractCo
       }
 
       /**
-       * Verstecken aller mit tag getaggten Einträge in der weiteren Iteration
+       * Verstecken aller mit tag getaggten Eintrï¿½ge in der weiteren Iteration
        * @param tag
        */
       public void hide(String tag) {
@@ -275,7 +275,7 @@ public class TaggedOrderedCollection<E extends Comparable<E>> extends AbstractCo
     }
 
     /**
-     * Liste aller nicht getaggten Einträge
+     * Liste aller nicht getaggten Eintrï¿½ge
      * @return
      */
     public List<E> getUntagged() {
@@ -284,7 +284,7 @@ public class TaggedOrderedCollection<E extends Comparable<E>> extends AbstractCo
 
 
     /**
-     * Liste der mit Tag tag getaggten Einträge
+     * Liste der mit Tag tag getaggten Eintrï¿½ge
      * @param tag
      * @return
      */
@@ -299,7 +299,7 @@ public class TaggedOrderedCollection<E extends Comparable<E>> extends AbstractCo
 
 
     /**
-     * Verstecken der mit Tag tag getaggten Einträge, so dass alle neuen Iteratoren diese Daten nicht
+     * Verstecken der mit Tag tag getaggten Eintrï¿½ge, so dass alle neuen Iteratoren diese Daten nicht
      * mehr anzeigen
      * @param tag
      */
@@ -309,7 +309,7 @@ public class TaggedOrderedCollection<E extends Comparable<E>> extends AbstractCo
 
 
     /**
-     * Entfernen des Tags tag aus der Liste der nicht anzuzeigenden Tags: Alle neuen Iteratoren können diese
+     * Entfernen des Tags tag aus der Liste der nicht anzuzeigenden Tags: Alle neuen Iteratoren kï¿½nnen diese
      * Daten wieder anzeigen
      * @param tag
      */

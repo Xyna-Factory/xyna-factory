@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ import com.gip.xyna.exceptions.Ex_FileAccessException;
 
 /**
  * Klasse kappselt das File-Objekt transaktionssicher.
- * Dazu wird eine temporäre Datei angelegt, auf welcher die Dateioperationen durchgeführt werden.
- * Beim commit-Aufruf wird die temporäre Datei umbenannt. Dieses rename wird mittels eines OS-Aufrufs
- * durchgeführt und sollte atomar sein (in jedem Fall unter *nix).
+ * Dazu wird eine temporï¿½re Datei angelegt, auf welcher die Dateioperationen durchgefï¿½hrt werden.
+ * Beim commit-Aufruf wird die temporï¿½re Datei umbenannt. Dieses rename wird mittels eines OS-Aufrufs
+ * durchgefï¿½hrt und sollte atomar sein (in jedem Fall unter *nix).
  * 
  * In dieser Klasse findet kein Locking zur Vermeidung von konkurrierenden Dateioperationen statt. Dies
- * muss, wenn gewünscht, in bei der Verwendung selbst gemacht werden.
+ * muss, wenn gewï¿½nscht, in bei der Verwendung selbst gemacht werden.
  * 
  * NB: Klasse ist nicht thread-safe.
  *
@@ -46,7 +46,7 @@ public class TransactionFile extends File {
   
   public static final String FILE_SUFFIX = ".transaction.tmp";
 
-  // File-Objekt, für welches ein transaktionsgesicherter Zugriff gewährleistet wird
+  // File-Objekt, fï¿½r welches ein transaktionsgesicherter Zugriff gewï¿½hrleistet wird
   private File originalFile;
   
   private boolean isCommited = false;
@@ -55,10 +55,10 @@ public class TransactionFile extends File {
   private boolean deleted = false;
   
   /**
-   * Konstruktor erzeugt neues File-Objekt, auf dem Dateioperationen durchgeführt werden können,
+   * Konstruktor erzeugt neues File-Objekt, auf dem Dateioperationen durchgefï¿½hrt werden kï¿½nnen,
    * die bis zu einem commit die Originaldatei nicht modifizieren.
    * 
-   * @param fileObject  Datei, für welche eine temporäre Datei angelegt werden soll 
+   * @param fileObject  Datei, fï¿½r welche eine temporï¿½re Datei angelegt werden soll 
    */
   public TransactionFile(File fileObject) {
     this(fileObject, fileObject.getAbsoluteFile().getParentFile());
@@ -69,11 +69,11 @@ public class TransactionFile extends File {
   }
   
   /**
-   * Konstruktor erzeugt neues File-Objekt, auf dem Dateioperationen durchgeführt werden können,
+   * Konstruktor erzeugt neues File-Objekt, auf dem Dateioperationen durchgefï¿½hrt werden kï¿½nnen,
    * die bis zu einem commit die Originaldatei nicht modifizieren.
    * 
-   * @param fileObject  Datei, für welche eine temporäre Datei angelegt werden soll
-   * @param directoryPath   Ordner, in dem temporäre Datei gespeichert wird 
+   * @param fileObject  Datei, fï¿½r welche eine temporï¿½re Datei angelegt werden soll
+   * @param directoryPath   Ordner, in dem temporï¿½re Datei gespeichert wird 
    */
   public TransactionFile(File fileObject, File directoryPath) {
     this(fileObject, directoryPath, fileObject.lastModified());
@@ -100,7 +100,7 @@ public class TransactionFile extends File {
    * @return entspricht der zeitstempel lastmodified dem, den das file anfangs hatte.
    */
   public boolean checkNotModified() {
-    //beim commit wird das file überschrieben, und damit wieder writeable gemacht
+    //beim commit wird das file ï¿½berschrieben, und damit wieder writeable gemacht
     originalFile.setReadOnly();
     if (expectLastModified != originalFile.lastModified()) {
       return false;
@@ -109,8 +109,8 @@ public class TransactionFile extends File {
   }
 
   /**
-   * Führt alle Änderungen auf der Datei durch. 
-   * Commit darf nur einmal ausgeführt werden. Für
+   * Fï¿½hrt alle ï¿½nderungen auf der Datei durch. 
+   * Commit darf nur einmal ausgefï¿½hrt werden. Fï¿½r
    * weiteren schreibend Zugriff muss neues Objekt erzeugt werden. 
    */
   public void commit() {
@@ -130,7 +130,7 @@ public class TransactionFile extends File {
         }
       }
     } else {
-      // Unter Windows muss Datei ggf. vorher gelöscht sein, bevor sie umbeannt werden kann --> Verlust der Atomarität
+      // Unter Windows muss Datei ggf. vorher gelï¿½scht sein, bevor sie umbeannt werden kann --> Verlust der Atomaritï¿½t
       if (!renameTo(originalFile)) {
         throw new RuntimeException("Could not rename file " + getAbsolutePath() + " to " + originalFile.getAbsolutePath());
       }
@@ -165,7 +165,7 @@ public class TransactionFile extends File {
 
 
   /**
-   * Kopiert Dateiinhalt von Originaldatei zur temporären Datei, um an dieser Daten anhängen zu können.
+   * Kopiert Dateiinhalt von Originaldatei zur temporï¿½ren Datei, um an dieser Daten anhï¿½ngen zu kï¿½nnen.
    */
   public void copyFileContent() {
     if(originalFile.exists()) {

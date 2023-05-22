@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -370,7 +370,7 @@ public class XmomGenerator {
     boolean inheritCodeChanged = false;
     private DeploymentMode deploymentMode = DeploymentMode.codeChanged;
     private WorkflowProtectionMode workflowProtectionMode = WorkflowProtectionMode.BREAK_ON_INTERFACE_CHANGES;
-    //Außerhalb der Factory (z.B. JUnit-Tests) wirft getRevisionManagement() eine NPE, 
+    //Auï¿½erhalb der Factory (z.B. JUnit-Tests) wirft getRevisionManagement() eine NPE, 
     //mit dieser useDefaultRevisionForTests=true wird dies umgangen, stattdessen wird als Revision -1 verwendet
     public static boolean useDefaultRevisionForTests = false;
     

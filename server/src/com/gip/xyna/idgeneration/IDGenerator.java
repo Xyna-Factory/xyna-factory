@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,9 +62,9 @@ public class IDGenerator extends FunctionGroup {
   public static final String REALM_DEFAULT = "default";
   
   /**
-   * gibt für diese jvm eindeutige ids. wird beim serverstart resetted.
+   * gibt fï¿½r diese jvm eindeutige ids. wird beim serverstart resetted.
    * 
-   * d.h. nicht global eindeutig, weder über mehrere knoten hinweg noch über neustart hinweg.
+   * d.h. nicht global eindeutig, weder ï¿½ber mehrere knoten hinweg noch ï¿½ber neustart hinweg.
    * aber lokal eindeutig, also auf diesem knoten haben mehrfache aufrufe nacheinander immer andere ids.
    */
   public static long generateUniqueIdForThisSession() {
@@ -157,7 +157,7 @@ public class IDGenerator extends FunctionGroup {
   }
 
   /*
-   * ACHTUNG: abwärtskompatibel halten, weil in projekten verwendet
+   * ACHTUNG: abwï¿½rtskompatibel halten, weil in projekten verwendet
    */
   /**
    * @return eine eindeutige zahl.
@@ -184,8 +184,8 @@ public class IDGenerator extends FunctionGroup {
   }
   
   /**
-   * gibt die als lastStoredId gespeicherte id vom anderen binding/knoten zurück 
-   * nur unterstützt, wenn factory geclustered ist
+   * gibt die als lastStoredId gespeicherte id vom anderen binding/knoten zurï¿½ck 
+   * nur unterstï¿½tzt, wenn factory geclustered ist
    */
   public long getIdLastUsedByOtherNode(String realm) {
     return idGenerationAlgorithm.getIdLastUsedByOtherNode(realm);
@@ -193,7 +193,7 @@ public class IDGenerator extends FunctionGroup {
   
   /**
    * speichert die zuletzt vergebene id vom eigenen knoten in der datenbank als lastStoredId
-   * nur unterstützt, wenn factory geclustered ist
+   * nur unterstï¿½tzt, wenn factory geclustered ist
    */
   public void storeLastUsed(String realm) {
     idGenerationAlgorithm.storeLastUsed(realm);

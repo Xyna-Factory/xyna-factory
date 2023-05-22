@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ public class ParameterInheritanceStorage {
   }
   
   /**
-   * Ändert eine bestehende InheritanceRule oder legt sie neu an, falls sie noch nicht existiert.
+   * ï¿½ndert eine bestehende InheritanceRule oder legt sie neu an, falls sie noch nicht existiert.
    * @param parameterType
    * @param dk
    * @param inheritanceRule
@@ -96,7 +96,7 @@ public class ParameterInheritanceStorage {
   }
 
   /**
-   * Löscht eine InheritanceRule.
+   * Lï¿½scht eine InheritanceRule.
    * @param dk
    * @param parameterType
    * @param childFilter
@@ -125,7 +125,7 @@ public class ParameterInheritanceStorage {
   
   
   /**
-   * Löscht alle InheritanceRules für einen OrderType.
+   * Lï¿½scht alle InheritanceRules fï¿½r einen OrderType.
    * @param dk
    * @throws PersistenceLayerException
    * @throws XFMG_NoSuchRevision

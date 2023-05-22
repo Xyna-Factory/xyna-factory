@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -336,7 +336,7 @@ public class IndexTest extends TestCase {
           if (debug) {
             System.out.println("check equals: " + entry.getKey());
           }
-          assertEquals(entry.getValue().size(), handler.data.size()); //kann größer 1 sein, falls der gleiche string mehrfach geaddet wird (gleicher key)
+          assertEquals(entry.getValue().size(), handler.data.size()); //kann grï¿½ï¿½er 1 sein, falls der gleiche string mehrfach geaddet wird (gleicher key)
 
           //gleiche objekte (gleiche pks) in map und handler
           Set<Integer> idsInMap = new HashSet<>();

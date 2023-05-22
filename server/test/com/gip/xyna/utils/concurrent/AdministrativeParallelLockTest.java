@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,10 +140,10 @@ public class AdministrativeParallelLockTest extends TestCase {
     AtomicLong lockTime1 = ParallelLockTestHelper.measureLockTimeInOtherThread(apl, new A(1, 1), 400);
     ParallelLockTestHelper.sleep(100);
     long start = System.currentTimeMillis();
-    assertEquals(false, apl.tryLock(new A(1, 2))); //hashCollision! kommt sofort zurück
+    assertEquals(false, apl.tryLock(new A(1, 2))); //hashCollision! kommt sofort zurï¿½ck
     ParallelLockTestHelper.assertSimilar(System.currentTimeMillis(), start, 5);
 
-    assertEquals(false, apl.tryLock(new A(1, 1))); //kommt sofort zurück, weil identisches objekt bereits gelockt ist
+    assertEquals(false, apl.tryLock(new A(1, 1))); //kommt sofort zurï¿½ck, weil identisches objekt bereits gelockt ist
     ParallelLockTestHelper.assertSimilar(System.currentTimeMillis(), start, 5);
 
     start = System.currentTimeMillis();    
@@ -167,7 +167,7 @@ public class AdministrativeParallelLockTest extends TestCase {
     apl.unlock(new A(1, 3));
     
     ParallelLockTestHelper.sleep(100);
-    ParallelLockTestHelper.assertSimilar(lockTime2.get(), start + 200, 5); //nach den beiden unlocks wird das lock für den anderen thraed frei
+    ParallelLockTestHelper.assertSimilar(lockTime2.get(), start + 200, 5); //nach den beiden unlocks wird das lock fï¿½r den anderen thraed frei
         
     ParallelLockTestHelper.sleep(100); //lock wieder frei
     

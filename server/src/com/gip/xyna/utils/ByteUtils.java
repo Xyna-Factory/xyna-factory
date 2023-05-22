@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -177,7 +177,7 @@ public class ByteUtils {
 
 
   /**
-   * s muss länge 1 oder 2 haben
+   * s muss lï¿½nge 1 oder 2 haben
    */
   public static byte fromHexString(String s) {
     int len = s.length();
@@ -192,7 +192,7 @@ public class ByteUtils {
 
 
   /**
-   * schreibt erst die länge des strings in das bytearray (immer 2 bytes), und danach den eigentlichen string
+   * schreibt erst die lï¿½nge des strings in das bytearray (immer 2 bytes), und danach den eigentlichen string
    * ACHTUNG: mit utf8 funktioniert das nicht korrekt, weil keine 1:1 beziehung zwischen characters und bytes besteht
    */
   public static void writeString(byte[] data, String value, int offset, int maxLength, Charset charset) {
@@ -287,7 +287,7 @@ public class ByteUtils {
   
    * @param hex
    * @param length
-   * @param fromLeft falls hex.length() &lt; length*2, wird mit 0 aufgefüllt, von links oder rechts
+   * @param fromLeft falls hex.length() &lt; length*2, wird mit 0 aufgefï¿½llt, von links oder rechts
    * @return byte[length]
    */
   public static byte[] fromHexString(String hex, int length, boolean fromLeft) {

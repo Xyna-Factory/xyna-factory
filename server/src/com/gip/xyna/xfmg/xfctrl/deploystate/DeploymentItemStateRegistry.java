@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,8 +115,8 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
      * FIXME evtl gibt es ein duplikat in einer kind-revision: dann dort die callsites hinmigrieren
      * 
      * falls es ein duplikat in einer parent-revision gibt, ist es schwieriger:
-     *   lokale callsites können im parent nicht immer aufgelöst werden.
-     *    - es kann aber welche geben, die dort aufgelöst werden können und deshalb dort migriert werden sollten.
+     *   lokale callsites kï¿½nnen im parent nicht immer aufgelï¿½st werden.
+     *    - es kann aber welche geben, die dort aufgelï¿½st werden kï¿½nnen und deshalb dort migriert werden sollten.
      */          
     DeploymentItemState dis = registered.get(fqName);
     if (dis == null) {
@@ -161,8 +161,8 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
           store((DeploymentItemStateImpl) dis);
         }
       } finally {
-        //beim speichern der exception werden exception causes aus java serialisierungsgründen in "deploymentTransition" genullt. 
-        //das deployment soll die causes aber noch sehen können
+        //beim speichern der exception werden exception causes aus java serialisierungsgrï¿½nden in "deploymentTransition" genullt. 
+        //das deployment soll die causes aber noch sehen kï¿½nnen
         restoreExceptionCauses(deploymentException, exceptionCauses);
       }
     }
@@ -287,7 +287,7 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
                                                DeploymentItemStateManagement dism) {
     DeploymentItemState previous = registered.get(di.getName());
     if (previous != null) {
-      //lokales phantom ergänzen
+      //lokales phantom ergï¿½nzen
       if (previous.exists()) {
         logger.warn(di.getName() + " exists in " + getManagedRevision());
       }

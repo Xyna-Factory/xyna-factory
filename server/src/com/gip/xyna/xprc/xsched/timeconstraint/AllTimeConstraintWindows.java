@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.gip.xyna.xprc.xsched.timeconstraint.windows.TimeConstraintWindowDefin
 
 
 /**
- * Speicherung aller TimeConstraintWindows, Überwachung aller Add-, Remove- und Replace-Vorgänge. 
+ * Speicherung aller TimeConstraintWindows, ï¿½berwachung aller Add-, Remove- und Replace-Vorgï¿½nge. 
  *
  */
 public class AllTimeConstraintWindows {
@@ -72,16 +72,16 @@ public class AllTimeConstraintWindows {
       addTimeWindow(timeWindow);
       return;
     }
-    existing.lock(); //Sicherstellen, dass Scheduler nicht gleichzeitig schedulen möchte
+    existing.lock(); //Sicherstellen, dass Scheduler nicht gleichzeitig schedulen mï¿½chte
     try {
-      //kein richtiges replace hier: Scheduler könnte bereits TimeConstraintWindow existing haben
+      //kein richtiges replace hier: Scheduler kï¿½nnte bereits TimeConstraintWindow existing haben
       //deswegen intern existing durch timeWindow ersetzen
       existing.replaceDescriptionAndWindowWith(timeWindow);
       
       //timeConstraintExecutor muss nun angepasst werden
       changeTimeConstraintExecutor( timeWindow, true, true);
       
-      //wartende Aufträge wieder in den Scheduler einstellen
+      //wartende Auftrï¿½ge wieder in den Scheduler einstellen
       if( existing.isOpen() ) {
         existing.rescheduleWaitingOrders(allOrders);
       }
@@ -95,12 +95,12 @@ public class AllTimeConstraintWindows {
     if( timeWindow == null ) {
       return; //bereits entfernt
     }
-    timeWindow.lock(); //gegen Verwendung im Scheduler schützen
+    timeWindow.lock(); //gegen Verwendung im Scheduler schï¿½tzen
     try {
       timeWindow.setRemoved(); //kann nun nicht mehr verwendet werden
-      //timeConstraintExecutor muss sich nicht mehr um dieses Zeitfenster kümmern
+      //timeConstraintExecutor muss sich nicht mehr um dieses Zeitfenster kï¿½mmern
       changeTimeConstraintExecutor( timeWindow, true, false);
-      //wartende Aufträge wieder in den Scheduler einstellen
+      //wartende Auftrï¿½ge wieder in den Scheduler einstellen
       timeWindow.rescheduleWaitingOrders(allOrders);
     } finally {
       timeWindow.unlock(); //evtl. wartet noch jemand am Lock, der sieht nun Status "Removed"
@@ -127,7 +127,7 @@ public class AllTimeConstraintWindows {
       if( tw.isRemoved() ) {
         tw.unlock();
       } else {
-        return tw; //üblicher Ausgang
+        return tw; //ï¿½blicher Ausgang
       }
     } while( true );
   }

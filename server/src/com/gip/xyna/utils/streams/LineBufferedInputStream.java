@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,18 +24,18 @@ import java.io.InputStream;
 
 
 /**
- * LineBufferedInputStream ist ein InputStream, der die readLine-Funktionalität von 
+ * LineBufferedInputStream ist ein InputStream, der die readLine-Funktionalitï¿½t von 
  * BufferedReader anbietet.
  * 
  * Damit ersetzt <code>new LineBufferedInputStream(in, LineMarker.LF, encoding);</code>  
  * die Zeile <code>new BufferedReader(new InputStreamReader(in, encoding);</code>
  * mit dem Vorteil, dass der InputStream nicht zu weit ausgelesen wird: der InputStreamReader 
- * liest einen großen Buffer voll, so dass diese Daten nicht mehr über den InputStream 
- * gelesen werden können.
+ * liest einen groï¿½en Buffer voll, so dass diese Daten nicht mehr ï¿½ber den InputStream 
+ * gelesen werden kï¿½nnen.
  * 
- * Als Zeilentrenner können beliebige Zeichenketten dienen.
+ * Als Zeilentrenner kï¿½nnen beliebige Zeichenketten dienen.
  * Leider ist das Verhalten etwas anders als beim BufferedReader: Die verschiedenen Zeilentrenner
- * {"\n","\r","\r\n"} können nicht gemischt erkannt werden.
+ * {"\n","\r","\r\n"} kï¿½nnen nicht gemischt erkannt werden.
  * 
  */
 public class LineBufferedInputStream extends InputStream {
@@ -116,7 +116,7 @@ public class LineBufferedInputStream extends InputStream {
         r = reverseBuffer[bufferPos];
         --bufferPos;
       }
-      //nächstes Zeichen ist gelesen
+      //nï¿½chstes Zeichen ist gelesen
       if( r == lineMarker[possibleMarkerPos] ) {
         possibleMarker[possibleMarkerPos] = r;
         ++possibleMarkerPos;
@@ -130,7 +130,7 @@ public class LineBufferedInputStream extends InputStream {
         } else {
           //PossibleMarker ist unterbrochen, daher erstes Zeichen ausgeben 
           baos.write(possibleMarker[0]);
-          //und Rest aus possibleMarker und r in den nächsten Schleifen prüfen
+          //und Rest aus possibleMarker und r in den nï¿½chsten Schleifen prï¿½fen
           reverseBuffer[++bufferPos] = r;
           for( int p=possibleMarkerPos-1; p>0; --p ) {
             reverseBuffer[++bufferPos] = possibleMarker[p];

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,11 +85,11 @@ public class SSHTrigger extends EventListener<SSHTriggerConnection, SSHStartPara
       try {
         sshCon = requests.poll(1000,TimeUnit.MILLISECONDS);
       } catch (InterruptedException e) {
-        //dann halt kürzer warten
+        //dann halt kï¿½rzer warten
       }
       if( sshCon != null ) {
         if( sshCon.getRequestType() == null ) {
-          return null; //ungültiger Eintrag nach Aufruf stop()
+          return null; //ungï¿½ltiger Eintrag nach Aufruf stop()
         }
         return sshCon;
       }
@@ -107,7 +107,7 @@ public class SSHTrigger extends EventListener<SSHTriggerConnection, SSHStartPara
       sshd.stop(true);
       requests.clear();
       
-      //laufendes Receive darf keinen gültigen Eintrag finden, daher Dummy-Eintrag zum Wecken
+      //laufendes Receive darf keinen gï¿½ltigen Eintrag finden, daher Dummy-Eintrag zum Wecken
       requests.offer( new SSHTriggerConnection(null, null) ); 
       
     } catch (IOException e) {

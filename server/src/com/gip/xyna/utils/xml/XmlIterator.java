@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * Iteratoren, mit denen über org.w3c.dom.Node iteriert werden kann
+ * Iteratoren, mit denen ï¿½ber org.w3c.dom.Node iteriert werden kann
  */
 public class XmlIterator {
   

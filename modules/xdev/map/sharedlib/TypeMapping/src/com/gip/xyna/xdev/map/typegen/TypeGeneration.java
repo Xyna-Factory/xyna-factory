@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class TypeGeneration {
     this.generationParameter = generationParameter;
     errorHandler = new XSDErrorHandler();
     xmomDataCreator = new XmomDataCreator(generationParameter);
-    xmomGenerator = XmomGenerator.with(-1L); //FIXME wegen Abwärtskompatibilität nötig, generationParameter.isOverwrite() nutzen
+    xmomGenerator = XmomGenerator.with(-1L); //FIXME wegen Abwï¿½rtskompatibilitï¿½t nï¿½tig, generationParameter.isOverwrite() nutzen
   }
 
   public TypeGeneration(String basePathForGeneration, 
@@ -187,7 +187,7 @@ public class TypeGeneration {
 
   /**
    * iteriert durch XSD-DOM-Baum und erzeugt Informationen ueber XSD-Struktur,
-   * die im Generator-Objekt gespeichert werden. Erzeugt die XMOMs und TypeMapping-Einträge.
+   * die im Generator-Objekt gespeichert werden. Erzeugt die XMOMs und TypeMapping-Eintrï¿½ge.
    */
   public void generateTypes() {
     typeInfoGenerator = new TypeInfoGenerator(generationParameter);
@@ -261,7 +261,7 @@ public class TypeGeneration {
     List<String> errors = new ArrayList<String>();
         
     public boolean handleError(DOMError error) {
-      //hier schon auswerten, da DOMError recyclet wird (nur eine Instanz für alle Fehler)
+      //hier schon auswerten, da DOMError recyclet wird (nur eine Instanz fï¿½r alle Fehler)
       StringBuilder sb = new StringBuilder();
       
       

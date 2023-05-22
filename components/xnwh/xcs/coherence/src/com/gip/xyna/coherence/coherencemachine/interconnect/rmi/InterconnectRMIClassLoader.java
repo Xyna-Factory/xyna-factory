@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +38,11 @@ public class InterconnectRMIClassLoader extends URLClassLoader {
 
 
   /**
-   * liste von zusätzlichen parents, die nicht mit dem konstruktor, sondern zur laufzeit dynamisch belegt werden.
-   * beispielsweise von persistencelayerclassloadern, die eine abhängigkeit auf storables erkennen, die in einem service
-   * (mdmclassloader) definiert sind. diese abhängigkeit kann irgendwann aufhören, weil z.b. der service undeployed
+   * liste von zusï¿½tzlichen parents, die nicht mit dem konstruktor, sondern zur laufzeit dynamisch belegt werden.
+   * beispielsweise von persistencelayerclassloadern, die eine abhï¿½ngigkeit auf storables erkennen, die in einem service
+   * (mdmclassloader) definiert sind. diese abhï¿½ngigkeit kann irgendwann aufhï¿½ren, weil z.b. der service undeployed
    * wird. dann sollten auch die referenzen auf die classloader verschwinden wegen oom-gefahr.<br>
-   * die weakreferences gewährleisten das.
+   * die weakreferences gewï¿½hrleisten das.
    */
   private WeakReference<ClassLoader>[] weaklyReferencedParents;
   private final Object weaklyReferencedParentsLock = new Object();

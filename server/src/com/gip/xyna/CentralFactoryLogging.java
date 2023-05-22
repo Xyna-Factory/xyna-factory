@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 
 
 /**
- * hier sollen später logger programmatisch ermittelt und geändert werden können.
+ * hier sollen spï¿½ter logger programmatisch ermittelt und geï¿½ndert werden kï¿½nnen.
  */
 public class CentralFactoryLogging {
 
@@ -140,12 +140,12 @@ public class CentralFactoryLogging {
     Configuration config = ctx.getConfiguration();
     LoggerConfig loggerConfig = config.getLoggers().get(loggerName);
     if (loggerConfig == null) {
-      //noch keine Config für diesen Logger vorhanden, daher nun eine neue anlegen,
-      //damit nicht die Parent-Config überschrieben wird.
+      //noch keine Config fï¿½r diesen Logger vorhanden, daher nun eine neue anlegen,
+      //damit nicht die Parent-Config ï¿½berschrieben wird.
       loggerConfig = new LoggerConfig(loggerName, level, true);
       ctx.getConfiguration().addLogger(loggerName, loggerConfig);
     } else {
-      //Level ändern
+      //Level ï¿½ndern
       loggerConfig.setLevel(level);
     }
     ctx.updateLoggers();
@@ -211,10 +211,10 @@ public class CentralFactoryLogging {
   private static final int NUMBER_ORDERTIMING_CALLS = 11; //wieviele elemente kann liste maximal haben
 
   /*
-   * TODO suspend-resume unterstützung. 
+   * TODO suspend-resume unterstï¿½tzung. 
    *      statistiken pro ordertype
-   *      aufräumen von daten: 
-   *        - fertiggelaufene aufträge separat von laufenden handhaben
+   *      aufrï¿½umen von daten: 
+   *        - fertiggelaufene auftrï¿½ge separat von laufenden handhaben
    *        - fertiggelaufene als ringbuffer
    */
   public static void logOrderTiming(long id, String s) {
@@ -247,7 +247,7 @@ public class CentralFactoryLogging {
       l = new ArrayList<CentralFactoryLogging.LogMessage>(NUMBER_ORDERTIMING_CALLS);
       logs.put(id, l);
     }
-    if (l.size() < NUMBER_ORDERTIMING_CALLS * 16) { //threadpool voll -> scheduler macht retries, die zu mehrfachen aufrufen führen
+    if (l.size() < NUMBER_ORDERTIMING_CALLS * 16) { //threadpool voll -> scheduler macht retries, die zu mehrfachen aufrufen fï¿½hren
       l.add(new LogMessage(s, t));
     }
   }

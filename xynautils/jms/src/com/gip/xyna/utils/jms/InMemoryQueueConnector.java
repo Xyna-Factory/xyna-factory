@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public class InMemoryQueueConnector implements JMSConnector {
             ctx = new InitialContext(); // wenn "innerhalb" des
             // ApplicationServers
          } else {
-            ctx = new InitialContext(environment); // für "externe" Clients
+            ctx = new InitialContext(environment); // fï¿½r "externe" Clients
             // oder Zugriff auf einen
             // anderen
             // AppServer/Container

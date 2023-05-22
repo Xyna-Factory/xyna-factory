@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import com.gip.xyna.utils.exceptions.utils.codegen.InvalidParameterNameException
 
 
 /**
- * parse() aufrufen, ansonsten sind die membervariablen nicht gefüllt.
+ * parse() aufrufen, ansonsten sind die membervariablen nicht gefï¿½llt.
  */
 public class ExceptionStorageParser_1_1 extends ExceptionStorageParserBase {
 
@@ -54,7 +54,7 @@ public class ExceptionStorageParser_1_1 extends ExceptionStorageParserBase {
   }
      
   /**
-   * löst strings der form ... ${key} ... ${key2} ... auf indem key und key2 mit system-properties
+   * lï¿½st strings der form ... ${key} ... ${key2} ... auf indem key und key2 mit system-properties
    * ersetzt werden (falls vorhanden).
    * @param fileName
    * @return
@@ -116,7 +116,7 @@ public class ExceptionStorageParser_1_1 extends ExceptionStorageParserBase {
       }
     }
     
-    //imports = referenzierte xmls, die nur zur auflösung von abhängigkeiten benutzt werden.
+    //imports = referenzierte xmls, die nur zur auflï¿½sung von abhï¿½ngigkeiten benutzt werden.
     List<Element> importElements = XMLUtils.getChildElementsByName(root, XML_1_1.ELEMENT_IMPORT);
     for (Element importElement : importElements) {
       String fileName = resolveFileNameVariables(importElement.getAttribute(XML_1_1.ATTRIBUTE_IMPORT_INCLUDE_FILE));

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class Optional<T> implements Serializable {
 
   private final static Optional<?> EMPTY = new Optional();
 
-  private final T value; //achtung: T ist nicht immer serializable, dann ist auch optional nicht serializable. so wird es derzeit verwendet, auch wenn das unschön ist
+  private final T value; //achtung: T ist nicht immer serializable, dann ist auch optional nicht serializable. so wird es derzeit verwendet, auch wenn das unschï¿½n ist
   private final boolean present;
 
   public Optional(T value) {

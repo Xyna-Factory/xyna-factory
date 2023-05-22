@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,14 +73,14 @@ public class ResumeOrderJavaDestination extends JavaDestination {
    * - DBConnection
    *
    * optimierung von
-   * - gleichzeitiges halten von ressourcen möglichst kurz
-   * - und möglichst die ressourcen kürzer, die viel contention haben
+   * - gleichzeitiges halten von ressourcen mï¿½glichst kurz
+   * - und mï¿½glichst die ressourcen kï¿½rzer, die viel contention haben
    * 
-   * die notwendigkeit, mehrere datenbank-operationen in der gleichen transaktion durchzuführen, ist hier nicht gegeben.
+   * die notwendigkeit, mehrere datenbank-operationen in der gleichen transaktion durchzufï¿½hren, ist hier nicht gegeben.
    * es muss nur schutz vor folgenden problemen gegeben werden:
-   * a) falls resume fehlschlägt, muss resume retry machen
+   * a) falls resume fehlschlï¿½gt, muss resume retry machen
    * b) falls resume erfolgreich, muss resumter auftrag sicheren ort erreichen, damit der resumeauftrag ansich verschwinden kann
-   * beides muss nicht gekoppelt werden - zuviele resumes sind nicht schädlich 
+   * beides muss nicht gekoppelt werden - zuviele resumes sind nicht schï¿½dlich 
    * 
    */
 
@@ -107,7 +107,7 @@ public class ResumeOrderJavaDestination extends JavaDestination {
 
       /*
        * Binding des zu resumenden Auftrags ermitteln.
-       * Es gibt folgende Fälle: 
+       * Es gibt folgende Fï¿½lle: 
        * A) (Root-)Auftrag befindet sich im OrderBackup => Dann findet man leicht das Binding heraus
        * B) Auftrag ist nicht im Backup
        *    B1) Er ist suspendiert mit konfiguriertem SuspensionBackupMode => No Backup
@@ -116,14 +116,14 @@ public class ResumeOrderJavaDestination extends JavaDestination {
        *    B2) Er ist noch nicht suspendiert, weil das suspend parallel am laufen ist (Racecondition)
        *       B2a) Es gibt auf diesem Knoten SRInformation
        *       B2b) Es gibt auf anderem Knoten SRInformation
-       * Wenn also das Binding über das OrderBackup nicht ermittelt werden kann, sollte man noch nach einem SRInformation-Eintrag oder einem Memory-Backup schauen.
+       * Wenn also das Binding ï¿½ber das OrderBackup nicht ermittelt werden kann, sollte man noch nach einem SRInformation-Eintrag oder einem Memory-Backup schauen.
        * Falls beides nicht gefunden wird, dann auf dem anderen Knoten delegieren.
-       * Flag übergeben, so dass auf dem anderen Knoten nicht erneut zurückdelegiert werden kann (Nur für den Fall eines Bugs)
-       * Es gibt dabei noch die Möglichkeit einer Racecondition, wenn das Suspend gleichzeitig mit den Checks passiert. 
+       * Flag ï¿½bergeben, so dass auf dem anderen Knoten nicht erneut zurï¿½ckdelegiert werden kann (Nur fï¿½r den Fall eines Bugs)
+       * Es gibt dabei noch die Mï¿½glichkeit einer Racecondition, wenn das Suspend gleichzeitig mit den Checks passiert. 
        * => Deshalb beim Check nach SRInformation und Memory-Backup aufpassen.
        * 
-       * => Der Check wird dadurch durchgeführt, dass man einfach lokal das Resume probiert.
-       * Wenn es fehlschlägt, weil der Auftrag nicht im Backup gefunden wird (dies inkludiert B1a und B2a), dann auf den anderen Knoten delegieren
+       * => Der Check wird dadurch durchgefï¿½hrt, dass man einfach lokal das Resume probiert.
+       * Wenn es fehlschlï¿½gt, weil der Auftrag nicht im Backup gefunden wird (dies inkludiert B1a und B2a), dann auf den anderen Knoten delegieren
        */
       Integer foreignBinding;
       try {
@@ -156,7 +156,7 @@ public class ResumeOrderJavaDestination extends JavaDestination {
 
 
   private Integer getForeignBinding(final ResumeOrderBean bean) throws PersistenceLayerException {
-    //TODO fastpath für "nicht im cluster, muss nichts überprüfen". das kann dann gecached werden. achtung: wann cacherefresh?
+    //TODO fastpath fï¿½r "nicht im cluster, muss nichts ï¿½berprï¿½fen". das kann dann gecached werden. achtung: wann cacherefresh?
 
     //TODO besser Anfrage ans OrderStartupAndMigrationManagement: getBindingOfOrder(Long orderId)
     return WarehouseRetryExecutor.buildCriticalExecutor().connection(ODSConnectionType.DEFAULT).storable(OrderInstanceBackup.class)
@@ -188,7 +188,7 @@ public class ResumeOrderJavaDestination extends JavaDestination {
                 } catch (Exception e) {
                   //LoadingAbortedWithErrorException, MigrationAbortedWithErrorException, InterruptedException
                   logger.warn("Waiting for migration failed, aborting resume.", e);
-                  throw new OrderDeathException(e); //resumeorder bleibt im orderbackup und wird beim nächsten serverstart erneut ausgeführt
+                  throw new OrderDeathException(e); //resumeorder bleibt im orderbackup und wird beim nï¿½chsten serverstart erneut ausgefï¿½hrt
                 }
               }
             }
@@ -219,7 +219,7 @@ public class ResumeOrderJavaDestination extends JavaDestination {
 
 
   /**
-   * Falls eine Migration gerade läuft, wird geprüft, ob diese schon eine DB-Connection hat. Zur Vermeidung von Deadlocks
+   * Falls eine Migration gerade lï¿½uft, wird geprï¿½ft, ob diese schon eine DB-Connection hat. Zur Vermeidung von Deadlocks
    * darf ResumeOrderJavaDestination erst eine Connection hollen, wenn der Migrationsthread eine hat
    */
   private void waitForOrderStartupAndMigrationManagement() {
@@ -239,7 +239,7 @@ public class ResumeOrderJavaDestination extends JavaDestination {
         try {
           Thread.sleep(50);
         } catch (InterruptedException e) {
-          // die ignorieren wir mal ... ansonsten würde der Resumeauftrag verloren gehen und der zugehörige Auftrag wär für immer verloren        
+          // die ignorieren wir mal ... ansonsten wï¿½rde der Resumeauftrag verloren gehen und der zugehï¿½rige Auftrag wï¿½r fï¿½r immer verloren        
         }
       }
     } while (waitAgain);
@@ -314,7 +314,7 @@ public class ResumeOrderJavaDestination extends JavaDestination {
               }
               return RETRY_OTHER_NODE;
             } else {
-              //unerwarteter fall. hier kann man den auftrag killen/aufräumen, er kann ja nicht wieder resumed werden. 
+              //unerwarteter fall. hier kann man den auftrag killen/aufrï¿½umen, er kann ja nicht wieder resumed werden. 
               if (killOrderWithoutOrderBackup.get()) {
                 KillStuckProcessBean kspb = new KillStuckProcessBean(bean.getTarget().getRootId(), true, AbortionCause.NOBACKUP);
                 try {
@@ -348,7 +348,7 @@ public class ResumeOrderJavaDestination extends JavaDestination {
 
 
     /**
-     * Resume konnte nicht ausgeführt werden, daher mit etwas Verzögerung nochmal probieren, 
+     * Resume konnte nicht ausgefï¿½hrt werden, daher mit etwas Verzï¿½gerung nochmal probieren, 
      * indem hier nun ein neuer ResumeOrder-Auftrag angelegt wird. 
      * @throws PersistenceLayerException 
      */

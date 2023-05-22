@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ public class XynaSchemaAttribute extends XynaSchemaNode {
                                                                                  // 0==1
                                                                                  // mit
                                                                                  // einer
-                                                                                 // prüfung
+                                                                                 // prï¿½fung
                                                                                  // ersetzen,
                                                                                  // ob
                                                                                  // type
@@ -107,7 +107,7 @@ public class XynaSchemaAttribute extends XynaSchemaNode {
                // </xsd:element>
                content = XynaSchema.COMPLEXCONTENT;
             }
-            // prüfen, ob extension bereits vorhanden
+            // prï¿½fen, ob extension bereits vorhanden
             XMLElement extension;
             if (parentNode.getChildNodes().getLength() > 0) {
                // dann muss extension vorhanden sein!

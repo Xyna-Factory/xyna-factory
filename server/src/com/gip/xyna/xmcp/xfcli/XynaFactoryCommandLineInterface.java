@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
       // TODO: als trigger/filter realisieren?
       serverSocket = new ServerSocket(serverPort, 0, InetAddress.getByName(null));
       
-      //Task zum Schließen des Sockets beim SchutdownHookManagement registrieren
+      //Task zum Schlieï¿½en des Sockets beim SchutdownHookManagement registrieren
       ShutdownHookManagement.getInstance().addTask(new Runnable() {
         public void run() {
           closeServerSocketSafely(serverSocket);
@@ -292,7 +292,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
       logger.log(XynaFactoryLogLevel.Factory, "Xyna Factory is up and running");
       status.compareAndSet(Status.Initializing, Status.Running);
 
-      // falls dabei etwas schief geht, muss shutdown durchgeführt werden
+      // falls dabei etwas schief geht, muss shutdown durchgefï¿½hrt werden
     } catch (XynaException xe) {
       shutdownWhenError();
       throw xe;
@@ -304,7 +304,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
       throw e;
     } catch (Throwable t) {
       try {
-        shutdownWhenError(); // einzige fehlermöglichkeit ist outofmemory oder sowas, alles andere wird in shutdown
+        shutdownWhenError(); // einzige fehlermï¿½glichkeit ist outofmemory oder sowas, alles andere wird in shutdown
                              // gefangen und geloggt
       } finally {
         Department.handleThrowable(t);
@@ -324,7 +324,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
 
     } catch (Throwable t) {
       try {
-        //falls im fehlerfall der shutdown nicht korrekt funktioniert, bleibt nix anderes übrig, als das ordentlich zu loggen 
+        //falls im fehlerfall der shutdown nicht korrekt funktioniert, bleibt nix anderes ï¿½brig, als das ordentlich zu loggen 
         logger.fatal("Error shutting down " + XYNA_FACTORY + ".", t);
       } finally {
         Department.handleThrowable(t);
@@ -371,7 +371,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
           needToCallSystemExit = true;
         }
 
-        //threads, die am ende ruhig offen sein dürfen. alle anderen sollten von xyna vernichtet worden sein!
+        //threads, die am ende ruhig offen sein dï¿½rfen. alle anderen sollten von xyna vernichtet worden sein!
         HashSet<String> threadNamesNormal = new HashSet<String>();
         threadNamesNormal.add(MAIN_THREAD_NAME);
         threadNamesNormal.add("Reference Handler"); //java.lang.ref.Reference
@@ -551,7 +551,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
     savePidToFile();
             
     if (containsArg(args, "-Xthreadtime")) {
-      //TODO clibefehl zum ein-/ausschalten zur laufzeit. hier trotzdem lassen um serverstart zeiten messen zu können 
+      //TODO clibefehl zum ein-/ausschalten zur laufzeit. hier trotzdem lassen um serverstart zeiten messen zu kï¿½nnen 
       ThreadMXBean tbean = ManagementFactory.getThreadMXBean();
       if (tbean.isThreadCpuTimeSupported()) {
         logger.debug("ThreadCPUTime supported and enabled");
@@ -579,7 +579,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
     try {
       Class xs = XynaClassLoader.getInstance().loadClass(XynaFactoryCommandLineInterface.class.getName());
       // aufruf von start-methode. ohne reflection gibt es eine classcastexception, weil die klasse zu der man castet
-      // hier in der klasse mit dem zugehörigen classloader geladen wurde und deshalb anders ist als
+      // hier in der klasse mit dem zugehï¿½rigen classloader geladen wurde und deshalb anders ist als
       // die von dem classloaderdispatcher geladene klasse.
       Object o = xs.getConstructor().newInstance();
       Method[] methods = o.getClass().getMethods();
@@ -605,7 +605,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
         System.out.println(XYNA_FACTORY + " starting on port " + XynaFactoryCommandLineInterface.serverPort);
       }
       //FIXME kann so nicht funktionieren, wenn Klasse oben wirklich mit anderem ClassLoader geladen wird 
-      ((XynaFactoryCommandLineInterface)o).join(); //TODO ermitteln, ob regulär beendet und ReturnCode korrekt setzen!
+      ((XynaFactoryCommandLineInterface)o).join(); //TODO ermitteln, ob regulï¿½r beendet und ReturnCode korrekt setzen!
       return ReturnCode.SUCCESS;
           
     } catch (Throwable e) {
@@ -681,7 +681,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
       logger.warn("could not create pid file " + f.getAbsolutePath() + ". pid=" + pid, e);
     }
     
-    //Task zum Löschen des pid files beim ShutdownHookManagement registrieren
+    //Task zum Lï¿½schen des pid files beim ShutdownHookManagement registrieren
     ShutdownHookManagement.getInstance().addTask(new Runnable() {
 
       public void run() {
@@ -770,7 +770,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
     } catch (ConnectException e) {
       throw e;
     } catch (SocketException se) {
-      //wahrscheinlich konnte man sich noch connecten und während der kommunikation wurde die verbindung geschlossen
+      //wahrscheinlich konnte man sich noch connecten und wï¿½hrend der kommunikation wurde die verbindung geschlossen
       if (args[argsBeginIdx].equals(XynaFactoryCLIConnection.COMMAND_STOP)) {
         // fehler ignorieren. server wurde runtergefahren, stop soll nicht fehlschlagen
       } else {
@@ -789,7 +789,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
   }
 
   public static void shutdown() {
-    status.compareAndSet(Status.Initializing, Status.ShuttingDown); //TODO nötig?
+    status.compareAndSet(Status.Initializing, Status.ShuttingDown); //TODO nï¿½tig?
     status.compareAndSet(Status.Running, Status.ShuttingDown);
   }
 

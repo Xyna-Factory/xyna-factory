@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class ListcapacitiesforordertypeImpl extends XynaCommandImplementation<Li
   public void execute(OutputStream statusOutputStream, Listcapacitiesforordertype payload) throws XynaException {
     String orderType = payload.getOrderType();
 
-    // Prüfung, ob Application/Version bzw. Workspace existiert
+    // Prï¿½fung, ob Application/Version bzw. Workspace existiert
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = revisionManagement.getRevision(payload.getApplicationName(), payload.getVersionName(), payload.getWorkspaceName());
     

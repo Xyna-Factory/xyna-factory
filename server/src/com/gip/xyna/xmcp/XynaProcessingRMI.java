@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -415,11 +415,11 @@ public interface XynaProcessingRMI extends Remote {
   public OrderExecutionResponse startOrder(XynaCredentials credentials, RemoteXynaOrderCreationParameter rxocp) throws RemoteException;
   
   /**
-   * gibt im gutfall die xmldarstellung der xynaobjekte zurück
-   * im exceptionfall wird nur die simple darstellung der exceptions zurückgegeben 
+   * gibt im gutfall die xmldarstellung der xynaobjekte zurï¿½ck
+   * im exceptionfall wird nur die simple darstellung der exceptions zurï¿½ckgegeben 
    * Es gibt mehrere Subklassen von OrderExecutionResponse. Im Fehlerfall wird {@link ErroneousOrderExecutionResponse},
    * im asynchronen Gutfall nur {@link SuccesfullOrderExecutionResponse} und im synchronen Gutfall
-   * {@link SynchronousSuccesfullOrderExecutionResponse} zurückgegeben.
+   * {@link SynchronousSuccesfullOrderExecutionResponse} zurï¿½ckgegeben.
    */
   @ProxyAccess(right = ProxyRight.START_ORDER, checks=1)
   public OrderExecutionResponse startOrderSynchronously(XynaCredentials credentials, RemoteXynaOrderCreationParameter rxocp) throws RemoteException;

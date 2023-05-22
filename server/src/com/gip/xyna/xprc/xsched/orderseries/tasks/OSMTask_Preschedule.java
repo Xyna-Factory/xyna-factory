@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,22 +32,22 @@ import com.gip.xyna.xprc.xsched.orderseries.SeriesInformationStorable.OrderStatu
  * OSMTask_Preschedule:
  * <br>
  * Im Prescheduler gerufen, um den bereits persistierten SeriesInformationStorable-Eintrag zu 
- * prüfen, ob er valide ist und ob alle Abhängigkeiten erfüllt sind und der zugehörige Auftrag
+ * prï¿½fen, ob er valide ist und ob alle Abhï¿½ngigkeiten erfï¿½llt sind und der zugehï¿½rige Auftrag
  * gestartet werden kann.<br>
  * Vorbedingung ist, dass der SeriesInformationStorable-Eintrag bereits transaktionssicher 
  * zusammen mit der XynaOrder in der DB persistiert wurde. Diese Bedingung wird hier nicht 
- * überprüft. Wichtig ist sie aber zur Konsistenzwahrung im Fehlerfall, wenn dieser Task nicht
- * mehr vollständig ausgeführt werden kann.
+ * ï¿½berprï¿½ft. Wichtig ist sie aber zur Konsistenzwahrung im Fehlerfall, wenn dieser Task nicht
+ * mehr vollstï¿½ndig ausgefï¿½hrt werden kann.
  * <br><br>
  * <pre>
  * Algorithmus:
  * 1) Lock der correlationId
  * 2) Suche des SeriesInformationStorable
- * 3) Bau des Predecessor-Baums in predecessorTrees, dabei Prüfung auf zyklische Abhängigkeit 
+ * 3) Bau des Predecessor-Baums in predecessorTrees, dabei Prï¿½fung auf zyklische Abhï¿½ngigkeit 
  *    der Predecessoren. Hier werden die Predecessoren gesucht und gelesen
- * 4) Schleife über alle PredecessorCorrIds
+ * 4) Schleife ï¿½ber alle PredecessorCorrIds
  * 4.1) Zugriff auf Predecessor-Baum preTree zu PredecessorCorrId
- * 4.2) Auswertung des Ergebnis des Aufrufs updatePredecessorInternal(preTree), 5 Fälle
+ * 4.2) Auswertung des Ergebnis des Aufrufs updatePredecessorInternal(preTree), 5 Fï¿½lle
  * 4.2.1) NotFound: nichts zu tun
  * 4.2.2) Later:    nichts zu tun
  * 4.2.3) Running:  nichts zu tun
@@ -56,24 +56,24 @@ import com.gip.xyna.xprc.xsched.orderseries.SeriesInformationStorable.OrderStatu
  * 5) Update des SeriesInformationStorable
  * 6) Entscheidung, ob Auftrag gestartet werden kann oder abgebrochen werden muss
  * 7) Unlock der correlationId
- * 8) Evtl. Starten des Auftrags über OSMInterface.readyToRun( long orderId, boolean cancel )
+ * 8) Evtl. Starten des Auftrags ï¿½ber OSMInterface.readyToRun( long orderId, boolean cancel )
  * </pre>
  * <pre>
  * Algorithmus updatePredecessorInternal(preTree):
- * 1) 3 Fälle
+ * 1) 3 Fï¿½lle
  * 1.1) preTree hat keine Daten:     Predecessor existiert noch nicht. 
- *                                   Rückgabe Result.NotFound 
- * 1.2) preTree hat eigenes Binding: Rückgabe Aufruf 
+ *                                   Rï¿½ckgabe Result.NotFound 
+ * 1.2) preTree hat eigenes Binding: Rï¿½ckgabe Aufruf 
  *                                   OSMLocalImpl.updatePredecessor (siehe dort)
- * 1.3) preTree hat fremdes Binding: Rückgabe Remote-Aufruf 
+ * 1.3) preTree hat fremdes Binding: Rï¿½ckgabe Remote-Aufruf 
  *                                   OSMRemoteProxyImpl.updatePredecessor, ruft dort 
  *                                   OSMLocalImpl.updatePredecessor (siehe dort) auf
- * 2) Mögliche Rückgaben:
+ * 2) Mï¿½gliche Rï¿½ckgaben:
  * 2.1) NotFound: Predecessor existiert noch nicht
  * 2.2) Later:    Predecessor wurde zwar gefunden, der weitere Status ist jedoch unbekannt, 
  *                da das Lock nicht erhalten wurde. (Grund: Deadlock-Vermeidung, dies kann 
  *                lokal oder remote auftreten) Ein weiterer OSMTask_UpdatePredecessor
- *                klärt den tatsächlichen Zustand ab.
+ *                klï¿½rt den tatsï¿½chlichen Zustand ab.
  * 2.3) Running:  Predecessor ist noch nicht gelaufen
  * 2.4) Cancel:   Predecessor ist durch Fehler oder Cancel beendet worden und AutoCancel=true
  * 2.5) Success:  Predecessor ist erfolgreich beendet worden oder ist durch Fehler oder Cancel
@@ -119,7 +119,7 @@ public class OSMTask_Preschedule extends OSMTask {
             + tree.getSize(1000) + " for correlationId " + sis.getCorrelationId() + " hasCycle=" + hasCycle);
       }
       
-      //Predecessor füllen
+      //Predecessor fï¿½llen
       Iterator<String> iter = sis.getPredecessorCorrIds().iterator();
       while( iter.hasNext() ) {
         String predecessorCorrId = iter.next();
@@ -135,19 +135,19 @@ public class OSMTask_Preschedule extends OSMTask {
             break;
           case Success:
             //Predecessor ist erfolgreich gelaufen oder mit einem Fehler beendet, der aber 
-            //nicht dazu führt, dass der aktuelle Auftrag abgebrochen werden muss.
+            //nicht dazu fï¿½hrt, dass der aktuelle Auftrag abgebrochen werden muss.
             predecessorFinished = true;
             break;
           case NotFound:
             //Predecessor existiert noch nicht
             break;
           case Later:
-            //Predecessor kann derzeit nicht bearbeitet werden, Operation wird später wiederholt
+            //Predecessor kann derzeit nicht bearbeitet werden, Operation wird spï¿½ter wiederholt
             break;
           case Running:
             //Predecessor wurde zwar gefunden( result.oderId != null ), darf aber noch nicht
             //eingetragen werden, damit aktueller Auftrag noch wartet. Eingetragen wird er 
-            //später in finish(OSMTask task)
+            //spï¿½ter in finish(OSMTask task)
             break;
         }
         if( predecessorFinished ) {
@@ -159,7 +159,7 @@ public class OSMTask_Preschedule extends OSMTask {
       }
       
       if( sis.isInheritedCancel() && sis.isIgnoreInheritedCancel() ) {
-        //inheritedCancel wird durch ignoreInheritedCancel überschrieben
+        //inheritedCancel wird durch ignoreInheritedCancel ï¿½berschrieben
         sis.setInheritedCancel(false);
       }
       
@@ -179,8 +179,8 @@ public class OSMTask_Preschedule extends OSMTask {
             canBeStarted = true;
             orderState = OrderState.HasCyclicDependencies;
           } else {
-            //der aktuelle Auftrag hängt zwar an einem Cycle, ist aber selbst nicht schuld daran.
-            //Dies sollte nicht auftreten können. Wenn doch, muss manuell aufgeräumt werden
+            //der aktuelle Auftrag hï¿½ngt zwar an einem Cycle, ist aber selbst nicht schuld daran.
+            //Dies sollte nicht auftreten kï¿½nnen. Wenn doch, muss manuell aufgerï¿½umt werden
             logger.warn( "Found existing circle "+ cycle+" which must be manually cleared");
             canBeStarted = false;
             orderState = OrderState.HasCyclicDependencies;            
@@ -204,8 +204,8 @@ public class OSMTask_Preschedule extends OSMTask {
 
   /**
    * Update des Predecessor in Cache und DB: Eintragen des Successors
-   * Rückgabe, ob Predecessor bekannt ist, erfolgreich war oder ob er
-   * über AutoCancel den Successor abbricht.
+   * Rï¿½ckgabe, ob Predecessor bekannt ist, erfolgreich war oder ob er
+   * ï¿½ber AutoCancel den Successor abbricht.
    * @param predecessorCorrId
    * @param successorCorrId
    * @param successorOrderId
@@ -215,10 +215,10 @@ public class OSMTask_Preschedule extends OSMTask {
     if( preTree.hasData() ) {
       int binding = preTree.getBinding();
       if( binding == ownBinding ) {
-        //Predeccessor gehört zum eigenen Binding
+        //Predeccessor gehï¿½rt zum eigenen Binding
         return localOsm.updatePredecessor(binding, predecessorCorrId,successorCorrId,successorOrderId);
       } else {
-        //Predeccessor gehört zu einem anderen Binding
+        //Predeccessor gehï¿½rt zu einem anderen Binding
         return remoteOsm.updatePredecessor(binding, predecessorCorrId,successorCorrId,successorOrderId);
       }
     } else {

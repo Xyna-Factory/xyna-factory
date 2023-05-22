@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ public class OrderExecutionTimeoutManagement extends FunctionGroup {
 
   public void registerOrderTimeout(XynaOrderServerExtension orderWithTTL) {
     if (scheduledCancelTasks.containsKey(orderWithTTL.getId())) {
-      //die map wird nur vom auftrag aufgeräumt (auch wenn er gecancelt wird), nicht von dem cancel-auftrag, damit 
+      //die map wird nur vom auftrag aufgerï¿½umt (auch wenn er gecancelt wird), nicht von dem cancel-auftrag, damit 
       //nicht ein weiteres canceltask erstellt wird, wenn der auftrag suspendiert und resumed.
       return;
     }

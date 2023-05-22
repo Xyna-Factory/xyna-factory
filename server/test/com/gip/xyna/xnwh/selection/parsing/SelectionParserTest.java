@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,12 +68,12 @@ public class SelectionParserTest extends TestCase {
    * Not escaped escape characters in EQUALS queries are removed.
    */
   public void testGenerateSelectObject() throws XNWH_InvalidSelectStatementException, XNWH_SelectParserException {
-    //Suche nach einem normalen Anführungszeichen
+    //Suche nach einem normalen Anfï¿½hrungszeichen
     VetoSelectImpl selection = generateVetoSelectObject("\\\"");
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals("\"", selection.getParameter().get(0));
     
-    //Filter enthält ein '
+    //Filter enthï¿½lt ein '
     selection = generateVetoSelectObject("x'y");
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals("x'y", selection.getParameter().get(0));
@@ -98,7 +98,7 @@ public class SelectionParserTest extends TestCase {
     assertEquals("select vetoName from vetos where not ( documentation = ?)", selection.getSelectString());
     assertEquals("x", selection.getParameter().get(0));
 
-    //Negation mit Klammern und Verknüpfung
+    //Negation mit Klammern und Verknï¿½pfung
     selection = generateVetoSelectObject("!(x OR y)");
     assertEquals("select vetoName from vetos where not ( documentation = ? or documentation = ?)", selection.getSelectString());
     assertEquals("x", selection.getParameter().get(0));
@@ -119,7 +119,7 @@ public class SelectionParserTest extends TestCase {
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals("*x", selection.getParameter().get(0));
 
-    //Suche nach Werten, die mit \" beginnen und mit x aufhören
+    //Suche nach Werten, die mit \" beginnen und mit x aufhï¿½ren
     selection = generateVetoSelectObject("\\\"*x");
     assertEquals("select vetoName from vetos where documentation LIKE ?", selection.getSelectString());
     assertEquals("\\\"%x", selection.getParameter().get(0));
@@ -149,7 +149,7 @@ public class SelectionParserTest extends TestCase {
     assertEquals("select vetoName from vetos where not ( documentation LIKE ?)", selection.getSelectString());
     assertEquals("x%y", selection.getParameter().get(0));
     
-    //Suche nach Werten größer als x
+    //Suche nach Werten grï¿½ï¿½er als x
     selection = generateVetoSelectObject(">x");
     assertEquals("select vetoName from vetos where documentation > ?", selection.getSelectString());
     assertEquals("x", selection.getParameter().get(0));
@@ -169,7 +169,7 @@ public class SelectionParserTest extends TestCase {
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals(">x", selection.getParameter().get(0));
     
-    //Oder-Verknüfung
+    //Oder-Verknï¿½fung
     selection = generateVetoSelectObject("x OR y");
     assertEquals("select vetoName from vetos where documentation = ? or documentation = ?", selection.getSelectString());
     assertEquals("x", selection.getParameter().get(0));
@@ -180,55 +180,55 @@ public class SelectionParserTest extends TestCase {
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals("x OR y", selection.getParameter().get(0));
     
-    //Verknüfung mit Wildcard, Negation und Klammern
+    //Verknï¿½fung mit Wildcard, Negation und Klammern
     selection = generateVetoSelectObject("x OR (y* AND !z)");
     assertEquals("select vetoName from vetos where documentation = ? or ( documentation LIKE ? and not ( documentation = ?))", selection.getSelectString());
     assertEquals("x", selection.getParameter().get(0));
     assertEquals("y%", selection.getParameter().get(1));
     assertEquals("z", selection.getParameter().get(2));
 
-    //Verknüfung mit Wildcard, Negation und Klammern
+    //Verknï¿½fung mit Wildcard, Negation und Klammern
     selection = generateVetoSelectObject("(x* OR y*) AND !*z");
     assertEquals("select vetoName from vetos where ( documentation LIKE ? or documentation LIKE ?) and not ( documentation LIKE ?)", selection.getSelectString());
     assertEquals("x%", selection.getParameter().get(0));
     assertEquals("y%", selection.getParameter().get(1));
     assertEquals("%z", selection.getParameter().get(2));
     
-    //Verknüfung mit Wildcard, Negation und (escapten) Klammern
+    //Verknï¿½fung mit Wildcard, Negation und (escapten) Klammern
     selection = generateVetoSelectObject("(x OR y) AND \\(z");
     assertEquals("select vetoName from vetos where ( documentation = ? or documentation = ?) and documentation = ?", selection.getSelectString());
     assertEquals("x", selection.getParameter().get(0));
     assertEquals("y", selection.getParameter().get(1));
     assertEquals("(z", selection.getParameter().get(2));
 
-    //Verknüfung mit Wildcard, Negation und (escapten) Klammern
+    //Verknï¿½fung mit Wildcard, Negation und (escapten) Klammern
     selection = generateVetoSelectObject("(x OR y) AND \"(z\"");
     assertEquals("select vetoName from vetos where ( documentation = ? or documentation = ?) and documentation = ?", selection.getSelectString());
     assertEquals("x", selection.getParameter().get(0));
     assertEquals("y", selection.getParameter().get(1));
     assertEquals("(z", selection.getParameter().get(2));
     
-    //ungültiger Filter -> suche Literal 
+    //ungï¿½ltiger Filter -> suche Literal 
     selection = generateVetoSelectObject("(x OR y) AND (z");
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals("(x OR y) AND (z", selection.getParameter().get(0));
 
-    //ungültiger Filter -> suche Literal 
+    //ungï¿½ltiger Filter -> suche Literal 
     selection = generateVetoSelectObject("\"");
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals("\"", selection.getParameter().get(0));
 
-    //ungültiger Filter -> suche Literal 
+    //ungï¿½ltiger Filter -> suche Literal 
     selection = generateVetoSelectObject("\"x");
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals("\"x", selection.getParameter().get(0));
 
-    //ungültiger Filter -> suche Literal 
+    //ungï¿½ltiger Filter -> suche Literal 
     selection = generateVetoSelectObject("\\\"x\"");
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals("\\\"x\"", selection.getParameter().get(0));
 
-    //ungültiger Filter -> suche Literal 
+    //ungï¿½ltiger Filter -> suche Literal 
     selection = generateVetoSelectObject(">!3");
     assertEquals("select vetoName from vetos where documentation = ?", selection.getSelectString());
     assertEquals(">!3", selection.getParameter().get(0));

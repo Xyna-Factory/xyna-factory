@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class XynaSchedulerCustomisationUtils {
         Thread.sleep( 500 );
       }
       catch (InterruptedException e) {
-        //dann halt kürzer warten
+        //dann halt kï¿½rzer warten
       }
       freeMem = examineFreeMem();
     }
@@ -74,7 +74,7 @@ public class XynaSchedulerCustomisationUtils {
 
   /**
    * Setzt TrySchedule, so dass nur noch SuspendAllOrders laufen darf,
-   * und fährt die XynaFactory herunter
+   * und fï¿½hrt die XynaFactory herunter
    */
   public static void shutdownFactory() {
     XynaScheduler scheduler = XynaFactory.getInstance().getProcessing().getXynaScheduler();
@@ -87,7 +87,7 @@ public class XynaSchedulerCustomisationUtils {
   }
 
   /**
-   * wirft Throwable weiter, so dass kein "throws Throwable" nötig ist
+   * wirft Throwable weiter, so dass kein "throws Throwable" nï¿½tig ist
    * @param t
    */
   public static void throwThrowable(Throwable t) {

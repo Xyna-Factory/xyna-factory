@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class OSMTaskConsumer implements Runnable {
 
   private static Logger logger = CentralFactoryLogging.getLogger(OSMTaskConsumer.class);
   public static final int MAX_FAILED_TASKS = 10; //TODO konfigurierbar
-  private static final int MAX_INTERN = 3; //Maximal 3 interne Aufträge, dann wieder ein externer 
+  private static final int MAX_INTERN = 3; //Maximal 3 interne Auftrï¿½ge, dann wieder ein externer 
   
   private volatile boolean running = false;
   private volatile boolean paused = false;
@@ -108,7 +108,7 @@ public class OSMTaskConsumer implements Runnable {
   public OSMTask retrieveTask() throws InterruptedException {
     OSMTask task = null;
     if( internCounter == MAX_INTERN ) {
-      //MAX_INTERN interne wurden bearbeitet, daher erst mal einen externen ausführen
+      //MAX_INTERN interne wurden bearbeitet, daher erst mal einen externen ausfï¿½hren
       internCounter = 0;
       task = externalQueue.poll(); //nicht warten, falls keine externen vorliegen 
     }
@@ -142,7 +142,7 @@ public class OSMTaskConsumer implements Runnable {
 
       taskCounter.increment(task.getClass());
     } catch (Exception e) {
-      //FIXME besser behandeln: Jeder Fehler bedeutet, dass Aufträge nicht ausgeführt werden!
+      //FIXME besser behandeln: Jeder Fehler bedeutet, dass Auftrï¿½ge nicht ausgefï¿½hrt werden!
       logger.warn("Task "+task+" failed", e);
       failedTasks.put(task.getCorrelationId(), task);
     }
@@ -158,7 +158,7 @@ public class OSMTaskConsumer implements Runnable {
   /**
    * Anhalten des TaskConsumers, bis unpause() gerufen wird. Diese Methode blockiert, bis der 
    * TaskConsumer sicher pausiert ist. Fall beim Warten der Thread interrupted wird, wird ein
-   * unpause() ausgeführt und die InterruptedException weitergeworfen. 
+   * unpause() ausgefï¿½hrt und die InterruptedException weitergeworfen. 
    * @throws InterruptedException falls TaskConsumers wegen InterruptedException nicht pausiert wurde
    */
   public void pause() throws InterruptedException {

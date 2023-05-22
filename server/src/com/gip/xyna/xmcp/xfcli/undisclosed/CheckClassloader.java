@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class CheckClassloader implements CommandExecution {
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
     ClassLoaderBase clb = cld.getClassLoaderByType(p.classloaderType, p.fqNameParent, p.revision);
     if (clb == null) {
-      //TODO andere classloadertypen probieren und zurückgeben: meintest du classloadertype x?
+      //TODO andere classloadertypen probieren und zurï¿½ckgeben: meintest du classloadertype x?
       clw.writeLineToCommandLine("Classloader for " + p.fqNameParent + " not found.");
       return;
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.gip.xyna.xprc.xpce.ordersuspension.interfaces.Step;
 
 
 /**
- * Keine Thread-Beschränkung gewünscht 
+ * Keine Thread-Beschrï¿½nkung gewï¿½nscht 
  */
 public class NoParallelismLimitation<S extends Step> implements ParallelismLimitation<S> {
   
@@ -43,7 +43,7 @@ public class NoParallelismLimitation<S extends Step> implements ParallelismLimit
   }
 
   public boolean awaitLimitationNotZero() {
-    return true; //sollte nie gerufen werden können
+    return true; //sollte nie gerufen werden kï¿½nnen
   }
 
 }

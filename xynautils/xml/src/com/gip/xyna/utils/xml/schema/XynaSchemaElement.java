@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
    }
 
    /**
-    * entweder nur ordnungsgebendes Element oder type später setzen
+    * entweder nur ordnungsgebendes Element oder type spï¿½ter setzen
     * 
     * @param name
     * @return
@@ -71,7 +71,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
     * 
     * @param name
     * @param namespace
-    *              NS vom Type. keine Angabe ist äquivalent zum TargetNS.
+    *              NS vom Type. keine Angabe ist ï¿½quivalent zum TargetNS.
     * @param typeName
     * @return
     * @throws Exception
@@ -107,7 +107,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
 
    /**
     * Setzt den Typ des Elements im Targetnamespace (falls man
-    * Simpletype-Konstanten von XynaSchema benutzt, benötigt man keine
+    * Simpletype-Konstanten von XynaSchema benutzt, benï¿½tigt man keine
     * gesonderte Namespace Angabe).
     * 
     * @param type
@@ -117,8 +117,8 @@ public class XynaSchemaElement extends XynaSchemaNode {
    }
 
    /**
-    * Setzt den Typ des Elements im Gewählten Namespace. Falls man
-    * Simpletype-Konstanten von XynaSchema benutzt, benötigt man keine
+    * Setzt den Typ des Elements im Gewï¿½hlten Namespace. Falls man
+    * Simpletype-Konstanten von XynaSchema benutzt, benï¿½tigt man keine
     * gesonderte Namespace Angabe.
     * 
     * @param namespace
@@ -149,7 +149,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
          if (refNamespace != null) {
             String shortNS = getRoot().getShortNS(refNamespace);
             if (shortNS != null) {
-               // type anhängen, falls shortNS = "" => kein doppelpunkt,
+               // type anhï¿½ngen, falls shortNS = "" => kein doppelpunkt,
                // weil dann ists der targetNS.
                el.setAttribute(XynaSchema.ATT_TYPE,
                      (shortNS.length() > 0 ? shortNS + ":" : "") + getType());
@@ -186,7 +186,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
                || getMaxOccurs() == MAX_UNBOUNDED
                || Integer.parseInt(getMaxOccurs()) != 1) {
             throw new Exception(
-                  "Nachrichtenelemente können nur Min- und MaxOccurs=1 haben.");
+                  "Nachrichtenelemente kï¿½nnen nur Min- und MaxOccurs=1 haben.");
          }
       }
       return el;
@@ -214,7 +214,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
                                                                                     // 0==1
                                                                                     // mit
                                                                                     // einer
-                                                                                    // prüfung
+                                                                                    // prï¿½fung
                                                                                     // ersetzen,
                // ob type ein eigener simpletype ist.
                throw new Exception(
@@ -231,7 +231,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
             // </xsd:complexType>
             // </xsd:element>
 
-            // prüfen, ob extension bereits vorhanden (2 fälle: entweder mit
+            // prï¿½fen, ob extension bereits vorhanden (2 fï¿½lle: entweder mit
             // element extended oder mit attribut.
             // sequence ist nur vorhanden, falls mit element extended wurde.
             XMLElement sequence;
@@ -278,7 +278,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
                }
                sequence = (XMLElement) xmldoc.createElementNS(
                      XynaSchema.NS_XSD, XynaSchema.SEQUENCE);
-               // attribute dürfen nicht vor der sequence stehen...
+               // attribute dï¿½rfen nicht vor der sequence stehen...
                if (extension.getChildNodes().getLength() > 0) {
                   extension.insertBefore(sequence, extension.getChildNodes()
                         .item(0));
@@ -296,7 +296,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
             // <xsd:element name="element2" type="xsd:string"/>
             // </xsd:sequence>
 
-            // möglichkeiten: vorhanden complextype => attribute oder
+            // mï¿½glichkeiten: vorhanden complextype => attribute oder
             // complextype => sequence => ... oder
             // nichts
             XMLElement sequence;
@@ -319,7 +319,7 @@ public class XynaSchemaElement extends XynaSchemaNode {
 
                sequence = (XMLElement) xmldoc.createElementNS(
                      XynaSchema.NS_XSD, XynaSchema.SEQUENCE);
-               // attribute dürfen nicht vor der sequence stehen...
+               // attribute dï¿½rfen nicht vor der sequence stehen...
                if (complexType.getChildNodes().getLength() > 0) {
                   complexType.insertBefore(sequence, complexType
                         .getChildNodes().item(0));
@@ -338,16 +338,16 @@ public class XynaSchemaElement extends XynaSchemaNode {
          XMLElement sequence;
          if (((XMLElement) parentNode).getElementsByTagName(
                XynaSchema.SEQUENCE_NONS).getLength() > 0) { // hier
-            // können
+            // kï¿½nnen
             // auch
             // attribute
-            // dranhängen
+            // dranhï¿½ngen
             sequence = (XMLElement) ((XMLElement) parentNode)
                   .getElementsByTagName(XynaSchema.SEQUENCE_NONS).item(0);
          } else {
             sequence = (XMLElement) xmldoc.createElementNS(XynaSchema.NS_XSD,
                   XynaSchema.SEQUENCE);
-            // attribute dürfen nicht vor der sequence stehen...
+            // attribute dï¿½rfen nicht vor der sequence stehen...
             if (parentNode.getChildNodes().getLength() > 0) {
                parentNode.insertBefore(sequence, parentNode.getChildNodes()
                      .item(0));
@@ -409,15 +409,15 @@ public class XynaSchemaElement extends XynaSchemaNode {
 
    public void importFragmentAsChild(XynaSchemaFragment frag) throws Exception {
       if (frag.getNode() instanceof XynaSchema) {
-         // Kind-Elemente anhängen ?
-         throw new Exception("nicht unterstützt."); // TODO
+         // Kind-Elemente anhï¿½ngen ?
+         throw new Exception("nicht unterstï¿½tzt."); // TODO
       } else if (frag.getNode() instanceof XynaSchemaAttribute
             || frag.getNode() instanceof XynaSchemaElement) {
          frag.getNode().setRoot(getRoot());
          getChildren().add(frag.getNode());
       } else if (frag.getNode() instanceof XynaSchemaComplexType) {
-         // Kind-Elemente anhängen?! oder Exception werfen...
-         throw new Exception("nicht unterstützt."); // TODO
+         // Kind-Elemente anhï¿½ngen?! oder Exception werfen...
+         throw new Exception("nicht unterstï¿½tzt."); // TODO
       }
    }
 

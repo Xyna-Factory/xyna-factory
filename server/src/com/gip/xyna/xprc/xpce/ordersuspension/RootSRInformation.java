@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class RootSRInformation<O> extends SRInformation {
     if( curr == null ) {
       orderReference = new StrongWeakReference<O>(order);
       return true;
-    } else if( curr != order ) { //!= ist richtig, Objekt-Identität nötig
+    } else if( curr != order ) { //!= ist richtig, Objekt-Identitï¿½t nï¿½tig
       if( logger.isDebugEnabled() ) {
         logger.debug("RootSRInformation has reference to old order "+curr+", new order is "+order);
       }
@@ -99,14 +99,14 @@ public class RootSRInformation<O> extends SRInformation {
       if( rootOrderSuspension.isMINecessary() ) {
         /*
          * Auftrag hatte Fehler bei Thread.interrupt() oder Thread.stop(). Daher muss es eine Redirection-MI
-         * geben, die vom Benutzer bearbeitet werden kann. Bei Bearbeitung wird dann das Resume ausgeführt. 
+         * geben, die vom Benutzer bearbeitet werden kann. Bei Bearbeitung wird dann das Resume ausgefï¿½hrt. 
          */  
         return Pair.of(ResumeResult.Unresumeable, SuspendResumeManagement.UNRESUMABLE_MI_REDIRECTION);
       }
     }
     if( orderHasRedirection ) {
       //Auftrag hat eine MI-Redirection, daher darf er nicht resumt werden.
-      //Durch die Redirection werden alle Lanes resumt, daher übergebene ResumeTargets nicht speichern. 
+      //Durch die Redirection werden alle Lanes resumt, daher ï¿½bergebene ResumeTargets nicht speichern. 
       return Pair.of(ResumeResult.Unresumeable, SuspendResumeManagement.UNRESUMABLE_MI_REDIRECTION);
     }
     return Pair.of(null,null);

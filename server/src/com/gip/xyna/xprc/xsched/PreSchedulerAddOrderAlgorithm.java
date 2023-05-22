@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_OrderEntryCouldNotBeAcknowledgedExcepti
 public interface PreSchedulerAddOrderAlgorithm {
   
   /**
-   * fügt einen auftrag zum scheduler hinzu. wird im prescheduler benutzt
+   * fï¿½gt einen auftrag zum scheduler hinzu. wird im prescheduler benutzt
    * @throws XPRC_OrderEntryCouldNotBeAcknowledgedException
    * @throws XNWH_RetryTransactionException
    */

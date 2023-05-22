@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -354,7 +354,7 @@ public class UninstallPackage {
               XynaFactory.getPortalInstance().getActivationPortal().undeployTrigger(node.getUniqueName(),
                                                                                     elis[j].getInstanceName());
             } catch (XACT_TriggerNotFound e) {
-              throw new RuntimeException(e); //sollte nicht vorkommen, weil man oben bereits überprüft hat, dass der trigger existiert
+              throw new RuntimeException(e); //sollte nicht vorkommen, weil man oben bereits ï¿½berprï¿½ft hat, dass der trigger existiert
             } catch (XACT_TriggerInstanceNotFound e) {
               throw new RuntimeException(e); //sollte nicht vorkommen, weil man die instanz gerade erst ermittelt hat
             }
@@ -421,9 +421,9 @@ public class UninstallPackage {
           try {
             XynaFactory.getInstance().getProcessing().getWorkflowEngine().undeployDatatype(node.getUniqueName(), true, false);
           } catch (XPRC_InvalidPackageNameException e) {
-            throw new RuntimeException(e); //dann ist dependency node ungültig
+            throw new RuntimeException(e); //dann ist dependency node ungï¿½ltig
           } catch (XPRC_InternalObjectMayNotBeUndeployedException e) {
-            throw new RuntimeException(e); //dann ist package ungültig
+            throw new RuntimeException(e); //dann ist package ungï¿½ltig
           } catch (XPRC_EXISTING_DEPENDENCY_ONUNDEPLOYMENT e) {
             throw new RuntimeException(e); //dependencies sollen auch undeployed werden
           }
@@ -500,9 +500,9 @@ public class UninstallPackage {
             XynaFactory.getInstance().getProcessing().getWorkflowEngine()
                 .undeployException(node.getUniqueName(), true, false);
           } catch (XPRC_InvalidPackageNameException e) {
-            throw new RuntimeException(e); //dann ist dependency node ungültig
+            throw new RuntimeException(e); //dann ist dependency node ungï¿½ltig
           } catch (XPRC_InternalObjectMayNotBeUndeployedException e) {
-            throw new RuntimeException(e); //dann ist package ungültig
+            throw new RuntimeException(e); //dann ist package ungï¿½ltig
           } catch (XPRC_EXISTING_DEPENDENCY_ONUNDEPLOYMENT e) {
             throw new RuntimeException(e); //dependencies sollen auch undeployed werden
           }
@@ -566,9 +566,9 @@ public class UninstallPackage {
         try {
           XynaFactory.getInstance().getProcessing().getWorkflowEngine().undeployDatatype(node.getUniqueName(), false, false);
         } catch (XPRC_InvalidPackageNameException e) {
-          throw new RuntimeException(e); //dann ist dependency node ungültig
+          throw new RuntimeException(e); //dann ist dependency node ungï¿½ltig
         } catch (XPRC_InternalObjectMayNotBeUndeployedException e) {
-          throw new RuntimeException(e); //dann ist package ungültig
+          throw new RuntimeException(e); //dann ist package ungï¿½ltig
         }
 
         File sharedLibDir = new File(Constants.SHAREDLIB_BASEDIR + node.getUniqueName());

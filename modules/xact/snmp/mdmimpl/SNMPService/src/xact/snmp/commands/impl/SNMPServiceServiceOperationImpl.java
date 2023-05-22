@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -300,7 +300,7 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
 
 
   /**
-   * böser hack: SNMP4j speichert die enginetime auf eine merkwürdige art und weise in UsmTimeTable.
+   * bï¿½ser hack: SNMP4j speichert die enginetime auf eine merkwï¿½rdige art und weise in UsmTimeTable.
    * beim verschicken eines requests mit authorativeEngineTime wird diese auf die vergangene zeit seit dem
    * letzten mal, dass jemand "setEngineTime" gesagt hat, gesetzt. anstatt auf die vergangene zeit seit der
    * derzeit gesetzten enginestarttime.

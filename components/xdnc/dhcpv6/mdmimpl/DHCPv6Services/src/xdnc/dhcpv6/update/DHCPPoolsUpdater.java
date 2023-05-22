@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,15 +62,15 @@ public class DHCPPoolsUpdater {
 
 
   /**
-   * übernimmt alle daten zu ip ranges in die virtual pools. updated ausserdem die
-   * ippoolstorables und options. entfernt nicht mehr benötigte pools aus persistence und aus virtualpoolcache. stellt
-   * am ende sicher, dass alle virtualpool infos auch in HISTORY persistiert wurden (unabhängig von der normalerweise
+   * ï¿½bernimmt alle daten zu ip ranges in die virtual pools. updated ausserdem die
+   * ippoolstorables und options. entfernt nicht mehr benï¿½tigte pools aus persistence und aus virtualpoolcache. stellt
+   * am ende sicher, dass alle virtualpool infos auch in HISTORY persistiert wurden (unabhï¿½ngig von der normalerweise
    * aktiven {@link PoolPersistenceStrategy}.<p>
    * methode kann gefahrlos mehrfach aufgerufen werden.
    */
   public void updateData(List<SharedNetwork> sharedNetworks) throws PersistenceLayerException {
     //TODO fehlerbehandlung: was soll passieren, wenn beim update der virtual pools ein fehler passiert? 
-    //     pools trotzdem updaten? oder versuch, virtual pools zurückzusetzen?
+    //     pools trotzdem updaten? oder versuch, virtual pools zurï¿½ckzusetzen?
 
     
 
@@ -110,7 +110,7 @@ public class DHCPPoolsUpdater {
 
   
 
-  //Alle Werte aus colB, deren Schlüssel auch in  colA enthalten ist */
+  //Alle Werte aus colB, deren Schlï¿½ssel auch in  colA enthalten ist */
   static Collection<? extends SuperPool>  differ(Collection<? extends SuperPool> colA,Collection<? extends SuperPool> colB) {
     ArrayList<SuperPool>  ret=new ArrayList<SuperPool> ();
     for(SuperPool spA:colA){

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,35 +45,35 @@ import com.gip.xyna.xnwh.persistence.StorableClassList;
 
 
 /**
- * WarehouseRetryExecutor führt Executables mit PersistenceLayer-Zugriffen aus.
+ * WarehouseRetryExecutor fï¿½hrt Executables mit PersistenceLayer-Zugriffen aus.
  * <p>
  * Dabei werden Retries gemacht, wenn die PersistenceLayerConnections nicht erhalten werden
- * konnten oder bei der Ausführung XNWH_RetryTransactionException auftreten. 
- * Der WarehouseRetryExecutor kümmert sich auch um das Öffnen und  Schließen der Connections,
- * wenn keine übergeben wird.
+ * konnten oder bei der Ausfï¿½hrung XNWH_RetryTransactionException auftreten. 
+ * Der WarehouseRetryExecutor kï¿½mmert sich auch um das ï¿½ffnen und  Schlieï¿½en der Connections,
+ * wenn keine ï¿½bergeben wird.
  * <p>
  * Zur vereinfachten Verwendung gibt es einen WarehouseRetryExecutorBuilder, mit dem die 
- * benötigten Angaben einfach gesammelt werden können (Siehe unteres Beispiel). Die Defaults 
- * sind so gewählt, dass viele mögliche Angaben meist entfallen können.   
+ * benï¿½tigten Angaben einfach gesammelt werden kï¿½nnen (Siehe unteres Beispiel). Die Defaults 
+ * sind so gewï¿½hlt, dass viele mï¿½gliche Angaben meist entfallen kï¿½nnen.   
  * <p>
- * Vor der ersten Ausführung sollten alle Storables, mit denen gearbeitet wird, dem WarehouseRetryExecutor
- * bekanntgegeben werden, damit er über {@link ODSConnection#ensurePersistenceLayerConnectivity(java.util.List)}
- * alle Verbindungen zu den PersistenceLayern herstellen kann. Wird dies nicht gemacht, können 
- * DeadLocks entstehen, wenn Connections erst später dazugeholt werden müssen, aber nicht mehr
- * verfügbar sind.
+ * Vor der ersten Ausfï¿½hrung sollten alle Storables, mit denen gearbeitet wird, dem WarehouseRetryExecutor
+ * bekanntgegeben werden, damit er ï¿½ber {@link ODSConnection#ensurePersistenceLayerConnectivity(java.util.List)}
+ * alle Verbindungen zu den PersistenceLayern herstellen kann. Wird dies nicht gemacht, kï¿½nnen 
+ * DeadLocks entstehen, wenn Connections erst spï¿½ter dazugeholt werden mï¿½ssen, aber nicht mehr
+ * verfï¿½gbar sind.
  * <p>
- * Um das Commit kümmert sich der WarehouseRetryExecutor automatisch, es muss nicht in den Executables
+ * Um das Commit kï¿½mmert sich der WarehouseRetryExecutor automatisch, es muss nicht in den Executables
  * gemacht werden:
  * <ul>
- * <li> Wenn eine normale Connection übergeben wird, wird kein Commit gemacht, dies ist Aufgabe des 
- * Connection-Erstellers bzw. der äußeren Transaktion.</li>
+ * <li> Wenn eine normale Connection ï¿½bergeben wird, wird kein Commit gemacht, dies ist Aufgabe des 
+ * Connection-Erstellers bzw. der ï¿½uï¿½eren Transaktion.</li>
  * <li> Wenn eine dedizierte Connection verwendet wird, werden automatisch Commits (und Rollbacks) gemacht</li>
- * <li> Wenn keine Connection übergeben wird, wird die interne Connection automatisch committet.</li>
- * <li> Das Commit/Rollback-Verhalten ist zusätzlich noch konfigurierbar.</li>
+ * <li> Wenn keine Connection ï¿½bergeben wird, wird die interne Connection automatisch committet.</li>
+ * <li> Das Commit/Rollback-Verhalten ist zusï¿½tzlich noch konfigurierbar.</li>
  * </ul>
  * <p>
- * Wenn sich die übergebene Connection bereits in einer Transaktion befindet, werden keine Retries gemacht,
- * wenn die Ausführung des Executables scheitert.
+ * Wenn sich die ï¿½bergebene Connection bereits in einer Transaktion befindet, werden keine Retries gemacht,
+ * wenn die Ausfï¿½hrung des Executables scheitert.
  * <p>
  * Beispiel:
  * <pre>
@@ -134,14 +134,14 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
       this.internalConnection = false;
       this.con = connection;
     } else {
-      //Anlegen einer neuen Con, wenn diese nicht übergeben wurde
+      //Anlegen einer neuen Con, wenn diese nicht ï¿½bergeben wurde
       this.internalConnection = true;
       this.con = ODSImpl.getInstance().openConnection(connectionType);
     }
   }
   
   /**
-   * Prüfung, ob Connection verwendbar ist durch ensurePersistenceLayerConnectivity
+   * Prï¿½fung, ob Connection verwendbar ist durch ensurePersistenceLayerConnectivity
    * @param ensuringStorables 
    * @return
    * @throws PersistenceLayerException 
@@ -175,9 +175,9 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
   }
 
   /**
-   * Verwendung der Connection: Ausführen von executable
+   * Verwendung der Connection: Ausfï¿½hren von executable
    * @param commitMode 
-   * @return true, wenn executable ausgeführt wurde und keine XNWH_RetryTransactionException/PersistenceLayerException auftrat
+   * @return true, wenn executable ausgefï¿½hrt wurde und keine XNWH_RetryTransactionException/PersistenceLayerException auftrat
    * @throws E1 von executable definiert
    * @throws E2 von executable definiert
    */
@@ -189,14 +189,14 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
       return true;
     } catch ( XNWH_RetryTransactionException e ) {
       if( transactionAlreadyStarted ) {
-        //äußere Transaktion, daher diesen Fehler propagieren
+        //ï¿½uï¿½ere Transaktion, daher diesen Fehler propagieren
         lastException = e;
-        throw e; //keinen Retry versuchen, da äußere Transaktion wahrscheinlich auch geschädigt
+        throw e; //keinen Retry versuchen, da ï¿½uï¿½ere Transaktion wahrscheinlich auch geschï¿½digt
       } else {
         if (!maxRetriesReached(false)) {
           con.rollback(); //immer rollback auf connection bei retry
         }
-        //keine äußere Transaktion, daher kann lokale Transaktion wiederholt werden
+        //keine ï¿½uï¿½ere Transaktion, daher kann lokale Transaktion wiederholt werden
         lastException = e;
         ++counterConnectionBroken;
         return false;
@@ -289,11 +289,11 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
     } else {
       try {
         if (internalConnection ) {
-          //intern geöffnete Connection wird nun geschlossen
+          //intern geï¿½ffnete Connection wird nun geschlossen
           con.closeConnection();
         } else {
           if( rollbackMode == Rollback.Always || (error && rollbackMode == Rollback.OnError) ) {
-            //auf übergebene Connection wird nun rollback gemacht
+            //auf ï¿½bergebene Connection wird nun rollback gemacht
             con.rollback();
           }
         }
@@ -353,14 +353,14 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
     try {
       do {
         boolean conIsUsable = checkConnectionIsUsable(ensuringStorables); //ist con verwendbar?
-        if( conIsUsable ) { //Connection ist valide, daher Task ausführen
+        if( conIsUsable ) { //Connection ist valide, daher Task ausfï¿½hren
           executionSucceeded = useConnection(executable,commitMode); //hat Task fehlerfrei geklappt? Wirft Task-definierte Exceptions!
           if( executionSucceeded ) {
-            return getExecutionResult(); //Ergebnis des erfolreichen Tasks zurückgeben
+            return getExecutionResult(); //Ergebnis des erfolreichen Tasks zurï¿½ckgeben
           }
         }
       } while( ! maxRetriesReached(true) ); //wiederholen, falls es Probleme gab
-      throw lastException(); //definierte Retries überschritten, daher letzte Exception weiterwerfen
+      throw lastException(); //definierte Retries ï¿½berschritten, daher letzte Exception weiterwerfen
     } catch (InterruptedException e) {
       if (lastException != null) {
         throw new XNWH_GeneralPersistenceLayerException("Interrupted waiting for retries after exception.", lastException);
@@ -368,7 +368,7 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
         throw new RuntimeException("Interrupted waiting for retries");
       }
     } finally {
-      closeConnection(rollbackMode, !executionSucceeded); //intern geöffnete Connections schließen, externe Con rollbacken
+      closeConnection(rollbackMode, !executionSucceeded); //intern geï¿½ffnete Connections schlieï¿½en, externe Con rollbacken
       if( logDiagnostics ) {
         String wreString = this.toString();
         long stop = System.currentTimeMillis();
@@ -397,8 +397,8 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
 
     /**
      * Setzt den ODSConnectionType, Default ist ODSConnectionType.DEFAULT
-     * Der WarehouseRetryExecutor kümmert sich automatisch ums Öffnen und
-     * Schließen der Connection.
+     * Der WarehouseRetryExecutor kï¿½mmert sich automatisch ums ï¿½ffnen und
+     * Schlieï¿½en der Connection.
      * @param connectionType
      * @return
      */
@@ -407,8 +407,8 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
       return this;
     }
     /**
-     * Übernimmt connectionType aus übergebener connection, bei null ODSConnectionType.DEFAULT
-     * Commit.OnlyIfOpened: Es wird ein Commit ausgeführt, wenn keine Connection übergeben wird.
+     * ï¿½bernimmt connectionType aus ï¿½bergebener connection, bei null ODSConnectionType.DEFAULT
+     * Commit.OnlyIfOpened: Es wird ein Commit ausgefï¿½hrt, wenn keine Connection ï¿½bergeben wird.
      * @param connection
      * @return
      */
@@ -418,14 +418,14 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
         this.connection = connection;
       }
       this.commitMode = Commit.OnlyIfOpened;
-      this.rollbackMode = Rollback.Never; //macht entweder äußere Transaktion oder die lokale Connection wird eh geschlossen
+      this.rollbackMode = Rollback.Never; //macht entweder ï¿½uï¿½ere Transaktion oder die lokale Connection wird eh geschlossen
       return this;
     }
     
 
     /**
      * Holt sich dedicated Connection
-     * Es wird am Ende immer ein Rollback ausgeführt, da die Connection ja nicht geschlossen wird
+     * Es wird am Ende immer ein Rollback ausgefï¿½hrt, da die Connection ja nicht geschlossen wird
      * @param dedicatedConnection
      * @return
      */
@@ -437,7 +437,7 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
     }
    
     /**
-     * Setzt ein Storable, für welches die Connection vor Ausführung des Executables geprüft wird.
+     * Setzt ein Storable, fï¿½r welches die Connection vor Ausfï¿½hrung des Executables geprï¿½ft wird.
      * Diese Methode kann mehrfach gerufen werden, alle Storables werden gesammelt.
      * @param storable
      * @return
@@ -451,7 +451,7 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
       return this;
     }
     /**
-     * Setzt alle zu prüfenden Storables
+     * Setzt alle zu prï¿½fenden Storables
      * @param storables
      * @return
      */
@@ -527,7 +527,7 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
     }
     
     /**
-     * Soll ein Rollback auf der externen Connection gemacht werden, nachdem das Executable ausgeführt wurde?
+     * Soll ein Rollback auf der externen Connection gemacht werden, nachdem das Executable ausgefï¿½hrt wurde?
      * Default ist Rollback.Never
      * @param rollback
      * @return
@@ -616,8 +616,8 @@ public class WarehouseRetryExecutor<T, E1 extends XynaException, E2 extends Xyna
 
   
   /**
-   * Erzeugen eines WarehouseRetryExecutorBuilder für kritische Ausführungen: 
-   * Wiedeholtes Connection-Erzeugen solange, bis Connection verfügbar ist
+   * Erzeugen eines WarehouseRetryExecutorBuilder fï¿½r kritische Ausfï¿½hrungen: 
+   * Wiedeholtes Connection-Erzeugen solange, bis Connection verfï¿½gbar ist
    * @return
    */
   public static WarehouseRetryExecutorBuilder buildCriticalExecutor() {

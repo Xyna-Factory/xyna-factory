@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import com.gip.xyna.xnwh.persistence.memory.index.tree.IndexImplTree.HasSize;
 
 public class Rebalancer<E extends HasSize> {
 
-  public static int cnt;//TODO kann raus, ist nur für tests
+  public static int cnt;//TODO kann raus, ist nur fï¿½r tests
   private static final Logger logger = CentralFactoryLogging.getLogger(Rebalancer.class);
 
 
@@ -70,7 +70,7 @@ public class Rebalancer<E extends HasSize> {
         if (size == 1) {
           rebalanceNode(node.getChild(0), false);
         } else if (size > 0) {
-          //gib die höchsten size/2 knoten an den parent
+          //gib die hï¿½chsten size/2 knoten an den parent
           AbstractNode<E> parent = node.getParent();
 
           for (int i = 0; i < size / 2; i++) {
@@ -96,17 +96,17 @@ public class Rebalancer<E extends HasSize> {
         boolean mergedNodes = false;
         for (int i = indexForFirstMergingCandidate; i < size - 1; i++) {
           AbstractNode<E> childToMergeTo = node.getChild(i);
-          //TODO performance: (i+1)tes kind jetzt ist in nächster iteration das i-te kind => muss man nicht erneut auslesen.
+          //TODO performance: (i+1)tes kind jetzt ist in nï¿½chster iteration das i-te kind => muss man nicht erneut auslesen.
           if (childToMergeTo.getSubTreeSize() + node.getChild(i + 1).getSubTreeSize() <= childToMergeTo
               .getMaxSubTreeSize()) {
 
-            //merging möglich
+            //merging mï¿½glich
             AbstractNode<E> removed = node.removeSubTree(i + 1); //removed hat depth D+1
 
             addNodeToTransformLater(removed);
 
             int numberOfChildren = childToMergeTo.getNumberOfChildren();
-            //i < i+1. d.h. erst removed anhängen, dann all seine kinder.
+            //i < i+1. d.h. erst removed anhï¿½ngen, dann all seine kinder.
             int positionLastChildOfRemoved = removed.getNumberOfChildren() - 1;
             for (int j = positionLastChildOfRemoved; j >= 0; j--) {
               AbstractNode<E> childOfRemoved = removed.removeSubTree(j);
@@ -118,7 +118,7 @@ public class Rebalancer<E extends HasSize> {
             mergedNodes = true;
             break;
           } else {
-            //kein merging möglich => beim nächsten schleifendurchlauf muss man das nicht nochmal probieren
+            //kein merging mï¿½glich => beim nï¿½chsten schleifendurchlauf muss man das nicht nochmal probieren
             indexForFirstMergingCandidate = i + 1;
           }
         }
@@ -163,7 +163,7 @@ public class Rebalancer<E extends HasSize> {
 
 
   /**
-   * validieren, dass der knoten vom richtigen typ ist. falls nicht, wird der typ angepasst und dann über die kinder
+   * validieren, dass der knoten vom richtigen typ ist. falls nicht, wird der typ angepasst und dann ï¿½ber die kinder
    * rekursiert ACHTUNG: parentknoten muss vor dem aufruf gelockt werden! stellt sicher, dass beim transform-aufruf
    * immer sowohl der parent, als auch der knoten selbst gelockt sind.
    */
@@ -184,7 +184,7 @@ public class Rebalancer<E extends HasSize> {
       }
   
       if (!node.isInvalid()) {
-        //parentlock hält parentmethode. nodelock hält diese methode
+        //parentlock hï¿½lt parentmethode. nodelock hï¿½lt diese methode
         if (!nodeTypeTransformer.validateNodeType(node)) {
           AbstractNode<E> newNode = node.transform(nodeTypeTransformer);
           synchronized (nodesToRemove) {
@@ -231,9 +231,9 @@ public class Rebalancer<E extends HasSize> {
   }
 
 
-  //FIXME performance: synchronize über cluster hinweg, damit knoten nicht mehrfach rebalanced werden.
+  //FIXME performance: synchronize ï¿½ber cluster hinweg, damit knoten nicht mehrfach rebalanced werden.
   /*
-   * zahl ist die anzahl der änderungen an diesem knoten. 
+   * zahl ist die anzahl der ï¿½nderungen an diesem knoten. 
    */
   private Map<AbstractNode<E>, Integer> nodesToRebalance = new HashMap<AbstractNode<E>, Integer>();
 
@@ -291,7 +291,7 @@ public class Rebalancer<E extends HasSize> {
       }
 
       if (nodesToRemove.size() > 100) {
-        //leere knoten entfernen. dazu muss man nochmal isEmpty() checken, weil sich der leer-status des knotens inzwischen geändert haben könnte
+        //leere knoten entfernen. dazu muss man nochmal isEmpty() checken, weil sich der leer-status des knotens inzwischen geï¿½ndert haben kï¿½nnte
         Set<AbstractNode<E>> copyOfNodesToRemove;
         synchronized (nodesToRemove) {
           copyOfNodesToRemove = new HashSet<AbstractNode<E>>(nodesToRemove);

@@ -1,6 +1,6 @@
  /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,12 +68,12 @@ public class ClassLoaderBase extends URLClassLoader {
 
   private ClassLoaderBase[] parents;
   /**
-   * liste von zusätzlichen parents, die nicht mit dem konstruktor, sondern zur laufzeit dynamisch belegt werden.
-   * beispielsweise von persistencelayerclassloadern, die eine abhängigkeit auf storables erkennen, die
-   * in einem service (mdmclassloader) definiert sind. diese abhängigkeit kann irgendwann aufhören, weil z.b. der
+   * liste von zusï¿½tzlichen parents, die nicht mit dem konstruktor, sondern zur laufzeit dynamisch belegt werden.
+   * beispielsweise von persistencelayerclassloadern, die eine abhï¿½ngigkeit auf storables erkennen, die
+   * in einem service (mdmclassloader) definiert sind. diese abhï¿½ngigkeit kann irgendwann aufhï¿½ren, weil z.b. der
    * service undeployed wird. dann sollten auch die referenzen auf die classloader verschwinden wegen
    * oom-gefahr.<br>
-   * die weakreferences gewährleisten das.
+   * die weakreferences gewï¿½hrleisten das.
    */
   private WeakReference<ClassLoaderBase>[] weakReferencedParents;
   private final Object weakReferencedParentsLock = new Object();
@@ -179,7 +179,7 @@ public class ClassLoaderBase extends URLClassLoader {
     return arg;
   }
   
-  //nur für debugging/analyse von geladenen klassen
+  //nur fï¿½r debugging/analyse von geladenen klassen
   private final Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>(2, 0.75f, 2);
   
   protected void addPreviouslyLoadedClass(String name, Class<?> clazz) {
@@ -242,7 +242,7 @@ public class ClassLoaderBase extends URLClassLoader {
          */
         Class<?> c = findLoadedClass(name);
         if (c == null) {
-          //könnte auch ein findClass auf eine andere klasse gewesen sein im gleichen package. dann ist es ok, wenn man die klasse noch nicht als "loaded" findet.
+          //kï¿½nnte auch ein findClass auf eine andere klasse gewesen sein im gleichen package. dann ist es ok, wenn man die klasse noch nicht als "loaded" findet.
           //also nochmal versuchen
           c = findClass(name); 
         }
@@ -452,8 +452,8 @@ public class ClassLoaderBase extends URLClassLoader {
     protected final Long parentRevision;
     
     /*
-     * Die parentRevision ist in der Regel null. Nur FilterClassLoader mit dem ClassLoaderType == OutdatedFilter übergeben als parentRevision die
-     * Revision des Triggers, da sich diese von der eigenen unterscheidet. Dies hängt mit dem dahinterliegenden Konzept für die Filterantwort 
+     * Die parentRevision ist in der Regel null. Nur FilterClassLoader mit dem ClassLoaderType == OutdatedFilter ï¿½bergeben als parentRevision die
+     * Revision des Triggers, da sich diese von der eigenen unterscheidet. Dies hï¿½ngt mit dem dahinterliegenden Konzept fï¿½r die Filterantwort 
      * RESPONSIBLE_BUT_TOO_NEW zusammen.
      */
     protected ClassLoaderIdRevisionRef(String classLoaderId, Long revision, Long parentRevision) {
@@ -514,17 +514,17 @@ public class ClassLoaderBase extends URLClassLoader {
   }
 
   /**
-   * fügt eine classloader abhängigkeit hinzu. 
-   * d.h. der classloader der übergebenen klasse
-   * muss beim ändern des hiesigen classloaders auch reloaded werden. das ist genau andersrum als eine klassenabhängigkeit.
+   * fï¿½gt eine classloader abhï¿½ngigkeit hinzu. 
+   * d.h. der classloader der ï¿½bergebenen klasse
+   * muss beim ï¿½ndern des hiesigen classloaders auch reloaded werden. das ist genau andersrum als eine klassenabhï¿½ngigkeit.
    * beispiel:
    * class1 benutzt class2 und class1 und class2 sollen unterschiedliche classloader haben (z.b. mdm objekte), 
    * dann delegiert der classloader von class1 das classloading von class2 an den classloader von class2.
-   * d.h. falls class2 sich ändert, hat der classloader von class1 als der (evtl) initiierende classloader
+   * d.h. falls class2 sich ï¿½ndert, hat der classloader von class1 als der (evtl) initiierende classloader
    * des classloading-vorgangs von class2 class2 gecached.
-   * d.h.: class 1 ändert sich =&gt; class2 classloader ist abhängig im sinne, dass der class2 classloader
+   * d.h.: class 1 ï¿½ndert sich =&gt; class2 classloader ist abhï¿½ngig im sinne, dass der class2 classloader
    * erneuert werden muss.
-   * =&gt; rekursiv müssen auch die von class2 abhängigen classloader erneuert werden.
+   * =&gt; rekursiv mï¿½ssen auch die von class2 abhï¿½ngigen classloader erneuert werden.
    * 
    * siehe auch java vm spec:
    * http://java.sun.com/docs/books/jvms/second_edition/html/ConstantPool.doc.html
@@ -570,7 +570,7 @@ public class ClassLoaderBase extends URLClassLoader {
 
 
   /**
-   * rekursives sammeln aller abhängigen classloader
+   * rekursives sammeln aller abhï¿½ngigen classloader
    */
   private void collectDependencies(HashMap<ClassLoaderType, HashSet<ClassLoaderIdRevisionRef>> deps) {
     for (ClassLoaderType clt : loadingClasses.keySet()) {
@@ -654,8 +654,8 @@ public class ClassLoaderBase extends URLClassLoader {
   /**
    * Reloads all dependent class loaders including this.
    * <ul> 
-   * <li>dependencies der alten classloader übernehmen</li>
-   * <li>urls der alten classloader übernehmen</li>
+   * <li>dependencies der alten classloader ï¿½bernehmen</li>
+   * <li>urls der alten classloader ï¿½bernehmen</li>
    * <li>sonstige extraaufgaben erledigen, die sich beim classloaderwechsel eines objekts
    * ergeben</li>
    * </ul>
@@ -668,10 +668,10 @@ public class ClassLoaderBase extends URLClassLoader {
     collectDependencies(deps);
     
     //erst undeployen, dann classloader austauschen, dann deployen.
-    //weil: eine mischung dieser operationen kann zu problemen führen, weil im deployment und undeployment objekte instanziiert
-    //werden, die ggfs auf andere objekte verweisen, die erst später reloaded werden.
-    //z.b. wenn man erst objekt A vollständig redeployed, und danach dann objekt B, welches in A verwendet wird
-    //vollständig redeployed, dann sind die verweise in A auf B nicht mehr gültig, da sie noch den alten
+    //weil: eine mischung dieser operationen kann zu problemen fï¿½hren, weil im deployment und undeployment objekte instanziiert
+    //werden, die ggfs auf andere objekte verweisen, die erst spï¿½ter reloaded werden.
+    //z.b. wenn man erst objekt A vollstï¿½ndig redeployed, und danach dann objekt B, welches in A verwendet wird
+    //vollstï¿½ndig redeployed, dann sind die verweise in A auf B nicht mehr gï¿½ltig, da sie noch den alten
     //classloader verwenden.
     reload_undeploy(deps);
     try {
@@ -682,14 +682,14 @@ public class ClassLoaderBase extends URLClassLoader {
     } catch (XynaException e) {
       throw new XFMG_ClassLoaderRedeploymentException(getType().toString(), id, e);
     }
-    //TODO der classloader von this wird hier evtl ein zweites mal ausgetauscht. wäre eigtl nicht notwendig, weil es bereits passiert ist. schadet aber nichts.
+    //TODO der classloader von this wird hier evtl ein zweites mal ausgetauscht. wï¿½re eigtl nicht notwendig, weil es bereits passiert ist. schadet aber nichts.
     reload_switchClassLoaders(deps);   
     reload_deploy(deps, null);
   }
 
 
   //reihenfolge wichtig, weil zb erst workflow neu deployen erzeugt bereits mdm classloader. diese werden nachher nochmal
-  //neu erzeugt, was zu classcastexceptions führt
+  //neu erzeugt, was zu classcastexceptions fï¿½hrt
   private static ClassLoaderType[] typesInOrderForReLoad = new ClassLoaderType[] {ClassLoaderType.SharedLib,
                   ClassLoaderType.MDM, ClassLoaderType.Exception, ClassLoaderType.Trigger, ClassLoaderType.WF,
                   ClassLoaderType.Filter, ClassLoaderType.OutdatedFilter};
@@ -747,7 +747,7 @@ public class ClassLoaderBase extends URLClassLoader {
           /*
            * passiert, wenn objekte nicht deployed wurden konnten.
            * normalerweise sollten diese dann undeployed werden. seit dem deploymentstatus feature wird aber bevorzugt, dass
-           * objekte in einem invaliden status deployed sind. dann gibt es aber unter umständen (bei datentypen/exceptions) keinen
+           * objekte in einem invaliden status deployed sind. dann gibt es aber unter umstï¿½nden (bei datentypen/exceptions) keinen
            * classloader.
            */
           if (logger.isDebugEnabled()) {
@@ -855,7 +855,7 @@ public class ClassLoaderBase extends URLClassLoader {
   private boolean hasBeenUsed = false;
   
   /**
-   * gibt das hasBeenDeployed flag zurück (default = false)
+   * gibt das hasBeenDeployed flag zurï¿½ck (default = false)
    */
   public boolean hasBeenDeployed() {
     return hasBeenDeployed;
@@ -899,8 +899,8 @@ public class ClassLoaderBase extends URLClassLoader {
 
 
   /**
-   * backupped dependencies wieder hinzufügen, falls vorhanden
-   * @return restore hat auch tatsächlich was gemacht
+   * backupped dependencies wieder hinzufï¿½gen, falls vorhanden
+   * @return restore hat auch tatsï¿½chlich was gemacht
    */
   public boolean restoreBackuppedClassloadingDependencies() {
     if (logger.isTraceEnabled()) {
@@ -964,7 +964,7 @@ public class ClassLoaderBase extends URLClassLoader {
               break;
             }
           }
-          //TODO aufräumen, wenn map leer ist
+          //TODO aufrï¿½umen, wenn map leer ist
         }
       }
     }
@@ -1048,7 +1048,7 @@ public class ClassLoaderBase extends URLClassLoader {
   /**
    * ClassLoader kann fqClassNames registrieren.
    * Damit kann beispielsweise in der Implementation erreicht werden, 
-   * dass der ClassLoader eine bestimmte Klasse selbst lädt anstatt seine Parents danach zu fragen.
+   * dass der ClassLoader eine bestimmte Klasse selbst lï¿½dt anstatt seine Parents danach zu fragen.
    *
    */
   public static interface RegisteringClassLoader {
@@ -1059,7 +1059,7 @@ public class ClassLoaderBase extends URLClassLoader {
   
   /**
    * ClassLoader kann ersetzt werden durch neuen ClassLoader, 
-   * falls Parent-ClassLoader erneuert werden müssen
+   * falls Parent-ClassLoader erneuert werden mï¿½ssen
    *
    */
   public static interface ReplaceableClassLoader {

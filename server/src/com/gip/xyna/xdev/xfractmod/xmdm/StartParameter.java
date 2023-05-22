@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ public interface StartParameter {
   /**
    * Zur Dokumentation.
    * 
-   * @return Liste der Startparameterbeschreibungen, sortiert nach möglichen Kombinationen. Falls es die
-   *         Startparametermöglichkeiten (A,B) und (A,C,D) gibt, würde hier zurückgegeben werden: new String[][]{{"A",
+   * @return Liste der Startparameterbeschreibungen, sortiert nach mï¿½glichen Kombinationen. Falls es die
+   *         Startparametermï¿½glichkeiten (A,B) und (A,C,D) gibt, wï¿½rde hier zurï¿½ckgegeben werden: new String[][]{{"A",
    *         "B"}, {"A", "C", "D"}}.
    */
   public String[][] getParameterDescriptions();

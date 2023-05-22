@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import java.util.ListIterator;
 /**
  * PeekIterator ist eine Implemtierung des Iterator-Interfaces, mit der ein Eintrag bereits
  * gelesen werden kann, bevor die Methode next gerufen wird.
- * Dazu muss im Konstruktor der Iterator der zugrundeliegenden Collection übergeben werden.
- * Die Methode remove wird nur unterstützt, wenn ein ListIterator übergeben wurde.
+ * Dazu muss im Konstruktor der Iterator der zugrundeliegenden Collection ï¿½bergeben werden.
+ * Die Methode remove wird nur unterstï¿½tzt, wenn ein ListIterator ï¿½bergeben wurde.
  */
 public class PeekIterator<E> implements java.util.Iterator<E> {
 

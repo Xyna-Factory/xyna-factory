@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,7 +159,7 @@ public class InterconnectTest extends TestCase {
       XSORUtil.setInt(transactionCorrId, ret, 5);
       senderQueue.offer(ret);
     }
-    System.out.println("queue füllen brauchte " + (System.currentTimeMillis() - t) + "ms");
+    System.out.println("queue fï¿½llen brauchte " + (System.currentTimeMillis() - t) + "ms");
     t = System.currentTimeMillis();
     //&& System.currentTimeMillis() - t < 40 * 1000
     while (waitMgmt.size() < cnt) {

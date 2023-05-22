@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public interface VariableContextIdentification {
     VariableInfo follow(List<VariableAccessPart> parts, int depth) throws XPRC_InvalidVariableMemberNameException;
 
     /**
-     * falls ignoreList auf true gesetzt ist, wird nie TypeInfo==LIST zurückgegeben. ansonsten wird der typ zurückgegeben, 
+     * falls ignoreList auf true gesetzt ist, wird nie TypeInfo==LIST zurï¿½ckgegeben. ansonsten wird der typ zurï¿½ckgegeben, 
      * und der kann auch LIST sein, falls die variable (inkl pfad) listenwertig ist.
      */
     TypeInfo getTypeInfo(boolean ignoreList);
@@ -62,7 +62,7 @@ public interface VariableContextIdentification {
   VariableInfo createVariableInfo(TypeInfo resultType);
   
   /**
-   * Gibt Typ von Root Variable zurück. Falls followAccessParts=true, werden die Accessparts mit validiert
+   * Gibt Typ von Root Variable zurï¿½ck. Falls followAccessParts=true, werden die Accessparts mit validiert
    */
   VariableInfo createVariableInfo(Variable v, boolean followAccessParts) throws XPRC_InvalidVariableIdException, XPRC_InvalidVariableMemberNameException;
   

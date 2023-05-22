@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ public class ProcessStepTest extends TestCase {
     XynaFactory.setInstance(xf);
     EasyMock.replay(xf);
 
-    // processstep hat 3 kinder, wobei nur 2 davon ausgeführt werden und der zweite davon fehlerhaft
+    // processstep hat 3 kinder, wobei nur 2 davon ausgefï¿½hrt werden und der zweite davon fehlerhaft
     MyProcessStep step = new MyProcessStep(0, true);
     MyProcess proc = new MyProcess();
     step.init(proc);
@@ -136,7 +136,7 @@ public class ProcessStepTest extends TestCase {
     step3.init(proc);
     boolean gotException = false;
     try {
-      step.execute(); // schritt ausführen. ruft intern 2 weitere schritte, einer geht gut, einer nicht
+      step.execute(); // schritt ausfï¿½hren. ruft intern 2 weitere schritte, einer geht gut, einer nicht
     } catch (XynaException e) {
       gotException = true;
       if (e.getMessage().contains("unexpected")) {
@@ -232,7 +232,7 @@ public class ProcessStepTest extends TestCase {
       } else if (getN() == 2) {
         throw new XynaException("expectedFault");
       } else if (getN() == 3) {
-        // sollte nicht ausgeführt werden
+        // sollte nicht ausgefï¿½hrt werden
         fail("processStep 3 should not have been executed");
       } else {
         fail("invalid processStep " + getN());

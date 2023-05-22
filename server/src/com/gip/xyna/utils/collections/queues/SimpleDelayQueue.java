@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,13 +33,13 @@ import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
 import com.gip.xyna.utils.collections.Pair;
 
 /**
- * SimpleDelayQueue ist eine Queue, bei der die Einträge erst nach 
- * einer Wartezeit wieder ausgelesen werden können.
+ * SimpleDelayQueue ist eine Queue, bei der die Eintrï¿½ge erst nach 
+ * einer Wartezeit wieder ausgelesen werden kï¿½nnen.
  * 
  * SimpleDelayQueue is eine Vereinfachtung von java.util.concurrent.DelayQueue:
- * Gespeicherte Einträge müssen nicht mehr das Interface Delayed erfüllen.
+ * Gespeicherte Eintrï¿½ge mï¿½ssen nicht mehr das Interface Delayed erfï¿½llen.
  * Bei offer und add kann stattdessen direkt die Zeit angegeben werden, nach der die
- * Einträge aus der Queue abgeholt werden können.
+ * Eintrï¿½ge aus der Queue abgeholt werden kï¿½nnen.
  *
  */
 public class SimpleDelayQueue<E> implements BlockingQueue<E> {

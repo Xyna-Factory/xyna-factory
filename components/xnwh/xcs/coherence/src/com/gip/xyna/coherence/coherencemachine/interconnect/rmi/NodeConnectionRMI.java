@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import com.gip.xyna.xact.rmi.RMIConnectionFailureException;
 
 // FIXME prio2: exception handling for all methods
 /**
- * "Client" - Implementierung des Interconnects für RMI
+ * "Client" - Implementierung des Interconnects fï¿½r RMI
  */
 public class NodeConnectionRMI implements InterconnectProtocol {
 
@@ -79,7 +79,7 @@ public class NodeConnectionRMI implements InterconnectProtocol {
   public LockAwaitResponse awaitLock(long objectId, long priority, boolean tryLock, long nanoTimeout)
       throws ObjectNotInCacheException, InterruptedException {
     try {
-      //über rmi kann man keine absoluten nanotimeouts übergeben => relativ berechnen und auf gegenseite rücktransformieren.
+      //ï¿½ber rmi kann man keine absoluten nanotimeouts ï¿½bergeben => relativ berechnen und auf gegenseite rï¿½cktransformieren.
       //FIXME pingzeit mit einberechnen?
       return getRmiInterface().awaitLock(objectId, priority, tryLock, nanoTimeout - System.nanoTime());
     } catch (RemoteException e) {
@@ -109,7 +109,7 @@ public class NodeConnectionRMI implements InterconnectProtocol {
   public LockRequestResponse requestLock(long objectId, long priority, boolean tryLock, long nanoTimeout)
       throws ObjectNotInCacheException, InterruptedException {
     try {
-      //über rmi kann man keine absoluten nanotimeouts übergeben => relativ berechnen und auf gegenseite rücktransformieren.
+      //ï¿½ber rmi kann man keine absoluten nanotimeouts ï¿½bergeben => relativ berechnen und auf gegenseite rï¿½cktransformieren.
       return getRmiInterface().requestLock(objectId, priority, tryLock, nanoTimeout - System.nanoTime());
     } catch (RemoteException e) {
       throw new RuntimeException(e);

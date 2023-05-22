@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ package com.gip.xyna.xnwh.persistence;
 
 
 /**
- * ermöglicht die trennung von connection-erstellung zu connection-eigenschaft definition.
+ * ermï¿½glicht die trennung von connection-erstellung zu connection-eigenschaft definition.
  * @see TransactionProperty
  */
 public interface TransactionPropertySpecification {
 
   /**
-   * könnte z.B. die connectioneigenschaften über {@link Connection#setTransactionProperty(TransactionProperty)} ändern
+   * kï¿½nnte z.B. die connectioneigenschaften ï¿½ber {@link Connection#setTransactionProperty(TransactionProperty)} ï¿½ndern
    */
   public void specifyTransactionProperties(ODSConnection con);
 

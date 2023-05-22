@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class LogFormatter extends Formatter {
 
    /**
     * @param timeFormat
-    *              Java-übliches Zeitformat, oder aber 'off' um es
+    *              Java-ï¿½bliches Zeitformat, oder aber 'off' um es
     *              auszuschalten.
     * @param enableLogLevelInfo
     * @param enableMethodLogging
@@ -89,7 +89,7 @@ public class LogFormatter extends Formatter {
 
    /**
     * Diese Methode stellt den Klassenname, Methodenname, Filename und
-    * Zeilennummer zur Verfügung. Aus LogRecord kopiert und modifiziert.
+    * Zeilennummer zur Verfï¿½gung. Aus LogRecord kopiert und modifiziert.
     * 
     * @param record
     */
@@ -202,7 +202,7 @@ public class LogFormatter extends Formatter {
 
    /**
     * Expandiert einen String auf der rechten Seite mit Leerzeichen bis zur
-    * Größe size.
+    * Grï¿½ï¿½e size.
     * 
     * @param str
     * @param size
@@ -221,7 +221,7 @@ public class LogFormatter extends Formatter {
    }
 
    /**
-    * Expandiert einen String auf der linken Seite mit Leerzeichen bis zur Größe
+    * Expandiert einen String auf der linken Seite mit Leerzeichen bis zur Grï¿½ï¿½e
     * size.
     * 
     * @param str

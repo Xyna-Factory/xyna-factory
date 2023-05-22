@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
     try {
       List<DeploymentItemStateReport> result = new ArrayList<DeploymentItemStateReport>();
       Selection selection = SelectionParser.generateSelectObjectFromSearchRequestBean(searchRequest);
-      //da das sql hier nicht verwendet werden kann, müssen wir die filterkriterien einzeln verarbeiten
+      //da das sql hier nicht verwendet werden kann, mï¿½ssen wir die filterkriterien einzeln verarbeiten
 
       Map<String, String> filterMap = searchRequest.getFilterEntries();
       String application = SelectionParser.getLiteral(filterMap.get(DeploymentItemColumn.APPLICATION.getColumnName()));
@@ -157,7 +157,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
         result.addAll(searchDeploymentItems(selection, revision));
       }
       if (application != null && workspace != null) {
-        //application definition: objekte aussortieren, die nicht zur appdef gehören
+        //application definition: objekte aussortieren, die nicht zur appdef gehï¿½ren
         List<ApplicationEntryStorable> entries = ((ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement()
             .getXynaFactoryControl().getApplicationManagement()).listApplicationDetails(application, null, true,
                                                                                         Collections.<String> emptyList(), revision, true);
@@ -188,7 +188,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
     //StateReport ermitteln
     DeploymentItemStateReport report = dis.getStateReport(selection);
 
-    //Tags und Tasks hinzufügen
+    //Tags und Tasks hinzufï¿½gen
     DeploymentMarkerManagement dmMgmt = XynaFactory.getPortalInstance().getFactoryManagementPortal().getXynaFactoryControl().getDeploymentMarkerManagement();
     if (selection.containsColumn(DeploymentItemColumn.MARKER) || selection.containsColumn(DeploymentItemColumn.TASK)) {
       report.addDeploymentMarker(dmMgmt.searchDeploymentTasks(Optional.of(dis), revision));
@@ -197,7 +197,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
       report.addDeploymentMarker(dmMgmt.searchDeploymentTags(Optional.of(dis), revision));
     }
     
-    //OpenTaskCount hinzufügen
+    //OpenTaskCount hinzufï¿½gen
     if (selection.containsColumn(DeploymentItemColumn.TASKCOUNT)) {
       report.setOpenTaskCount(dmMgmt.countOpenDeploymentTasks(dis, revision));
     }
@@ -215,7 +215,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
       }
     }
     
-    //Tags und Tasks hinzufügen
+    //Tags und Tasks hinzufï¿½gen
     List<DeploymentMarker> markers = new ArrayList<DeploymentMarker>();
     DeploymentMarkerManagement dmMgmt = XynaFactory.getPortalInstance().getFactoryManagementPortal().getXynaFactoryControl().getDeploymentMarkerManagement();
 
@@ -230,7 +230,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
       reports = CollectionUtils.join(reports, markers, new DeploymentItemStateReportJoin(false), JoinType.LeftOuter);
     }
     
-    //OpenTaskCount hinzufügen
+    //OpenTaskCount hinzufï¿½gen
     if (selection.containsColumn(DeploymentItemColumn.TASKCOUNT)) {
       if (!selection.containsColumn(DeploymentItemColumn.MARKER) && !selection.containsColumn(DeploymentItemColumn.TASK)) {
         //Tasks wurden noch nicht gesucht
@@ -239,15 +239,15 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
       
       //aus der Liste aller Tags und Tasks die noch offenen Tasks heraussuchen
       List<DeploymentMarker> openTasks = CollectionUtils.transformAndSkipNull(markers, new OpenDeploymentTasks());
-      //und die Anzahl an die Reports dranhängen
+      //und die Anzahl an die Reports dranhï¿½ngen
       reports = CollectionUtils.join(reports, openTasks, new DeploymentItemStateReportJoin(true), JoinType.LeftOuter);
     }
     
     return reports;
   }
   
-  //callsites werden beim serverstart bereits befüllt (initialer resolution aufruf checken=)
-  //callsites unvollständig
+  //callsites werden beim serverstart bereits befï¿½llt (initialer resolution aufruf checken=)
+  //callsites unvollstï¿½ndig
   
   
   public Map<Long, Map<String, XMOMDatabaseSearchResultEntry>> searchByBackwardRelation(Set<XMOMDatabaseEntryColumn> relations, String usedObject, Long revision) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
@@ -301,13 +301,13 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
                       }
                       if (relation == XMOMDatabaseEntryColumn.NEEDEDBY || relation == XMOMDatabaseEntryColumn.PRODUCEDBY) {
                         if (invokerImpl.getType() == XMOMType.DATATYPE) {
-                          //operation finden, die man anstatt dem typ zurückgeben will
+                          //operation finden, die man anstatt dem typ zurï¿½ckgeben will
                           for (OperationInterface op : invokerImpl.getPublishedInterfaces(DeploymentLocation.SAVED).getAllOperations()) {
                             boolean foundOp = false;
                             if (relation == XMOMDatabaseEntryColumn.NEEDEDBY) {
                               for (TypeInterface input : op.getInput()) {
                                 if (input.getType() == asType.getType() && input.getName().equals(asType.getName())) {
-                                  //operation gefunden, die den typ benötigt
+                                  //operation gefunden, die den typ benï¿½tigt
                                   foundOp = true;
                                   break;
                                 }
@@ -689,7 +689,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
 
 
   /**
-   * sammelt transitions (auch die, wo der state sich gar nicht ändert) zwischen beiden resolvern von allen objekten der rootrevision
+   * sammelt transitions (auch die, wo der state sich gar nicht ï¿½ndert) zwischen beiden resolvern von allen objekten der rootrevision
    */
   public List<StateTransition> collectStateChangesBetweenResolvers(long rootRevision,
                                                                               CrossRevisionResolver crossResolver,

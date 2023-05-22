@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,7 +114,7 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
       
       //Steht Antwort oder Abbruch bereits fest? 
       if (existingEntry.getNotified() || existingEntry.receivedTimeout() ) {
-        //Eintrag wird nicht länger benötigt
+        //Eintrag wird nicht lï¿½nger benï¿½tigt
         defaultConnection.deleteOneRow(existingEntry);
         defaultConnection.commit();
         if( existingEntry.getNotified() ) {
@@ -130,7 +130,7 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
       existingEntry = synchronizationEntry;
       
       //evtl. ist der SynchronizationEntry nur verloren gegangen, warum auch immer... (z.b. memory-konfiguration, nach neustart)
-      //deshalb Timeout hier überwachen
+      //deshalb Timeout hier ï¿½berwachen
       long firstExecutionTimeInMilliSeconds = existingEntry.getTimeStamp();
       long timeoutInSeconds = existingEntry.getTimeout();
       long now = System.currentTimeMillis();
@@ -147,13 +147,13 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
     boolean updated = defaultConnection.persistObject(existingEntry);
     if( updated == doInsert ) {
       //Update trotz erwartetem Insert: eine andere Transaktion ist dazwischengekommen
-      //umgekehrt Insert trotz erwartetem Update sollte nicht auftreten, da existierende Zeile für Update gelockt ist
+      //umgekehrt Insert trotz erwartetem Update sollte nicht auftreten, da existierende Zeile fï¿½r Update gelockt ist
       defaultConnection.rollback();
       throw new RetryException();
     }
     defaultConnection.commit(); //persistiert auch CLO, schaltet CLO aktiv
     
-    //Suspendierung anstoßen
+    //Suspendierung anstoï¿½en
     throw new ProcessSuspendedException(suspensionCause); 
   }
   
@@ -161,13 +161,13 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
   private void prepareResume(SynchronizationEntry synchronizationEntry, Long rootOrderId, ODSConnection defaultConnection) throws PersistenceLayerException, XPRC_TIMEOUT_DURING_SYNCHRONIZATION {
     Long cronId = synchronizationEntry.getCorrespondingResumeOrderId();
     if (cronId != null && cronId != 0) {
-      //es wurde bereits ein cron erstellt. nach dem serverstart existiert dieser aber u.u. nicht mehr => existenz überprüfen
+      //es wurde bereits ein cron erstellt. nach dem serverstart existiert dieser aber u.u. nicht mehr => existenz ï¿½berprï¿½fen
       CronLikeOrder clo = XynaFactory.getInstance().getProcessing().getXynaScheduler().getCronLikeScheduler().getCronLikeOrder(defaultConnection, cronId);
       if (clo != null) {
         //cron existiert noch
         return;
       } else if (synchronizationEntry.isTimedOut()) {
-        //cron existiert nicht mehr, aber timeout ist bereits überschritten
+        //cron existiert nicht mehr, aber timeout ist bereits ï¿½berschritten
         defaultConnection.deleteOneRow(synchronizationEntry);
         defaultConnection.commit();
         throw new XPRC_TIMEOUT_DURING_SYNCHRONIZATION(synchronizationEntry.getCorrelationId());

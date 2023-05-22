@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class NoAbstractMethodsInHierarchy implements DeploymentItemInterface, In
       theirClone.getInput().remove(0);
     }
 
-    return theirClone.equals(ourClone); //nicht matches verwenden, weil inputs identisch sein müssen
+    return theirClone.equals(ourClone); //nicht matches verwenden, weil inputs identisch sein mï¿½ssen
   }
 
 

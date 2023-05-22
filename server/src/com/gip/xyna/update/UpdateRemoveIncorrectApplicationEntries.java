@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.gip.xyna.xnwh.persistence.ODSImpl;
 
 /**
  * entfernt alle applicationentries, die vom typ filter sind, weil sie wegen bugz 14551 
- * einen falschen namen haben und wegen bugz 14670 eh nicht mehr benötigt werden
+ * einen falschen namen haben und wegen bugz 14670 eh nicht mehr benï¿½tigt werden
  */
 public class UpdateRemoveIncorrectApplicationEntries extends Update {
 

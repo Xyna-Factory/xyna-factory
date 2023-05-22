@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Cache<U, V> {
 
   /*
-   * problem: ein thread entfernt eines oder mehrere objekte aus dem cache, und gleichzeitig läuft die
+   * problem: ein thread entfernt eines oder mehrere objekte aus dem cache, und gleichzeitig lï¿½uft die
    * cache-entry-creation. es muss sichergestellt werden, dass bemerkt wird, dass das objekt zu alt ist
    * und das objekt dann erneut erstellt wird.
-   * es darf nie passieren, dass der cache ein objekt enthält, welches begonnen wurde zu erstellen, bevor es
+   * es darf nie passieren, dass der cache ein objekt enthï¿½lt, welches begonnen wurde zu erstellen, bevor es
    * das letzte mal aus dem cache entfernt wurde.
    * 
    */
@@ -59,9 +59,9 @@ public class Cache<U, V> {
         value = map.get(key);
       }
       if (value == null) {
-        //cache befüllen
+        //cache befï¿½llen
         if (((ConcurrentHashMap)map).putIfAbsent(key, PLACE_HOLDER) == null) {
-          //place holder, damit man bemerkt, wenn der cache geleert wird, während man den value erstellt
+          //place holder, damit man bemerkt, wenn der cache geleert wird, wï¿½hrend man den value erstellt
           boolean success = false;
           try {
             value = creation.create(key);
@@ -72,7 +72,7 @@ public class Cache<U, V> {
             }
           }
           if (!((ConcurrentHashMap)map).replace(key, PLACE_HOLDER, value)) {
-            //sollte nicht passieren können
+            //sollte nicht passieren kï¿½nnen
             value = map.get(key);
           }
         } else {

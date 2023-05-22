@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class PreSchedulerInformationSerializer implements XMLSerializer {
         }
       }
     } catch (NumberFormatException e) {
-      throw new Exception("XML PreSchedulerInformation hat ungültigen Wert für ein Capacity Feld. Es sind nur Zahlen erlaubt. " + xml, e);
+      throw new Exception("XML PreSchedulerInformation hat ungï¿½ltigen Wert fï¿½r ein Capacity Feld. Es sind nur Zahlen erlaubt. " + xml, e);
     }
     
     Resource[] res = new Resource[nlRes.getLength()];

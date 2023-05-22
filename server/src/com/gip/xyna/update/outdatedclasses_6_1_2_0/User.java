@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,11 +71,11 @@ public class User extends Storable<User> {
   private int failedLogins = 0; //those have to be persisted now because we don't have a HashMap anymore, we would be fine as long as we're using Memory as default though
 
   public User() {
-    //für storable
+    //fï¿½r storable
   }
   
   
-  User(String name) {    //für usermanagement
+  User(String name) {    //fï¿½r usermanagement
     this();
     this.name = name;
   }

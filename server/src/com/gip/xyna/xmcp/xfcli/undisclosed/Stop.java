@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class Stop implements CommandExecution {
     XynaPropertyDuration timeout = XynaProperty.TIMEOUT_SHUTDOWN_ACTIVE_OPERATIONS;
     clw.writeLineToCommandLine("Waiting for active operations ...");
     
-    //WriteLock für alle Operations holen
+    //WriteLock fï¿½r alle Operations holen
     Pair<Operation, Operation> failure = CommandControl.tryWriteLock(CommandControl.Operation.SERVER_STOP, CommandControl.Operation.all(), timeout.get().getNumber(), timeout.get().getUnit());
 
     if (failure != null) {
@@ -59,7 +59,7 @@ public class Stop implements CommandExecution {
       //die gelockte Operation (failure.getFirst()) meistens auch der lockOwner
       Operation locked = failure.getSecond() != null ? failure.getSecond() : failure.getFirst();
       if (allArgs.containsArg(STOP_PARAM_IGNOREACTIVEOPERATIONS)) {
-        //Stoppen soll trotz laufender Operationen ausgeführt werden
+        //Stoppen soll trotz laufender Operationen ausgefï¿½hrt werden
         clw.writeLineToCommandLine(locked + " is still active. Shut down anyway.");
       } else {
         //Stoppen abbrechen

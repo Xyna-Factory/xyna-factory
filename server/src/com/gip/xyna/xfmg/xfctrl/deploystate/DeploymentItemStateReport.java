@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -360,7 +360,7 @@ public class DeploymentItemStateReport implements Serializable {
       switch ( type) {
         case INVALID_0001 :
         case INVALID_0011:
-          //falls application, könnte man das "only" auch weglassen.
+          //falls application, kï¿½nnte man das "only" auch weglassen.
           sb.append("The inconsistency exists only in deployed. The using object must be redeployed.");
           break;
         case INVALID_0101 :
@@ -595,9 +595,9 @@ public class DeploymentItemStateReport implements Serializable {
   }
 
   public enum ServiceImplInconsistencyState {
-    SAVED_INTERFACE_CHANGE,       //ImplJar ist vom <lastJarChange>, aber ServiceGroup wurde am <lastChange> geändert
+    SAVED_INTERFACE_CHANGE,       //ImplJar ist vom <lastJarChange>, aber ServiceGroup wurde am <lastChange> geï¿½ndert
     DEPLOYED_INTERFACE_CHANGE,    //ImplJar ist vom <lastJarChange>, aber ServiceGroup wurde am <lastChange> deployed
-    SAVED_USED_OBJECT_CHANGE,     //ImplJar ist vom <lastJarChange>, aber der verwendete <usedXmomType> <usedFqName> wurde am <lastChange> geändert
+    SAVED_USED_OBJECT_CHANGE,     //ImplJar ist vom <lastJarChange>, aber der verwendete <usedXmomType> <usedFqName> wurde am <lastChange> geï¿½ndert
     DEPLOYED_USED_OBJECT_CHANGE,  //ImplJar ist vom <lastJarChange>, aber der verwendete <usedXmomType> <usedFqName> wurde am <lastChange> deployed
     SAVED_MISSING_JAR,            //ImplJar wird von mindestens einem Service verwendet, ist aber in SAVED nicht vorhanden
     DEPLOYED_MISSING_JAR;         //ImplJar wird von mindestens einem Service verwendet, ist aber in DEPLOYED nicht vorhanden

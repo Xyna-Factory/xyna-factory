@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ public class AnnotationHelper {
   //FIXME redundant mit gleichbenamter methode in storable klasse
 
   /**
-   * Gibt null zurück, falls klasse nicht persistable ist bzw nicht eine seiner superklassen.
+   * Gibt null zurï¿½ck, falls klasse nicht persistable ist bzw nicht eine seiner superklassen.
    */
   public static Persistable getPersistable(Class<?> klass) {
     Persistable persi = klass.getAnnotation(Persistable.class);

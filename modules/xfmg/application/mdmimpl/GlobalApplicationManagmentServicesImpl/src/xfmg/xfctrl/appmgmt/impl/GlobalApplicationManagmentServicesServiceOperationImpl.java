@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -376,7 +376,7 @@ public class GlobalApplicationManagmentServicesServiceOperationImpl implements E
   
   
   /**
-   * Entfernt die übergebene Application auf dem Knoten.
+   * Entfernt die ï¿½bergebene Application auf dem Knoten.
    */
   public void removeApplication(XynaOrderServerExtension correlatedOrder, FactoryNode factoryNode, Application application, RemoveApplicationParameter removeApplicationParameter) throws ConnectException, RemoteException {
     try{
@@ -393,7 +393,7 @@ public class GlobalApplicationManagmentServicesServiceOperationImpl implements E
   }
 
   /**
-   * Startet die übergebene Application auf dem Knoten.
+   * Startet die ï¿½bergebene Application auf dem Knoten.
    */
   public void startApplication(XynaOrderServerExtension correlatedOrder, FactoryNode factoryNode, Application application, StartApplicationParameter startApplicationParameter) throws ConnectException, RemoteException {
     try{
@@ -445,7 +445,7 @@ public class GlobalApplicationManagmentServicesServiceOperationImpl implements E
   
 
   /**
-   * Stoppt die übergebene Application auf dem Knoten.
+   * Stoppt die ï¿½bergebene Application auf dem Knoten.
    */
   public void stopApplication(XynaOrderServerExtension correlatedOrder, FactoryNode factoryNode, Application application,
                               StopApplicationParameter stopApplicationParameter) throws ConnectException, RemoteException {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public interface ClusterManagement {
 
   /**
    * muss aufgerufen werden, um die erreichbarkeit des anderen knotens zu signalisieren. das clustermanagement hat keine eigene
-   * implementierung, die die erreichbarkeit des anderen knotens prüft.
+   * implementierung, die die erreichbarkeit des anderen knotens prï¿½ft.
    * heisst in spec: onReachabilityChange
    */
   public void setOtherNodeAvailable(boolean available);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
  * abstrahiert inputs/outputs von workflow-schritten etc
  * insbesondere haben manche schritte keine leichtzuordbaren output-variablen im step/generationbase-kontext:
  * - stepfunction: output-variablen liegen als globale variablen vor, mit der id, die im receive element steckt
- * - stepchoice: die outputs sind berechnet (mindestens teilweise) und nur über die assigns sichtbar
+ * - stepchoice: die outputs sind berechnet (mindestens teilweise) und nur ï¿½ber die assigns sichtbar
  * - etc. 
  */
 public abstract class AVariableIdentification {
@@ -85,7 +85,7 @@ public abstract class AVariableIdentification {
     }
   }
   
-  //gibt die id der outputvariable im step-/generationbasecontext zurück
+  //gibt die id der outputvariable im step-/generationbasecontext zurï¿½ck
   public StepVariableIdProvider idprovider = new ThrowExceptionIdProvider();
   
   //daten zur input-connection
@@ -105,7 +105,7 @@ public abstract class AVariableIdentification {
       return false;
     }
   };
-  //default, wird dann überschrieben. das ist die id, die von der gui/im json benutzt wird
+  //default, wird dann ï¿½berschrieben. das ist die id, die von der gui/im json benutzt wird
   public InternalGUIIdGeneration internalGuiId = new InternalGUIIdGeneration() {
     
     @Override
@@ -163,9 +163,9 @@ public abstract class AVariableIdentification {
   public abstract AVariable getIdentifiedVariable();
 
   /**
-   * das setzen des labels kann nicht immer direkt auf der "AVariable" durchgeführt werden, weil AVariable manchmal nur eine referenz eines anderen objektes ist.
+   * das setzen des labels kann nicht immer direkt auf der "AVariable" durchgefï¿½hrt werden, weil AVariable manchmal nur eine referenz eines anderen objektes ist.
    * beispiel: stepfunction.inputvariablen referenzieren die inputvariablen des referenzierten services.
-   *           wenn das label am aufruf geändert werden soll, ist das nicht gleichbedeutend mit einer änderung in der service(-definition)
+   *           wenn das label am aufruf geï¿½ndert werden soll, ist das nicht gleichbedeutend mit einer ï¿½nderung in der service(-definition)
    */
   public abstract void setLabel(String label);
   

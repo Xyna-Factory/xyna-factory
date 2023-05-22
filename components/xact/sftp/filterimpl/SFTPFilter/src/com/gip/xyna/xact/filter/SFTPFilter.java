@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,13 +57,13 @@ public class SFTPFilter extends ConnectionFilter<SFTPTriggerConnection> {
     
   public final static XynaPropertyString filesystemPathIdentifier = new XynaPropertyString("xact.sftp.filesystemPathIdentifier", null)
                           .setDefaultDocumentation(DocumentationLanguage.EN, "Path identifier for file system access")
-                          .setDefaultDocumentation(DocumentationLanguage.DE, "Pfad-Kennzeichnung für Dateisystem-Zugriff");
+                          .setDefaultDocumentation(DocumentationLanguage.DE, "Pfad-Kennzeichnung fï¿½r Dateisystem-Zugriff");
   public final static XynaPropertyString databasePathIdentifier = new XynaPropertyString("xact.sftp.databasePathIdentifier", null)
                           .setDefaultDocumentation(DocumentationLanguage.EN, "Path identifier for database access")
-                          .setDefaultDocumentation(DocumentationLanguage.DE, "Pfad-Kennzeichnung für Datenbank-Zugriff");
+                          .setDefaultDocumentation(DocumentationLanguage.DE, "Pfad-Kennzeichnung fï¿½r Datenbank-Zugriff");
   public final static XynaPropertyString localSftpRoot = new XynaPropertyString("xact.sftp.localSftpRoot", null)
                           .setDefaultDocumentation(DocumentationLanguage.EN, "Local root for file system access")
-                          .setDefaultDocumentation(DocumentationLanguage.DE, "Lokales Wurzelverzeichnis für Dateisystem-Zugriff");
+                          .setDefaultDocumentation(DocumentationLanguage.DE, "Lokales Wurzelverzeichnis fï¿½r Dateisystem-Zugriff");
   
 
   public final static String PROCESS_SFTP_ORDERTYPE = "xact.sftp.ProcessSFTPRequest";

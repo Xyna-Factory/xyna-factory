@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package com.gip.xyna.utils.misc.io;
 
 /**
  * Kapselung der Debug-Ausgaben der FTP- und Telnet-Objekte, um das Verwenden
- * beliebiger Logger zu ermöglichen
+ * beliebiger Logger zu ermï¿½glichen
  */
 public interface IOLogger {
 

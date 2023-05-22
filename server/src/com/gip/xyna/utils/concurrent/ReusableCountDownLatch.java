@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * ReusableCountDownLatch ist ein wiederverwendbarer CountDownLatch.
- * Er ist für Anwendungsfälle gedacht, in denen nur selten ein await(..) benötigt wird, 
- * das countDown() aber häufig gerufen wird.
+ * Er ist fï¿½r Anwendungsfï¿½lle gedacht, in denen nur selten ein await(..) benï¿½tigt wird, 
+ * das countDown() aber hï¿½ufig gerufen wird.
  * 
  * - countDown() hat keinen Effekt, solange kein await(..) gerufen wurde
  * - await(..) legt einen inneren CountDownLatch an
  * - weitere await(..) verwenden den gleichen inneren CountDownLatch
- * - countDown() sieht inneren CountDownLatch, löst diesen aus und entfernt den inneren CountDownLatch wieder
+ * - countDown() sieht inneren CountDownLatch, lï¿½st diesen aus und entfernt den inneren CountDownLatch wieder
  */
 public class ReusableCountDownLatch {
 

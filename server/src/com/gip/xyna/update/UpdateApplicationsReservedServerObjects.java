@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 /*
  * durch die modularisierungsumstellung werden xmls von reserved objects nun ganz normal behandelt und deshalb z.b. auch in applications erwartet.
  * 
- * in bestehenden applications fehlen die xmls aber, weil sie bisher immer über das default-workingset aufgelöst worden sind.
+ * in bestehenden applications fehlen die xmls aber, weil sie bisher immer ï¿½ber das default-workingset aufgelï¿½st worden sind.
  * deshalb werden sie nun an die fehlenden stellen kopiert.
  */
 public class UpdateApplicationsReservedServerObjects extends UpdateJustVersion implements ApplicationUpdate {
@@ -83,16 +83,16 @@ public class UpdateApplicationsReservedServerObjects extends UpdateJustVersion i
 
       XMOMDatabase.getXMOMDatabasePreInit(ods, "update"); //registriert storables etc
 
-      //abhängigkeiten von reservierten objekten auf andere bestimmen
+      //abhï¿½ngigkeiten von reservierten objekten auf andere bestimmen
       for (long r : XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
           .getAllWorkspaceRevisions()) {
         analyseReservedObjects(r, ODSConnectionType.HISTORY);
       }
 
       /*
-       * für alle revisions:
+       * fï¿½r alle revisions:
        *   suche verwendungen von reserved server objects.
-       *   falls gefunden, füge reserved server objects zu revision hinzu
+       *   falls gefunden, fï¿½ge reserved server objects zu revision hinzu
        */
       for (long r : XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
           .getAllApplicationRevisions()) {
@@ -169,7 +169,7 @@ public class UpdateApplicationsReservedServerObjects extends UpdateJustVersion i
       }
 
       Set<String> reservedObjects = new HashSet<String>();
-      //die exceptions werden immer benötigt, weil sie von der infrastruktur geworfen werden können und dadurch in audits auch ohne explizite nutzung auftauchen können
+      //die exceptions werden immer benï¿½tigt, weil sie von der infrastruktur geworfen werden kï¿½nnen und dadurch in audits auch ohne explizite nutzung auftauchen kï¿½nnen
       reservedObjects.add(GenerationBase.CORE_EXCEPTION);
       reservedObjects.add(GenerationBase.CORE_XYNAEXCEPTION);
       for (XMOMDomOrExceptionDatabaseEntry e : mapOfAllObjects.values()) {
@@ -182,7 +182,7 @@ public class UpdateApplicationsReservedServerObjects extends UpdateJustVersion i
         }
       }
 
-      //nun noch reservierte objekte hinzufügen, die nicht in der xmomdb stehen und nicht direkt referenziert werden, aber indirekt referenzeirt werden.      
+      //nun noch reservierte objekte hinzufï¿½gen, die nicht in der xmomdb stehen und nicht direkt referenziert werden, aber indirekt referenzeirt werden.      
       addIndirectlyReferencedReservedObjects(reservedObjects);
       for (String usedReserved : reservedObjects) {
         copyReservedToRevision(usedReserved, revision);
@@ -302,7 +302,7 @@ public class UpdateApplicationsReservedServerObjects extends UpdateJustVersion i
         //nicht mehrfach checken
         continue;
       }
-      //dass man hier überhaupt ein zweites mal checkt, ist eigtl nur deswegen, weil z.b. die baseapplication beim ersten mal nicht da gewesen war oder sowas.
+      //dass man hier ï¿½berhaupt ein zweites mal checkt, ist eigtl nur deswegen, weil z.b. die baseapplication beim ersten mal nicht da gewesen war oder sowas.
       logger.info("checking for reserved object dependencies in revision " + l);
       try {
         analyseReservedObjects(l, ODSConnectionType.HISTORY);
@@ -377,7 +377,7 @@ public class UpdateApplicationsReservedServerObjects extends UpdateJustVersion i
   private File searchReservedObjectLocation(String fqName) {
     /*
      * erstmal in default workspace schauen - wenn es hier um eine updateinstallation geht, ist es hier vielleicht noch drin
-     * danach checken wir die üblichen verdächtigen applications, und zuletzt einfach in allen revisions schauen.
+     * danach checken wir die ï¿½blichen verdï¿½chtigen applications, und zuletzt einfach in allen revisions schauen.
      */
     File f =
         new File(GenerationBase.getFileLocationForDeploymentStaticHelper(fqName, RevisionManagement.REVISION_DEFAULT_WORKSPACE) + ".xml");

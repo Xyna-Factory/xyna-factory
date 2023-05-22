@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public class MessageBusTest extends TestCase {
   private final static String DEFAULT_PRODUCT = "Xyna";
   private final static String DEFAULT_CONTEXT = "Chat";
   private final static String DEFAULT_PAYLOAD_KEY = "Text";
-  private final static String DEFAULT_PAYLOAD_VALUE = "Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet.";
+  private final static String DEFAULT_PAYLOAD_VALUE = "Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Bï¿½ses getan hï¿½tte, wurde er eines Morgens verhaftet.";
   private final static List<SerializablePair<String, String>> DEFAULT_PAYLOAD = getDefaultPayload();
   
   private static List<SerializablePair<String, String>> getDefaultPayload() {

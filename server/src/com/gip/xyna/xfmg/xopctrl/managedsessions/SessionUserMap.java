@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class SessionUserMap {
 
   private Map<String, String> sessionToUser = new HashMap<String, String>();
   private Map<String, List<String>> userToSessions = new HashMap<String, List<String>>();
-  //TODO user-Eintrag aus userToSessions entfernen, wenn der user gelöscht wird
+  //TODO user-Eintrag aus userToSessions entfernen, wenn der user gelï¿½scht wird
   
   private Set<String> lockedUser = new HashSet<String>();
   
@@ -46,7 +46,7 @@ public class SessionUserMap {
   
   
   /**
-   * Trägt eine Session mit zugehörigem User in die Maps ein.
+   * Trï¿½gt eine Session mit zugehï¿½rigem User in die Maps ein.
    * @param sessionId
    * @param user
    * @throws PersistenceLayerException
@@ -92,7 +92,7 @@ public class SessionUserMap {
   
   
   /**
-   * Liefert die SessionIds für einen User
+   * Liefert die SessionIds fï¿½r einen User
    * @param user
    * @return
    */
@@ -121,7 +121,7 @@ public class SessionUserMap {
   }
   
   /**
-   * Trägt gesperrte User in die lockedUser-Liste bzw. entfernt nicht gesperrte User.
+   * Trï¿½gt gesperrte User in die lockedUser-Liste bzw. entfernt nicht gesperrte User.
    * @param user
    */
   public void lockUser(User user) {

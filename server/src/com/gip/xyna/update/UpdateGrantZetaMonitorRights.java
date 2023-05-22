@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,10 +43,10 @@ public class UpdateGrantZetaMonitorRights extends UpdateJustVersion {
     try {
       ODSConnection c = ods.openConnection(ODSConnectionType.HISTORY);
       try {
-        //neu benötigte Rechte den bereits vorhanden Rollen zuweisen
+        //neu benï¿½tigte Rechte den bereits vorhanden Rollen zuweisen
         Collection<Role> roles = c.loadCollection(Role.class);
         for (Role role : roles) {
-          //Rechte für Ordermonitor, Mi-Monitor und Live-Reporting in neuer GUI den Rollen ADMIN und MODELLER zuweisen
+          //Rechte fï¿½r Ordermonitor, Mi-Monitor und Live-Reporting in neuer GUI den Rollen ADMIN und MODELLER zuweisen
           if (UserManagement.ADMIN_ROLE_NAME.equals(role.getName()) ||
               UserManagement.MODELLER_ROLE_NAME.equals(role.getName())) {
             role.grantRight(GuiRight.ZETA_PROCESS_MONITOR_ORDERMONITOR.getKey());

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +36,9 @@ public class XynaOrder_ctype implements java.io.Serializable {
     
     public XynaOrder_ctype() {
     }
-  //folgende beide methoden werden benötigt, damit webservice dispatchermanager kompiliert
+  //folgende beide methoden werden benï¿½tigt, damit webservice dispatchermanager kompiliert
   //(da werden intern serializer-klassen gebaut, die XynaOrder_ctype beinhalten, obwohl es
-  //im ws nicht benötigt wird)
+  //im ws nicht benï¿½tigt wird)
 
   public void set_any(SOAPElement s) {
   }

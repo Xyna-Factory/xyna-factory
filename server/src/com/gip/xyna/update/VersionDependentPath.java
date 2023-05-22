@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public enum VersionDependentPath {
   
   public static final String fileSeparator = "/";
   
-  //Konstanten für Pfade ab Version 4.1.15.0
+  //Konstanten fï¿½r Pfade ab Version 4.1.15.0
   public static final String SERVICES_DIR = "." + fileSeparator + "services";
   public static final String REVISION_PATH = "revisions";
   public static final String PREFIX_REVISION = "rev_";
@@ -90,7 +90,7 @@ public enum VersionDependentPath {
 
 
   public static VersionDependentPath getCurrent() {
-    //neusten pfad zuerst probieren, dann immer ältere checken.
+    //neusten pfad zuerst probieren, dann immer ï¿½ltere checken.
     for (int i = values().length - 1; i >= 0; i--) {
       VersionDependentPath v = values()[i];
       if (new File(v.getPath(PathType.XMOM, false)).exists()) {

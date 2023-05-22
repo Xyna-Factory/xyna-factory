@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
     AFTER_SUSPENSION(true, -1), //TODO umbenennen in RESUMING
     
     /**
-     * nachdem Auftrag vom Scheduler in die Execution-Phase übergeht
+     * nachdem Auftrag vom Scheduler in die Execution-Phase ï¿½bergeht
      */
     AFTER_SCHEDULING(-1),
 
@@ -112,7 +112,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
     
     
     /**
-     * bei Suspendierung werden beendete Kindaufträge mit diesem BackupCause gesichert
+     * bei Suspendierung werden beendete Kindauftrï¿½ge mit diesem BackupCause gesichert
      */
     FINISHED_SUBWF(-1),
     
@@ -249,8 +249,8 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
   }
   
   /**
-   * Dies ist ein Workaround für Bug 12543/12550: In UpdateOrderInstanceBackupWithRootOrderID 
-   * wurde die rootId eingeführt und sollte dort auch in die OrderInstanceDetails eingetragen 
+   * Dies ist ein Workaround fï¿½r Bug 12543/12550: In UpdateOrderInstanceBackupWithRootOrderID 
+   * wurde die rootId eingefï¿½hrt und sollte dort auch in die OrderInstanceDetails eingetragen 
    * werden. Auf Grund von ClassLoading-Problemen geht das dort jedoch nicht, so dass das 
    * Nachtragen hier nun geschehen muss.
    * @param oi

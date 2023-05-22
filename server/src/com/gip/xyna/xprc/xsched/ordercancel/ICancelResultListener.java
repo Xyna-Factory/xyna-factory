@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public abstract class ICancelResultListener {
     return isObsolete;
   }
 
-  //können compensations und resumes gecancelt werden?
+  //kï¿½nnen compensations und resumes gecancelt werden?
   private boolean cancelCompensationAndResumes;
   public boolean cancelCompensationAndResumes() {
     return cancelCompensationAndResumes;

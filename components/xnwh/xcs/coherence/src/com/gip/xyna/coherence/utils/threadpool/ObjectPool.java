@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class ObjectPool<A extends Shutdownable> {
         try {
           lock.wait();
         } catch (InterruptedException e) {
-          //FIXME prio4: InterruptedException behandeln? Gegenwärtig wird dann potentiell eine NoSuchElementException geworfen.
+          //FIXME prio4: InterruptedException behandeln? Gegenwï¿½rtig wird dann potentiell eine NoSuchElementException geworfen.
         }
       }
       return freeObjects.remove();

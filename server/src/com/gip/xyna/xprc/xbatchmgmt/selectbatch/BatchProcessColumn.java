@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public enum BatchProcessColumn {
   private String columnName;
   private String[] aliases;
   private BatchProcessTable table; //Tabelle in der die Spalte mit dem columnName vorkommt
-  private BatchProcessTable additionalTable;   //zusätzliche Tabelle in der auch nach der colum gefiltert werden soll (evtl. mit anderem Spaltennamen)
+  private BatchProcessTable additionalTable;   //zusï¿½tzliche Tabelle in der auch nach der colum gefiltert werden soll (evtl. mit anderem Spaltennamen)
 
   private BatchProcessColumn(String columnName, BatchProcessTable table) {
     this(columnName, table, null, new String[0]);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,10 +72,10 @@ public class OrderWithMissingCapacity extends AbandonedOrderDetectionRule<OrderW
   @Override
   public List<OrderWithMissingCapacityDetails> detect(int maxrows) throws PersistenceLayerException {
     
-    // FIXME eigentlich ist die Abfrage falsch, da hiermit nicht Aufträge gefunden werden,
-    // die ihre Capacity-Zuordnung nur über das Planning bekommen
+    // FIXME eigentlich ist die Abfrage falsch, da hiermit nicht Auftrï¿½ge gefunden werden,
+    // die ihre Capacity-Zuordnung nur ï¿½ber das Planning bekommen
 
-    // Auftrag benötigt Kapazität, die nicht existiert
+    // Auftrag benï¿½tigt Kapazitï¿½t, die nicht existiert
     
     int foundCount = 0;
     List<OrderWithMissingCapacityDetails> result = new ArrayList<OrderWithMissingCapacityDetails>();

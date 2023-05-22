@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,7 +183,7 @@ public class SynchronizationManagement extends FunctionGroup
   }
 
   /**
-   * Does not block. TODO wieso? hängt doch von XPRC_SYNCHRONIZATION_WAIT_ACTIVELY_FOR_RESPONSE_TIMEOUT_MILLISECONDS ab!
+   * Does not block. TODO wieso? hï¿½ngt doch von XPRC_SYNCHRONIZATION_WAIT_ACTIVELY_FOR_RESPONSE_TIMEOUT_MILLISECONDS ab!
    * @param correlationId - id to synchronize on
    * @param timeoutInSeconds - a resume order will be started after this time, thereby finding out that no answer has
    *          been created.
@@ -391,11 +391,11 @@ public class SynchronizationManagement extends FunctionGroup
                 try {
                   resumeWaitingOrder(result, defaultCon);
                 } catch (XPRC_ResumeFailedException e) {
-                  //fehler weiterwerfen -> dann kann der workflow erneut ausgeführt werden, falls die voraussetzungen für ein resume besser sind.
-                  //nachteil: die sync-answer geht dadurch verloren. die könnte man eigtl auch speichern.
-                  //          -> problem dabei: dann kann man halt nicht mehr einfach den workflow erneut ausführen, 
+                  //fehler weiterwerfen -> dann kann der workflow erneut ausgefï¿½hrt werden, falls die voraussetzungen fï¿½r ein resume besser sind.
+                  //nachteil: die sync-answer geht dadurch verloren. die kï¿½nnte man eigtl auch speichern.
+                  //          -> problem dabei: dann kann man halt nicht mehr einfach den workflow erneut ausfï¿½hren, 
                   //             weil der synchronization-entry bereits als notified gilt.
-                  //eine lösung wäre: die einfache möglichkeit zu bieten, das resume erneut zu triggern
+                  //eine lï¿½sung wï¿½re: die einfache mï¿½glichkeit zu bieten, das resume erneut zu triggern
                   throw new RuntimeException(e); //TODO exception deklarieren?
                 }
               }

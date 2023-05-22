@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,11 +43,11 @@ import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 
 
 /**
- * StringParameter ist eine komfortable Lösung, um Konfigurationsparameter als String-Liste einzulesen,
+ * StringParameter ist eine komfortable Lï¿½sung, um Konfigurationsparameter als String-Liste einzulesen,
  * zu validieren und einfachen Zugriff darauf zu erhalten.
  * Innerhalb dieser StringParameter-Klasse existieren viele Hilfsklassen, die zusammenwirken.
  * <br><br>
- * Aufgerufen werden sollten (in den meisten Fällen) nur die statischen Methoden, die auch im 
+ * Aufgerufen werden sollten (in den meisten Fï¿½llen) nur die statischen Methoden, die auch im 
  * folgenden Beispiel verwendet werden:<pre>
  * public enum Testenum { abc, def, ghi };
  * public String parse(List&lt;StringParameter&lt;?&gt;&gt; allParameters, List&lt;String&gt; params) {
@@ -60,7 +60,7 @@ import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
  * }
  * public void main( String[] args ) {
  *   StringParameter&lt;Testenum&gt; sp1 = StringParameter.typeEnum(Testenum.class, "testEnum").
- *       description("beliebige Enums sind möglich").build();
+ *       description("beliebige Enums sind mï¿½glich").build();
  *   StringParameter&lt;Boolean&gt; sp3 = StringParameter.typeBoolean("testBoolean").
  *      description("nur true und false sind caseInsensitive zugelassen").build();
  *   StringParameter&lt;String&gt; sp2 = StringParameter.typeString("testMandatoryFor").
@@ -202,7 +202,7 @@ public abstract class StringParameter<T> implements Serializable {
   }
   
   /**
-   * Parsen des String in den gewünschten Typ
+   * Parsen des String in den gewï¿½nschten Typ
    * @param string
    * @return
    * @throws Exception
@@ -210,7 +210,7 @@ public abstract class StringParameter<T> implements Serializable {
   public abstract T parseString(String string) throws Exception;
   
   /**
-   * Parsen des Object in den gewünschten Typ
+   * Parsen des Object in den gewï¿½nschten Typ
    * @param object
    * @return
    * @throws Exception
@@ -225,7 +225,7 @@ public abstract class StringParameter<T> implements Serializable {
   public abstract String asString(T value);
   
   /**
-   * Rückgabe des Typs
+   * Rï¿½ckgabe des Typs
    * @return
    */
   public abstract Class<T> getTypeClass();
@@ -245,7 +245,7 @@ public abstract class StringParameter<T> implements Serializable {
     }
   }
   /*
-   *  FIXME schöner wäre hier ein 
+   *  FIXME schï¿½ner wï¿½re hier ein 
    * public String toNamedParameter(T value) {
    *   return name+"="+asString(value);
    * }
@@ -282,7 +282,7 @@ public abstract class StringParameter<T> implements Serializable {
   }
 
   /**
-   * Selektion des Parameters aus der Object-Map: Falls Eintrag in der Map fehlt, wird defaultValue zurückgegeben
+   * Selektion des Parameters aus der Object-Map: Falls Eintrag in der Map fehlt, wird defaultValue zurï¿½ckgegeben
    * @param map
    * @return
    */
@@ -296,7 +296,7 @@ public abstract class StringParameter<T> implements Serializable {
   }
   
   /**
-   * Selektion des Parameters aus der Object-Map: Falls Eintrag in der Map fehlt, wird defaultValue zurückgegeben
+   * Selektion des Parameters aus der Object-Map: Falls Eintrag in der Map fehlt, wird defaultValue zurï¿½ckgegeben
    * @param map
    * @return
    */
@@ -315,9 +315,9 @@ public abstract class StringParameter<T> implements Serializable {
   }
   
   /**
-   * Parsen in den gewünschten Typ.
-   * (Nötig, da alter Code gegen parse(String) kompiliert ist, 
-   * ansonsten würde parse(Object) parse(String) ersetzen können.)
+   * Parsen in den gewï¿½nschten Typ.
+   * (Nï¿½tig, da alter Code gegen parse(String) kompiliert ist, 
+   * ansonsten wï¿½rde parse(Object) parse(String) ersetzen kï¿½nnen.)
    * @param string
    * @return
    * @throws StringParameterParsingException
@@ -338,7 +338,7 @@ public abstract class StringParameter<T> implements Serializable {
     }
   }
   /**
-   * Parsen in den gewünschten Typ.
+   * Parsen in den gewï¿½nschten Typ.
    * @param object
    * @return
    * @throws StringParameterParsingException
@@ -367,7 +367,7 @@ public abstract class StringParameter<T> implements Serializable {
   private boolean validateString(String string) throws StringParameterParsingException {
     //Validierung
     if( pattern != null ) {
-      //Auch Leerstrings sollen gegen Pattern geprüft werden
+      //Auch Leerstrings sollen gegen Pattern geprï¿½ft werden
       Matcher m = pattern.matcher(string);
       if( ! m.matches() ) {
         throw new StringParameterParsingException(name, Reason.Pattern );
@@ -398,13 +398,13 @@ public abstract class StringParameter<T> implements Serializable {
   public void validate(Map<String, Object> paramMap) throws StringParameterParsingException {
     if( isMandatory() ) {
       if( paramMap.containsKey(name) ) {
-        //ist enthalten, daher Regel erfüllt
+        //ist enthalten, daher Regel erfï¿½llt
       } else {
         throw new StringParameterParsingException(name, Reason.Mandatory);
       }
     } else if( isMandatoryFor() ) {
       if( paramMap.containsKey(name) ) {
-        //ist enthalten, daher Regel erfüllt
+        //ist enthalten, daher Regel erfï¿½llt
       } else {
         //nicht enthalten, ist einer der Anforderer enthalten?
         for( SerializablePair<String, SerializableMandatoryValue> pair : mandatoryFor ) {
@@ -1412,7 +1412,7 @@ public abstract class StringParameter<T> implements Serializable {
             return (T) obj;
               }
           */
-          //list.add(typeClass.cast(o)); hat keine schöne Exception (Message ist leer)
+          //list.add(typeClass.cast(o)); hat keine schï¿½ne Exception (Message ist leer)
           if( o == null ) {
             list.add(null);
           } else {

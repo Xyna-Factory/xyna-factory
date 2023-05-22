@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ import com.gip.xyna.xprc.xsched.LazyAlgorithmExecutor;
 
 
 /**
- * Batch-weise sequentielle Abarbeitung von Aufgaben in einem eigenen Thread. Über die {@link ProcessingStrategy} kann
- * gesteuert werden, wann das nächste Batch verarbeitet wird, und ob es synchron oder asynchron verarbeitet werden
+ * Batch-weise sequentielle Abarbeitung von Aufgaben in einem eigenen Thread. ï¿½ber die {@link ProcessingStrategy} kann
+ * gesteuert werden, wann das nï¿½chste Batch verarbeitet wird, und ob es synchron oder asynchron verarbeitet werden
  * soll. 
  * {@link ProcessingAction} definiert die eigentliche Verarbeitung eines Batches.
- * Aufgaben werden über {@link #add(Object)} hinzugefügt.
+ * Aufgaben werden ï¿½ber {@link #add(Object)} hinzugefï¿½gt.
  *
  * @param <E>
  * @param <F> Welchen Fehler die Verarbeitung werfen kann. Wird nur bei synchroner Verarbeitung geworfen, ansonsten geloggt.
@@ -54,7 +54,7 @@ public class BatchedQueueProcessor<E, F extends Exception> {
   public interface ProcessingAction<E, F extends Exception> {
 
     /**
-     * abarbeitung des nächsten batches
+     * abarbeitung des nï¿½chsten batches
      * @param requests
      * @return exception if any
      */
@@ -69,7 +69,7 @@ public class BatchedQueueProcessor<E, F extends Exception> {
 
     /**
      * entscheidung, ob und wie jetzt abgearbeitet werden soll.<p>
-     * es werden alle änderungen abgearbeitet, die sich bis dahin angesammelt haben.
+     * es werden alle ï¿½nderungen abgearbeitet, die sich bis dahin angesammelt haben.
      */
     public ProcessingType decideProcessing();
 
@@ -152,7 +152,7 @@ public class BatchedQueueProcessor<E, F extends Exception> {
         if (latch != null) {
           latch.countDown();
         } else {
-          //asynchrone ausführung
+          //asynchrone ausfï¿½hrung
           if (exception != null) {
             logger.warn("exception occurred during asynchronous batch execution", exception);
           }
@@ -188,7 +188,7 @@ public class BatchedQueueProcessor<E, F extends Exception> {
           // the latch can be null before the first execution
               || lazyExecutor.getCurrentAlgorithm().latch == null) {
             latch = new CountDownLatch(1);
-            //latch übergeben, wird beim nächsten algorithmus-durchlauf dann benutzt.
+            //latch ï¿½bergeben, wird beim nï¿½chsten algorithmus-durchlauf dann benutzt.
             lazyExecutor.changeAlgorithm(new ProcessingAlgorithm(latch));
           } else {
             latch = lazyExecutor.getCurrentAlgorithm().latch;

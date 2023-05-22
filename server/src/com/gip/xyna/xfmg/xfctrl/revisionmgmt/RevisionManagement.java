@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -145,7 +145,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   private String sqlQueryXMOMVersionForApplicationAndVersionForAllBindings;
   private String sqlQueryXMOMVersionForWorkspaceForAllBindings;
   
-  //aus Performancegründen werden die Zuordnungen Revision vs. Application bzw. Workspace gecached.
+  //aus Performancegrï¿½nden werden die Zuordnungen Revision vs. Application bzw. Workspace gecached.
   //die Maps enthalten auch den Default-Workspace
   private Map<Long, Application> applications;
   private Map<Long, Workspace> workspaces;
@@ -364,11 +364,11 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
   
   /**
-   * Ermittelt die Revisionsnummer für eine Version einer Application oder einen Workspace.
-   * Der ApplicationName und WorkspaceName dürfen nicht beide gesetzt sein.
-   * Falls keiner von beiden gesetzt ist, wird die Revision des Default-Workspaces zurückgeliefert.
-   * Falls nur der Applicationsname gegeben ist, wird die höchste Revision (== neuste Version)
-   * zurückgeliefert.
+   * Ermittelt die Revisionsnummer fï¿½r eine Version einer Application oder einen Workspace.
+   * Der ApplicationName und WorkspaceName dï¿½rfen nicht beide gesetzt sein.
+   * Falls keiner von beiden gesetzt ist, wird die Revision des Default-Workspaces zurï¿½ckgeliefert.
+   * Falls nur der Applicationsname gegeben ist, wird die hï¿½chste Revision (== neuste Version)
+   * zurï¿½ckgeliefert.
    * 
    */
   public Long getRevision(String applicationName, String versionName, String workspaceName) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
@@ -387,7 +387,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
       return revision;
     }
     
-    //falls versionName == null die höchste Revision suchen
+    //falls versionName == null die hï¿½chste Revision suchen
     if (runtimeContext instanceof Application) {
       if (((Application)runtimeContext).getVersionName() == null) {
         
@@ -415,7 +415,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
   
   /**
-   * Liefert ein RuntimeContext-Objekt für eine Application-Version bzw. einen Workspace
+   * Liefert ein RuntimeContext-Objekt fï¿½r eine Application-Version bzw. einen Workspace
    * @param applicationName
    * @param versionName
    * @param workspaceName
@@ -487,7 +487,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
   
   /**
-   * Überprüft, ob die revision zu einem Workspace gehört.
+   * ï¿½berprï¿½ft, ob die revision zu einem Workspace gehï¿½rt.
    * @param revision
    * @return
    */
@@ -501,7 +501,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   
   
   /**
-   * Legt eine neue Revision für eine neue Application-Version an.
+   * Legt eine neue Revision fï¿½r eine neue Application-Version an.
    * @param applicationName
    * @param newVersion
    * @return
@@ -577,7 +577,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   
   
   /**
-   * Legt eine neue Revision für eine neuen Workspace an.
+   * Legt eine neue Revision fï¿½r eine neuen Workspace an.
    * @param workspace
    * @return
    * @throws PersistenceLayerException
@@ -640,7 +640,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   
   private long createNewRevision(Long preferredRevision) throws PersistenceLayerException {
     
-    // eigene Connection, weil ggf. ein Rollback durchgeführt wird
+    // eigene Connection, weil ggf. ein Rollback durchgefï¿½hrt wird
     ODSConnection con = ods.openConnection();
     try {      
       RevisionIdentifer revision = new RevisionIdentifer(RevisionIdentifer.REVISION_ID);
@@ -737,8 +737,8 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   /**
    * hat am ende keinen fileseparator, ausser bei shared libs und root.
    * 
-   * Achtung: Diese Methode wird auch für Updates verwendet.
-   * Ändert sich ein Pfad, muss in com.gip.xyna.update.VersionDependentPath
+   * Achtung: Diese Methode wird auch fï¿½r Updates verwendet.
+   * ï¿½ndert sich ein Pfad, muss in com.gip.xyna.update.VersionDependentPath
    * eine neue Konstante erstellt werden.
    */
   public static String getPathForRevision(PathType pathtype, Long revision, boolean deployed) {
@@ -890,19 +890,19 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
   
   public boolean isApplicationDefinition(String applicationName, String versionName, Long parentRevision) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    //FIXME zusammenhang zwischen applications, workingsets und revisions ist meiner meinung nach nicht ordentlich getrennt. hier sollte man mal aufräumen
+    //FIXME zusammenhang zwischen applications, workingsets und revisions ist meiner meinung nach nicht ordentlich getrennt. hier sollte man mal aufrï¿½umen
     String workingsetVersion = ApplicationManagementImpl.getWorkingsetVersionName(applicationName, parentRevision);
     return workingsetVersion == null ? (versionName == null ? true : false) : workingsetVersion.equals(versionName);
   }
   
   /**
-   * Überprüft, ob noch laufende Aufträge oder TimeControlled Orders für
+   * ï¿½berprï¿½ft, ob noch laufende Auftrï¿½ge oder TimeControlled Orders fï¿½r
    * die angegebene Revision existieren.
    * @param revision
-   * @param force laufende Aufträge werden abgebrochen
+   * @param force laufende Auftrï¿½ge werden abgebrochen
    * @throws XPRC_TimeoutWhileWaitingForUnaccessibleOrderException
    * @throws PersistenceLayerException
-   * @throws XFMG_RunningOrdersException es laufen Aufträge und sie sollen nicht
+   * @throws XFMG_RunningOrdersException es laufen Auftrï¿½ge und sie sollen nicht
    * abgebrochen werden (force = false)
    */
   public void handleRunningOrders(long revision, boolean force) throws XPRC_TimeoutWhileWaitingForUnaccessibleOrderException,
@@ -920,7 +920,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
 
   /**
-   * Entfernt das OrderContextMapping für den übergebenen orderType in dem angegebenen runtimeContext
+   * Entfernt das OrderContextMapping fï¿½r den ï¿½bergebenen orderType in dem angegebenen runtimeContext
    * @param runtimeContext
    * @throws PersistenceLayerException
    */
@@ -991,7 +991,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
   
   /**
-   * Überprüft, ob der RuntimeContext exitiert
+   * ï¿½berprï¿½ft, ob der RuntimeContext exitiert
    * @param rc
    * @return true, falls es den RuntimeContext gibt
    */
@@ -1035,9 +1035,9 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
                                                                      
   
   /*
-   * Bei der Kollisionsprüfung in A werden alle Objekte aus dem Sichtbarkeitsbereich im gesamten Sichtbarkeitsbereich auf Kollision geprüft.
-   *  In einem rekursivem Schritt steigt man mit der Sammlung aller Kollsionen hinab in die Requirements und prüft ob die Kollision
-   *  auch in ihrem (eingeschränktem) Sichtbarkeitsbereich besteht.
+   * Bei der Kollisionsprï¿½fung in A werden alle Objekte aus dem Sichtbarkeitsbereich im gesamten Sichtbarkeitsbereich auf Kollision geprï¿½ft.
+   *  In einem rekursivem Schritt steigt man mit der Sammlung aller Kollsionen hinab in die Requirements und prï¿½ft ob die Kollision
+   *  auch in ihrem (eingeschrï¿½nktem) Sichtbarkeitsbereich besteht.
    */
   public Collection<RuntimeContextProblem> getRuntimeContextProblems(RuntimeDependencyContext rc, RuntimeContextProblemParameter rcpp)
                   throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
@@ -1480,7 +1480,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   
   
   /**
-   * @return true, falls das problem im übergebenen runtimecontext gefunden wird, ansonsten false
+   * @return true, falls das problem im ï¿½bergebenen runtimecontext gefunden wird, ansonsten false
    */
   private boolean problemExistsInRuntimeContext(RuntimeDependencyContext rc, RuntimeContextProblemParameter rcpp, RuntimeContextProblem rcp) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, PersistenceLayerException {
     switch (rcp.getId()) {
@@ -1528,7 +1528,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   }
 
   /**
-   * @return true, falls der übergebene RC die kollisionen vollständig enthält
+   * @return true, falls der ï¿½bergebene RC die kollisionen vollstï¿½ndig enthï¿½lt
    */
   private boolean runtimeContextContainsAllSimpleCollisions(RuntimeDependencyContext rc, RuntimeContextProblemParameter rcpp, RuntimeContextCollisionType rcct, Collision rcp) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, PersistenceLayerException {
     Map<String, Map<RuntimeDependencyContext, ApplicationEntryType>> elements = collectAllElementsInHierarchy(rcct, rc, rcpp);

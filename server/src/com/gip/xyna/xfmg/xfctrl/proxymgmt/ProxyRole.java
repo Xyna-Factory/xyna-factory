@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 
 /**
- * Ergänzt Role um wichtige Methoden für ProxyManagement und kann dabei auch mehrere Rollen zusammenfassen.
+ * Ergï¿½nzt Role um wichtige Methoden fï¿½r ProxyManagement und kann dabei auch mehrere Rollen zusammenfassen.
  *
  */
 public class ProxyRole {

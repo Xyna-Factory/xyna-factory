@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ public class DemonPersistency {
     }
     
     if( !changed ) {
-      //keine Änderungen, daher ist nichts zu tun
+      //keine ï¿½nderungen, daher ist nichts zu tun
       return;
     }
     FileWriter fw  = null;

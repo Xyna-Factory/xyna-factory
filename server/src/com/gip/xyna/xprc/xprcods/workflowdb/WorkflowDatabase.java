@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public class WorkflowDatabase extends FunctionGroup {
   /*
    * listen der fq original names, nicht der class names
    * 
-   * Für die deployedProcessOriginalFQs werden die fqOriginalNames und die classNames
+   * Fï¿½r die deployedProcessOriginalFQs werden die fqOriginalNames und die classNames
    * in einer BijectiveMap (fqOriginalNames -> classNames) gespeichert
    */
   private HashMap<Long, Set<String>> deployedDatatypesFQs;
@@ -198,7 +198,7 @@ public class WorkflowDatabase extends FunctionGroup {
        after(XynaProcessingODS.FUTUREEXECUTION_ID).
        after(XynaClusteringServicesManagement.class).
        after(RevisionManagement.class).
-       after(DataModelStorage.class).  //darf bestimmen, ob Datenmodel-Typen deployt werden dürfen
+       after(DataModelStorage.class).  //darf bestimmen, ob Datenmodel-Typen deployt werden dï¿½rfen
        after(RuntimeContextDependencyManagement.class).
        execAsync( new Runnable(){ public void run() { 
          try { initLater(); } catch( XynaException xe ) { throw new RuntimeException(xe); } } } ); 
@@ -267,7 +267,7 @@ public class WorkflowDatabase extends FunctionGroup {
         if (singleBatchDeploy) {
           allObjects.addAll(objects);
         } else {
-          lock.unlock(); //während des deployments das lockfreigeben
+          lock.unlock(); //wï¿½hrend des deployments das lockfreigeben
           try {
             for (GenerationBase gb : objects) {
               gb.setDeploymentComment("Serverstart: reload");
@@ -297,7 +297,7 @@ public class WorkflowDatabase extends FunctionGroup {
       }
       
       if (singleBatchDeploy) {
-        lock.unlock(); //während des deployments das lockfreigeben
+        lock.unlock(); //wï¿½hrend des deployments das lockfreigeben
         try {
           for (GenerationBase gb : allObjects) {
             gb.setDeploymentComment("Serverstart: reload");
@@ -380,10 +380,10 @@ public class WorkflowDatabase extends FunctionGroup {
           public void finish(boolean success) throws XPRC_DeploymentHandlerException {
             /*
              * TODO verbesserungsideen:
-             * - falls nicht success, nicht speichern? oder muss dann generationbase in onError undeploymenthandler ausführen?
+             * - falls nicht success, nicht speichern? oder muss dann generationbase in onError undeploymenthandler ausfï¿½hren?
              * - falls auf DB statt auf XML konfiguriert, kann man feingranularer speichern
              */
-            lock.lock(); //booleans atomar umsetzen, wenn mehrere deploymentvorgänge parallel am laufen sind
+            lock.lock(); //booleans atomar umsetzen, wenn mehrere deploymentvorgï¿½nge parallel am laufen sind
             try {
               if (deployedWFsChanged) {
                 persistDeployedProcessOriginalFQs();
@@ -437,7 +437,7 @@ public class WorkflowDatabase extends FunctionGroup {
           }
 
           public void finish() throws XPRC_UnDeploymentHandlerException {
-            lock.lock(); //booleans atomar umsetzen, wenn mehrere deploymentvorgänge parallel am laufen sind
+            lock.lock(); //booleans atomar umsetzen, wenn mehrere deploymentvorgï¿½nge parallel am laufen sind
             try {
               if (deployedWFsChanged) {
                 persistDeployedProcessOriginalFQs();
@@ -694,7 +694,7 @@ public class WorkflowDatabase extends FunctionGroup {
   }
 
   /**
-   * Liefert DeplyomentStatuses für Default-Workspace
+   * Liefert DeplyomentStatuses fï¿½r Default-Workspace
    * @return
    */
   public Map<ApplicationEntryType, Map<String, DeploymentStatus>> getAllDeploymentStatuses() {
@@ -719,7 +719,7 @@ public class WorkflowDatabase extends FunctionGroup {
   
   
   /**
-   * Liefert den xmlName zum fqClassName für einen deployten Workflow
+   * Liefert den xmlName zum fqClassName fï¿½r einen deployten Workflow
    * @param fqClassName
    * @param revision
    * @return
@@ -744,7 +744,7 @@ public class WorkflowDatabase extends FunctionGroup {
         String savedMdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, revision, false);
         File baseDir = new File(savedMdmDir);
         if (!baseDir.exists()) {
-          //Workspaces die nur noch für Audits vorhanden sind, haben kein saved-Verzeichnis mehr
+          //Workspaces die nur noch fï¿½r Audits vorhanden sind, haben kein saved-Verzeichnis mehr
           continue;
         }
         ArrayList<File> files = getMDMFiles(baseDir, new ArrayList<File>());

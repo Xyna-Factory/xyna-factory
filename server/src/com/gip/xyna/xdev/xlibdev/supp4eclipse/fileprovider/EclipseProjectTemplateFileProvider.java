@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,9 +88,9 @@ public class EclipseProjectTemplateFileProvider extends FunctionGroup {
   
 
   /**
-   * zipped den inhalt des verzeichnisses @tempdir, packt ihn in @targetZipFile und sorgt dafür, dass
-   * das file gelöscht wird, wenn es nicht mehr benötigt wird (falls deleteZipAfterStreamClose = true).
-   * d.h. falls der zurückgegebene inputstream geclosed wird.
+   * zipped den inhalt des verzeichnisses @tempdir, packt ihn in @targetZipFile und sorgt dafï¿½r, dass
+   * das file gelï¿½scht wird, wenn es nicht mehr benï¿½tigt wird (falls deleteZipAfterStreamClose = true).
+   * d.h. falls der zurï¿½ckgegebene inputstream geclosed wird.
    * @return inputstream auf das erstellte zipfile 
    */
   public InputStream getHandledInputStreamFromFile(File targetZipFile, File tempdir,

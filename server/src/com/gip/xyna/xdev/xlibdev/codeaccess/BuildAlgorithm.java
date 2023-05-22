@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,9 +65,9 @@ public class BuildAlgorithm implements Algorithm {
 
   private CodeAccess codeAccess;
   
-  private List<ComponentCodeChange> changedComponents = new ArrayList<ComponentCodeChange>(); //über svn geänderte Komponenten
+  private List<ComponentCodeChange> changedComponents = new ArrayList<ComponentCodeChange>(); //ï¿½ber svn geï¿½nderte Komponenten
   private List<XMOMChangeEvent> xmomChangeEvents = new ArrayList<XMOMChangeEvent>(); //neu gespeicherte Objekte (XMOM)
-  private AtomicBoolean rebuildAll = new AtomicBoolean(false); //alle ServiceGroups neu bauen (z.B. wegen RuntimeContextDependency-Änderung)
+  private AtomicBoolean rebuildAll = new AtomicBoolean(false); //alle ServiceGroups neu bauen (z.B. wegen RuntimeContextDependency-ï¿½nderung)
   private Set<String> rebuildMDMJarTriggers = new HashSet<String>();
   
   public BuildAlgorithm(CodeAccess codeAccess) {
@@ -110,8 +110,8 @@ public class BuildAlgorithm implements Algorithm {
     }
     
     try {
-      //Komponenten, die neu gebaut werden müssen, einsammeln (so lange bis
-      //bis keine neuen Änderungen mehr registriert werden)
+      //Komponenten, die neu gebaut werden mï¿½ssen, einsammeln (so lange bis
+      //bis keine neuen ï¿½nderungen mehr registriert werden)
       do {
         if (locked) {
           //RepostioryLock freigeben, falls im vorhergehenden Schleifendurchlauf geholt
@@ -119,7 +119,7 @@ public class BuildAlgorithm implements Algorithm {
           locked = false;
         }
         
-        //Listen in lokale Listen umtragen, damit die globalen wieder neu gefüllt werden können
+        //Listen in lokale Listen umtragen, damit die globalen wieder neu gefï¿½llt werden kï¿½nnen
         synchronized (changedComponents) {
           components.addAll(changedComponents);
           changedComponents = new ArrayList<ComponentCodeChange>();
@@ -131,9 +131,9 @@ public class BuildAlgorithm implements Algorithm {
           xmomChangeEvents = new ArrayList<XMOMChangeEvent>();
         }
         
-        //für die XMOMChangeEvents müssen alle abhängigen ServiceGroups und Filter ermittelt werden
+        //fï¿½r die XMOMChangeEvents mï¿½ssen alle abhï¿½ngigen ServiceGroups und Filter ermittelt werden
         if (!rebuildAll.get()) {
-          //zunächst alle Dependencies ermitteln
+          //zunï¿½chst alle Dependencies ermitteln
           Set<DependencyNode> dependencies = new HashSet<DependencyNode>();
           for (XMOMChangeEvent event : events) {
             dependencies.addAll(collectDependencies(event)); //(eigenes Objekt ist in Dependencies enthalten)
@@ -153,7 +153,7 @@ public class BuildAlgorithm implements Algorithm {
           }
         }
 
-        //RepositoryLock holen, damit keine neuen Änderungen mehr dazukommen
+        //RepositoryLock holen, damit keine neuen ï¿½nderungen mehr dazukommen
         codeAccess.lockRepository();
         locked = true;
       } while (!isChangedComponentsEmpty() || !isXmomChangeEventsEmpty());
@@ -167,21 +167,21 @@ public class BuildAlgorithm implements Algorithm {
       
       Map<ComponentKey, ComponentCodeChange> buildMap = new HashMap<ComponentKey, ComponentCodeChange>();
 
-      //für alle ServiceGroups ein ComponentCodeChange erstellen
+      //fï¿½r alle ServiceGroups ein ComponentCodeChange erstellen
       for (String service : services) {
         ComponentKey key = new ComponentKey(service, ComponentType.CODED_SERVICE);
         ComponentCodeChange value = codeAccess.createComponentCodeChangeForNewService(service);
         buildMap.put(key, value);
       }
       
-      //für alle Filter ein ComponentCodeChange erstellen
+      //fï¿½r alle Filter ein ComponentCodeChange erstellen
       for (String f : filter) {
         ComponentKey key = new ComponentKey(f, ComponentType.FILTER);
         ComponentCodeChange value = codeAccess.createComponentCodeChangeForFilter(f);
         buildMap.put(key, value);
       }
       
-      //deleted JavaFiles und changed jars/subcomponents der changedComponents hinzufügen
+      //deleted JavaFiles und changed jars/subcomponents der changedComponents hinzufï¿½gen
       for (ComponentCodeChange ccc : components) {
         ComponentKey key = new ComponentKey(ccc.getComponentOriginalName(), ccc.getComponentType());
         ComponentCodeChange existingChange = buildMap.get(key);
@@ -251,7 +251,7 @@ public class BuildAlgorithm implements Algorithm {
   }
   
   /**
-   * Sucht alle abhängigen Objekte über das DependencyRegister.
+   * Sucht alle abhï¿½ngigen Objekte ï¿½ber das DependencyRegister.
    * TODO besser XMOMDatabase verwenden
    * @param event
    * @return
@@ -274,7 +274,7 @@ public class BuildAlgorithm implements Algorithm {
   }
   
   /**
-   * Sucht alle ServiceGroups über XMOMDatabase.
+   * Sucht alle ServiceGroups ï¿½ber XMOMDatabase.
    */
   private Set<String> searchAllServices(GenerationBaseCache gbCache) {
     Set<String> services = new HashSet<String>();
@@ -305,7 +305,7 @@ public class BuildAlgorithm implements Algorithm {
   
   
   /**
-   * Überprüft, ob eine ServiceGroup mindestens eine Operation hat
+   * ï¿½berprï¿½ft, ob eine ServiceGroup mindestens eine Operation hat
    * die nicht als CodeSnippet implementiert ist.
    * @param fqOriginalName
    * @param gbCache
@@ -331,7 +331,7 @@ public class BuildAlgorithm implements Algorithm {
   
   
   /**
-   * Sucht alle Filter über XynaActivationTrigger
+   * Sucht alle Filter ï¿½ber XynaActivationTrigger
    */
   private Set<String> searchAllFilter() {
     Set<String> filter = new HashSet<String>();

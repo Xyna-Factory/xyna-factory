@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,7 +114,7 @@ public class ListapplicationdetailsImpl extends XynaCommandImplementation<Listap
           showApplicationEntries(clw, type, entries);
         }
       }
-      //Auftragseingangsschnittstellen für RuntimeApplications
+      //Auftragseingangsschnittstellen fï¿½r RuntimeApplications
       if (!(appInfo instanceof ApplicationDefinitionInformation)) {
         StringBuilder sb = new StringBuilder();
         as.appendOrderEntryInterfaces(sb, appInfo.getName(), appInfo.getVersion());
@@ -324,7 +324,7 @@ public class ListapplicationdetailsImpl extends XynaCommandImplementation<Listap
           success = false;
         } 
       } else {
-        //fileName ist gesetzt, daher dürfen applicationName, versionName und parentWorkspace nicht gesetzt sein
+        //fileName ist gesetzt, daher dï¿½rfen applicationName, versionName und parentWorkspace nicht gesetzt sein
         if( applicationName != null ) {
           clw.writeLineToCommandLine("applicationName and fileName must not be set at once");
           success = false;
@@ -377,7 +377,7 @@ public class ListapplicationdetailsImpl extends XynaCommandImplementation<Listap
           if( foundApplicationCount == 1 ) {
             foundApp = apps.get(0); //gesuchte Application gefunden
           } else if( foundApplicationCount > 1 ) {
-            //Mehr als eine Application gefunden, nun die mit höchster Revision zurückgeben
+            //Mehr als eine Application gefunden, nun die mit hï¿½chster Revision zurï¿½ckgeben
             long maxRev = -1;
             for( ApplicationStorable ai : apps ) {
               long r = revisionManagement.getRevision(ai.getName(), ai.getVersion(), null );

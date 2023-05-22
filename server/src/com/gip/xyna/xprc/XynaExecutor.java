@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -213,9 +213,9 @@ public class XynaExecutor {
     
     prioritizedExecServices = new XynaThreadPoolExecutor[11];
     for (int i = 1; i < 11; i++) {
-      // keine (bzw leere) queue, weil ansonsten subaufträge nie gestartet werden könnten, deren parentaufträge die
+      // keine (bzw leere) queue, weil ansonsten subauftrï¿½ge nie gestartet werden kï¿½nnten, deren parentauftrï¿½ge die
       // threads blockieren
-      // grund dafür ist, dass die threadpoolexecutoren die logik besitzen, dass neue threads oberhalb von der
+      // grund dafï¿½r ist, dass die threadpoolexecutoren die logik besitzen, dass neue threads oberhalb von der
       // corepoolsize
       // erst erstellt werden, wenn die queue voll ist.
       prioritizedExecServices[i] = new XynaThreadPoolExecutor(minThreadsExecution, maxThreadsExecution,

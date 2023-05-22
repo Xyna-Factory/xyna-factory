@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class ExpiringMapTest extends TestCase {
     Thread.sleep(200);
     assertEquals("b", map.get("a"));
     Thread.sleep(200);
-    //erst anderer zugriff führt zum expire
+    //erst anderer zugriff fï¿½hrt zum expire
     assertEquals("b", map.get("a"));
     assertNull(map.get("a"));
   }

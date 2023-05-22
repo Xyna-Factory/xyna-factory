@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import com.gip.xyna.xnwh.persistence.ODSImpl.ClusteredStorableConfigChangeHandle
 
 
 /**
- * Fasst die für einen geclusterten Service notwendigen Daten zusammen.
+ * Fasst die fï¿½r einen geclusterten Service notwendigen Daten zusammen.
  */
 public class ClusterContext implements ClusteredStorableConfigChangeHandler {
 

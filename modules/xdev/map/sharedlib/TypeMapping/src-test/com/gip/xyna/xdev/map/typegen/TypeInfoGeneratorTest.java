@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1620,7 +1620,7 @@ public class TypeInfoGeneratorTest extends TestCase {
 
 
   /**
-   * TODO kann aufgrund der Beschränkungen von TypeMappingEntryHelper keine vergleichbaren Daten liefern
+   * TODO kann aufgrund der Beschrï¿½nkungen von TypeMappingEntryHelper keine vergleichbaren Daten liefern
    * @param typeInfos
    */
   @SuppressWarnings("unused")

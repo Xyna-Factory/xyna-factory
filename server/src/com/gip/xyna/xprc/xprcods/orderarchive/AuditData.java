@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -160,7 +160,7 @@ public class AuditData implements Serializable {
     this.revision = revision;
   }
 
-  //TODO eigtl sollte man hier die revision nicht übergeben. processAuditData sollte die revision bereits vorher gesetzt bekommen.
+  //TODO eigtl sollte man hier die revision nicht ï¿½bergeben. processAuditData sollte die revision bereits vorher gesetzt bekommen.
   public String toXML(long id, long parentId, long startTime, long endTime, List<XynaExceptionInformation> exceptions,
                       ExecutionType executionType, Long revision, boolean removeAuditDataAfterwards) throws XPRC_CREATE_MONITOR_STEP_XML_ERROR {
     try {

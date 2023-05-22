@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -200,7 +200,7 @@ public class XynaSSHServer {
     if (logger.isInfoEnabled()) {
       logger.info("address " + host + " unknown in network configuration management.");
     }   
-    //else: abwärtskompatibel:
+    //else: abwï¿½rtskompatibel:
     boolean ipv6 = false;
     boolean useLocalAddresses = false;
     return NetworkInterfaceUtils.getFirstIpAddressByInterfaceName(host, ipv6, useLocalAddresses);

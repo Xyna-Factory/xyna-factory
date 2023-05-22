@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * RetryExecutor führt eine {@link Executable}-Implementierung mehrfach aus, bis das Executable "fertig" signalisiert,
- * die maximale Anzahl an Retries überschritten ist oder ein Timeout erreicht wurde.
+ * RetryExecutor fï¿½hrt eine {@link Executable}-Implementierung mehrfach aus, bis das Executable "fertig" signalisiert,
+ * die maximale Anzahl an Retries ï¿½berschritten ist oder ein Timeout erreicht wurde.
  * <p>
  * Konfiguriert werden kann
  * <ul>
- * <li>absoluteTimeout: Retries werden nur bis (absoluteTimeout-timeBetweenRetries/2) durchgeführt, Default 0=unbeschränkt</li>
- * <li>maxRetries: Maximale Anzahl an Retries, Default 0=unbeschränkt</li>
+ * <li>absoluteTimeout: Retries werden nur bis (absoluteTimeout-timeBetweenRetries/2) durchgefï¿½hrt, Default 0=unbeschrï¿½nkt</li>
+ * <li>maxRetries: Maximale Anzahl an Retries, Default 0=unbeschrï¿½nkt</li>
  * <li>timeBetweenRetries: Wartezeit zwischen den Retries, Default 0=keine</li>
  * <li>interruptable: Darf RetryExecutor durch eine Thread.interrupt abgebrochen werden? Default true</li>
  * </ul>
@@ -45,11 +45,11 @@ import java.util.concurrent.TimeUnit;
 public class RetryExecutor {
   
   /**
-   * Executable wird von {@link RetryExecutor} mehrfach ausgeführt.
+   * Executable wird von {@link RetryExecutor} mehrfach ausgefï¿½hrt.
    * <p>
    * Methoden:
    * <ul>
-   * <li>execute(): erste Ausführung</li>
+   * <li>execute(): erste Ausfï¿½hrung</li>
    * <li>retry(int): n.te Wiederholung</li>
    * <li>failed(boolean): Retries alle fehlgeschlagen</li>
    * </ul>
@@ -57,14 +57,14 @@ public class RetryExecutor {
   public interface Executable {
 
     /**
-     * erste Ausführung
-     * @return true, wenn kein Retry nötig ist
+     * erste Ausfï¿½hrung
+     * @return true, wenn kein Retry nï¿½tig ist
      */
     boolean execute();
     /**
-     * Retry-Ausführung
+     * Retry-Ausfï¿½hrung
      * @param retry wievielter Retry, beginnt mit 1
-     * @return true, wenn kein weiterer Retry nötig ist
+     * @return true, wenn kein weiterer Retry nï¿½tig ist
      */
     boolean retry(int retry);
     
@@ -121,7 +121,7 @@ public class RetryExecutor {
   }
   
   /**
-   * Unbeschränkte Retries
+   * Unbeschrï¿½nkte Retries
    * @return
    */
   public static RetryExecutor retry() {
@@ -129,9 +129,9 @@ public class RetryExecutor {
   }
 
   /**
-   * Ausführen des Executables
+   * Ausfï¿½hren des Executables
    * @param executable
-   * @return true, wenn Executable erfolgreich ausgeführt wurde
+   * @return true, wenn Executable erfolgreich ausgefï¿½hrt wurde
    *         false, wenn Timeout erreicht wurde oder maximale Anzahl an Retries erreicht wurde
    */
   public boolean execute(Executable executable) {
@@ -144,7 +144,7 @@ public class RetryExecutor {
         break;
       }
 
-      //maxRetries überwachen
+      //maxRetries ï¿½berwachen
       if( maxRetries > 0 ) {
         if( retry >= maxRetries ) {
           //maximale Anazahl an Retries erreicht
@@ -155,31 +155,31 @@ public class RetryExecutor {
       
       long sleep = timeBetweenRetries;
       
-      //Timeout überwachen
+      //Timeout ï¿½berwachen
       if( absoluteTimeout > 0 ) {
         long now = System.currentTimeMillis();
-        //evtl. kürzer warten
+        //evtl. kï¿½rzer warten
         sleep = Math.min(sleep, absoluteTimeout-now);
         if( sleep < 0 ) {
-          //nicht länger warten, Timeout ist abgelaufen
+          //nicht lï¿½nger warten, Timeout ist abgelaufen
           executable.failed(true);
           break;
         } else if( sleep < timeBetweenRetries/2 ) {
-          //nicht länger warten, Timeout läuft bald ab
+          //nicht lï¿½nger warten, Timeout lï¿½uft bald ab
           executable.failed(true);
           break;
         }
       }
       
-      //Warten vor nächster Ausführung
+      //Warten vor nï¿½chster Ausfï¿½hrung
       try {
         Thread.sleep(sleep);
       } catch (InterruptedException e) {
         if( interruptable ) {
-          //Abbruch wird gewünscht
+          //Abbruch wird gewï¿½nscht
           break;
         } else {
-          //dann halt kürzer warten
+          //dann halt kï¿½rzer warten
         }
       }
       
@@ -188,7 +188,7 @@ public class RetryExecutor {
   }
 
   /**
-   * Setzen des Timouts, bis zu dem Retries ausgeführt werden
+   * Setzen des Timouts, bis zu dem Retries ausgefï¿½hrt werden
    * @param absoluteTimeout
    * @return
    */
@@ -220,7 +220,7 @@ public class RetryExecutor {
   }
   
   /**
-   * Anzahl der maximal durchgeführten Retries
+   * Anzahl der maximal durchgefï¿½hrten Retries
    * @param maxRetries
    * @return
    */

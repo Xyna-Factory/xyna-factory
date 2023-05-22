@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class FastValidationStrategy implements ValidationStrategy {
     } catch (RuntimeException e) {
       return e;
     } finally {
-      //3) NetworkTimeout zurücksetzen
+      //3) NetworkTimeout zurï¿½cksetzen
       try {
         con.setNetworkTimeout(DBConnectionDataBuilder.DefaultNetworkTimeoutExecutor, oldTimeout);
       } catch ( Exception e ) {

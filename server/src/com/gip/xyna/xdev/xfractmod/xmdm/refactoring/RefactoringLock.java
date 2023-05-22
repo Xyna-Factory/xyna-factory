@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DeploymentLocks;
 
 /**
  * locks gegen konkurrierende deployments und shutdown des servers
- * gegen laufende aufträge wird während des undeployments unabhängig von diesem lock gelockt.
+ * gegen laufende auftrï¿½ge wird wï¿½hrend des undeployments unabhï¿½ngig von diesem lock gelockt.
  */
 class RefactoringLock {
   

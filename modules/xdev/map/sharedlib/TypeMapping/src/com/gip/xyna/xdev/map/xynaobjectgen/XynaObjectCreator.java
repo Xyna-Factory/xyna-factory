@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,11 +36,11 @@ import com.gip.xyna.xdev.map.xynaobjectgen.XynaObjectCreatorCache.TypeMappingCac
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 
 /**
- * XynaObjectCreator kann XynaObjecte erstelllen, indem XMLs über das TypeMapping interpretiert werden.
+ * XynaObjectCreator kann XynaObjecte erstelllen, indem XMLs ï¿½ber das TypeMapping interpretiert werden.
  *
- * Ein wenig Konfiguration ist über die XOCStrategy möglich.
+ * Ein wenig Konfiguration ist ï¿½ber die XOCStrategy mï¿½glich.
  *
- * XynaObjectCreator kann zwar auch direkt verwendet werden, ein Aufruf über den XynaObjectCreatorCache
+ * XynaObjectCreator kann zwar auch direkt verwendet werden, ein Aufruf ï¿½ber den XynaObjectCreatorCache
  * ist aber besser.
  *
  */
@@ -262,7 +262,7 @@ public class XynaObjectCreator {
 
   /**
    * Setter kann nicht komplette Liste auf einmal setzen,
-   * sondern wird mehrfach aufgerufen und trägt Daten mit addTo{VarName}(...) ein
+   * sondern wird mehrfach aufgerufen und trï¿½gt Daten mit addTo{VarName}(...) ein
    */
   private static class ListSetter implements Setter {
     private Class<?> listType;

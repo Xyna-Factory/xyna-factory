@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.gip.xyna.coherence.coherencemachine.CoherenceObject;
 
 
 /**
- * 1. statistiken über alle objekte
+ * 1. statistiken ï¿½ber alle objekte
  *    oder
  * 2. statistiken + liste aller objekte
  */

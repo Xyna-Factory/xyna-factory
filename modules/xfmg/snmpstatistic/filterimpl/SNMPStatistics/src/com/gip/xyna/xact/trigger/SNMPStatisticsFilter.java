@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class SNMPStatisticsFilter extends ConnectionFilter<SNMPTriggerConnection
     AbstractSNMPStatisticsHandler orders = new SNMPStatisticsOrdersHandler(generic);
     AbstractSNMPStatisticsHandler jvm = new SNMPStatisticsJVMHandler(orders);
     SNMPStatisticsFactoryNodeHandler nodes = new SNMPStatisticsFactoryNodeHandler(null);
-    oidSingleDispatcher.add(nodes); // TODO schöner wäre, wenn die handler beim trigger registriert werden. der hat dann die übersicht, was es so alles gibt
+    oidSingleDispatcher.add(nodes); // TODO schï¿½ner wï¿½re, wenn die handler beim trigger registriert werden. der hat dann die ï¿½bersicht, was es so alles gibt
     oidSingleDispatcher.add(jvm);
     oidSingleDispatcher.add(orders);
     oidSingleDispatcher.add(generic);
@@ -83,7 +83,7 @@ public class SNMPStatisticsFilter extends ConnectionFilter<SNMPTriggerConnection
    */
   public XynaOrder generateXynaOrder(SNMPTriggerConnection tc) throws XynaException, InterruptedException {
     // wirft interruptedexception, falls oid bearbeitet wurde (filter greift), ansonsten passiert einfach nichts
-    // (nächster filter...)
+    // (nï¿½chster filter...)
     tc.handleEvent(requestHandler);
     return null;
   }

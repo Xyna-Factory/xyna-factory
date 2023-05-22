@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,9 +96,9 @@ public class TCMLocalImpl implements TCMInterface {
   }
   
   private void checkTimeWindowInUse(TimeConstraintWindow tw) throws XPRC_TimeWindowStillUsedException {
-    //Prüfung, ob Zeitfenster derzeit verwendet wird 
-    //(nur möglich, wenn Zeitfenster geschlossen ist und Aufträge darauf warten)
-    //TODO wie prüfen wenn offen?
+    //Prï¿½fung, ob Zeitfenster derzeit verwendet wird 
+    //(nur mï¿½glich, wenn Zeitfenster geschlossen ist und Auftrï¿½ge darauf warten)
+    //TODO wie prï¿½fen wenn offen?
     if( tw.hasWaitingOrders() ) {
       throw new XPRC_TimeWindowStillUsedException(tw.getName());
     }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,7 +131,7 @@ public class SearchRequestBean implements Serializable {
    * jeder filter ist entweder
    * "local"
    * "&lt;factoryNodeName&gt;"
-   * "&lt;wildcard-expression&gt;",die serverseitig in eine liste von factorynodes ausge-x-t wird, z.b. ACS* für ACS1 und ACS2
+   * "&lt;wildcard-expression&gt;",die serverseitig in eine liste von factorynodes ausge-x-t wird, z.b. ACS* fï¿½r ACS1 und ACS2
    * 
    * die liste der nodes wird immer "geodert" gesehen, d.h. die ergebnisse der suchen werden vereinigt.
    * 

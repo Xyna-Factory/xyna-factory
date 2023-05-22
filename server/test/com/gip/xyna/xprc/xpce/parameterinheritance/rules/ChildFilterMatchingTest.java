@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,8 +102,8 @@ public class ChildFilterMatchingTest extends TestCase {
   
   /*
    * OrderType A definiert als Filter B:C
-   * Regel gilt für: A -> B -> C
-   * Regel gilt z.B. nicht für: A oder B -> C oder A -> D -> B -> C
+   * Regel gilt fï¿½r: A -> B -> C
+   * Regel gilt z.B. nicht fï¿½r: A oder B -> C oder A -> D -> B -> C
    */
   
   @Test
@@ -116,8 +116,8 @@ public class ChildFilterMatchingTest extends TestCase {
   
   /*
    * OrderType A definiert als Filter B:C\:D
-   * Regel gilt für: A -> B -> C:D
-   * Regel gilt z.B. nicht für: A -> B -> C -> D
+   * Regel gilt fï¿½r: A -> B -> C:D
+   * Regel gilt z.B. nicht fï¿½r: A -> B -> C -> D
    */
   
   @Test
@@ -142,8 +142,8 @@ public class ChildFilterMatchingTest extends TestCase {
   
   /*
    * OrderType A definiert als Filter B:*:C
-   * Regel gilt z.B. für: A -> B -> C und A -> B -> D -> E  -> C
-   * Regel gilt z.B. nicht für: A -> B -> C -> D
+   * Regel gilt z.B. fï¿½r: A -> B -> C und A -> B -> D -> E  -> C
+   * Regel gilt z.B. nicht fï¿½r: A -> B -> C -> D
    */
   
   @Test
@@ -156,8 +156,8 @@ public class ChildFilterMatchingTest extends TestCase {
   
   /*
    * OrderType A definiert als Filter B:*:C:*
-   * Regel gilt z.B. für: A -> B -> C und A -> B -> D -> E  -> C und A -> B -> C -> D
-   * Regel gilt z.B. nicht für: A -> D -> B -> C
+   * Regel gilt z.B. fï¿½r: A -> B -> C und A -> B -> D -> E  -> C und A -> B -> C -> D
+   * Regel gilt z.B. nicht fï¿½r: A -> D -> B -> C
    */
   
   @Test
@@ -170,8 +170,8 @@ public class ChildFilterMatchingTest extends TestCase {
   
   /*
    * OrderType A definiert als Filter *:B:C
-   * Regel gilt z.B. für: A -> B -> C und A -> D -> B -> C
-   * Regel gilt z.B. nicht für: A -> D
+   * Regel gilt z.B. fï¿½r: A -> B -> C und A -> D -> B -> C
+   * Regel gilt z.B. nicht fï¿½r: A -> D
    */
   
   @Test

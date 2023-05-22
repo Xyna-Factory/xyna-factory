@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public interface SchedulerCustomisation<O,I> {
   SchedulerInformationBuilder<I> getInformationBuilder();
 
   /**
-   * Initialisierung: Anpassung der beiden Queues für den Auftragseingang und für Urgency-Änderungen
+   * Initialisierung: Anpassung der beiden Queues fï¿½r den Auftragseingang und fï¿½r Urgency-ï¿½nderungen
    * @return
    */
   Pair<BlockingQueue<Urgency<O>>, BlockingQueue<Urgency<O>>> createQueues();
@@ -44,7 +44,7 @@ public interface SchedulerCustomisation<O,I> {
   void setScheduler(Scheduler<O,I> scheduler);
 
   /**
-   * Anpassung: Durchführung des Schedulings
+   * Anpassung: Durchfï¿½hrung des Schedulings
    * @param uo
    * @return
    */
@@ -63,12 +63,12 @@ public interface SchedulerCustomisation<O,I> {
   void beforeScheduling(long urgency);
 
   /**
-   * Optional Anpassung: Gerufen, nachdem alle Aufträge geschedult wurden 
+   * Optional Anpassung: Gerufen, nachdem alle Auftrï¿½ge geschedult wurden 
    */
   void postparation();
 
   /**
-   * Optional Anpassung: Gerufen, bevor alle Aufträge geschedult werden 
+   * Optional Anpassung: Gerufen, bevor alle Auftrï¿½ge geschedult werden 
    */
   void preparation();
 
@@ -83,14 +83,14 @@ public interface SchedulerCustomisation<O,I> {
   void beginScheduling();
 
   /**
-   * Optional: Behandlung beliebiger Exceptions, die während 
+   * Optional: Behandlung beliebiger Exceptions, die wï¿½hrend 
    * eines Schedulinglaufs aufgetreten sind
    * @param t
    */
   void handleThrowable(Throwable t);
 
   /**
-   * Rückgabe einer Id zum Auftrag
+   * Rï¿½ckgabe einer Id zum Auftrag
    * @param order
    * @return
    */

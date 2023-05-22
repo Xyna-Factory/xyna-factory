@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * Klasse zum verschlüsseln von Streams
+ * Klasse zum verschlï¿½sseln von Streams
  */
 public class StreamDESEncrypter {
 
@@ -93,7 +93,7 @@ public class StreamDESEncrypter {
   }
 
   /**
-   * generiert einen key mittels der übergebenen passphrase (muss 8 zeichen lang sein)
+   * generiert einen key mittels der ï¿½bergebenen passphrase (muss 8 zeichen lang sein)
    * @param passPhrase
    * @return
    * @throws Exception
@@ -112,7 +112,7 @@ public class StreamDESEncrypter {
   }
 
   /**
-   * initialisiert den encrypter. danach können mehrere streams mit dem gleichen key ver- und entschlüsselt werden.
+   * initialisiert den encrypter. danach kï¿½nnen mehrere streams mit dem gleichen key ver- und entschlï¿½sselt werden.
    * @param key
    * @throws Exception
    */
@@ -128,7 +128,7 @@ public class StreamDESEncrypter {
   }
 
   /**
-   * liest die daten aus dem inputstream und schreibt sie verschlüsselt in den outputstream
+   * liest die daten aus dem inputstream und schreibt sie verschlï¿½sselt in den outputstream
    * @param in
    * @param out
    * @throws Exception
@@ -146,7 +146,7 @@ public class StreamDESEncrypter {
   }
 
   /**
-   * liest die daten aus dem inputstream und schreibt sie entschlüsselt in den outputstream
+   * liest die daten aus dem inputstream und schreibt sie entschlï¿½sselt in den outputstream
    * @param in
    * @param out
    * @throws Exception

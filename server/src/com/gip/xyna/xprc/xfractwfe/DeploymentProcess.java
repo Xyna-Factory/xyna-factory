@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,18 +61,18 @@ import com.gip.xyna.xprc.xsched.cronlikescheduling.CronLikeOrder;
  * 
  * - sammelt alle gleichzeitigen Deployments
  * - in der Regel gibt es nur einen aktiven DeploymentProcess und ggf. einen Wartenden (wenn ein
- *   Deployment gerade läuft und gleichzeitig ein weiteres angestoßen wird)
+ *   Deployment gerade lï¿½uft und gleichzeitig ein weiteres angestoï¿½en wird)
  * - falls ein Objekt von unterschiedlichen Deployments mit unterschiedlichen Deploymentmodes deployt
- *   werden soll, gewinnt der stärkste Deploymentmode
- * - ein Deployment im DeploymentProcess übernimmt die Führerschaft und prüft, ob die betroffene Workflows
- *   in Benutzung sind. Ebenfalls werden Algorithmen ausgetauscht, um ein weiteres Einstellen von Aufträgen verhindern zu können
- * - die anderen Deployments im DeploymentProcess warten, bis das führende Deployment die Prüfung beendet hat
- * - falls das führende Deployment bei der Prüfung feststellt, dass das Deployment aufgrund des Deploymentmodes
- *   abgebrochen werden muss, übernimmt ein anderes Deployment die Führerschaft
- * - anschließend werden die Deployments parallel durchgeführt
- * - nach Beendigung aller Deployments werden die Algorithmen wieder durch die Defaultalgorithmen von einem führendem Deployment
+ *   werden soll, gewinnt der stï¿½rkste Deploymentmode
+ * - ein Deployment im DeploymentProcess ï¿½bernimmt die Fï¿½hrerschaft und prï¿½ft, ob die betroffene Workflows
+ *   in Benutzung sind. Ebenfalls werden Algorithmen ausgetauscht, um ein weiteres Einstellen von Auftrï¿½gen verhindern zu kï¿½nnen
+ * - die anderen Deployments im DeploymentProcess warten, bis das fï¿½hrende Deployment die Prï¿½fung beendet hat
+ * - falls das fï¿½hrende Deployment bei der Prï¿½fung feststellt, dass das Deployment aufgrund des Deploymentmodes
+ *   abgebrochen werden muss, ï¿½bernimmt ein anderes Deployment die Fï¿½hrerschaft
+ * - anschlieï¿½end werden die Deployments parallel durchgefï¿½hrt
+ * - nach Beendigung aller Deployments werden die Algorithmen wieder durch die Defaultalgorithmen von einem fï¿½hrendem Deployment
  *   erstetzt - hierbei warten die restlichen Deployments, bis dieser Schritt abgeschlossen ist
- * - aufgehaltene Aufträge/Crons werden eingestellt
+ * - aufgehaltene Auftrï¿½ge/Crons werden eingestellt
  * 
  */
 public class DeploymentProcess {
@@ -483,7 +483,7 @@ public class DeploymentProcess {
           cleanFromMaps(failedDeploy);
         }
 
-        //benachrichtige einen anderen thread und werfe fehler. es muss mindestens einen anderen thread geben, ansonsten wäre man oben in das erste if gegangen
+        //benachrichtige einen anderen thread und werfe fehler. es muss mindestens einen anderen thread geben, ansonsten wï¿½re man oben in das erste if gegangen
         Entry<Long, Object> pillowEntry = pillows.entrySet().iterator().next();
         Object pillow = pillowEntry.getValue();
         synchronized (pillow) {
@@ -593,7 +593,7 @@ public class DeploymentProcess {
       }
       return true;
     }
-    //TODO hier müsste man eigtl warten, dass der designierte cleanup-thread fertig wird
+    //TODO hier mï¿½sste man eigtl warten, dass der designierte cleanup-thread fertig wird
     return false;
   }
 

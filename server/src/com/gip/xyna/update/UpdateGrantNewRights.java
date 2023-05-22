@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class UpdateGrantNewRights extends UpdateJustVersion {
     try {
       ODSConnection c = ods.openConnection(ODSConnectionType.HISTORY);
       try {
-        //neu benötigte Rechte den bereits vorhanden Rollen zuweisen
+        //neu benï¿½tigte Rechte den bereits vorhanden Rollen zuweisen
         Collection<Role> roles = c.loadCollection(Role.class);
         for (Role role : roles) {
           if (role.getAlias() != null && !role.getAlias().equals("")) {
@@ -87,46 +87,46 @@ public class UpdateGrantNewRights extends UpdateJustVersion {
             }
           }
           
-          //Datenmodell-Rechte zu Rollen hinzufügen, die vorher die Rechte EDIT_MDM
+          //Datenmodell-Rechte zu Rollen hinzufï¿½gen, die vorher die Rechte EDIT_MDM
           //oder ein ApplicationManagement-Recht hatten.
           if (editMdmRight || applicationRight) {
             newScopedRights.add(ScopedRight.DATA_MODEL.allAccess());
           }
           
-          //DeploymentMarker-Rechte zu Rollen hinzufügen, die vorher das Recht EDIT_MDM hatten
+          //DeploymentMarker-Rechte zu Rollen hinzufï¿½gen, die vorher das Recht EDIT_MDM hatten
           if (editMdmRight) {
             newScopedRights.add(ScopedRight.DEPLOYMENT_MARKER.allAccess());
           }
           
-          //DeploymentItem-Rechte zu Rollen hinzufügen, die vorher die Rechte EDIT_MDM,
+          //DeploymentItem-Rechte zu Rollen hinzufï¿½gen, die vorher die Rechte EDIT_MDM,
           //DEPLOYMENT_MDM oder ein Application-Management-Recht hatten
           if (editMdmRight || deploymentMdmRight || applicationRight) {
             newScopedRights.add(ScopedRight.DEPLOYMENT_ITEM.allAccess());
           }
           
-          //OrderInputSource-Rechte zu Rollen hinzufügen, die vorher das Recht EDIT_MDM hatten
+          //OrderInputSource-Rechte zu Rollen hinzufï¿½gen, die vorher das Recht EDIT_MDM hatten
           if (editMdmRight) {
             newScopedRights.add(ScopedRight.ORDER_INPUT_SOURCE.allAccess());
           }
           
-          //CronLikeOrders-Rechte zu Rollen hinzufügen, die vorher das Recht EDIT_MDM hatten
+          //CronLikeOrders-Rechte zu Rollen hinzufï¿½gen, die vorher das Recht EDIT_MDM hatten
           if (startOrderRight) {
             newScopedRights.add(ScopedRight.CRON_LIKE_ORDER.allAccess());
           }
           
-          //Read-OrderTypes-Recht zu allen Rollen hinzufügen, die nicht bereits ein Ordertypes-Recht besitzen
+          //Read-OrderTypes-Recht zu allen Rollen hinzufï¿½gen, die nicht bereits ein Ordertypes-Recht besitzen
           if (!orderTypesRight) {
             newScopedRights.add(ScopedRight.ORDER_TYPE.getKey() + ":" + Action.read + ":*:*:*");
           }
           
-          //Read-Capacities-Recht zu allen Rollen hinzufügen, die nicht bereits ein Capacities-Recht besitzen
+          //Read-Capacities-Recht zu allen Rollen hinzufï¿½gen, die nicht bereits ein Capacities-Recht besitzen
           if (orderArchiveViewRight && !capacitiesRight) {
             newScopedRights.add(ScopedRight.CAPACITY.getKey() + ":" + Action.read + ":*");
           }
           
           role.setScopedRights(newScopedRights);
           
-          //Sichtbarkeitsrechte für GUI zu allen Rollen hinzufügen
+          //Sichtbarkeitsrechte fï¿½r GUI zu allen Rollen hinzufï¿½gen
           role.grantRight(GuiRight.FACTORY_MANAGER.getKey());
           role.grantRight(GuiRight.PROCESS_MODELLER.getKey());
           role.grantRight(GuiRight.PROCESS_MONITOR.getKey());

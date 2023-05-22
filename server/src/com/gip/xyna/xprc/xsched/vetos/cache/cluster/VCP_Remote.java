@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,7 +193,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
         return VetoResponseEntry.inUse(veto.getName(), veto.getState() );
       }
     } else if( currentState == State.Comparing ) {
-      //Konflikt: anderer Knoten führt gerade Vergleich durch
+      //Konflikt: anderer Knoten fï¿½hrt gerade Vergleich durch
       return VetoResponseEntry.inUse(veto.getName(), veto.getState());
     } else if( currentState == State.Local ) {
       notifyScheduler = true;
@@ -224,8 +224,8 @@ public class VCP_Remote implements VCP_RemoteInterface {
       if( ownUrgency == Long.MIN_VALUE ) {
         return Pair.of(Compare.UNUSED, State.None);
       }
-      //bei Gleichheit dürfen nicht beide Knoten zum gleichen Ergebnis kommen, da sonst entweder beide das 
-      //Veto verwenden oder keiner das Veto erhält.
+      //bei Gleichheit dï¿½rfen nicht beide Knoten zum gleichen Ergebnis kommen, da sonst entweder beide das 
+      //Veto verwenden oder keiner das Veto erhï¿½lt.
       boolean useLocal = vcp_Clustered.isVetoPreferred(ownUrgency, veto);
       logger.info("Same urgency "+ownUrgency+" as on other node -> " + useLocal);
       return useLocal ? Pair.of(Compare.LOCAL, State.Local) : Pair.of(Compare.REMOTE, State.Remote);
@@ -238,7 +238,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
       vetoCache.process(veto);
       return VetoResponseEntry.success(request.getName());
     } else if( request.getUrgency() == Long.MAX_VALUE ) {
-      //eigenes free für AdminVetos ist zurückgekommen: siehe VCP_Clustered.processFree(VetoCacheEntry)
+      //eigenes free fï¿½r AdminVetos ist zurï¿½ckgekommen: siehe VCP_Clustered.processFree(VetoCacheEntry)
       return VetoResponseEntry.success(request.getName());
     } else if( veto.getState() == State.Remote ) {
       //Veto-Verwendung war auf anderem Knoten zu schnell, deswegen muss hier nichts freigeben werden
@@ -268,13 +268,13 @@ public class VCP_Remote implements VCP_RemoteInterface {
       }
     case Scheduled:
       if( veto.isReplicated() ) {
-        //Direkt nach Übergang nach Clustered werden Scheduled-Vetos teilweise doppelt gemeldet, dies soll kein Fehler sein
+        //Direkt nach ï¿½bergang nach Clustered werden Scheduled-Vetos teilweise doppelt gemeldet, dies soll kein Fehler sein
         return VetoResponseEntry.success(request.getName());
       } else {
         return VetoResponseEntry.failUnexpectedState(veto);
       }
     case Comparing:
-      //Dies ist zu erwarten, wenn dieser Knoten den anderen Knoten über ein Compare in Zustand Local gebracht hat,
+      //Dies ist zu erwarten, wenn dieser Knoten den anderen Knoten ï¿½ber ein Compare in Zustand Local gebracht hat,
       //dieser dann schnell nach Usable->Scheduling->Scheduled gegangen ist und hier lokal die Antwort (Comparing->Remote)
       //noch nicht umgesetzt wurde. Evtl ist dies gerade geschehen, deshalb nochmal probieren
       return setScheduled(State.Remote, veto, request, true);
@@ -337,7 +337,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
     } else {
       if( veto.replace(State.Compare, vetoNew) ) {
         //Veto konnte ersetzt werden. Sollte eigentlich klappen, wenn State Compare ist, da nur VetoCacheProcessor und RMI
-        //den State Compare ändern darf. VCP sollte aber noch am CountDownLatch hängen.
+        //den State Compare ï¿½ndern darf. VCP sollte aber noch am CountDownLatch hï¿½ngen.
       } else {
         logger.warn("Failed replication for veto "+vetoName+", "+request.getReplication()+": veto already exists: "+veto);
       }

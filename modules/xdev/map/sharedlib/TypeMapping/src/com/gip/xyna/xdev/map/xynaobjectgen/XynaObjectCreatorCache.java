@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ public class XynaObjectCreatorCache {
       throw new XynaObjectCreationException(node.getNodeName(), XOCExceptionType.Lookup.name(), "namespace->null" );
     }
 
-    //gleicher elementname könnte im xml in unterschiedlichen typen auftauchen
+    //gleicher elementname kï¿½nnte im xml in unterschiedlichen typen auftauchen
     //aber im gleichen parent XynaObject ist er unique
     //so wird der cache den gleichen xynaobjectcreator mehrfach enthalten - pech.
     String key = targetId+"_"+namespace+":" + parentXynaObjectName + ":" +node.getNodeName();

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ public final class NonTLVOctetStringTlvEncoderTest {
         encoder.write(node, target);
         assertEquals(TestHelper.createIntegerList(34, 92, 34,92,92,92,34,34), TestHelper.toUnsignedIntList(target));
 
-        node = new TypeWithValueNode("StringValue", "\"цьед\"");
+        node = new TypeWithValueNode("StringValue", "\"пїЅпїЅпїЅпїЅ\"");
         target = new ByteArrayOutputStream();
         encoder.write(node, target);
         assertEquals(TestHelper.createIntegerList(34,0xC3, 0xB6, 0xC3, 0xBC, 0xC3, 0xA5, 0xC3, 0xA4,34),

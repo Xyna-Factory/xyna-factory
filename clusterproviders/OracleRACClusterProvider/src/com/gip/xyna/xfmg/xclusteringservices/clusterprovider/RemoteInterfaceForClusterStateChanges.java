@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.gip.xyna.utils.db.SQLUtils;
 public interface RemoteInterfaceForClusterStateChanges {
 
   /**
-   * der joinende legt vorher in der db eine zeile für sich an
+   * der joinende legt vorher in der db eine zeile fï¿½r sich an
    * knoten A signalisiert an knoten B, dass er mit ins cluster will.
    */
   public void join(SQLUtils sqlUtils, int joinedBinding) throws InterFactoryConnectionDoesNotWorkException, DBNotReachableException;
@@ -35,8 +35,8 @@ public interface RemoteInterfaceForClusterStateChanges {
   public void startup(SQLUtils sqlUtils, int startingBinding) throws InterFactoryConnectionDoesNotWorkException, DBNotReachableException;
 
   /**
-   * Während des Connect (nach startup oder join): B signalisiert an Knoten A, dass dieser noch nicht CONNECTED sein kann.
-   * Diese Nachricht wird häufig verschickt, damit A weiß, dass B noch versucht, den CONNECT herzustellen 
+   * Wï¿½hrend des Connect (nach startup oder join): B signalisiert an Knoten A, dass dieser noch nicht CONNECTED sein kann.
+   * Diese Nachricht wird hï¿½ufig verschickt, damit A weiï¿½, dass B noch versucht, den CONNECT herzustellen 
    * @param connectingBinding
    */
   public void waiting(SQLUtils sqlUtils, int connectingBinding) throws InterFactoryConnectionDoesNotWorkException, DBNotReachableException;
@@ -49,10 +49,10 @@ public interface RemoteInterfaceForClusterStateChanges {
   
   /**
    * knoten A signalisiert an knoten B, dass eine trennung der knoten passieren soll. 
-   * Ziel-Zustände von A und B schreibt A vorher in die Tabelle XynaClusterSetup
+   * Ziel-Zustï¿½nde von A und B schreibt A vorher in die Tabelle XynaClusterSetup
    * 
    * 2 Usecases:
-   * - A fährt runter
+   * - A fï¿½hrt runter
    *   
    * - A hat kein RMI Interconnect und will deshalb Master werden.
    *   - B ist down
@@ -64,7 +64,7 @@ public interface RemoteInterfaceForClusterStateChanges {
   public void disconnect(SQLUtils sqlUtils, int quittingBinding);
   
   /**
-   * hat nichts mit remote zu tun, ist nur für das shutdown der implementierung dieser klasse (aufräumen).
+   * hat nichts mit remote zu tun, ist nur fï¿½r das shutdown der implementierung dieser klasse (aufrï¿½umen).
    * queue listener beenden und so.
    */
   public void shutdown(String cause);

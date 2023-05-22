@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 
 /**
- * Factory Operationen sollen unter Umständen nicht gleichzeitig laufen. Mit dieser Klasse kann man ausdrücken, dass eine Menge 
- * von Operations vorrübergehend gesperrt sein soll. Das ganze pro Revision.
+ * Factory Operationen sollen unter Umstï¿½nden nicht gleichzeitig laufen. Mit dieser Klasse kann man ausdrï¿½cken, dass eine Menge 
+ * von Operations vorrï¿½bergehend gesperrt sein soll. Das ganze pro Revision.
  * 
  * Zum Sperren von Operations a und b die Methode wlock(eigeneOperation, {a, b}, revision) aufrufen; zum Entsperren wunlock.
  * 
@@ -69,11 +69,11 @@ public class CommandControl {
      * Holt ein writeLock, falls nicht ein anderer Thread die Operation bereits gewrite-locked hat.
      * 
      * @param lockedBy
-     * @return null, falls Lock bekommen, sonst Operation, die das writeLock hält
+     * @return null, falls Lock bekommen, sonst Operation, die das writeLock hï¿½lt
      */
     public boolean writeLock(T lockedBy) {
       if (isReadLockedByCurrentThread()) {
-        //eigener Thread hat bereits ein readLock, dies würde zu einem DeadLock führen
+        //eigener Thread hat bereits ein readLock, dies wï¿½rde zu einem DeadLock fï¿½hren
         throw new RuntimeException("cannot upgrade readlock to writelock");
       }
       
@@ -104,7 +104,7 @@ public class CommandControl {
      */
     public boolean tryWriteLock(T lockedBy, long waitUntil) throws InterruptedException {
       if (isReadLockedByCurrentThread()) {
-        //eigener Thread hat bereits ein readLock, dies würde zu einem DeadLock führen
+        //eigener Thread hat bereits ein readLock, dies wï¿½rde zu einem DeadLock fï¿½hren
         throw new RuntimeException("cannot upgrade readlock to writelock");
       }
       
@@ -167,7 +167,7 @@ public class CommandControl {
     }
     
     /**
-     * Überprüft, ob der eigene Thread bereits ein readLock hält.
+     * ï¿½berprï¿½ft, ob der eigene Thread bereits ein readLock hï¿½lt.
      */
     private boolean isReadLockedByCurrentThread() {
       return l.getReadHoldCount() > 0;
@@ -245,7 +245,7 @@ public class CommandControl {
 
     
     /**
-     * WriteLocks für die angegebenen Operations in allen Revisions. Falls eine Operation durch einen anderen Thread
+     * WriteLocks fï¿½r die angegebenen Operations in allen Revisions. Falls eine Operation durch einen anderen Thread
      * gelocked (read oder write) ist, wird maximal bis 'waitUntil' abgewartet, ob das Lock freigegeben wird.
      * 
      * @param source
@@ -353,8 +353,8 @@ public class CommandControl {
   }
 
   /**
-   * readlock in default workingset für diese operation.
-   * andere komponenten sollen sich davor schützen, dass nicht gleichzeitig ein prozess am laufen ist, der ein writelock auf der operation benötigt.
+   * readlock in default workingset fï¿½r diese operation.
+   * andere komponenten sollen sich davor schï¿½tzen, dass nicht gleichzeitig ein prozess am laufen ist, der ein writelock auf der operation benï¿½tigt.
    * z.b. clearworkingset oder removeapplication.
    * wirft exceptions, falls nicht gelockt.
    */
@@ -469,7 +469,7 @@ public class CommandControl {
     }
 
     /**
-     * Liefert alle Operations außer der übergebenen zurück.
+     * Liefert alle Operations auï¿½er der ï¿½bergebenen zurï¿½ck.
      * @param operation
      * @return
      */
@@ -488,8 +488,8 @@ public class CommandControl {
 
 
   /**
-   * readlock für diese operation in der revision.
-   * andere komponenten sollen sich davor schützen, dass nicht gleichzeitig ein prozess am laufen ist, der ein writelock auf der operation benötigt.
+   * readlock fï¿½r diese operation in der revision.
+   * andere komponenten sollen sich davor schï¿½tzen, dass nicht gleichzeitig ein prozess am laufen ist, der ein writelock auf der operation benï¿½tigt.
    * z.b. clearworkingset oder removeapplication.
    * wirft exceptions, falls nicht gelockt.
    */
@@ -499,8 +499,8 @@ public class CommandControl {
 
   
   /**
-   * readlock für diese operation in dem runtimecontext
-   * andere komponenten sollen sich davor schützen, dass nicht gleichzeitig ein prozess am laufen ist, der ein writelock auf der operation benötigt.
+   * readlock fï¿½r diese operation in dem runtimecontext
+   * andere komponenten sollen sich davor schï¿½tzen, dass nicht gleichzeitig ein prozess am laufen ist, der ein writelock auf der operation benï¿½tigt.
    * z.b. clearworkingset oder removeapplication.
    * wirft exceptions, falls nicht gelockt.
    * @throws XFMG_CouldNotLockOperation 
@@ -510,7 +510,7 @@ public class CommandControl {
       long revision = getRevision(runtimeContext);
       tryLock(operation, revision);
     } catch (XynaException e) {
-      throw new XFMG_CouldNotLockOperation(operation.toString(), runtimeContext.toString(), e); //TODO unschöne fehlermeldung
+      throw new XFMG_CouldNotLockOperation(operation.toString(), runtimeContext.toString(), e); //TODO unschï¿½ne fehlermeldung
     }
   }
   
@@ -520,8 +520,8 @@ public class CommandControl {
 
 
   /**
-   * readlock für diese operation in der application.
-   * andere komponenten sollen sich davor schützen, dass nicht gleichzeitig ein prozess am laufen ist, der ein writelock auf der operation benötigt.
+   * readlock fï¿½r diese operation in der application.
+   * andere komponenten sollen sich davor schï¿½tzen, dass nicht gleichzeitig ein prozess am laufen ist, der ein writelock auf der operation benï¿½tigt.
    * z.b. clearworkingset oder removeapplication.
    * wirft exceptions, falls nicht gelockt werden konnte.
    */
@@ -571,7 +571,7 @@ public class CommandControl {
 
 
   /**
-   * writelock für die angegebenen operations in der angegebenen revision.
+   * writelock fï¿½r die angegebenen operations in der angegebenen revision.
    * 
    * verwendung von z.b. clearworkingset oder removeapplication.
    * 
@@ -593,7 +593,7 @@ public class CommandControl {
   }
 
   /**
-   * WriteLocks für die angegebenen Operations in allen Revisions. Falls eine Operation durch einen anderen Thread
+   * WriteLocks fï¿½r die angegebenen Operations in allen Revisions. Falls eine Operation durch einen anderen Thread
    * gelocked (read oder write) ist, wird das timeout abgewartet, ob das Lock freigegeben wird.
    * 
    * Verwendung von z.B. stop factory
@@ -602,7 +602,7 @@ public class CommandControl {
    * @param toWriteLock
    * @param timout
    * @param unit
-   * @return null, falls writeLocks für alle Operations in allen Revisions geholt werden konnten. Ansonsten ein Paar bestehend aus 
+   * @return null, falls writeLocks fï¿½r alle Operations in allen Revisions geholt werden konnten. Ansonsten ein Paar bestehend aus 
    * 1. der nicht lockbaren Operation, falls ein anderer Thread diese Operation geread- oder gewrite-locked hat
    * 2. der Source Operation die die nicht lockbare Operation gelockt hat, falls es ein writeLock ist (null falls es ein readLock ist)
    * @throws InterruptedException
@@ -623,7 +623,7 @@ public class CommandControl {
           if (result != null) {
               break;  //Locks nicht bekommen -> abbrechen
             } else {
-              locked.add(revision); //Locks bekommen -> Locks für nächste Revision holen
+              locked.add(revision); //Locks bekommen -> Locks fï¿½r nï¿½chste Revision holen
             }
           suc = true;
         } finally {
@@ -647,7 +647,7 @@ public class CommandControl {
   }
   
 
-  //damit man das array nach aussen hin unverändert lässt, es aber intern sortieren kann
+  //damit man das array nach aussen hin unverï¿½ndert lï¿½sst, es aber intern sortieren kann
   private static Operation[] clone(Operation[] ops) {
     Operation[] cloned = new Operation[ops.length];
     System.arraycopy(ops, 0, cloned, 0, ops.length);

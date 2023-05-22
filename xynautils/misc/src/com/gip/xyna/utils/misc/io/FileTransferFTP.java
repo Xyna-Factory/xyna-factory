@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class FileTransferFTP implements FileTransfer {
    * @param server
    * @param username
    * @param password
-   * @param type Übertragungsweise ASCII oder BINARY
+   * @param type ï¿½bertragungsweise ASCII oder BINARY
    * @throws SocketException
    * @throws IOException
    */
@@ -87,7 +87,7 @@ public class FileTransferFTP implements FileTransfer {
   }
 
   /**
-   * Löschen einer Datei auf dem FTP-Server
+   * Lï¿½schen einer Datei auf dem FTP-Server
    * @param name
    * @return
    * @throws IOException

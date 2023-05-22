@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,9 @@ import com.gip.xyna.xprc.xpce.execution.MasterWorkflowPostScheduler.Mode;
  * <li> {@link #cancelOrder} </li>
  * </ul>
  * <br>
- * Die Rückgabe dieser Methoden sollte meist <code>true</code> sein. <code>false</code> bedeutet, 
- * dass der ThreadPool im XynaExecutor überlastet ist und der Aufruf daher nochmal (nach einer Pause)
- * wiederholt werden muss. Dabei wird zuerst versucht, ThreadPools mit niedrigeren Prioritäten zu 
+ * Die Rï¿½ckgabe dieser Methoden sollte meist <code>true</code> sein. <code>false</code> bedeutet, 
+ * dass der ThreadPool im XynaExecutor ï¿½berlastet ist und der Aufruf daher nochmal (nach einer Pause)
+ * wiederholt werden muss. Dabei wird zuerst versucht, ThreadPools mit niedrigeren Prioritï¿½ten zu 
  * verwenden.
  * 
  * <br>
@@ -55,10 +55,10 @@ public class XynaOrderExecutor {
 
   
   /**
-   * Start der XynaOrder: Ausführung des MasterWorkflowPostScheduler im XynaExecutor
+   * Start der XynaOrder: Ausfï¿½hrung des MasterWorkflowPostScheduler im XynaExecutor
    * Achtung: dieses direkte Starten sollte nur durch den Scheduler aufgerufen werden
    * @param schedulingOrder
-   * @return false, wenn Ausführung nicht möglich war und der Aufruf wiederholt werden muss
+   * @return false, wenn Ausfï¿½hrung nicht mï¿½glich war und der Aufruf wiederholt werden muss
    */
   public static boolean startOrder(SchedulingOrder schedulingOrder) {
     CentralFactoryLogging.logOrderTiming(schedulingOrder.getOrderId(), "start execution thread");
@@ -67,11 +67,11 @@ public class XynaOrderExecutor {
   }
   
   /**
-   * Start der XynaOrder: Ausführung des MasterWorkflowPostScheduler im XynaExecutor
+   * Start der XynaOrder: Ausfï¿½hrung des MasterWorkflowPostScheduler im XynaExecutor
    * Achtung: dieses direkte Starten sollte nur durch den Scheduler aufgerufen werden
    * @param xynaOrder
    * @param priority
-   * @return false, wenn Ausführung nicht möglich war und der Aufruf wiederholt werden muss
+   * @return false, wenn Ausfï¿½hrung nicht mï¿½glich war und der Aufruf wiederholt werden muss
    */
   public static boolean startOrder(XynaOrderServerExtension xynaOrder, int priority) {
     CentralFactoryLogging.logOrderTiming(xynaOrder.getId(), "start execution thread");
@@ -96,7 +96,7 @@ public class XynaOrderExecutor {
 
   /**
    * Abbruch der XynaOrder durch Cancel
-   * @return false, wenn Ausführung nicht möglich war und der Aufruf wiederholt werden muss
+   * @return false, wenn Ausfï¿½hrung nicht mï¿½glich war und der Aufruf wiederholt werden muss
    */
   public static boolean cancelOrder(XynaOrderServerExtension xynaOrder) {
     return cancelOrder(xynaOrder, false);
@@ -105,7 +105,7 @@ public class XynaOrderExecutor {
 
   /**
    * Abbruch der XynaOrder durch Cancel
-   * @return false, wenn Ausführung nicht möglich war und der Aufruf wiederholt werden muss
+   * @return false, wenn Ausfï¿½hrung nicht mï¿½glich war und der Aufruf wiederholt werden muss
    */
   public static boolean cancelOrder(XynaOrderServerExtension xo, boolean ignoreCapacitiesAndVetos) {
     xo.setCancelled(true);
@@ -123,12 +123,12 @@ public class XynaOrderExecutor {
 
   
   /**
-   * Einstellen des XynaRunnable mit der Priorität <code>prio</code> in den XynaExecutor
-   * Falls der ThreadPool des XynaExecutors zu der angegebenen Priorität belegt ist, 
-   * wird versucht, den ThreadPool zur nächstniedrigeren Priorität zu belegen.
+   * Einstellen des XynaRunnable mit der Prioritï¿½t <code>prio</code> in den XynaExecutor
+   * Falls der ThreadPool des XynaExecutors zu der angegebenen Prioritï¿½t belegt ist, 
+   * wird versucht, den ThreadPool zur nï¿½chstniedrigeren Prioritï¿½t zu belegen.
    * @param xr
    * @param prio
-   * @return false, wenn Ausführung nicht möglich war
+   * @return false, wenn Ausfï¿½hrung nicht mï¿½glich war
    */
   private static boolean tryExecuteXynaRunnable(XynaRunnable xr, int prio, boolean withCleanupThreadPool) {
     try {

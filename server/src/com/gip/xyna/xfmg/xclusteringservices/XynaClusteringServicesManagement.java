@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,13 +193,13 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
      
       
       boolean isReadyForChange = true;
-      //wenn vom clusterprovider "onChange" aufgerufen wird, sollte nicht nochmal isReadyForChange überprüft werden!
-      //dann ist der cluster zustandsübergang ja bereits passiert!
+      //wenn vom clusterprovider "onChange" aufgerufen wird, sollte nicht nochmal isReadyForChange ï¿½berprï¿½ft werden!
+      //dann ist der cluster zustandsï¿½bergang ja bereits passiert!
       if (checkAgainIsReady) {
         isReadyForChange = isReadyForChange(newState);
       }
       if( isReadyForChange && !onChangeRunning) {
-        //im eigenen thread ausführen, damit nicht statechangehandler rekursiv aufgerufen werden.
+        //im eigenen thread ausfï¿½hren, damit nicht statechangehandler rekursiv aufgerufen werden.
         //logger.debug("tryOnChange("+newState+") called from", new Exception() );
         onChangeRunning = true;
         threadpool.execute(new OnChange(newState) );
@@ -220,7 +220,7 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
           Thread.sleep(1000); //TODO feste Konstante anpassen
         }
         catch (InterruptedException e) {
-          //ignorieren, dann war die Wartezeit halt kürzer
+          //ignorieren, dann war die Wartezeit halt kï¿½rzer
         }
         tryOnChange();
       }
@@ -277,7 +277,7 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
           if( success ) {
             currentClusterState = newClusterState;
           } else {
-            currentClusterState = null; //OnChange ist nicht regulär fertig geworden, daher ist Zustand unbestimmt
+            currentClusterState = null; //OnChange ist nicht regulï¿½r fertig geworden, daher ist Zustand unbestimmt
           }
         }
       }
@@ -590,7 +590,7 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
   private void initXynaClusteringServicesManagement() {
     ods = ODSImpl.getInstance();
              try {
-              //achtung, die storables dürfen nur auf xml konfiguriert sein, weil sonst die abhängigkeiten beim laden von odsimpl nicht passen
+              //achtung, die storables dï¿½rfen nur auf xml konfiguriert sein, weil sonst die abhï¿½ngigkeiten beim laden von odsimpl nicht passen
               //bei der erstinstallation werden die defaultpersistencelayers erst im update angelegt.
               ods.registerStorable(ClusterComponentStorable.class);
               ods.registerStorable(ClusterInstanceStorable.class);
@@ -618,7 +618,7 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
                 for (int i = 0; i<allIds.length; i++) {
                   allIds[i] = ids.get(i);
                 }
-                //aggregations-task für alle clusterinstances
+                //aggregations-task fï¿½r alle clusterinstances
                 FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
                 fExec.addTask(XynaClusteringServicesManagementInterface.FUTURE_EXECUTION_ID__START_CLUSTERPROVIDERS_FINISHED, "XynaClusteringServicesManagement_ClusterProvider_Finished").
                 after(allIds).
@@ -626,8 +626,8 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
                 execAsync(); //dummy. aggregiert die future execution tasks der cluster instances, um darauf zu warten, dass sie alle gestartet wurden.
               }
               
-              //die clustercomponents haben sich noch nicht registriert -> erst ausführen, wenn alle clustercomponents sich hier registriert haben.
-              //das funktioniert so, dass die anderen components ein futureexecutiontask definieren müssen, mit einer before-beziehung auf diese id.
+              //die clustercomponents haben sich noch nicht registriert -> erst ausfï¿½hren, wenn alle clustercomponents sich hier registriert haben.
+              //das funktioniert so, dass die anderen components ein futureexecutiontask definieren mï¿½ssen, mit einer before-beziehung auf diese id.
               registerSavedClusterComponents();
               
               connectSavedClusterInstances();
@@ -638,7 +638,7 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
 
   private void registerSavedClusterComponents() throws PersistenceLayerException,
       XFMG_ClusterComponentConfigurationException {
-    //bereits früher auf cluster konfigurierte komponenten 
+    //bereits frï¿½her auf cluster konfigurierte komponenten 
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       ArrayList<ClusterComponentStorable> components = 
@@ -677,13 +677,13 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
   }
 
   /**
-   * Reihenfolge der Initialisierung der ClusterComponent ist wichtig, da es gegenseitige Abhängigkeitem 
+   * Reihenfolge der Initialisierung der ClusterComponent ist wichtig, da es gegenseitige Abhï¿½ngigkeitem 
    * der Inititalisierung gibt. 
    * (Zumindest fiel es einmal auf, dass auf einem anderen System als der Entwicklungsumgebung  Probleme 
    * auftraten, da die Reihenfolge anders war als bis dahin getetestet.)
    * 
    * Sortierung ist: 
-   * a) zugehöriger ClusterProvider, dabei RMIClusterProvider als letzter
+   * a) zugehï¿½riger ClusterProvider, dabei RMIClusterProvider als letzter
    * b) innerhalb des gleichen ClusterProviders: Alphabetisch nach Namen der ClusterComponent
    * TODO Konfigurierbarkeit der Sortierung?
    */
@@ -782,7 +782,7 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
    * Achtung: Reihenfolge der einzelnen Shutdowns ist nicht beliebig, da der Shutdown eines 
    * ClusterProviders Auswirkungen auf die anderen ClusterProvider hat.
    * Daher wird RMIClusterProvider als letztes heruntergefahren
-   * TODO Reihenfolge für weitere ClusterProvider konfigurierbar machen?
+   * TODO Reihenfolge fï¿½r weitere ClusterProvider konfigurierbar machen?
    */
   @Override
   protected void shutdown() throws XynaException {
@@ -914,8 +914,8 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
       return; //enablement passiert im init.
     }
 
-    //falls die clusterablecomponents (früher) bereits mit einer clusterinstance verknüpft wurde, aber diese
-    //verknüpfung nach diesem serverstart noch nicht stattgefunden hat, passiert dies nun.
+    //falls die clusterablecomponents (frï¿½her) bereits mit einer clusterinstance verknï¿½pft wurde, aber diese
+    //verknï¿½pfung nach diesem serverstart noch nicht stattgefunden hat, passiert dies nun.
     //usecase: in ondeployment eines services wird eine clusterablecomponent registriert. zu diesem zeitpunkt
     //sind die clusterprovider bereits initialisiert.
     
@@ -1031,7 +1031,7 @@ public class XynaClusteringServicesManagement extends Section implements XynaClu
     } catch (XFMG_JarFolderNotFoundException e) {
       throw new XFMG_ClusterProviderFilesNotFoundException(clusterType, e);
     }
-    // FIXME SPS prio5: bei classloaderdispatcher registrieren, damit man mit listclassloaderinfos über die cli infos über
+    // FIXME SPS prio5: bei classloaderdispatcher registrieren, damit man mit listclassloaderinfos ï¿½ber die cli infos ï¿½ber
     //           die classloaders bekommen kann.
     //           aufpassen: auch wieder deregistrieren, wenn persistencelayer undeployed wird. z.B.:
     // ClassLoaderDispatcherFactory.getInstance().getImpl().registerPersistenceLayerClassLoader(persLayerClassLoader);

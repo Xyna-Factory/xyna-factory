@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ import com.gip.xyna.xprc.xprcods.orderarchive.XynaExceptionInformationThrowable;
 
 
 /**
- * entspricht mehreren zusammengehörenden xmlelementen &lt;catch&gt;.
+ * entspricht mehreren zusammengehï¿½renden xmlelementen &lt;catch&gt;.
  * daraus wird ein java step generiert der form
  * execute() {
  *   try {
@@ -84,7 +84,7 @@ public class StepCatch extends Step implements Distinction {
   protected static final String METHODNAME_SUSPEND_MANUAL_OR_SHUTDOWN;
 
   static {
-    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert kï¿½nnen von obfuscation tools mit "refactored" werden.
     // ProcessStepCatch
     try {
       METHODNAME_GET_REGULAR_EXECUTION_STEP = ProcessStepCatch.class.getDeclaredMethod(_METHODNAME_GET_REGULAR_EXECUTION_STEP_ORIG).getName();
@@ -299,7 +299,7 @@ public class StepCatch extends Step implements Distinction {
     if (exceptionHandlersWithRetry.size() > 0) {
       cb.addLine("boolean caughtRetryException;");
       cb.addLine("do {");
-      cb.addLine(METHODNAME_SET_LANE_ID, "(\"",retryId,"-\"+parentProcess.", WF.FIELDNAME_RETRY_COUNTER, ".get())");//laneId soll für jeden Retry eindeutig werden
+      cb.addLine(METHODNAME_SET_LANE_ID, "(\"",retryId,"-\"+parentProcess.", WF.FIELDNAME_RETRY_COUNTER, ".get())");//laneId soll fï¿½r jeden Retry eindeutig werden
       cb.addLine("caughtRetryException = false;");
     }
     cb.addLine("try {");
@@ -325,7 +325,7 @@ public class StepCatch extends Step implements Distinction {
     cb.addLine(METHODNAME_EXECUTE_CHILDREN, "(0)");
     cb.addLine("}");
 
-    //catchblöcke
+    //catchblï¿½cke
     int i = 0;
     for (String id : exceptionVariableIdsToCatch.keySet()) {
       i++;
@@ -333,7 +333,7 @@ public class StepCatch extends Step implements Distinction {
       ExceptionVariable v = (ExceptionVariable) vi.variable;
       String catchClass;
       if (v.getFQClassName().equals(Exception.class.getName())) {
-        //exceptions die nicht gefangen werden können sollen behandeln:
+        //exceptions die nicht gefangen werden kï¿½nnen sollen behandeln:
         cb.addLine("} catch (", ProcessSuspendedException.class.getName(), " e) {");
         cb.addLine("throw e");
         cb.addLine("} catch (", OrderDeathException.class.getName(), " e) {");
@@ -353,9 +353,9 @@ public class StepCatch extends Step implements Distinction {
       cb.addLine("}");
       cb.addLine(vi.getScopeGetter(getParentScope()), v.getSetter("e", null));
 
-      //suspenden bevor kinder ausgeführt werden
+      //suspenden bevor kinder ausgefï¿½hrt werden
       cb.addLine("if (", ScopeStep.getScopeGetter(getParentScope(), getParentWFObject().getWfAsStep()), WF.METHODNAME_IS_ATTEMPTING_SUSPENSION, "()) {");
-      // FIXME das ist nicht sicher. bessere lösung: beim setzen des attemptingSuspension-Flags gleich
+      // FIXME das ist nicht sicher. bessere lï¿½sung: beim setzen des attemptingSuspension-Flags gleich
       //       den SuspensionCause mitsetzen
       cb.addLine("throw ",SuspendResumeManagement.class.getSimpleName(), ".", METHODNAME_SUSPEND_MANUAL_OR_SHUTDOWN, "(null,getLaneId())");
       cb.addLine("}");

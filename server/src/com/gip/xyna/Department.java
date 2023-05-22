@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,7 +147,7 @@ public abstract class Department extends XynaFactoryComponent {
     // TODO move to util class
 
     // http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Error.html
-    if (t instanceof ThreadDeath) { // ThreadDeath fehler müssen weitergeworfen werden!
+    if (t instanceof ThreadDeath) { // ThreadDeath fehler mï¿½ssen weitergeworfen werden!
       throw (ThreadDeath) t;
     }
     if (t instanceof OutOfMemoryError) {

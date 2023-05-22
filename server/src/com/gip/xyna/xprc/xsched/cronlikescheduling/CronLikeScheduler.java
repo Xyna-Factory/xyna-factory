@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,8 +117,8 @@ import com.gip.xyna.xprc.xsched.cronlikescheduling.selectcrons.CronLikeOrderSele
 
 
 /**
- * Folgende Anforderungen gibt es für den Cluster-Betrieb an den Cron Like Scheduler:<br>
- * * In den Zuständen CONNECTED, SINGLE und DISCONNECTED werden nur Cron Like Orders für das eigene Binding verarbeitet.<br>
+ * Folgende Anforderungen gibt es fï¿½r den Cluster-Betrieb an den Cron Like Scheduler:<br>
+ * * In den Zustï¿½nden CONNECTED, SINGLE und DISCONNECTED werden nur Cron Like Orders fï¿½r das eigene Binding verarbeitet.<br>
  * * Im Zustand DISCONNECTED_MASTER werden Cron Like Orders mit beliebigen Bindings verarbeitet.<br>
  * * Im Zustand DISCONNECTED_SLAVE werden gar keine Cron Like Orders verarbeitet.
  */
@@ -161,12 +161,12 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
     fExec.addTask(CronLikeScheduler.class, "CronLikeScheduler").
       after("CronLikeScheduler.initStorables").
       after( WorkflowDatabase.FUTURE_EXECUTION_ID ). //zum Lesen der serialisierten XMOM-Objekte
-      before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).//Aufträge könnten CLOs erstellen
+      before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).//Auftrï¿½ge kï¿½nnten CLOs erstellen
       execAsync(new Runnable() { public void run() { initCronLikeScheduler(); }});
 
     fExec.addTask("CronLikeScheduler.startTimerThread", "CronLikeScheduler.startTimerThread").
       after(CronLikeScheduler.class).
-      after(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION). //CLOs können Aufträge starten
+      after(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION). //CLOs kï¿½nnen Auftrï¿½ge starten
       execAsync(new Runnable() { public void run() { startTimerThread(); }});
 
     XynaProperty.XYNA_BACKUP_DURING_CRON_LIKE_SCHEDULING.registerDependency(UserType.XynaFactory,DEFAULT_NAME);
@@ -375,7 +375,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
   }
   
   /**
-   * Überprüft, dass die Application nicht im Zustand AUDIT_MODE ist
+   * ï¿½berprï¿½ft, dass die Application nicht im Zustand AUDIT_MODE ist
    * @param DestinationKey
    */
   private void checkApplicationState(DestinationKey destinationKey) throws XPRC_InvalidCronLikeOrderParametersException {
@@ -419,19 +419,19 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
      * Create a new cron like order, add it to the order queue and store it in default connection.
      * 
      * @param clocp creation parameters of the cron like order
-     *        Achtung: startTime wird von der GUI immer in UTC übergeben. Diese wird hier zusammen
-     *        mit der übergebenen Zeitzone konvertiert.
+     *        Achtung: startTime wird von der GUI immer in UTC ï¿½bergeben. Diese wird hier zusammen
+     *        mit der ï¿½bergebenen Zeitzone konvertiert.
      * @param prio Priority in executeAfterCommitAction
-     * @param uniqueKeys Set@lt;CronLikeOrderColumn&gt;: Diese Spalten müssen einen eindeutigen Wert 
+     * @param uniqueKeys Set@lt;CronLikeOrderColumn&gt;: Diese Spalten mï¿½ssen einen eindeutigen Wert 
      *        haben, d.h. nicht die gleichen Daten wie die neue CLO.
-     *        Achtung: Dies gewährleistet keine echte Eindeutigkeit gegenüber bereits gelaufenen Crons 
+     *        Achtung: Dies gewï¿½hrleistet keine echte Eindeutigkeit gegenï¿½ber bereits gelaufenen Crons 
      *                 und zeitgleich angelegten!
      * @return the newly created cron like order
      * @throws XPRC_CronCreationException if order creation failed (e.g. creation parameters are null)
      * @throws XPRC_CronLikeOrderStorageException
      * @throws XNWH_RetryTransactionException
      * @throws XPRC_InvalidCronLikeOrderParametersException
-     * @throws XPRC_CronLikeOrderAlreadyExistsException Suche nach den uniqueKeys hat Einträge gefunden
+     * @throws XPRC_CronLikeOrderAlreadyExistsException Suche nach den uniqueKeys hat Eintrï¿½ge gefunden
      */
     public CronLikeOrder createCronLikeOrder(CronLikeOrderCreationParameter clocp, CronLikeOrderPersistenceOption removeOnShutdownOption,
                                              ODSConnection con, final int prio,
@@ -442,7 +442,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
                      new IllegalArgumentException("Cron like order creation parameters may not be null."));
     }
     
-    //überprüfen, dass die Application nicht im Zustand AUDIT_MODE ist
+    //ï¿½berprï¿½fen, dass die Application nicht im Zustand AUDIT_MODE ist
     checkApplicationState(clocp.getDestinationKey());
     
     verifyCronLikeOrderCreationParameter(clocp);
@@ -690,8 +690,8 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
               }
               return true;
             } else {
-              // FIXME Cause anhängen, der erkennen lässt, was das Problem ist. Ist das sogar eine RuntimeException? Oder
-              //       nur ein Race während der Disconnect erkannt wird?
+              // FIXME Cause anhï¿½ngen, der erkennen lï¿½sst, was das Problem ist. Ist das sogar eine RuntimeException? Oder
+              //       nur ein Race wï¿½hrend der Disconnect erkannt wird?
               throw new XPRC_CronRemovalException(id);
             }
           }
@@ -925,7 +925,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
                                            final CronLikeOrder clo, ODSConnection con)
       throws XPRC_CronLikeOrderStorageException, XPRC_InvalidCronLikeOrderParametersException {
 
-    //überprüfen, dass die (neue) Application nicht im Zustand AUDIT_MODE ist
+    //ï¿½berprï¿½fen, dass die (neue) Application nicht im Zustand AUDIT_MODE ist
     if (destination != null) {
       checkApplicationState(destination);
     }
@@ -1197,8 +1197,8 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       // weiterwerfen ...
       throw new RemoteException(e.getMessage(), e);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      // kann ignoriert werden: wenn Cronlikeorder gelöscht werden soll, aber gar nicht da ist, ist es wohl schon
-      // gelöscht
+      // kann ignoriert werden: wenn Cronlikeorder gelï¿½scht werden soll, aber gar nicht da ist, ist es wohl schon
+      // gelï¿½scht
       return;
     }
 
@@ -1491,14 +1491,14 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
     final CronLikeTimer copyOfCronLikeTimer = cronLikeTimer;
     if (!schedulingStopped) {
       do {
-        //Da gleichzeitig andere Threads im Acknowledge ankommen können, kann folgendes vorkommen:
-        //Der Cron wird von diesem Thread noch in der Datenbank (im alten Zustand) gefunden und anschließend
-        //entfernt der andere Thread ihn aus notToSchedule. Dann würde er bei tryAddNewOrderWithoutUnmarkOrder
-        //aber fälschlicherweise wieder in die Queue eingefügt werden.
-        //Daher werden ab nun alle Aufträge, die aus notToSchedule ausgetragen werden in einem neuen 
-        //Set "deletedOrModified" gesammelt und nur in die Queue hinzugefügt, wenn sie in keinem
+        //Da gleichzeitig andere Threads im Acknowledge ankommen kï¿½nnen, kann folgendes vorkommen:
+        //Der Cron wird von diesem Thread noch in der Datenbank (im alten Zustand) gefunden und anschlieï¿½end
+        //entfernt der andere Thread ihn aus notToSchedule. Dann wï¿½rde er bei tryAddNewOrderWithoutUnmarkOrder
+        //aber fï¿½lschlicherweise wieder in die Queue eingefï¿½gt werden.
+        //Daher werden ab nun alle Auftrï¿½ge, die aus notToSchedule ausgetragen werden in einem neuen 
+        //Set "deletedOrModified" gesammelt und nur in die Queue hinzugefï¿½gt, wenn sie in keinem
         //der beiden Sets vorhanden sind.
-        //Außerdem wird das cleared-FLag auf false gesetzt.
+        //Auï¿½erdem wird das cleared-FLag auf false gesetzt.
         copyOfCronLikeTimer.prepareReadNext();
         
         //Crons aus der DB auslesen
@@ -1527,7 +1527,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
                     }
                     break;
                   }
-                  //Cron in die Queue einfügen
+                  //Cron in die Queue einfï¿½gen
                   if (copyOfCronLikeTimer.tryAddNewOrderWithoutUnmarkOrder(order, true)) {
                     added++;
                   } else {
@@ -1540,7 +1540,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
             cursorList = cursor.getRemainingCacheOrNextIfEmpty();
           }
           
-          //das Einsammeln der gelöschten und geänderten Crons kann nun gestoppt werden
+          //das Einsammeln der gelï¿½schten und geï¿½nderten Crons kann nun gestoppt werden
           copyOfCronLikeTimer.finishReadNext();
 
           if (logger.isTraceEnabled()) {
@@ -1548,7 +1548,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
           }
           
           synchronized (copyOfCronLikeTimer.getBlockingObject()) {
-            //falls genausoviele Crons aus der DB in die Queue eingefügt wurden, wie
+            //falls genausoviele Crons aus der DB in die Queue eingefï¿½gt wurden, wie
             //reinpassen, dann sind wahrscheinlich noch mehr Crons in der DB vorhanden,
             //daher das flag auf false setzen
             if(added == readsize) {
@@ -1557,7 +1557,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
           }
         } finally {
           // Cursor wird nur bei Connection-close geschlossen. Da aber eine dedizierte Connection verwendet wird, kann es
-          // bis zum Server-Shutdown dauern, bis Connection geschlossen wird. Also schließen wir Cursor schonmal hier.
+          // bis zum Server-Shutdown dauern, bis Connection geschlossen wird. Also schlieï¿½en wir Cursor schonmal hier.
           cursor.close();
         }
       } while(copyOfCronLikeTimer.isCleared()); //nochmal von vorne beginnen, weil die Queue geleert wurde
@@ -1630,7 +1630,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       }
     }
 
-    // TODO delete all from default. beim init kann man dann daran erkennen, ob shutdown ausgeführt wurde, oder ob der
+    // TODO delete all from default. beim init kann man dann daran erkennen, ob shutdown ausgefï¿½hrt wurde, oder ob der
     // server gekillt wurde
   }
 
@@ -1709,7 +1709,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
   }
 
   /**
-   * @return gibt CLO oder null zurück, falls nicht gefunden
+   * @return gibt CLO oder null zurï¿½ck, falls nicht gefunden
    */
   public CronLikeOrder getCronLikeOrder(ODSConnection con, Long id) throws PersistenceLayerException {
     CronLikeOrder clo = new CronLikeOrder(id);
@@ -1723,7 +1723,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
 
   
   /**
-   * alle crons, die dem ordertype, der revision und falls gewünscht dem lokalen binding entsprechen 
+   * alle crons, die dem ordertype, der revision und falls gewï¿½nscht dem lokalen binding entsprechen 
    */
   public FactoryWarehouseCursor<CronLikeOrder> getCursorForCronLikeOrders(ODSConnection con, int blockSize,
                                                                           Long revSource, String[] ordertypes,
@@ -1747,7 +1747,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       sql.append(" AND ").append(inList.getSQL(CronLikeOrder.COL_ORDERTYPE));
       com.gip.xyna.utils.db.Parameter params = inList.getParams();
       for (int i = 0; i < params.size(); i++) {
-        Object param = params.getParameter(i + 1); //fängt bei 1 an zu zählen
+        Object param = params.getParameter(i + 1); //fï¿½ngt bei 1 an zu zï¿½hlen
         parameter.add(param);
       }
     }

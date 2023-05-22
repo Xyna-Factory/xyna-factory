@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,10 +166,10 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
       public void processPdu(CommandResponderEvent e) {
         if (!e.isProcessed()) {
           try {
-            // event zu queue hinzufügen. receive methode liest dann aus queue aus...
+            // event zu queue hinzufï¿½gen. receive methode liest dann aus queue aus...
             if (!events.offer(e, capFullTimeout, TimeUnit.MILLISECONDS)) {
-              // überlastet => nichts tun TODO herausfinden, ob man statt dessen in bestimmten fällen einen fehler
-              // zurückgeben sollte?
+              // ï¿½berlastet => nichts tun TODO herausfinden, ob man statt dessen in bestimmten fï¿½llen einen fehler
+              // zurï¿½ckgeben sollte?
             }
           } catch (InterruptedException e1) {
             // sollte nicht vorkommen. falls doch, auch nicht so schlimm
@@ -204,7 +204,7 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
 
 
   /**
-   * böser hack: SNMP4j speichert die enginetime auf eine merkwürdige art und weise in UsmTimeTable.
+   * bï¿½ser hack: SNMP4j speichert die enginetime auf eine merkwï¿½rdige art und weise in UsmTimeTable.
    * beim verschicken eines requests mit authorativeEngineTime wird diese auf die vergangene zeit seit dem
    * letzten mal, dass jemand "setEngineTime" gesagt hat, gesetzt. anstatt auf die vergangene zeit seit der
    * derzeit gesetzten enginestarttime.
@@ -238,7 +238,7 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
     return localEngineID;
   }
 
-  //in snmpserviceimpl sehr ähnlich!
+  //in snmpserviceimpl sehr ï¿½hnlich!
   private static byte[] getLocalEngineId(InetAddress ip, int port) {
     //return MPv3.createLocalEngineID();
     byte[] b = ip.getAddress();
@@ -253,8 +253,8 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
     }
     os.append(getIntAsByteArray((int)revision));
     
-    //darf maximal 27 bytes lang sein. 2 für portbytes, 4-8 für address, 4 rest, 2 revision, macht zusammen 12 - 16
-    //für zukünftige änderungen auf nummer sicher gehen:
+    //darf maximal 27 bytes lang sein. 2 fï¿½r portbytes, 4-8 fï¿½r address, 4 rest, 2 revision, macht zusammen 12 - 16
+    //fï¿½r zukï¿½nftige ï¿½nderungen auf nummer sicher gehen:
     if (os.length() > 27) {
       b = os.getValue();
       byte[] b2 = new byte[27];
@@ -262,7 +262,7 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
       os = new OctetString(b2);
     }
     return MPv3.createLocalEngineID(os);
-    //FIXME xynainstanz id, damit eindeutigkeit auch bei mehreren instanzen gewährleistet werden kann?
+    //FIXME xynainstanz id, damit eindeutigkeit auch bei mehreren instanzen gewï¿½hrleistet werden kann?
   }
 
 
@@ -277,8 +277,8 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
   
   
   /**
-   * für jede andere per snmpv3 bekannte snmp engine (also eine, mit der man in der vergangenheit mal kommuniziert hat)
-   * werden bootcnt+boottime gespeichert und beim zugriff gegen den letzten gespeicherten wert auf plausibilität
+   * fï¿½r jede andere per snmpv3 bekannte snmp engine (also eine, mit der man in der vergangenheit mal kommuniziert hat)
+   * werden bootcnt+boottime gespeichert und beim zugriff gegen den letzten gespeicherten wert auf plausibilitï¿½t
    * vergleichen/kontrolliert. sinn: replay-attacken verhindern.
    * wenn ein device seinen bootcnt+time resettet (z.b. firmware-upgrade), muss der eintrag aus dem cache entfernt werden.
    * dazu ist diese methode.
@@ -393,7 +393,7 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
   
 
   /**
-   * führt runnable aus, sofern oder sobald der trigger gestartet wurde
+   * fï¿½hrt runnable aus, sofern oder sobald der trigger gestartet wurde
    */
   public void executeWhenTriggerIsInitialized(Runnable r) {
     while (true) {

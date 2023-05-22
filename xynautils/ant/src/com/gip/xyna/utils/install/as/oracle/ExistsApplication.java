@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class ExistsApplication implements Condition {
   private String oc4j;
 
   /**
-   * überprüft, ob die application "appName" im durch die anderen Parameter beschriebenen oc4j deployed ist.
+   * ï¿½berprï¿½ft, ob die application "appName" im durch die anderen Parameter beschriebenen oc4j deployed ist.
    * @return
    * @throws BuildException
    */

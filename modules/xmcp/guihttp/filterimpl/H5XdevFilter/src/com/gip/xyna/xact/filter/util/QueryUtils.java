@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -210,7 +210,7 @@ public class QueryUtils {
     }
     
     /* Ermitteln des Index der ersten Output-Variablen.
-     * Der Index ist abhängig von der Anzahl der Input-Variablen.
+     * Der Index ist abhï¿½ngig von der Anzahl der Input-Variablen.
      */
     int firstOutputVarIndex = 0;
     if (stepMapping.getInputVars() != null) {
@@ -218,10 +218,10 @@ public class QueryUtils {
     }
 
     /*
-     * Das Mapping erzeugt eine FilterCondition, die später der Input der Query-Function wird.
+     * Das Mapping erzeugt eine FilterCondition, die spï¿½ter der Input der Query-Function wird.
      * Die FilterCondition bekommt den Member formula mit der Expression gesetzt, welche die eigentliche FilterBedingung ist.
-     * Eventuell vorhandene dynamische Teile (Variablen) werden aufgelöst.
-     * Dies ist notwendig, da die Query-Function dies selbst nicht kann. Die Query-Function kennt nur %0%, was das eigene Storable repräsentiert.
+     * Eventuell vorhandene dynamische Teile (Variablen) werden aufgelï¿½st.
+     * Dies ist notwendig, da die Query-Function dies selbst nicht kann. Die Query-Function kennt nur %0%, was das eigene Storable reprï¿½sentiert.
      * Der Wert der eventuell verwendeten Variablen wird mit Hilfe der Funktion concat in die Expression gebracht.
      * Eventuell vorhandene Quotes bzw. Backslashes werden mit replaceall gequoted.
      * 
@@ -256,7 +256,7 @@ public class QueryUtils {
       }
       if (isDynamicExpression(condition)) {
         String expression = unescapeXMLExpressionForMapping(condition);
-        // Bei gemischten Expressions (dynamische und statische Inhalte) muss zusätzlich noch nicht gequotete doppelte Anführungszeichen entfernt werden.
+        // Bei gemischten Expressions (dynamische und statische Inhalte) muss zusï¿½tzlich noch nicht gequotete doppelte Anfï¿½hrungszeichen entfernt werden.
         expression = ExpressionUtils.unescapeQueryExpression(expression);
         sb.append("(").append(createDynamicExpression(expression)).append(")");
       } else {
@@ -269,7 +269,7 @@ public class QueryUtils {
   }
   
   /**
-   * Ermittelt ob die Expression einen dynamischen Teil enthält.
+   * Ermittelt ob die Expression einen dynamischen Teil enthï¿½lt.
    * Dies ist immer dann der Fall, wenn eine Variable mit einem Index > 0 enthalten ist.
    * @param expression
    * @return
@@ -279,7 +279,7 @@ public class QueryUtils {
   }
 
   /**
-   * Erzeugt mit Hilfe des XFLLexer die Expression, welche den dynmischen Teil auflöst und quoted.
+   * Erzeugt mit Hilfe des XFLLexer die Expression, welche den dynmischen Teil auflï¿½st und quoted.
    * @param expression
    * @return
    */
@@ -347,10 +347,10 @@ public class QueryUtils {
   }
 
   /**
-   * Erzeugt den Teil der Expression, der Backslashes und doppelte Anführungszeichen quoted.
+   * Erzeugt den Teil der Expression, der Backslashes und doppelte Anfï¿½hrungszeichen quoted.
    * Das Quoten erfolgt mit Hilfe von replaceall.
-   * Die vielen Backslashes entstehen dadurch, dass hier bereits für die später erzeugte Java-Klasse gequoted werden muss.
-   * Benötigt man in der Regex von replaceall einen Backslash zum Quoten, so braucht man im XML 4 Backslashes.
+   * Die vielen Backslashes entstehen dadurch, dass hier bereits fï¿½r die spï¿½ter erzeugte Java-Klasse gequoted werden muss.
+   * Benï¿½tigt man in der Regex von replaceall einen Backslash zum Quoten, so braucht man im XML 4 Backslashes.
    * Zu beachten ist auch, dass der Backslash im 2. Parameter von replaceall auch gequoted werden muss. 
    * 
    * Beispiel anhand von %0%.name
@@ -358,7 +358,7 @@ public class QueryUtils {
    * 1. Backslash quoten
    *    replaceall(%0%.name,"\\\\","\\\\\\\\")
    *    
-   * 2. Doppeltes Anführungszeichen quoten
+   * 2. Doppeltes Anfï¿½hrungszeichen quoten
    *    replaceall([ERGEBNIS AUS 1],"\"","\\\\\"")
    *    
    * Ergbenis:
@@ -373,7 +373,7 @@ public class QueryUtils {
     /*
     * Passt die Indexe von Variablen in der Expression an.
     * Dies ist notwendig, da das Query  in der GUI als 1. Input-Variable eine Fakevariable bestehend aus dem Storable bekommt.
-    * Dadurch verschieben sich alle Indexe. Dies wird hier wieder für das Mapping korrigiert
+    * Dadurch verschieben sich alle Indexe. Dies wird hier wieder fï¿½r das Mapping korrigiert
     * */
     sb.append(modifyVariableIndices(part, -1));
     sb.append(",\"\\\\\\\\\",\"\\\\\\\\\\\\\\\\\"),\"\\\"\",\"\\\\\\\\\\\"\"),\"\\\"");
@@ -445,8 +445,8 @@ public class QueryUtils {
       return result;
     }
     /*
-     * Die GUI bekommt als erste Variable das Storable (Fakevariable). Dadurch müssen für die GUI alle Variablenindexe bei dynamischen FilterConditions um 1 erhöht werden.
-     * Dies benötigt die GUI um die einzelnen Member des Storable ermitteln und darstellen zu können.
+     * Die GUI bekommt als erste Variable das Storable (Fakevariable). Dadurch mï¿½ssen fï¿½r die GUI alle Variablenindexe bei dynamischen FilterConditions um 1 erhï¿½ht werden.
+     * Dies benï¿½tigt die GUI um die einzelnen Member des Storable ermitteln und darstellen zu kï¿½nnen.
      */
     String prepared = modifyVariableIndices(input, 1); //increase by one
     
@@ -474,20 +474,20 @@ public class QueryUtils {
      *       
      * Hinweise:
      *  - Die einzelnen FilterConditions stehen im Mapping immer innerhalb von Klammern und werden durch && voneinander getrennt
-     *  - Dynmische Variablen müssen vor dem Aufruf des Querys entfernt werden, da das Query keine Variablen auswerten kann.
-     *  - Eventuell vorhandene Backslashes und einfache Anführungszeichen müssen entsprechend gequoted werden.
-     *    Dies erfolgt durch den zweimaligen Aufruf von replaceall. Da das replaceall bereits für eine Java-Klasse gequoted ist, gibt es entsprechend viele Backslashes.
-     *  - Alle dynamischen Variablen in den Query-Conditions müssen Input-Variablen des Mappings sein.
-     *  - Das Mapping erzeugt ein FilterCondition-Object, welches später die erste Input-Variable der Query-Function ist. %0% innerhalb des concat steht für das Storable.
+     *  - Dynmische Variablen mï¿½ssen vor dem Aufruf des Querys entfernt werden, da das Query keine Variablen auswerten kann.
+     *  - Eventuell vorhandene Backslashes und einfache Anfï¿½hrungszeichen mï¿½ssen entsprechend gequoted werden.
+     *    Dies erfolgt durch den zweimaligen Aufruf von replaceall. Da das replaceall bereits fï¿½r eine Java-Klasse gequoted ist, gibt es entsprechend viele Backslashes.
+     *  - Alle dynamischen Variablen in den Query-Conditions mï¿½ssen Input-Variablen des Mappings sein.
+     *  - Das Mapping erzeugt ein FilterCondition-Object, welches spï¿½ter die erste Input-Variable der Query-Function ist. %0% innerhalb des concat steht fï¿½r das Storable.
      * 
      */
 
-    // nicht benötigte Teile aus der Expression entfernen
+    // nicht benï¿½tigte Teile aus der Expression entfernen
     
     /*
      * Erster Teil des Mappings entfernen. ( bis zum concat(" )
-     * Hier ist die Besonderheit, dass die erste Variable des Mappings abhängig von der Anzahl der Input-Variablen ist.
-     * Die erzeugte FilterCondition ist die erste Output-Variable des Mappings und bekommt somit die nächste fortlaufende Id nach den Input-Variablen.
+     * Hier ist die Besonderheit, dass die erste Variable des Mappings abhï¿½ngig von der Anzahl der Input-Variablen ist.
+     * Die erzeugte FilterCondition ist die erste Output-Variable des Mappings und bekommt somit die nï¿½chste fortlaufende Id nach den Input-Variablen.
      * Zum Beispiel, wenn das Mapping 2 Input-Variablen hat, so ist die Id der ersten Outputvariablen 2.
      * 
      */
@@ -517,7 +517,7 @@ public class QueryUtils {
       }
       if(isFormulaDynamic(formula)) {
         /*
-         * Bei dynamischen FilterConditions muss der Teil entfernt werden, der später zur Laufzeit die dynamischen Variablen auflöst.
+         * Bei dynamischen FilterConditions muss der Teil entfernt werden, der spï¿½ter zur Laufzeit die dynamischen Variablen auflï¿½st.
          * \"",replaceall(replaceall(%0%.name,"\\\\","\\\\\\\\"),"\"","\\\\\"")," --> %0%.name
          */
         

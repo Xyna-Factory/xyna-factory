@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,10 +65,10 @@ import com.gip.xyna.xprc.xsched.timeconstraint.TimeConstraintManagement;
 
 
 /**
- * Klasse gibt die Reihenfolge und die zugehörige Fehlerbehandlung für alle Einzel Schritte des Masterworkflows im
- * Processing nach dem Scheduling an. Alle Fehler vor der Ausführung der Execution-Destination führen zur Ausführung des
- * Cleanups. Alle Fehler während des Cleanups werden in der XynaOrder geloggt und dann der nächste Schritt im Cleanup
- * ausgeführt. technisch: Die Fehlerbehandlung von Einzelschritten ist in der Methode
+ * Klasse gibt die Reihenfolge und die zugehï¿½rige Fehlerbehandlung fï¿½r alle Einzel Schritte des Masterworkflows im
+ * Processing nach dem Scheduling an. Alle Fehler vor der Ausfï¿½hrung der Execution-Destination fï¿½hren zur Ausfï¿½hrung des
+ * Cleanups. Alle Fehler wï¿½hrend des Cleanups werden in der XynaOrder geloggt und dann der nï¿½chste Schritt im Cleanup
+ * ausgefï¿½hrt. technisch: Die Fehlerbehandlung von Einzelschritten ist in der Methode
  * executeAndCatchEverythingExceptSuspension() gekapselt.
  */
 public class MasterWorkflowPostScheduler extends XynaRunnable {
@@ -219,7 +219,7 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
       if (!xo.getSchedulingData().isHasAcquiredCapacities()) {
         throw new RuntimeException("order is expected to have aquired its capacities after scheduling.");
       }
-      //fehler vor execution führen zu cleanup
+      //fehler vor execution fï¿½hren zu cleanup
       //status update geschieht in dispatcher
       mw.executeAndCatchEverythingExceptSuspension(execution_dispatch, ProcessingStage.EXECUTION);
       // this is just for consistency (und wird von frequencycontrolled tasks verwendet)
@@ -235,7 +235,7 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
   
   private static final Executable cleanup_batch = new Executable() {
     public void execute(MasterWorkflowPostScheduler mw) throws XynaException {
-      //Falls der Auftrag ein BatchProcess-Master ist, geht der BatchProcess jetzt in den Status Cleanup über
+      //Falls der Auftrag ein BatchProcess-Master ist, geht der BatchProcess jetzt in den Status Cleanup ï¿½ber
       if(mw.xo.getBatchProcessMarker() != null && mw.xo.getBatchProcessMarker().isBatchProcessMaster()){
         BatchProcessManagement bpm = XynaFactory.getInstance().getProcessing().getBatchProcessManagement();
         try {
@@ -379,14 +379,14 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
       while (true) {
         mw.executeAndCatchEverythingToAddAsWarning(finish_archive, ProcessingStage.ARCHIVING);
         try {
-          //später: wenn die connections bereits vorher zugemacht werden, dann braucht man in BatchProcess.terminateMaster keinen eigenen thread.
+          //spï¿½ter: wenn die connections bereits vorher zugemacht werden, dann braucht man in BatchProcess.terminateMaster keinen eigenen thread.
           XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().callResponseListener(mw.xo, mw.archivingBean);
           break;
         } catch (XNWH_RetryTransactionException ctcbe) {
-          //FIXME es ist fragwürdig, ob das wirklich eine so gute idee ist, hier retries zu machen.
-          //wenn der auftrag das commit auf die DEFAULT connection (insbesondre orderarchive) bereits durchführen konnte,
-          //dann funktioniert der erneute aufruf von finish_archive nicht so gut. es können dann keine auditdaten aus DEFAULT geholt werden.
-          //es sollte eigtl auch wie im archive() ein fehler dazu führen, dass auf ALTERNATIVE ausgewichen wird, damit die daten nicht verloren gehen.
+          //FIXME es ist fragwï¿½rdig, ob das wirklich eine so gute idee ist, hier retries zu machen.
+          //wenn der auftrag das commit auf die DEFAULT connection (insbesondre orderarchive) bereits durchfï¿½hren konnte,
+          //dann funktioniert der erneute aufruf von finish_archive nicht so gut. es kï¿½nnen dann keine auditdaten aus DEFAULT geholt werden.
+          //es sollte eigtl auch wie im archive() ein fehler dazu fï¿½hren, dass auf ALTERNATIVE ausgewichen wird, damit die daten nicht verloren gehen.
           
           // Cannot use warehouseRetryExecutor here because we need two simultanous connections
           // exception kann nur von responselistener kommen
@@ -498,7 +498,7 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
 
 
   /**
-   * Lässt nur {@link ProcessSuspendedException} und die von Department.handleThrowable weitergeworfenen Errors durch,
+   * Lï¿½sst nur {@link ProcessSuspendedException} und die von Department.handleThrowable weitergeworfenen Errors durch,
    * Alles andere wird gefangen und als Fehler in der XynaOrder geloggt.
    * @param r
    */
@@ -523,8 +523,8 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
   }
   
   /**
-   * Lässt nur die von Department.handleThrowable weitergeworfenen Errors durch,
-   * Alles andere wird gefangen und soll als Warnung an die XynaOrder angehängt werden (TODO)
+   * Lï¿½sst nur die von Department.handleThrowable weitergeworfenen Errors durch,
+   * Alles andere wird gefangen und soll als Warnung an die XynaOrder angehï¿½ngt werden (TODO)
    * und wird bis dahin nur geloggt.
    * @param r
    */
@@ -572,7 +572,7 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
 
   public void run() {
     try {
-      if( so != null ) { //häufigste Ausführung hat SchedulingOrder gesetzt
+      if( so != null ) { //hï¿½ufigste Ausfï¿½hrung hat SchedulingOrder gesetzt
         extractXynaOrder();
       }
       if( xo == null ) {
@@ -580,7 +580,7 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
           scheduler.getAllOrdersList().removeOrder(so);
           XynaFactory.getInstance().getProcessing().killStuckProcess(so.getOrderId(), true, AbortionCause.UNKNOWN);
         } else {
-          //keine Möglichkeit, Auftrag abbzubrechen
+          //keine Mï¿½glichkeit, Auftrag abbzubrechen
         }
         return;
       }
@@ -641,14 +641,14 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
     DeploymentManagement.getInstance().countOrderThatKnowsAboutDeployment(xo.getIdOfLatestDeploymentFromOrder());
     try {
       if (xo.mustDeploymentCounterBeCountDown()) {
-        //xynaprocess.cleanupAbortFailedThreads zählt hoch
+        //xynaprocess.cleanupAbortFailedThreads zï¿½hlt hoch
         DeploymentManagement.getInstance().countDownOrderThatKnowsAboutDeployment(xo.getIdOfLatestDeploymentFromOrder());
         xo.setDeploymentCounterCountDownDone();
       }
       if (so != null) {
         scheduler.getAllOrdersList().removeOrder(so);
       }
-      //ausgeführte XynaOrder dem SuspendResumeManagement bekanntmachen, damit dort notwendige Daten zur 
+      //ausgefï¿½hrte XynaOrder dem SuspendResumeManagement bekanntmachen, damit dort notwendige Daten zur 
       //Suspendierung bereit sind 
       XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().
       getSuspendResumeManagement().addStartedOrder(xo.getId(), xo);
@@ -740,10 +740,10 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
           runNormal();
         } else if (xo.getDestinationKey().isCompensate()) {
           //compensate
-          xo.setAbortionException(new ProcessAbortedException(AbortionCause.UNKNOWN)); //FIXME abortionCause und orginOrderId von ursprünglichem abort erben
+          xo.setAbortionException(new ProcessAbortedException(AbortionCause.UNKNOWN)); //FIXME abortionCause und orginOrderId von ursprï¿½nglichem abort erben
           cleanupCompensateBeforeOrderHasBeenScheduled(false);
         } else {
-          //ungültiger zustand?
+          //ungï¿½ltiger zustand?
           logger.error("order " + xo
               + " with execution process instance was cancelled, but is neither resuming nor compensating. process state = "
               + xo.getExecutionProcessInstance().getState());
@@ -807,7 +807,7 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
 
   private void compensateMasterWorkflow() {
     //compensate wird nur aufgerufen, wenn auftrag fehlerfrei war.
-    //exceptions die an der xyna order hängen, sind also eindeutig der compensation zuordbar.
+    //exceptions die an der xyna order hï¿½ngen, sind also eindeutig der compensation zuordbar.
     final String ndc = xo.getLoggingDiagnosisContext( XynaProperty.XYNA_CREATE_LOG4J_DIAG_CONTEXT.get() );
     final boolean createLoggingContextForThis = ndc != null;
     if( createLoggingContextForThis ) {
@@ -869,16 +869,16 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
       XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getSuspendResumeManagement().
       handleSuspensionEvent(processSuspendedException, xo, true);
       return true;
-      //TODO sollte man hier im fehlerfall die kindaufträge die schon suspendiert sind killern?
-      // Hier gibt es unterschiedliche Fehlerfälle:
+      //TODO sollte man hier im fehlerfall die kindauftrï¿½ge die schon suspendiert sind killern?
+      // Hier gibt es unterschiedliche Fehlerfï¿½lle:
       // 1) DB komplett nicht mehr erreichbar. In diesem Fall wirft die Methode eine OrderDeathException. Es ist nichts
-      //    weiter zu tun, weil die Factory in diesem Fall sowieso herunterfährt.
-      // 2) Eine sonstige PersistenceLayerException: Außer bei der internen Entwicklung sollte das nur passieren, wenn
+      //    weiter zu tun, weil die Factory in diesem Fall sowieso herunterfï¿½hrt.
+      // 2) Eine sonstige PersistenceLayerException: Auï¿½er bei der internen Entwicklung sollte das nur passieren, wenn
       //    es echte Probleme mit der Datenbank gibt und der Knoten im Single-Betrieb ist (dann wird kein OrderDeath
       //    geworfen).
       // 3) XPRC_UNEXPECTED_ERROR_PROCESS ist eigentlich eine RuntimeException. Wird mit Throwable behandelt.
       // 4) XPRC_ErrorDuringSuspensionHandling: Inhaltlicher Fehler bei funktionierender Warehouse-Verbindung. In diesem
-      //    Fall Cleanup für die Subaufträge nachholen und 
+      //    Fall Cleanup fï¿½r die Subauftrï¿½ge nachholen und 
     } catch (OrderDeathException ode) {
       logger.warn("Connection to database appears to be broken, stopping execution", ode);
       handleOrderDeath(this, ode);

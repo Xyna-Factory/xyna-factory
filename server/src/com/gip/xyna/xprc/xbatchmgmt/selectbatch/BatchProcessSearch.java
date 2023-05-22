@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class BatchProcessSearch {
   private static PreparedQueryCache cache = new PreparedQueryCache();
   
   /**
-   * Sucht alle Batch Prozesse, die die übergebenen Filterkriterien erfüllen und
+   * Sucht alle Batch Prozesse, die die ï¿½bergebenen Filterkriterien erfï¿½llen und
    * sortiert das Ergebnis absteigend nach der batchProcessId
    * @param select Filterkriterien
    * @param maxRows maximale Anzahl an Ergebnissen
@@ -66,7 +66,7 @@ public class BatchProcessSearch {
     
     ODSConnection con = ODSImpl.getInstance().openConnection(ODSConnectionType.DEFAULT);
     try {
-      //die Ids der Batch Prozesse suchen, die die Filterkriterien erfüllen
+      //die Ids der Batch Prozesse suchen, die die Filterkriterien erfï¿½llen
       Set<Long> found = searchBatchProcessIds(con, select);
       
       //das Ergebnis absteigend sortieren
@@ -74,7 +74,7 @@ public class BatchProcessSearch {
       Comparator<Long> comparator = Collections.<Long>reverseOrder();
       Collections.sort(sort, comparator);
       
-      //auf maximale Anzahl beschränken
+      //auf maximale Anzahl beschrï¿½nken
       if (sort.size() > maxRows) {
         List<Long> tmp = new ArrayList<Long>();
         for (int i = 0; i<maxRows; i++) {
@@ -83,7 +83,7 @@ public class BatchProcessSearch {
         sort = tmp;
       }
       
-      //zu den BatchProcessIds die zugehörigen BatchProcessInformations holen
+      //zu den BatchProcessIds die zugehï¿½rigen BatchProcessInformations holen
       List<BatchProcessInformation> bpis = getBatchProcessInformations(con, sort, select);
       result = new BatchProcessSearchResult(bpis, found.size());
     } finally {
@@ -95,7 +95,7 @@ public class BatchProcessSearch {
   
 
   /**
-   * Liefert die Ids der Batch Prozesse, die die übergebenen Filterkriterien erfüllen
+   * Liefert die Ids der Batch Prozesse, die die ï¿½bergebenen Filterkriterien erfï¿½llen
    * @param con
    * @param select Filterkriterien
    * @return
@@ -104,21 +104,21 @@ public class BatchProcessSearch {
   private Set<Long> searchBatchProcessIds(ODSConnection con, BatchProcessSelectImpl select) throws PersistenceLayerException {
     Set<Long> found = new HashSet<Long>();
     
-    //zunächst werden alle laufenden Prozesse aus dem Archive gesucht, die die Filter-Kriterien erfüllen
+    //zunï¿½chst werden alle laufenden Prozesse aus dem Archive gesucht, die die Filter-Kriterien erfï¿½llen
     List<Long> archiveRunningIds = searchBatchProcessIds(con, select, BatchProcessTable.ArchiveRunning);
     found.addAll(archiveRunningIds);
     
     //dann nur die behalten, die auch die Filter-Kriterien in Customization und RuntimeInformation 
-    //erfüllen
+    //erfï¿½llen
     filter( found, con, select, BatchProcessTable.Custom );
     filter( found, con, select, BatchProcessTable.Runtime );
     
-    //zu den gefundenen laufenden Prozessen müssen nun noch die abgeschlossenen hinzugefügt werden
+    //zu den gefundenen laufenden Prozessen mï¿½ssen nun noch die abgeschlossenen hinzugefï¿½gt werden
     List<Long> archiveIds = searchBatchProcessIds(con, select, BatchProcessTable.Archive);
     found.addAll(archiveIds);
     
     //als letztes muss noch die Schnittmenge mit den Suchergebnissen aus der RestartInformation
-    //gebildet werden, um die Filter-Kriterien aus der RestartInformation zu berücksichtigen
+    //gebildet werden, um die Filter-Kriterien aus der RestartInformation zu berï¿½cksichtigen
     filter( found, con, select, BatchProcessTable.Restart );
     
     return found;
@@ -163,8 +163,8 @@ public class BatchProcessSearch {
   }
   
   /**
-   * Liefert die BatchProcessInformations zu den übergebenen BatchProcessIds (für laufende
-   * aus dem Memory, für abgeschlossenen aus dem Warehouse)
+   * Liefert die BatchProcessInformations zu den ï¿½bergebenen BatchProcessIds (fï¿½r laufende
+   * aus dem Memory, fï¿½r abgeschlossenen aus dem Warehouse)
    * @param con
    * @param batchProcessIds
    * @param select 
@@ -181,10 +181,10 @@ public class BatchProcessSearch {
       BatchProcessInformation bpi;
       
       if (batchProcess != null) {
-        //Batch Process läuft noch
+        //Batch Process lï¿½uft noch
         bpi = batchProcess.getBatchProcessInformation();
       } else {
-        //der Process läuft nicht mehr, daher Archive und RestartInformation
+        //der Process lï¿½uft nicht mehr, daher Archive und RestartInformation
         //aus dem Warehouse holen
         try {
           BatchProcessArchiveStorable archive = new BatchProcessArchiveStorable(batchProcessId);
@@ -196,7 +196,7 @@ public class BatchProcessSearch {
           bpi.setRestartInformation(restartInfo);
         }
         catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-          // sollte eigentlich nicht auftreten, da aus dem Archive keine Daten gelöscht werden
+          // sollte eigentlich nicht auftreten, da aus dem Archive keine Daten gelï¿½scht werden
           logger.warn("BatchProcess disappeared", e);
           continue;
         }

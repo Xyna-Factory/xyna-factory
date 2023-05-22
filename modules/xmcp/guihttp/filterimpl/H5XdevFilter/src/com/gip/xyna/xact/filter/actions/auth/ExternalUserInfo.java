@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ public class ExternalUserInfo {
       cf = CertificateFactory.getInstance("X.509");
       X509Certificate cert = (X509Certificate) cf.generateCertificate(bais);
 
-      //TODO will man das wie früher im webservice konfigurierbar machen, welche daten aus dem zertifikat ausgelesen werden?
+      //TODO will man das wie frï¿½her im webservice konfigurierbar machen, welche daten aus dem zertifikat ausgelesen werden?
       BigInteger serialnumber = cert.getSerialNumber();
       String dnName = cert.getSubjectDN().getName();
       LdapName ldapname;

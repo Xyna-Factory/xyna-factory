@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,19 +92,19 @@ public abstract class AbstractDatabaseLock implements DatabaseLock {
 
   /**
    * Neubau der Connection wegen der aufgetretenen Exception cause
-   * @throws LockFailedException falls Connection nicht neu geöffnet werden kann
+   * @throws LockFailedException falls Connection nicht neu geï¿½ffnet werden kann
    */
   protected abstract ODSConnection getConnectionForRetry(PersistenceLayerException cause) throws LockFailedException;
 
 
   /**
-   * Schließen der Connection nach dem Unlock
+   * Schlieï¿½en der Connection nach dem Unlock
    */
   protected abstract void closeConnectionForUnlock();
 
 
   /**
-   * Schließen der Connection beim Shutdown
+   * Schlieï¿½en der Connection beim Shutdown
    */
   protected abstract void closeConnectionForShutdown();
 
@@ -120,7 +120,7 @@ public abstract class AbstractDatabaseLock implements DatabaseLock {
 
 
   /**
-   * Persistiert das ClusteringServicesLockStorable. Falls dies nicht klappt, werden Retries durchgeführt, solange der
+   * Persistiert das ClusteringServicesLockStorable. Falls dies nicht klappt, werden Retries durchgefï¿½hrt, solange der
    * ClusterState != DISCONNECTED_SLAVE ist Ansonsten wird abgebrochen mit der zuletzt erhaltenen
    * PersistenceLayerException oder einer InterruptedException
    */
@@ -185,7 +185,7 @@ public abstract class AbstractDatabaseLock implements DatabaseLock {
         } catch (LockFailedException e) {
           throw e;
         } catch (Exception e) {
-          //Fehler tritt nur in Ausnahmefällen im ClusterState DISCONNECTED_SLAVE auf,
+          //Fehler tritt nur in Ausnahmefï¿½llen im ClusterState DISCONNECTED_SLAVE auf,
           //daher Fehler einfach weiterwerfen
           throw new LockFailedException(e);
         }
@@ -243,7 +243,7 @@ public abstract class AbstractDatabaseLock implements DatabaseLock {
 
   /**
    * Lockt das ClusteringServicesLockStorable durch ein SelectForUpdate. Falls dies nicht klappt, werden Retries
-   * durchgeführt, solange der ClusterState != DISCONNECTED_SLAVE ist Ansonsten wird abgebrochen mit der zuletzt
+   * durchgefï¿½hrt, solange der ClusterState != DISCONNECTED_SLAVE ist Ansonsten wird abgebrochen mit der zuletzt
    * erhaltenen PersistenceLayerException oder einer InterruptedException
    * @throws PersistenceLayerException
    * @throws InterruptedException
@@ -261,7 +261,7 @@ public abstract class AbstractDatabaseLock implements DatabaseLock {
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
         logger.error("Could not lock ClusteringServicesLockStorable-entry \"" + targetStorable.getName()
             + "\"; not found in database -> trying to recreate");
-        persistStorable(); //wirft Exceptions, daher Austieg, falls persistStorable auch auf Fehler stößt
+        persistStorable(); //wirft Exceptions, daher Austieg, falls persistStorable auch auf Fehler stï¿½ï¿½t
         retryException = null;
       } catch (PersistenceLayerException e) {
         lockingCon = getConnectionForRetry(e);

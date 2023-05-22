@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@
 package com.gip.xyna.utils.exceptions;
 
 /**
- * Hiervon abgeleitete Klassen können im ExceptionHandler benutzt werden um
+ * Hiervon abgeleitete Klassen kï¿½nnen im ExceptionHandler benutzt werden um
  * Fehler dynamisch zu filtern. Falls der Filter greift, sollte die Methode
- * filterException ein XynaFault_ctype zurückgeben, ansonsten die Exception
+ * filterException ein XynaFault_ctype zurï¿½ckgeben, ansonsten die Exception
  * selbst.
  */
 public interface ExceptionFilter {

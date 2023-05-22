@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class FailoverSourceOID implements FailoverSource {
   private OID oid;
 
   /**
-   * Konstruktor für erste Registrierung in FailoverSources
+   * Konstruktor fï¿½r erste Registrierung in FailoverSources
    */
   public FailoverSourceOID() {/*nichts zu tun*/}
   

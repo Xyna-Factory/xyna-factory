@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,9 +103,9 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   private OSMClusterStateChangeHandler osmClusterStateChangeHandler = new OSMClusterStateChangeHandler();
   private RMIClusterStateChangeHandler rmiClusterStateChangeHandler = new RMIClusterStateChangeHandler();
   
-  private ArrayBlockingQueue<OSMTask> externalQueue; //externe Queue für Task, die neu ins OSM eingestellt 
-                                                     //werden. Blockierend als Überlastschutz
-  private Queue<OSMTask> internalQueue; //interne Queue für Tasks, die während der Taskbearbeitung anfallen
+  private ArrayBlockingQueue<OSMTask> externalQueue; //externe Queue fï¿½r Task, die neu ins OSM eingestellt 
+                                                     //werden. Blockierend als ï¿½berlastschutz
+  private Queue<OSMTask> internalQueue; //interne Queue fï¿½r Tasks, die wï¿½hrend der Taskbearbeitung anfallen
   private OSMTaskConsumer osmTaskConsumer;
   private Thread consumerThread; //Achtung: derzeit nur ein Thread. Falls dies nicht reicht,
    //muss nochmal sehr auf die verwendeten Objekte geachtet werden: derzeit sind diese nicht threadsafe!
@@ -119,7 +119,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   private HashParallelReentrantLock<Long> parallelLock = new HashParallelReentrantLock<Long>(32); //verhindert konkurrierende 
           //Zugriffe auf waitingOrders und readyOrders mit gleicher OrderId
 
-  private Map<Long,Triple<String,OrderState,List<String>>> readyOrders; //Aufträge, die sofort in den Scheduler eingestellt werden können 
+  private Map<Long,Triple<String,OrderState,List<String>>> readyOrders; //Auftrï¿½ge, die sofort in den Scheduler eingestellt werden kï¿½nnen 
   private AllOrdersList allOrders;
   
   private static CommaMasker commaMasker = CorrelationIdTransformator.commaMasker;
@@ -183,7 +183,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   }
 
   private void initClusterStatusKnown() {
-    //ClusterStatus ist nun bekannt, daher können die restlichen Initialisierungen durchgeführt werden.
+    //ClusterStatus ist nun bekannt, daher kï¿½nnen die restlichen Initialisierungen durchgefï¿½hrt werden.
     allOrders = XynaFactory.getInstance().getProcessing().getXynaScheduler().getAllOrdersList();
     
     initOSM();
@@ -192,12 +192,12 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
     boolean storableClustered = storableClusterContext.getClusterState() != ClusterState.NO_CLUSTER;
     
     if( rmiClustered && storableClustered ) {
-      //OrderSeriesManagement ist geclustert: jetzt bereits starten, keinen Übergang nach Connected abwarten
+      //OrderSeriesManagement ist geclustert: jetzt bereits starten, keinen ï¿½bergang nach Connected abwarten
     } else {
       if( !rmiClustered && !storableClustered ) {
         //OrderSeriesManagement ist nicht geclustert
       } else {
-        //nur einer der beiden ist geclustert; dies ist ein schwerer Fehler der zum Abbruch führen muss.
+        //nur einer der beiden ist geclustert; dies ist ein schwerer Fehler der zum Abbruch fï¿½hren muss.
         if( storableClustered ) {
           logger.warn( "SeriesInformationStorable is clustered but RMI is not clustered");
         } else {
@@ -303,11 +303,11 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   }
 
   /**
-   * Auftragseingang: Mehrere Threads können gleichzeitig Aufträge einstellen und 
+   * Auftragseingang: Mehrere Threads kï¿½nnen gleichzeitig Auftrï¿½ge einstellen und 
    * diese Methode aufrufen.<br>
-   * Durch das Einstellen in die Queue hier wird die Parallelität im OSM verringert.
+   * Durch das Einstellen in die Queue hier wird die Parallelitï¿½t im OSM verringert.
    * Der Insert und Commit des SeriesInformationStorable erfolgt noch in dem akktuellen Thread.
-   * Dieser erhält daher auch die dabei möglichen Fehler.
+   * Dieser erhï¿½lt daher auch die dabei mï¿½glichen Fehler.
    * 
    * @param xo
    * @throws XPRC_DUPLICATE_CORRELATIONID 
@@ -352,9 +352,9 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   }
   
   /**
-   * Einstellen nach der OrderMigration: OSMTask_Resume muss ausgeführt werden
-   * Achtung: Task darf erst nach dem Commit auf der übergebenen Connection laufen,
-   * da sonst benötigte Daten aus dem OrderArchive nicht sichtbar sind. 
+   * Einstellen nach der OrderMigration: OSMTask_Resume muss ausgefï¿½hrt werden
+   * Achtung: Task darf erst nach dem Commit auf der ï¿½bergebenen Connection laufen,
+   * da sonst benï¿½tigte Daten aus dem OrderArchive nicht sichtbar sind. 
    * @param xo
    * @param con 
    */
@@ -379,16 +379,16 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   }
   
   /**
-   * Auftragsausgang: Mehrere Threads bearbeiten die Aufträge und können diese
+   * Auftragsausgang: Mehrere Threads bearbeiten die Auftrï¿½ge und kï¿½nnen diese
    * Methode dann gleichzeitig aufrufen.
-   * Durch das Einstellen in die Queue hier wird die Parallelität im OSM verringert.
+   * Durch das Einstellen in die Queue hier wird die Parallelitï¿½t im OSM verringert.
    * @param xo
    */
   public void finishOrder(XynaOrderServerExtension xo) {
     if (xo.isTransientFlagSet(TransientFlags.DuplicateSeriesCorrelationId)) {
       //wenn der Auftrag wegen einer doppelten CorrelationId abgebrochen wurde, darf
-      //finish nicht ausgeführt werden, da sonst die SeriesInformation eines anderen
-      //Auftrags überschrieben wird
+      //finish nicht ausgefï¿½hrt werden, da sonst die SeriesInformation eines anderen
+      //Auftrags ï¿½berschrieben wird
       if (logger.isDebugEnabled()) {
         logger.debug("Don't execute OSMTask_Finish for order " + xo.getId() + " with correlationId " + xo.getSeriesCorrelationId());
       }
@@ -399,9 +399,9 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   }
   
   /**
-   * Auftragsausgang: Mehrere Threads bearbeiten die Aufträge und können diese
+   * Auftragsausgang: Mehrere Threads bearbeiten die Auftrï¿½ge und kï¿½nnen diese
    * Methode dann gleichzeitig aufrufen.
-   * Durch das Einstellen in die Queue hier wird die Parallelität im OSM verringert.
+   * Durch das Einstellen in die Queue hier wird die Parallelitï¿½t im OSM verringert.
    */  
   public void abortOrder(long xynaOrderId) {
     SearchResult result = osmCacheImpl.search(xynaOrderId);
@@ -412,7 +412,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
         putInExternalQueue( OSMTask.abort(result.getCorrelationId()) );
         break ;
       case OtherBinding:
-        // FIXME anderen Knoten benachrichtigen ... keine gute Lösung!!!
+        // FIXME anderen Knoten benachrichtigen ... keine gute Lï¿½sung!!!
         putInExternalQueue( OSMTask.abort(result.getCorrelationId()) );
         logger.warn("Abort order series with other binding.");
     }
@@ -420,7 +420,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
 
   /**
    * Starten des Auftrags, falls er bereits in waitingOrders eingetragen ist. Ansonsten Speichern des
-   * OrderState für {@link #addWaitingOrder(SchedulingOrder) addOrder }.
+   * OrderState fï¿½r {@link #addWaitingOrder(SchedulingOrder) addOrder }.
    * @see com.gip.xyna.xprc.xsched.orderseries.OSMInterface#readyToRun(String, long, com.gip.xyna.xprc.xsched.orderseries.OSMInterface.OrderState, List)
    */
   public void readyToRun(String correlationId, long id, OrderState orderState, List<String> cycle ) {
@@ -429,7 +429,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
     try {
       SchedulingOrder so = allOrders.getSchedulingOrder(orderId);
       if( so != null ) {
-        //Auftrag stand in waitingOrders, nun Orderstate prüfen
+        //Auftrag stand in waitingOrders, nun Orderstate prï¿½fen
         if( canBeStarted(so, correlationId, orderState, cycle) ) {
           allOrders.seriesCompleted(so);
         }
@@ -448,8 +448,8 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   }
   
   /**
-   * Eintragen der neuen SchedulingOrder in die Liste aller Aufträge. Falls kein OrderState in readyOrders
-   * bekannt ist, wird die SchedulingOrder für {@link #readyToRun(String, long, com.gip.xyna.xprc.xsched.orderseries.OSMInterface.OrderState, List) readyToRun} gespeichert.
+   * Eintragen der neuen SchedulingOrder in die Liste aller Auftrï¿½ge. Falls kein OrderState in readyOrders
+   * bekannt ist, wird die SchedulingOrder fï¿½r {@link #readyToRun(String, long, com.gip.xyna.xprc.xsched.orderseries.OSMInterface.OrderState, List) readyToRun} gespeichert.
    * @param so
    */
   public void addWaitingOrder(SchedulingOrder so) {
@@ -461,7 +461,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
     try {
       Triple<String,OrderState,List<String>> triple = readyOrders.remove(orderId);
       if( triple != null ) {
-        //Auftrag stand in readyOrders, nun OrderState prüfen
+        //Auftrag stand in readyOrders, nun OrderState prï¿½fen
         if( canBeStarted(so, triple.getFirst(), triple.getSecond(), triple.getThird() ) ) {
           so.removeWaitingCause( WaitingCause.Series );
           return;
@@ -469,7 +469,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
       } else {
         //readyToRun wurde noch nicht gerufen, daher darauf warten
       }
-      //wird nun hier überwacht
+      //wird nun hier ï¿½berwacht
       XynaOrderServerExtension xo = so.getXynaOrderOrNull();
       if( xo != null ) {
         xo.setTransientFlag(TransientFlags.WasKnownToScheduler);
@@ -493,7 +493,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
         //Auftrag kann in den Scheduler eingestellt werden
         return true;
       case HasCyclicDependencies:
-        //Auftrag muss wegen zyklischer Predecessor-Abhängigkeit abgebrochen werden
+        //Auftrag muss wegen zyklischer Predecessor-Abhï¿½ngigkeit abgebrochen werden
         allOrders.getXynaOrder(so).addException(new XPRC_CircularDependencyInSeriesException(String.valueOf(cycle)), ProcessingStage.INITIALIZATION );
         so.markAsTerminated();
         return true;
@@ -502,16 +502,16 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
         so.markAsCanceled();
         return true;
       case NotFound:
-        //sollte hier nicht möglich sein
+        //sollte hier nicht mï¿½glich sein
         logger.warn("Unexpected orderState "+orderState+ " for order "+ so.getOrderId()+", store again");
         break;
       case WaitingForPredecessor:
-        //sollte hier nicht möglich sein
+        //sollte hier nicht mï¿½glich sein
         logger.warn("Unexpected orderState "+orderState+ " for order "+ so.getOrderId()+", store again");
         break;
       case AlreadyFinished: 
-        //Eigentlich ist hier nichts zu tun. //TODO aber es könnte versucht werden, das AlreadyFinished
-        //hier nachzuvollziehen: Einträge aus Listen entfernen
+        //Eigentlich ist hier nichts zu tun. //TODO aber es kï¿½nnte versucht werden, das AlreadyFinished
+        //hier nachzuvollziehen: Eintrï¿½ge aus Listen entfernen
     }
     return false;
   }
@@ -580,7 +580,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
           wo.setBinding( preTree.hasData() ? preTree.getBinding() : ownBinding );
           boolean set = false;
           while( ! set ) {
-            try { //ungeschützter Zugriff auf nicht-synchronisierte Map. Gleichzeitiger Zugriff ist unwahrscheinlich
+            try { //ungeschï¿½tzter Zugriff auf nicht-synchronisierte Map. Gleichzeitiger Zugriff ist unwahrscheinlich
               wo.setPredecessors( CollectionUtils.transform(preTree.getBranches(), predecessorTransformation ) );
               set = true;
             } catch( ConcurrentModificationException e ) {
@@ -621,7 +621,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
 
   /**
    * Entfernen des Auftrags aus dem OrderSeriesManagement: Der Auftrag wird sofort gestartet.
-   * Sollte nur von OSMTaks_reschedule in Notfällen gerufen werden.
+   * Sollte nur von OSMTaks_reschedule in Notfï¿½llen gerufen werden.
    * @param orderId
    */
   public void removeOrder(long orderId) {
@@ -682,10 +682,10 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
       if( logger.isInfoEnabled() ) {
         logger.info("OrderSeriesManagement.RMIClusterStateChangeHandler.onChange("+newState+")");
       }
-      //Dieser ClusterStateChangeHandler muss fast nichts machen, da alle wichtigen Übergänge 
+      //Dieser ClusterStateChangeHandler muss fast nichts machen, da alle wichtigen ï¿½bergï¿½nge 
       //vom OSMClusterStateChangeHandler erledigt werden, da dieser die wesentlich genaueren 
-      //Statusübergänge des StorableClusterContext beobachtet.
-      //Lediglich der Übergang nach CONNECTED muss beobachtet werden, da hier das Setzen des 
+      //Statusï¿½bergï¿½nge des StorableClusterContext beobachtet.
+      //Lediglich der ï¿½bergang nach CONNECTED muss beobachtet werden, da hier das Setzen des 
       //OSMRemoteProxyImpl erst erfolgen darf, wenn beide ClusterContext im Zustand CONNECTED sind
       if( newState == ClusterState.CONNECTED ) {
         boolean started = tryStartOsmTaskConsumer(false);
@@ -746,7 +746,7 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
   }
   
   /**
-   * Zerlegen der OrderSerien, wenn diese im alten Format (Huckepack-Aufträge) vorliegen 
+   * Zerlegen der OrderSerien, wenn diese im alten Format (Huckepack-Auftrï¿½ge) vorliegen 
    * @param xo
    * @param backupCon
    * @param hasToBeAcknowledged
@@ -755,8 +755,8 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
     OrderSeriesSeparator oss = new OrderSeriesSeparator(hasToBeAcknowledged, backupCon);
     oss.separate(xo);
     
-    //Einstellen der Serien-Aufträge in XynaProcessCtrlExecution: 
-    //Durchführung von Planning und Prescheduling, bis XynaScheduler.addOrder fertig ist.
+    //Einstellen der Serien-Auftrï¿½ge in XynaProcessCtrlExecution: 
+    //Durchfï¿½hrung von Planning und Prescheduling, bis XynaScheduler.addOrder fertig ist.
     boolean successful = true;
     XynaProcessCtrlExecution xprcctrl = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution();
     for (XynaOrderServerExtension seriesXo : oss.getSeries() ) {
@@ -769,11 +769,11 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
       }
     }
     if( ! successful ) {
-      //Aufträge sind nicht erfolgreich durch das Planning gelaufen
+      //Auftrï¿½ge sind nicht erfolgreich durch das Planning gelaufen
       //evtl. loggen
     }
     
-    //für den Basis-Auftrag muss das alte Acknowledge verwendet werden
+    //fï¿½r den Basis-Auftrag muss das alte Acknowledge verwendet werden
     oss.restoreAcknowledge( xo );
   }
 
@@ -790,19 +790,19 @@ public class OrderSeriesManagement extends FunctionGroup implements OSMInterface
       try {
         task.await(); //auf Bearbeitung des Tasks warten
       } catch( InterruptedException e ) {
-        //ignorieren, Info ist dann halt evtl. nur teilweise gefüllt 
+        //ignorieren, Info ist dann halt evtl. nur teilweise gefï¿½llt 
       }
       return task.getInfo();
     }
     //Suche nach dem Auftrag kann hier schon passieren, das muss nicht der OSMTaskConsumer machen
     OSMTask_Reschedule task = new OSMTask_Reschedule(orderId,force,this);
     task.searchOrder(osmCacheImpl);
-    if( task.canBeStarted() ) { //vom Suchergebnis ist abhängig, ob ein Task sinnvoll gestartet werden kann
+    if( task.canBeStarted() ) { //vom Suchergebnis ist abhï¿½ngig, ob ein Task sinnvoll gestartet werden kann
       putInExternalQueue( task );
       try {
         task.await(); //auf Bearbeitung des Tasks warten
       } catch( InterruptedException e ) {
-        //ignorieren, Info ist dann halt evtl. nur teilweise gefüllt 
+        //ignorieren, Info ist dann halt evtl. nur teilweise gefï¿½llt 
       }
     }
     return task.getInfo();

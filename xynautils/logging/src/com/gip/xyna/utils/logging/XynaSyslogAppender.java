@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class XynaSyslogAppender extends SyslogAppender {
 
   private static final long serialVersionUID = 1L;
 
-  //SyslogAppender unterstützt nur SyslogLayout und RFC5424Layout, daher hier eigenes PatternLayout.
+  //SyslogAppender unterstï¿½tzt nur SyslogLayout und RFC5424Layout, daher hier eigenes PatternLayout.
   PatternLayout patternLayout;
   
   protected XynaSyslogAppender(String name, Layout<? extends Serializable> layout,

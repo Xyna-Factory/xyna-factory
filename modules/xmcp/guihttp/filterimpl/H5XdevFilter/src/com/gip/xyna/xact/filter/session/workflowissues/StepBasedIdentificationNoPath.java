@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ public class StepBasedIdentificationNoPath extends StepBasedIdentification{
       }
       
       if (dataModel != null && vi.getVariable().getDomOrExceptionObject() instanceof DOM) {
-        //manche der in-/output variablen können pathmaps sein.        
+        //manche der in-/output variablen kï¿½nnen pathmaps sein.        
         DOM dom = (DOM) vi.getVariable().getDomOrExceptionObject();
         if (dom.getPathMapInformation() != null) {
           //variable ist pathmap

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationState;
 
 /*
- * spätere evaluierung, welcher runtimecontext "wirklich" der richtige ist. dieser runtimecontext ist prinzipiell nur ein zwischenzustand
+ * spï¿½tere evaluierung, welcher runtimecontext "wirklich" der richtige ist. dieser runtimecontext ist prinzipiell nur ein zwischenzustand
  */
 public abstract class DynamicRuntimeContext extends RuntimeContext {
   

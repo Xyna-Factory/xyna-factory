@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class DistributedWorkTest extends TestCase {
           long tid = Thread.currentThread().getId();
           int nextWorkIdx;
           while (-1 != (nextWorkIdx = work.getAndLockNextOpenTaskIdx())) {
-            //bit wurde gesetzt, weil ansosnten continue, d.h. jetzt kann dieser thread in ruhe das addTable durchführen
+            //bit wurde gesetzt, weil ansosnten continue, d.h. jetzt kann dieser thread in ruhe das addTable durchfï¿½hren
             try {
               System.out.println(tid + "- " + System.currentTimeMillis() + " working " + nextWorkIdx);
               synchronized (worked) {
@@ -64,7 +64,7 @@ public class DistributedWorkTest extends TestCase {
                 innerRun();
               }
             } finally {
-              work.taskDone(); //auch bei einem fehler sollen die threads nicht warten müssen.
+              work.taskDone(); //auch bei einem fehler sollen die threads nicht warten mï¿½ssen.
             }
           }
           try {

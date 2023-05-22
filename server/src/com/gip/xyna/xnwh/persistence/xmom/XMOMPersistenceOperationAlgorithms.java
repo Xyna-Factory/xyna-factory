@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -453,7 +453,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                 adjustMetaFieldData(storable, correlatedOrder, correspondingInfo);
               } else {
                 //will man hier validieren, dass alle objekte in der hierarchie identische historizationtimestamp und currentversion-flag besitzen?
-                //oder darf der user sich hier auch objekt-abhängigkeiten speichern, die es ohne "keepMetaData" nicht geben könnte?
+                //oder darf der user sich hier auch objekt-abhï¿½ngigkeiten speichern, die es ohne "keepMetaData" nicht geben kï¿½nnte?
                 // => da es keine folgefehler gibt, sondern eine solche inkonsistenz keine anderen features kaputt macht,
                 //    ist das also erlaubt.
               }
@@ -492,12 +492,12 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
     if (override) {
       if (info instanceof XMOMStorableStructureInformation) {
         /*
-         * man muss aufpassen, dass man nicht ein objekt löscht, was von einem anderen thread geschrieben wurde, wenn wir vorher keine historisierung
+         * man muss aufpassen, dass man nicht ein objekt lï¿½scht, was von einem anderen thread geschrieben wurde, wenn wir vorher keine historisierung
          * machen konnten (objekt existierte zum zeitpunkt der historisierung noch nicht).
          */
         XMOMStorableStructureInformation xmomInfo = (XMOMStorableStructureInformation) info;
         if (!xmomInfo.usesHistorization() || !historizePrevious || historizationMap.presentInHistorization( xmomInfo, storable, false)) {
-          //lösche die aktuelle version (currentversion oder history, je nachdem worauf man store sagt)
+          //lï¿½sche die aktuelle version (currentversion oder history, je nachdem worauf man store sagt)
           XMOMStorableStructureInformation mergedClone = ((XMOMStorableStructureInformation) info).generateMergedClone(); 
           if (deletePreviousVersion(con, storable, mergedClone) != null) {
             type = AccessType.UPDATE;
@@ -510,7 +510,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
          */
       } 
       // else:
-      // in einem vorherigen schritt der store-rekursion ist das delete bereits passiert, welches das aktuelle storable schon mitgelöscht hat
+      // in einem vorherigen schritt der store-rekursion ist das delete bereits passiert, welches das aktuelle storable schon mitgelï¿½scht hat
     } else if (alreadyExists(con, storable, info, historizationMap)) {
       return true;
     }
@@ -613,7 +613,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
     
     final List<UpdateGeneration> updates = UpdateGenerator.parse(mergedInfo, adjustUpdatePaths(updatePaths));
     
-    //wenn update historisierte objekte ändert, historizationtimestamp anpassen. -> entsprechende spalten mit in die updates aufnehmen
+    //wenn update historisierte objekte ï¿½ndert, historizationtimestamp anpassen. -> entsprechende spalten mit in die updates aufnehmen
     final boolean usesHistorizationAcrossHierarchy = usesHistorizationAcrossHierarchy(mergedInfo);
     if (usesHistorizationAcrossHierarchy) {
       final Long timestamp = System.currentTimeMillis();
@@ -639,7 +639,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                 }
                 updateHistorizationTimeStamp = true;
               }
-              //falls keepmetafielddata=true, dann müssen die metafeldspalten explizit angegeben sein
+              //falls keepmetafielddata=true, dann mï¿½ssen die metafeldspalten explizit angegeben sein
               
               if (updateHistorizationTimeStamp) {
                 boolean isXMOMStorableChangedByUpdates = false;
@@ -648,7 +648,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                   isXMOMStorableChangedByUpdates = true;
                 } else {
                   //falls referenzierte objekte existieren, muss man diese nur dann updaten, wenn auch in ihnen etwas anderes geupdated wird!
-                  //FIXME referenzierte objekte können in der hierarchie mehrfach vorkommen, dann nur ein update durchführen
+                  //FIXME referenzierte objekte kï¿½nnen in der hierarchie mehrfach vorkommen, dann nur ein update durchfï¿½hren
                   List<StorableColumnInformation> accessPathOfUpdate =
                       new ArrayList<StorableColumnInformation>(preparedUpdate.getUnfinishedUpdateStatement().getQualifiedColumn().getAccessPath());
                   List<StorableColumnInformation> accessPathOfColumn = new ArrayList<StorableColumnInformation>(column.getAccessPath());
@@ -1186,7 +1186,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
           if (current instanceof XMOMStorableStructureInformation) { // && current instanceof obj
             StorableColumnInformation uidCol = current.getColInfoByPersistenceTypeAcrossHierachy(PersistenceTypeInformation.UNIQUE_IDENTIFIER);
             if (uidMustBeAutoGenerated(uidCol.getFromDatatype(obj))) {
-              //TODO ids nicht global eindeutig sondern nur lokal eindeutig für diese tabelle erzeugen
+              //TODO ids nicht global eindeutig sondern nur lokal eindeutig fï¿½r diese tabelle erzeugen
               uidCol.setInDatatype(obj, transformType(String.valueOf(idGen.getUniqueId()), uidCol));
             }
 
@@ -1369,8 +1369,8 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
     }
     
     /*
-     * erst löschen, dann fehler werfen, falls noch anderswo referenziert, damit mehrfache referenzen auf das gleiche storable innerhalb einer
-     * hierarchie nicht beim "handleBackwardReferences" zu fehlern führt
+     * erst lï¿½schen, dann fehler werfen, falls noch anderswo referenziert, damit mehrfache referenzen auf das gleiche storable innerhalb einer
+     * hierarchie nicht beim "handleBackwardReferences" zu fehlern fï¿½hrt
      */
 
     for (StorableStructureInformation structure : deletionOrder) {
@@ -1546,7 +1546,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       Map<Object, XynaObject> map = new HashMap<>(unsortedResult.size());
       for (XynaObject xynaObject : unsortedResult) {
         if (xynaObject != null) {
-          //TODO kann man den PK nicht einfacher herausbekommen? der storable-structure cache weiß doch, welche spalte der PK ist.
+          //TODO kann man den PK nicht einfacher herausbekommen? der storable-structure cache weiï¿½ doch, welche spalte der PK ist.
           Storable<?> storable = PersistenceAccessDelegator.transformDatatypeToStorable(xynaObject);
           map.put(storable.getPrimaryKey(), xynaObject);
         }

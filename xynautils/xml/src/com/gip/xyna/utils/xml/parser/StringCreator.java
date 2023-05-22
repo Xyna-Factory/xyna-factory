@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ public class StringCreator {
 
    /**
     * imports von xsds die bereits in dem array xsdStrings enthalten sind,
-    * führen zu problemen. die xsdStrings wären also als xsd-dateien eigtl
+    * fï¿½hren zu problemen. die xsdStrings wï¿½ren also als xsd-dateien eigtl
     * invalide wegen fehlender imports.
     * 
     * @param xsdStrings
-    *              sammlung von xsds, die benötigt werden.
+    *              sammlung von xsds, die benï¿½tigt werden.
     * @param elementName
     * @return
     * @throws Exception
@@ -64,7 +64,7 @@ public class StringCreator {
    }
 
    /**
-    * imports/includes müssen global erreichbar sein
+    * imports/includes mï¿½ssen global erreichbar sein
     * 
     * @param xsdString
     *              xsd inhalt (darf nicht filename sein (CDATA-fehler))
@@ -95,7 +95,7 @@ public class StringCreator {
    // aus oracle demo copy&paste
 
    /**
-    * imports/includes müssen relativ zur url oder global erreichbar sein!
+    * imports/includes mï¿½ssen relativ zur url oder global erreichbar sein!
     * 
     * @param url
     * @param elementName

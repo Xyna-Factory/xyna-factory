@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1173,7 +1173,7 @@ public abstract class OBTableObject extends OBDBObject {
 
   /** 
    * Besetzt die SQL-Teil-Statements (Member-Variablen) 
-   * VALUES (...) und SET ... für insert und update.
+   * VALUES (...) und SET ... fï¿½r insert und update.
    * @param context
    * @param update
    * @return Kommagetrennte Liste der CLobs, falls welche vorhanden sind.
@@ -1369,7 +1369,7 @@ public abstract class OBTableObject extends OBDBObject {
 
   /** 
    * Besetzt die SQL-Teil-Statements (Member-Variablen) 
-   * VALUES (...) und SET ... für insert und update.
+   * VALUES (...) und SET ... fï¿½r insert und update.
    * @param context
    * @param tableUpdate
    * @param valuesOut Liste der in das PreparedStatement einzufuegenden Werte - Ausgabe-Parameter
@@ -1537,7 +1537,7 @@ public abstract class OBTableObject extends OBDBObject {
   }
   /** 
    * Besetzt die SQL-Teil-Statements (Member-Variablen) 
-   * VALUES (...) und SET ... für insert und update.
+   * VALUES (...) und SET ... fï¿½r insert und update.
    * @param context
    * @param tableValueStringOut
    * @param valuesOut

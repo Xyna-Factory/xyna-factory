@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.util.Set;
 
 /**
  * serialisierbare Version von WrappedMap.
- * Map-Implementierung, die alle Aufrufe an eine im Konstruktor übergebene Map weiterreicht.
+ * Map-Implementierung, die alle Aufrufe an eine im Konstruktor ï¿½bergebene Map weiterreicht.
  * Dies vereinfacht das Implementieren von Dekoratoren. 
  */
 public class SerializableWrappedMap<K,V> implements Map<K,V> , Serializable {

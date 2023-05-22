@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@ public class TimedTaskTest extends TestCase {
     tt.addTask( now+20, "B" );
     
     
-    //Test sollte meistens erfolgreich sein, könnte aber sporadisch wegen Timing-Problemen scheitern
+    //Test sollte meistens erfolgreich sein, kï¿½nnte aber sporadisch wegen Timing-Problemen scheitern
     sleep(5);
     Assert.assertEquals( "[]", list.toString() );
     sleep(10);

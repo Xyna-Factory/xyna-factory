@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class SyslogHandler extends Handler {
    private SocketAddress address;
 
    /**
-    * Erzeugt einen DatagramHandler, der seine Einträge an einen bestimmten Host
+    * Erzeugt einen DatagramHandler, der seine Eintrï¿½ge an einen bestimmten Host
     * und Port schickt.
     */
    public SyslogHandler(String host, int port) throws SocketException {
@@ -51,10 +51,10 @@ public class SyslogHandler extends Handler {
    }
 
    /**
-    * Schließt den zugrundeliegenden Socket.
+    * Schlieï¿½t den zugrundeliegenden Socket.
     */
    public void close() {
-      // Schließen des Socket
+      // Schlieï¿½en des Socket
       socket.close();
    }
 
@@ -64,7 +64,7 @@ public class SyslogHandler extends Handler {
    }
 
    /**
-    * Schreibt den übergebenen LogRecord zum Ziel.
+    * Schreibt den ï¿½bergebenen LogRecord zum Ziel.
     */
    public void publish(LogRecord rec) {
       if (isLoggable(rec)) {

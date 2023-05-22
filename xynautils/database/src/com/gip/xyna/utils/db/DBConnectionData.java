@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,11 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.utils.db.exception.DBUtilsException;
 
 /**
- * DBConnectionData sammelt alle Daten, die zum Öffnen einer Connection zur DB nötig sind.
+ * DBConnectionData sammelt alle Daten, die zum ï¿½ffnen einer Connection zur DB nï¿½tig sind.
  * Die Methode {@link createSQLUtils} erzeugt eine fertige SQLUtils-Instanz.
  * 
- * Diese Klasse kann sowohl für MySQL als auch für Oracle-Connections verwendet werden.
- * Der zu verwendende Treiber kann entweder übergeben werden oder 
+ * Diese Klasse kann sowohl fï¿½r MySQL als auch fï¿½r Oracle-Connections verwendet werden.
+ * Der zu verwendende Treiber kann entweder ï¿½bergeben werden oder 
  * kann aus der URL erkannt werden.  
  * 
  * Aufruf:
@@ -130,7 +130,7 @@ public class DBConnectionData {
    */
   public static class DBConnectionDataBuilder {
     
-    public static Executor DefaultNetworkTimeoutExecutor = Executors.newCachedThreadPool(); //hier als Default, könnte konfigurierbar werden..
+    public static Executor DefaultNetworkTimeoutExecutor = Executors.newCachedThreadPool(); //hier als Default, kï¿½nnte konfigurierbar werden..
 
     protected DBConnectionData dcd;
     
@@ -274,11 +274,11 @@ public class DBConnectionData {
       switch( dcd.type ) {
       case MySQL:
       case MARIADB:
-        //Für weitere mögliche Properties: http://dev.mysql.com/doc/refman/5.0/en/connector-j-reference-configuration-properties.html
+        //Fï¿½r weitere mï¿½gliche Properties: http://dev.mysql.com/doc/refman/5.0/en/connector-j-reference-configuration-properties.html
         dcd.properties.setProperty("tcpKeepAlive","true");//Tcp Keepalive
         break;
       case Oracle:
-        //Für weitere mögliche Properties: http://www.orindasoft.com/public/Oracle_JDBC_JavaDoc/javadoc1020/oracle/jdbc/pool/OracleDataSource.html#setConnectionProperties(java.util.Properties)
+        //Fï¿½r weitere mï¿½gliche Properties: http://www.orindasoft.com/public/Oracle_JDBC_JavaDoc/javadoc1020/oracle/jdbc/pool/OracleDataSource.html#setConnectionProperties(java.util.Properties)
         break;
       case DB2:
         break;
@@ -363,7 +363,7 @@ public class DBConnectionData {
       //TODO reflection kram auch cachen
       
       Class<?> c = helperClassLoader.loadClass(ClassLoaderHelper.class.getName());
-      //über reflection getConnection von classloaderhelper aufrufen, weil um ohne connection aufrufen zu können, müsste man 
+      //ï¿½ber reflection getConnection von classloaderhelper aufrufen, weil um ohne connection aufrufen zu kï¿½nnen, mï¿½sste man 
       //eine instanz auf die klasse casten, wobei man eine classcastexception zur laufzeit bekommt (weil klasse
       //lokal anders ist als die von dem angegebenen classloader geladene).
       Method[] methods = c.getMethods();
@@ -445,8 +445,8 @@ public class DBConnectionData {
   }
 
   /*
-   * cache für urlclassloader, die verwendet werden, um jdbc treiber zu laden.
-   * der cache ist dazu da, dass nicht für mehrfaches createconnection unterschiedliche classloader-instanzen verwendet werden
+   * cache fï¿½r urlclassloader, die verwendet werden, um jdbc treiber zu laden.
+   * der cache ist dazu da, dass nicht fï¿½r mehrfaches createconnection unterschiedliche classloader-instanzen verwendet werden
    * und der jdbc treiber dadurch oom wird. (bei oracle jdbc schon passiert)
    * 
    * wenn ein alter classloader nicht mehr verwendet werden, darf hier kein classloaderleak
@@ -461,10 +461,10 @@ public class DBConnectionData {
       synchronized (classLoaderCache) {
         result = classLoaderCache.get(classLoaderToLoadDriver);
         if (result == null) {
-          //FIXME nicht für jeden übergebenen classloader einen helper-classloader erstellen, wenn 
+          //FIXME nicht fï¿½r jeden ï¿½bergebenen classloader einen helper-classloader erstellen, wenn 
           //diese classloader eigtl alle das jdbc-loading an einen gemeimsamen anderen classloader delegieren
-          //beispiel: mehrere black services delegieren alle das jdbc-laden an einen sharedlib-classloader. dann bräuchte
-          //man nur den classloaderhelper für den sharedlib-classloader
+          //beispiel: mehrere black services delegieren alle das jdbc-laden an einen sharedlib-classloader. dann brï¿½uchte
+          //man nur den classloaderhelper fï¿½r den sharedlib-classloader
           ClassLoader classLoaderToGetURLsFrom = DBConnectionData.class.getClassLoader();
           while (!(classLoaderToGetURLsFrom instanceof URLClassLoader) && classLoaderToGetURLsFrom != null) {
             classLoaderToGetURLsFrom = classLoaderToGetURLsFrom.getParent();
@@ -477,7 +477,7 @@ public class DBConnectionData {
 
                 @Override
                 public synchronized Class<?> loadClass(String name) throws ClassNotFoundException {
-                  //synchronized, damit findloadedclass threadsafe wird. sonst kann es passieren, dass für die gleiche klasse zweimal
+                  //synchronized, damit findloadedclass threadsafe wird. sonst kann es passieren, dass fï¿½r die gleiche klasse zweimal
                   //findclass aufgerufen wird.
                   Class<?> c = findLoadedClass(name);
                   if (c == null) {
@@ -572,7 +572,7 @@ public class DBConnectionData {
     try {
       closed = connection.isClosed();
     } catch( Throwable t ) {
-      //Fehler hier wird unterdrückt, da schlecht behandelbar, 
+      //Fehler hier wird unterdrï¿½ckt, da schlecht behandelbar, 
       //wenn wirklich ein schwerwiegender Fehler auftritt, wird 
       //unten ein DBUtilsException geworfen.
     }
@@ -595,7 +595,7 @@ public class DBConnectionData {
     try {
       closed = sqlUtils.getConnection().isClosed();
     } catch( Throwable t ) {
-      //Fehler hier wird unterdrückt, da schlecht behandelbar, 
+      //Fehler hier wird unterdrï¿½ckt, da schlecht behandelbar, 
       //wenn wirklich ein schwerwiegender Fehler auftritt, wird 
       //unten ein DBUtilsException geworfen.
     }

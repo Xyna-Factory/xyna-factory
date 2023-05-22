@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public class XTFInputCreationInstance implements OrderInputCreationInstance {
     GENERATOR_MON_LEVEL.setDefaultDocumentation(DocumentationLanguage.EN, "Defines the monitoring level that "
         + "is used for input generating workflows. -1 for no special configuration.");
     GENERATOR_MON_LEVEL.setDefaultDocumentation(DocumentationLanguage.DE, "Definiert das Monitoring Level,"
-        + " welches für die Input-generierenden Workflows verwendet wird. (-1 zur Verwendung des dem Ordertype zugeordneten Monitoring Levels)");
+        + " welches fï¿½r die Input-generierenden Workflows verwendet wird. (-1 zur Verwendung des dem Ordertype zugeordneten Monitoring Levels)");
   }
   
   private OptionalOISGenerateMetaInformation params;

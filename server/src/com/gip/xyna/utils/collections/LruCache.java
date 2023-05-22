@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@ import java.util.LinkedHashMap;
 
 
 /**
- * LruCache ist ein Cache, der eine vorgegebenen Anzahl von Cache-Einträgen 
- * aufbewahrt. Falls weitere Einträge über put() eingetragen werden, werden die 
- * am längsten nicht verwendeten (LRU) Einträge entfernt. Als Verwendung zählt
- * dabei die Abfrage über get() und das Eintragen oder Ändern über put().
+ * LruCache ist ein Cache, der eine vorgegebenen Anzahl von Cache-Eintrï¿½gen 
+ * aufbewahrt. Falls weitere Eintrï¿½ge ï¿½ber put() eingetragen werden, werden die 
+ * am lï¿½ngsten nicht verwendeten (LRU) Eintrï¿½ge entfernt. Als Verwendung zï¿½hlt
+ * dabei die Abfrage ï¿½ber get() und das Eintragen oder ï¿½ndern ï¿½ber put().
  * <br><br>
  * Achtung: dieser Cache ist nicht threadsafe, daher extern absichern!
  */

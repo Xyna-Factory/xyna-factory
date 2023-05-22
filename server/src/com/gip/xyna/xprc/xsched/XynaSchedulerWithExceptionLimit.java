@@ -1,6 +1,6 @@
 ///*
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// * Copyright 2022 GIP SmartMercial GmbH, Germany
+// * Copyright 2023 Xyna GmbH, Germany
 // *
 // * Licensed under the Apache License, Version 2.0 (the "License");
 // * you may not use this file except in compliance with the License.
@@ -177,8 +177,8 @@
 //
 //
 //      // negativ, falls o1 > o2
-//      // da die sortierte liste mit hohen prioritäten anfangen soll, und
-//      // niedrige prioritäten kleiner sind als grosse,
+//      // da die sortierte liste mit hohen prioritï¿½ten anfangen soll, und
+//      // niedrige prioritï¿½ten kleiner sind als grosse,
 //      // gilt also:
 //      public int compare(XynaOrderServerExtension o1, XynaOrderServerExtension o2) {
 //        if (mustBeResumed(o1)) {
@@ -218,16 +218,16 @@
 //
 //
 //  /**
-//   * beim start des servers wird der scheduler mit einem comparator initialisiert, der beim serverstart resumte aufträge
+//   * beim start des servers wird der scheduler mit einem comparator initialisiert, der beim serverstart resumte auftrï¿½ge
 //   * bevorzugt. wegen schlechterer performance wird er dann mittels dieser methode ausgetauscht gegen einen der das
-//   * nicht mehr berücksichtigt.
+//   * nicht mehr berï¿½cksichtigt.
 //   */
 //  public void setDefaultComparator() {
 //    schedulerComparator = new Comparator<XynaOrderServerExtension>() {
 //
 //      // negativ, falls o1 > o2
-//      // da die sortierte liste mit hohen prioritäten anfangen soll, und
-//      // niedrige prioritäten kleiner sind als grosse,
+//      // da die sortierte liste mit hohen prioritï¿½ten anfangen soll, und
+//      // niedrige prioritï¿½ten kleiner sind als grosse,
 //      // gilt also:
 //      public int compare(XynaOrderServerExtension o1, XynaOrderServerExtension o2) {
 //        if (o1.isCancelled()) {
@@ -341,7 +341,7 @@
 //          // since the only reason it exists is that it has not been cleaned up yet
 //          cancelListeners.remove(listener);
 //        } else {
-//          //TODO lock früher freigeben: im elsezweig bruacht man es nicht mehr
+//          //TODO lock frï¿½her freigeben: im elsezweig bruacht man es nicht mehr
 //
 //          XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getStatusChangeProvider()
 //                          .notifyListeners(xo, OrderInstanceStatus.CANCELED);
@@ -350,7 +350,7 @@
 //            XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive()
 //                            .updateInstanceCancel(xo);
 //          } catch (XynaException e) {
-//            //TODO evtl konfigurieren, ob aufträge bei fehlern in der persistierung abgebrochen werden?
+//            //TODO evtl konfigurieren, ob auftrï¿½ge bei fehlern in der persistierung abgebrochen werden?
 //            logger.warn("could not update instance of " + xo, e);
 //          }
 //
@@ -376,7 +376,7 @@
 //      XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive()
 //                      .updateStatusScheduling(xo);
 //    } catch (XynaException e) {
-//      //TODO evtl konfigurieren, ob aufträge bei fehlern in der persistierung abgebrochen werden?
+//      //TODO evtl konfigurieren, ob auftrï¿½ge bei fehlern in der persistierung abgebrochen werden?
 //      logger.warn("could not update instance of " + xo, e);
 //    }
 //
@@ -407,7 +407,7 @@
 //
 //
 //  /**
-//   * schedulerthread mit management für pausieren, beenden, wecken
+//   * schedulerthread mit management fï¿½r pausieren, beenden, wecken
 //   */
 //  private class SchedulerRunnable implements Runnable {
 //    
@@ -422,7 +422,7 @@
 //
 //
 //    /**
-//     * stoppt scheduling thread gracefully, d.h. er läuft seine jetzige schleife zuende und beendet sich danach.
+//     * stoppt scheduling thread gracefully, d.h. er lï¿½uft seine jetzige schleife zuende und beendet sich danach.
 //     */
 //    public void stopSchedulingThread() {
 //      threadMayRun = false;
@@ -431,7 +431,7 @@
 //
 //
 //    /**
-//     * thread schläft solange bis er durch unPauseScheduling aufgeweckt wird
+//     * thread schlï¿½ft solange bis er durch unPauseScheduling aufgeweckt wird
 //     */
 //    public void pauseScheduling() {
 //      // thread kann nicht interrupted werden
@@ -457,7 +457,7 @@
 //          schedulerCntLock.unlock();
 //          unlocked = true;
 //
-//          // interrupted thread, so dass er erneut läuft
+//          // interrupted thread, so dass er erneut lï¿½uft
 //          synchronized (sleepLock) {
 //            if (threadIsAsleep && !isPaused) {
 //              sleepLock.notify(); // schlafenden thread interrupten
@@ -468,7 +468,7 @@
 //            }
 //          }
 //        } else {
-//          // ansonsten läuft er noch... => signalisierung, dass er nochmal laufen soll
+//          // ansonsten lï¿½uft er noch... => signalisierung, dass er nochmal laufen soll
 //          schedulerCnt++;
 //        }
 //      } finally {
@@ -552,7 +552,7 @@
 //        ordersBeingCheckedForSchedLock.lock();
 //        try {
 //
-//          // checken, ob aufträge laufen dürfen
+//          // checken, ob auftrï¿½ge laufen dï¿½rfen
 //          ordersLock.lock();
 //          try {
 //            // copy all orders to a private list to be able to rapidly iterate over it without locking for every item
@@ -581,7 +581,7 @@
 //
 //              if (xo.getSchedulingTimeout() != null) {
 //                if (!schedulingMaintenanceRunnable.notifyOnScheduled(xo)) {
-//                  // TODO achtung, hier muss alles was in checkSchedulingConditions passiert ist, rückgängig gemacht
+//                  // TODO achtung, hier muss alles was in checkSchedulingConditions passiert ist, rï¿½ckgï¿½ngig gemacht
 //                  // werden
 //                  // => besser benamen!
 //                  freeCapacities(xo);
@@ -815,7 +815,7 @@
 //                              // letzter fehler
 //                                                          xo.getErrors()[xo.getErrors().length - 1]);
 //            } catch (XynaException e) {
-//              // TODO evtl konfigurieren, ob aufträge bei fehlern in der persistierung abgebrochen werden?
+//              // TODO evtl konfigurieren, ob auftrï¿½ge bei fehlern in der persistierung abgebrochen werden?
 //              logger.warn("could not update instance of " + xo, e);
 //            }
 //
@@ -862,7 +862,7 @@
 //
 //
 //  /**
-//   * vorgängeraufträge von nachfolgeauftrag entfernen.
+//   * vorgï¿½ngerauftrï¿½ge von nachfolgeauftrag entfernen.
 //   */
 //  private void handleSeries(XynaOrder xo, boolean errorOccurred) throws XynaException {
 //    if (xo.getSeriesInformation() != null) {
@@ -1113,9 +1113,9 @@
 //
 //
 //  /**
-//   * 1. scheduler anhalten (pause-aufträge müssen noch laufen dürfen!)
-//   *   (implementierung durch austausch des scheduler algorithmus, der nur noch suspendaufträge durchlässt)
-//   * 2. aufträge die bald einen timeout haben mit fehler beantworten
+//   * 1. scheduler anhalten (pause-auftrï¿½ge mï¿½ssen noch laufen dï¿½rfen!)
+//   *   (implementierung durch austausch des scheduler algorithmus, der nur noch suspendauftrï¿½ge durchlï¿½sst)
+//   * 2. auftrï¿½ge die bald einen timeout haben mit fehler beantworten
 //   */
 //  public void pauseScheduling() {
 //    innerSchedulerRunnable.changeSchedulerAlgorithm(new SchedulerAlgorithm() {
@@ -1135,7 +1135,7 @@
 //            ordersBeingCheckedForSchedLock.lock();
 //            try {
 //
-//              // checken, ob aufträge laufen dürfen
+//              // checken, ob auftrï¿½ge laufen dï¿½rfen
 //              ordersLock.lock();
 //              try {
 //                // copy all orders to a private list to be able to rapidly iterate over it without locking for every
@@ -1167,7 +1167,7 @@
 //
 //                  if (xo.getSchedulingTimeout() != null) {
 //                    if (!schedulingMaintenanceRunnable.notifyOnScheduled(xo)) {
-//                      // TODO achtung, hier muss alles was in checkSchedulingConditions passiert ist, rückgängig gemacht
+//                      // TODO achtung, hier muss alles was in checkSchedulingConditions passiert ist, rï¿½ckgï¿½ngig gemacht
 //                      // werden
 //                      // => besser benamen!
 //                      freeCapacities(xo);
@@ -1249,7 +1249,7 @@
 //
 //
 //  public int getWaitingOrdersCount() {
-//    //TODO aufträge die mit startzeit in zukunft eingestellt wurden beachten. cron like order?
+//    //TODO auftrï¿½ge die mit startzeit in zukunft eingestellt wurden beachten. cron like order?
 //    ordersBeingCheckedForSchedLock.lock();
 //    ordersLock.lock();
 //    try {
@@ -1294,7 +1294,7 @@
 //  public void suspendOrder(XynaOrderServerExtension order) throws XynaException {
 //    //lock holen, falls waiting, dann suspend
 //    //TODO was tun, wenn der auftrag noch nicht hier ist, sondern noch im planning, und der scheduler evtl nicht angehalten ist    
-//    //     evtl ähnlich behandeln wie cancel
+//    //     evtl ï¿½hnlich behandeln wie cancel
 //    if (order.getProcessInstance() != null) {
 //      order.getProcessInstance().suspend();
 //    } else {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ import com.gip.xyna.utils.db.types.XMLType;
  * Diese Methoden-Sammlung soll helfen, das Auslesen zu vereinfachen.
  * Es gibt dabei immer zwei Methoden getXXX( ResultSet rs, int i )
  * und getXXX( ResultSet rs, String colName ), wie dies auch im ResultSet selbst
- * angeboten wird. Für manche Ausleseoperationen ist es nötig, dass vorher der
- * SELECT-String verändert wird, dazu dienen die selectXXX-Methoden.
+ * angeboten wird. Fï¿½r manche Ausleseoperationen ist es nï¿½tig, dass vorher der
+ * SELECT-String verï¿½ndert wird, dazu dienen die selectXXX-Methoden.
  * <p>
  * Beispiel-Aufruf:
  * <code><pre>
@@ -88,7 +88,7 @@ public class ResultSetUtils {
   }
   
   /**
-   * Lesen eines Longs unter Berücksichtigung der NULL
+   * Lesen eines Longs unter Berï¿½cksichtigung der NULL
    * @param rs
    * @param i
    * @return
@@ -99,7 +99,7 @@ public class ResultSetUtils {
     return longToLong( l, rs.wasNull() );
   }
   /**
-   * Lesen eines Longs unter Berücksichtigung der NULL
+   * Lesen eines Longs unter Berï¿½cksichtigung der NULL
    * @param rs
    * @param colName
    * @return
@@ -114,7 +114,7 @@ public class ResultSetUtils {
   }
   
   /**
-   * Lesen eines Integers unter Berücksichtigung der NULL
+   * Lesen eines Integers unter Berï¿½cksichtigung der NULL
    * @param rs
    * @param i
    * @return
@@ -125,7 +125,7 @@ public class ResultSetUtils {
     return intToInteger( j, rs.wasNull() );
   }
   /**
-   * Lesen eines Integers unter Berücksichtigung der NULL
+   * Lesen eines Integers unter Berï¿½cksichtigung der NULL
    * @param rs
    * @param colName
    * @return

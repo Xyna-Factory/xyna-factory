@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ import java.util.concurrent.ConcurrentMap;
 import com.gip.xyna._1_5.xsd.faults._1.XynaFault_ctype;
 
 /**
- * Exception ohne konkrete Angabe der Message sondern nur des Codes. Die tatsächliche Fehler
- * Nachricht wird über den {@link ExceptionHandler} erzeugt. {@link #getMessage} ist überschrieben und
- * gibt die aus dem Code erzeugte Fehlernachricht zurück.
+ * Exception ohne konkrete Angabe der Message sondern nur des Codes. Die tatsï¿½chliche Fehler
+ * Nachricht wird ï¿½ber den {@link ExceptionHandler} erzeugt. {@link #getMessage} ist ï¿½berschrieben und
+ * gibt die aus dem Code erzeugte Fehlernachricht zurï¿½ck.
  */
 public class XynaException extends Exception {
 
@@ -40,7 +40,7 @@ public class XynaException extends Exception {
    private String message;
    
    /**
-    * Erzeugt eine XynaException mit dem übergebenen Code
+    * Erzeugt eine XynaException mit dem ï¿½bergebenen Code
     * 
     * @param code
     */
@@ -58,7 +58,7 @@ public class XynaException extends Exception {
    }
 
    /**
-    * Erzeugt eine XynaException mit dem übergebenen Code und einem Argument
+    * Erzeugt eine XynaException mit dem ï¿½bergebenen Code und einem Argument
     * 
     * @param code
     * @param arg
@@ -93,7 +93,7 @@ public class XynaException extends Exception {
    }
    
    /**
-    * erzeugt eine XynaException mit dem übergebenen Code und mehreren Argumenten
+    * erzeugt eine XynaException mit dem ï¿½bergebenen Code und mehreren Argumenten
     * 
     * @param code
     * @param args
@@ -124,7 +124,7 @@ public class XynaException extends Exception {
    */
    public XynaException initCause(Throwable t) {
      if (t == null) {
-       //getCause gibt trotzdem noch null zurück. der einzige unterschied zum "normalen super.initCause(null)" ist, dass man initCause(null) mehrfach aufrufen kann.
+       //getCause gibt trotzdem noch null zurï¿½ck. der einzige unterschied zum "normalen super.initCause(null)" ist, dass man initCause(null) mehrfach aufrufen kann.
        //vorteil: initCause(null) tut einfach nichts. deshalb kann der konstruktor XynaException(args, cause) immer aufgerufen werden, auch wenn der cause
        //ggfs null ist.
        return this;
@@ -134,8 +134,8 @@ public class XynaException extends Exception {
 
 
   /**
-   * verwandelt die mehreren übergebenen exceptions in eine einzige exception, so dass im stacktrace klar wird, dass
-   * mehrere exceptions vorlagen, die nicht voneinander abhängig gewesen waren.
+   * verwandelt die mehreren ï¿½bergebenen exceptions in eine einzige exception, so dass im stacktrace klar wird, dass
+   * mehrere exceptions vorlagen, die nicht voneinander abhï¿½ngig gewesen waren.
    * <p>
    * kann nur einmal aufgerufen werden.
    */
@@ -248,7 +248,7 @@ public class XynaException extends Exception {
 
   public String getMessage() {
     refreshArgs();
-    //erst versuchen mit aktueller default-sprache die fehlermeldung zu bauen. falls nicht möglich => rollback auf gecachte fehlermeldung.
+    //erst versuchen mit aktueller default-sprache die fehlermeldung zu bauen. falls nicht mï¿½glich => rollback auf gecachte fehlermeldung.
     try {
       message = ExceptionHandler.getErrorMessage(code, args, getRevision());
     } catch (UnknownExceptionCodeException e) {
@@ -257,7 +257,7 @@ public class XynaException extends Exception {
         return message;
       }
       try {
-        //nicht einfach e.getMessage() aufrufen, weil das zu endlos-rekursion führen kann
+        //nicht einfach e.getMessage() aufrufen, weil das zu endlos-rekursion fï¿½hren kann
         message = ExceptionHandler.getErrorMessage(e.getCode(), e.getArgs(), e.getRevision());
       } catch (UnknownExceptionCodeException f) {
         message = "Internal Error: Code " + e.getCode() + " not found. Caused by: Code " + code + " not found";
@@ -293,6 +293,6 @@ public class XynaException extends Exception {
   }
   
   
-  //TODO besserer umgang mit dynamischer lokalisierung (für verschiedenartige fehlermeldungen im gleichen system)
+  //TODO besserer umgang mit dynamischer lokalisierung (fï¿½r verschiedenartige fehlermeldungen im gleichen system)
   
 }

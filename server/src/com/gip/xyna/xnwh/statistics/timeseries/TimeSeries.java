@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,11 +50,11 @@ public class TimeSeries {
 
 
   /**
-   * liefert daten zwischen start- und endzeit bzgl der übergebenen resolution und aggregation.
+   * liefert daten zwischen start- und endzeit bzgl der ï¿½bergebenen resolution und aggregation.
    * 
-   * falls konvertierung nicht unterstützt, kann es sein, dass sowohl start- und endzeit, als auch resolution im result anders sind.
+   * falls konvertierung nicht unterstï¿½tzt, kann es sein, dass sowohl start- und endzeit, als auch resolution im result anders sind.
    * 
-   * @param resolutionMS gewünschte größe der buckets in millisekunden, bzgl der die daten zurückgegeben werden. bsp: 900000 =&gt; jeder zurückgegebene wert entspricht einer aggregation über 15 minuten.
+   * @param resolutionMS gewï¿½nschte grï¿½ï¿½e der buckets in millisekunden, bzgl der die daten zurï¿½ckgegeben werden. bsp: 900000 =&gt; jeder zurï¿½ckgegebene wert entspricht einer aggregation ï¿½ber 15 minuten.
    * @param aggregationType falls werte mit unterschiedlichen aggregationtypes gespeichert sind, ist dies ein filter auf die vorhandenen aggregationstypen.
    */
   public FetchedData getData(long starttimeMS, long endtimeMS, boolean calculateDiffs, long resolutionMS,

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@ public class RMIInterface {
         @Override
         public <I extends Remote> I getRmiImpl(RMIClusterProvider arg0, GenericRMIAdapter<I> arg1)
             throws com.gip.xyna.xfmg.xclusteringservices.RMIRetryExecutor.RMIConnectionDownException {
-          //TODO: überlegen, ob mehr retries als der default notwendig sind, vgl defaultimplementierung von rmiconnectionnotavailablehandler
+          //TODO: ï¿½berlegen, ob mehr retries als der default notwendig sind, vgl defaultimplementierung von rmiconnectionnotavailablehandler
           //      der macht aber zugriff auf rmiclusterprovider, was hier nicht passt.
           throw new com.gip.xyna.xfmg.xclusteringservices.RMIRetryExecutor.RMIConnectionDownException();
         }
