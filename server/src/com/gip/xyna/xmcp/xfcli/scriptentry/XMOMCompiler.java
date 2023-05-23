@@ -47,6 +47,7 @@ import com.gip.xyna.FileUtils;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.lists.StringSerializableList;
+import com.gip.xyna.xdev.xlibdev.supp4eclipse.base.ServiceImplementationTemplate;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.RuntimeContextRequirementXmlEntry;
@@ -60,6 +61,11 @@ import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xmcp.xfcli.scriptentry.util.ExceptionAnalyzer;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xprc.exceptions.XPRC_InheritedConcurrentDeploymentException;
+import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
+import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
+import com.gip.xyna.xprc.exceptions.XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH;
+import com.gip.xyna.xprc.exceptions.XPRC_WrappedCompileError;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
@@ -69,6 +75,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.Compilation;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.InMemoryCompilationSet;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.FileSystemXMLSource;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.MDMParallelDeploymentException;
@@ -92,10 +99,13 @@ public class XMOMCompiler {
   private static final String INPUT_PRINT_CLASSPATH = "printclasspath";
   private static final String INPUT_TYPERESISTANT = "typresistant";
   private static final String INPUT_EXCEPTION_ON_MISSING_APP_XML_ENTRY = "exceptiononmissingappentry";
+  //if set, only generate servicedefinitionjar for this service
+  private static final String INPUT_SERVICEDEFINITION_FQNAME = "servicefqname";
 
   private static final List<String> inputKeys =
       Arrays.asList(INPUT_APPLICATION_NAME_AND_VERSION, INPUT_OUPTUT_PATH, INPUT_STORABLE_INTERFACES, INPUT_SOURCEPATHS, INPUT_SINGLE_FILE,
-                    INPUT_RECURSIVE, INPUT_TYPES, INPUT_PRINT_CLASSPATH, INPUT_TYPERESISTANT, INPUT_EXCEPTION_ON_MISSING_APP_XML_ENTRY);
+                    INPUT_RECURSIVE, INPUT_TYPES, INPUT_PRINT_CLASSPATH, INPUT_TYPERESISTANT, INPUT_EXCEPTION_ON_MISSING_APP_XML_ENTRY,
+                    INPUT_SERVICEDEFINITION_FQNAME);
 
 
   public static void main(String[] args) {
@@ -180,6 +190,9 @@ public class XMOMCompiler {
         case INPUT_EXCEPTION_ON_MISSING_APP_XML_ENTRY :
           data.setExceptionOnMissingAppXmlEntry(Boolean.parseBoolean(value));
           break;
+        case INPUT_SERVICEDEFINITION_FQNAME :
+          data.setServiceDefinitionFqName(value);
+          break;
         default :
           throw new RuntimeException("Unknown input: '" + key + "'. Available inputs: " + String.join(", ", inputKeys));
       }
@@ -236,16 +249,41 @@ public class XMOMCompiler {
       InMemoryCompilationSet.THROW_ALL_ERRORS = true;
 
       source = createXMLSource(data, tmpClassFolder);
-      Set<GenerationBase> toDeploy = findXmomObjects(data, source, tmpClassFolder);
+      
+      String serviceDefinitionFqName = data.getServiceDefinitionFqName();
+      if (serviceDefinitionFqName != null) {
+        ServiceImplementationTemplate t;
+        try {
+          t = new ServiceImplementationTemplate(serviceDefinitionFqName, source.getRevision(RuntimeContext.valueOf(data.getApplicationNameAndVersion())));
+        } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+          throw new RuntimeException(e);
+        }
+        File jar;
+        try {
+          jar = t.buildServiceDefinitionJarFile(outputLocation, source, false);
+        } catch (Ex_FileAccessException | XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH | XPRC_InvalidPackageNameException
+            | XPRC_InheritedConcurrentDeploymentException | AssumedDeadlockException | XPRC_MDMDeploymentException e) {
+          throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof XPRC_WrappedCompileError) {
+            for (Exception inner : ((XPRC_WrappedCompileError)e.getCause()).getInnerExceptions()) {
+              inner.printStackTrace();
+            }
+          }
+          throw e;
+        }
+        System.out.println("created servicedefinition.jar: " + jar.getAbsolutePath());
+      } else {
+        Set<GenerationBase> toDeploy = findXmomObjects(data, source, tmpClassFolder);
 
-      deploy(toDeploy);
+        deploy(toDeploy);
 
-      if (!data.isRecursive()) {
-        File xmomPath = source.getXMOMPath(RuntimeContext.valueOf(data.getApplicationNameAndVersion()));
-        removeClassFilesFromOtherRevisions(tmpClassFolder, xmomPath);
-      }
-
-      finalizeResult(data.isReturnSingleFile(), outputLocation.getAbsoluteFile(), tmpClassFolder.toFile());
+        if (!data.isRecursive()) {
+          File xmomPath = source.getXMOMPath(RuntimeContext.valueOf(data.getApplicationNameAndVersion()));
+          removeClassFilesFromOtherRevisions(tmpClassFolder, xmomPath);
+        }
+        finalizeResult(data.isReturnSingleFile(), outputLocation.getAbsoluteFile(), tmpClassFolder.toFile());
+     }
 
       System.out.println("Done");
     } finally {
@@ -582,6 +620,7 @@ public class XMOMCompiler {
     private boolean recursive; //should XMOMs from other applications be included?
     private boolean typresistant; //xprc.xfractwfe.different.typeresistant
     private boolean exceptionOnMissingAppXmlEntry;
+    private String serviceDefinitionFqName; //when building servicedefinition.jar, build it for this fqname
 
     private boolean printClasspath;
 
@@ -589,6 +628,16 @@ public class XMOMCompiler {
     public XMOMCompilationData() {
       storableInterfaces = new ArrayList<String>();
       sourcePaths = new ArrayList<String>();
+    }
+
+
+    public String getServiceDefinitionFqName() {
+      return serviceDefinitionFqName;
+    }
+
+
+    public void setServiceDefinitionFqName(String value) {
+      serviceDefinitionFqName = value;
     }
 
 
@@ -740,7 +789,7 @@ public class XMOMCompiler {
         exceptions.add(generator.getFqClassName() + " should be in " + rtc);
       }
       return super.getOrParseXML(generator, fileFromDeploymentLocation);
-    };
+    }
 
 
     public List<String> getExceptions() {

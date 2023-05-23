@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -282,4 +282,46 @@
         <!--delete dir="${target.dir}" failonerror="false" /-->
         <delete dir="${basedir}/classes" />
     </target>
+	
+	
+   <!-- ================================= 
+         target: create-servicedefinition-jar         
+         ================================= -->
+    <target name="create-servicedefinition-jar" description="Create servicedefinition.jar locally">
+	    <xmlproperty file="${basedir}/../../application.xml" collapseAttributes="true" />
+	
+        <property name="java.compile.version" value="Java6" />
+        <property name="output.dir" value="${base.lib.dir}/xyna" />
+        <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
+        <property name="apps.paths" value="${root.dir}" />
+        <property name="recursive" value="true" />
+        <property name="single.file" value="true" />
+        <property name="types" value="DATATYPE,EXCEPTION" />
+        <property name="printclasspath" value="true" />
+
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.XMOMCompiler" fork="true" failonerror="true">
+            <arg value="app:${Application.applicationName}/${Application.versionName}" />
+            <arg value="output:${output.dir}" />
+            <arg value="storableInterfaces:${xprc.xfractwfe.generation.storable.xmom.interfaces}" />
+            <arg line="sourcePaths:${apps.paths}" />
+            <arg value="singleFile:${single.file}" />
+            <arg value="recursive:${recursive}" />
+            <arg value="types:${types}" />
+			<arg value="servicefqname:${mdm.service.path}" />
+            <env key="mdmjarjavaversion" value="${java.compile.version}" />
+			<jvmarg value="-Dexceptions.storage=${exception.xml.dir}/Exceptions.xml" />
+            <classpath>
+                <fileset dir="${common.lib.dir}"> <!-- jars from xyna server -->
+                    <include name="*.jar" />
+                </fileset>
+                <fileset dir="${base.lib.dir}"> <!-- jars specific to the service -->
+                    <include name="*.jar" />
+                </fileset>
+                <fileset dir="${mdm.lib.dir}">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+    </target>
+
 </project>
