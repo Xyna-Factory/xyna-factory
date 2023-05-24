@@ -26,11 +26,11 @@ import java.io.OutputStreamWriter;
 import java.util.Queue;
 
 import org.apache.log4j.Logger;
-import org.apache.sshd.common.session.Session.TimeoutStatus;
-import org.apache.sshd.server.Command;
+import org.apache.sshd.common.session.helpers.TimeoutIndicator.TimeoutStatus;
+import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
-import org.apache.sshd.server.SessionAware;
+import org.apache.sshd.server.session.ServerSessionAware;
 import org.apache.sshd.server.session.ServerSession;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -41,7 +41,7 @@ import xact.ssh.server.SSHSessionStore;
 import xact.ssh.server.SSHSessionStore.SSHConnection;
 import xact.ssh.server.XynaSSHServer;
 
-public class ShellCommand implements Command, SessionAware, SSHConnection {
+public class ShellCommand implements Command, ServerSessionAware, SSHConnection {
   
   private static final Logger logger = CentralFactoryLogging.getLogger(ShellCommand.class);
 

@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.apache.sshd.common.Factory;
-import org.apache.sshd.server.Command;
+import org.apache.sshd.server.command.Command;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.exceptions.XACT_TriggerCouldNotBeStartedException;
