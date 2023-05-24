@@ -72,7 +72,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
   }
  
   public void destroy(ChannelSession cs) {
-    if( session.getTimeoutStatus() == TimeoutStatus.NoTimeout) {
+    if( session.getTimeoutStatus().getStatus() == TimeoutStatus.NoTimeout) {
       if( clientExit ) {
         logger.info("Client requested disconnect on "+connectionParameter.getUniqueId() );
       } else {
