@@ -19,7 +19,7 @@
 
 # OS -> System/Distribution library
 
- 
+
 #  Nur auf unterstuetzten Plattformen installieren
 check_target_platform () {
   export INSTALLATION_HARDWARE=$(${VOLATILE_UNAME} -m)
@@ -33,8 +33,13 @@ check_target_platform () {
         case "${i}" in
           sles) TOKEN_ETC_ISSUE="SUSE Linux Enterprise Server";;
           debian) TOKEN_ETC_ISSUE="Debian GNU/Linux";;
-          oracle) TOKEN_ETC_ISSUE="Oracle Linux Server";;
-          rhel) 
+          oracle)
+            TOKEN_ETC_ISSUE="Oracle Linux Server"
+            if [[ -f "/etc/oracle-release" ]]; then
+              TARGET_FILE="/etc/oracle-release"
+            fi
+            ;;
+          rhel)
             TOKEN_ETC_ISSUE="Red Hat Enterprise Linux Server"
             if [[ -f "/etc/redhat-release" ]]; then
               TARGET_FILE="/etc/redhat-release"
@@ -52,26 +57,31 @@ check_target_platform () {
               fi
             fi
             ;;
-          centos) 
+          centos)
             TOKEN_ETC_ISSUE="CentOS Linux"
             if [[ -f "/etc/redhat-release" ]]; then
               TARGET_FILE="/etc/redhat-release"
             fi
+            if [[ -f "/etc/centos-release" ]]; then
+              TARGET_FILE="/etc/centos-release"
+            fi
+            ;;
+          *)
             ;;
         esac
         if [[ $(${VOLATILE_GREP} -ci "${TOKEN_ETC_ISSUE}" "${TARGET_FILE}") -gt 0 ]]; then
           export INSTALLATION_PLATFORM="${i}"
           INSTALLATION_PLATFORM_VERSION=$(check_target_version "${i}" ${TARGET_FILE})
           set_systemd ${INSTALLATION_PLATFORM} ${INSTALLATION_PLATFORM_VERSION}
-          if [[ $? = 0 ]] ; then
-            export INSTALLATION_PLATFORM_VERSION=${INSTALLATION_PLATFORM_VERSION}
-            return;
-          else
-            f_exit_with_message ${EX_UNSUPPORTED} "check_target_platform: This version of ${TOKEN_ETC_ISSUE} is not supported. Abort!"
-          fi
+          export INSTALLATION_PLATFORM_VERSION=${INSTALLATION_PLATFORM_VERSION}
+          return;
         fi
       done
-      f_exit_with_message ${EX_UNSUPPORTED} "check_target_platform: This Linux distribution is not supported. Abort!";;
+
+      # Fallback: Debian 11
+      INSTALLATION_PLATFORM="debian"
+      INSTALLATION_PLATFORM_VERSION="11"
+      ;;
     *)  f_exit_with_message ${EX_UNSUPPORTED} "check_target_platform: Platform '$(${VOLATILE_UNAME})' is not supported. Abort!";;
   esac
 }
@@ -80,26 +90,21 @@ set_systemd(){
   local PLATFORM="$1";
   local PLATFORM_VERSION="$2"
   case "${PLATFORM}" in
-    rhel|oracle|centos) 
+    rhel|oracle|centos)
       case ${INSTALLATION_PLATFORM_VERSION} in
         5.7|5.9|6.*)
           SYSTEMD_ENV="false"
           ;;
-        7.*|8.*)
+        *)
           SYSTEMD_ENV="true"
           ;;
-        *)
       esac;
       ;;
-    debian|sles) 
+    debian|sles)
       SYSTEMD_ENV="false"
       ;;
     ubuntu)
-      case ${INSTALLATION_PLATFORM_VERSION} in
-        16.*|18.*|20.*)
-          SYSTEMD_ENV="true"
-          ;;
-      esac;
+      SYSTEMD_ENV="true"
       ;;
   esac
 }
@@ -108,11 +113,7 @@ check_target_version () {
   local PLATFORM="$1";
   local TARGET_FILE=$2;
   case "${PLATFORM}" in
-    sles) 
-      if [[ $(${VOLATILE_GREP} -ci "SUSE Linux Enterprise Server 11 ("   "${TARGET_FILE}") -eq 1 ]]; then
-        echo "11";
-        return 0;
-      fi
+    sles)
       if [[ $(${VOLATILE_GREP} -ci "SUSE Linux Enterprise Server 11 SP1" "${TARGET_FILE}") -eq 1 ]]; then
         echo "11.1";
         return 0;
@@ -121,40 +122,20 @@ check_target_version () {
         echo "11.2";
         return 0;
       fi
-      return 1;
+      echo "11"
+      return 0
       ;;
-    rhel) 
+    rhel)
       local INSTALLATION_PLATFORM_VERSION=$(${VOLATILE_CAT} ${TARGET_FILE} | ${VOLATILE_AWK} '$1=="Red" { print $7 }');
-      case ${INSTALLATION_PLATFORM_VERSION} in
-        5.7|5.9)
-          echo ${INSTALLATION_PLATFORM_VERSION}
-          ;;
-        6.*)
-          echo ${INSTALLATION_PLATFORM_VERSION} 
-          ;;
-        7.*|8.*)
-          echo ${INSTALLATION_PLATFORM_VERSION}
-          ;;
-        *)
-          return 1;
-      esac;
+      echo ${INSTALLATION_PLATFORM_VERSION}
       ;;
-    debian) 
+    debian)
       cat /etc/debian_version
       return 0
       ;;
     oracle)
       local INSTALLATION_PLATFORM_VERSION=$(${VOLATILE_CAT} ${TARGET_FILE} | ${VOLATILE_AWK} '$1=="Oracle" { print $5 }');
-      case ${INSTALLATION_PLATFORM_VERSION} in
-        6.*)
-          echo ${INSTALLATION_PLATFORM_VERSION} 
-          ;;
-        7.*)
-          echo ${INSTALLATION_PLATFORM_VERSION}
-          ;;
-        *)
-          return 1;
-      esac
+      echo ${INSTALLATION_PLATFORM_VERSION}
       ;;
     ubuntu)
       local INSTALLATION_PLATFORM_VERSION
@@ -163,26 +144,12 @@ check_target_version () {
       else
         INSTALLATION_PLATFORM_VERSION=$(${VOLATILE_AWK} '$1=="Ubuntu" { print $2 }' ${TARGET_FILE});
       fi
-      case ${INSTALLATION_PLATFORM_VERSION} in
-        16.*|18.*|20.*)
-          echo ${INSTALLATION_PLATFORM_VERSION} 
-          ;;
-        *)
-          return 1;
-      esac
+      echo ${INSTALLATION_PLATFORM_VERSION}
       ;;
-    centos) 
+    centos)
       local INSTALLATION_PLATFORM_VERSION=$(${VOLATILE_CAT} ${TARGET_FILE} | ${VOLATILE_AWK} '$1=="CentOS" { print $4 }');
-      case ${INSTALLATION_PLATFORM_VERSION} in
-        7.*|8.*)
-          echo ${INSTALLATION_PLATFORM_VERSION}
-          ;;
-        *)
-          return 1;
-      esac;
+      echo ${INSTALLATION_PLATFORM_VERSION}
       ;;
-    *)
-      return 1;
   esac
 }
 
