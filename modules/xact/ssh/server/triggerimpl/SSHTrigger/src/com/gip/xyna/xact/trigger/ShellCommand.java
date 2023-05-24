@@ -27,6 +27,7 @@ import java.util.Queue;
 
 import org.apache.log4j.Logger;
 import org.apache.sshd.common.session.helpers.TimeoutIndicator.TimeoutStatus;
+import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
@@ -70,7 +71,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
     this.startParameter = startParameter;
   }
  
-  public void destroy() {
+  public void destroy(ChannelSession cs) {
     if( session.getTimeoutStatus() == TimeoutStatus.NoTimeout) {
       if( clientExit ) {
         logger.info("Client requested disconnect on "+connectionParameter.getUniqueId() );
@@ -106,7 +107,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
     return connectionParameter;
   }
   
-  public void start(Environment environment) throws IOException {
+  public void start(ChannelSession cs, Environment environment) throws IOException {
     this.environment = environment;
     
     //TODO Encoding aus environment lesen
