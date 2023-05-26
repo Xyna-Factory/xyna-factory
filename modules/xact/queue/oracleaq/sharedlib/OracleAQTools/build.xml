@@ -30,7 +30,7 @@
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
     <target name="prepareLibs" description="Prepare libs">
-        <copy file="${basedir}/lib/xyna/ojdbc5-11.2.0.4.jar" todir="${unfree.lib.dir}"/> 
+        <copy file="${basedir}/lib/xyna/ojdbc10*.jar" todir="${unfree.lib.dir}"/> 
     </target>
 
 </project>
