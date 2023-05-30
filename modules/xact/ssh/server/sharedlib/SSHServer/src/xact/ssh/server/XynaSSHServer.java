@@ -17,9 +17,8 @@
  */
 package xact.ssh.server;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ public class XynaSSHServer {
     boolean success = false;
     
     try {
-      SimpleGeneratorHostKeyProvider hkp =  new SimpleGeneratorHostKeyProvider(FileSystems.getDefault().getPath(sp.getHostKeyFilename()));
+      SimpleGeneratorHostKeyProvider hkp =  new SimpleGeneratorHostKeyProvider(Path.of(sp.getHostKeyFilename()));
       hkp.setAlgorithm(sp.getAlgorithm()); 
       
       sshd.setPort(sp.getPort());
@@ -204,7 +203,7 @@ public class XynaSSHServer {
     if (logger.isInfoEnabled()) {
       logger.info("address " + host + " unknown in network configuration management.");
     }   
-    //else: abw‰rtskompatibel:
+    //else: abw√§rtskompatibel:
     boolean ipv6 = false;
     boolean useLocalAddresses = false;
     return NetworkInterfaceUtils.getFirstIpAddressByInterfaceName(host, ipv6, useLocalAddresses);
