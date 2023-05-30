@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM.TemplateGenerationResult;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLSourceAbstraction;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectCodeGenerator;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.InMemoryCompilationSet;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.JavaSourceFromString;
@@ -66,20 +68,17 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
   public static final String SERVICE_DEFINITION_JAVADOC_JAR = Support4Eclipse.PROJECT_LIB_XYNA_FOLDER + File.separator + Support4Eclipse.FILENAME_SERVICEDEFINITION_JAVADOC_JAR;
 
   private final String fqXmlName;
-  private final String mdmClassesPath;
 
   
   public ServiceImplementationTemplate(String fqXmlName, String mdmClassesPath, Long revision) {
     super(revision);
     this.fqXmlName = fqXmlName;
-    this.mdmClassesPath = mdmClassesPath;
   }
 
   
   public ServiceImplementationTemplate(String fqXmlName, Long revision) {
     super(revision);
     this.fqXmlName = fqXmlName;
-    mdmClassesPath = new File(RevisionManagement.getPathForRevision(PathType.XMOMCLASSES, revision)).getPath();
   }
 
 
@@ -160,7 +159,7 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
     // create serviceimpl template string
     TemplateGenerationResult templates = d.generateServiceImplTemplate();
     
-    File serviceDefinitionLib = generateServiceDefinitionLib(d, templates, projectLocationDirectory);
+    File serviceDefinitionLib = generateServiceDefinitionLib(d, templates, projectLocationDirectory, true);
     File target = new File(projectLocationDirectory, Support4Eclipse.PROJECT_LIB_XYNA_FOLDER + File.separator);
     try {
       target.mkdirs();
@@ -207,7 +206,7 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
   }
 
 
-  private File generateServiceDefinitionLib(DOM dom, final TemplateGenerationResult result, File targetDir)
+  private File generateServiceDefinitionLib(DOM dom, final TemplateGenerationResult result, File targetDir, boolean generateJavaDoc)
       throws Ex_FileAccessException {
       // compile
       HashSet<String> jars = new HashSet<String>();
@@ -285,19 +284,21 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
         FileUtils.deleteDirectoryRecursively(tempClassFolder);
       }
       
-      //javadoc
-      Set<String> files = new HashSet<String>();
-      for (Pair<String, String> filenameFilecontentPair : result.getFilesForGeneratedAdditionalLib()) {
-        String filename = GenerationBase.getRelativeJavaFileLocation(filenameFilecontentPair.getFirst(), false, revision);
-        files.add(filename);
+      if (generateJavaDoc) {
+        //javadoc
+        Set<String> files = new HashSet<String>();
+        for (Pair<String, String> filenameFilecontentPair : result.getFilesForGeneratedAdditionalLib()) {
+          String filename = GenerationBase.getRelativeJavaFileLocation(filenameFilecontentPair.getFirst(), false, revision);
+          files.add(filename);
+        }
+        File javadocDir = new File(targetDir, "javadoc");
+        String sourcePath = GenerationBase.getRelativeJavaFileLocation("a.B", false, revision);
+        sourcePath = sourcePath.substring(0, sourcePath.length() - "a.B.java".length());
+        GenerationBase.createJavaDoc(files.toArray(new String[files.size()]), javadocDir.getAbsolutePath(), sourcePath, classPath);
+        Manifest manifest = new Manifest();
+        Support4Eclipse.createJarFile(manifest, new File(targetDir, SERVICE_DEFINITION_JAVADOC_JAR), javadocDir, true);
+        FileUtils.deleteDirectoryRecursively(javadocDir);
       }
-      File javadocDir = new File(targetDir, "javadoc");
-      String sourcePath =  GenerationBase.getRelativeJavaFileLocation("a.B", false, revision);
-      sourcePath = sourcePath.substring(0, sourcePath.length() - "a.B.java".length());
-      GenerationBase.createJavaDoc(files.toArray(new String[files.size()]), javadocDir.getAbsolutePath(), sourcePath, classPath);
-      Manifest manifest = new Manifest();
-      Support4Eclipse.createJarFile(manifest, new File(targetDir, SERVICE_DEFINITION_JAVADOC_JAR), javadocDir, true);
-      FileUtils.deleteDirectoryRecursively(javadocDir);
       
       return serviceDefinitionLib;
   }
@@ -309,7 +310,17 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
     DOM d = DOM.getInstance(fqXmlName, revision);
     d.parseGeneration(false, true);
     TemplateGenerationResult result = d.generateServiceImplTemplate();
-    return generateServiceDefinitionLib(d, result, targetDir);
+    return generateServiceDefinitionLib(d, result, targetDir, true);
+  }
+
+
+  public File buildServiceDefinitionJarFile(File targetDir, XMLSourceAbstraction source, boolean generateJavaDoc)
+      throws Ex_FileAccessException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException,
+      XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException {
+    DOM d = DOM.getOrCreateInstance(fqXmlName, new GenerationBaseCache(), revision, source);
+    d.parseGeneration(false, true);
+    TemplateGenerationResult result = d.generateServiceImplTemplate();
+    return generateServiceDefinitionLib(d, result, targetDir, generateJavaDoc);
   }
   
 
