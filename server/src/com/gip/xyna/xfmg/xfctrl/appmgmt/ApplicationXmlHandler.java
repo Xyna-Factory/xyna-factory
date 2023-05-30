@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.gip.xyna.FileUtils;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.ApplicationInfoEntry;
@@ -344,12 +345,14 @@ public class ApplicationXmlHandler extends DefaultHandler {
       }
       applicationXmlEntry.comment = atts.getValue(ATTRIBUTE_COMMENT);
       
-      try {
-        applicationXmlEntry.setFactoryVersion(atts.getValue(ATTRIBUTE_FACTORYVERSION));
-      } catch (XPRC_VERSION_DETECTION_PROBLEM e) {
-        throw new SAXException(e);
-      } catch (PersistenceLayerException e) {
-        throw new SAXException(e);
+      if (XynaFactory.isFactoryServer()) {
+        try {
+          applicationXmlEntry.setFactoryVersion(atts.getValue(ATTRIBUTE_FACTORYVERSION));
+        } catch (XPRC_VERSION_DETECTION_PROBLEM e) {
+          throw new SAXException(e);
+        } catch (PersistenceLayerException e) {
+          throw new SAXException(e);
+        }
       }
     }
 
