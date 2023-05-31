@@ -17,8 +17,8 @@
  */
 package xact.ssh.server;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -28,15 +28,18 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.sshd.common.Factory;
-import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
-import org.apache.sshd.server.Command;
+import org.apache.sshd.core.CoreModuleProperties;
+import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.UserAuth;
+import org.apache.sshd.server.auth.UserAuthFactory;
 import org.apache.sshd.server.auth.UserAuthNoneFactory;
 import org.apache.sshd.server.auth.password.UserAuthPasswordFactory;
 import org.apache.sshd.server.auth.pubkey.UserAuthPublicKeyFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
+import org.apache.sshd.server.shell.ShellFactory;
+import org.apache.sshd.server.subsystem.SubsystemFactory;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -77,7 +80,7 @@ public class XynaSSHServer {
     boolean success = false;
     
     try {
-      SimpleGeneratorHostKeyProvider hkp =  new SimpleGeneratorHostKeyProvider(new File(sp.getHostKeyFilename()) );
+      SimpleGeneratorHostKeyProvider hkp =  new SimpleGeneratorHostKeyProvider(Path.of(sp.getHostKeyFilename()));
       hkp.setAlgorithm(sp.getAlgorithm()); 
       
       sshd.setPort(sp.getPort());
@@ -86,7 +89,7 @@ public class XynaSSHServer {
       
       sshd.setNioWorkers(2); //FIXME
   
-      List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<NamedFactory<UserAuth>>();
+      List<UserAuthFactory> userAuthFactories = new ArrayList<>();
       boolean alwaysAuthenticated = false;
       switch( sp.getAuth() ) {
       case both:
@@ -129,7 +132,7 @@ public class XynaSSHServer {
       sshd.setPublickeyAuthenticator(auth);
       sshd.setPasswordAuthenticator(auth);
       
-      sshd.getProperties().put(SshServer.IDLE_TIMEOUT, sp.getIdleTimeout().getDurationInMillis() );
+      sshd.getProperties().put(CoreModuleProperties.IDLE_TIMEOUT.getName(), sp.getIdleTimeout().getDurationInMillis());
       
       
       success = true;
@@ -200,7 +203,7 @@ public class XynaSSHServer {
     if (logger.isInfoEnabled()) {
       logger.info("address " + host + " unknown in network configuration management.");
     }   
-    //else: abw‰rtskompatibel:
+    //else: abw√§rtskompatibel:
     boolean ipv6 = false;
     boolean useLocalAddresses = false;
     return NetworkInterfaceUtils.getFirstIpAddressByInterfaceName(host, ipv6, useLocalAddresses);
@@ -218,11 +221,11 @@ public class XynaSSHServer {
   }
 
 
-  public void setSubsystemFactories(List<NamedFactory<Command>> subsystemFactories) {
+  public void setSubsystemFactories(List<? extends SubsystemFactory> subsystemFactories) {
     sshd.setSubsystemFactories(subsystemFactories);
   }
   
-  public void setShellFactory(Factory<Command> shellFactory) {
+  public void setShellFactory(ShellFactory shellFactory) {
     sshd.setShellFactory(shellFactory);
   }
   
@@ -232,7 +235,11 @@ public class XynaSSHServer {
 
   public HostKey getHostKey() {
     if( hostKey == null ) {
-      hostKey = new HostKey(sshd.getKeyPairProvider().loadKey(KeyPairProvider.SSH_RSA).getPublic());
+      try {
+        hostKey = new HostKey(sshd.getKeyPairProvider().loadKey(null, KeyPairProvider.SSH_RSA).getPublic());
+      } catch (Exception e) {
+        logger.warn("Couldn't get SSH-HostKey:" + e.toString());
+      }
     }
     return hostKey;
   }

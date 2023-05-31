@@ -23,8 +23,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.apache.sshd.common.Factory;
-import org.apache.sshd.server.Command;
+import org.apache.sshd.server.shell.ShellFactory;
+import org.apache.sshd.server.channel.ChannelSession;
+import org.apache.sshd.server.command.Command;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.exceptions.XACT_TriggerCouldNotBeStartedException;
@@ -33,7 +34,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 
 import xact.ssh.server.XynaSSHServer;
 
-public class SSHTrigger extends EventListener<SSHTriggerConnection, SSHStartParameter> implements Factory<Command> {
+public class SSHTrigger extends EventListener<SSHTriggerConnection, SSHStartParameter> implements ShellFactory {
 
   private static Logger logger = CentralFactoryLogging.getLogger(SSHTrigger.class);
 
@@ -73,7 +74,7 @@ public class SSHTrigger extends EventListener<SSHTriggerConnection, SSHStartPara
     }
   }
 
-  public Command create() {
+  public Command createShell(ChannelSession cs) {
     return new ShellCommand(sshd, requests, startParameter);
   }
   
