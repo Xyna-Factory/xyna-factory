@@ -59,7 +59,7 @@
     </dependency>
     <dependency>
       <groupId>com.oracle</groupId>
-      <artifactId>ojdbc7</artifactId>
+      <artifactId>ojdbc10</artifactId>
     </dependency>
 
   </dependencies>
