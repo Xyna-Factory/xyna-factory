@@ -252,8 +252,6 @@ build_clusterproviders() {
   #oracle rac cluster provider
   cd $SCRIPT_DIR/../clusterproviders/OracleRACClusterProvider
   rm -f /test/com/gip/xyna/xfmg/xclusteringservices/clusterprovider/OracleRACClusterProviderTest.java
-  sed -i 's/ojdbc7/ojdbc10/' pom.xml
-  sed -i 's/>com.oracle</>com.oracle.database.jdbc</' pom.xml
   ant -Doracle.home=/tmp
   
   #xsor cluster provider
