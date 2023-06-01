@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -290,7 +290,7 @@ public class ApplicationXmlEntry {
   }
   
   private static final XynaPropertyString applicationXMLHeaderComment = new XynaPropertyString("xfmg.xfctrl.appmgmt.applicationxml.headercomment", "\n * - - - - - - - - - - - - - - - - - - - - - - - - - -\n" + 
-      " * Copyright 2023 GIP SmartMercial GmbH, Germany\n" + 
+      " * Copyright 2023 Xyna GmbH, Germany\n" + 
       " *\n" +
       " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
       " * you may not use this file except in compliance with the License.\n" +
