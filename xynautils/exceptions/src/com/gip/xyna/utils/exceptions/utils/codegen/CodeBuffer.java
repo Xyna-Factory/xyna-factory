@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -257,7 +257,7 @@ public class CodeBuffer {
   public void setGIPSourceHeader(String departmentName) {
     header =   "/*\n"
              + " * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n"
-             + " * Copyright 2022 Xyna GmbH, Germany\n"
+             + " * Copyright 2022 GIP SmartMercial GmbH, Germany\n"
              + " *\n"
              + " * Licensed under the Apache License, Version 2.0 (the \"License\");\n"
              + " * you may not use this file except in compliance with the License.\n"
