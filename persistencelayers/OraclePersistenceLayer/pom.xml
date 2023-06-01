@@ -55,5 +55,10 @@
             <groupId>com.gip.xyna</groupId>
             <artifactId>DefaultConnectionPoolTypes</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc10</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
