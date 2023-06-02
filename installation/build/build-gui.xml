@@ -18,7 +18,7 @@
 -->
 <project basedir="." default="build" name="Modeller">
 
-  <property name="repository-url" value="https://github.com/GIP-SmartMercial" />
+  <property name="repository-url" value="https://github.com/Xyna-Factory" />
 
   <property name="modeller.git" value="xyna-modeller.git" />
   <property name="modeller.name" value="xyna-modeller" />
