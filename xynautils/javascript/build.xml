@@ -1,6 +1,6 @@
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@
     <jar jarfile="${build}/JavaScriptCheckStyle.jar" basedir="${classes}">
         <manifest>
           <attribute name="Implementation-Title" value="JavaScript check style task for Ant"/>
-          <attribute name="Implementation-Vendor" value="GIP SmartMercial GmbH"/>
+          <attribute name="Implementation-Vendor" value="Xyna GmbH"/>
           <attribute name="Implementation-Version" value="build ${buildtime}"/> 
           <attribute name="Built-By" value="${user.name}"/>
         </manifest>
