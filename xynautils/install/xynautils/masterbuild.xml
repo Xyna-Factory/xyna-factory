@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
   <property name="svn.tag" value="${project.name}-${release.number}" />
   <property name="svn.project" value="xyna/utils/${utils.name}" />
 
-  <property name="vendor.name" value="GIP SmartMercial GmbH" />
+  <property name="vendor.name" value="Xyna GmbH" />
 
   <import file="${ant.file.xynautils_masterbuild}/../../build/ant-xyna.xml" />
 
