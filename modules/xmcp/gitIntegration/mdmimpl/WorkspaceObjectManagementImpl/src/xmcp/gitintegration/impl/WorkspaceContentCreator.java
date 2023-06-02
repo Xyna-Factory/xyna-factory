@@ -37,7 +37,7 @@ import xmcp.gitintegration.impl.xml.WorkspaceContentXmlConverter;
 
 
 public class WorkspaceContentCreator {
-
+  
   public static final String WORKSPACE_XML_FILENAME = "workspace.xml";
   public static final String WORKSPACE_XML_SPLITNAME = "config";
 
@@ -46,9 +46,9 @@ public class WorkspaceContentCreator {
     Long revision = getRevision(workspaceName);
     String path = RevisionManagement.getPathForRevision(PathType.ROOT, revision);
     File file = new File(path, WORKSPACE_XML_FILENAME);
-    if (!file.exists()) {
+    if(!file.exists()) {
       file = new File(file.getParentFile(), WORKSPACE_XML_SPLITNAME);
-      if (!file.exists()) {
+      if(!file.exists()) {
         throw new RuntimeException("workspace.xml does not exist for '" + workspaceName + "' at " + file.getParent());
       }
     }
@@ -81,7 +81,7 @@ public class WorkspaceContentCreator {
 
   /**
    * File is either a workspace.xml or a configuration-folder containing
-   * files named after workspaceContentItem subclasses
+   * files named after workspaceContentItem subclasses  
    */
   public WorkspaceContent createWorkspaceContentFromFile(File file) {
     WorkspaceContent result = null;
@@ -99,6 +99,11 @@ public class WorkspaceContentCreator {
     WorkspaceContent result = new WorkspaceContent();
     for (File f : file.listFiles()) {
       String input = Files.readString(f.toPath());
+      if(f.getName().equals(WORKSPACE_XML_FILENAME)) {
+        WorkspaceContent c = converter.convertFromXml(input);
+        result.setWorkspaceName(c.getWorkspaceName());
+        continue;
+      }
       converter.addToWorkspaceContent(input, result);
     }
     return result;
