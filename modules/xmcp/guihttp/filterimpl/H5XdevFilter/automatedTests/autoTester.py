@@ -1,4 +1,20 @@
 # -*- coding: utf-8 -*-
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Copyright 2023 Xyna GmbH, Germany
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import json
 import subprocess
 import re
@@ -10,7 +26,10 @@ import urllib
 import string
 import random
 import xml.etree.ElementTree as ET
-import StringIO
+try:
+    import StringIO
+except ImportError:
+    from io import StringIO
 import time
 import threading
 
@@ -44,19 +63,19 @@ keyOperationMergeList="mergeLists"
 
 class SuccessException(Exception):
   pass
-  
+
 class FailedException(Exception):
   pass
-  
+
 class OperationException(Exception):
   innerException = None
-  
+
 class MaxRetriesExccededException(Exception):
   pass
-  
+
 class NoValidFactoryConfigException(Exception):
   pass
-  
+
 class Factory:
   ip = ""
   port = -1
@@ -67,15 +86,15 @@ class Factory:
   tags = {}
 
 class RequestTester:
-    
+
   port = "8080"
   seedPrefix = ""
   debug = False
-  
+
   factoryConstraintValidatorFunctions = {}
   testHasConstraints = False
 
-  
+
   def readConfig_json(self, cfgFile):
     with open(cfgFile) as configAsJson:
       cfg = json.loads(configAsJson.read())
@@ -90,11 +109,11 @@ class RequestTester:
     if "factories" not in cfg:
       print("factories required.")
       sys.exit(3)
-      
+
     if len(cfg["factories"]) == 0:
       print("at least one factory required")
       sys.exit(3)
-     
+
     self.factories = []
     for factory in cfg["factories"]:
       f = Factory()
@@ -106,14 +125,14 @@ class RequestTester:
       f.cookieFile = self.cookieFile = pathOfScript + "/" + factory["cookieFile"]
       f.tags = factory["tags"] if "tags" in factory else {}
       self.factories.append(f)
-               
+
 
   def loadFunctionFile(self, path, file):
     if self.debug:
-      print "loading function file: " + path + file
+      print("loading function file: " + path + file)
     with open(path + file, "r") as jsonFile:
       completeJson = json.load(jsonFile)
-      
+
     for entry in completeJson:
       if entry["type"] == "additionalFunctionFile":
         newPath = entry["value"][0: entry["value"].rfind('/')+1]
@@ -134,9 +153,9 @@ class RequestTester:
     self.functions = {}
     self.loadFunctionFile(path, functionFile)
     if self.debug:
-        print "functions loaded"
+        print("functions loaded")
     sys.stdout.flush()
-    
+
     self.successes = 0
     self.fails = 0
     self.failedList = []
@@ -158,13 +177,13 @@ class RequestTester:
     result["sameIP"] = self.validateConstraintSameIP
     result["tag"] = self.validateConstraintTag
 
-    return result    
+    return result
 
 
   def checkFactoryIndices(self, candidateMap, constraint):
     if "factoryIndices" not in constraint:
       raise Exception("invalid sameIP constraint. Missing factoryIndices. " + str(constraint))
-    
+
     factoryIndices = constraint["factoryIndices"]
     factoryIndices = self.translateFactoryIndices(factoryIndices, len(candidateMap))
 
@@ -185,7 +204,7 @@ class RequestTester:
     expectedValue = constraint["value"] if "value" in constraint else None
     factoryIndexInConfig = candidateMap[factoryIndex]
     factory = self.factories[factoryIndexInConfig]
-    
+
     if isinstance(factory.tags, dict):
       if expectedTag not in factory.tags:
         return False
@@ -195,22 +214,22 @@ class RequestTester:
         return factory.tags[expectedTag] == expectedValue
     else:
       return False
-    
+
 
   def validateConstraintSameIP(self, candidateMap, constraint):
     self.checkFactoryIndices(candidateMap, constraint)
-    
+
     factoryIndices = constraint["factoryIndices"]
     factoryIndices = self.translateFactoryIndices(factoryIndices, len(candidateMap))
     factoryIndexInConfig = candidateMap[0]
     expectedIP = self.factories[factoryIndexInConfig].ip
-      
+
     for factoryIndex in factoryIndices:
       factoryIndexInConfig = candidateMap[factoryIndex]
       ip = self.factories[factoryIndexInConfig].ip
       if ip != expectedIP:
         return False
-    return True 
+    return True
 
 
   #factoryIndices are either a list of numbers, or "all"
@@ -225,12 +244,12 @@ class RequestTester:
 
   def validateConstraintDifferentIP(self, candidateMap, constraint):
     self.checkFactoryIndices(candidateMap, constraint)
-    
+
     seenIPs = []
     factoryIndices = constraint["factoryIndices"]
     factoryIndices = self.translateFactoryIndices(factoryIndices, len(candidateMap))
-    
-    
+
+
     for factoryIndex in factoryIndices:
       factoryIndexInConfig = candidateMap[factoryIndex]
       ip = self.factories[factoryIndexInConfig].ip
@@ -250,11 +269,11 @@ class RequestTester:
 
   def createSubprocessArguments(self, requestType, rdyUrl, rdyPayload, factoryIndexTranslated, writeCookies):
     result = ['curl', '-k', '-X', requestType, rdyUrl]
-    
+
     if requestType == "POST" or requestType == "PUT":
       result.append('-d')
       result.append(rdyPayload)
-      
+
     self.addCookiesToArguments(result, factoryIndexTranslated, writeCookies)
 
     return result
@@ -262,10 +281,10 @@ class RequestTester:
 
   def printCookies(self, factoryIndexTranslated):
     cookieFile = self.factories[factoryIndexTranslated].cookieFile
-    print "  cookie file: " + str(cookieFile)
+    print("  cookie file: " + str(cookieFile))
     with open(cookieFile, "r") as cookieFi:
       for line in cookieFi:
-        print "  >> " + line
+        print("  >> " + line)
 
 
   #factory index is index as defined by test. Not translated using self.factoryIndexMap!
@@ -275,27 +294,28 @@ class RequestTester:
     self.payload = payload
     rdyUrl = self.formatUrl(factoryIndexTranslated)
     arguments = self.createSubprocessArguments(requestType, rdyUrl, self.payload, factoryIndexTranslated, writeCookies)
-    
+
     if self.debug:
-        print "making request:"
-        print "  url: " + rdyUrl
-        print "  payload: " + self.payload
-    
-        print "  executing call. requestType: " + requestType
-        print "  executing call. Arguments: " + str(arguments)
+        print("making request:")
+        print("  url: " + rdyUrl)
+        print("  payload: " + self.payload)
+
+        print("  executing call. requestType: " + requestType)
+        print("  executing call. Arguments: " + str(arguments))
         #self.printCookies(factoryIndexTranslated)
-        print "\n"
-    
+        print("\n")
+
     p = subprocess.Popen(arguments, stdout = subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     (result, error) = p.communicate()
-    
-    if self.debug:
-        print "result: " + str(result)
-        print "error:" + str(error)
-    
-    return result
 
-    
+    if self.debug:
+        print("result: " + str(result))
+        print("error:" + str(error))
+
+    unicodeResult = str(result, "UTF-8")
+    return unicodeResult
+
+
   def addCookiesToArguments(self, arguments, factoryIndexTranslated, writeCookies):
     cookieFile = self.factories[factoryIndexTranslated].cookieFile
     if writeCookies:
@@ -303,27 +323,27 @@ class RequestTester:
       arguments.append(cookieFile)
     arguments.append('--cookie')
     arguments.append(cookieFile)
-    
+
   # expects factoryIndex as defined by test. Not translated using self.factoryIndexMap
   def createUploadArguments(self, filepath, factoryIndex):
     factoryIndexTranslated = self.factoryIndexMap[factoryIndex]
     self.urlExtension = "/upload"
     rdyUrl = self.formatUrl(factoryIndexTranslated)
     result = ['curl', "-F", "file=@" + filepath, rdyUrl]
-      
+
     self.addCookiesToArguments(result, factoryIndexTranslated, False)
 
-    return result  
+    return result
 
-    
+
   def executeUpload(self, filePath, factoryIndex):
     arguments = self.createUploadArguments(filePath, factoryIndex)
     p = subprocess.Popen(arguments, stdout = subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     (result, error) = p.communicate()
-    
+
     if self.debug:
-      print ("upload:\n" + str(error))
-    
+      print("upload:\n" + str(error))
+
     return result
 
 
@@ -335,13 +355,13 @@ class RequestTester:
     result = value
     regex = re.compile('(!.*?[^!]!)', re.IGNORECASE)
     returnJson = False
-    if not isinstance(result, basestring):
+    if not isinstance(result, str):
       returnJson = True
       result = json.dumps(result)
-    
+
     usedParameters = re.findall(regex, result) #value # find all used parameters in value
     #print "used parameters: " + str(usedParameters)
-   
+
     for upara in usedParameters:
       if upara not in parameters:
         if self.debug:
@@ -349,16 +369,16 @@ class RequestTester:
         parameterValue = upara
       else:
         parameterValue = parameters[upara]
-      if not isinstance(parameterValue, basestring):
+      if not isinstance(parameterValue, str):
         parameterValue = json.dumps(parameterValue)
         includeQuotes = '"' + upara + '"'
         result = result.replace(includeQuotes, parameterValue)
       #print "replacing '" + upara + "' with '" + parameters[upara] + "'"
-      result = result.replace(upara, parameterValue) #replace parameter with value 
+      result = result.replace(upara, parameterValue) #replace parameter with value
 
     if returnJson:
       result = json.JSONDecoder().decode(result)
-    
+
     return result
 
 
@@ -366,8 +386,8 @@ class RequestTester:
     result = "Error during operation: '"
     result = result + json.dumps(operationJson, indent=2) + "'"
     return result
-    
-    
+
+
   def determineListIndex(self, pathStep, parameters, subresponse):
     listKeyName = pathStep
     if "[" in listKeyName:
@@ -383,22 +403,22 @@ class RequestTester:
         raise err
       raise Exception("could not determine ListIndexDescription. PathStep: " + str(pathStep))
     indexDescription = indexDescription[1:len(indexDescription)-1]
-    
+
     #index is 'last' -> return last Index of list
     if indexDescription == 'last':
       return len(subresponse[listKeyName])-1
-    
+
     #index was directly in the path -> $list[0]
     try:
       result = int(indexDescription)
       return result
     except ValueError:
       pass
-    
+
     #index is a parameter we read before -> $list[!index!]
     if indexDescription[0] == '!' and indexDescription[len(indexDescription)-1] == '!' and indexDescription in parameters:
       return int(self.getParameter(parameters, indexDescription))
-      
+
     #we have something a little more complex
     indexDescription = self.splitIndexDescription(indexDescription)
     for candidate in subresponse[listKeyName]:
@@ -417,9 +437,9 @@ class RequestTester:
       data = part.split("=")
       tuple = (str(data[0]), str(data[1])) # TODO: trim?
       result.append(tuple)
-    return result  
+    return result
 
- 
+
   #indexDescription is a list of tuples (key, value)
   def complexListIndexMatches(self, indexDescription, candidate):
     for [key, value] in indexDescription:
@@ -428,8 +448,8 @@ class RequestTester:
       if str(candidate[key]) != str(value):
         return False
     return True
- 
- 
+
+
   #response is json, path is '/' separated path to an item in it
   #path may contain [index] if we want to grap value of index in list
   #returns the item identified by path.
@@ -437,9 +457,9 @@ class RequestTester:
   def readValueFromJson(self, value, path, parameters):
     pathSteps = path.split('/')
     obj = ""
-    
+
     #convert to json, if value is string
-    if isinstance(value, basestring):
+    if isinstance(value, str):
      try:
        obj = json.JSONDecoder().decode(value)
      except ValueError:
@@ -451,7 +471,7 @@ class RequestTester:
          raise Exception("could not decode response: '" + value + "'")
     else:
       obj = value
-        
+
     current = obj;
     pathSoFar = ""
     for pathStep in pathSteps:
@@ -466,17 +486,17 @@ class RequestTester:
         completePathStep = pathStep
         index = self.determineListIndex(pathStep, parameters, obj)
         pathStep = pathStep[0:pathStep.index("[")]
-        
+
         if len(pathStep) > 0:
           if pathStep not in obj:
             raise Exception("unexpected json format: " + pathStep + " not found in: " + str(obj))
           obj = obj[pathStep]
-        
+
         try:
           if isinstance(obj, dict) and index not in obj: #no IndexError if we try a number and object is a dict.
             keys = list(obj.keys())
             raise Exception("Index Error. Could not read from Json: index: '" + str(index) + "'. completePathStep:'" + str(completePathStep)+"'. Object is dict with keys: " + str(keys))
-          
+
           obj = obj[index]
         except IndexError:
           raise Exception("Index Error. Could not read from Json: index: '" + str(index) + "'. completePathStep: '" + str(completePathStep) + "'. length of object: " + str(len(obj)))
@@ -484,23 +504,23 @@ class RequestTester:
         if pathStep not in obj:
           raise Exception("pathStep: '" + pathStep + "' was not in value. path: " + path + \
           ". Path so far: " + pathSoFar + \
-          ". Object: " + str(obj)) 
+          ". Object: " + str(obj))
         obj = obj[pathStep]
-        
+
     return obj
- 
+
 
   def readFromResponse(self, response, path, parameters):
     #if self.debug:
     #  print "reading from response. At '" + path + "'. " + str(response).decode('utf-8') + "\n"
-      
-    obj = self.readValueFromJson(response, path, parameters) 
+
+    obj = self.readValueFromJson(response, path, parameters)
     return json.dumps(obj)
-    
-    
+
+
   def readListLengthFromResponse(self, response, path, parameters):
-    obj = self.readValueFromJson(response, path, parameters) 
-    return len(obj) 
+    obj = self.readValueFromJson(response, path, parameters)
+    return len(obj)
 
 
   def checkNoException(self, response, url, parameters, payload):
@@ -511,7 +531,7 @@ class RequestTester:
       if len(payload) > 100:
         shortenedPayload = payload[0:100]
       raise Exception("404 not found: '" + url + "'. payload (max 100): '" + shortenedPayload + "'")
-    
+
     try:
       response = self.readFromResponse(response, "$meta/fqn", parameters)
     except Exception as err:
@@ -519,8 +539,8 @@ class RequestTester:
         raise err
       return # if there is no "$meta/fqn", it is not an ErrorResponse
       #print entireResponse #comment in to display entire response
-      #raise Exception("error during exception check: '" + response + "' " + url + ". payload: '" + payload + "'")   
-      
+      #raise Exception("error during exception check: '" + response + "' " + url + ". payload: '" + payload + "'")
+
     if response == "\"xmcp.processmodeller.datatypes.Error\"":
       try:
         response = self.readFromResponse(entireResponse, "exceptionMessage", parameters)
@@ -533,62 +553,62 @@ class RequestTester:
           if innerErr is KeyboardInterrupt:
             raise err
           response = entireResponse # add entire response if we can not find a message
-      
+
       #cap response/error length
       if len(response) > 200:
         response = response[0:200]
-      raise Exception("got an error. url was: " + url + " msg: " + response)  
+      raise Exception("got an error. url was: " + url + " msg: " + response)
     #print entireResponse
 
-  
+
   def modifyParameter(self, oldValue, operationJson, parameters):
     result = oldValue
 
     #substring
     if operationJson["operation"] == "substring":
       index = -1
-      
+
       # if there is no divider in string, return complete string
       try:
         result.index(operationJson["divider"])
       except ValueError:
         return oldValue
-      
+
       if "direction" in operationJson and operationJson["direction"] == "inversed":
         index = result.rindex(operationJson["divider"])
       else:
         index = result.index(operationJson["divider"])
-      
+
       if "keep" in operationJson and operationJson["keep"] == "before":
         result = result[:index]
       else:
         result = result[index + 1:]
-  
+
     #concat
     if operationJson["operation"] == "concat":
       result = result + self.replacePlaceholders(operationJson["value"], parameters)
-      
+
     #urlencode
     if operationJson["operation"] == "urlencode":
       result =  urllib.quote(oldValue)
-  
+
     #replace
     if operationJson["operation"] == "replace":
       result = oldValue.replace(operationJson["toReplace"], operationJson["replacement"])
-  
+
     return result
 
-    
+
   #function call
   def handleInvoke(self, operationJson, parameters):
     if "functionName" not in operationJson:
       raise Exception("functionName required for invoke." + json.dumps(operationJson))
-  
+
     functionName = operationJson["functionName"]
     function = self.functions[functionName]
     steps = function["operations"]
     functionParameters = {}
-    
+
     #set function inputs
     if "input" in function:
       for inputVarName in function["input"]:
@@ -598,10 +618,10 @@ class RequestTester:
           ourInputValueWithPlaceholders = operationJson["mapInput"][inputVarName]
         else:
           ourInputValueWithPlaceholders = ""
-          print "WARN: not setting function input: " + inputVarName + " of function: " + function["functionName"]
-          
+          print("WARN: not setting function input: " + inputVarName + " of function: " + function["functionName"])
+
         inputVariableValue = self.replacePlaceholders(ourInputValueWithPlaceholders, parameters)
-          
+
         if isinstance(inputVariableValue, int) or len(inputVariableValue) > 0:
           functionParameters[inputVarName] = inputVariableValue
         else:
@@ -623,14 +643,14 @@ class RequestTester:
    [variable, value] = self.prepareAssertMaybeEquals(operationJson, parameters)
    if not self.checkAreEqual(variable, value):
      raise AssertionError("Assert equals failed: '" + str(variable) + "' is not '" + str(value) + "'")
-     
+
 
   def handleAssertNotEquals(self, operationJson, parameters, response):
    [variable, value] = self.prepareAssertMaybeEquals(operationJson, parameters)
    if self.checkAreEqual(variable, value):
      raise AssertionError("Assert not equals failed. Both are: '" + str(variable))
-   
-   
+
+
   def checkAreEqual(self, variable, value):
     if str(variable) != str(value):
       try:
@@ -644,22 +664,22 @@ class RequestTester:
       if str(variable) != str(value):
         return False
     return True
-  
+
 
   def prepareAssertMaybeEquals(self, operationJson, parameters):
     if operationJson["variable"] not in parameters:
       for v in parameters.keys():
-        print "parameterName: " + v
+        print("parameterName: " + v)
       raise Exception(operationJson["variable"] + " is not in parameters")
-    
+
     variable = self.getParameter(parameters, operationJson["variable"])
     value = self.replacePlaceholders(operationJson["value"], parameters)
-    return [variable, value]    
+    return [variable, value]
 
 
   def handleAssertListlength(self, operationJson, parameters, response):
    expectedValue = self.replacePlaceholders(operationJson["expectedValue"], parameters)
-   
+
    if "path" in operationJson:
      path = self.replacePlaceholders(operationJson["path"], parameters)
      length = self.readListLengthFromResponse(response, path, parameters)
@@ -667,34 +687,34 @@ class RequestTester:
    else:
      length = len(self.getParameter(parameters, operationJson["variable"]))
      placeDescription = operationJson["variable"]
-     
+
    expectedValueInt = -1
-      
+
    try:
      expectedValueInt = int(expectedValue)
    except:
      raise TypeError("Could not determine expected listLength. This is not an int: " + expectedValue)
-   
+
    if int(expectedValue) != length:
      raise AssertionError("Assert listLength failed: '" + placeDescription + "' has " + str(length) + " entries. Expected: " + str(expectedValue))
-   
+
 
   def handleAssertBigger(self, operationJson, parameters, response):
     variable = self.getParameter(parameters, operationJson["variable"])
     value = self.replacePlaceholders(operationJson["value"], parameters)
-      
+
     try:
       variable = int(variable)
       value = int(value)
     except:
       raise TypeError("Assert bigger failed. Number problems: '" + variable + "' , '" + value + "'")
-    
+
     if "orEquals" in operationJson and bool(operationJson["orEquals"]):
       if variable < value:
-        raise AssertionError("Assert bigger failed: '" + str(variable) + "' is not bigger than or equal to '" + str(value) + "'")    
+        raise AssertionError("Assert bigger failed: '" + str(variable) + "' is not bigger than or equal to '" + str(value) + "'")
     elif variable <= value:
       raise AssertionError("Assert bigger failed: '" + str(variable) + "' is not bigger than '" + str(value) + "'")
-        
+
 
   def handleAssertFieldNotInResult(self, operationJson, parameters, response):
     variable = operationJson["fieldName"]
@@ -702,25 +722,25 @@ class RequestTester:
     basePath = self.replacePlaceholders(basePath, parameters)
     obj = self.readFromResponse(response, basePath, parameters)
     obj = json.JSONDecoder().decode(obj)
-    
+
     if variable in obj:
-      raise AssertionError("Assert fieldNotInResult failed: '" + str(variable) + "' is in result ('"+str(obj)+"'). value: '" + str(obj[variable]))  
- 
- 
+      raise AssertionError("Assert fieldNotInResult failed: '" + str(variable) + "' is in result ('"+str(obj)+"'). value: '" + str(obj[variable]))
+
+
   def handleAssertEqualJson(self, operationJson, parameters, response):
     variable = self.getParameter(parameters, operationJson["variable"])
     value = self.replacePlaceholders(operationJson["value"], parameters)
- 
+
     variable = variable.replace("\\n", "")
     value = value.replace("\\n", "")
     variable = variable.replace("\\\"", "\"")
     value = value.replace("\\\"", "\"")
     varJson = json.loads(variable)
     varValue = json.loads(value)
-    
+
     varToString = json.dumps(varJson)
     valueToString = json.dumps(varValue)
-    
+
     if varToString != valueToString:
       raise AssertionError("Assert equal Json failed. " + varToString + " is not " + valueToString)
 
@@ -737,7 +757,7 @@ class RequestTester:
         return True
     return False
 
-    
+
   def entryInDict(self, entry, candidate, parameters):
     result = True
     for key in entry:
@@ -746,7 +766,7 @@ class RequestTester:
       if isinstance(entry[key], dict):
         if not isinstance(candidate[key], dict):
           return False
-        partResult = self.entryInDict(entry[key], candidate[key], parameters) 
+        partResult = self.entryInDict(entry[key], candidate[key], parameters)
         result = result and partResult
       elif isinstance(entry[key], list):
         if not isinstance(candidate[key], list):
@@ -757,9 +777,9 @@ class RequestTester:
         valueReplaced = self.replacePlaceholders(entry[key], parameters)
         partResult = valueReplaced == candidate[key]
         result = result and partResult
-        
+
     return result
-  
+
 
   def isSublist(self, subList, superList, parameters):
     result = True
@@ -780,7 +800,7 @@ class RequestTester:
         partResult = element in superList
         result = result and partResult
     return result
-    
+
 
   def handleAssertIsInList(self, operationJson, parameters, response):
     pathToList = ""
@@ -795,12 +815,12 @@ class RequestTester:
       variableToUse = operationJson["variable"]
       list = self.getParameter(parameters, variableToUse)
       pathToList = str(variableToUse)
-    
+
     entriesToFind = operationJson["entries"]
     invertLogic = False
     if "invertLogic" in operationJson:
       invertLogic = bool(operationJson["invertLogic"])
-      
+
     for entry in entriesToFind:
       if invertLogic:
         if self.dictInList(entry, list, parameters):
@@ -809,14 +829,14 @@ class RequestTester:
         if not self.dictInList(entry, list, parameters):
           raise AssertionError("Assert isInList failed. " + str(entry) + " is not in " + pathToList + ". Data: " + str(json.dumps(list, indent=2)))
 
- 
+
   def handleAssertContains(self, operationJson, parameters, response):
     [variable, value] = self.prepareContains(operationJson, parameters)
     if not value in variable:
       raise AssertionError("Assert contains failed. '" + str(variable) + "' does not contain '" + value + "'")
 
 
-  def handleAssertDoesNotContain(self, operationJson, parameters, response): 
+  def handleAssertDoesNotContain(self, operationJson, parameters, response):
     [variable, value] = self.prepareContains(operationJson, parameters)
     if value in variable:
       raise AssertionError("Assert contains failed. '" + str(variable) + "' does contain '" + value + "'")
@@ -825,30 +845,30 @@ class RequestTester:
   def prepareContains(self, operationJson, parameters):
     variable = self.replacePlaceholders(operationJson["variable"], parameters)
     value = self.replacePlaceholders(operationJson["value"], parameters)
-    
+
     variable = str(variable).encode('utf-8')
     value = str(value).encode('utf-8')
-    return [variable, value]    
+    return [variable, value]
 
 
   def handleAssertStartsWith(self, operationJson, parameters, response):
     variable = self.replacePlaceholders(operationJson["variable"], parameters)
     value = self.replacePlaceholders(operationJson["value"], parameters)
-    
+
     variable = str(variable).encode('utf-8')
     value = str(value).encode('utf-8')
-    
+
     if not variable.startswith(value):
       raise AssertionError("Assert startsWith failed. '" + str(variable) + "' does not start with '" + value + "'")
-      
-    
+
+
   def handleAssertEndsWith(self, operationJson, parameters, response):
     variable = self.replacePlaceholders(operationJson["variable"], parameters)
     value = self.replacePlaceholders(operationJson["value"], parameters)
-    
+
     variable = str(variable).encode('utf-8')
     value = str(value).encode('utf-8')
-    
+
     if not variable.endswith(value):
       raise AssertionError("Assert endsWith failed. '" + str(variable) + "' does not end with '" + value + "'")
 
@@ -861,35 +881,35 @@ class RequestTester:
 
     sortedList = json.loads(variable)
     unsortedList = json.loads(variable)
-    
+
     if "member" in operationJson:
       memberName = operationJson["member"]
       sortedList = map(lambda x: x[memberName], sortedList)
       unsortedList = map(lambda x: x[memberName], unsortedList)
-    
-    
+
+
     sortedList = map(lambda x: x.lower(), sortedList)
     unsortedList = map(lambda x: x.lower(), unsortedList)
-    
+
     sortedList.sort()
 
     if not invertLogic and sortedList != unsortedList:
       raise AssertionError("Variable is not sorted. " + str(unsortedList) + " should have been " + str(sortedList))
     elif invertLogic and sortedList == unsortedList:
       raise AssertionError("Variable is sorted, but should not be." + str(sortedList))
-    
- 
+
+
   #asssertions
   def handleAssert(self, operationJson, parameters, response = None):
     constraint = operationJson["constraint"]
-    
+
     if response == None:
       response = self.lastResponse
-    
+
     if constraint == "equals":
       self.handleAssertEquals(operationJson, parameters, response)
     elif constraint == "notEquals":
-      self.handleAssertNotEquals(operationJson, parameters, response)    
+      self.handleAssertNotEquals(operationJson, parameters, response)
     elif constraint == "listLength":
       self.handleAssertListlength(operationJson, parameters, response)
     elif constraint == "bigger":
@@ -918,12 +938,12 @@ class RequestTester:
     variableName = operationJson["variable"]
     if variableName not in parameters:
       parameters[variableName] = ""
-  
+
     variable = self.getParameter(parameters, variableName)
-  
+
     value = self.replacePlaceholders(operationJson["value"], parameters)
     result = value
-    
+
     #jsonDecode works, if value is json.
     #if value is a simple string (not quoted), the decoding fails and we use it as a string
     try:
@@ -932,8 +952,8 @@ class RequestTester:
       if err is KeyboardInterrupt:
         raise err
       pass
-    
-    
+
+
     #we only set part of the variable (variable is json)
     if "path" in operationJson:
       result = variable
@@ -947,25 +967,25 @@ class RequestTester:
         toUpdate = self.readValueFromJson(result, shortenedPath, parameters)
         lastPart = pathReplaced[len(shortenedPath) + 1:] #+1 is /
       toUpdate[lastPart] = value
-      
+
     parameters[variableName] = result
 
 
   def handleSetRandom(self, operation, parameters):
-  
+
     if "variable" not in operation:
       raise Exception("setRandom requires variable.")
-  
+
     if "length" in operation:
       length = operation["length"]
       if not isinstance(length, int):
         raise Exception("length must be an integer. was: '" + length + "'")
     else:
       length = 8
-      
+
     if "seed" in operation:
       random.seed(str(self.seedPrefix) + operation["seed"])
-      
+
     value = "".join(random.choice(string.ascii_letters) for x in range(length))
     parameters[operation["variable"]] = value
 
@@ -985,12 +1005,12 @@ class RequestTester:
     else:
       numberOfIterations = self.replacePlaceholders(operation["count"], parameters)
       variableIteratingOver = range(0, int(numberOfIterations))
-      
+
     for singleVar in variableIteratingOver:
       parameters[singleVarName] = singleVar
       for subOperation in operation["operations"]:
         self.handleOperation(subOperation, parameters)
-     
+
     #remove single variable from parameters -- TODO: might remove some outer variable of same name.
     #parameters.pop(singleVarName)
 
@@ -998,10 +1018,10 @@ class RequestTester:
   def handlePrintVariable(self, operation, parameters):
     if not "variable" in operation:
       raise Exception("invalid print operation. variable required. " + str(operation))
-      
+
     value = self.getParameter(parameters, operation["variable"])
-      
-    if isinstance(value, basestring):
+
+    if isinstance(value, str):
       pass
     else:
       try:
@@ -1010,37 +1030,37 @@ class RequestTester:
         if err is KeyboardInterrupt:
           raise err
 
-    print "print: " + operation["variable"]  + " (" + str(type(self.getParameter(parameters, operation["variable"]))) + "):"
-    print value
+    print("print: " + operation["variable"]  + " (" + str(type(self.getParameter(parameters, operation["variable"]))) + "):")
+    print(value)
 
 
   def handleSetFromVariable(self, operationJson, parameters):
     variableNametoSet = operationJson["targetVariable"]
     variableNameToRead = operationJson["sourceVariable"]
-    
+
     obj = self.getParameter(parameters, variableNameToRead)
 
     if isinstance(obj, dict):
       obj = json.dumps(obj)
-    
+
     if isinstance(obj, list):
       obj = json.dumps(obj)
-    
+
     try:
       obj = json.JSONDecoder().decode(obj)
     except Exception as err:
       if err is KeyboardInterrupt:
         raise err
       raise Exception("could not decode json. obj was: " + str(obj))
-    
+
     path = operationJson["path"]
     path = self.replacePlaceholders(path, parameters)
-    
+
     obj = self.readFromResponse(obj, path, parameters)
     obj = self.checkAndUnquoteResult(operationJson, obj)
-    
+
     obj = self.convertToObject(operationJson, obj)
-      
+
     parameters[variableNametoSet] = obj
 
 
@@ -1051,23 +1071,23 @@ class RequestTester:
       except Exception as err:
         if err is KeyboardInterrupt:
           raise err
-        print "exception converting into object: " + str(err) + " - " + str(obj)
+        print("exception converting into object: " + str(err) + " - " + str(obj))
         #object remains string
     return obj
-    
-    
+
+
   def handleSubtestcase(self, operation, parameters):
     testcaseName = ""
-  
+
     if "subtestcaseName" in operation:
       testcaseName = self.replacePlaceholders(operation["subtestcaseName"], parameters)
-      print "starting subtestcase: " + testcaseName
+      print("starting subtestcase: " + testcaseName)
     else:
-      print "starting unnamed subtestcase"
+      print("starting unnamed subtestcase")
     sys.stdout.flush()
-      
+
     operations = operation["operations"]
-    
+
     try:
       for operation in operations:
         self.handleOperation(operation, parameters)
@@ -1079,10 +1099,10 @@ class RequestTester:
     except Exception as err:
       self.fails = self.fails + 1
       if len(testcaseName) > 0:
-        print "subtestcase failed: " + testcaseName
+        print("subtestcase failed: " + testcaseName)
         self.failedList.append("(subtestcase) " + testcaseName + " " + str(err))
       else:
-        print "subtestcase failed"
+        print("subtestcase failed")
       sys.stdout.flush()
 
 
@@ -1094,11 +1114,11 @@ class RequestTester:
       payload = json.dumps(operationJson["payload"])
       payload = self.replacePlaceholders(payload, parameters)
       payload = json.dumps(json.loads(payload), ensure_ascii=False)
-    
+
     #TODO: it seems like this does not trigger?
     if "requestType" not in operationJson:
       raise Exception("requestType required for call operation.")
-    
+
     if "async" in operationJson and bool(operationJson["async"]):
       self.executeAsyncCall(operationJson, parameters, url, payload, factoryIndex)
     else:
@@ -1118,9 +1138,9 @@ class RequestTester:
     if "callId" not in operationJson:
       raise Error("callId missing in async call operation")
     callId = operationJson["callId"]
-    
+
     threadParameters = parameters.copy()
-    
+
     thread = threading.Thread(target = self.threadAsyncCall, args = (operationJson, threadParameters, url, payload, factoryIndex, callId))
     self.threads[callId] = thread
     thread.start()
@@ -1128,10 +1148,10 @@ class RequestTester:
 
   # if call defines retries, this function may make multiple calls if necessary
   def executeCallReturnResult(self, operationJson, parameters, url, payload, factoryIndex):
-    
+
     maxRetries = int(self.replacePlaceholders(operationJson["retries"]["maxRetries"], parameters)) if "retries" in operationJson and "maxRetries" in operationJson["retries"] else 0
     takenTries = 0
-    
+
     while takenTries <= maxRetries:
       response = self.executeRequest(url, operationJson["requestType"], payload, factoryIndex, False)
       if "acceptError" not in operationJson or not bool(operationJson["acceptError"]):
@@ -1140,11 +1160,11 @@ class RequestTester:
       if not anotherTryNecessary:
         break
       takenTries = takenTries + 1
-      
+
     if takenTries > maxRetries:
       raise MaxRetriesExccededException("maxRetriesExceeded. Another call is necessary after reaching " + str(maxRetries) + " retries.")
-    
-    return response      
+
+    return response
 
 
   def executeSyncCall(self, operationJson, parameters, url, payload, factoryIndex):
@@ -1156,7 +1176,7 @@ class RequestTester:
       if len(value) < 2 or value[0] != "\"" or value[len(value)-1] != "\"":
         raise Exception("could not unquote value: '" + value + "'")
       value = value[1:len(value)-1]
-    return value 
+    return value
 
 
   # checks if the response satisfies a condition defined in operationJson
@@ -1187,29 +1207,29 @@ class RequestTester:
   def handleReadFromResponse(self, operationJson, parameters):
     if "pathInResponse" not in operationJson:
       raise Exception("pathInResponse required for read operation, but not set.")
-      
+
     if "targetVariable" not in operationJson:
       raise Exception("targetVariable required for read operation, but not set.")
-      
+
     path =  operationJson["pathInResponse"]
     path = self.replacePlaceholders(path, parameters)
-  
+
     if path == "":
       value = self.lastResponse
     else:
       value = self.readFromResponse(self.lastResponse, path, parameters)
-      
+
     value = self.checkAndUnquoteResult(operationJson, value)
-    
+
     if "getListLength" in operationJson and bool(operationJson["getListLength"]):
       value = json.JSONDecoder().decode(value)
       if not isinstance(value, list):
         raise Exception("can't determine listlength for: '" + str(value) + "'. Not a list.")
       else:
         value = len(value)
-        
+
     value = self.convertToObject(operationJson, value)
-    
+
     parameters[operationJson["targetVariable"]] = value
 
 
@@ -1219,11 +1239,11 @@ class RequestTester:
       if divider[0] == "!" and divider[len(divider)-1] == "!":
         operationJson["modification"]["divider"] = self.getParameter(parameters, divider)
     variableName = operationJson["variable"]
-    
+
     #if result is suppost to be assigned to a different variable
     if "targetVariable" in operationJson:
       variableName = operationJson["targetVariable"]
-    
+
     variable = self.getParameter(parameters, operationJson["variable"])
     parameters[variableName] = self.modifyParameter(variable, operationJson["modification"], parameters)
 
@@ -1234,22 +1254,22 @@ class RequestTester:
         parameters[key] = self.replacePlaceholders(entry[key], parameters)
 
 
-  def handleSelectFromXml(self, operationJson, parameters):    
+  def handleSelectFromXml(self, operationJson, parameters):
     if "inputVariable" not in operationJson:
       raise Exception("inputVariable field required for selectFromXml")
     inputVarName = operationJson["inputVariable"]
-      
+
     if "xpath" not in operationJson:
       raise Exception("xpath field required for selectFromXml")
     xpath = operationJson["xpath"]
-      
+
     if "outputVariable" not in operationJson:
       raise Exception("variable field required for selectFromXml")
 
     if inputVarName not in parameters:
       raise Exception("undefined inputVariable: '" + inputVarName+ "'")
     inputVar = self.getParameter(parameters, inputVarName)
-    
+
 
     if "jsonDecode" in operationJson and bool(operationJson["jsonDecode"]):
       inputVar = json.JSONDecoder().decode(inputVar)
@@ -1258,9 +1278,9 @@ class RequestTester:
       file = StringIO.StringIO(inputVar.encode('utf-8'))
     except UnicodeDecodeError:
       file = StringIO.StringIO(inputVar)
-    
+
     root = ET.parse(file)
-    
+
     if len(xpath) > 0:
       if "returnNode" in operationJson and bool(operationJson["returnNode"]):
         result = root.findall(xpath)
@@ -1269,11 +1289,11 @@ class RequestTester:
     else:
       result = root.getroot()
     file.close()
-    
-    
+
+
     if result is None:
       raise Exception("SelectFromXml. Could not find result. xpath: " + xpath)
-    
+
     if "attribute" in operationJson:
       result = result.attrib[operationJson["attribute"]]
     elif "returnNode" in operationJson and bool(operationJson["returnNode"]):
@@ -1302,16 +1322,16 @@ class RequestTester:
     variable = variable.replace("\\\\", "\\")
     variable = variable.replace("\\\"", "\"")
     parameters[targetVariableName] = variable
-    
-    
+
+
   def handleUpload(self, operationJson, parameters):
     targetVariableName = operationJson["fileIdVar"]
     file = operationJson["file"]
     factoryIndex = operationJson["factoryIndex"] if "factoryIndex" in operationJson else 0
-    
+
     if "relativeToThis" in operationJson and bool(operationJson["relativeToThis"]):
       file = os.path.join(self.currentTest, file)
-    
+
     result = self.executeUpload(file, factoryIndex)
     orgResult = result
     regex = re.compile('[0-9]+$', re.IGNORECASE)
@@ -1321,8 +1341,8 @@ class RequestTester:
       raise Exception("Upload failed! " + str(orgResult))
 
     parameters[targetVariableName] = result[0]
-    
-    
+
+
   def handleCurrentTime(self, operationJson, parameters):
     milliseconds = int(round(time.time() * 1000))
     targetVarName = operationJson["targetVariable"]
@@ -1335,7 +1355,7 @@ class RequestTester:
 
   def handleGetUsername(self, operationJson, parameters):
     factoryIndexInTest = 0
-    if "factoryIndex" in operationJson:  
+    if "factoryIndex" in operationJson:
       factoryIndexInTest = operationJson["factoryIndex"]
     factoryIndexTranslated = self.factoryIndexMap[factoryIndexInTest]
     targetVarName = operationJson["targetVariable"]
@@ -1353,10 +1373,10 @@ class RequestTester:
   def handleMergeList(self, operationJson, parameters):
     baseListVarName = operationJson["baseList"]
     toAddVarName = operationJson["listToAdd"]
-    
+
     baseList = self.getParameter(parameters, baseListVarName)
     toAddList = self.getParameter(parameters, toAddVarName)
-    
+
     baseList.extend(toAddList)
 
 
@@ -1380,7 +1400,7 @@ class RequestTester:
       if isinstance(result, MaxRetriesExccededException):
         raise result
 
- 
+
   def handleAdd(self, operationJson, parameters):
     targetVarName = operationJson["targetVariable"]
     result = 0
@@ -1389,7 +1409,7 @@ class RequestTester:
       result = self.getParameter(parameters, sourceVarName)
     elif("sourceConstant" in operationJson):
       result = operationJson["sourceConstant"]
-  
+
     if("additionVariable" in operationJson):
       additionVarName = operationJson["additionVariable"]
       result = int(result) + int(self.getParameter(parameters, additionVarName))
@@ -1407,12 +1427,12 @@ class RequestTester:
         operation = "<no operation set>"
       print("ignoring operation: " + operation)
       return
-  
+
     if keyOperation not in operationJson:
       raise Exception("missing " + keyOperation + " in " + str(operationJson))
-  
+
     operation = operationJson[keyOperation]
-    
+
     try:
       if operation == keyOperationCall:
        self.handleCall(operationJson, parameters)
@@ -1461,7 +1481,7 @@ class RequestTester:
       if operation == keyOperationMergeList:
         self.handleMergeList(operationJson, parameters)
     except SuccessException as err:
-        raise(err) 
+        raise(err)
     except Exception as err:
       if err is KeyboardInterrupt:
         raise err
@@ -1472,14 +1492,14 @@ class RequestTester:
 
 
   def runTestCase(self, descriptionFile, completeJson):
-    print "    test case: " + descriptionFile
+    print("    test case: " + descriptionFile)
     sys.stdout.flush()
 
     if "operations" not in completeJson:
       raise Exception("no operations in '" + descriptionFile + "'")
-      
+
     operations = completeJson["operations"]
-    
+
     #validate (all called functions are registered)
     for operation in operations:
       if "operation" not in operation:
@@ -1487,12 +1507,12 @@ class RequestTester:
       if operation["operation"] == "invoke":
         if operation["functionName"] not in self.functions:
           raise Exception("Function '" + operation["functionName"] + "' not registered.")
-    
+
     #execute.
     self.lastResponse = ""
     self.currentTest = os.path.dirname(os.path.abspath(descriptionFile))
     parameters = {}
-    
+
     try:
       for tuple in operations:
         self.handleOperation(tuple, parameters)
@@ -1503,7 +1523,7 @@ class RequestTester:
 
     #check for running threads
     self.checkRunningThreads()
-    
+
     # clear threads
     self.threads = {}
     threadResults = {}
@@ -1511,12 +1531,12 @@ class RequestTester:
   def checkRunningThreads(self):
     for callId in self.threads:
       threadObj = self.threads[callId]
-      print "WARN: Call not joined: " + str(callId)
-      
+      print("WARN: Call not joined: " + str(callId))
+
     for callId in self.threads:
       threadObj.join()
-      
-    
+
+
   def login(self, factoryIndex):
     factoryIndexTranslated = self.factoryIndexMap[factoryIndex]
     username = self.factories[factoryIndexTranslated].username
@@ -1525,7 +1545,7 @@ class RequestTester:
     response = self.executeRequest("/auth/login", 'POST', payload, factoryIndex, True)
     self.checkNoException(response, "/auth/login", [], payload)
 
-    
+
   def logout(self, factoryIndex):
     self.executeRequest("/auth/logout", 'POST', '', factoryIndex, True)
 
@@ -1537,7 +1557,7 @@ class RequestTester:
       requiredFactories = int(testJson["factoryCount"])
       if len(self.factories) < requiredFactories:
         raise Exception("Insufficient factories configured. Test requires " + str(requiredFactories) + " factories, but only " + str(len(self.factories)) + " are configured!")
-      
+
       for i in range(0,requiredFactories,1):
         self.logout(i)
 
@@ -1572,7 +1592,7 @@ class RequestTester:
       for i in range(0, factoryCount,1):
         self.factoryIndexMap[i] = i
       return
-    
+
     self.testHasConstraints = True
     #find combination of factories that satisfies the constraints
     constraints = testJson["factoryConstraints"]
@@ -1580,7 +1600,7 @@ class RequestTester:
     for candidate in candidates:
       if self.isValidFactoryCombination(candidate, constraints):
         self.factoryIndexMap = candidate
-        break        
+        break
     if len(self.factoryIndexMap) == 0:
       raise NoValidFactoryConfigException("Could not find valid combination of factories.")
     if self.debug:
@@ -1600,7 +1620,7 @@ class RequestTester:
       print("no constraint type set: " + str(constraint))
       return True
     constraintType = constraint["constraintType"]
-    
+
     if constraintType not in self.factoryConstraintValidatorFunctions:
       raise Exception("Unknown Constraint type: " + str(constraintType))
     constraintValidatorFunction = self.factoryConstraintValidatorFunctions[constraintType]
@@ -1637,7 +1657,7 @@ class RequestTester:
       print("reading test content for: " + str(descriptionFile))
     completeJson = ""
     try:
-      with open(descriptionFile, "r") as jsonFile:
+      with open(descriptionFile, "r", encoding="utf8") as jsonFile:
         completeJson = json.load(jsonFile)
     except KeyboardInterrupt as e:
       raise e
@@ -1648,18 +1668,18 @@ class RequestTester:
 
 
   def runTestSeries(self, seriesFile, path, openSeries = []):
-    print "running test series: " + path + seriesFile
-    
+    print("running test series: " + path + seriesFile)
+
     completePathAndFile = (path + seriesFile)
     if completePathAndFile in openSeries:
-      print "not executing " + completePathAndFile + " again."
-    
+      print("not executing " + completePathAndFile + " again.")
+
     openSeries.append(completePathAndFile)
-    
+
     completeJson = ""
     with open(path + seriesFile, "r") as jsonFile:
       completeJson = json.load(jsonFile)
-     
+
     # execute tests
     if "tests" in completeJson:
       for test in completeJson["tests"]:
@@ -1668,41 +1688,41 @@ class RequestTester:
           self.fails = self.fails + 1
           self.failedList.append(path + test + "(from "+ path + seriesFile + ") - invalid Test json.")
           continue #invalid json
-        
+
         try:
           self.resolveFactoryConstraints(testcontent)
         except NoValidFactoryConfigException as e:
           self.fails = self.fails + 1
           self.failedList.append(path + test + "(from "+ path + seriesFile + ") - no valid factory configuration found.")
           continue
-        
+
         self.loginForTest(testcontent)
-        
+
         try:
           self.runTestCase(path + test, testcontent)
           self.successes = self.successes + 1
-        except ValueError as ve:        
+        except ValueError as ve:
           self.fails = self.fails + 1
           self.failedList.append(path + test + "(from "+ path + seriesFile + ") - invalid JSON. " + str(ve))
-          print "Test failed: " + test
+          print("Test failed: " + test)
           traceback.print_exc(file=sys.stdout)  #comment in for stacktrace on exception
-          
+
         except SuccessException:
             self.successes = self.successes + 1
             self.logoutForTest(testcontent)
             continue
-        except Exception as err:        
+        except Exception as err:
           if err is KeyboardInterrupt:
             self.logoutForTest(testcontent)
             raise err
-            
+
           self.fails = self.fails + 1
-          self.failedList.append(path + test + " (from "+ path + seriesFile + "): " + str(err).decode('utf-8'))
-          print "Test failed: " + test + ("" if not self.testHasConstraints else " factory index map (id in test -> id in config): " + str(self.factoryIndexMap))
+          self.failedList.append(path + test + " (from "+ path + seriesFile + "): " + str(err))
+          print("Test failed: " + test + ("" if not self.testHasConstraints else " factory index map (id in test -> id in config): " + str(self.factoryIndexMap)))
           #print "Error msg: " + str(err)
           traceback.print_exc(file=sys.stdout) #comment in for stacktrace on exception
         self.logoutForTest(testcontent)
-     
+
     # execute sub testseries
     if "testseries" in completeJson:
       for testseries in completeJson["testseries"]:
@@ -1732,9 +1752,9 @@ try:
   rt.runTestSeries(testSeriesName, path)
 except Exception as err:
   if err is KeyboardInterrupt:
-    print "KeyboardInterrupt. Testing aborted."
+    print("KeyboardInterrupt. Testing aborted.")
   else:
-    print "exception: " + str(err)
+    print("exception: " + str(err))
   returncode = 1
 endTime = datetime.datetime.now()
 
@@ -1744,10 +1764,10 @@ failedList = rt.failedList
 
 #print output
 if fails > 0:
-  print "Failed Tests:"
+  print("Failed Tests:")
   for failedTest in failedList:
-    print "  " + failedTest
+    print("  " + failedTest)
   returncode = 2
-print "done. Tests took: " + str(endTime - startTime) + ". Successes: " + str(successes) + ", Fails: " + str(fails)
+print("done. Tests took: " + str(endTime - startTime) + ". Successes: " + str(successes) + ", Fails: " + str(fails))
 
 sys.exit(returncode)
