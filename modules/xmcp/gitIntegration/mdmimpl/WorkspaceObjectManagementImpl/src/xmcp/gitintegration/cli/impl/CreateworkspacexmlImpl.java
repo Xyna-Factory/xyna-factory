@@ -14,15 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
+*/
 package xmcp.gitintegration.cli.impl;
 
 
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
@@ -67,7 +70,11 @@ public class CreateworkspacexmlImpl extends XynaCommandImplementation<Creatework
   
   private void removeExistingFiles(String path) {
     FileUtils.deleteFileWithRetries(new File(path, WorkspaceContentCreator.WORKSPACE_XML_FILENAME));
-    FileUtils.deleteDirectory(new File(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME));
+    try(Stream<Path> files = Files.list(Path.of(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME))) {
+      files.forEach(x -> FileUtils.deleteFileWithRetries(x.toFile()));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
@@ -79,7 +86,9 @@ public class CreateworkspacexmlImpl extends XynaCommandImplementation<Creatework
     removeExistingFiles(path);
     
     try {
-      Files.createDirectories(configFolder.toPath());
+      if(!Files.exists(configFolder.toPath())) {
+        Files.createDirectories(configFolder.toPath());
+      }
       //write new files
       for (Pair<String, String> entry : data) {
         File fi = new File(configFolder, entry.getFirst());
