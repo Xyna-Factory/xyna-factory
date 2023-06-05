@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 -->
 <project basedir="." default="build" name="Modeller">
 
-  <property name="repository-url" value="https://github.com/GIP-SmartMercial" />
+  <property name="repository-url" value="https://github.com/Xyna-Factory" />
 
   <property name="modeller.git" value="xyna-modeller.git" />
   <property name="modeller.name" value="xyna-modeller" />
