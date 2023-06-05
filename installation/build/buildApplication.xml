@@ -94,7 +94,18 @@
             </else>
         </if>
 
-        <delete dir="${target.dir}/app" failonerror="true" />
+		<!-- include datamodel archive if it exists -->
+		<if>
+			<available file="datamodel" type="dir" />
+			<then>
+				<local name="datamodelzip" />
+				<property name="datamodelzip" value="AppMgmtAdd_${Application.applicationName}.1234567890datamodelarchive" />
+			    <zip destfile="${datamodelzip}" basedir="datamodel" includes="**/*.xml" />
+				<zip destfile="${target.dir}/${app.name}.app" basedir="." includes="${datamodelzip}" update="true"/>
+				<delete file="${datamodelzip}" />
+			</then>
+		</if>
+		<delete dir="${target.dir}/app" failonerror="true" />
     </target>
 
 
@@ -264,6 +275,26 @@
 
     </target>
 	
+	<!-- =================================
+         target: update-datamodel-archive
+         ================================= -->
+    <target name="update-datamodel-archive" description="get datamodel archive from Xyna">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+        <property name="applicationname" value="${Application.applicationName}" />
+        <property name="applicationversion" value="${Application.versionName}" />
+        <property name="dollar" value="$" />
+
+		<!-- figure out datamodel fqname via sql and then export the datamodel -->
+		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh exportdatamodels -datamodelfqname ${dollar}(${server.path}/xynafactory.sh sql &quot;select * from datamodel where label='${applicationname}' and version='${applicationversion}'&quot; HISTORY | grep -e '\sfqname =' | awk '{print $3}' | tr -d &quot;'&quot; ) -filename /tmp/datamodelarchive.zip" />
+
+        <!-- copy datamodelarchive from xyna server-->
+        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/datamodelarchive.zip" todir="${basedir}" />
+
+		<mkdir dir="${basedir}/datamodel" />
+		<unzip src="${basedir}/datamodelarchive.zip" dest="${basedir}/datamodel"/>
+		<delete file="${basedir}/datamodelarchive.zip" />
+    </target>
+
     <!-- ================================= 
          target: compile-xmoms         
          ================================= -->
