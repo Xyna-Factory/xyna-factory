@@ -18,16 +18,18 @@
  -->
 <project name="buildApplication" basedir=".">
     <import file="macros.xml" />
-
-    <property name="antUtils.dir" value="${root.dir}/installation/build/" />
-    <property name="common.lib.dir" value="${root.dir}/common/lib" />
-    <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
-
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
     <property file="${application.dir}/workspace.properties" />
 
-
+    <property name="antUtils.dir" value="${root.dir}/installation/build/" />
+    <property name="common.lib.dir" value="${root.dir}/common/lib" />
+    <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
+	<property name="xyna.modules.dir" value="${root.dir}/modules" />
+	<!-- github supports svn: tag would be: https://github.com/Xyna-Factory/xyna-factory/tags/9.0.1.0/modules -->
+	<!-- location of xyna modules -->
+	<property name="xyna.modules.svn" value="https://github.com/Xyna-Factory/xyna-factory/trunk/modules" />
+	
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
             <pathelement location="${root.dir}/installation/build/lib/ant-contrib.jar" />
@@ -301,7 +303,7 @@
     <!-- ================================= 
          target: compile-xmoms         
          ================================= -->
-    <target name="compile-xmoms" description="compile xmom objects locally">
+    <target name="compile-xmoms" description="compile xmom objects locally" depends="get-xyna-modules">
         <xmlproperty file="application.xml" collapseAttributes="true" />
 
         <property name="java.compile.version" value="Java6" />
@@ -331,6 +333,21 @@
 
     </target>
 
+	<target name="get-xyna-modules" >
+		<if>
+			<not>
+				<available file="${xyna.modules.dir}" type="dir" />
+			</not>
+			<then>
+				<mkdir dir="${xyna.modules.dir}" />
+				<local name="script.absolute" />
+				<property name="script.absolute" location="${antUtils.dir}/module_checkout.sh"/>
+				<exec executable="${script.absolute}" dir="${xyna.modules.dir}/..">
+					<arg value="${xyna.modules.svn}"/>
+				</exec>
+			</then>
+		</if>
+	</target>
 
     <!-- ================================= 
          target: minify application xml         
