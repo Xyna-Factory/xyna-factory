@@ -350,7 +350,7 @@ zip_result() {
 compose_thirdparties() {
   cd $SCRIPT_DIR/../release
   mkdir third_parties
-  cd $SCRIPT_DIR/../server
+  cd $SCRIPT_DIR/build
   mvn license:download-licenses -s pom.xml license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
 }
 
