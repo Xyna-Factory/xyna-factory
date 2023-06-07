@@ -351,7 +351,16 @@ compose_thirdparties() {
   cd $SCRIPT_DIR/../release
   mkdir third_parties
   cd $SCRIPT_DIR/build
-  mvn license:download-licenses -s pom.xml license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
+  # backup pom.xml
+  cp pom.xml pom.xml-bak
+  # comment "dependencyManagement"-tags
+  sed -i s/\<dependencyManagement\>/\<\!--dependencyManagement--\>/g pom.xml
+  sed -i s:\</dependencyManagement\>:\<\!--/dependencyManagement--\>:g pom.xml
+  # run license downloads (bom must have name "pom.xml")
+  mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
+  # restore backup
+  rm pom.xml
+  mv pom.xml-bak pom.xml
 }
 
 #TODO: buildTemplateMechanismStandalone is a target in installation/build/build.xml
