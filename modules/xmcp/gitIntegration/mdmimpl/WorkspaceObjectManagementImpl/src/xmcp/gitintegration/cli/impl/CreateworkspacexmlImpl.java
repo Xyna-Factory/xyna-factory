@@ -70,10 +70,12 @@ public class CreateworkspacexmlImpl extends XynaCommandImplementation<Creatework
   
   private void removeExistingFiles(String path) {
     FileUtils.deleteFileWithRetries(new File(path, WorkspaceContentCreator.WORKSPACE_XML_FILENAME));
-    try(Stream<Path> files = Files.list(Path.of(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME))) {
-      files.forEach(x -> FileUtils.deleteFileWithRetries(x.toFile()));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    if (Files.exists(Path.of(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME))) {
+      try (Stream<Path> files = Files.list(Path.of(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME))) {
+        files.forEach(x -> FileUtils.deleteFileWithRetries(x.toFile()));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
