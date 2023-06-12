@@ -348,6 +348,7 @@ zip_result() {
 
 
 compose_thirdparties() {
+  echo "downloading third party licenses"
   cd $SCRIPT_DIR/../release
   mkdir third_parties
   cd $SCRIPT_DIR/build
@@ -356,8 +357,14 @@ compose_thirdparties() {
   # comment "dependencyManagement"-tags
   sed -i s/\<dependencyManagement\>/\<\!--dependencyManagement--\>/g pom.xml
   sed -i s:\</dependencyManagement\>:\<\!--/dependencyManagement--\>:g pom.xml
+  echo "\n pom.xml:"
+  echo "$(cat pom.xml)"
+  echo "\n now running license-download..."
   # run license downloads (bom must have name "pom.xml")
   mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
+  echo "license-download done"
+  ls -la
+  ls -la $SCRIPT_DIR/../release/third_parties
   # restore backup
   rm pom.xml
   mv pom.xml-bak pom.xml
@@ -592,6 +599,12 @@ build() {
   build_oracle_aq_tools
 }
 
+build_with_third_parties() {
+  build
+  compose_thirdparties
+}
+
+
 # main
 if [ $# -eq 0 ]
 then
@@ -609,6 +622,9 @@ case $1 in
     ;;
   "build")
     build
+    ;;
+  "with_third_parties")
+    build_with_third_parties
     ;;
   "all")
     build_all
