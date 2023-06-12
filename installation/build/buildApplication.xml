@@ -270,6 +270,9 @@
 		</script>
 		<echo message="got revision=${revision}" />
 		<mkdir dir="XMOM" />
+		<delete verbose="true">
+			<fileset dir="XMOM" includes="**/*.xml" />
+		</delete>
 		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" />
 		<custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" todir="XMOM/" />
 
