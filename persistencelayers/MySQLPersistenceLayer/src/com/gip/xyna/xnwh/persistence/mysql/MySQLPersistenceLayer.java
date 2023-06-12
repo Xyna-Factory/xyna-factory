@@ -42,6 +42,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -96,6 +97,7 @@ import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision.IndexModification;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerConnectionWithAlterTableSupport;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerWithAlterTableSupportHelper;
+import com.gip.xyna.xnwh.persistence.xmom.PersistenceExpressionVisitors;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.pools.MySQLPoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
@@ -2101,6 +2103,10 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       }
 
       String sqlQuery = query.getQuery().getSqlString();
+
+      //Umwandlung zu rlike, da MariaDB regexp_like() nicht unterstützt
+      sqlQuery = modifyFunction(sqlQuery, PersistenceExpressionVisitors.QueryFunctionStore.REGEXP_LIKE_SQL_FUNCTION, "%Column% RLIKE (%Params%)" );
+
       //TODO cachen
       if (maxRows == 1 && transactionProperties != null
           && transactionProperties.contains(TransactionProperty.selectRandomElement())) {
@@ -2136,6 +2142,24 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         throw new XNWH_GeneralPersistenceLayerException("query \"" + sqlQuery + "\" [" + paras
             + "] could not be executed.", e);
       }
+    }
+
+
+    /**
+     * Passt die Schreibweise einer SQL-Funktion (z.B. regexp_like) an MySQL an.
+     */
+    private String modifyFunction(String sqlQuery, String sqlFunction, String replacement) {
+      if (sqlQuery.contains(sqlFunction)) {
+        String preExpr = "([\\s\\(]+)"; //Leerzeichen oder Klammer stehen am Anfang
+        String params = "([^,]*),([^)]*)"; //Parameter der SQL-Funktion
+        Pattern pattern = Pattern.compile(preExpr +"\\Q" + sqlFunction + "\\E" +"\\s*\\(" + params + "\\)",Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(sqlQuery);
+          if (matcher.find()) {
+            replacement = replacement.replace("%Column%", "$2").replace("%Params%", "$3");
+            sqlQuery = matcher.replaceAll("$1" + replacement); //eigentliche Ersetzung
+        }
+      }
+      return sqlQuery;
     }
 
 
