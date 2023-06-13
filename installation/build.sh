@@ -605,7 +605,8 @@ build() {
 
 build_with_third_parties() {
   build
-  compose_thirdparties
+  build_modeller
+  build_xyna_factory
 }
 
 
