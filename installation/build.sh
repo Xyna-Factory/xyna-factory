@@ -363,8 +363,12 @@ compose_thirdparties() {
   # run license downloads (bom must have name "pom.xml")
   mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
   echo "license-download done"
+  echo "build-dir:"
   ls -la
+  echo "third parties:"
   ls -la $SCRIPT_DIR/../release/third_parties
+  echo "license.xml"
+  echo "$(cat $SCRIPT_DIR/../release/third_parties/licenses.xml)"
   # restore backup
   rm pom.xml
   mv pom.xml-bak pom.xml
