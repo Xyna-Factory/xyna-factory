@@ -78,11 +78,7 @@
                 <artifactId>demonlib</artifactId>
                 <version>1.0.0</version>
             </dependency>
-<<<<<<< HEAD
-            <!--dependency>
-=======
             <dependency>
->>>>>>> 9d473d93 (test: re-added erroneous dependencies (#315))
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>DHCPClusterStateSharedLib</artifactId>
                 <version>1.0.0</version>
