@@ -949,27 +949,15 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
     private <T extends Storable> boolean isView(String tableName) {
-      Boolean queryResult = sqlUtils.queryOneRow("show table status where name = ?", new com.gip.xyna.utils.db.Parameter(tableName),
-                                  new ResultSetReader<Boolean>() {
+      Boolean queryResult = sqlUtils.queryOneRow("SELECT TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_NAME = ?",
+                                                 new com.gip.xyna.utils.db.Parameter(tableName), new ResultSetReader<Boolean>() {
 
-                                    public Boolean read(ResultSet rs) throws SQLException {
-                                      String comment = rs.getString("comment");
-                                      if (rs.wasNull()) {
-                                        return false;
-                                      }
-                                      /*
-                                       * Auszug aus http://dev.mysql.com/doc/refman/5.0/en/show-table-status.html:
-                                        "For views, all the fields displayed by SHOW TABLE STATUS are NULL except that
-                                        Name indicates the view name and Comment says view. 
-                                       */
-                                      return comment != null && comment.equalsIgnoreCase("view");
-                                    }
-                                  });
-      if (queryResult == null) {
-        return false;
-      } else {
-        return queryResult;
-      }
+                                                   public Boolean read(ResultSet rs) throws SQLException {
+                                                     String tableType = rs.getString("TABLE_TYPE");
+                                                     return tableType != null && tableType.equalsIgnoreCase("VIEW");
+                                                   }
+                                                 });
+      return Boolean.TRUE.equals(queryResult);
     }
 
 
