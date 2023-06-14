@@ -652,8 +652,8 @@ case $1 in
     build
     ;;
   "all")
-    #build_all
-    build_with_third_parties
+    build_all
+    #build_with_third_parties
     ;;
   "compose")
     build_xyna_factory
