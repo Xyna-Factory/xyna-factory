@@ -380,21 +380,16 @@ compose_thirdparties() {
   sed -i '/<dependency>/{N;N;{/<artifactId>jradius-extended</{N;N;d}}}' pom.xml
   sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
   sed -i '/<dependency>/{N;N;{/<artifactId>gnu-crypto</{N;N;d}}}' pom.xml
-  echo "\n pom.xml:"
+  echo "pom.xml:"
   echo "$(cat pom.xml)"
-  echo "\n now running license-download..."
   # run license downloads (bom must have name "pom.xml")
   mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
-  echo "license-download done"
-  echo "build-dir:"
-  ls -la
-  echo "third parties:"
-  ls -la $SCRIPT_DIR/../release/third_parties
   echo "license.xml"
   echo "$(cat $SCRIPT_DIR/../release/third_parties/licenses.xml)"
   # restore backup
   rm pom.xml
   mv pom.xml-bak pom.xml
+  echo "license-download done"
 }
 
 #TODO: buildTemplateMechanismStandalone is a target in installation/build/build.xml
@@ -626,12 +621,6 @@ build() {
   build_oracle_aq_tools
 }
 
-build_with_third_parties() {
-  build
-  build_modeller
-  build_xyna_factory
-}
-
 
 # main
 if [ $# -eq 0 ]
@@ -653,7 +642,6 @@ case $1 in
     ;;
   "all")
     build_all
-    #build_with_third_parties
     ;;
   "compose")
     build_xyna_factory
