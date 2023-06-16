@@ -157,6 +157,9 @@ public class Tags {
   public static final String EXCEPTION_TYPE_MESSAGE_LANGUAGE = "messageLanguage";
   public static final String EXCEPTION_TYPE_MESSAGE_TEXT = "messageText";
   
+  // member vars
+  public static final String DATA_TYPE_MEMBER_VAR_DOCUMENTATION = "documentation";
+
   // member methods
   public static final String DATA_TYPE_MEMBER_METHOD = "memberMethod";
   public static final String DATA_TYPE_IMPLEMENTATION_TYPE = "implementationType";
