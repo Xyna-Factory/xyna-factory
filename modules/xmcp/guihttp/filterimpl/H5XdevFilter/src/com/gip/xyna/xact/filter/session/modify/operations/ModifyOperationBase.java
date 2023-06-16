@@ -698,11 +698,14 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
     DatatypeVariable var = new DatatypeVariable(parent.getRoot().getGenerationBase());
     if (content.getFqn() != null && isFqnReachable(content.getFqn(), parent.getRoot().getGenerationBase().getRevision())) {
       var.create(content.getFqn());
+    } else if (content.getPrimitiveType() != null) {
+      var.create(content.getPrimitiveType());
     } else {
       var.create(PrimitiveType.STRING);
     }
     var.setLabel(content.getLabel());
     var.setIsList(content.isList());
+    var.setDocumentation(content.getDocumentation());
 
     List<String> usedNames = new ArrayList<>();
     for (AVariable memberVar : parent.getDtOrException().getAllMemberVarsIncludingInherited()) {
