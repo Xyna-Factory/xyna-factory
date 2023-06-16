@@ -30,9 +30,9 @@
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
     <target name="prepareLibs" description="Prepare libs">
-        <copy file="${basedir}/lib/xyna/bcpkix-jdk15on-1.60.jar" todir="${unfree.lib.dir}"/>
-        <copy file="${basedir}/lib/xyna/bcprov-jdk15on-1.60.jar" todir="${unfree.lib.dir}"/>
-        <copy file="${basedir}/lib/xyna/com.ibm.mq.allclient-9.1.1.0.jar" todir="${unfree.lib.dir}"/>
+        <copy file="${basedir}/lib/xyna/bcpkix-jdk15on-1.64.jar" todir="${unfree.lib.dir}"/>
+        <copy file="${basedir}/lib/xyna/bcprov-jdk15on-1.64.jar" todir="${unfree.lib.dir}"/>
+        <copy file="${basedir}/lib/xyna/com.ibm.mq.allclient-9.1.5.0.jar" todir="${unfree.lib.dir}"/>
         <copy file="${basedir}/lib/xyna/com.ibm.mq.traceControl-9.0.0.13.jar" todir="${unfree.lib.dir}"/>
         <copy file="${basedir}/lib/xyna/fscontext-1.2.jar" todir="${unfree.lib.dir}"/>
         <copy file="${basedir}/lib/xyna/jms-1.1.jar" todir="${unfree.lib.dir}"/>
