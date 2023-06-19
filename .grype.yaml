@@ -1,0 +1,7 @@
+# see https://github.com/anchore/grype#specifying-matches-to-ignore
+ignore:
+
+  # We can make rules to match just by vulnerability ID:
+  - vulnerability: CVE-2022-21511
+    package:
+      name: xmlparserv2
