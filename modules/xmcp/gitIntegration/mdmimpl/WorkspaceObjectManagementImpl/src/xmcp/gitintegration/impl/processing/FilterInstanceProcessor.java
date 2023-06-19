@@ -28,9 +28,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xact.XynaActivationBase;
 import com.gip.xyna.xact.XynaActivationPortal;
+import com.gip.xyna.xact.trigger.DeployFilterParameter;
 import com.gip.xyna.xact.trigger.FilterInformation;
 import com.gip.xyna.xact.trigger.FilterInformation.FilterInstanceInformation;
+import com.gip.xyna.xfmg.xfctrl.cmdctrl.CommandControl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
@@ -50,6 +53,7 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
   private static final String TAG_TRIGGERINSTANCENAME = "triggerinstancename";
 
   private static final XynaActivationPortal xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
+  private static final XynaActivationBase xynaActivation = XynaFactory.getInstance().getActivation();
 
 
   @Override
@@ -194,22 +198,37 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
 
   @Override
   public void create(FilterInstance item, long revision) {
-    // TODO Auto-generated method stub
-
+    CommandControl.tryLock(CommandControl.Operation.FILTER_DEPLOY, revision);
+    try {
+      DeployFilterParameter deployFilterParameter =
+          new DeployFilterParameter.Builder().filterName(item.getFilterName()).instanceName(item.getFilterInstanceName())
+              .triggerInstanceName(item.getTriggerInstanceName()).revision(revision).optional(false).build();
+      xynaActivation.getActivationTrigger().deployFilter(deployFilterParameter);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      CommandControl.unlock(CommandControl.Operation.FILTER_DEPLOY, revision);
+    }
   }
 
 
   @Override
   public void modify(FilterInstance from, FilterInstance to, long revision) {
-    // TODO Auto-generated method stub
-
+    this.delete(from, revision);
+    this.create(to, revision);
   }
 
 
   @Override
   public void delete(FilterInstance item, long revision) {
-    // TODO Auto-generated method stub
-
+    CommandControl.tryLock(CommandControl.Operation.FILTER_UNDEPLOY, revision);
+    try {
+      xynaActivation.getActivationTrigger().undeployFilter(item.getFilterInstanceName(), revision);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      CommandControl.unlock(CommandControl.Operation.FILTER_UNDEPLOY, revision);
+    }
   }
 
 
