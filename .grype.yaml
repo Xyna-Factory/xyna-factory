@@ -1,0 +1,61 @@
+# see https://github.com/anchore/grype#specifying-matches-to-ignore
+ignore:
+# In the comments "marked packages" are the apackes that caused the alerts.
+# They are not affected by the CVE, but grype throught so because of issues converting the package
+#   name to the CPE.
+
+
+  # CVE-2022-21511; CVE-2022-21510:
+  # - https://www.oracle.com/security-alerts/cpujul2022.html
+  # - https://github.com/anchore/grype/issues/1186
+  # marked packages:
+  #   - xdb,
+  #   - xmlparserv2,
+  #   - ojdbc10
+  - vulnerability: CVE-2022-21511
+  - vulnerability: CVE-2022-21510
+
+  # CVE-2011-5034, CVE-2008-0732, CVE-2006-0254
+  # - https://issues.apache.org/jira/browse/GERONIMO-6814
+  # - https://github.com/anchore/grype/issues/1071
+  # marked packages:
+  #   - geronimo-jms_1.1_spec,
+  #   - geronimo-j2ee-management_1.1_spec,
+  #   - geronimo-j2ee-management_1.0_spec,
+  #   - geronimo-jms_1.1_spec
+  - vulnerability: CVE-2011-5034
+  - vulnerability: CVE-2008-0732
+  - vulnerability: CVE-2006-0254
+
+  # - https://github.com/anchore/grype/issues/431
+  # marked packages:
+  #   - maven-resolver-util (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-transport-http (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-transport-file (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-transport-classpath (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-spi (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-named-locks (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-impl (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-connector-basic (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-api (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-ant-tasks (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-provider (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  #   - maven-resolver-impl (maven-resolver-ant-tasks-1.4.0-uber.jar)
+  - vulnerability: CVE-2021-26291
+
+  # affected is Database Server not the jdbc:
+  # - https://nvd.nist.gov/vuln/detail/CVE-2017-3310
+  # - https://nvd.nist.gov/vuln/detail/CVE-2017-10202
+  # - https://nvd.nist.gov/vuln/detail/CVE-2016-3609
+  # - https://nvd.nist.gov/vuln/detail/CVE-2016-3454
+  # marked packages:
+  #   - ojdbc5
+  - vulnerability: CVE-2017-3310
+  - vulnerability: CVE-2017-10202
+  - vulnerability: CVE-2016-3609
+  - vulnerability: CVE-2016-3454
+
+  # CVE-2020-1945 is about Apache Ant itself, not about the ant-crontib.jar
+  # marked packages:
+  #   - ant-contrib.jar
+  - vulnerability: CVE-2020-1945
