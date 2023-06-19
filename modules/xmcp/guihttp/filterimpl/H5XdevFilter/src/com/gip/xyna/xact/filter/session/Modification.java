@@ -397,6 +397,7 @@ public class Modification implements HasXoRepresentation {
     checkRevision(saveRequest.getRevision());
     Persistence persistence = new Persistence(gbo, revision, saveRequest, session.getSession());
     persistence.save();
+    focusCandidateId = null;
 
     return persistence.getSaveFqn();
   }
