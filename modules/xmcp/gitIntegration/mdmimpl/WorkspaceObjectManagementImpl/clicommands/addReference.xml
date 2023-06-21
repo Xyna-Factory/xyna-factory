@@ -16,11 +16,11 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="addReference" Description="Add a reference for build support to an object" />
+  <CommandDefinition Name="addReference" Description="Add a reference for build support for a dependent library to an object. Triggers, filters and some datatypes require libraries to function. By providing references to these libraries, they can be set up correctly. References, in this context, are managed by the GitIntegration application." />
   <Argument Name="workspaceName" Description="Workspace in which the object is registered" />
   <Argument Name="path" Description="Path to where the referenced files are stored/generated from" />
-  <Argument Name="objectType" Description="Type of the Object for which this reference is relevant: DATATYPE, TRIGGER, TRIGGERINSTANCE, FILTER, FILTERINSTANCE" />
-  <Argument Name="refType" Description="Type of the reference: build (ant build will be called here), lib_folder (jar files under this folder are considert for build support" />
+  <Argument Name="objectType" Description="Type of the Object for which this reference is relevant: DATATYPE, TRIGGER, FILTER" />
+  <Argument Name="refType" Description="Type of the reference: build (ant build will be called here), lib_folder (jar files under this folder are considered for build support" />
   <Argument Name="objectName" Description="FqName of the Object using this reference" />
 
 </XynaCommandLineCommand>

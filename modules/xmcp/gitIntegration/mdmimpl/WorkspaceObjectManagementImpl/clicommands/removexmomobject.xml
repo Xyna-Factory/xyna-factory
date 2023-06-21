@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="removexmomobject" Description="Removes the registered XMOM object with specified fqName in the given workspace. In particular, a potentially existing deployed state is removed." />
-  <Argument Name="workspaceName" Description="Workspace from which the XMOM object is removed" />
+  <CommandDefinition Name="removexmomobject" Description="Remove a xmom object from a workspace." />
+  <Argument Name="workspaceName" Description="Workspace from which the XMOM object should be removed" />
   <Argument Name="fqName" Description="fqName of the XMOM object" />
 </XynaCommandLineCommand>
