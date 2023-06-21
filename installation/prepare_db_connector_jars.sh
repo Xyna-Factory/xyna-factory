@@ -19,7 +19,7 @@
 INSTANCE=001
 
 
-if [[ $# == 1 ]];
+if [[ $# == 1 ]] ; then
   INSTANCE=$1
 fi
 
