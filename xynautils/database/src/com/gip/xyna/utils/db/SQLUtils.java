@@ -332,6 +332,8 @@ public class SQLUtils {
                stmt.close();
             } catch (SQLException e) {
             }
+         } else {
+           clearStatement(stmt);
          }
       }
    }
@@ -549,6 +551,19 @@ public class SQLUtils {
       } finally {
          finallyClose(rs, stmt);
       }
+   }
+   
+
+   private void clearStatement(PreparedStatement stmt) {
+     try {
+       stmt.clearParameters();
+       boolean moreResults = stmt.getMoreResults();
+       while (moreResults) {
+         moreResults = stmt.getMoreResults();
+       }
+     } catch (SQLException e) {
+       logException(e);
+     }
    }
 
    /**
