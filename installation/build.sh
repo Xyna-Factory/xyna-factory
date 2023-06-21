@@ -316,7 +316,18 @@ build_xyna_factory() {
   zip_xyna
   compose_prerequisites
   compose_modeller
+  compose_connectors
   zip_result
+}
+
+
+compose_connectors() {
+  cd $SCRIPT_DIR
+  mkdir -p $SCRIPT_DIR/../release
+  mvn -f db.connector.pom.xml dependency:resolve -DexcludeTransitive=true
+  mvn -f db.connector.pom.xml -DoutputDirectory="${SCRIPT_DIR}/../release" dependency:copy-dependencies -DexcludeTransitive=true
+  mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release -DlicensesOutputFile=${SCRIPT_DIR}/../release/licenses.xml -DlicensesOutputFileEol=LF
+  cp ${SCRIPT_DIR}/prepare_db_connctor_jars.sh ${SCRIPT_DIR}/../release
 }
 
 
