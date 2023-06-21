@@ -348,10 +348,48 @@ zip_result() {
 
 
 compose_thirdparties() {
+  echo "downloading third party licenses"
   cd $SCRIPT_DIR/../release
   mkdir third_parties
-  cd $SCRIPT_DIR/../server
-  mvn license:download-licenses -s pom.xml license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
+  cd $SCRIPT_DIR/build
+  # backup pom.xml
+  cp pom.xml pom.xml-bak
+  # comment "dependencyManagement"-tags
+  sed -i s/\<dependencyManagement\>/\<\!--dependencyManagement--\>/g pom.xml
+  sed -i s:\</dependencyManagement\>:\<\!--/dependencyManagement--\>:g pom.xml
+  # delete unfree or erroneous dependencies
+  sed -i '/<dependency>/{N;N;{/<artifactId>demonlib</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPClusterStateSharedLib</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPv6DBStorablesSharedLib</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPSharedLib</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>OraclePersistenceLayer</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>RemoteGenericODSAccess</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>SFTPTrigger</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>XynaContentStorables</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>XynaLocalMemoryPersistenceLayer</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>XynaXMLShellPersistenceLayer</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.allclient</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.traceControl</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>tools</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>fscontext</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>providerutil</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>javaee-api</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>jms</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-core</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-dictionary</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-extended</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
+  sed -i '/<dependency>/{N;N;{/<artifactId>gnu-crypto</{N;N;d}}}' pom.xml
+  echo "pom.xml:"
+  echo "$(cat pom.xml)"
+  # run license downloads (bom must have name "pom.xml")
+  mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
+  echo "license.xml"
+  echo "$(cat $SCRIPT_DIR/../release/third_parties/licenses.xml)"
+  # restore backup
+  rm pom.xml
+  mv pom.xml-bak pom.xml
+  echo "license-download done"
 }
 
 #TODO: buildTemplateMechanismStandalone is a target in installation/build/build.xml
@@ -582,6 +620,7 @@ build() {
   build_persistencelayers
   build_oracle_aq_tools
 }
+
 
 # main
 if [ $# -eq 0 ]
