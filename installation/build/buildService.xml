@@ -51,6 +51,8 @@
 
     <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
+    <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
+
     <checkJavaVersion />
     <checkServerProperties />
 
@@ -66,6 +68,9 @@
         <available file="${basedir}/Exceptions.xml" />
     </condition>
 
+    <conditaion property="third_parties.available">
+        <available file="${third_parties.pom}" />
+    </condition>
 
     <!-- ================================= 
          target: build-app             
@@ -87,7 +92,12 @@
           <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
           <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
         </resolver:resolve>
-        <loadLicenses targetDir="${base.lib.dir}" />
+        <if>
+            <equals arg1="${third_parties.available}" arg2="true" />
+            <then>
+                <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
+            </then>
+        </if>
         <!-- delete generated-resources ? -->
       </target>
 
