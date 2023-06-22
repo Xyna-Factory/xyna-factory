@@ -51,7 +51,7 @@
         <available file="${basedir}/Exceptions.xml" />
     </condition>
 
-    <conditaion property="third_parties.available">
+    <condition property="third_parties.available">
         <available file="${third_parties.pom}" />
     </condition>
 
