@@ -86,18 +86,21 @@
                target: resolve             
           =================================  -->
       <target name="resolve">
+
+        <if>
+            <equals arg1="${third_parties.available}" arg2="true" />
+            <then>
+                <intallPom pom="${third_parties.pom}" />
+                <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
+            </then>
+        </if>
+
         <resolver:resolve>
           <resolver:dependencies pomRef="pom"/>
           <resolver:remoterepos refid="xyna.repository"/>
           <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
           <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
         </resolver:resolve>
-        <if>
-            <equals arg1="${third_parties.available}" arg2="true" />
-            <then>
-                <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
-            </then>
-        </if>
         <!-- delete generated-resources ? -->
       </target>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -278,6 +278,28 @@
     </sequential>
   </macrodef>
 
+  <macrodef name="installPom">
+    <attribute name="pom" default="${basedir}/pom.xml" />
+    <sequential>
+      <exec osfamily="windows" executable="cmd" outputproperty="exec.output">
+        <arg value="/c"/>
+        <arg value="mvn"/>
+        <arg value="-f" />
+        <arg value="${pom}" />
+        <arg value="-s" />
+        <arg value="${mavenSettingFile}" />
+        <arg value="install" />
+      </exec>
+      <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
+        <arg value="-f" />
+        <arg value="${pom}" />
+        <arg value="-s" />
+        <arg value="${mavenSettingFile}" />
+        <arg value="install" />
+      </exec>
+      <echo message="${exec.output}" />
+    </sequential>
+  </macrodef>
 
   <!-- = = = = = = = = = = = = = = = = =
                 macrodef: copyLibraryToAntLib          
