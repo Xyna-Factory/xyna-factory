@@ -266,7 +266,7 @@
       </exec>
       <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
         <arg value="-f" />
-        <arg value="${pom}" />
+        <arg value="@{pom}" />
         <arg value="-s" />
         <arg value="${mavenSettingFile}" />
         <arg value="license:download-licenses" />
