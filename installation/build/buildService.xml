@@ -90,7 +90,7 @@
         <if>
             <equals arg1="${third_parties.available}" arg2="true" />
             <then>
-                <intallPom pom="${third_parties.pom}" />
+                <installPom pom="${third_parties.pom}" />
                 <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
             </then>
         </if>
