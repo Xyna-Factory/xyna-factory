@@ -68,6 +68,7 @@ das entsprechend zum Betriebssystem und der Architektur des Zielsystem zu waehle
   Welche <optionen> es gibt bekommt man angezeigt durch das Kommando:
      # ./install_prerequisites.sh
   
+  *Anmerkung:* Ab Java18 sollte die Property `jvm.option.additional` ergänzt werden um `-Djava.security.manager=allow`
   
    Beispiele: 
    
