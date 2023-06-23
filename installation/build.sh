@@ -609,18 +609,19 @@ build_all() {
   build_xynautils
   build_misc
   build_xynafactory_jar
-  build_conpooltypes
-  build_persistencelayers
-  prepare_modules
-  build_oracle_aq_tools
-  build_modules
-  build_plugins
-  build_clusterproviders
-  build_networkavailability
-  buildTemplateImplNew
-  build_prerequisites
-  build_modeller
-  build_xyna_factory
+  # TODO: Temporary -> remove comments later
+  # build_conpooltypes
+  # build_persistencelayers
+  # prepare_modules
+  # build_oracle_aq_tools
+  # build_modules
+  # build_plugins
+  # build_clusterproviders
+  # build_networkavailability
+  # buildTemplateImplNew
+  # build_prerequisites
+  # build_modeller
+  # build_xyna_factory
 }
 
 build() {
