@@ -340,18 +340,7 @@ f_check_system_before_installation () {
     echo -en "\n  * Checking program 'java' is available at 'JAVA_HOME=${JAVA_HOME}/${BIN_PATH}'"
     VOLATILE_JAVA=${JAVA_HOME}/${BIN_PATH}/java
     if [[ -x ${VOLATILE_JAVA} ]]; then
-     f_ok
-     echo -en "\n  * Checking Java installation is Java version 11"
-     JAVA_VERSION=$(${VOLATILE_JAVA} -version 2>&1 | ${VOLATILE_AWK} -F\" '{print $2}')
-     local isSupported=$(echo ${JAVA_VERSION} |  ${VOLATILE_SED} -e "s+^11.*+JAVA_CHECK_PASSED+")
-     if [[ "${isSupported}" == "JAVA_CHECK_PASSED" ]]; then
-       f_ok
-     else
-       f_failed; failed=1
-       echo "!!! Not supported java version found!!!"
-       ${VOLATILE_JAVA} -version
-       echo "!!!!!!!!!!!!!!!!!!!!!!!"
-     fi
+      f_ok
     else
       f_failed; failed=1
     fi
