@@ -38,18 +38,22 @@ das entsprechend zum Betriebssystem und der Architektur des Zielsystem zu waehle
  
 2.2	Zum Entpacken der Liefergegenstaende ist ein neues Verzeichnis im Homeverzeichnis des root-Benutzer anzulegen:
  
+```
    # mkdir -p ${HOME}/Lieferungen/Lieferung_YYYYMMDD 
    # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
-   
-   Alle benoetigten Pakete werden dann in das neue Verzeichnis kopiert und dort entpackt.
+```
+
+Alle benoetigten Pakete werden dann in das neue Verzeichnis kopiert und dort entpackt.
 
 
 
 2.3. Porperties anlegen und anpassen
 
+```
    # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
    # cd XynaBlackEditionPrerequisites*
    # ./install_prerequisites.sh -n
+```
 
   Dieser Befehl erzeugt das Verzeichnis: /etc/xyna/environment und legt darin die Datei 
   "black_edition001.properties" und eine rechnerspezifische Properties-Datei  "<hostname>.properties" 
