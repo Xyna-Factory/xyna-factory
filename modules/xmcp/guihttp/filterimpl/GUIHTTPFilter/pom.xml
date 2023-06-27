@@ -36,13 +36,10 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>GUIHTTPFilter_third_parties</artifactId>
+            <version>1.0.0</version>
+            <type>pom</type>
             <scope>runtime</scope>
         </dependency>
         <dependency>
