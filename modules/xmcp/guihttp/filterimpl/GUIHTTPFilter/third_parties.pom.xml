@@ -21,38 +21,28 @@
         <groupId>com.gip.xyna</groupId>
         <artifactId>bom</artifactId>
         <version>1.0.0</version>
-        <relativePath>../../../../installation/build/pom.xml</relativePath>
+        <relativePath>../../../../../installation/build/pom.xml</relativePath>
     </parent>
-    
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
-    <artifactId>ISO8601ToUnixTimestampTransformationImpl</artifactId>
-    <version>0.6.45</version>
-    <packaging>jar</packaging>
+    <artifactId>GUIHTTPFilter_third_parties</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>ISO8601ToUnixTimestampTransformationImpl_third_parties</artifactId>
-            <version>1.0.0</version>
-            <type>pom</type>
+       <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-1.2-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynafactory</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynautils-exceptions</artifactId>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>
