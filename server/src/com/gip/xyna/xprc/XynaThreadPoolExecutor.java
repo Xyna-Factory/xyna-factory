@@ -55,7 +55,7 @@ import com.gip.xyna.xfmg.xfmon.fruntimestats.values.StringStatisticsValue;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 
 
-//TODO XynaRunnables sollten entscheiden kÃ¶nnen, ob sie gequeued werden dÃ¼rfen
+//TODO XynaRunnables sollten entscheiden können, ob sie gequeued werden dürfen
 public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements StatisticsReporterLegacy {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(XynaThreadPoolExecutor.class);
@@ -119,20 +119,20 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
   public interface ThreadPoolUsageStrategy {
 
     /**
-     * PrÃ¼fung, ob XynaRunnable direkt von einem Thread ausgefÃ¼hrt werden darf
+     * Prüfung, ob XynaRunnable direkt von einem Thread ausgeführt werden darf
      * @param xynaRunnable
      * @return
      */
     boolean isExecutionPossible(XynaRunnable xynaRunnable);
 
     /**
-     * Vor dem AusfÃ¼hren des XynaRunnable gerufen
+     * Vor dem Ausführen des XynaRunnable gerufen
      * @param xynaRunnable
      */
     void beforeExecute(XynaRunnable xynaRunnable);
 
     /**
-     * Vor dem AusfÃ¼hren des XynaRunnable gerufen
+     * Vor dem Ausführen des XynaRunnable gerufen
      * @param xynaRunnable
      */
     void afterExecute(XynaRunnable xynaRunnable);
@@ -160,7 +160,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
   }
   
   /**
-   * Weitere Threads Ã¼ber corePoolSize werden erst verwendet, wenn Queue voll ist
+   * Weitere Threads über corePoolSize werden erst verwendet, wenn Queue voll ist
    *
    */
   public static class DefaultThreadPoolSizeStrategy implements ThreadPoolSizeStrategy {
@@ -193,7 +193,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
       int nextPoolSize;
       int waitingTasks = executor.getWaitingCount();
       if( waitingTasks > 0 ) {
-        //muss Pool wirklich vergrÃ¶ÃŸert werden?
+        //muss Pool wirklich vergrößert werden?
         int effectivelyWaiting = getEffectivelyWaitingTaskCount();
         if( effectivelyWaiting > 0 ) {
           nextPoolSize = Math.min( calculateNextPoolSize(effectivelyWaiting), maximumPoolSize );
@@ -201,7 +201,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
           nextPoolSize = currentPoolSize;
         }
       } else {
-        //GrÃ¶ÃŸe wieder veringern
+        //Größe wieder veringern
         nextPoolSize = corePoolSize;
       }
       adaptPoolSize(nextPoolSize);
@@ -210,8 +210,8 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
     protected abstract int calculateNextPoolSize(int effectivelyWaiting);
 
     /**
-     * Liefert die Anzahl der tatsÃ¤chlich wartenden Tasks. (es kÃ¶nnen sich gleichzeitig Task in der Queue
-     * befinden und Threads warten, dass sie etwas auslesen kÃ¶nnen)
+     * Liefert die Anzahl der tatsächlich wartenden Tasks. (es können sich gleichzeitig Task in der Queue
+     * befinden und Threads warten, dass sie etwas auslesen können)
      * @return
      */
     protected int getEffectivelyWaitingTaskCount() {
@@ -230,9 +230,9 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
   }
   
   /**
-   * Pool soweit vergrÃ¶ÃŸern, dass alle wartenden Tasks ausgefÃ¼hrt werden kÃ¶nnen:
-   * Alle Tasks werden sofort neuen Thread gegeben, die Queue wird erst gefÃ¼llt, wenn die
-   * maximale GrÃ¶ÃŸe des ThreadPools erreicht ist.
+   * Pool soweit vergrößern, dass alle wartenden Tasks ausgeführt werden können:
+   * Alle Tasks werden sofort neuen Thread gegeben, die Queue wird erst gefüllt, wenn die
+   * maximale Größe des ThreadPools erreicht ist.
    */
   public static class EagerThreadPoolSizeStrategy extends AbstractThreadPoolSizeStrategy {
 
@@ -242,7 +242,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
     
     @Override
     protected synchronized int calculateNextPoolSize(int effectivelyWaiting) {
-      //Pool soweit vergrÃ¶ÃŸern, dass alle wartenden AuftrÃ¤ge ausgefÃ¼hrt werden kÃ¶nnen
+      //Pool soweit vergrößern, dass alle wartenden Aufträge ausgeführt werden können
       return currentPoolSize+effectivelyWaiting;
     }
 
@@ -254,8 +254,8 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
   }
   
   /**
-   * ThreadPool wird nur vergrÃ¶ÃŸert, wenn genÃ¼gend Tasks in der Queue warten:
-   * GrÃ¶ÃŸe des Pools = CorePoolSize + Queue-Size/Lazyness
+   * ThreadPool wird nur vergrößert, wenn genügend Tasks in der Queue warten:
+   * Größe des Pools = CorePoolSize + Queue-Size/Lazyness
    */
   public static class LazyThreadPoolSizeStrategy extends AbstractThreadPoolSizeStrategy {
 
@@ -271,7 +271,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
     
     @Override
     protected synchronized int calculateNextPoolSize(int effectivelyWaiting) {
-      //Pool soweit vergrÃ¶ÃŸern, dass ein Teil der wartenden AuftrÃ¤ge ausgefÃ¼hrt werden kann
+      //Pool soweit vergrößern, dass ein Teil der wartenden Aufträge ausgeführt werden kann
       return corePoolSize+effectivelyWaiting/lazyness;
     }
 
@@ -312,11 +312,11 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
     }
 
     /**
-     * gebe runnable zurÃ¼ck, welches nicht ausgefÃ¼hrt, aber auf dem noch nicht "rejected()" ausgefÃ¼hrt wurde oder null, falls das runnable gequeued werden konnte.
-     * &lt;=&gt; gebe nur runnable zurÃ¼ck, wenn das Ã¼bergebene runnable nicht gequeued werden konnte.
+     * gebe runnable zurück, welches nicht ausgeführt, aber auf dem noch nicht "rejected()" ausgeführt wurde oder null, falls das runnable gequeued werden konnte.
+     * &lt;=&gt; gebe nur runnable zurück, wenn das übergebene runnable nicht gequeued werden konnte.
      */
     public Runnable exchangeRejected(Runnable r) {
-      //anstelle des neuen nicht ausfÃ¼hrbaren runnables wird das Ã¤lteste vorhandene in der queue verworfen
+      //anstelle des neuen nicht ausführbaren runnables wird das älteste vorhandene in der queue verworfen
       Runnable eldest = queue.offerOrFilteredExchange( pollFilter, r );
       if( eldest == null ) {
         return null; //Queue wurde frei
@@ -325,7 +325,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
       } else {
         if( eldest instanceof XynaRunnable ) {
           ((XynaRunnable) eldest).rejected();
-          return null; //Rejection wurde durchgefÃ¼hrt
+          return null; //Rejection wurde durchgeführt
         } else {
           throw new IllegalStateException( "offerOrFilteredExchange returned no XynaRunnable" );
         }
@@ -638,9 +638,9 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
   private static BlockingQueue<Runnable> createPrioritizedQueueIfNecessary(BlockingQueue<Runnable> queue,
                                                                            int workQueueSize, boolean queueAsRingBuffer) {
     if( queue instanceof PrioritizedCallerQueue ) {
-      return queue; // ist bereits gewÃ¼nschte Queue 
+      return queue; // ist bereits gewünschte Queue 
     } else if( queue == null ) {
-      //es wird eine Queue benÃ¶tigt, daher anlegen 
+      //es wird eine Queue benötigt, daher anlegen 
       return new PrioritizedCallerQueue(workQueueSize);
     } else {
       //Queue existiert schon
@@ -676,7 +676,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
         logger.trace( "WrappedRejectedExecutionHandler "+r );
       }
       if( executor instanceof XynaThreadPoolExecutor ) {
-        //FIXME: exchange sollte nicht das "rejected()" ausfÃ¼hren, sondern das gehÃ¶rt hier in die methode.
+        //FIXME: exchange sollte nicht das "rejected()" ausführen, sondern das gehört hier in die methode.
         XynaThreadPoolExecutor xtpe = (XynaThreadPoolExecutor)executor;
         Runnable rejected = xtpe.getQueueingStrategy().exchangeRejected( r );
         if( rejected != null ) {
@@ -753,9 +753,9 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
         getRejectedExecutionHandler().rejectedExecution(command, this);
       } else {
         if (getActiveCount() == 0 && getQueue().size() > 0) {
-          //bugz 18281: racecondition, dass executionpossible false zurÃ¼ckgegeben hat,
+          //bugz 18281: racecondition, dass executionpossible false zurückgegeben hat,
           //nun aber keine aktiven threads mehr existieren und deshalb das runnable nicht aus der queue entnommen wird
-          //mit dem einstellen eines leeren runnables wird getriggert, dass weitere runnables aus der queue verarbeitet werden kÃ¶nnen.
+          //mit dem einstellen eines leeren runnables wird getriggert, dass weitere runnables aus der queue verarbeitet werden können.
           super.execute(EMPTY_XYNARUNNABLE);
         }
       }
@@ -777,8 +777,8 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
   private static final XynaPropertyBoolean skipThreadLocalCleanup = new XynaPropertyBoolean("xyna.threadpool.threadlocalcleanup.skip", false);
 
   /**
-   * workaround dafÃ¼r, dass reentrantreadwritelock (und ggfs andere klassen, die threadlocal benutzen) ihren kontext
-   * daraus nicht korrekt entfernen und dadurch unkontrolliert der benÃ¶tigte speicherplatz anwachsen kann
+   * workaround dafür, dass reentrantreadwritelock (und ggfs andere klassen, die threadlocal benutzen) ihren kontext
+   * daraus nicht korrekt entfernen und dadurch unkontrolliert der benötigte speicherplatz anwachsen kann
    */
   private void cleanThreadLocal(Thread currentThread) {
     if (currentThread == null) {
@@ -791,16 +791,16 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
     try {
       threadLocalsField.set(currentThread, null);
 
-      //workaround dafÃ¼r, dass in reentrantreadwritelock ein cache fÃ¼r objekte die threadlokal gehalten werden benutzt wird.
+      //workaround dafür, dass in reentrantreadwritelock ein cache für objekte die threadlokal gehalten werden benutzt wird.
       //wenn man dies nicht macht, ist der cache != dem threadlokal gehaltenen objekt und es kann illegalmonitorstateexceptions geben.
       //usecase: thread1 macht readlock.lock(), readlock.unlock() => cache ist vorhanden mit holdcount = 0
       //         dann ist thread zuende und threadlocalmap wird geleert
       //         dann macht thread1 readlock.lock => gecachter holdcount = 1
-      //         dann kommt thread2 macht readlock.lock => cache wird entfernt und durch einen fÃ¼r thread2 ersetzt => information von holdcount = 1 geht verloren.
+      //         dann kommt thread2 macht readlock.lock => cache wird entfernt und durch einen für thread2 ersetzt => information von holdcount = 1 geht verloren.
       //         thread1 readlock.unlock => illegalmonitorstateexception, weil holdcount in threadlocal = 0.
       //mit der neuen threadid wird forciert, dass der cache nicht nach wiederverwendet werden kann, falls der thread aus dem threadpool
       //einmal fertiggelaufen war und beim erneuten execute das gleiche reentrantlock benutzt.
-      //das verhalten ist dann genauso wie man es ohne threadpoolbenutzung erwarten wÃ¼rde (immer andere threadids)
+      //das verhalten ist dann genauso wie man es ohne threadpoolbenutzung erwarten würde (immer andere threadids)
       long newTid = (Long) createTidMethod.invoke(null);
       tidField.set(currentThread, newTid);
     } catch (IllegalArgumentException e) {
@@ -915,7 +915,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
   
   @Override
   public int getCorePoolSize() {
-    //muss Ã¼berschrieben werden, da interne corePoolSize geÃ¤ndert wird
+    //muss überschrieben werden, da interne corePoolSize geändert wird
     return corePoolSize;
   }
 

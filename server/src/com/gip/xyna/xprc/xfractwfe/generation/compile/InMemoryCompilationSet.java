@@ -85,9 +85,9 @@ public class InMemoryCompilationSet implements CompilationSet {
 
   /**
    * classdir, in das die classfiles generiert werden.
-   * wirkt sich nur auf sources aus, die nach dem setzen des classdirs zum compilationset hinzugefÃ¼gt werden.
+   * wirkt sich nur auf sources aus, die nach dem setzen des classdirs zum compilationset hinzugefügt werden.
    * 
-   * alternativ kann fÃ¼r jede javasource ein eigenes classdir angegeben werden @link{JavaSourceFromString#setClassOutputLocation(String)}
+   * alternativ kann für jede javasource ein eigenes classdir angegeben werden @link{JavaSourceFromString#setClassOutputLocation(String)}
    * @param classDir
    */
   public void setClassDir(String classDir) {
@@ -216,7 +216,7 @@ public class InMemoryCompilationSet implements CompilationSet {
       }
       CompilationTask task = compiler.getTask(sw, stfm, stfm.getErrorCollector(), options, null, compilationTargetsOrdered);
 
-      synchronized (GenerationBase.class) { //keine compiles gleichzeitig ausfÃ¼hren (synchronisiert mit Main.compile())
+      synchronized (GenerationBase.class) { //keine compiles gleichzeitig ausführen (synchronisiert mit Main.compile())
         if (!task.call()) {
           // according to the java-doc we should have encountered an error and will throw once checking the diagnostics collector 
         }
@@ -279,7 +279,7 @@ public class InMemoryCompilationSet implements CompilationSet {
   }
   
   /**
-   * reihenfolge in der files hier hinzugefÃ¼gt werden, ist fÃ¼rs kompilieren relevant
+   * reihenfolge in der files hier hinzugefügt werden, ist fürs kompilieren relevant
    */
   public void addToCompile(JavaSourceFromString source) {
     if (classDir != null) {
