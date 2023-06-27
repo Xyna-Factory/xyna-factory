@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,6 @@
 
     <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
-    <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
-
     <checkJavaVersion />
     <checkServerProperties />
 
@@ -49,10 +47,6 @@
 
     <condition property="exception.xml.available">
         <available file="${basedir}/Exceptions.xml" />
-    </condition>
-
-    <condition property="third_parties.available">
-        <available file="${third_parties.pom}" />
     </condition>
 
     <!-- ================================= 
@@ -140,20 +134,13 @@
                target: resolve             
           =================================  -->
       <target name="resolve">
-
-        <if>
-            <equals arg1="${third_parties.available}" arg2="true" />
-            <then>
-                <installPom pom="${third_parties.pom}" />
-                <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
-            </then>
-        </if>
         <resolver:resolve>
           <resolver:dependencies pomRef="pom"/>
           <resolver:remoterepos refid="xyna.repository"/>
           <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
           <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
         </resolver:resolve>
+        <loadLicenses targetDir="${base.lib.dir}" />
         <!-- delete generated-resources ? -->
       </target>
 

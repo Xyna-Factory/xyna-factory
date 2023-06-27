@@ -36,10 +36,8 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>ISO8601ToUnixTimestampTransformationImpl_third_parties</artifactId>
-            <version>1.0.0</version>
-            <type>pom</type>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
