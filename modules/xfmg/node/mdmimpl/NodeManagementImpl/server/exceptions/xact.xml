@@ -113,7 +113,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Der Trigger %0% ist noch deployed und kann nicht gelÃ¶scht werden</MessageText>
+      <MessageText Language="DE">Der Trigger %0% ist noch deployed und kann nicht gelöscht werden</MessageText>
       <MessageText Language="EN">The trigger %0% is still deployed and can't be removed</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-09250" TypeName="XACT_FilterMayNotBeRemovedIsDeployedException" TypePath="com.gip.xyna.xact.exceptions">
@@ -122,7 +122,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Der Filter %0% ist noch deployed und kann nicht gelÃ¶scht werden</MessageText>
+      <MessageText Language="DE">Der Filter %0% ist noch deployed und kann nicht gelöscht werden</MessageText>
       <MessageText Language="EN">The filter %0% is still deployed and can't be removed</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-09251" TypeName="XACT_WrongTriggerException" TypePath="com.gip.xyna.xact.exceptions">
@@ -302,10 +302,10 @@
       <MessageText Language="EN">Startparameters of trigger %0% have changed. Triggers deployed before have incompatible startparameters.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-09347" TypeName="XACT_TriggerCouldNotBeStartedException" TypePath="com.gip.xyna.xact.exceptions" IsAbstract="true">
-   	  <Description Language="DE" >Trigger Impls kÃ¶nnen hier von ableiten</Description>
+   	  <Description Language="DE" >Trigger Impls können hier von ableiten</Description>
    </ExceptionType>
    <ExceptionType Code="XYNA-09348" TypeName="XACT_TriggerCouldNotBeStoppedException" TypePath="com.gip.xyna.xact.exceptions" IsAbstract="true">
-   	  <Description Language="DE" >Trigger Impls kÃ¶nnen hier von ableiten</Description>
+   	  <Description Language="DE" >Trigger Impls können hier von ableiten</Description>
    </ExceptionType>   
    <ExceptionType Code="XYNA-09349" TypeName="XACT_LibOfFilterImplNotFoundException" TypePath="com.gip.xyna.xact.exceptions">
       <Data Label="library" VariableName="lib">
@@ -395,7 +395,7 @@
          <Type>String</Type>
        </Meta>
      </Data> 
-     <MessageText Language="DE">Trigger Instanz kann nicht enabled werden, wenn der zugehÃ¶rige Trigger '%0%' nicht erfolgreich hinzugefÃ¼gt wurde.</MessageText>
+     <MessageText Language="DE">Trigger Instanz kann nicht enabled werden, wenn der zugehörige Trigger '%0%' nicht erfolgreich hinzugefÃ¼gt wurde.</MessageText>
      <MessageText Language="EN">Trigger instance can not be enabled without its trigger '%0%' being added successfully first.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-09357" TypeName="XACT_FilterInstanceNeedsEnabledFilterException" TypePath="com.gip.xyna.xact.exceptions">
@@ -404,7 +404,7 @@
          <Type>String</Type>
        </Meta>
      </Data> 
-     <MessageText Language="DE">Filter Instanz kann nicht enabled werden, wenn der zugehÃ¶rige Filter '%0%' nicht erfolgreich hinzugefÃ¼gt wurde.</MessageText>
+     <MessageText Language="DE">Filter Instanz kann nicht enabled werden, wenn der zugehörige Filter '%0%' nicht erfolgreich hinzugefÃ¼gt wurde.</MessageText>
      <MessageText Language="EN">Filter instance can not be enabled without its filter '%0%' being added successfully first.</MessageText>
    </ExceptionType>
 </ExceptionStore>

@@ -959,7 +959,7 @@
   </Meta>
   <Data Label="Backward" VariableName="backward">
     <Meta>
-      <Documentation>-„cascade“: Alle XMOM Storables, die ein zu löschendes XMOM Storable referenzieren, werden ebenso gelöscht. Rekursiv
+      <Documentation>-„cascade“: Alle XMOM Storables, die ein zu l�schendes XMOM Storable referenzieren, werden ebenso gel�scht. Rekursiv
 -„error“ (Default): Fehler, falls eine solche Abhängigkeit festgestellt wird
 -„delete“: Das Objekt wird entfernt. Andere XMOM Storables, die dieses Objekt referenzieren, referenzieren es jetzt nicht mehr, sind aber noch funktionstüchtig.</Documentation>
       <Type>String</Type>
@@ -967,8 +967,8 @@
   </Data>
   <Data Label="Forward" VariableName="forward">
     <Meta>
-      <Documentation>-„recursive“: Alle abhängigen XMOM Storables rekursiv löschen. Dabei wird jeweils auch das Verhalten für Rückwärtsreferenzen beachtet.
--„keep“ (Default): Referenzierte Objekte werden nicht gelöscht sondern bleiben bestehen</Documentation>
+      <Documentation>-„recursive“: Alle abhängigen XMOM Storables rekursiv l�schen. Dabei wird jeweils auch das Verhalten für Rückwärtsreferenzen beachtet.
+-„keep“ (Default): Referenzierte Objekte werden nicht gel�scht sondern bleiben bestehen</Documentation>
       <Type>String</Type>
     </Meta>
   </Data>

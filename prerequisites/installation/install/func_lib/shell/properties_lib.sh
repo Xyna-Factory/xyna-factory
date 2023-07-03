@@ -245,7 +245,7 @@ check_property () {
   if [[ -f "${PROP_FILE}" ]]; then
     local ret_val=$(f_count_occurrencies_in_file "^${PROPERTY}[= ]" "${PROP_FILE}")
     case ${ret_val} in
-      0) # Property ist nicht vorhanden, also anlegen, falls benÃ¶tigt
+      0) # Property ist nicht vorhanden, also anlegen, falls benötigt
         local create_prop=$(f_check_property_creation ${PROPERTY});
         if f_selected ${create_prop} ; then
           local COMMENT=$(f_create_comment ${PROPERTY});

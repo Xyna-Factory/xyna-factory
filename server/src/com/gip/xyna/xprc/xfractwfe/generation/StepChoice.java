@@ -83,7 +83,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
   protected static final String METHODNAME_DECIDE;
   
   static {
-    //methoden namen auf diese art gespeichert kÃ¶nnen von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_DECIDE = SubclassChoiceObject.class.getDeclaredMethod(_METHODNAME_DECIDE_ORIG, Object.class, Class[].class, ChoiceLane[].class).getName();
     } catch (Exception e) {

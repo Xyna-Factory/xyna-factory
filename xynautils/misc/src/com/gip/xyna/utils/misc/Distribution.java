@@ -56,7 +56,7 @@ public class Distribution<T extends Comparable<? super T>> {
    }
 
    /**
-    * @return größter Messwert
+    * @return gr�ßter Messwert
     */
    public T getMaximum() {
       analyze();
@@ -80,7 +80,7 @@ public class Distribution<T extends Comparable<? super T>> {
    }
 
    /**
-    * @return 9. Decil der Messwerte (10% der Messwerte sind größer)
+    * @return 9. Decil der Messwerte (10% der Messwerte sind gr�ßer)
     */
    public T get9Decil() {
       analyze();

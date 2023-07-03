@@ -26,7 +26,7 @@ Configuration: Über config.cfg
     ]
   }        
   
-Testseriendatei: Im JSON Format können zwei Arrays definiert werden. 
+Testseriendatei: Im JSON Format k�nnen zwei Arrays definiert werden. 
   Das Array "testseries" hat einen Eintrag für jede weitere auszuführende 
   Testserie. Der Pfad kann absolut (nicht getestet) oder relativ zur 
   aktuellen Testeriendatei angegeben werden. Trennzeichen ist "/".
@@ -145,7 +145,7 @@ Testdatei: Eine Testdatei enthält valides JSON mit folgenden Elementen:
     "operation": "setRandom" - fest. Bestimmt den Operationstypen
     "variable": Name der Variable, die einen Random Wert bekommen soll.
     "length": optional. Default ist 8.
-    "seed": optional. Ermöglicht das Setzten eines seeds
+    "seed": optional. Erm�glicht das Setzten eines seeds
   }
   setFromVariable:
   {
@@ -269,7 +269,7 @@ Testdatei: Eine Testdatei enthält valides JSON mit folgenden Elementen:
 
 Variablen: Beginnen und enden mit "!".
 Modifikationen: Die "modification" Operation unterstützt verschiedene
-  Möglichkeiten zum Verändern einer Variablen:
+  M�glichkeiten zum Verändern einer Variablen:
   substring
   {
     "operation" : "substring" - fest. Bestimmt den Operationstypen
@@ -301,7 +301,7 @@ Modifikationen: Die "modification" Operation unterstützt verschiedene
   }
 
 
-Funktionsdateien: Durch das definieren von Funktionen ist es möglich Arbeitsabläufe 
+Funktionsdateien: Durch das definieren von Funktionen ist es m�glich Arbeitsabläufe 
   einmal zu definieren und dann an anderen Stellen aufzurufen, ohne die Implementation 
   kopieren zu müssen. Dazu ist in der Konfigurationsdatei die Referenz auf eine
   Funktionsdatei hinterlegt, welche vor dem Ausführen der Tests geladen wird.

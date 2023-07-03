@@ -41,7 +41,7 @@
     	</Meta>
     </Data>
     <MessageText Language="EN">Couldn't open socket on port %0%.</MessageText>
-    <MessageText Language="DE">Socket auf Port %0% konnte nicht geöffnet werden.</MessageText>
+    <MessageText Language="DE">Socket auf Port %0% konnte nicht ge�ffnet werden.</MessageText>
   </ExceptionType>
   <ExceptionType Code="XYNA-08002" TypeName="Ex_FileAccessException" TypePath="com.gip.xyna.exceptions" >
     <Data Label="file" VariableName="fileName">
@@ -64,7 +64,7 @@
     	</Meta>
     </Data>
     <MessageText Language="EN">The policy file '%0%' seems to be invalid. The permission '%1%' could not be found.</MessageText>
-    <MessageText Language="DE">In der Policy Datei '%0%' wurde die Permission '%1%' nicht gefunden. Mögliche Gründe: Permission ist nicht vorhanden oder Datei hat ungültigen Syntax.</MessageText>
+    <MessageText Language="DE">In der Policy Datei '%0%' wurde die Permission '%1%' nicht gefunden. M�gliche Gründe: Permission ist nicht vorhanden oder Datei hat ungültigen Syntax.</MessageText>
   </ExceptionType>
   <ExceptionType Code="XYNA-08004" TypeName="Ex_ExceptionHandlingFailedException" TypePath="com.gip.xyna.exceptions" >
     <MessageText Language="EN">Exception occurred during internal Exception Handling.</MessageText>

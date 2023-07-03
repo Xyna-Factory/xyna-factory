@@ -248,10 +248,10 @@ print_full_path_to_executable () {
       echo "!! Unable to locate executables '${EXECUTABLES}'. Abort!" >&2
       echo "XXX_command_${EXECUTABLES// /_}_not_found_XXX" 
     fi; 
-    #möglich für Bug 22964:   kill -s TERM $$
+    #m�glich für Bug 22964:   kill -s TERM $$
     exit 99
   else
-    # TODO warum wird hier ein readlink benötigt?
+    # TODO warum wird hier ein readlink ben�tigt?
     echo "$(__readlink ${FULL_PATH_TO_EXECUTABLE})"
   fi
 }

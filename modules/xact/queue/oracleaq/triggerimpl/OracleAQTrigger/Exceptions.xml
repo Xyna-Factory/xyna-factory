@@ -37,7 +37,7 @@
 				<Type>String</Type>
 			</Meta>
 		</Data>
-		<MessageText Language="DE">Verbindung zu Datenbankschema %0% mit JDBC URL %1% konnte nicht geÃ¶ffnet werden.</MessageText>
+		<MessageText Language="DE">Verbindung zu Datenbankschema %0% mit JDBC URL %1% konnte nicht geöffnet werden.</MessageText>
       <MessageText Language="EN">Could not open connection to database schema %0% with JDBC URL %1%.</MessageText>
    </ExceptionType>
 

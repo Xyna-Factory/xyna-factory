@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Trigger und SharedLib müssen bereits ein Mail-Objekt befüllen, können aber keinen 
+ * Trigger und SharedLib müssen bereits ein Mail-Objekt befüllen, k�nnen aber keinen 
  * XMOM-Datentyp verwenden.
  * Dieser Datentyp hier ist ein Nachbau des XMOM-Datentyps xact.mail.Mail. 
  * Damit ist dann eine Umwandlung in den XMOM-Datentyp einfach.

@@ -39,7 +39,7 @@
 	<target name="build" depends="resolve,buildXSOR">
 		<delete dir="${basedir}/classes" />
 		<mkdir dir="${basedir}/classes" />
-		<!-- eigtl lib auch mal lÃ¶schen, aber das geht nicht, weil man dann das xsor.jar lÃ¶scht...-->
+		<!-- eigtl lib auch mal löschen, aber das geht nicht, weil man dann das xsor.jar löscht...-->
 		<mkdir dir="${basedir}/lib" />
 		<mkdir dir="${target.dir}" />
 <echo message="basedir: ${basedir}" />

@@ -35,7 +35,7 @@
     <Label Language="EN">Custom Fields</Label>
     <Label Language="DE">Benutzerbeschriftungen</Label>
     <Documentation Language="EN">Userdefined value to be used to recognize orders.</Documentation>
-    <Documentation Language="DE">Benutzerdefinierte Werte, die dazu verwendet werden können Aufträge wieder zu erkennen.</Documentation>
+    <Documentation Language="DE">Benutzerdefinierte Werte, die dazu verwendet werden k�nnen Aufträge wieder zu erkennen.</Documentation>
     <FormItem Label="Custom Fields 1">
       <Label Language="EN">Custom Fields 1</Label>
       <Label Language="DE">Benutzerdefiniert 1</Label>
@@ -62,7 +62,7 @@
     <Label Language="EN">Priority</Label>
     <Label Language="DE">Priorität</Label>
     <Documentation Language="EN">Priority of order (highest = 10, lowest = 1); maps to the systems thread priorities</Documentation>
-    <Documentation Language="DE">Priorität des Auftrags (höchste 10, kleinste 1); verwendet die Thread-Prioritäten des Systems</Documentation>
+    <Documentation Language="DE">Priorität des Auftrags (h�chste 10, kleinste 1); verwendet die Thread-Prioritäten des Systems</Documentation>
     <DataLink>%0%.priority</DataLink>
   </FormItem>
 

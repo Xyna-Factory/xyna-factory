@@ -18,14 +18,14 @@
 -->
 <Form xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsList="true" Label="Delete Test Project" TypeName="DeleteTestProjectForm" TypePath="xdev.xtestfactory.infrastructure.forms" Version="1.8">
         <Label Language="EN">Delete Test Project</Label>
-        <Label Language="DE">Test-Projekt löschen</Label>
+        <Label Language="DE">Test-Projekt l�schen</Label>
         <Input>
                 <Data ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
         </Input>
  
         <FormItem Label="Name">
                 <Label Language="EN">Are you sure you want to delete this Test Project? This step cannot be undone. The System Under Test will not be deleted.</Label>
-                <Label Language="DE">Sind Sie sich sicher, dass Sie fortfahren wollen? Dieser Schritt kann nicht rückgängig gemacht werden. Das Zielsystem wird nicht gelöscht.</Label>
+                <Label Language="DE">Sind Sie sich sicher, dass Sie fortfahren wollen? Dieser Schritt kann nicht rückgängig gemacht werden. Das Zielsystem wird nicht gel�scht.</Label>
         </FormItem>
 
         <Box>

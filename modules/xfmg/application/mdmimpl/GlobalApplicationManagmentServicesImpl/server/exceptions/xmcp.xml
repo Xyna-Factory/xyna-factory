@@ -39,7 +39,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">fehler beim lösen von %0% von rmi-registry</MessageText>
+      <MessageText Language="DE">fehler beim l�sen von %0% von rmi-registry</MessageText>
       <MessageText Language="EN">error unbinding %0% from rmi-registry</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-10190" TypeName="XMCP_UNKOWN_XYNA_COMMAND" TypePath="com.gip.xyna.xmcp.exceptions">
@@ -70,7 +70,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Verzeichnis %0% konnte nicht gelöscht werden</MessageText>
+      <MessageText Language="DE">Verzeichnis %0% konnte nicht gel�scht werden</MessageText>
       <MessageText Language="EN">Couldn't delete directory %0%</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-10195" TypeName="XMCP_COULD_NOT_GET_CANONICAL_PATH" TypePath="com.gip.xyna.xmcp.exceptions">
@@ -134,7 +134,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Der Aufruf %0% ist beschränkt und derzeit nicht möglich, weil er bereits ausgeführt wird.</MessageText>
+      <MessageText Language="DE">Der Aufruf %0% ist beschränkt und derzeit nicht m�glich, weil er bereits ausgeführt wird.</MessageText>
       <MessageText Language="EN">Call %0% is restricted and not available at this moment because its resource is used by someone else.</MessageText>
    </ExceptionType> 
    <ExceptionType Code="XYNA-10201" TypeName="XMCP_InvalidParameterCombinationException" TypePath="com.gip.xyna.xmcp.exceptions">
@@ -148,7 +148,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Es können nicht beide der Parameter '%0%' und '%1%' gleichzeitig gesetzt werden.</MessageText>
+      <MessageText Language="DE">Es k�nnen nicht beide der Parameter '%0%' und '%1%' gleichzeitig gesetzt werden.</MessageText>
       <MessageText Language="EN">Parameter '%0%' and '%1%' may not both be set.</MessageText>
    </ExceptionType> 
    
