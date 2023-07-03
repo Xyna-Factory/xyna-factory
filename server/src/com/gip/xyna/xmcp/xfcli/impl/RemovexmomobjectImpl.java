@@ -45,7 +45,7 @@ public class RemovexmomobjectImpl extends XynaCommandImplementation<Removexmomob
     Long revision = revisionManagement.getRevision(null, null, payload.getWorkspaceName());
 
     TemporarySessionAuthentication tsa = TemporarySessionAuthentication
-        .tempAuthWithUniqueUserAndOperationLock("addxmomobject", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE, revision,
+        .tempAuthWithUniqueUserAndOperationLock("removexmomobject", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE, revision,
                                                 CommandControl.Operation.XMOM_SAVE);
     tsa.initiate();
     try {

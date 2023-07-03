@@ -14,17 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
+*/
 package xmcp.gitintegration.impl.processing;
 
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -43,8 +46,10 @@ import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.WorkspaceContentDifferenceType;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.OutputCreator;
+import xmcp.gitintegration.impl.references.ReferenceMethods;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.references.ReferenceType;
+import xmcp.gitintegration.impl.references.methods.LibFolderMethods;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 
@@ -69,6 +74,22 @@ public class ReferenceSupport {
   public static final String TAG_PATH = "path";
   public static final String TAG_TYPE = "type";
 
+  private static final HashMap<ReferenceType, ReferenceMethods> implementations = setReferenceMethods();
+  
+  
+  private static HashMap<ReferenceType, ReferenceMethods> setReferenceMethods() {
+    HashMap<ReferenceType, ReferenceMethods> result = new HashMap<ReferenceType, ReferenceMethods>();
+    
+    //register implementations here
+    result.put(ReferenceType.lib_folder, new LibFolderMethods());
+    
+    return result;
+  }
+
+  private ReferenceMethods dispatch(ReferenceType type) {
+    return implementations.get(type);
+  }
+  
 
   public String getTagName() {
     return TAG_REFERENCES;
@@ -102,10 +123,6 @@ public class ReferenceSupport {
 
 
   public void appendReferences(List<? extends Reference> tags, XmlBuilder builder) {
-    if(tags == null || tags.isEmpty()) {
-      return;
-    }
-    
     builder.startElement(TAG_REFERENCES);
     for (Reference tag : tags) {
       appendReference(tag, builder);
@@ -116,7 +133,7 @@ public class ReferenceSupport {
 
   public void appendReference(Reference tag, XmlBuilder builder) {
     builder.startElement(TAG_REFERENCE);
-    builder.element(TAG_TYPE, tag.getType());
+    builder.element(TAG_TYPE, tag.getType().toString());
     builder.element(TAG_PATH, tag.getPath());
     builder.endElement(TAG_REFERENCE);
   }
@@ -295,5 +312,17 @@ public class ReferenceSupport {
       }
     }
     return resultList;
+  }
+  
+  public File findJar(List<Reference> references, String jarName, Long revision) {
+    for(Reference reference : references) {
+      ReferenceType referenceType = ReferenceType.valueOf(reference.getType());
+      ReferenceMethods methods = dispatch(referenceType);
+      Optional<File> result = methods.findJar(reference, jarName, revision);
+      if(result.isPresent()) {
+        return result.get();
+      }
+    }
+    return null;
   }
 }
