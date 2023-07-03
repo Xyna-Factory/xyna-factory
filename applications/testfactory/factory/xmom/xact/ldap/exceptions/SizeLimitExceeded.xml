@@ -22,6 +22,6 @@
       <IsXynaComponent>true</IsXynaComponent>
     </Meta>
     <MessageText Language="EN">The size limit has been exceeded</MessageText>
-    <MessageText Language="DE">Die Ergebnisseinschr�nkung wurde überschritten</MessageText>
+    <MessageText Language="DE">Die Ergebnisseinschränkung wurde überschritten</MessageText>
   </ExceptionType>
 </ExceptionStore>

@@ -24,6 +24,6 @@
       </Meta>
     </Data>
     <MessageText Language="EN">Validation failed! The restriction '%3%' could not be validated on '%1%' for the field '%2%' with length %4%.</MessageText>
-    <MessageText Language="DE">Validierung gescheitert! Die Einschr�nkung '%3%' konnte auf dem Typ '%1%' für den Pfad '%2%' mit L�nge %4% nicht validiert werden.</MessageText>
+    <MessageText Language="DE">Validierung gescheitert! Die Einschränkung '%3%' konnte auf dem Typ '%1%' für den Pfad '%2%' mit Länge %4% nicht validiert werden.</MessageText>
   </ExceptionType>
 </ExceptionStore>

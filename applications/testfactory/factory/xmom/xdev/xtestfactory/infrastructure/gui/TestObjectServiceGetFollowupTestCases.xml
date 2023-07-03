@@ -19,7 +19,7 @@
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Test Object Service: Get Followup Test Cases" TypeName="TestObjectServiceGetFollowupTestCases" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation</FixedDetailOptions>
-    <Documentation>liefert alle testf�lle, die mit "Template  " beginnen. Ist die Implementierung der Instanzmethode im TestObject und kann deshalb vom Kunden überschrieben werden.</Documentation>
+    <Documentation>liefert alle testfälle, die mit "Template  " beginnen. Ist die Implementierung der Instanzmethode im TestObject und kann deshalb vom Kunden überschrieben werden.</Documentation>
   </Meta>
   <Operation ID="0" Label="Test Object Service: Get Followup Test Cases" Name="TestObjectServiceGetFollowupTestCases">
     <Input>

@@ -289,7 +289,7 @@
       <MessageText Language="EN">Invalid number of start parameters.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-09345" TypeName="XACT_TriggerDeploymentMultipleException" TypePath="com.gip.xyna.xact.exceptions">
-      <MessageText Language="DE">Während des Deployments der Trigger sind mehrere Fehler aufgetreten.</MessageText>
+      <MessageText Language="DE">WÃ¤hrend des Deployments der Trigger sind mehrere Fehler aufgetreten.</MessageText>
       <MessageText Language="EN">Several Errors occured durching trigger deployment.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-09346" TypeName="XACT_StartParameterDefinitionsChangedException" TypePath="com.gip.xyna.xact.exceptions">
@@ -298,7 +298,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Die Startparameter des Triggers %0% haben sich geändert und sind nicht kompatibel bereits deployten Triggern.</MessageText>
+      <MessageText Language="DE">Die Startparameter des Triggers %0% haben sich geÃ¤ndert und sind nicht kompatibel bereits deployten Triggern.</MessageText>
       <MessageText Language="EN">Startparameters of trigger %0% have changed. Triggers deployed before have incompatible startparameters.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-09347" TypeName="XACT_TriggerCouldNotBeStartedException" TypePath="com.gip.xyna.xact.exceptions" IsAbstract="true">

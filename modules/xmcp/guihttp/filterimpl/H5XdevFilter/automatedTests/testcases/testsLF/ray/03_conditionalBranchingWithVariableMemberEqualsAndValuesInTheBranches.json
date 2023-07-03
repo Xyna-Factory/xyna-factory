@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "ConditionalBranchingWithVariableMemberEqualsAndValuesInTheBranches",
-	"description": "Erzeugt zwei Datentypen und erstellt einen Workflow. Der Workflow enth�lt ein conditionalBranching mit dem ersten erzeugten Datentypen in der Expression. Alle Zweige des ConditionalBranchings geben den zweiten Member zurück.",
+	"description": "Erzeugt zwei Datentypen und erstellt einen Workflow. Der Workflow enthält ein conditionalBranching mit dem ersten erzeugten Datentypen in der Expression. Alle Zweige des ConditionalBranchings geben den zweiten Member zurück.",
 	"created": "11.11.2019",
 	"updated": "12.11.2019"
   },

@@ -19,7 +19,7 @@
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Test Data For Simple List" TypeName="GetTestDataForSimpleList" TypePath="xdev.xtestfactory.infrastructure.selector" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation,vScroll(559)</FixedDetailOptions>
-    <Documentation>Sortieren und Filtern von Eintr�gen wird nicht unterstützt.</Documentation>
+    <Documentation>Sortieren und Filtern von Einträgen wird nicht unterstützt.</Documentation>
   </Meta>
   <Operation ID="0" Label="Get Test Data For Simple List" Name="GetTestDataForSimpleList">
     <Input>

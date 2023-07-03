@@ -44,7 +44,7 @@
       <VarName>VELOCITY_ENGINE_INITIALIZATION_FAILURE</VarName>
     </JavaGen>
     <MessageText Language="EN">Failed to initialize Velocity engine.</MessageText>
-    <MessageText Language="DE">Fehler w‰hrend der Initialisierung der Velocity Engine.</MessageText>
+    <MessageText Language="DE">Fehler w√§hrend der Initialisierung der Velocity Engine.</MessageText>
   </Message>
   <Message Code="XYNA-11021">
     <JavaGen>

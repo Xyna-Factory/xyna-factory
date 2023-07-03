@@ -29,6 +29,6 @@
       </Meta>
     </Data>
     <MessageText Language="EN">The object '%0%' of type %1% is a predefined XynaObject, only a restricted set of manipulations is allowed with those</MessageText>
-    <MessageText Language="DE">Bei dem Objekt '%0%' vom Typ %1% handelt es sich um ein vordefiniertes XynaObjekt, bei diesen sind nur eingeschr‰nkte Manipulationen erlaubt</MessageText>
+    <MessageText Language="DE">Bei dem Objekt '%0%' vom Typ %1% handelt es sich um ein vordefiniertes XynaObjekt, bei diesen sind nur eingeschr√§nkte Manipulationen erlaubt</MessageText>
   </ExceptionType>
 </ExceptionStore>

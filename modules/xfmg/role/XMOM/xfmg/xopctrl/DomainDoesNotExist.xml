@@ -24,6 +24,6 @@
       </Meta>
     </Data>
     <MessageText Language="EN">Domain %0% is not known to the factory</MessageText>
-    <MessageText Language="DE">Dom‰ne %0% ist der Fabrik unbekannt</MessageText>
+    <MessageText Language="DE">Dom√§ne %0% ist der Fabrik unbekannt</MessageText>
   </ExceptionType>
 </ExceptionStore>

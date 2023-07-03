@@ -38,7 +38,7 @@
   </Data>
   <Data Label="Data Model Reference" VariableName="dataModelReference">
     <Meta>
-      <Documentation>TODO: Kl‰ren, in welcher Form die Referenz z.B. auf das XSD hier abgelegt wird.</Documentation>
+      <Documentation>TODO: Kl√§ren, in welcher Form die Referenz z.B. auf das XSD hier abgelegt wird.</Documentation>
       <Type>String</Type>
     </Meta>
   </Data>

@@ -52,7 +52,7 @@
       <VarName>VELOCITY_TEMPLATE_PROVIDER_INITIALIZATION_FAILURE</VarName>
     </JavaGen>
     <MessageText Language="EN">Failed to initialize template provider.</MessageText>
-    <MessageText Language="DE">Fehler w‰hrend der Initialisierung des Template Providers.</MessageText>
+    <MessageText Language="DE">Fehler w√§hrend der Initialisierung des Template Providers.</MessageText>
   </Message>
   <Message Code="XYNA-11002">
     <JavaGen>

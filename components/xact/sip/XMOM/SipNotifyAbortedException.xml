@@ -19,6 +19,6 @@
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XYNA-09003" Label="Sip Notify Aborted Exception" TypeName="SipNotifyAbortedException" TypePath="xact.sip">
     <MessageText Language="EN">Abortion while waiting for SIP notify response</MessageText>
-    <MessageText Language="DE">Aborrt-Signal erhalten, w‰hrend auf eine Antwort gewartet wurde</MessageText>
+    <MessageText Language="DE">Aborrt-Signal erhalten, w√§hrend auf eine Antwort gewartet wurde</MessageText>
   </ExceptionType>
 </ExceptionStore>

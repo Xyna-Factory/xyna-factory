@@ -64,7 +64,7 @@
                   </FormItem>
                   <FormItem Label="All mappings between Test Cases and Features will be lost">
                         <Label Language="EN">All mappings between Test Cases and Features will be lost</Label>
-                        <Label Language="DE">Alle Zuordnungen zwischen Testf‰llen und Leistungsmerkmalen gehen verloren</Label>
+                        <Label Language="DE">Alle Zuordnungen zwischen Testf√§llen und Leistungsmerkmalen gehen verloren</Label>
                   </FormItem>
                 </Form>
 

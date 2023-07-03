@@ -46,7 +46,7 @@
  
                  <FormItem Label="NextToBeDrawn">
                         <Label Language="EN">Next to be drawn</Label>
-                        <Label Language="DE">Nächster zu ziehender Wert</Label>
+                        <Label Language="DE">NÃ¤chster zu ziehender Wert</Label>
                         <DataLink>%0%.nextToBeDrawn</DataLink>
                 </FormItem>
 

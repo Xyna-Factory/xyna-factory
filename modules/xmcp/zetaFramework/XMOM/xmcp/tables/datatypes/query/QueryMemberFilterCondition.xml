@@ -36,7 +36,7 @@
       <Documentation>Folgende Operatoren werden unterstützt:
 - Gleichheit: {"=", "==",  "EQUALS"}
 - Ungleichheit: {"!=", "!==", "NOT EQUALS"}
-- Enth�lt: {"CONTAINS"}</Documentation>
+- Enthält: {"CONTAINS"}</Documentation>
     </Meta>
   </Data>
 </DataType>

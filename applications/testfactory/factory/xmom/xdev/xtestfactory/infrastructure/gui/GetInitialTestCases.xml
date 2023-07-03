@@ -19,8 +19,8 @@
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Initial Test Cases" TypeName="GetInitialTestCases" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation,vScroll(2690)</FixedDetailOptions>
-    <Documentation>Initiale Testfälle könnten z.B. konstant sein oder aus dem Test Project Type ermittelt werden (alle Testfälle des Typs Xyz)
-Oder Testfälle, die mit "Template" im Namen anfangen
+    <Documentation>Initiale TestfÃ¤lle könnten z.B. konstant sein oder aus dem Test Project Type ermittelt werden (alle TestfÃ¤lle des Typs Xyz)
+Oder TestfÃ¤lle, die mit "Template" im Namen anfangen
 Kein Input nötig, da Chain Infos usw in der Gui sind.</Documentation>
   </Meta>
   <Operation ID="0" Label="Get Initial Test Cases" Name="GetInitialTestCases">

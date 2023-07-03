@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * LocalMailStore verwaltet empfangene Mails.
  * 
  * Mails werden nicht sofort aus der Inbox gel�scht, sollen aber ntürlich nicht direkt einen 
- * zweiten Auftrag starten. Daher müssen die Mails, für die gerade ein Auftrag l�uft, verwaltet werden.
+ * zweiten Auftrag starten. Daher müssen die Mails, für die gerade ein Auftrag läuft, verwaltet werden.
  * Wenn der auftrag fertig ist, kann die Mail aus Inbox und aus LocalMailStore entfernt werden.
  * Auch für Retries werden hier die RetryCounter verwaltet.
  *

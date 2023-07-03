@@ -39,7 +39,7 @@
 
                <FormItem Editable="true" HideIfUndefined="false" Label="Priority">
                         <Label Language="EN">Priority</Label>
-                        <Label Language="DE">Priorit‰t</Label>
+                        <Label Language="DE">Priorit√§t</Label>
                         <DataLink>%0%.priority</DataLink>
                </FormItem>
 

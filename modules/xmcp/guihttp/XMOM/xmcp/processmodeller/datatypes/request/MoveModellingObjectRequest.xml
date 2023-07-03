@@ -43,11 +43,11 @@
   <Data Label="Conflict Handling" VariableName="conflictHandling">
     <Meta>
       <Type>String</Type>
-      <Documentation>Wirkt sich beim Verschieben eines Cases aus und nur, wenn force=true. Mögliche Ausprägungen:
+      <Documentation>Wirkt sich beim Verschieben eines Cases aus und nur, wenn force=true. Mögliche AusprÃ¤gungen:
 
-- USE_DESTINATION: behält den Inhalt des Branches, in den der Case gezogen wird und verwirft den Branch, aus dem der Case kommt
+- USE_DESTINATION: behÃ¤lt den Inhalt des Branches, in den der Case gezogen wird und verwirft den Branch, aus dem der Case kommt
 - USE_SOURCE: ersetzt den Inhalt des Ziel-Branches mit dem aus dem der Case kommt
-- APPEND: hängt an den Inhalt des Branches, aus dem der Case kommt, an den des Ziel-Branches an</Documentation>
+- APPEND: hÃ¤ngt an den Inhalt des Branches, aus dem der Case kommt, an den des Ziel-Branches an</Documentation>
     </Meta>
   </Data>
 </DataType>

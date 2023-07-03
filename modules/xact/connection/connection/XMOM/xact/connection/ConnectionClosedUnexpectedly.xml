@@ -18,7 +18,7 @@
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="SendException" BaseTypePath="xact.connection" Code="XYNA-XACT-00006" Label="Connection closed unexpectedly" TypeName="ConnectionClosedUnexpectedly" TypePath="xact.connection">
-    <MessageText Language="DE">Verbindung zum Ger‰t wurde unterbrochen.</MessageText>
+    <MessageText Language="DE">Verbindung zum Ger√§t wurde unterbrochen.</MessageText>
     <MessageText Language="EN">Connection to device has been closed unexpectedly.</MessageText>
   </ExceptionType>
 </ExceptionStore>

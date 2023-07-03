@@ -73,7 +73,7 @@
   <Data IsList="true" Label="Test Data Selector Prototypes" ReferenceName="TestDataSelectorPrototype" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorPrototypes"/>
   <Data Label="Test Object Type" VariableName="testObjectType">
     <Meta>
-      <Documentation>fqname des storables, welches die testobject-daten enthält, die in testcasechains referenziert sind</Documentation>
+      <Documentation>fqname des storables, welches die testobject-daten enthÃ¤lt, die in testcasechains referenziert sind</Documentation>
       <Type>String</Type>
     </Meta>
   </Data>

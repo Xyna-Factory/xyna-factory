@@ -171,7 +171,7 @@ public class Updater implements UpdaterInterface {
                                 false);
       updates.add(ud);
 
-      //5.0.1.4 Generierte Workflows haben sich wegen getNeededInputVarsCount() ge�ndert
+      //5.0.1.4 Generierte Workflows haben sich wegen getNeededInputVarsCount() geändert
       Version v172 = new Version(v171).increaseToMajorVersion(4, 1);
       ud = new UpdateJustVersion(v171, v172, false, true, false, false );
       updates.add(ud);
@@ -263,7 +263,7 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
       
       
-      // 5.1.2.2 bug16588 => generierter wf code ist nicht abw�rtskompatibel mit laufenden auftr�gen
+      // 5.1.2.2 bug16588 => generierter wf code ist nicht abwärtskompatibel mit laufenden aufträgen
       Version v185 = new Version(v184).increaseToMajorVersion(4, 1);
       ud = new UpdateDontAllowOrdersInOrderBackup(v184, v185, true); //true ist beabsichtigt
       updates.add(ud);
@@ -491,7 +491,7 @@ public class Updater implements UpdaterInterface {
       ud = new UpdateFrequencyControlledTaskInformationSetWorkspace(v222, v223, false);
       updates.add(ud);
       
-      // 6.0.1.6 auslassen, weil es im 6.0.1.6 branch das gleiche update enth�lt)
+      // 6.0.1.6 auslassen, weil es im 6.0.1.6 branch das gleiche update enthält)
       Version v_6016 = new Version(v223).increaseToMajorVersion(4, 1);
       
       // 6.0.1.7
@@ -513,13 +513,13 @@ public class Updater implements UpdaterInterface {
       // 6.1.0.0: 6.0.1.6 branch erstellt, der auch
       Version v226 = new Version(v225).increaseToMajorVersion(2, 1);
       ud = new UpdateJustVersion(v225, v226, false);
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.0.1 anf�ngt, und >= 6.0.1.9 ist.
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.0.1 anfängt, und >= 6.0.1.9 ist.
       updates.add(ud);
 
       // 6.1.1.0: 6.1.0 branch erstellt
       Version v227 = new Version(v226).increaseToMajorVersion(3, 1);
       ud = new UpdateJustVersion(v226, v227, false);
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.0 anf�ngt, und >= 6.1.0.0 ist.
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.0 anfängt, und >= 6.1.0.0 ist.
       updates.add(ud);
       
       // 6.1.1.1
@@ -556,7 +556,7 @@ public class Updater implements UpdaterInterface {
       // 6.1.2.0
       Version v233 = new Version(v232).increaseToMajorVersion(3, 1);
       ud = new UpdateJustVersion(v232, v233, true); //true wegen bug 19364
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.1 anf�ngt, und gr�ßer gleich 6.1.1.5 ist
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.1 anfängt, und gr�ßer gleich 6.1.1.5 ist
       updates.add(ud);
       
       // 6.1.2.1
@@ -623,7 +623,7 @@ public class Updater implements UpdaterInterface {
                                 new String[] {"xnwh.persistence.PersistenceServices"},
                                 new String[] {},
                                 true, false, false);
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.2 anf�ngt, und gr�ßer gleich 6.1.2.9 ist
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.2 anfängt, und gr�ßer gleich 6.1.2.9 ist
       updates.add(ud);
       
       // 6.1.3.1
@@ -1774,8 +1774,8 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
 
 
-      //ACHTUNG: bei updates in einem branch muss gew�hrleistet werden, dass alle sp�teren versionen (trunk, sp�tere branches)
-      //         auf dem branch updaten k�nnen. bei updates, die in sp�teren versionen dann sonderbehandlungen im update-
+      //ACHTUNG: bei updates in einem branch muss gewährleistet werden, dass alle späteren versionen (trunk, spätere branches)
+      //         auf dem branch updaten k�nnen. bei updates, die in späteren versionen dann sonderbehandlungen im update-
       //         prozess ben�tigen, müssen die versionen, auf denen die updates passieren sollen, oben genau angegeben werden.
       //         beispiel: in einem branch-update wird eine spalte zu einer tabelle hinzugefügt. dieses update passiert
       //                   auch im trunk. dann ben�tigen alle branches zwischen dem betroffenen branch und der trunk-version
@@ -1784,13 +1784,13 @@ public class Updater implements UpdaterInterface {
       //                   bewerten kann, ob es erneut ausgeführt werden muss...
       
       
-      // Regeln zum Hochz�hlen von Versionsstellen
+      // Regeln zum Hochzählen von Versionsstellen
       // erste stelle: von chef vorgegeben
       // zweite stelle: dicke features, mit produktmanagement absprechen
       // dritte stelle: kleinere features, dickere bugfixing-pakete
       // vierte stelle: bugfixing-releases / branch-updates
       
-      // weil bei tags mindestens die 3te stelle hochgez�hlt wird, k�nnen branches kollisionslos die vierte stelle weiterz�hlen.
+      // weil bei tags mindestens die 3te stelle hochgezählt wird, k�nnen branches kollisionslos die vierte stelle weiterzählen.
 
       // hier weitere updates registrieren. reihenfolge sollte so sein, dass nicht versucht werden muss, ein update
       // mehrfach anzuwenden
@@ -1892,7 +1892,7 @@ public class Updater implements UpdaterInterface {
 
 
   public void checkUpdate() throws XPRC_GENERAL_UPDATE_ERROR, XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException {
-    //updates im mdm wirken sich auf updates der generierten klassen aus, andersrum sollte es keine abh�ngigkeiten geben
+    //updates im mdm wirken sich auf updates der generierten klassen aus, andersrum sollte es keine abhängigkeiten geben
     checkUpdateMdm();
     checkUpdateGeneral();
   }
@@ -1955,7 +1955,7 @@ public class Updater implements UpdaterInterface {
         }
 
 
-        //FutureExecution für Updates, die erst sp�ter ausgeführt werden sollen, einstellen
+        //FutureExecution für Updates, die erst später ausgeführt werden sollen, einstellen
         FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
         
         final boolean finalMustUpdateGeneratedClasses = mustUpdateGeneratedClasses;
@@ -2014,7 +2014,7 @@ public class Updater implements UpdaterInterface {
                 success = true;
             } finally {
               if (!success) {
-                //falls generation nicht stattgefunden hat, beim n�chsten mal erneut versuchen
+                //falls generation nicht stattgefunden hat, beim nächsten mal erneut versuchen
                 saveMustUpdateGeneratedClasses(localMustUpdateGeneratedClasses);
               } else {
                 saveMustUpdateGeneratedClasses(false);
@@ -2038,7 +2038,7 @@ public class Updater implements UpdaterInterface {
                     success = true;
                   } finally {
                     if (!success && previousVersion != null) {
-                      //rollback, damit die parametrisierung für das rewrite beim n�chsten update erneut verwendet wird
+                      //rollback, damit die parametrisierung für das rewrite beim nächsten update erneut verwendet wird
                       try {
                         setVersion(ExecutionTime.afterUpdateGeneratedClassesBeforeRewriteOrderBackup, previousVersion);
                       } catch (XynaException e) {
@@ -2087,7 +2087,7 @@ public class Updater implements UpdaterInterface {
     }
     catch (XynaException e) {
       // TODO update-rollbacken? das muss das update entsprechend unterstützen. idee: updates definieren eine
-      // entsprechende funktion und sorgen selbst�ndig für sicherheitskopien etc
+      // entsprechende funktion und sorgen selbständig für sicherheitskopien etc
       throw new XPRC_GENERAL_UPDATE_ERROR(targetVersion != null ? targetVersion.getString() : "unknown", e);
     }
 
@@ -2133,7 +2133,7 @@ public class Updater implements UpdaterInterface {
       if (doMDMUpdates) {
 
         // mdm updates: mdm xmls durchlaufen, version auslesen und ggfs updaten
-        // wird eine gui benutzt, die xmls in einem �lteren format erstellt, gibt es beim xml parsen entsprechende
+        // wird eine gui benutzt, die xmls in einem älteren format erstellt, gibt es beim xml parsen entsprechende
         // fehler. die xmls werden dort nicht "gefixt".
 
         logger.debug("Locating XMOM files potentially relevant for updates...");
@@ -2227,7 +2227,7 @@ public class Updater implements UpdaterInterface {
       }
     } catch (XynaException e) {
       // TODO update-rollbacken? das muss das update entsprechend unterstützen. idee: updates definieren eine
-      // entsprechende funktion und sorgen selbst�ndig für sicherheitskopien etc
+      // entsprechende funktion und sorgen selbständig für sicherheitskopien etc
       throw new XPRC_GENERAL_UPDATE_ERROR(targetVersion != null ? targetVersion.getString() : "unknown", e);
     }
   }

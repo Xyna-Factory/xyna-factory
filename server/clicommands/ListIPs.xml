@@ -18,5 +18,5 @@
  <XynaCommandLineCommand>
   <CommandDefinition Name="listips" Groups="NetworkConfiguration" Description="Lists all defined IP Addresses."/>
   <BoolOption Name="v" LongName="verbose" Description="Show documentation of defined ips." Optional="true"/>
-  <!--  hier könnte man später auch einen schalter hinzufÃ¼gen, der die rechner-spezifischen ips ausliest und anzeigt -->  
+  <!--  hier könnte man spÃ¤ter auch einen schalter hinzufÃ¼gen, der die rechner-spezifischen ips ausliest und anzeigt -->  
 </XynaCommandLineCommand>

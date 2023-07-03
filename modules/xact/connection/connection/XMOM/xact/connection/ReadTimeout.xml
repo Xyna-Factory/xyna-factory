@@ -28,7 +28,7 @@
         <Type>String</Type>
       </Meta>
     </Data>
-    <MessageText Language="DE">Device hat innerhalb von %0% ms keine vollst‰ndige Antwort gegeben.</MessageText>
+    <MessageText Language="DE">Device hat innerhalb von %0% ms keine vollst√§ndige Antwort gegeben.</MessageText>
     <MessageText Language="EN">Device did not provide a complete response after %0% ms.</MessageText>
   </ExceptionType>
 </ExceptionStore>

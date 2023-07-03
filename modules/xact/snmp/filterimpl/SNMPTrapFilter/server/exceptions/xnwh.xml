@@ -177,7 +177,7 @@
       <MessageText Language="EN">Warehouse job schedule parameter %0% with value '%1%' is invalid.</MessageText>
    </ExceptionType>  
    <ExceptionType Code="XYNA-02239" TypeName="XNWH_EncryptionException" TypePath="com.gip.xyna.xnwh.exceptions">
-      <MessageText Language="DE">Fehler w‰hrend dem Verschl√ºsseln.</MessageText>
+      <MessageText Language="DE">Fehler w√§hrend dem Verschl√ºsseln.</MessageText>
       <MessageText Language="EN">Error during encryption.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-02240" TypeName="XNWH_PersistenceLayerMayNotBeUndeployedInUseException" TypePath="com.gip.xyna.xnwh.exceptions">
@@ -245,7 +245,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Das Feature '%0%' ist bei der gegenw‰rtigen Persistencelayer-Konfiguration nicht verf√ºgbar.</MessageText>
+      <MessageText Language="DE">Das Feature '%0%' ist bei der gegenw√§rtigen Persistencelayer-Konfiguration nicht verf√ºgbar.</MessageText>
       <MessageText Language="EN">The feature '%0%' is not supported for the current persistencelayer configuration.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-02247" TypeName="XNWH_GeneralPersistenceLayerException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
@@ -374,7 +374,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">ODSName wurde ge‰ndert, aber das Deployment des zugehˆrigen XMOM Storables '%0%' ist fehlgeschlagen.</MessageText>
+      <MessageText Language="DE">ODSName wurde ge√§ndert, aber das Deployment des zugehˆrigen XMOM Storables '%0%' ist fehlgeschlagen.</MessageText>
       <MessageText Language="EN">ODS name has been changed but corresponding XMOM Storable '%0%' could not be deployed.</MessageText>
    </ExceptionType>  
  </ExceptionStore>

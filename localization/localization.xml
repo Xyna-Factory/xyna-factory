@@ -33,7 +33,7 @@ Please note: When an application is started/stopped, its Trigger and Filter inst
     <language>DE</language>
     <text>Erlaubt das Hinzuf√ºgen oder Entfernen von Runtime Applications √ºber die Webservice-Schnittstelle der Xyna Factory. Dies wird typischerweise innerhalb der Sektion f√ºr die Verwaltung von Arbeitsumgebungen und Applikationen des Xyna Factory Managers √ºberpr√ºft.
 
-Damit der Webservice-Aufruf dieser Operationen erlaubt wird, m√ºssen zus‰tzlich die folgenden Rechte gegeben sein:
+Damit der Webservice-Aufruf dieser Operationen erlaubt wird, m√ºssen zus√§tzlich die folgenden Rechte gegeben sein:
 
     xfmg.xfctrl.ApplicationManagement:deploy:...
     xfmg.xfctrl.ApplicationManagement:remove:...
@@ -56,7 +56,7 @@ These operations are typically used by the Live Reporting section of the Xyna Pr
     <language>DE</language>
     <text>Erlaubt das Starten oder Stoppen von Runtime Applications √ºber die Webservice-Schnittstelle der Xyna Factory. Dies wird typischerweise innerhalb der Sektion f√ºr die Verwaltung von Arbeitsumgebungen und Applikationen des Xyna Factory Managers √ºberpr√ºft.
 
-Damit der Webservice-Aufruf dieser Operationen erlaubt wird, m√ºssen zus‰tzlich die folgenden Rechte gegeben sein:
+Damit der Webservice-Aufruf dieser Operationen erlaubt wird, m√ºssen zus√§tzlich die folgenden Rechte gegeben sein:
 
     xfmg.xfctrl.ApplicationManagement:start:...
     xfmg.xfctrl.ApplicationManagement:stop:...
@@ -79,7 +79,7 @@ Please note: This right is only relevant for the RMI interface. Use the right xf
     <language>DE</language>
     <text>Erlaubt das Deployment und Undeployment von XMOM-Objekten: Datentypen, Exception-Typen, Servicegruppen und Workflows
 
-Beachte: Datentypen, Exception-Typen und Servicegruppen kˆnnen nicht separat gespeichert werden. Das Speichern und Deployen dieser Objekte passiert immer gemeinsam. Deshalb ist in diesen F‰llen zus‰tzlich das Recht EDIT_MDM zum Deployment benˆtigt.</text>
+Beachte: Datentypen, Exception-Typen und Servicegruppen kˆnnen nicht separat gespeichert werden. Das Speichern und Deployen dieser Objekte passiert immer gemeinsam. Deshalb ist in diesen F√§llen zus√§tzlich das Recht EDIT_MDM zum Deployment benˆtigt.</text>
   </localization>
   <localization>
     <id>-5</id>
@@ -118,7 +118,7 @@ This right is not in use anymore</text>
     <language>DE</language>
     <text>Erlaubt das Erstellen, Bearbeiten und Entfernen von Destinations
 
-Beachte: Das Recht ist nur f√ºr die RMI-Schnittstelle relevant. Um in der Sektion des Xyna Factory Managers zur Verwaltung von Auftragstypen Destinations zu ‰ndern, wird das Recht xfmg.xfctrl.orderTypes:... benˆtigt.</text>
+Beachte: Das Recht ist nur f√ºr die RMI-Schnittstelle relevant. Um in der Sektion des Xyna Factory Managers zur Verwaltung von Auftragstypen Destinations zu √§ndern, wird das Recht xfmg.xfctrl.orderTypes:... benˆtigt.</text>
   </localization>
   <localization>
     <id>-7</id>
@@ -180,7 +180,7 @@ Please note: This right also allows the user to change his password (c.f. USER_M
     <type>RIGHT</type>
     <identifier>KILL_STUCK_PROCESS</identifier>
     <language>DE</language>
-    <text>Erlaubt den Abbruch von Xyna-Auftr‰gen
+    <text>Erlaubt den Abbruch von Xyna-Auftr√§gen
 
 Das Recht wird f√ºr die Benutzung des entsprechenden Knopfes in der Auftrags√ºbersicht-Sektion des Xyna Process Monitors benˆtigt.</text>
   </localization>
@@ -198,7 +198,7 @@ Das Recht wird f√ºr die Benutzung des entsprechenden Knopfes in der Auftrags√ºbe
     <language>DE</language>
     <text>Erlaubt die √Ñnderungen von Monitoring-Levels (global und pro Auftragstyp)
 
-Beachte: Dieses Recht ist nur f√ºr die RMI-Schnittstelle relevant. F√ºr die Monitoring-Level-√Ñnderungen in der Sektion zur Verwaltung von Auftragstypen im Xyna Factory Manager wird das Recht xfmg.xfctrl.orderTypes:... benˆtigt. Wenn das globale Monitoring-Level √ºber die Xyna Property xyna.default.monitoringlevel ge‰ndert werden soll, wird das Recht xfmg.xfctrl.XynaProperties:read:xyna.default.monitoringlevel benˆtigt.</text>
+Beachte: Dieses Recht ist nur f√ºr die RMI-Schnittstelle relevant. F√ºr die Monitoring-Level-√Ñnderungen in der Sektion zur Verwaltung von Auftragstypen im Xyna Factory Manager wird das Recht xfmg.xfctrl.orderTypes:... benˆtigt. Wenn das globale Monitoring-Level √ºber die Xyna Property xyna.default.monitoringlevel ge√§ndert werden soll, wird das Recht xfmg.xfctrl.XynaProperties:read:xyna.default.monitoringlevel benˆtigt.</text>
   </localization>
   <localization>
     <id>-11</id>
@@ -214,7 +214,7 @@ Please note: This right definition is equivalent to the right xprc.xpce.StartOrd
     <type>RIGHT</type>
     <identifier>ORDERARCHIVE_DETAILS</identifier>
     <language>DE</language>
-    <text>Erlaubt die Anzeige der Audit-Details von Xyna-Auftr‰gen (typischerweise im Xyna Process Monitor)</text>
+    <text>Erlaubt die Anzeige der Audit-Details von Xyna-Auftr√§gen (typischerweise im Xyna Process Monitor)</text>
   </localization>
   <localization>
     <id>-12</id>
@@ -237,7 +237,7 @@ Please note: There is no right to delete a Coded Service. To delete a Coded Serv
     <type>RIGHT</type>
     <identifier>ORDERARCHIVE_VIEW</identifier>
     <language>DE</language>
-    <text>Erlaubt die Anzeige der Informationen zu Xyna-Auftr‰gen
+    <text>Erlaubt die Anzeige der Informationen zu Xyna-Auftr√§gen
 
 Wird typischerweise in der Sektion Auftrags√ºbersicht im Xyna Process Monitor verwendet.</text>
   </localization>
@@ -302,9 +302,9 @@ This right is needed to kill a running Xyna Order inside the Order Overview sect
     <type>RIGHT</type>
     <identifier>START_ORDER</identifier>
     <language>DE</language>
-    <text>Erlaubt das Starten von Xyna-Auftr‰gen
+    <text>Erlaubt das Starten von Xyna-Auftr√§gen
 
-Beachte: Dieses Recht ist ‰quivalent zur dem Recht xprc.xpce.StartOrder:*:*:*.</text>
+Beachte: Dieses Recht ist √§quivalent zur dem Recht xprc.xpce.StartOrder:*:*:*.</text>
   </localization>
   <localization>
     <id>-17</id>
@@ -325,7 +325,7 @@ Folgende Operationen werden ermˆglicht:
   Deployment/Undeployment
   Aktivieren/Deaktivieren (Enable/Disable)
 
-Beachte: Wenn eine Applikation gestartet/gestoppt wird, werden zugehˆrige Trigger/Filter (de-)aktiviert. In diesen F‰llen werden die Rechte xfmg.xfctrl.ApplicationManagement:start:... und xfmg.xfctrl.ApplicationManagement:stop:... √ºberpr√ºft.</text>
+Beachte: Wenn eine Applikation gestartet/gestoppt wird, werden zugehˆrige Trigger/Filter (de-)aktiviert. In diesen F√§llen werden die Rechte xfmg.xfctrl.ApplicationManagement:start:... und xfmg.xfctrl.ApplicationManagement:stop:... √ºberpr√ºft.</text>
   </localization>
   <localization>
     <id>-18</id>
@@ -360,18 +360,18 @@ See right xfmg.xfctrl.ApplicationManagement for more details.</text>
     <type>RIGHT</type>
     <identifier>USER_MANAGEMENT</identifier>
     <language>DE</language>
-    <text>Erlaubt die Anzeige und die Verwaltung von Benutzern, Rechten, Rollen und Rechte-Dom‰nen
+    <text>Erlaubt die Anzeige und die Verwaltung von Benutzern, Rechten, Rollen und Rechte-Dom√§nen
 
 Diese Operationen werden im Xyna User Management verwendet und sind zur Verwendung davon notwendig.
 
-Beachte: Dieses Recht erlaubt einem Benutzer auch sein eigenes Passwort zu ‰ndern (vgl. USER_MANAGEMENT_EDIT_OWN).</text>
+Beachte: Dieses Recht erlaubt einem Benutzer auch sein eigenes Passwort zu √§ndern (vgl. USER_MANAGEMENT_EDIT_OWN).</text>
   </localization>
   <localization>
     <id>19</id>
     <type>RIGHT</type>
     <identifier>USER_MANAGEMENT_EDIT_OWN</identifier>
     <language>DE</language>
-    <text>Erlaubt es das eigene Passwort zu ‰ndern</text>
+    <text>Erlaubt es das eigene Passwort zu √§ndern</text>
   </localization>
   <localization>
     <id>-20</id>
@@ -471,7 +471,7 @@ Beispiel: xfmg.xfctrl.ApplicationDefinitionManagement:write:default workspace:Me
 
 Beachte: Es gibt kein spezielles Recht zur Anzeige von Applikationsdefinitionen. Jeder Benutzer darf alle Applikationsdefinitionen sehen.
 
-Beachte: Das Recht WORKINGSET_MANAGEMENT wird benˆtigt, wenn die verwendeten Runtime Kontexte einer Applikationsdefinition ge‰ndert werden sollen.
+Beachte: Das Recht WORKINGSET_MANAGEMENT wird benˆtigt, wenn die verwendeten Runtime Kontexte einer Applikationsdefinition ge√§ndert werden sollen.
 
 Die Operationen werden typischerweise in der Sektion zur Verwaltung von Arbeitsumgebungen und Applikationen im Xyna Factory Manager verwendet.</text>
   </localization>
@@ -506,14 +506,14 @@ Rechteparameter:
             Erlaubt es, Applikationen auf einem anderen Factory-Knoten zu deployen
         write: Erlaubt die √Ñnderung der benˆtigten Runtime-Kontexte
         remove: Erlaubt es Runtime Applications zu lˆschen
-        migrate: Erlaubt die Migration von Cron-like-Auftr‰ge und Auftragstypen
+        migrate: Erlaubt die Migration von Cron-like-Auftr√§ge und Auftragstypen
         *: Erlaubt alle obigen Operationen
     /.*/: Name der Runtime Application
     /.*/: Version der Runtime Application
 
-Die Operationen werden typischerweise in der Sektion zur Verwaltung von Arbeitsumgebungen und Applikationen im Xyna Factory Manager verwendet. Technisch werden im Hintergrund f√ºr manche von ihnen Autr‰ge in der Application GlobalApplicationMgmt gestartet. Um diese Auftr‰ge starten zu d√ºrfen, werden Rechte vom Typ xprc.xpce.StartOrder benˆtigt. Sinnvoll ist hier z.B. das Recht xprc.xpce.StartOrder:*:GlobalApplicationMgmt:*. 
+Die Operationen werden typischerweise in der Sektion zur Verwaltung von Arbeitsumgebungen und Applikationen im Xyna Factory Manager verwendet. Technisch werden im Hintergrund f√ºr manche von ihnen Autr√§ge in der Application GlobalApplicationMgmt gestartet. Um diese Auftr√§ge starten zu d√ºrfen, werden Rechte vom Typ xprc.xpce.StartOrder benˆtigt. Sinnvoll ist hier z.B. das Recht xprc.xpce.StartOrder:*:GlobalApplicationMgmt:*. 
 
-Folgende Operationen starten Auftr‰ge, deren Auftragstyp √ºber eine Xyna Property konfigurierbar ist:
+Folgende Operationen starten Auftr√§ge, deren Auftragstyp √ºber eine Xyna Property konfigurierbar ist:
 
     &lt;operation&gt;: &lt;Xyna Property Name&gt;
     list: xfmg.xfctrl.appmgmt.ListApplications.Destination
@@ -544,18 +544,18 @@ Vergleiche auch Beschreibung dieser Rechte.</text>
     <type>RIGHT_SCOPE</type>
     <identifier>xfmg.xfctrl.capacities</identifier>
     <language>DE</language>
-    <text>Erlaubt die Anzeige und Verwaltung von Kapazit‰ten
+    <text>Erlaubt die Anzeige und Verwaltung von Kapazit√§ten
 
 Rechteparameter:
     [read, write, insert, delete, *]:
-        read: Erlaubt die Anzeige der Kapazit‰ten
-        write: Erlaubt es Kapazit‰ten zu ‰ndern
-        insert: Erlaubt die Erstellung von Kapazit‰ten
-        delete: Erlaubt es Kapazit‰ten zu entfernen
+        read: Erlaubt die Anzeige der Kapazit√§ten
+        write: Erlaubt es Kapazit√§ten zu √§ndern
+        insert: Erlaubt die Erstellung von Kapazit√§ten
+        delete: Erlaubt es Kapazit√§ten zu entfernen
         *: Erlaubt alle obigen Operationen
-    /\*/: Name der Kapazit‰t. Derzeit ist hier nur der Platzhalter * erlaubt.
+    /\*/: Name der Kapazit√§t. Derzeit ist hier nur der Platzhalter * erlaubt.
 
-Diese Operationen werden typischerweise in der Sektion zur Verwaltung von Kapazit‰ten im Xyna Factory Manager und in der Sektion zur Beobachtung von Kapazit‰ten im Xyna Process Monitor verwendet.</text>
+Diese Operationen werden typischerweise in der Sektion zur Verwaltung von Kapazit√§ten im Xyna Factory Manager und in der Sektion zur Beobachtung von Kapazit√§ten im Xyna Process Monitor verwendet.</text>
   </localization>
   <localization>
     <id>-27</id>
@@ -581,22 +581,22 @@ These operations are typically used by the Administrative Vetoes section of the 
     <type>RIGHT_SCOPE</type>
     <identifier>xfmg.xfctrl.cronLikeOrders</identifier>
     <language>DE</language>
-    <text>Erlaubt die Anzeige und Verwaltung von Cron-like-Auftr‰gen
+    <text>Erlaubt die Anzeige und Verwaltung von Cron-like-Auftr√§gen
 
 Rechteparameter:
     [read, write, insert, delete, *]:
-        read: Erlaubt die Anzeige von Cron-like-Auftr‰gen
-        write: Erlaubt die √Ñnderung von Cron-like-Auftr‰gen
-        insert: Erlaubt die Erstellung von Cron-like-Auftr‰gen
-        delete: Erlaubt das Lˆschen von Cron-like-Auftr‰gen
+        read: Erlaubt die Anzeige von Cron-like-Auftr√§gen
+        write: Erlaubt die √Ñnderung von Cron-like-Auftr√§gen
+        insert: Erlaubt die Erstellung von Cron-like-Auftr√§gen
+        delete: Erlaubt das Lˆschen von Cron-like-Auftr√§gen
         *: Erlaubt alle obigen Operationen
     /\*/: Name des Cron-like-Auftrags: Derzeit ist hier nur der Platzhalter * erlaubt.
     /\*/: Name der Runtime Application oder der Arbeitsumgebung. Derzeit ist hier nur der Platzhalter * erlaubt.
     /\*/: Version der Runtime Application oder leer, falls eine Arbeitsumgebung gemeint ist. Derzeit ist hier nur der Platzhalter * erlaubt.
 
-Ein Cron-like-Auftrag startet Xyna-Auftr‰ge bez√ºglich des konfigurierten Auftragstyps. Deshalb muss auch das entsprechende xprc.xpce.StartOrder:...-Recht gegeben sein.
+Ein Cron-like-Auftrag startet Xyna-Auftr√§ge bez√ºglich des konfigurierten Auftragstyps. Deshalb muss auch das entsprechende xprc.xpce.StartOrder:...-Recht gegeben sein.
 
-Die Operationen werden typischerweise in der Sektion zur Verwaltung von Cron-like-Auftr‰gen im Xyna Factory Manager verwendet.</text>
+Die Operationen werden typischerweise in der Sektion zur Verwaltung von Cron-like-Auftr√§gen im Xyna Factory Manager verwendet.</text>
   </localization>
   <localization>
     <id>-28</id>
@@ -661,35 +661,35 @@ This operation is typically used during startup of the Xyna Fractal Modeller and
     <type>RIGHT_SCOPE</type>
     <identifier>xfmg.xfctrl.deploymentItems</identifier>
     <language>DE</language>
-    <text>Erlaubt die Anzeige von Deployment-Gegenst‰nden
+    <text>Erlaubt die Anzeige von Deployment-Gegenst√§nden
 
 Rechteparameter:
     [read, *]:
-        read: Erlaubt die Anzeige von Deployment Gegenst‰nden
+        read: Erlaubt die Anzeige von Deployment Gegenst√§nden
         *: Erlaubt alle obigen Operationen
     /\*/: Name des Deployment Gegenstands; Derzeit ist hier nur der Platzhalter * erlaubt.
     /\*/: Name der Runtime Application oder der Arbeitsumgebung. Derzeit ist hier nur der Platzhalter * erlaubt.
     /\*/: Version der Runtime Application oder leer, falls eine Arbeitsumgebung gemeint ist. Derzeit ist hier nur der Platzhalter * erlaubt.
 
-Diese Operationen werden typischerweise in der Sektion zur √úbersicht der Deployment-Gegenst‰nde im Xyna Factory Manager und in dem seitlichen Feld zur Anzeige von Deployment-Gegenst‰nden im Xyna Process Modeller verwendet.</text>
+Diese Operationen werden typischerweise in der Sektion zur √úbersicht der Deployment-Gegenst√§nde im Xyna Factory Manager und in dem seitlichen Feld zur Anzeige von Deployment-Gegenst√§nden im Xyna Process Modeller verwendet.</text>
   </localization>
   <localization>
     <id>29</id>
     <type>RIGHT_SCOPE</type>
     <identifier>xfmg.xfctrl.deploymentMarker</identifier>
     <language>DE</language>
-    <text>Erlaubt die Verwendung von Tasks und Tags zu Deployment-Gegenst‰nden
+    <text>Erlaubt die Verwendung von Tasks und Tags zu Deployment-Gegenst√§nden
 
 Rechteparameter:
     [write, insert, delete, *]:
-        write: Erlaubt es Tasks und Tags zu ‰ndern
+        write: Erlaubt es Tasks und Tags zu √§ndern
         insert: Erlaubt die Erstellung von Tasks und Tags
         delete: Erlaubt das Lˆschen von Tasks und Tags
         *: Erlaubt alle obigen Operationen
 
 Beachte: Es gibt kein separates Recht zur Anzeige von Tasks und Tags.
 
-Diese Operationen werden typischerweise in der Sektion zur √úbersicht der Deployment-Gegenst‰nde im Xyna Factory Manager und in dem seitlichen Feld zur Anzeige von Details von XMOM-Objekten im Xyna Process Modeller verwendet.</text>
+Diese Operationen werden typischerweise in der Sektion zur √úbersicht der Deployment-Gegenst√§nde im Xyna Factory Manager und in dem seitlichen Feld zur Anzeige von Details von XMOM-Objekten im Xyna Process Modeller verwendet.</text>
   </localization>
   <localization>
     <id>-30</id>
@@ -816,22 +816,22 @@ These operations are typically used by the Capacities section of the Xyna Factor
     <type>RIGHT_SCOPE</type>
     <identifier>xfmg.xfctrl.timeControlledOrders</identifier>
     <language>DE</language>
-    <text>Erlaubt die Anzeige und Verwaltung von zeitgesteuerten Auftr‰gen
+    <text>Erlaubt die Anzeige und Verwaltung von zeitgesteuerten Auftr√§gen
 
 Rechteparameter:
     [read, write, insert, enable, disable, kill, *]:
-        read: Erlaubt die Anzeige zeitgesteuerter Auftr‰ge
-        write: Erlaubt die Bearbeitung zeitgesteuerter Auftr‰ge
-        insert: Erlaubt die Erstellung zeitgesteuerter Auftr‰ge
-        enable: Erlaubt die Aktivierung zeitgesteuerter Auftr‰ge
-        disable: Erlaubt die Pausierung zeitgesteuerter Auftr‰ge
-        kill: Erlaubt es zeitgesteuerte Auftr‰ge abzubrechen
+        read: Erlaubt die Anzeige zeitgesteuerter Auftr√§ge
+        write: Erlaubt die Bearbeitung zeitgesteuerter Auftr√§ge
+        insert: Erlaubt die Erstellung zeitgesteuerter Auftr√§ge
+        enable: Erlaubt die Aktivierung zeitgesteuerter Auftr√§ge
+        disable: Erlaubt die Pausierung zeitgesteuerter Auftr√§ge
+        kill: Erlaubt es zeitgesteuerte Auftr√§ge abzubrechen
         *: Erlaubt alle obigen Operationen
     /\*/: Name des zeitgesteuerten Auftrags
     /\*/: Name der Runtime Application oder der Arbeitsumgebung
     /\*/: Version der Runtime Application oder leer, falls eine Arbeitsumgebung gemeint ist
 
-Diese Operationen werden typischerweise in der Sektion zur Verwaltung von zeitgesteuerten Auftr‰gen im Xyna Factory Manager verwendet.</text>
+Diese Operationen werden typischerweise in der Sektion zur Verwaltung von zeitgesteuerten Auftr√§gen im Xyna Factory Manager verwendet.</text>
   </localization>
   <localization>
     <id>-34</id>
@@ -1100,7 +1100,7 @@ These operations are typically used by the Order Types section of the Xyna Facto
     <type>RIGHT_SCOPE</type>
     <identifier>xprc.xpce.StartOrder</identifier>
     <language>DE</language>
-    <text>Erlaubt das Starten von Xyna-Auftr‰gen
+    <text>Erlaubt das Starten von Xyna-Auftr√§gen
 
 Rechteparameter:
     /.*/: Name des Auftragstyps

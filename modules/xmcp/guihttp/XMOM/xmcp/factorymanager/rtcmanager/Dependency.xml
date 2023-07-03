@@ -27,9 +27,9 @@
   </Data>
   <Data Label="dependencyType" VariableName="dependencyType">
     <Meta>
-      <Documentation>explicit: direkt gew‰hlte Abh‰ngigkeit
-implicit: Abh‰ngigkeit einer gew‰hlten Abh‰ngigkeit (transitiv)
-independent: keine Abh‰ngigkeit</Documentation>
+      <Documentation>explicit: direkt gew√§hlte Abh√§ngigkeit
+implicit: Abh√§ngigkeit einer gew√§hlten Abh√§ngigkeit (transitiv)
+independent: keine Abh√§ngigkeit</Documentation>
       <Type>String</Type>
     </Meta>
   </Data>

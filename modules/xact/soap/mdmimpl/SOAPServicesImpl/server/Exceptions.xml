@@ -68,7 +68,7 @@
   </ExceptionType>
   <ExceptionType Code="XYNA-08004" TypeName="Ex_ExceptionHandlingFailedException" TypePath="com.gip.xyna.exceptions" >
     <MessageText Language="EN">Exception occurred during internal Exception Handling.</MessageText>
-    <MessageText Language="DE">Ein Fehler ist während der internen Fehlerbehandlung passiert.</MessageText>
+    <MessageText Language="DE">Ein Fehler ist wÃ¤hrend der internen Fehlerbehandlung passiert.</MessageText>
   </ExceptionType>
   
 </ExceptionStore>

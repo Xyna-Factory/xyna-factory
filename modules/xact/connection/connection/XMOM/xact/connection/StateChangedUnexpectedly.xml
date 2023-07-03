@@ -28,7 +28,7 @@
         <Type>String</Type>
       </Meta>
     </Data>
-    <MessageText Language="DE">Device Zustand hat sich von &lt;%0%&gt; auf &lt;%1%&gt; ge‰ndert</MessageText>
+    <MessageText Language="DE">Device Zustand hat sich von &lt;%0%&gt; auf &lt;%1%&gt; ge√§ndert</MessageText>
     <MessageText Language="EN">Device state has changed unexpectedly from &lt;%0%&gt; to &lt;%1%&gt;.</MessageText>
   </ExceptionType>
 </ExceptionStore>

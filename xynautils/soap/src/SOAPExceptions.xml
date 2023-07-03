@@ -28,7 +28,7 @@
     <JavaGen>
       <VarName>HTTP_RESPONSE_CODE_ERROR</VarName>
     </JavaGen>
-    <MessageText Language="DE">Soap Antwort enth‰lt einen Http Response Code, der einen Fehler signalisiert: %0%</MessageText>
+    <MessageText Language="DE">Soap Antwort enth√§lt einen Http Response Code, der einen Fehler signalisiert: %0%</MessageText>
     <MessageText Language="EN">Soap response contains http response code signaling an error: %0%</MessageText>
     <Parameter Number="0">
       <Description Language="DE">Http Response Code</Description>
@@ -127,7 +127,7 @@
       <VarName>ORDERNUMBER_TOO_LONG</VarName>
     </JavaGen>
     <Parameter Number="0">
-      <Description Language="DE">Maximal erlaubte L‰nge der OrderNumber</Description>
+      <Description Language="DE">Maximal erlaubte L√§nge der OrderNumber</Description>
       <JavaGen>
         <FQJavaType>int</FQJavaType>
         <Name>maxlength</Name>

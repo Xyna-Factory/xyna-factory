@@ -27,7 +27,7 @@ import com.gip.xyna.xact.StatusCode;
 
 public class StatusCodeSet {
   
-  private static StatusCodeSet Set_OK = new StatusCodeSet(StatusCode.OK); //h‰ufigster Fall
+  private static StatusCodeSet Set_OK = new StatusCodeSet(StatusCode.OK); //h√§ufigster Fall
   
   public static StatusCodeSet parseExpectedList(List<? extends HTTPStatusCode> expectedHTTPStatusCode) {
    

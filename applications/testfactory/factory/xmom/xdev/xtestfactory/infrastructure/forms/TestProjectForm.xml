@@ -75,12 +75,12 @@
 
 	<FormItem Secondary="true">
 		<Label Language="EN">Test Cases</Label>
-		<Label Language="DE">Testf‰lle</Label>
+		<Label Language="DE">Testf√§lle</Label>
 		<Button>
 			<!--Label Language="EN">Open</Label>
 			<Label Language="DE">√ñffnen</Label-->
                         <Label Language="EN">Open Test Cases</Label>
-                        <Label Language="DE">Testf‰lle anzeigen</Label>
+                        <Label Language="DE">Testf√§lle anzeigen</Label>
 
 			<Action>
 				<OpenForm ReferenceName="TestCasesForm" ReferencePath="xdev.xtestfactory.infrastructure.forms">

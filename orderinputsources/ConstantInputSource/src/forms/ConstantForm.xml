@@ -35,7 +35,7 @@
     <Label Language="EN">Custom Fields</Label>
     <Label Language="DE">Benutzerbeschriftungen</Label>
     <Documentation Language="EN">Userdefined value to be used to recognize orders.</Documentation>
-    <Documentation Language="DE">Benutzerdefinierte Werte, die dazu verwendet werden kˆnnen Auftr‰ge wieder zu erkennen.</Documentation>
+    <Documentation Language="DE">Benutzerdefinierte Werte, die dazu verwendet werden kˆnnen Auftr√§ge wieder zu erkennen.</Documentation>
     <FormItem Label="Custom Fields 1">
       <Label Language="EN">Custom Fields 1</Label>
       <Label Language="DE">Benutzerdefiniert 1</Label>
@@ -60,9 +60,9 @@
   
   <FormItem Label="Priority">
     <Label Language="EN">Priority</Label>
-    <Label Language="DE">Priorit‰t</Label>
+    <Label Language="DE">Priorit√§t</Label>
     <Documentation Language="EN">Priority of order (highest = 10, lowest = 1); maps to the systems thread priorities</Documentation>
-    <Documentation Language="DE">Priorit‰t des Auftrags (hˆchste 10, kleinste 1); verwendet die Thread-Priorit‰ten des Systems</Documentation>
+    <Documentation Language="DE">Priorit√§t des Auftrags (hˆchste 10, kleinste 1); verwendet die Thread-Priorit√§ten des Systems</Documentation>
     <DataLink>%0%.priority</DataLink>
   </FormItem>
 
@@ -79,10 +79,10 @@
     <Documentation Language="DE">Monitoring Level des Auftrags:
 0 = Es werden keinerlei Auditdaten angelegt.
 5 = Auditdaten werden nur angelegt, wenn ein Fehler angefallen ist.
-10 = Auditdaten werden angelegt. Nach der Erzeugung wird die n‰chste Aktualisierung erst wieder nach Beendigung der Cleanup-Phase durchgef√ºhrt.
+10 = Auditdaten werden angelegt. Nach der Erzeugung wird die n√§chste Aktualisierung erst wieder nach Beendigung der Cleanup-Phase durchgef√ºhrt.
 15 = Auditdaten werden angelegt. Jede √Ñnderung im Status des Master Workflow sorgt f√ºr eine Aktualisierung der Auditdaten. Insbesondere wird dabei dar "Letzte Aktualisierung"-Zeitstempel aktualisiert.
-17 = Zur Laufzeit Monitoring Level 20. Falls Auftrag erfolgreich beendet wird, wird das Monitoring Level auf 0 ge‰ndert.
-18 = Zur Laufzeit Monitoring Level 20. Falls Auftrag erfolgreich beendet wird, wird das Monitoring Level auf 10 ge‰ndert.
+17 = Zur Laufzeit Monitoring Level 20. Falls Auftrag erfolgreich beendet wird, wird das Monitoring Level auf 0 ge√§ndert.
+18 = Zur Laufzeit Monitoring Level 20. Falls Auftrag erfolgreich beendet wird, wird das Monitoring Level auf 10 ge√§ndert.
 20 = Auditdaten werden angelegt. Eingabe-, Ausgabe- und Fehlerwerte werden f√ºr jeden Workflowschritt aufgezeichnet.</Documentation>
     <DataLink>%0%.monitoringLevel</DataLink>
   </FormItem>

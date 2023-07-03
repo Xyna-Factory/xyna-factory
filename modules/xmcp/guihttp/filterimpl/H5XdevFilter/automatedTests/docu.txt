@@ -12,7 +12,7 @@ testcases/alltests.json zugegriffen.
 Configuration: √úber config.cfg
   Format: Ein Json Objekt
   {
-    "cookieFile": Hier werden die cookies abgelegt, die w‰hrend der Tests verwendet werden
+    "cookieFile": Hier werden die cookies abgelegt, die w√§hrend der Tests verwendet werden
     "functions": Diese Funktionsdatei wird vor dem Ausf√ºhren der Tests geladen.
     "factories": [
       {
@@ -32,24 +32,24 @@ Testseriendatei: Im JSON Format kˆnnen zwei Arrays definiert werden.
   aktuellen Testeriendatei angegeben werden. Trennzeichen ist "/".
   Beispiel: <path>/<path>/<file.json>
 
-  Das Array "tests" enth‰lt einen Eintrag f√ºr jeden auzuf√ºhrenden
+  Das Array "tests" enth√§lt einen Eintrag f√ºr jeden auzuf√ºhrenden
   Testfall. Die Struktur ist analog zu den Testserien.
   
 Beschreibung: Der automatisierte Tester f√ºhrt die Testserie aus, welche 
   beim Aufruf √ºbergeben wird. Es werden alle in der Testseriendatei
-  angegebenen Testf‰lle und Untertestseriendateien durchlaufen. Ein Testfall 
+  angegebenen Testf√§lle und Untertestseriendateien durchlaufen. Ein Testfall 
   besteht aus drei Teilen: Login,  Testinhalt und Logout. Nur der Testinhalt 
   muss in den Testdateien angegeben werden.
   
-Testdatei: Eine Testdatei enth‰lt valides JSON mit folgenden Elementen:
+Testdatei: Eine Testdatei enth√§lt valides JSON mit folgenden Elementen:
   "meta" - optional f√ºr "name", "description", "author", "comment"
   "factoryCount" - optional. Wenn angegeben, wird vor testausf√ºhrung gepr√ºft, ob ausreichend factories konfiguriert sind.
-                   zus‰tzlich wird sich auf den ersten factoryCount factories vor Begin des Tests eingeloggt und nach dem
+                   zus√§tzlich wird sich auf den ersten factoryCount factories vor Begin des Tests eingeloggt und nach dem
                    Test ausgeloggt. Wird factoryCount nicht angegeben, ist das Verhalten Identisch zu factoryCount 1.
   "factoryConstraints" - optional. Liste von factoryConstraints. Wenn auf mehrere Factories zugegriffen werden soll, kann
                    √ºber diese Liste sichergestellt werden, dass die verwendeten Factories in der vom test erwarteten relation
                    stehen. ZB kann ein factoryConstraint daf√ºr sorgen, dass zwei factories auf unterschiedlichen IPs laufen.
-                   Die verf√ºgbaren factoryConstraints mit relevanten Informationen werden weiter unten erkl‰rt.
+                   Die verf√ºgbaren factoryConstraints mit relevanten Informationen werden weiter unten erkl√§rt.
   "operations" - ein array mit den einzelnen Schritten des Testfalls.
   
     Eine Operation kann au√üerdem optional ein feld "ignore" (: true,)
@@ -63,22 +63,22 @@ Testdatei: Eine Testdatei enth‰lt valides JSON mit folgenden Elementen:
       "operation": "call" - fest. Bestimmt den Operationstypen
       "requestType": "POST", "PUT" oder "GET" - Art des Requests
       "url": url des Requests. Kann veriablen enthalten.
-      "payload": <json> Payload des Requests. Optional - abh‰ngig von requestType.
+      "payload": <json> Payload des Requests. Optional - abh√§ngig von requestType.
       
       "acceptError": true|false. Optional - wenn true wird der call nicht auf Fehler gepr√ºft
       
       "factoryIndex": optional. Wenn angegeben, wird die factory als Ziel verwendet, die unter dem Index konfiguriert wurde
                       Ist dieses Attribut nicht angegeben, ist das Verhalten identisch zu factoryIndex 0
       
-      "async": true|false. optional. - wenn true, dann wird nicht auf das Ergebnis des Request gewartet, sondern die n‰chte Operation ausgef√ºhrt.
-      "callId": optional. - MUSS angegeben werden, wenn async true ist. Referenz auf diesen Request f√ºr eine sp‰tere joinAsyncCall Operation.
+      "async": true|false. optional. - wenn true, dann wird nicht auf das Ergebnis des Request gewartet, sondern die n√§chte Operation ausgef√ºhrt.
+      "callId": optional. - MUSS angegeben werden, wenn async true ist. Referenz auf diesen Request f√ºr eine sp√§tere joinAsyncCall Operation.
       
       "retries": optional. - der call wird wiederholt, bis die retryCondition keinen AssertError mehr wirft.
       {
-        "maxRetries": optional. Wie h‰ufig soll der call maximal wiederholt werden? Wenn nicht gesetzt, wird der call nicht wiederholt.
+        "maxRetries": optional. Wie h√§ufig soll der call maximal wiederholt werden? Wenn nicht gesetzt, wird der call nicht wiederholt.
         "retryCondition": MUSS angegeben werden, wenn retry gesetzt ist. Liste von Operations, die nach dem Erhalt einer Antwort durchlaufen
                       werden. Wirft die Ausf√ºhrung einen AssertError (-> eine Assert Operation wertet zu false als), wird der call wiederholt.
-                      Andere Fehler w‰hrend der Durchf√ºhrung des Operations f√ºhren dazu, dass der call nicht wiederholt wird.
+                      Andere Fehler w√§hrend der Durchf√ºhrung des Operations f√ºhren dazu, dass der call nicht wiederholt wird.
         "variable": optional. Variable, in welche das Ergebnis des calls geschrieben werden soll.					  
       }
     }
@@ -97,17 +97,17 @@ Testdatei: Eine Testdatei enth‰lt valides JSON mit folgenden Elementen:
        werden Anf√ºhrungszeichen am Anfang und Ende des Ergebnisses
        entfernt. Kann verwendet werden um Strings ohne die umschlie√üenden
        Anf√ºhrungszeichen aus einer JSON Antwort zu lesen.
-     "getListLength": Optional. Wenn angegeben wird die L‰nge des ausgew‰hlten
+     "getListLength": Optional. Wenn angegeben wird die L√§nge des ausgew√§hlten
        Objekts in die Variable geschrieben.
   }
   mod:
   {
     "operation": "modification" - fest. Bestimmt den Operationstypen
-    "variable": Variablenname, der ver‰ndert werden soll
+    "variable": Variablenname, der ver√§ndert werden soll
     "modification": Unterobjekt mit Informationen zur Modifikation.
-      werden sp‰ter beschrieben.
+      werden sp√§ter beschrieben.
     "targetVariable: optional. Wenn angegeben, wird das Ergebnis in diese
-      Variable geschrieben und die variable in "variable" bleibt unver‰ndert.
+      Variable geschrieben und die variable in "variable" bleibt unver√§ndert.
   }
   print:
   {
@@ -269,7 +269,7 @@ Testdatei: Eine Testdatei enth‰lt valides JSON mit folgenden Elementen:
 
 Variablen: Beginnen und enden mit "!".
 Modifikationen: Die "modification" Operation unterst√ºtzt verschiedene
-  Mˆglichkeiten zum Ver‰ndern einer Variablen:
+  Mˆglichkeiten zum Ver√§ndern einer Variablen:
   substring
   {
     "operation" : "substring" - fest. Bestimmt den Operationstypen
@@ -281,7 +281,7 @@ Modifikationen: Die "modification" Operation unterst√ºtzt verschiedene
   concat
   {
     "operation" : "concat" - fest. Bestimmt den Operationstypen
-    "value" : was an die Variable angeh‰ngt werden soll. Kann Variablen enthaten
+    "value" : was an die Variable angeh√§ngt werden soll. Kann Variablen enthaten
   }
   urlencode
   {
@@ -301,7 +301,7 @@ Modifikationen: Die "modification" Operation unterst√ºtzt verschiedene
   }
 
 
-Funktionsdateien: Durch das definieren von Funktionen ist es mˆglich Arbeitsabl‰ufe 
+Funktionsdateien: Durch das definieren von Funktionen ist es mˆglich Arbeitsabl√§ufe 
   einmal zu definieren und dann an anderen Stellen aufzurufen, ohne die Implementation 
   kopieren zu m√ºssen. Dazu ist in der Konfigurationsdatei die Referenz auf eine
   Funktionsdatei hinterlegt, welche vor dem Ausf√ºhren der Tests geladen wird.
@@ -320,7 +320,7 @@ Funktionsdateien: Durch das definieren von Funktionen ist es mˆglich Arbeitsabl‰
     "output": Liste von OutputParametern. Dies sind Variablennamen, die innerhalb der Funktion
       gesetzt werden.
     "operations": Liste mit Operationen, die im Rahmen der Funktion ausgef√ºhrt werden sollen.
-      Die verf√ºgbaren Operationen sind die gleichen, die auch bei den Testf‰llen verf√ºgbar sind.
+      Die verf√ºgbaren Operationen sind die gleichen, die auch bei den Testf√§llen verf√ºgbar sind.
   }
 
 Asserttypen und ihre Felder:
@@ -334,7 +334,7 @@ Asserttypen und ihre Felder:
   "value: "Wert, den die Variable nicht haben darf. Variablen werden ersetzt.
 
   "constraint": "listLength" - fest. Bestimmt den Asserttypen.
-  "expectedValue": Erwartete Listenl‰nge. Variablen werden ersetzt.
+  "expectedValue": Erwartete Listenl√§nge. Variablen werden ersetzt.
   "path": Pfad JSON des letzten call Ergebnisses. (endet in $list)
   "variable": optional. Es muss entweder path oder variable gesetzt sein. Ist beides gesetzt, wird
     path verwendet und variable ignoriert. Wenn variable gesetzt ist, wird als Liste die

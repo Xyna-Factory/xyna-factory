@@ -20,7 +20,7 @@
   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XYNA-XACT-15002" Label="Detected error" TypeName="DetectedError" TypePath="xact.connection">
     <Data Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
     <Data Label="response" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response"/>
-    <MessageText Language="DE">Antwort des Ger‰ts wurde als fehlerhaft klassifiziert</MessageText>
+    <MessageText Language="DE">Antwort des Ger√§ts wurde als fehlerhaft klassifiziert</MessageText>
     <MessageText Language="EN">Response from device was classified as errorneous</MessageText>
   </ExceptionType>
 </ExceptionStore>

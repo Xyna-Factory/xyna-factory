@@ -23,9 +23,9 @@
   <Data Label="Dependency Type" VariableName="dependencyType">
     <Meta>
       <Type>String</Type>
-      <Documentation>explicit: direkt gew‰hlte Abh‰ngigkeit
-implicit: Abh‰ngigkeit einer gew‰hlten Abh‰ngigkeit (transitiv)
-independent: keine Abh‰ngigkeit</Documentation>
+      <Documentation>explicit: direkt gew√§hlte Abh√§ngigkeit
+implicit: Abh√§ngigkeit einer gew√§hlten Abh√§ngigkeit (transitiv)
+independent: keine Abh√§ngigkeit</Documentation>
     </Meta>
   </Data>
   <Data Label="Origin RTC" VariableName="originRTC">

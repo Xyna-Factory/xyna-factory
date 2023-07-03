@@ -208,7 +208,7 @@ public class StatisticsAction implements FilterAction {
   private class StatisticsEntryComparator implements Comparator<StatisticsEntry> {
 
     public int compare(StatisticsEntry o1, StatisticsEntry o2) {
-      return (int)(o2.getTimestamp() - o1.getTimestamp()); //rückw�rts
+      return (int)(o2.getTimestamp() - o1.getTimestamp()); //rückwärts
     }
     
   }

@@ -18,7 +18,7 @@
 -->
 <Form xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsList="true" Label="Test Cases" TypeName="TestCasesCreateForm" TypePath="xdev.xtestfactory.infrastructure.forms" Version="1.8">
         <Label Language="EN">Test Cases</Label>
-        <Label Language="DE">Testf‰lle</Label>
+        <Label Language="DE">Testf√§lle</Label>
         <Input>
                 <Data ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
                 <!--Data ReferenceName="Feature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="features"/-->
@@ -43,7 +43,7 @@
                 </FormItem-->
                 <FormItem HideIfUndefined="false">
                         <Label Language="EN">Priority</Label>
-                        <Label Language="DE">Priorit‰t</Label>
+                        <Label Language="DE">Priorit√§t</Label>
                         <DataLink>%0%.priority</DataLink>
                 </FormItem>
                <FormItem HideIfUndefined="false">
@@ -68,7 +68,7 @@
                         </Restriction>
                         <Button>
                           <Label Language="EN">Select</Label>
-                          <Label Language="DE">Ausw‰hlen</Label>
+                          <Label Language="DE">Ausw√§hlen</Label>
                           <Action>
                             <OpenForm ReferenceName="TestCaseCoveredFeaturesForm" ReferencePath="xdev.xtestfactory.infrastructure.forms">
                               <DataLink>%0%.name</DataLink>

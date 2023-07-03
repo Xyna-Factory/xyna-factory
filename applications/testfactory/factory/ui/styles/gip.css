@@ -3063,7 +3063,7 @@ Label.MapModFormulaCounterLabel
   fontFamily: "Courier New", "_typewriter";
 }
 
-/*Icons für die Autovervollst�ndigungsliste*/
+/*Icons für die Autovervollständigungsliste*/
 Button.autoCompletionIconVariable
 {
   upSkin: Embed(source="/processmodeller/icon_variable.png");

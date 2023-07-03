@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
  <XynaCommandLineCommand>
- <!--  Dependencies="NONE" wäre schön, geht aber nicht, weil impl auf factory-klassen angewiesen ist (im gegensatz zu listconnectionpoolinfo -->
+ <!--  Dependencies="NONE" wÃ¤re schön, geht aber nicht, weil impl auf factory-klassen angewiesen ist (im gegensatz zu listconnectionpoolinfo -->
   <CommandDefinition Name="listconnectionpools" Groups="Connection Pool Management" Description="Shows statistics about connection pools." />
   <BoolOption Name="t" LongName="asTable" Description="Lists the output in the form of a well formatted table" Optional="true"/>
 </XynaCommandLineCommand>

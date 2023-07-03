@@ -115,7 +115,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Für Fabrik Komponente "%0%" wurden Komponenten mehrfach als abh�ngig definiert.</MessageText>
+      <MessageText Language="DE">Für Fabrik Komponente "%0%" wurden Komponenten mehrfach als abhängig definiert.</MessageText>
       <MessageText Language="EN">For factory component "%0%" other components have been defined as dependent more than once.</MessageText>
    </ExceptionType>
    
@@ -386,7 +386,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Fehler w�hrend der Kommunikation mit dem Repository: %0%</MessageText>
+      <MessageText Language="DE">Fehler während der Kommunikation mit dem Repository: %0%</MessageText>
       <MessageText Language="EN">Error during repository communication: %0%</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-03379" TypeName="XDEV_PathLockedException" TypePath="com.gip.xyna.xdev.exceptions" BaseTypeName="XDEV_RepositoryAccessException" BaseTypePath="com.gip.xyna.xdev.exceptions">
