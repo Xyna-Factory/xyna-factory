@@ -175,7 +175,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Auftrag konnte nicht gestartet werden, weil der zugehörige Workflow %0% noch beim Deployment ist</MessageText>
+      <MessageText Language="DE">Auftrag konnte nicht gestartet werden, weil der zugehÃ¶rige Workflow %0% noch beim Deployment ist</MessageText>
       <MessageText Language="EN">order could not be started. workflow %0% is still deploying</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01153" TypeName="XPRC_UNEXPECTED_THREAD_INTERRUPTION" TypePath="com.gip.xyna.xprc.exceptions">
@@ -543,7 +543,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Die Methode %0% ist abstract und static definiert. diese Kombination ist unmöglich</MessageText>
+      <MessageText Language="DE">Die Methode %0% ist abstract und static definiert. diese Kombination ist unmÃ¶glich</MessageText>
       <MessageText Language="EN">method %0% is defined as abstract and static which is not allowed in this combination</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01428" TypeName="XPRC_InvalidXmlMissingRequiredElementException" TypePath="com.gip.xyna.xprc.exceptions">
@@ -557,7 +557,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">In Element %0% fehlt das benötigte Kindelement %1%.</MessageText>
+      <MessageText Language="DE">In Element %0% fehlt das benÃ¶tigte Kindelement %1%.</MessageText>
       <MessageText Language="EN">element %0% is missing its required childelement %1%.</MessageText>
    </ExceptionType>   
    <ExceptionType Code="XYNA-01429" TypeName="XPRC_JarFileForServiceImplNotFoundException" TypePath="com.gip.xyna.xprc.exceptions">
@@ -726,7 +726,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">referenzierte variablen id konnte nicht aufgelöst werden: %0%</MessageText>
+      <MessageText Language="DE">referenzierte variablen id konnte nicht aufgelÃ¶st werden: %0%</MessageText>
       <MessageText Language="EN">referenced variableid not found: %0%</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01449" TypeName="XPRC_MissingServiceIdException" TypePath="com.gip.xyna.xprc.exceptions">
@@ -797,7 +797,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Methode %0% in Objekt %1% kann nur statisch aufgerufen werden, da keine zugehörige Variable definiert wurde.</MessageText>
+      <MessageText Language="DE">Methode %0% in Objekt %1% kann nur statisch aufgerufen werden, da keine zugehÃ¶rige Variable definiert wurde.</MessageText>
       <MessageText Language="EN">missing object-instance: method %0% in object %1% can not be accessed in a static way.</MessageText>
    </ExceptionType>
    
@@ -808,7 +808,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">referenzierte serviceid konnte nicht aufgelöst werden: %0%</MessageText>
+      <MessageText Language="DE">referenzierte serviceid konnte nicht aufgelÃ¶st werden: %0%</MessageText>
       <MessageText Language="EN">referenced serviceid not found: %0%</MessageText>
    </ExceptionType>
     <ExceptionType Code="XYNA-01456" TypeName="XPRC_InvalidIDTargetException" TypePath="com.gip.xyna.xprc.exceptions">
@@ -951,7 +951,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Deployment wurde abgebrochen,  Auftragstyp "%0%" konnte in Dispatcher %1% nicht aufgelöst werden.</MessageText>
+      <MessageText Language="DE">Deployment wurde abgebrochen,  Auftragstyp "%0%" konnte in Dispatcher %1% nicht aufgelÃ¶st werden.</MessageText>
       <MessageText Language="EN">Deployment aborted, ordertype "%0%" could not be resolved in dispatcher %1%.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01471" TypeName="XPRC_TimeoutWhileWaitingForUnaccessibleOrderException" TypePath="com.gip.xyna.xprc.exceptions">
@@ -1157,7 +1157,7 @@
          </Meta>
       </Data>
       <MessageText Language="EN">Capacity '%0%' needed to schedule does not exist.</MessageText>
-      <MessageText Language="DE">Die zum Schedulen benötigte Capacity '%0%' existiert nicht.</MessageText>
+      <MessageText Language="DE">Die zum Schedulen benÃ¶tigte Capacity '%0%' existiert nicht.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01498" TypeName="XPRC_Scheduler_TooHighCapacityCardinalityException" TypePath="com.gip.xyna.xprc.exceptions">
       <Data Label="capName" VariableName="capName">
@@ -1171,11 +1171,11 @@
          </Meta>
       </Data>
       <MessageText Language="EN">Capacity '%0%' needed to schedule is not availabe in requested cardinality %1%.</MessageText>
-      <MessageText Language="DE">Die zum Schedulen benötigte Capacity '%0%' ist nicht in der geforderten Cardinality %1% vorhanden.</MessageText>
+      <MessageText Language="DE">Die zum Schedulen benÃ¶tigte Capacity '%0%' ist nicht in der geforderten Cardinality %1% vorhanden.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01499" TypeName="XPRC_Scheduler_SchedulerBeanMissingException" TypePath="com.gip.xyna.xprc.exceptions">
       <MessageText Language="EN">SchedulerBean is needed to schedule.</MessageText>
-      <MessageText Language="DE">Die zum Schedulen benötigte SchedulerBean existiert nicht.</MessageText>
+      <MessageText Language="DE">Die zum Schedulen benÃ¶tigte SchedulerBean existiert nicht.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01500" TypeName="XPRC_AdministrativeVetoAllocationDenied" TypePath="com.gip.xyna.xprc.exceptions">
       <Data Label="vetoName" VariableName="vetoName">
@@ -1342,7 +1342,7 @@
          </Meta>
       </Data>
       <MessageText Language="EN">Time window '%0%' needed to schedule does not exist.</MessageText>
-      <MessageText Language="DE">Das zum Schedulen benötigte Zeitfenster '%0%' existiert nicht.</MessageText>
+      <MessageText Language="DE">Das zum Schedulen benÃ¶tigte Zeitfenster '%0%' existiert nicht.</MessageText>
    </ExceptionType>
    
    <ExceptionType Code="XYNA-01522" TypeName="XPRC_TimeWindowStillUsedException" TypePath="com.gip.xyna.xprc.exceptions">

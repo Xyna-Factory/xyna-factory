@@ -183,7 +183,7 @@ public class HTTPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
       //ok, Connection wurde vor dem reconnect ordentlich geschlossen 
     } catch (HttpException e) {
       logger.warn("Failed to close old connection before reconnect", e );
-      //soll aber reconnect nicht weiter stören
+      //soll aber reconnect nicht weiter stÃ¶ren
     }
     hc = new HttpConnectionImpl(connectParameter);
     hc.connect(false);

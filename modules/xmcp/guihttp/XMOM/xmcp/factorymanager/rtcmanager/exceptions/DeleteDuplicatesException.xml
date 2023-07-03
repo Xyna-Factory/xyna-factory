@@ -23,7 +23,7 @@
         <Type>String</Type>
       </Meta>
     </Data>
-    <MessageText Language="DE">Duplikate konnten nicht gelöscht werden: %0%</MessageText>
+    <MessageText Language="DE">Duplikate konnten nicht gelÃ¶scht werden: %0%</MessageText>
     <MessageText Language="EN">Duplicates could not be deleted: %0%</MessageText>
   </ExceptionType>
 </ExceptionStore>

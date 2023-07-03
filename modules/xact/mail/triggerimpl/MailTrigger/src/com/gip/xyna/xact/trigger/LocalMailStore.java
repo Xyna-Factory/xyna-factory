@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * LocalMailStore verwaltet empfangene Mails.
  * 
- * Mails werden nicht sofort aus der Inbox gel�scht, sollen aber ntürlich nicht direkt einen 
+ * Mails werden nicht sofort aus der Inbox gelöscht, sollen aber ntürlich nicht direkt einen 
  * zweiten Auftrag starten. Daher müssen die Mails, für die gerade ein Auftrag läuft, verwaltet werden.
  * Wenn der auftrag fertig ist, kann die Mail aus Inbox und aus LocalMailStore entfernt werden.
  * Auch für Retries werden hier die RetryCounter verwaltet.
@@ -49,10 +49,10 @@ public class LocalMailStore implements Serializable {
     int nextRetry =  retry == null ? 1 : retry.intValue()+1;
     if( nextRetry <= maxRetries ) {
       retriedMails.put(messageId, nextRetry);
-      receivedMails.remove(messageId); //soll wieder gelesen werden k�nnen
+      receivedMails.remove(messageId); //soll wieder gelesen werden können
       return true;
     }
-    return false; //Retries überschritten, daher nun Mail l�schen -> Aufgabe des Filters
+    return false; //Retries überschritten, daher nun Mail löschen -> Aufgabe des Filters
   }
 
   public void delete(String messageId) {
@@ -61,7 +61,7 @@ public class LocalMailStore implements Serializable {
   }
 
   public void notProcessed(String messageId) {
-    receivedMails.remove(messageId);// Mail soll wieder gelesen werden k�nnen
+    receivedMails.remove(messageId);// Mail soll wieder gelesen werden können
   }
   
 }

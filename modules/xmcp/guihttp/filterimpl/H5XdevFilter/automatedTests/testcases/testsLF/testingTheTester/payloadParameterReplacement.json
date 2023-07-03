@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "payloadParameterReplacemnent",
-	"description": "Testet die Funktion variablen im payload von 'call' Operationen angeben zu können"
+	"description": "Testet die Funktion variablen im payload von 'call' Operationen angeben zu kÃ¶nnen"
   },
   "operations":
   [

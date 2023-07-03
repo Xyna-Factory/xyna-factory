@@ -1087,7 +1087,7 @@ install_xyna_cluster () {
 }
 
 check_install_oracle_cluster () {
-  #Suche nach Pattern, daher kein  if [ -e ojdbc*.jar ]; möglich!
+  #Suche nach Pattern, daher kein  if [ -e ojdbc*.jar ]; mÃ¶glich!
   local OJDBC_JAR_FOUND="false";
   if [[ -d ${INSTALL_PREFIX}/server/userlib/ ]] ; then
     for f in ${INSTALL_PREFIX}/server/userlib/ojdbc*.jar; do 
@@ -1414,7 +1414,7 @@ merge_files () {
   ${VOLATILE_CP} ${CUSTOMIZED_FILE} ${TMP_CUSTOMIZED_FILE}
   ${VOLATILE_CP} ${NEW_FILE} ${TMP_NEW_FILE}
   
-  #Common Base ist nötig, evtl. versuchen anzulegen
+  #Common Base ist nÃ¶tig, evtl. versuchen anzulegen
   if [ -e ${COMMON_BASE_FILE} ] ; then
     ${VOLATILE_CP} ${COMMON_BASE_FILE} ${TMP_COMMON_BASE_FILE}
   else

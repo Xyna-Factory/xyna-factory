@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<!-- Hier könnte man zb auch Logmeldungen in verschiedenen Sprachen speichern -->
+<!-- Hier kÃ¶nnte man zb auch Logmeldungen in verschiedenen Sprachen speichern -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
               Name="ExampleExceptionStore" Version="1.0" Type="ExceptionMasterFile"
               DefaultLanguage="DE">

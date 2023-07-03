@@ -277,7 +277,7 @@
 
   
   <!-- ================================= 
-              target: buildTest (packt nicht alle Tests in das Jar, sondern nur von anderen Projekten benötigte)         
+              target: buildTest (packt nicht alle Tests in das Jar, sondern nur von anderen Projekten benÃ¶tigte)         
              ================================= -->
  <target name="buildTest" depends="build">
    <delete dir="${basedir}/classes" />

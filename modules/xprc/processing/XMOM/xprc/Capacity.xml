@@ -22,7 +22,7 @@
 			<Type>String</Type>
 		</Meta>
 	</Data>
-  <Data Label="Wie oft wird die Kapazität ben�tigt" VariableName="cardinality">
+  <Data Label="Wie oft wird die Kapazität benötigt" VariableName="cardinality">
 	    <Meta>
 			<Type>Integer</Type>
 		</Meta>

@@ -19,7 +19,7 @@
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="107" Label="Add Custom Field Columns" TypeName="AddCustomFieldColumns" TypePath="xmcp.processmonitor" Version="1.8">
   <Meta>
     <FixedDetailOptions>hideDetailAreas,highDetailsMode,openDocumentation</FixedDetailOptions>
-    <Documentation>TODO: schönere Lösung als per Copy &amp; Paste</Documentation>
+    <Documentation>TODO: schÃ¶nere LÃ¶sung als per Copy &amp; Paste</Documentation>
   </Meta>
   <Operation ID="106" Label="Add Custom Field Columns" Name="AddCustomFieldColumns">
     <Meta>

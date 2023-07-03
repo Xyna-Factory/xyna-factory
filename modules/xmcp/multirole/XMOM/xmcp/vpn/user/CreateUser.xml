@@ -256,7 +256,7 @@
             <Exception ID="140" Label="Create User Exception" ReferenceName="CreateUserException" ReferencePath="xmcp.vpn.user" VariableName="createUserException140"/>
             <Target RefID="141"/>
           </Output>
-          <Mapping>%1%.exceptionDetails=concat("Der Benutzer \"",%0%.username,"\" konnte nicht angelegt werden. Möglicherweise ist der Benutzername bereits vergeben.")</Mapping>
+          <Mapping>%1%.exceptionDetails=concat("Der Benutzer \"",%0%.username,"\" konnte nicht angelegt werden. MÃ¶glicherweise ist der Benutzername bereits vergeben.")</Mapping>
         </Mappings>
         <Throw ExceptionID="141" ID="134" Label="Throw Create User Exception">
           <Source RefID="141"/>

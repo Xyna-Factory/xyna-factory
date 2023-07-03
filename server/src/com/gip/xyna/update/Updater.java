@@ -276,7 +276,7 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
       
       
-      // 5.1.3.1 deploy workflows die von gui ben�tigt werden
+      // 5.1.3.1 deploy workflows die von gui benötigt werden
       Version v187 = new Version(v186).increaseToMajorVersion(4, 1);
       ud = new UpdateDeployMDMs(v186, v187,
                                 new String[] {"xnwh.persistence.Query", 
@@ -556,7 +556,7 @@ public class Updater implements UpdaterInterface {
       // 6.1.2.0
       Version v233 = new Version(v232).increaseToMajorVersion(3, 1);
       ud = new UpdateJustVersion(v232, v233, true); //true wegen bug 19364
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.1 anfängt, und gr�ßer gleich 6.1.1.5 ist
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.1 anfängt, und größer gleich 6.1.1.5 ist
       updates.add(ud);
       
       // 6.1.2.1
@@ -570,7 +570,7 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
       
       // 6.1.2.3
-      //codegen Änderungen für objekt-versionierung, xml referenzen in toXml-darstellung, und deep-equals M�glichkeiten. xynaobjectlist ist nicht serialisierungskompatibel
+      //codegen Änderungen für objekt-versionierung, xml referenzen in toXml-darstellung, und deep-equals Möglichkeiten. xynaobjectlist ist nicht serialisierungskompatibel
       Version v236 = new Version(v235).increaseToMajorVersion(4, 1);
       ud = new UpdateOrderBackupNewXynaObjectList(v235, v236); 
       updates.add(ud);
@@ -623,7 +623,7 @@ public class Updater implements UpdaterInterface {
                                 new String[] {"xnwh.persistence.PersistenceServices"},
                                 new String[] {},
                                 true, false, false);
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.2 anfängt, und gr�ßer gleich 6.1.2.9 ist
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.2 anfängt, und größer gleich 6.1.2.9 ist
       updates.add(ud);
       
       // 6.1.3.1
@@ -657,7 +657,7 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
 
       
-      // 7.0.0.1: wichtig vor 7.0.0.2, damit auch alle reservierten objekte gefunden werden k�nnen
+      // 7.0.0.1: wichtig vor 7.0.0.2, damit auch alle reservierten objekte gefunden werden können
       Version v249 = new Version(v248).increaseToMajorVersion(4, 1);
       ud = new UpdateDiscoverXMOMDatabase(v248, v249, false, true);
       updates.add(ud);
@@ -1775,10 +1775,10 @@ public class Updater implements UpdaterInterface {
 
 
       //ACHTUNG: bei updates in einem branch muss gewährleistet werden, dass alle späteren versionen (trunk, spätere branches)
-      //         auf dem branch updaten k�nnen. bei updates, die in späteren versionen dann sonderbehandlungen im update-
-      //         prozess ben�tigen, müssen die versionen, auf denen die updates passieren sollen, oben genau angegeben werden.
+      //         auf dem branch updaten können. bei updates, die in späteren versionen dann sonderbehandlungen im update-
+      //         prozess benötigen, müssen die versionen, auf denen die updates passieren sollen, oben genau angegeben werden.
       //         beispiel: in einem branch-update wird eine spalte zu einer tabelle hinzugefügt. dieses update passiert
-      //                   auch im trunk. dann ben�tigen alle branches zwischen dem betroffenen branch und der trunk-version
+      //                   auch im trunk. dann benötigen alle branches zwischen dem betroffenen branch und der trunk-version
       //                   ein neues update (und ein neues release), welches den update-fall mit und ohne der schon vorhandenen
       //                   neuen spalte berücksichtigt. alternativ kann das update selbst natürlich so schlau sein, dass es
       //                   bewerten kann, ob es erneut ausgeführt werden muss...
@@ -1790,7 +1790,7 @@ public class Updater implements UpdaterInterface {
       // dritte stelle: kleinere features, dickere bugfixing-pakete
       // vierte stelle: bugfixing-releases / branch-updates
       
-      // weil bei tags mindestens die 3te stelle hochgezählt wird, k�nnen branches kollisionslos die vierte stelle weiterzählen.
+      // weil bei tags mindestens die 3te stelle hochgezählt wird, können branches kollisionslos die vierte stelle weiterzählen.
 
       // hier weitere updates registrieren. reihenfolge sollte so sein, dass nicht versucht werden muss, ein update
       // mehrfach anzuwenden
@@ -2210,7 +2210,7 @@ public class Updater implements UpdaterInterface {
     }
 
     // für alle geparsten files alle updates ausführen. die Document-Instanzen bleiben immer die gleichen
-    // und werden u.U. mehrfach aktualisiert auf die Platte geschrieben. Hier k�nnte man noch den Update-Fall
+    // und werden u.U. mehrfach aktualisiert auf die Platte geschrieben. Hier könnte man noch den Update-Fall
     // dahingehend optimieren, dass aktualisierte DocumentS nur ein mal geschrieben werden.
     int updated = 0;
     

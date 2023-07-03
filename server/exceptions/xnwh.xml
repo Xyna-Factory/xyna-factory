@@ -31,7 +31,7 @@
       <MessageText Language="EN">Multiple node found for path in where element: %0%</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-02221" TypeName="XNWH_PERSISTENCE_ERROR" TypePath="com.gip.xyna.xnwh.exceptions">
-      <MessageText Language="DE">Persistierung nicht möglich</MessageText>
+      <MessageText Language="DE">Persistierung nicht mÃ¶glich</MessageText>
       <MessageText Language="EN">Unable to persist</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-02222" TypeName="XNWH_XMLSERIALIZATION_UNSUPPORTED" TypePath="com.gip.xyna.xnwh.exceptions">
@@ -136,7 +136,7 @@
             <Type>long</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Die Persistence Layer Instanz mit ID %0% kann nicht gelöscht werden, solange sie noch benutzt wird.</MessageText>
+      <MessageText Language="DE">Die Persistence Layer Instanz mit ID %0% kann nicht gelÃ¶scht werden, solange sie noch benutzt wird.</MessageText>
       <MessageText Language="EN">Persistence layer instance %0% may not be deleted while in use.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-02236" TypeName="XNWH_PersistenceLayerClassIncompatibleException" TypePath="com.gip.xyna.xnwh.exceptions">
@@ -191,7 +191,7 @@
             <Type>long</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Der Persistence Layer mit ID %0% kann nicht gelöscht werden, solange die Instanz mit ID '%1%' davon existiert.</MessageText>
+      <MessageText Language="DE">Der Persistence Layer mit ID %0% kann nicht gelÃ¶scht werden, solange die Instanz mit ID '%1%' davon existiert.</MessageText>
       <MessageText Language="EN">Persistence layer %0% may not be undeployed while still being use by persistence layer instance with id '%1%'.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-02241" TypeName="XNWH_InvalidObjectForTableException" TypePath="com.gip.xyna.xnwh.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
@@ -318,7 +318,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Die Menge an dedizierten Verbindungen erschöpft das ConnectionLimit %0% des PersistenceLayers (%1%)</MessageText>
+      <MessageText Language="DE">Die Menge an dedizierten Verbindungen erschÃ¶pft das ConnectionLimit %0% des PersistenceLayers (%1%)</MessageText>
       <MessageText Language="EN">The amount of dedicated connections exhausts the connection limit %0% of the persistence layer (%1%)</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-02254" TypeName="XNWH_InvalidXMOMStorablePathException" TypePath="com.gip.xyna.xnwh.exceptions" >
@@ -369,7 +369,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">ODSName wurde geÃ¤ndert, aber das Deployment des zugehörigen XMOM Storables '%0%' ist fehlgeschlagen.</MessageText>
+      <MessageText Language="DE">ODSName wurde geÃ¤ndert, aber das Deployment des zugehÃ¶rigen XMOM Storables '%0%' ist fehlgeschlagen.</MessageText>
       <MessageText Language="EN">ODS name has been changed but corresponding XMOM Storable '%0%' could not be deployed.</MessageText>
    </ExceptionType>  
    <ExceptionType Code="XYNA-02258" TypeName="XNWH_PersistenceLayerInstanceNotRegisteredException" TypePath="com.gip.xyna.xnwh.exceptions">

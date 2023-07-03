@@ -18,7 +18,7 @@
 -->
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="40" Label="LeaseAssignment_v6" TypeName="LeaseAssignment_v6" TypePath="xdnc.dhcpv6" Version="1.8">
   <Meta>
-    <Documentation>LeaseAssignment_v6 wird aufgerufen, wenn der Server eine DHCPv6 Nachricht als Relay Nachricht empfängt. Der Workflow verarbeitet Nachrichten vom Typ SOLICIT, REQUEST, RENEW, REBIND und  DECLINE. Leases k�nnen vergeben, verlängert oder ungültig gemacht werden. Die Daten werden in Form von Nodes durch den Filter eingegeben und ebenfalls in Form von Nodes an den Filter weitergegeben, welcher die Antwort in Byteform als DHCPv6 Nachricht verschickt.</Documentation>
+    <Documentation>LeaseAssignment_v6 wird aufgerufen, wenn der Server eine DHCPv6 Nachricht als Relay Nachricht empfängt. Der Workflow verarbeitet Nachrichten vom Typ SOLICIT, REQUEST, RENEW, REBIND und  DECLINE. Leases können vergeben, verlängert oder ungültig gemacht werden. Die Daten werden in Form von Nodes durch den Filter eingegeben und ebenfalls in Form von Nodes an den Filter weitergegeben, welcher die Antwort in Byteform als DHCPv6 Nachricht verschickt.</Documentation>
   </Meta>
   <Operation ID="39" Label="LeaseAssignment_v6" Name="LeaseAssignment_v6">
     <Meta>
@@ -56,7 +56,7 @@
       <Target RefID="392"/>
       <Target RefID="414"/>
       <Meta>
-        <Documentation>Bestimmt den Typ der eingehenden Nachricht. Dazu wird in der RelayNachricht der Wert der Untertoption "InnerType" abgerufen. Die erhaltene Zahl ergibt den Typ der Nachricht, also SOLICIT, REQUEST, RENEW, REBIND oder DECLINE. Das Ergebnis ist dann ein entsprechendes MOM Objekt, welches den Nachrichtentyp repräsentiert. Folgende Methoden k�nnen dann die Nachricht entsprechend dem Nachrichtentyp behandeln.</Documentation>
+        <Documentation>Bestimmt den Typ der eingehenden Nachricht. Dazu wird in der RelayNachricht der Wert der Untertoption "InnerType" abgerufen. Die erhaltene Zahl ergibt den Typ der Nachricht, also SOLICIT, REQUEST, RENEW, REBIND oder DECLINE. Das Ergebnis ist dann ein entsprechendes MOM Objekt, welches den Nachrichtentyp repräsentiert. Folgende Methoden können dann die Nachricht entsprechend dem Nachrichtentyp behandeln.</Documentation>
       </Meta>
       <Invoke Operation="determineDHCPv6MessageType" ServiceID="392">
         <Source RefID="52"/>

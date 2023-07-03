@@ -18,7 +18,7 @@
 -->
 <Service ID="1" Label="LeaseQuery_v6" TypeName="LeaseQuery_v6" TypePath="xdnc.dhcpv6" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
   <Meta>
-    <Documentation>Der Workflow LeaseQuery_v6 wird aufgerufen, wenn eine LeaseQuery Nachricht (Client-Server Format, keine Relay Nachricht) eintrifft. Er bearbeitet Anfragen nach IP Adressen mit den zugehörigen ClientIDs.</Documentation>
+    <Documentation>Der Workflow LeaseQuery_v6 wird aufgerufen, wenn eine LeaseQuery Nachricht (Client-Server Format, keine Relay Nachricht) eintrifft. Er bearbeitet Anfragen nach IP Adressen mit den zugehÃ¶rigen ClientIDs.</Documentation>
   </Meta>
   <Operation ID="0" Label="LeaseQuery_v6" Name="LeaseQuery_v6">
     <Input>

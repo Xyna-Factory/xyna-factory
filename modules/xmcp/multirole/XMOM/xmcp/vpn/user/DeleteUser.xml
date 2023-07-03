@@ -60,7 +60,7 @@
       </Output>
       <Mapping>%1%.name=%0%.userName</Mapping>
     </Mappings>
-    <Function ID="239" Label="Get role from user (ACHTUNG! Muss VOR dem Löschen des Users aufgerufen werden!)">
+    <Function ID="239" Label="Get role from user (ACHTUNG! Muss VOR dem LÃ¶schen des Users aufgerufen werden!)">
       <Source RefID="213"/>
       <Source RefID="19"/>
       <Target RefID="240"/>
@@ -112,7 +112,7 @@
             <Exception Label="Delete User Exception" ReferenceName="DeleteUserException" ReferencePath="xmcp.vpn.user" VariableName="deleteUserException"/>
             <Target RefID="246"/>
           </Output>
-          <Mapping>%1%.exceptionDetails=concat("Der Benutzer \"",%0%.name,"\" konnte nicht gelöscht werden. Möglicherweise existiert der Benutzer nicht (mehr).")</Mapping>
+          <Mapping>%1%.exceptionDetails=concat("Der Benutzer \"",%0%.name,"\" konnte nicht gelÃ¶scht werden. MÃ¶glicherweise existiert der Benutzer nicht (mehr).")</Mapping>
         </Mappings>
         <Throw ExceptionID="246" ID="247" Label="Throw Delete User Exception">
           <Source RefID="246"/>

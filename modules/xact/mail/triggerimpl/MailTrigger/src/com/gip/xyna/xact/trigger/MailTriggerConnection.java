@@ -59,7 +59,7 @@ public class MailTriggerConnection extends TriggerConnection {
   }
   
   /**
-   * L�scht die Mail auf dem Server
+   * Löscht die Mail auf dem Server
    * @throws MessagingException
    */
   public void delete() throws MessagingException {
@@ -75,7 +75,7 @@ public class MailTriggerConnection extends TriggerConnection {
   }
 
   public void sendReply(Mail reply) {
-    //in der Reply k�nnen nun Sender, Recipients und Subject fehlen, diese werden nun ergänzt.
+    //in der Reply können nun Sender, Recipients und Subject fehlen, diese werden nun ergänzt.
     if( isEmpty( reply.getSubject() ) ) {
       reply.setSubject( mail.getSubject() ); //TODO "Re: " ergänzen?
     }

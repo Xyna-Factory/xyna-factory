@@ -19,7 +19,7 @@
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Right" TypeName="DeleteRight" TypePath="xmcp.xacm.rightmanagement" Version="1.8">
   <Meta>
     <Documentation>Der Workflow führt die folgenden Schritte durch:
-* L�schen des Rechtes mit dem übergebenen Rechtnamen</Documentation>
+* Löschen des Rechtes mit dem übergebenen Rechtnamen</Documentation>
     <FixedDetailOptions>hideDetailAreas,highDetailsMode,openDocumentation</FixedDetailOptions>
   </Meta>
   <Operation ID="0" Label="Delete Right" Name="DeleteRight">

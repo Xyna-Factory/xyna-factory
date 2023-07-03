@@ -75,7 +75,7 @@ Xyna Factory Server / Xyna Net Factory / 3.x / Black Edition
         export JAVA_HOME=/opt/jdk11
         export ANT_OPTS="-ms1024M -mx1024M"
         export NODE_OPTIONS=--max_old_space_size=2048
-    a. In Eclipse k�nnen die Argumente über die Run Configuration im Tab JRE angegeben werden. Alternativ kann das Argument auch direkt an das JRE angehängt werden. Dazu unter Window -> Preferences -> Java -> Installed JREs die aktuelle JRE editieren und Default VM Argument angeben.
+    a. In Eclipse können die Argumente über die Run Configuration im Tab JRE angegeben werden. Alternativ kann das Argument auch direkt an das JRE angehängt werden. Dazu unter Window -> Preferences -> Java -> Installed JREs die aktuelle JRE editieren und Default VM Argument angeben.
     b. Bei der Verwendung der Shell erst den Befehl export ANT_OPTS="-XX:MaxPermSize=1024M -ms1024M -mx1024M" eingeben, dann ant ausführen.
 
 Anmerkung: Bei 32bit JVMs darf XX:MaxPermSize nicht so hoch gewählt werden, da sonst die Java Virtual Machine nicht gestartet werden kann.
@@ -104,10 +104,10 @@ BRANCH=6.1.2.9;
 #Hauptverzeichnis flach auschecken
 mkdir ${BRANCH}; svn --depth=files co svn://svn/branches/XYNA_BLACK_v${BRANCH}_branch/xyna/blackedition ${BRANCH}
 
-#ben�tigte Unterverzeichnisse vollständig
+#benötigte Unterverzeichnisse vollständig
 cd ${BRANCH}; svn up --depth=infinity server ; cd ..
 cd ${BRANCH}; svn up --depth=infinity XynaBlackEditionWebServices ; cd ..
-cd ${BRANCH}; svn up --depth=infinity installation/ ; cd .. #damit "cd server; ant buildJar" m�glich wird
+cd ${BRANCH}; svn up --depth=infinity installation/ ; cd .. #damit "cd server; ant buildJar" möglich wird
 
 Mergen
 ======
@@ -137,7 +137,7 @@ svn cp svn://svn/trunk@193292 svn://svn/branches/XYNA_BLACK_v7.0.2.27_branch/
 
 Bau einer Lieferung
 ###################
-ein lokaler build is m�glicherweise aufgrund von fehlender npm/node Einrichtung oder Platzbedarf nicht auf dem eigenem Entwicklungsrechner m�glich, login4 ist für einen delivery build eingerichtet worden.
+ein lokaler build is möglicherweise aufgrund von fehlender npm/node Einrichtung oder Platzbedarf nicht auf dem eigenem Entwicklungsrechner möglich, login4 ist für einen delivery build eingerichtet worden.
 vgl auch https://wiki.gip.com/wiki/Xyna_Black_Edition:Xyna_Black_Edition/Entwickler_Doku/Lieferungserstellung
 
 cd blackedition
@@ -175,7 +175,7 @@ vi ReleaseNotes${VERSION}.txt
 Der Text für die Releasenotes kann per Workflow aus Bugzilla-Daten erstellt werden:
 Workflow 
   xdoc.bugzilla.wf.GenerateReleasenotesXynaSingleVersion
-oder für gr�ßere Versionsintervalle mit
+oder für größere Versionsintervalle mit
   xdoc.bugzilla.wf.GenerateReleasenotesXynaBetweenTwoVersions
 auf https://10.0.10.106:8443/FractalModeller/
 Credentials sind: release/release
@@ -183,7 +183,7 @@ Credentials sind: release/release
 Damit da ordentliche Texte drin stehen, sollten alle (betroffenen) Bugs in Bugzilla folgende Eigenschaften haben:
 - Target Milestone = <Release-Version>
 - Version = <Version, seit der der Bug existiert>
-- Ein Kommentar sollte folgendes Format haben, damit die Releasenotes extrahiert werden k�nnen. Falls kein solcher Kommentar gefunden wird, wird die Bug Summary für die Releasenotes benutzt.
+- Ein Kommentar sollte folgendes Format haben, damit die Releasenotes extrahiert werden können. Falls kein solcher Kommentar gefunden wird, wird die Bug Summary für die Releasenotes benutzt.
 <Irgendein Text, der für die Releasenotes nicht relevant ist>
 #Releasenotes
 <Releasenotes Text, wie er später im generierten Dokument auftauchen soll>

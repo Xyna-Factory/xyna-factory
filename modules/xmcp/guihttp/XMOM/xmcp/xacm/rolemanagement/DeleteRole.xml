@@ -20,7 +20,7 @@
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation</FixedDetailOptions>
     <Documentation>Der Workflow führt die folgenden Schritte durch:
-* L�schen der Rolle mit dem übergebeben Rollennamen</Documentation>
+* Löschen der Rolle mit dem übergebeben Rollennamen</Documentation>
   </Meta>
   <Operation ID="0" Label="Delete Role" Name="DeleteRole">
     <Input>

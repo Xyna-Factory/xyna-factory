@@ -421,7 +421,7 @@ wait_for_factory_status () {
 
 #
 # abort_waiting_for_factory_start
-# Erm�glicht ein frühzeitiges Abbrechen des Wartens auf den XynaFactory-Start.
+# Ermöglicht ein frühzeitiges Abbrechen des Wartens auf den XynaFactory-Start.
 # Es muss bald ein "xynafactory.pid" existieren, wenig später muss Factory im Status "Starting" sein
 # Eingabeparameter
 # o Tick
@@ -724,7 +724,7 @@ f_xynafactory_status_to_string () {
 #Trick:
 # Aufruf f_start_factory_internal ${JAVA_OPTIONS} com.gip.xyna.xmcp.xfcli.XynaFactoryCommandLineInterface "$@" >/dev/null 2>&1 &
 #verhindert nun, dass irgendwelche Ausgaben aus dem Hintergrund-Prozess entweichen.
-#Diese m�glichen Ausgaben haben verhindert, dass bei Factory-Installation das tee in install_black_edition.sh beendet wurde.
+#Diese möglichen Ausgaben haben verhindert, dass bei Factory-Installation das tee in install_black_edition.sh beendet wurde.
 f_start_factory_internal() {
   nohup ${FACTORY_CLI_CMD} "$@" 2>&1 | ${VOLATILE_LOGGER} -p "${XYNA_SYSLOG_FACILITY}.debug" &
 }

@@ -18,7 +18,7 @@
 -->
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Test Factory Planning" TypeName="TestFactoryPlanning" TypePath="xdev.xtestfactory.infrastructure.services" Version="1.8">
   <Meta>
-    <Documentation>Der Workflow ist nur interessant für Testfälle, die einer Testfallkette angeh�ren. Falls der Status des Testfalls auf "Planned" steht, wird er gestartet. In den anderen Fällen (Running, Finished, Failed) wird eine Kopie des Testfalls angelegt und diese ausgeführt. Dazu ruft sich dieser Workflow rekursiv selbst auf.</Documentation>
+    <Documentation>Der Workflow ist nur interessant für Testfälle, die einer Testfallkette angehören. Falls der Status des Testfalls auf "Planned" steht, wird er gestartet. In den anderen Fällen (Running, Finished, Failed) wird eine Kopie des Testfalls angelegt und diese ausgeführt. Dazu ruft sich dieser Workflow rekursiv selbst auf.</Documentation>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation</FixedDetailOptions>
   </Meta>
   <Operation ID="0" Label="Test Factory Planning" Name="TestFactoryPlanning">

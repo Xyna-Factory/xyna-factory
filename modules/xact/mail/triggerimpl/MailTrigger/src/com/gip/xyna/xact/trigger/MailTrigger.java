@@ -180,7 +180,7 @@ public class MailTrigger extends EventListener<MailTriggerConnection, MailStartP
    * @param con corresponding triggerconnection
    */
   public void onNoFilterFound(MailTriggerConnection con) {
-    //Mail sollte nicht gelöscht werden. Oder doch? Dann sollte das ein weiterer StartParameter werden!
+    //Mail sollte nicht gelÃ¶scht werden. Oder doch? Dann sollte das ein weiterer StartParameter werden!
     mailStore.notProcessed(con.getMessageId());
   }
 
