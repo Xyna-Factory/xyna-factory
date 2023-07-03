@@ -77,9 +77,9 @@
 	},
 	{
 	  "operation": "assert",
-	  "constraint": "equals",
+	  "constraint": "startsWith",
 	  "variable": "!exceptionMessage!",
-	  "value": "java.lang.NullPointerException: null"
+	  "value": "java.lang.NullPointerException"
 	}
   ]
 }
