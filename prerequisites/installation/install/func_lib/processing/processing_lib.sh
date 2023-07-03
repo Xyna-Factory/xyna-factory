@@ -131,7 +131,7 @@ f_set_xyna_property() {
 }
 
 ######################################################################
-#  ZurÃ¼cksetzen einer Xyna-Property
+#  Zurücksetzen einer Xyna-Property
 #
 #  Eingabeparameter
 #o   Property-Name
@@ -342,7 +342,7 @@ A_HERE_DOCUMENT
 
 
 # wait_for_factory_status
-# wartet auf den StatusÃ¼bergang der Factory, derzeit nur start oder stop
+# wartet auf den Statusübergang der Factory, derzeit nur start oder stop
 # Eingabeparameter
 # o start oder stop
 # o Wartezeit zwischen der Ausgebe der Punkte
@@ -371,7 +371,7 @@ wait_for_factory_status () {
     if [[ ${IST_STATUS} == ${SOLL_STATUS} ]]; then
       break; #Warten zuende, Zielzustand erreicht
     fi;
-    #FrÃ¼hzeitiges Abbrechen des Wartens, falls Factory nicht gestartet werden kann
+    #Frühzeitiges Abbrechen des Wartens, falls Factory nicht gestartet werden kann
     if [[ ${SOLL_STATUS} == ${XYNA_FACTORY_RUNS} ]] ; then
       if abort_waiting_for_factory_start ${t} ${IST_STATUS} ; then
         break;
@@ -421,8 +421,8 @@ wait_for_factory_status () {
 
 #
 # abort_waiting_for_factory_start
-# ErmÃ¶glicht ein frÃ¼hzeitiges Abbrechen des Wartens auf den XynaFactory-Start.
-# Es muss bald ein "xynafactory.pid" existieren, wenig spÃ¤ter muss Factory im Status "Starting" sein
+# Ermöglicht ein frühzeitiges Abbrechen des Wartens auf den XynaFactory-Start.
+# Es muss bald ein "xynafactory.pid" existieren, wenig später muss Factory im Status "Starting" sein
 # Eingabeparameter
 # o Tick
 # o aktueller Status
@@ -641,7 +641,7 @@ f_restart_xynafactory() {
 #    bei VERBOSE=true: XynaFactory-Aufruf
 #    bei XYNA_FACTORY_RC !=(0,9,12): attention_multi_msg mit XYNA_FACTORY_RC und XYNA_FACTORY_OUTPUT
 #
-#  RÃ¼ckgabe:
+#  Rückgabe:
 #    XYNA_FACTORY_RC
 ############################################################
 f_xynafactory_silent () {
@@ -677,7 +677,7 @@ f_xynafactory_silent () {
 #    bei XYNA_FACTORY_RC  =(0,9,12): XYNA_FACTORY_OUTPUT
 #    bei XYNA_FACTORY_RC !=(0,9,12): attention_multi_msg mit XYNA_FACTORY_RC und XYNA_FACTORY_OUTPUT
 #
-#  RÃ¼ckgabe:
+#  Rückgabe:
 #    XYNA_FACTORY_RC
 ############################################################
 f_xynafactory () {
@@ -688,7 +688,7 @@ f_xynafactory () {
     if f_selected ${VERBOSE} ; then 
       echo "${INDENTATION}./xynafactory.sh $@";
     fi
-    echo "${XYNA_FACTORY_OUTPUT}" | sed "s+^+${INDENTATION}+" #EinrÃ¼cken
+    echo "${XYNA_FACTORY_OUTPUT}" | sed "s+^+${INDENTATION}+" #Einrücken
   else 
     local MSG="./xynafactory.sh ${@}\nfailed with return code ${XYNA_FACTORY_RC}:\n\n${XYNA_FACTORY_OUTPUT}";
     attention_multi_msg "${MSG}";
@@ -724,7 +724,7 @@ f_xynafactory_status_to_string () {
 #Trick:
 # Aufruf f_start_factory_internal ${JAVA_OPTIONS} com.gip.xyna.xmcp.xfcli.XynaFactoryCommandLineInterface "$@" >/dev/null 2>&1 &
 #verhindert nun, dass irgendwelche Ausgaben aus dem Hintergrund-Prozess entweichen.
-#Diese mÃ¶glichen Ausgaben haben verhindert, dass bei Factory-Installation das tee in install_black_edition.sh beendet wurde.
+#Diese möglichen Ausgaben haben verhindert, dass bei Factory-Installation das tee in install_black_edition.sh beendet wurde.
 f_start_factory_internal() {
   nohup ${FACTORY_CLI_CMD} "$@" 2>&1 | ${VOLATILE_LOGGER} -p "${XYNA_SYSLOG_FACILITY}.debug" &
 }

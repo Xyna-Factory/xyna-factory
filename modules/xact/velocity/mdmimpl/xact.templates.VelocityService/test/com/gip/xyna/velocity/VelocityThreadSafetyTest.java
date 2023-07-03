@@ -78,7 +78,7 @@ public class VelocityThreadSafetyTest extends TestCase {
     String token = getVelocityToken();
     try {
       StringWriter writer = new StringWriter();
-      //bugz 8908: logtag muss fÃ¼r jeden thread unterschiedlich sein, ansonsten funktioniert der test nicht
+      //bugz 8908: logtag muss für jeden thread unterschiedlich sein, ansonsten funktioniert der test nicht
       velocityEngine.evaluate(context, writer, token, new StringReader(template));
       return writer.toString();
     } finally {

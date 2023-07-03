@@ -147,7 +147,7 @@ public class SMTPImpl {
     }
 
     private void fillBody(Part part, Content body) throws MessagingException {
-      part.setContent(body.getContentString(), body.getMediaType() ); //TODO charset=UTF-8 erg√§nzen?
+      part.setContent(body.getContentString(), body.getMediaType() ); //TODO charset=UTF-8 erg‰nzen?
     }
 
     private InternetAddress toInternetAddress(String mailAddress) throws InvalidMailAddressException {

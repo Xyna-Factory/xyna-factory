@@ -39,7 +39,7 @@ f_detect_syslog_type () {
     if (( 0 == $(f_count_occurrencies_in_file "\$ModLoad" "/etc/rsyslog.conf") )) ; then
       echo "rsyslog_v8";
       #TODO bessere Erkennung?
-      #v8 steht hier fÃ¼r mehrere Features:
+      #v8 steht hier für mehrere Features:
       # a) module(load=... statt $ModLoad ....
       # b) $IncludeConfig statt alles in rsyslog.conf
       # c) $FileOwner syslog und $FileGroup adm

@@ -9,7 +9,7 @@ Kompletter Ablauf des Baus:
 
 cd installation/delivery
 
-vi delivery.properties #release.number erhÃ¶hen
+vi delivery.properties #release.number erhöhen
 
 svn ci -m "neues Release" delivery.properties
 

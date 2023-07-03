@@ -3,7 +3,7 @@
   {
 
 	"name": "dragConditionalChoiceIntoWorkflow",
-	"description": "Ã–ffnet einen neuen Workflow und fÃ¼gt ein ConditionalChoice ein. ÃœberprÃ¼ft, dass im Workflow genau ein Schritt ist und der Type ein ConditionalChoice ist.",
+	"description": "Öffnet einen neuen Workflow und fügt ein ConditionalChoice ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type ein ConditionalChoice ist.",
 	"created": "11.11.2019",
 	"updated": "11.11.2019"
   },

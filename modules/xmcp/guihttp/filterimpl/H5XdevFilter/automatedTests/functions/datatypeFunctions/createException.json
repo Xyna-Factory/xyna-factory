@@ -1,6 +1,6 @@
 [
   {
-    "description": "Erstellt, deployt und schlie√üt eine Exception mit gegebenem path und label.",
+    "description": "Erstellt, deployt und schlieﬂt eine Exception mit gegebenem path und label.",
     "type": "function",
 	"functionName": "createException",
 	"input": ["!path!", "!label!", "!workspace!"],

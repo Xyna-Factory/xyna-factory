@@ -28,8 +28,8 @@
     <property name="exception.xml.dir" value="${root.dir}/server" />
     <property name="base.lib.dir" value="${basedir}/lib" />
     <property name="mdm.lib.dir" value="${basedir}/../../lib" />
-    <!--<property name="additional.lib.dir" /> (nur zum Kompilieren nÃ¶tig) kann gesetzt werden, muss aber nicht -->
-    <!--<property name="unfree.lib.dir" /> (unfreie Libs, die zum Kompilieren und AusfÃ¼hren nÃ¶tig sind) kann gesetzt werden, muss aber nicht -->
+    <!--<property name="additional.lib.dir" /> (nur zum Kompilieren nötig) kann gesetzt werden, muss aber nicht -->
+    <!--<property name="unfree.lib.dir" /> (unfreie Libs, die zum Kompilieren und Ausführen nötig sind) kann gesetzt werden, muss aber nicht -->
     <property name="target.dir" value="${basedir}/deploy" />
     <property name="module.dir" value="${root.dir}/modules/${mdm.xml.path}" />
 
@@ -95,7 +95,7 @@
          target: prepareLibs             
          ================================= -->
     <target name="prepareLibs" description="Prepare libs">
-        <!-- leer, Ã¼berschreibbar im build.xml -->
+        <!-- leer, überschreibbar im build.xml -->
     </target>
 
     <!-- ================================= 

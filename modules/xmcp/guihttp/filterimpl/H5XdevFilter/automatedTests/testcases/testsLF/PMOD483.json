@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "PMOD483",
-	"description": "1. Workflow anlegen, 2. workflow with in and output hinzufÃ¼gen (base.math.IntegerNumber Bitwise NOT), 3. base.math.IntegerNumber in Workflow input, 4. Input zur Liste, 5. Detached-Operator setzten, 6. Detached entfernen",
+	"description": "1. Workflow anlegen, 2. workflow with in and output hinzufügen (base.math.IntegerNumber Bitwise NOT), 3. base.math.IntegerNumber in Workflow input, 4. Input zur Liste, 5. Detached-Operator setzten, 6. Detached entfernen",
 	"created": "23.10.2019",
 	"updated": "23.10.2019"
   },

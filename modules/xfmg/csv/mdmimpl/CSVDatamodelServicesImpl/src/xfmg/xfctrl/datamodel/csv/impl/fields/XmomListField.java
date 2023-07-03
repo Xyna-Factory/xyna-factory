@@ -56,7 +56,7 @@ public class XmomListField extends AbstractXmomField {
   }
   
   /**
-   * keine next()-Methode: get()-Methode fÃ¼hrt einmal nach dem 
+   * keine next()-Methode: get()-Methode führt einmal nach dem 
    * hasNext()-Aufruf intern next() auf, ansonsten wird immer das letzte Element ausgegeben.
    *
    */

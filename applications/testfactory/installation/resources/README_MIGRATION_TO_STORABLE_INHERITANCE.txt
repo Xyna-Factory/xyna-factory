@@ -5,7 +5,7 @@ Beschrieben wird die Migration von einer XTF-Installation die noch keine Storabl
 
 
 1) Vor der Fabrik-Installation muss bereits umgestellt werden auf eine XynaTestFactoryInfrastructure-Application Version, die verhindert, dass alle TestDaten in eine Tabelle zusammenfallen. Dies geschieht in folgenden Schritten:
-1.1) Import der benÃ¶tigten AbhÃ¤ngigkeiten (Processing, Zeta) und Entfernung veralteten AbhÃ¤ngigkeiten (DOM-Inspector), zB.:
+1.1) Import der benötigten Abhängigkeiten (Processing, Zeta) und Entfernung veralteten Abhängigkeiten (DOM-Inspector), zB.:
 
 ./xynafactory.sh importapplication ~/Lieferungen/Lieferung_20190513/factory/XynaBlackEdition_v8.1.0.20_20190417_1708/components/xprc/Processing.1.0.10.app
 
@@ -21,8 +21,8 @@ Beschrieben wird die Migration von einer XTF-Installation die noch keine Storabl
 ./install_testfactory.sh -i 1 -d
 
 
-1.2) Migration aller bisher prÃ¤sententen XynaTestFactoryInfrastructure Versionen auf die neue Version.
-     Falls auf dem System noch TestProjekte existieren, die gar keine XynaTestFactoryInfrastructure verwenden sondern die Infrastruktur noch als Kopie in ihrem Workspace verwenden, mÃ¼ssen diese auch umgestellt werden (hinzufÃ¼gen der XynaTestFactoryInfrastructure-App zu ihren Dependencies und dann Kollisionen lÃ¶schen).
+1.2) Migration aller bisher präsententen XynaTestFactoryInfrastructure Versionen auf die neue Version.
+     Falls auf dem System noch TestProjekte existieren, die gar keine XynaTestFactoryInfrastructure verwenden sondern die Infrastruktur noch als Kopie in ihrem Workspace verwenden, müssen diese auch umgestellt werden (hinzufügen der XynaTestFactoryInfrastructure-App zu ihren Dependencies und dann Kollisionen löschen).
 
 ./xynafactory.sh migrateruntimecontext -fromApplicationName XynaTestFactoryInfrastructure -fromVersionName 7.0.4.1 -toApplicationName XynaTestFactoryInfrastructure -toVersionName 8.2.0.5 -f
 
@@ -31,7 +31,7 @@ Beschrieben wird die Migration von einer XTF-Installation die noch keine Storabl
 ./xynafactory.sh migrateruntimecontext -fromApplicationName XynaTestFactoryInfrastructure -fromVersionName 8.1.7.3 -toApplicationName XynaTestFactoryInfrastructure -toVersionName 8.2.0.5 -f
 
 
-2) Installation der Fabrik, je nach grÃ¶sse des Systems sollten die Timeout-Parameter des Inmstallations-Scriptes angepasst werden.
+2) Installation der Fabrik, je nach grösse des Systems sollten die Timeout-Parameter des Inmstallations-Scriptes angepasst werden.
 func_lib/processing/processing_lib.sh
   local SLEEP=${2:-22}vi 
   local MAX_RETRIES=${3:-18000}
@@ -39,12 +39,12 @@ func_lib/processing/processing_lib.sh
 ./install_black_edition.sh -i 1 -v -x SSH,GuiHttp,Http,Mail,Queue,ActiveMQ,WebSphereMQ,CapacityMgmt,FileMgmt,Net,RegExp,XynaPropertyMgmt,UserSessionMgmt -c xynafactory,fractalmodeller -w blackedition -d tomcat -g xsd -p
 
 
-3) Nach der Fabrik-Installation kÃ¶nnen die restlichen Bestandteile der XTF-Lieferung installiert werden.
+3) Nach der Fabrik-Installation können die restlichen Bestandteile der XTF-Lieferung installiert werden.
 
 ./install_testfactory.sh  -i 1 -fo
 
 
-4) Migration der TestObjects Ã¼ber folgendes Statement (fÃ¼r AV und RMK/AT Xyna mit New Features):
+4) Migration der TestObjects über folgendes Statement (für AV und RMK/AT Xyna mit New Features):
 
 INSERT INTO testobjectmetadata (parentuid, unid, idx, testobjectid, typename)
   SELECT parentuid, unid, idx, id, "xdev.xtestfactory.infrastructure.storables.TestObjectMetaData" FROM testobject2;

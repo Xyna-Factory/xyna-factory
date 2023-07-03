@@ -363,12 +363,12 @@ f_replace_in_file() {
   ${VOLATILE_RM} -f ${TMP_FILE}
 }
 
-#  EinfÃ¼gen in eine Datei vor einem Token
+#  Einfügen in eine Datei vor einem Token
 #
 #  Eingabeparameter:
 #o   1 = Dateiname
 #o   2 = Token
-#o   3 = einzufÃ¼gender Text
+#o   3 = einzufügender Text
 # Beispiel: f_insert_in_file_before_line "${FILE_TO_EDIT}" "</xynapropertiesTable>"  ${PROPERTY}
 f_insert_in_file_before_line () {
   local FILE_TO_EDIT=$1;
@@ -379,11 +379,11 @@ ${VOLATILE_AWK} -v pattern="${2}" -v insert="${3}" '$0~pattern {print insert} {p
 }
 
 ######################################################################
-#  PrÃ¼fung, ob mindestens eines der Ã¼bergebenen Files existieren 
+#  Prüfung, ob mindestens eines der übergebenen Files existieren 
 #
 #  Eingabeparameter
 #o   File-Liste
-#  RÃ¼ckgabeparameter
+#  Rückgabeparameter
 #    boolean
 # Beispiel: if f_files_exist ${FILE} ${FILE2} ; then ...
 ######################################################################
@@ -397,12 +397,12 @@ f_files_exist () {
 }
 
 ######################################################################
-#  PrÃ¼fung, wie hÃ¤ufig der angegebene String in einer Datei auftritt
+#  Prüfung, wie häufig der angegebene String in einer Datei auftritt
 #
 #  Eingabeparameter
 #  o  String
 #  o  File 
-#  RÃ¼ckgabeparameter
+#  Rückgabeparameter
 #    Anzahl
 # Beispiel: if f_files_exist ${FILE} ${FILE2} ; then ...
 ######################################################################

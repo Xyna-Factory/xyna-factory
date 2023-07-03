@@ -171,7 +171,7 @@ public class Updater implements UpdaterInterface {
                                 false);
       updates.add(ud);
 
-      //5.0.1.4 Generierte Workflows haben sich wegen getNeededInputVarsCount() geÃ¤ndert
+      //5.0.1.4 Generierte Workflows haben sich wegen getNeededInputVarsCount() geändert
       Version v172 = new Version(v171).increaseToMajorVersion(4, 1);
       ud = new UpdateJustVersion(v171, v172, false, true, false, false );
       updates.add(ud);
@@ -257,13 +257,13 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
       
       
-      // 5.1.2.1 XMOM-Objekte fÃ¼r Applications in Workflow-Database Storables eintragen (Bug 15026)
+      // 5.1.2.1 XMOM-Objekte für Applications in Workflow-Database Storables eintragen (Bug 15026)
       Version v184 = new Version(v183).increaseToMajorVersion(4, 1);
       ud = new UpdateWorkflowDatabaseForApplications(v183, v184, false); 
       updates.add(ud);
       
       
-      // 5.1.2.2 bug16588 => generierter wf code ist nicht abwÃ¤rtskompatibel mit laufenden auftrÃ¤gen
+      // 5.1.2.2 bug16588 => generierter wf code ist nicht abwärtskompatibel mit laufenden aufträgen
       Version v185 = new Version(v184).increaseToMajorVersion(4, 1);
       ud = new UpdateDontAllowOrdersInOrderBackup(v184, v185, true); //true ist beabsichtigt
       updates.add(ud);
@@ -276,7 +276,7 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
       
       
-      // 5.1.3.1 deploy workflows die von gui benÃ¶tigt werden
+      // 5.1.3.1 deploy workflows die von gui benötigt werden
       Version v187 = new Version(v186).increaseToMajorVersion(4, 1);
       ud = new UpdateDeployMDMs(v186, v187,
                                 new String[] {"xnwh.persistence.Query", 
@@ -409,7 +409,7 @@ public class Updater implements UpdaterInterface {
       ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //v5.1.5.x darf hier drauf updaten
       updates.add(ud);
       
-      // 5.2.0.1: neue Spalte fqnamelowercase in XMOMDatabase fÃ¼llen
+      // 5.2.0.1: neue Spalte fqnamelowercase in XMOMDatabase füllen
       Version v208 = new Version(v207).increaseToMajorVersion(4, 1);
       ud = new UpdateDiscoverXMOMDatabase(v207, v208, false, true);
       updates.add(ud);
@@ -491,7 +491,7 @@ public class Updater implements UpdaterInterface {
       ud = new UpdateFrequencyControlledTaskInformationSetWorkspace(v222, v223, false);
       updates.add(ud);
       
-      // 6.0.1.6 auslassen, weil es im 6.0.1.6 branch das gleiche update enthÃ¤lt)
+      // 6.0.1.6 auslassen, weil es im 6.0.1.6 branch das gleiche update enthält)
       Version v_6016 = new Version(v223).increaseToMajorVersion(4, 1);
       
       // 6.0.1.7
@@ -513,13 +513,13 @@ public class Updater implements UpdaterInterface {
       // 6.1.0.0: 6.0.1.6 branch erstellt, der auch
       Version v226 = new Version(v225).increaseToMajorVersion(2, 1);
       ud = new UpdateJustVersion(v225, v226, false);
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.0.1 anfÃ¤ngt, und >= 6.0.1.9 ist.
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.0.1 anfängt, und >= 6.0.1.9 ist.
       updates.add(ud);
 
       // 6.1.1.0: 6.1.0 branch erstellt
       Version v227 = new Version(v226).increaseToMajorVersion(3, 1);
       ud = new UpdateJustVersion(v226, v227, false);
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.0 anfÃ¤ngt, und >= 6.1.0.0 ist.
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.0 anfängt, und >= 6.1.0.0 ist.
       updates.add(ud);
       
       // 6.1.1.1
@@ -556,7 +556,7 @@ public class Updater implements UpdaterInterface {
       // 6.1.2.0
       Version v233 = new Version(v232).increaseToMajorVersion(3, 1);
       ud = new UpdateJustVersion(v232, v233, true); //true wegen bug 19364
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.1 anfÃ¤ngt, und grÃ¶ÃŸer gleich 6.1.1.5 ist
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.1 anfängt, und größer gleich 6.1.1.5 ist
       updates.add(ud);
       
       // 6.1.2.1
@@ -570,7 +570,7 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
       
       // 6.1.2.3
-      //codegen Ã„nderungen fÃ¼r objekt-versionierung, xml referenzen in toXml-darstellung, und deep-equals MÃ¶glichkeiten. xynaobjectlist ist nicht serialisierungskompatibel
+      //codegen Änderungen für objekt-versionierung, xml referenzen in toXml-darstellung, und deep-equals Möglichkeiten. xynaobjectlist ist nicht serialisierungskompatibel
       Version v236 = new Version(v235).increaseToMajorVersion(4, 1);
       ud = new UpdateOrderBackupNewXynaObjectList(v235, v236); 
       updates.add(ud);
@@ -600,13 +600,13 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
       
       // 6.1.2.7
-      //Ã„nderung der Code-Generierung (Bug 19072)
+      //Änderung der Code-Generierung (Bug 19072)
       Version v240 = new Version(v239).increaseToMajorVersion(4, 1);
       ud = new UpdateJustVersion(v239, v240, true);
       updates.add(ud);
       
       // 6.1.2.8
-      //Ã„nderung der Code-Generierung (Performance/Memory-Bug bei Listenwertigen Membervariablen)
+      //Änderung der Code-Generierung (Performance/Memory-Bug bei Listenwertigen Membervariablen)
       Version v241 = new Version(v240).increaseToMajorVersion(4, 1);
       ud = new UpdateJustVersion(v240, v241, true);
       updates.add(ud);
@@ -623,7 +623,7 @@ public class Updater implements UpdaterInterface {
                                 new String[] {"xnwh.persistence.PersistenceServices"},
                                 new String[] {},
                                 true, false, false);
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.2 anfÃ¤ngt, und grÃ¶ÃŸer gleich 6.1.2.9 ist
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //alles was mit 6.1.2 anfängt, und größer gleich 6.1.2.9 ist
       updates.add(ud);
       
       // 6.1.3.1
@@ -638,7 +638,7 @@ public class Updater implements UpdaterInterface {
 
       // 6.1.3.3
       Version v246 = new Version(v245).increaseToMajorVersion(4, 1);
-      ud = new UpdateJustVersion(v245, v246, true); //wegen toXml-Anpassungen fÃ¼r Modularisierung neu generieren
+      ud = new UpdateJustVersion(v245, v246, true); //wegen toXml-Anpassungen für Modularisierung neu generieren
       updates.add(ud);
       
       // 6.1.3.4 NPE-Fix in Impl
@@ -657,7 +657,7 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
 
       
-      // 7.0.0.1: wichtig vor 7.0.0.2, damit auch alle reservierten objekte gefunden werden kÃ¶nnen
+      // 7.0.0.1: wichtig vor 7.0.0.2, damit auch alle reservierten objekte gefunden werden können
       Version v249 = new Version(v248).increaseToMajorVersion(4, 1);
       ud = new UpdateDiscoverXMOMDatabase(v248, v249, false, true);
       updates.add(ud);
@@ -1774,23 +1774,23 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
 
 
-      //ACHTUNG: bei updates in einem branch muss gewÃ¤hrleistet werden, dass alle spÃ¤teren versionen (trunk, spÃ¤tere branches)
-      //         auf dem branch updaten kÃ¶nnen. bei updates, die in spÃ¤teren versionen dann sonderbehandlungen im update-
-      //         prozess benÃ¶tigen, mÃ¼ssen die versionen, auf denen die updates passieren sollen, oben genau angegeben werden.
-      //         beispiel: in einem branch-update wird eine spalte zu einer tabelle hinzugefÃ¼gt. dieses update passiert
-      //                   auch im trunk. dann benÃ¶tigen alle branches zwischen dem betroffenen branch und der trunk-version
+      //ACHTUNG: bei updates in einem branch muss gewährleistet werden, dass alle späteren versionen (trunk, spätere branches)
+      //         auf dem branch updaten können. bei updates, die in späteren versionen dann sonderbehandlungen im update-
+      //         prozess benötigen, müssen die versionen, auf denen die updates passieren sollen, oben genau angegeben werden.
+      //         beispiel: in einem branch-update wird eine spalte zu einer tabelle hinzugefügt. dieses update passiert
+      //                   auch im trunk. dann benötigen alle branches zwischen dem betroffenen branch und der trunk-version
       //                   ein neues update (und ein neues release), welches den update-fall mit und ohne der schon vorhandenen
-      //                   neuen spalte berÃ¼cksichtigt. alternativ kann das update selbst natÃ¼rlich so schlau sein, dass es
-      //                   bewerten kann, ob es erneut ausgefÃ¼hrt werden muss...
+      //                   neuen spalte berücksichtigt. alternativ kann das update selbst natürlich so schlau sein, dass es
+      //                   bewerten kann, ob es erneut ausgeführt werden muss...
       
       
-      // Regeln zum HochzÃ¤hlen von Versionsstellen
+      // Regeln zum Hochzählen von Versionsstellen
       // erste stelle: von chef vorgegeben
       // zweite stelle: dicke features, mit produktmanagement absprechen
       // dritte stelle: kleinere features, dickere bugfixing-pakete
       // vierte stelle: bugfixing-releases / branch-updates
       
-      // weil bei tags mindestens die 3te stelle hochgezÃ¤hlt wird, kÃ¶nnen branches kollisionslos die vierte stelle weiterzÃ¤hlen.
+      // weil bei tags mindestens die 3te stelle hochgezählt wird, können branches kollisionslos die vierte stelle weiterzählen.
 
       // hier weitere updates registrieren. reihenfolge sollte so sein, dass nicht versucht werden muss, ein update
       // mehrfach anzuwenden
@@ -1892,7 +1892,7 @@ public class Updater implements UpdaterInterface {
 
 
   public void checkUpdate() throws XPRC_GENERAL_UPDATE_ERROR, XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException {
-    //updates im mdm wirken sich auf updates der generierten klassen aus, andersrum sollte es keine abhÃ¤ngigkeiten geben
+    //updates im mdm wirken sich auf updates der generierten klassen aus, andersrum sollte es keine abhängigkeiten geben
     checkUpdateMdm();
     checkUpdateGeneral();
   }
@@ -1934,7 +1934,7 @@ public class Updater implements UpdaterInterface {
             targetVersion = u.getVersionAfterUpdate();
             Version updatedVersion = tryUpdate(u, version, executionTime);
             if (!updatedVersion.equals(version)) {
-              // set new version, weil update durchgefÃ¼hrt wurde
+              // set new version, weil update durchgeführt wurde
               setVersion(version, updatedVersion, executionTime);
               version = updatedVersion;
 
@@ -1955,7 +1955,7 @@ public class Updater implements UpdaterInterface {
         }
 
 
-        //FutureExecution fÃ¼r Updates, die erst spÃ¤ter ausgefÃ¼hrt werden sollen, einstellen
+        //FutureExecution für Updates, die erst später ausgeführt werden sollen, einstellen
         FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
         
         final boolean finalMustUpdateGeneratedClasses = mustUpdateGeneratedClasses;
@@ -1973,7 +1973,7 @@ public class Updater implements UpdaterInterface {
              .after(RuntimeContextDependencyManagement.class)
              .before(WorkflowDatabase.FUTURE_EXECUTION_ID)
              .execAsync( new Runnable() { public void run() {
-          //nun die einmal durchzufÃ¼hrenden xmom objekt bezogenen updates falls notwendig
+          //nun die einmal durchzuführenden xmom objekt bezogenen updates falls notwendig
           boolean localMustUpdateGeneratedClasses = finalMustUpdateGeneratedClasses;
           boolean localMustRewriteWorkflows = finalMustRewriteWorkflows;
           boolean localMustRewriteDatatypes = finalMustRewriteDatatypes;
@@ -1993,7 +1993,7 @@ public class Updater implements UpdaterInterface {
                 for (Update u : updates) {
                   Version updatedVersion = u.update(currentVersion, ExecutionTime.afterUpdateGeneratedClassesBeforeRewriteOrderBackup);
                   if (!updatedVersion.equals(currentVersion)) {
-                    // set new update version, weil update durchgefÃ¼hrt wurde
+                    // set new update version, weil update durchgeführt wurde
                     setVersion(ExecutionTime.afterUpdateGeneratedClassesBeforeRewriteOrderBackup, updatedVersion);
                     currentVersion = updatedVersion;
                     
@@ -2014,7 +2014,7 @@ public class Updater implements UpdaterInterface {
                 success = true;
             } finally {
               if (!success) {
-                //falls generation nicht stattgefunden hat, beim nÃ¤chsten mal erneut versuchen
+                //falls generation nicht stattgefunden hat, beim nächsten mal erneut versuchen
                 saveMustUpdateGeneratedClasses(localMustUpdateGeneratedClasses);
               } else {
                 saveMustUpdateGeneratedClasses(false);
@@ -2038,7 +2038,7 @@ public class Updater implements UpdaterInterface {
                     success = true;
                   } finally {
                     if (!success && previousVersion != null) {
-                      //rollback, damit die parametrisierung fÃ¼r das rewrite beim nÃ¤chsten update erneut verwendet wird
+                      //rollback, damit die parametrisierung für das rewrite beim nächsten update erneut verwendet wird
                       try {
                         setVersion(ExecutionTime.afterUpdateGeneratedClassesBeforeRewriteOrderBackup, previousVersion);
                       } catch (XynaException e) {
@@ -2073,7 +2073,7 @@ public class Updater implements UpdaterInterface {
                   for (Update u : updates) {
                     Version updatedVersion = u.update(currentVersion, ExecutionTime.endOfFactoryStart);
                     if (!updatedVersion.equals(currentVersion)) {
-                      // set new update version, weil update durchgefÃ¼hrt wurde
+                      // set new update version, weil update durchgeführt wurde
                       setVersion(ExecutionTime.endOfFactoryStart, updatedVersion);
                       currentVersion = updatedVersion;
                     }
@@ -2086,8 +2086,8 @@ public class Updater implements UpdaterInterface {
 
     }
     catch (XynaException e) {
-      // TODO update-rollbacken? das muss das update entsprechend unterstÃ¼tzen. idee: updates definieren eine
-      // entsprechende funktion und sorgen selbstÃ¤ndig fÃ¼r sicherheitskopien etc
+      // TODO update-rollbacken? das muss das update entsprechend unterstützen. idee: updates definieren eine
+      // entsprechende funktion und sorgen selbständig für sicherheitskopien etc
       throw new XPRC_GENERAL_UPDATE_ERROR(targetVersion != null ? targetVersion.getString() : "unknown", e);
     }
 
@@ -2133,11 +2133,11 @@ public class Updater implements UpdaterInterface {
       if (doMDMUpdates) {
 
         // mdm updates: mdm xmls durchlaufen, version auslesen und ggfs updaten
-        // wird eine gui benutzt, die xmls in einem Ã¤lteren format erstellt, gibt es beim xml parsen entsprechende
+        // wird eine gui benutzt, die xmls in einem älteren format erstellt, gibt es beim xml parsen entsprechende
         // fehler. die xmls werden dort nicht "gefixt".
 
         logger.debug("Locating XMOM files potentially relevant for updates...");
-        // aus Performance-GrÃ¼nden werden erst alle XMLs einmal geparst, die potentiell relevant sind.
+        // aus Performance-Gründen werden erst alle XMLs einmal geparst, die potentiell relevant sind.
         Map<String, Document> mapFilenameToDocument = new HashMap<String, Document>();
         
         String savedXMOMPath = VersionDependentPath.getCurrent().getPath(PathType.XMOM, false); //saved-Ordner vom default workspace
@@ -2155,10 +2155,10 @@ public class Updater implements UpdaterInterface {
           for (File rev : revisionFolders) {
             deployedXMOMDirs.add(new File(rev.getPath() + Constants.FILE_SEPARATOR + Constants.SUBDIR_XMOM));
             
-            //fÃ¼r Workspaces mÃ¼ssen auch die xmls im saved-Ordner geupdated werden
+            //für Workspaces müssen auch die xmls im saved-Ordner geupdated werden
             String savedPath = rev.getPath() + Constants.FILE_SEPARATOR + Constants.PREFIX_SAVED + Constants.FILE_SEPARATOR + Constants.SUBDIR_XMOM;
             if (!savedPath.equals(savedXMOMPath)) {
-              //zu deployedXMOMDirs hinzufÃ¼gen, da dann keine Exception geworfen wird, wenn das Verzeichnis nicht existiert
+              //zu deployedXMOMDirs hinzufügen, da dann keine Exception geworfen wird, wenn das Verzeichnis nicht existiert
               deployedXMOMDirs.add(new File(savedPath));
             }
           }
@@ -2166,7 +2166,7 @@ public class Updater implements UpdaterInterface {
 
         MDMUpdate.addRelevantFileNamesAndDocuments(savedXMOMDir, deployedXMOMDirs, mapFilenameToDocument);
         
-        //Updates durchfÃ¼hren
+        //Updates durchführen
         updateMdm(mapFilenameToDocument);
         
         if (mdmupdates.size() > 0) {
@@ -2185,7 +2185,7 @@ public class Updater implements UpdaterInterface {
   }
 
   /**
-   * FÃ¼hrt die MDMUpdates fÃ¼r eine Revision durch.
+   * Führt die MDMUpdates für eine Revision durch.
    * @param revision
    */
   public void updateMdm(long revision) throws XPRC_GENERAL_UPDATE_ERROR {
@@ -2209,8 +2209,8 @@ public class Updater implements UpdaterInterface {
       logger.debug("Found " + size + " XMOM file" + (size != 1 ? "s" : "") + ", performing updates if necessary.");
     }
 
-    // fÃ¼r alle geparsten files alle updates ausfÃ¼hren. die Document-Instanzen bleiben immer die gleichen
-    // und werden u.U. mehrfach aktualisiert auf die Platte geschrieben. Hier kÃ¶nnte man noch den Update-Fall
+    // für alle geparsten files alle updates ausführen. die Document-Instanzen bleiben immer die gleichen
+    // und werden u.U. mehrfach aktualisiert auf die Platte geschrieben. Hier könnte man noch den Update-Fall
     // dahingehend optimieren, dass aktualisierte DocumentS nur ein mal geschrieben werden.
     int updated = 0;
     
@@ -2226,15 +2226,15 @@ public class Updater implements UpdaterInterface {
         logger.debug("No XMOM files needed to be updated.");
       }
     } catch (XynaException e) {
-      // TODO update-rollbacken? das muss das update entsprechend unterstÃ¼tzen. idee: updates definieren eine
-      // entsprechende funktion und sorgen selbstÃ¤ndig fÃ¼r sicherheitskopien etc
+      // TODO update-rollbacken? das muss das update entsprechend unterstützen. idee: updates definieren eine
+      // entsprechende funktion und sorgen selbständig für sicherheitskopien etc
       throw new XPRC_GENERAL_UPDATE_ERROR(targetVersion != null ? targetVersion.getString() : "unknown", e);
     }
   }
 
 
   /**
-   * falls version nicht Ã¼bereinstimmt, wird ein fehler geworfen
+   * falls version nicht übereinstimmt, wird ein fehler geworfen
    */
   public void validateMDMVersion(String mdmversion) throws XPRC_VERSION_VALIDATION_ERROR,
       XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException {
@@ -2282,7 +2282,7 @@ public class Updater implements UpdaterInterface {
     
     public final static String COL_FACTORYVERSION = "factoryversion";
     public final static String COL_MDMVERSION = "mdmversion";
-    public final static String COL_VERSION_END_OF_FACTORY_START = "updateversion"; //TODO name von spalte hat keine groÃŸe aussagekraft!
+    public final static String COL_VERSION_END_OF_FACTORY_START = "updateversion"; //TODO name von spalte hat keine große aussagekraft!
     public final static String COL_VERSION_AFTER_UPDATES= "codegenversion";
     public final static String COL_VERSION_ORDER_BACKUP = "orderbackupversion";
     public final static String COL_VERSION_PRE_INIT = "preinitversion";
@@ -2524,7 +2524,7 @@ public class Updater implements UpdaterInterface {
       try {
         con.queryOneRow(v);
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-        // Daten existieren nicht --> update noch nicht durchgefÃ¼hrt und Version liegt noch in alter Persistenz vor
+        // Daten existieren nicht --> update noch nicht durchgeführt und Version liegt noch in alter Persistenz vor
         return null;
       }
       if (v.getFactoryVersion() == null) {
@@ -2601,7 +2601,7 @@ public class Updater implements UpdaterInterface {
       try {
         con.queryOneRow(v);
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-        // Daten existieren nicht --> update noch nicht durchgefÃ¼hrt und Version liegt noch in alter Persistenz vor
+        // Daten existieren nicht --> update noch nicht durchgeführt und Version liegt noch in alter Persistenz vor
         return null;
       }
       
@@ -2638,7 +2638,7 @@ public class Updater implements UpdaterInterface {
         con.persistObject(v);
         con.commit();
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-        // Daten existieren nicht --> update noch nicht durchgefÃ¼hrt und Version liegt noch in alter Persistenz vor
+        // Daten existieren nicht --> update noch nicht durchgeführt und Version liegt noch in alter Persistenz vor
         return false;
       }
       return true;

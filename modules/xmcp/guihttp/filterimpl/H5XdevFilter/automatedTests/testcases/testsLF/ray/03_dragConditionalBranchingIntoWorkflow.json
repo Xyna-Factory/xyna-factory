@@ -3,7 +3,7 @@
   {
 
 	"name": "dragConditionalBranchingIntoWorkflow",
-	"description": "Ã–ffnet einen neuen Workflow und fÃ¼gt ein ConditionalBranching ein. ÃœberprÃ¼ft, dass im Workflow genau ein Schritt ist und der Type ein ConditionalBranching ist.",
+	"description": "Öffnet einen neuen Workflow und fügt ein ConditionalBranching ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type ein ConditionalBranching ist.",
 	"created": "11.11.2019",
 	"updated": "11.11.2019"
   },

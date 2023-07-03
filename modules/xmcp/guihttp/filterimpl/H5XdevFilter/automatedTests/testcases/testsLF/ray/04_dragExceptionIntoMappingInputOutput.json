@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "dragExceptionIntoMappingInputOutput",
-	"description": "Erstellt einen Exceptiontypen und fÃ¼gt ihn einem Mapping als Input und Output hinzu",
+	"description": "Erstellt einen Exceptiontypen und fügt ihn einem Mapping als Input und Output hinzu",
 	"created": "12.11.2019",
 	"updated": "12.11.2019"
   },
