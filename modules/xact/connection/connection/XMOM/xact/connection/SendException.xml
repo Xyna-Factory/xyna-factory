@@ -22,7 +22,7 @@
     <Data IsList="true" Label="unsend commands" ReferenceName="Command" ReferencePath="xact.connection" VariableName="unsendCommands"/>
     <Data Label="erroneous command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="erroneousCommand"/>
     <Data Label="error message" ReferenceName="Response" ReferencePath="xact.connection" VariableName="response"/>
-    <MessageText Language="DE">Fehler bei Kommunikation mit dem Ger√§t</MessageText>
+    <MessageText Language="DE">Fehler bei Kommunikation mit dem Ger‰t</MessageText>
     <MessageText Language="EN">Error in communication with device</MessageText>
   </ExceptionType>
 </ExceptionStore>

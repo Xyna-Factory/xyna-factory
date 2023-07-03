@@ -880,7 +880,7 @@ update_xynafactory () {
   exit_if_dir_not_found revisions
   exit_if_dir_not_found server
 
-  #hier schon Berechtigung √§ndern, damit schreibbar im Backup
+  #hier schon Berechtigung ‰ndern, damit schreibbar im Backup
   ${VOLATILE_CHMOD} 750 ${INSTALL_PREFIX}/server/xynafactory.sh
 
   echo -e "\n  + Backup."
@@ -1220,7 +1220,7 @@ import_applications () {
     IMPORT_APPLICATIONS_GLOBALLY="--global"
   fi
   
-  #mit Versionen erg√§nzte lokale Liste
+  #mit Versionen erg‰nzte lokale Liste
   local APP_LIST="";
   local APP;
   for APP in ${ALL_APPLICATIONS} ; do
@@ -1372,10 +1372,10 @@ filter_copy () {
 }
 
 #
-# Merge zweier Dateien auf Basis des gemeinsamen Vorl√§ufers
+# Merge zweier Dateien auf Basis des gemeinsamen Vorl‰ufers
 # Parameter sind <dir> <filename> <srcdir> <newFileName>
 # Zu mergende Dateien sind <dir>/<filename> und <srcdir>/<newFileName> mit
-# Vorl√§ufer <dir>/installDefaults/<filename>
+# Vorl‰ufer <dir>/installDefaults/<filename>
 #
 # Falls der Merge scheitert, wir die Installation angehalten, der
 # Benutzer kann den Konflikt manuell beseitigen und die Installation 
@@ -1410,7 +1410,7 @@ merge_files () {
     exit 11;
   fi;
   
-  #tempor√§re Kopien, die im Konfliktfall interessant sind 
+  #tempor‰re Kopien, die im Konfliktfall interessant sind 
   ${VOLATILE_CP} ${CUSTOMIZED_FILE} ${TMP_CUSTOMIZED_FILE}
   ${VOLATILE_CP} ${NEW_FILE} ${TMP_NEW_FILE}
   
@@ -1513,8 +1513,8 @@ merge_files () {
 }
 
 #
-# Tr√§gt die √ºbergebenen Zeilen in server.policy ein, falls die erste Zeile noch nicht eingetragen ist.
-# Falls die Datei server.policy ge√§ndert wurde, wird XYNAFACTORY_NEEDS_RESTART auf true gesetzt
+# Tr‰gt die √ºbergebenen Zeilen in server.policy ein, falls die erste Zeile noch nicht eingetragen ist.
+# Falls die Datei server.policy ge‰ndert wurde, wird XYNAFACTORY_NEEDS_RESTART auf true gesetzt
 # Aufruf : add_to_server_policy "Zeile 1" "Zeile 2" ...
 add_to_server_policy () {
   FILE_TO_EDIT="${INSTALL_PREFIX}/server/server.policy"
@@ -1526,7 +1526,7 @@ add_to_server_policy () {
                    END {print matchStr;}' \
                   ${FILE_TO_EDIT});
   if [[ ${MATCH} = "none" ]] ; then
-    #server.policy erg√§nzen
+    #server.policy erg‰nzen
     backup_file ${FILE_TO_EDIT}
     local LINES;
     for line in "$@"; do 

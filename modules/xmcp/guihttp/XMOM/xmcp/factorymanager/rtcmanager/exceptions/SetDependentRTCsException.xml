@@ -23,7 +23,7 @@
         <Type>String</Type>
       </Meta>
     </Data>
-    <MessageText Language="DE">Abh√§ngige Laufzeitkontexte konnten nicht gesetzt werden: %0%</MessageText>
+    <MessageText Language="DE">Abh‰ngige Laufzeitkontexte konnten nicht gesetzt werden: %0%</MessageText>
     <MessageText Language="EN">Dependet RuntimeContexts could not be set: %0%</MessageText>
   </ExceptionType>
 </ExceptionStore>

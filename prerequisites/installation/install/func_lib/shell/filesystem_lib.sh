@@ -397,7 +397,7 @@ f_files_exist () {
 }
 
 ######################################################################
-#  Prüfung, wie häufig der angegebene String in einer Datei auftritt
+#  Prüfung, wie h�ufig der angegebene String in einer Datei auftritt
 #
 #  Eingabeparameter
 #  o  String

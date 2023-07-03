@@ -125,7 +125,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Internes Objekt %0% kann nicht geÃ¤ndert werden.</MessageText>
+      <MessageText Language="DE">Internes Objekt %0% kann nicht geändert werden.</MessageText>
       <MessageText Language="EN">Internal object %0% may not be modified.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-10200" TypeName="XMCP_RestrictedCallNotAvailableException" TypePath="com.gip.xyna.xmcp.exceptions" BaseTypeName="PersistenceLayerException" BaseTypePath="com.gip.xyna.xnwh.persistence">
@@ -134,7 +134,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Der Aufruf %0% ist beschrÃ¤nkt und derzeit nicht möglich, weil er bereits ausgefÃ¼hrt wird.</MessageText>
+      <MessageText Language="DE">Der Aufruf %0% ist beschränkt und derzeit nicht möglich, weil er bereits ausgefÃ¼hrt wird.</MessageText>
       <MessageText Language="EN">Call %0% is restricted and not available at this moment because its resource is used by someone else.</MessageText>
    </ExceptionType> 
    <ExceptionType Code="XYNA-10201" TypeName="XMCP_InvalidParameterCombinationException" TypePath="com.gip.xyna.xmcp.exceptions">

@@ -125,7 +125,7 @@ f_import_applications_internal_get_required_applications() {
 }
 
 # Verwaltung der von einer Application vorausgesetzten Applications:
-# Eintrag in die Verwaltungs-Listen; PrÃ¼fung dass kein AbhÃ¤ngigkeits-Zirkel auftritt
+# Eintrag in die Verwaltungs-Listen; PrÃ¼fung dass kein Abhängigkeits-Zirkel auftritt
 #
 # Kommunikation mit Aufrufer Ã¼ber folgende Variablen:
 # * REQ_APP_FILE_LIST    #erforderte Apps
@@ -156,7 +156,7 @@ f_import_applications_internal_required () {
   for REQ_APP_FILE in ${REQ_APP_FILE_LIST} ; do
     #evtl in Gesamt-Liste löschen, damit nicht doppelt
     APP_LIST=$(f_remove_from_list APP_LIST ${REQ_APP_FILE});
-    #Requirement vorne eintragen, damit als nÃ¤chstes ausgewertet
+    #Requirement vorne eintragen, damit als nächstes ausgewertet
     APP_LIST=$(f_add_to_list_begin APP_LIST ${REQ_APP_FILE});
   done
 }
@@ -209,7 +209,7 @@ f_import_application () {
     return 100;
   fi
 
-  # tail -1 gibt nur die höchste Versionsnummer zurÃ¼ck, weil die Ausgabe von listapplications bereits sortiert ist. Migration von Ã¤lteren Applications muss manuell erfolgen
+  # tail -1 gibt nur die höchste Versionsnummer zurÃ¼ck, weil die Ausgabe von listapplications bereits sortiert ist. Migration von älteren Applications muss manuell erfolgen
   local OLD_APP=$(f_xynafactory listapplications -h | ${VOLATILE_GREP} -v "STATUS: 'AUDIT_MODE'" | ${VOLATILE_GREP} "'${NEW_APP}' '" | tail -1)
   local OLD_APP_LINE=$OLD_APP
   # Erzeuge Array in LINE  (Separiert nach leerzeichen), d.h. Name, Version, etc separat

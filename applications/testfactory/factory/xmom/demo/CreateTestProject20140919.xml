@@ -123,7 +123,7 @@
               <Meta>
                 <Type>String</Type>
               </Meta>
-              <Value>Top-FunktionalitÃ¤t</Value>
+              <Value>Top-Funktionalität</Value>
             </Data>
             <Data ID="234" Label="Priority" VariableName="priority">
               <Meta>
@@ -211,7 +211,7 @@
               <Meta>
                 <Type>String</Type>
               </Meta>
-              <Value>Höchste ZuverlÃ¤ssigkeit</Value>
+              <Value>Höchste Zuverlässigkeit</Value>
             </Data>
             <Data ID="248" Label="Priority" VariableName="priority">
               <Meta>
@@ -274,7 +274,7 @@
             </Data>
             <Data ID="258" Label="Data Model Reference" VariableName="dataModelReference">
               <Meta>
-                <Documentation>TODO: KlÃ¤ren, in welcher Form die Referenz z.B. auf das XSD hier abgelegt wird.</Documentation>
+                <Documentation>TODO: Klären, in welcher Form die Referenz z.B. auf das XSD hier abgelegt wird.</Documentation>
                 <Type>String</Type>
               </Meta>
             </Data>
@@ -315,7 +315,7 @@
         <Meta>
           <Type>String</Type>
         </Meta>
-        <Value>Dies ist ein Test-Projekt fÃ¼r die Demonstration der Entwicklungsfortschritte der nÃ¤chsten Generation der Xyna Test Factory.</Value>
+        <Value>Dies ist ein Test-Projekt fÃ¼r die Demonstration der Entwicklungsfortschritte der nächsten Generation der Xyna Test Factory.</Value>
       </Data>
       <Data ID="274" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest">
         <Data ID="268" Label="ID" VariableName="iD">
@@ -389,19 +389,19 @@
             </Data>
             <Data ID="282" Label="Test Process Reference" VariableName="testProcessReference">
               <Meta>
-                <Documentation>TODO: KlÃ¤ren, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wÃ¤ren wir bei Refactorings-FÃ¤llen völlig aus dem Schneider.</Documentation>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
                 <Type>String</Type>
               </Meta>
             </Data>
             <Data ID="283" Label="Test Series Reference" VariableName="testSeriesReference">
               <Meta>
-                <Documentation>TODO: KlÃ¤ren, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wÃ¤ren wir bei Refactorings-FÃ¤llen völlig aus dem Schneider.</Documentation>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
                 <Type>String</Type>
               </Meta>
             </Data>
             <Data ID="284" Label="Mass Process Reference" VariableName="massProcessReference">
               <Meta>
-                <Documentation>TODO: KlÃ¤ren, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wÃ¤ren wir bei Refactorings-FÃ¤llen völlig aus dem Schneider.</Documentation>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
                 <Type>String</Type>
               </Meta>
             </Data>
@@ -455,19 +455,19 @@
             </Data>
             <Data ID="296" Label="Test Process Reference" VariableName="testProcessReference">
               <Meta>
-                <Documentation>TODO: KlÃ¤ren, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wÃ¤ren wir bei Refactorings-FÃ¤llen völlig aus dem Schneider.</Documentation>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
                 <Type>String</Type>
               </Meta>
             </Data>
             <Data ID="297" Label="Test Series Reference" VariableName="testSeriesReference">
               <Meta>
-                <Documentation>TODO: KlÃ¤ren, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wÃ¤ren wir bei Refactorings-FÃ¤llen völlig aus dem Schneider.</Documentation>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
                 <Type>String</Type>
               </Meta>
             </Data>
             <Data ID="298" Label="Mass Process Reference" VariableName="massProcessReference">
               <Meta>
-                <Documentation>TODO: KlÃ¤ren, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wÃ¤ren wir bei Refactorings-FÃ¤llen völlig aus dem Schneider.</Documentation>
+                <Documentation>TODO: Klären, ob wir hier nicht auf ein Storable referenzieren können, welches beim Refactoring dann innen drin ein Feld umgesetzt bekommt. Dann wären wir bei Refactorings-Fällen völlig aus dem Schneider.</Documentation>
                 <Type>String</Type>
               </Meta>
             </Data>

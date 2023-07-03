@@ -19,7 +19,7 @@
 <Application applicationName="SSHTools" comment="" factoryVersion="" versionName="1.0" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">SSHTools for devicetypes</Description>
-    <Description Lang="EN">SSHTools für die Gerätetypen</Description>
+    <Description Lang="EN">SSHTools für die Ger�tetypen</Description>
     <BuildDate>2015.06.25 10:13:00</BuildDate>
   </ApplicationInfo>
   <SharedLibs>

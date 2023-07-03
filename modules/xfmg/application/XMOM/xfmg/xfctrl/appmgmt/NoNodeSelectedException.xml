@@ -18,7 +18,7 @@
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XYNA-XFMG-00002" Label="No node selected exception" TypeName="NoNodeSelectedException" TypePath="xfmg.xfctrl.appmgmt">
-    <MessageText Language="DE">Es wurde kein Knoten ausgew√§hlt.</MessageText>
+    <MessageText Language="DE">Es wurde kein Knoten ausgew‰hlt.</MessageText>
     <MessageText Language="EN">No node was selected.</MessageText>
   </ExceptionType>
 </ExceptionStore>

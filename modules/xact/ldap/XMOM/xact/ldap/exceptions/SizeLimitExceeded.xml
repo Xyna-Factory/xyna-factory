@@ -19,6 +19,6 @@
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="LDAPException" BaseTypePath="xact.ldap.exceptions" Code="XYNA-15212" Label="Size limit exceeded" TypeName="SizeLimitExceeded" TypePath="xact.ldap.exceptions">
     <MessageText Language="EN">The size limit has been exceeded</MessageText>
-    <MessageText Language="DE">Die Ergebnisseinschränkung wurde überschritten</MessageText>
+    <MessageText Language="DE">Die Ergebnisseinschr�nkung wurde überschritten</MessageText>
   </ExceptionType>
 </ExceptionStore>

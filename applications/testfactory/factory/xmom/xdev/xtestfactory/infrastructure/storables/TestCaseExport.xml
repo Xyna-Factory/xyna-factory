@@ -38,7 +38,7 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="PrioritÃ¤t" VariableName="prioritaet">
+  <Data Label="Priorität" VariableName="prioritaet">
     <Meta>
       <Type>String</Type>
     </Meta>

@@ -422,7 +422,7 @@ wait_for_factory_status () {
 #
 # abort_waiting_for_factory_start
 # Ermöglicht ein frÃ¼hzeitiges Abbrechen des Wartens auf den XynaFactory-Start.
-# Es muss bald ein "xynafactory.pid" existieren, wenig spÃ¤ter muss Factory im Status "Starting" sein
+# Es muss bald ein "xynafactory.pid" existieren, wenig später muss Factory im Status "Starting" sein
 # Eingabeparameter
 # o Tick
 # o aktueller Status

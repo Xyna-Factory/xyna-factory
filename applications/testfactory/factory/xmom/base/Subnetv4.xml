@@ -41,7 +41,7 @@
         sum += 128 >> (i % 8);
       }
       
-      //string anhÃ¤ngen
+      //string anhängen
       if (i % 8 == 7) {
         nm.append(sum);
         if (i != 31) {
@@ -74,7 +74,7 @@
         sum += 1 << (7 - (i % 8));
       }
       
-      //string anhÃ¤ngen
+      //string anhängen
       if (i % 8 == 7) {
         wc.append(sum);
         if (i != 31) {

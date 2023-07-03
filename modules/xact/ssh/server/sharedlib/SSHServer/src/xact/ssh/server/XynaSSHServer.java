@@ -203,7 +203,7 @@ public class XynaSSHServer {
     if (logger.isInfoEnabled()) {
       logger.info("address " + host + " unknown in network configuration management.");
     }   
-    //else: abw√§rtskompatibel:
+    //else: abw‰rtskompatibel:
     boolean ipv6 = false;
     boolean useLocalAddresses = false;
     return NetworkInterfaceUtils.getFirstIpAddressByInterfaceName(host, ipv6, useLocalAddresses);

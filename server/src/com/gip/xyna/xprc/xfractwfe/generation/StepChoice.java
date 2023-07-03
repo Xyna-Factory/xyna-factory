@@ -480,7 +480,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
       throws XPRC_InvalidVariableIdException, XPRC_InvalidVariableMemberNameException,
       XPRC_ParsingModelledExpressionException {
 
-    // TODO code in StepParallel etc ähnlich => extraktion von teilcode
+    // TODO code in StepParallel etc �hnlich => extraktion von teilcode
 
     cb.addLine("private static class " + getClassName() + " extends " + FractalProcessStep.class.getSimpleName() + "<"
                    + getParentScope().getClassName() + "> {").addLB();
@@ -496,7 +496,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
 
     //nun noch die ChoiceLanes für Cases mit Alias generieren (diese erst nach den anderen Cases
     //generieren, damit sich für im alten Format serialisierte Workflows (Alias als Referenz)
-    //die Reihenfolge der ChoiceLane-Klassen nicht ändert)
+    //die Reihenfolge der ChoiceLane-Klassen nicht �ndert)
     for (int i = 0; i < cases.size(); i++) {
       if (cases.get(i).getAlias() != null) {
         generateChoiceLane(cb, i);

@@ -13,7 +13,7 @@ Xyna Factory Server / Xyna Net Factory / 3.x / Black Edition
 
 * Einrichten des Flex-Workspace (Eclipse)
   1. Unter Window -> Preferences -> Flex -> Installed Flex SDKs das SDK aus
-     /opt/common/flex_sdk auswÃ¤hlen und als default auswÃ¤hlen.
+     /opt/common/flex_sdk auswählen und als default auswählen.
   2. Unter Window -> Preferences -> General -> Workspace -> Linked Resources
      eine Path Variable mit Namen BLACKEDITION anlegen, der als Wert der lokle Pfad zu den ausgecheckten
      Daten zugewiesen wird, z.B. ~/devel/xyna/blackedition
@@ -75,10 +75,10 @@ Xyna Factory Server / Xyna Net Factory / 3.x / Black Edition
         export JAVA_HOME=/opt/jdk11
         export ANT_OPTS="-ms1024M -mx1024M"
         export NODE_OPTIONS=--max_old_space_size=2048
-    a. In Eclipse können die Argumente Ã¼ber die Run Configuration im Tab JRE angegeben werden. Alternativ kann das Argument auch direkt an das JRE angehÃ¤ngt werden. Dazu unter Window -> Preferences -> Java -> Installed JREs die aktuelle JRE editieren und Default VM Argument angeben.
+    a. In Eclipse können die Argumente Ã¼ber die Run Configuration im Tab JRE angegeben werden. Alternativ kann das Argument auch direkt an das JRE angehängt werden. Dazu unter Window -> Preferences -> Java -> Installed JREs die aktuelle JRE editieren und Default VM Argument angeben.
     b. Bei der Verwendung der Shell erst den Befehl export ANT_OPTS="-XX:MaxPermSize=1024M -ms1024M -mx1024M" eingeben, dann ant ausfÃ¼hren.
 
-Anmerkung: Bei 32bit JVMs darf XX:MaxPermSize nicht so hoch gewÃ¤hlt werden, da sonst die Java Virtual Machine nicht gestartet werden kann.
+Anmerkung: Bei 32bit JVMs darf XX:MaxPermSize nicht so hoch gewählt werden, da sonst die Java Virtual Machine nicht gestartet werden kann.
 Also z.B. -XX:MaxPermSize=256M
 
 * System Voraussetzungen (Installation)
@@ -104,7 +104,7 @@ BRANCH=6.1.2.9;
 #Hauptverzeichnis flach auschecken
 mkdir ${BRANCH}; svn --depth=files co svn://svn/branches/XYNA_BLACK_v${BRANCH}_branch/xyna/blackedition ${BRANCH}
 
-#benötigte Unterverzeichnisse vollstÃ¤ndig
+#benötigte Unterverzeichnisse vollständig
 cd ${BRANCH}; svn up --depth=infinity server ; cd ..
 cd ${BRANCH}; svn up --depth=infinity XynaBlackEditionWebServices ; cd ..
 cd ${BRANCH}; svn up --depth=infinity installation/ ; cd .. #damit "cd server; ant buildJar" möglich wird
@@ -146,8 +146,8 @@ vi delivery.properties # neue Version eintragen
 svn ci -m "neue version <Version>" delivery.properties
 #Checke SVN Historie auf Ã„nderungen in Modulen seit letzter Lieferung
 #Erstmal manuell: svn log -v svn://svn/trunk/xyna/blackedition/modules | less
-#Passe application.xmls an, wo es Ã„nderungen gab (typischerweise sollten diese Ã„nderungen abwÃ¤rtskompatibel sein, also in der 3ten Stelle Version anpassen)
-#AbhÃ¤ngigkeiten anderer application.xmls anpassen
+#Passe application.xmls an, wo es Ã„nderungen gab (typischerweise sollten diese Ã„nderungen abwärtskompatibel sein, also in der 3ten Stelle Version anpassen)
+#Abhängigkeiten anderer application.xmls anpassen
 
 #Umgebungsvariablen setzen
 export ANT_HOME=/opt/common/apache-ant-1.8.3
@@ -186,7 +186,7 @@ Damit da ordentliche Texte drin stehen, sollten alle (betroffenen) Bugs in Bugzi
 - Ein Kommentar sollte folgendes Format haben, damit die Releasenotes extrahiert werden können. Falls kein solcher Kommentar gefunden wird, wird die Bug Summary fÃ¼r die Releasenotes benutzt.
 <Irgendein Text, der fÃ¼r die Releasenotes nicht relevant ist>
 #Releasenotes
-<Releasenotes Text, wie er spÃ¤ter im generierten Dokument auftauchen soll>
+<Releasenotes Text, wie er später im generierten Dokument auftauchen soll>
 
 Beispiel:
 Bug 23382

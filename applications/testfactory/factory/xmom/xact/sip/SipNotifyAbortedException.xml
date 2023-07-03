@@ -22,6 +22,6 @@
       <IsXynaComponent>true</IsXynaComponent>
     </Meta>
     <MessageText Language="EN">Abortion while waiting for SIP notify response</MessageText>
-    <MessageText Language="DE">Aborrt-Signal erhalten, w√§hrend auf eine Antwort gewartet wurde</MessageText>
+    <MessageText Language="DE">Aborrt-Signal erhalten, w‰hrend auf eine Antwort gewartet wurde</MessageText>
   </ExceptionType>
 </ExceptionStore>

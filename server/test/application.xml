@@ -18,7 +18,7 @@
 -->
 <Application applicationName="BatchProcessMgmt" comment="" factoryVersion="" versionName="1.0" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Konfiguration im Planning-Workflow, Starten von Auftr√§gen</Description>
+    <Description Lang="DE">Konfiguration im Planning-Workflow, Starten von Auftr‰gen</Description>
     <Description Lang="EN">Configuration in Planning workflow, starting orders</Description>
     <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>

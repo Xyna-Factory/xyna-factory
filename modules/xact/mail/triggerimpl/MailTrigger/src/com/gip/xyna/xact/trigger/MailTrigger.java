@@ -138,7 +138,7 @@ public class MailTrigger extends EventListener<MailTriggerConnection, MailStartP
       logger.warn("Failed to receive mail", t);
       throw new TriggerFailedException("Failed to receive mail", t);
     } else {
-      // da dieser Fehler nicht immer auftritt, wird er als temporÃ¤res Problem angesehen.
+      // da dieser Fehler nicht immer auftritt, wird er als temporäres Problem angesehen.
       //Daher werden weiter Retries probiert.
       if( recReceive == null ) {
         recReceive = new RepeatedExceptionCheck();

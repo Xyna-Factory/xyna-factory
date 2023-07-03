@@ -19,7 +19,7 @@
 <ExceptionStore Name="ExceptionStore" Version="1.8" xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1">
   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XYNA-XACT-09006" Label="DHCPv6InconsistentDataException" TypeName="DHCPv6InconsistentDataException" TypePath="xdnc.dhcpv6.exceptions">
     <Meta>
-      <Documentation>Exception, falls z.B. in leasestable inkonsistente Daten (doppelte Eintr√§ge) drinstehen</Documentation>
+      <Documentation>Exception, falls z.B. in leasestable inkonsistente Daten (doppelte Eintr‰ge) drinstehen</Documentation>
     </Meta>
     <Data Label="reason" VariableName="reason">
       <Meta>

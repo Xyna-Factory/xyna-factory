@@ -67,7 +67,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Der f√ºr das Laden der Klasse %0% zust√§ndige ClassLoader wurde nicht gefunden.</MessageText>
+      <MessageText Language="DE">Der f√ºr das Laden der Klasse %0% zust‰ndige ClassLoader wurde nicht gefunden.</MessageText>
       <MessageText Language="EN">Could not find classloader responsible for loading of class %0%.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04007" TypeName="XFMG_RMI_CLASSLOADING_PROBLEM" TypePath="com.gip.xyna.xfmg.exceptions">
@@ -313,7 +313,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Bei dem Objekt '%0%' vom Typ %1% handelt es sich um ein vordefiniertes XynaObjekt, bei diesen sind nur eingeschr√§nkte Manipulationen erlaubt.</MessageText>
+      <MessageText Language="DE">Bei dem Objekt '%0%' vom Typ %1% handelt es sich um ein vordefiniertes XynaObjekt, bei diesen sind nur eingeschr‰nkte Manipulationen erlaubt.</MessageText>
       <MessageText Language="EN">The object '%0%' of type %1% is a predefined XynaObject, only a restricted set of manipulations is allowed with those.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04071" TypeName="XFMG_NamingConventionException" TypePath="com.gip.xyna.xfmg.exceptions">
@@ -354,7 +354,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Dom√§ne %0% ist der Fabrik unbekannt.</MessageText>
+      <MessageText Language="DE">Dom‰ne %0% ist der Fabrik unbekannt.</MessageText>
       <MessageText Language="EN">Domain %0% is not known to the factory.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04074" TypeName="XFMG_DomainIsAssignedException" TypePath="com.gip.xyna.xfmg.exceptions">
@@ -363,7 +363,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Die Dom√§ne '%0%' ist noch an einer Rolle oder einem Benutzer zugewiesen und kann nicht entfernt werden.</MessageText>
+      <MessageText Language="DE">Die Dom‰ne '%0%' ist noch an einer Rolle oder einem Benutzer zugewiesen und kann nicht entfernt werden.</MessageText>
       <MessageText Language="EN">The domain %0% is still assigned to a role or a user and can not be deleted.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04076" TypeName="XFMG_InvalidCreationOfExistingOrdertype" TypePath="com.gip.xyna.xfmg.exceptions" >
@@ -474,7 +474,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Der Wert '%0%' ist keine g√ºltige Kapazit√§t.</MessageText>
+      <MessageText Language="DE">Der Wert '%0%' ist keine g√ºltige Kapazit‰t.</MessageText>
       <MessageText Language="EN">The value '%0%' is not valid.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04131" TypeName="XFMG_InvalidXynaOrderPriority" TypePath="com.gip.xyna.xfmg.exceptions" >
@@ -488,7 +488,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Die angegebene Priorit√§t %0% ist ausserhalb des zul√§ssigen Bereiches (%1) </MessageText>
+      <MessageText Language="DE">Die angegebene Priorit‰t %0% ist ausserhalb des zul‰ssigen Bereiches (%1) </MessageText>
       <MessageText Language="EN">The given priority %0% is not within the valid interval (%1) .</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04132" TypeName="XFMG_PasswordRestrictionViolation" TypePath="com.gip.xyna.xfmg.exceptions" >
@@ -497,7 +497,7 @@
             <Type>String</Type>            
          </Meta>
       </Data>
-      <MessageText Language="DE">Das angegebene Passwort konnte nicht gegen die definierte Passworteinschr√§nkung %0% validiert werden.</MessageText>
+      <MessageText Language="DE">Das angegebene Passwort konnte nicht gegen die definierte Passworteinschr‰nkung %0% validiert werden.</MessageText>
       <MessageText Language="EN">The entered password could not be validated against the configured restriction: %0%</MessageText>
    </ExceptionType>
    
@@ -693,7 +693,7 @@
       <MessageText Language="EN">The object %0% could not be found.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04165" TypeName="XFMG_CronLikeOrderCopyException" TypePath="com.gip.xyna.xfmg.exceptions">
-      <MessageText Language="DE">W√§hrend des Kopierens der Cron Like Orders ist ein Fehler aufgetreten.</MessageText>
+      <MessageText Language="DE">W‰hrend des Kopierens der Cron Like Orders ist ein Fehler aufgetreten.</MessageText>
       <MessageText Language="EN">Could not copy Cron Like Orders..</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04166" TypeName="XFMG_NetworkInterfaceNotFoundException" TypePath="com.gip.xyna.xfmg.exceptions">
@@ -815,7 +815,7 @@
           <Type>Integer</Type>
         </Meta>
       </Data>
-      <MessageText Language="DE">Es existieren noch %0% laufende Auftr√§ge, %1% Cron Like Orders und %2% Frequency-controlled Tasks.</MessageText>
+      <MessageText Language="DE">Es existieren noch %0% laufende Auftr‰ge, %1% Cron Like Orders und %2% Frequency-controlled Tasks.</MessageText>
       <MessageText Language="EN">There are %0% active orders, %1% cron like orders and %2% frequency-controlled tasks.</MessageText>
    </ExceptionType>
    
@@ -844,7 +844,7 @@
       <MessageText Language="EN">Right '%0%' could not be verified: %1%</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-04178" TypeName="XFMG_ClearWorkingSetFailedBecauseOfRunningOrders" TypePath="com.gip.xyna.xfmg.exceptions">    
-      <MessageText Language="DE">Workingset konnte nicht geleert werden, da noch Auftr√§ge am laufen sind.</MessageText>
+      <MessageText Language="DE">Workingset konnte nicht geleert werden, da noch Auftr‰ge am laufen sind.</MessageText>
       <MessageText Language="EN">Workingset could not be cleared because of active orders.</MessageText>
    </ExceptionType>  
    
@@ -1028,7 +1028,7 @@
             <Type>String</Type>            
          </Meta>
       </Data>
-      <MessageText Language="DE">Die Konfiguration der Application '%0%' mit Version '%1%' hat sich ge√§ndert. Bitte geben Sie an, ob ein LocalBuild oder eine neue Version mit Branch erstellt werden soll.</MessageText>
+      <MessageText Language="DE">Die Konfiguration der Application '%0%' mit Version '%1%' hat sich ge‰ndert. Bitte geben Sie an, ob ein LocalBuild oder eine neue Version mit Branch erstellt werden soll.</MessageText>
       <MessageText Language="EN">Configuration of application '%0%' with version '%1%' has changed. Please specify whether a localbuild or a new version with branch should be created.</MessageText>
    </ExceptionType>
    
@@ -1108,7 +1108,7 @@
          </Meta>
       </Data>
       <MessageText Language="EN">The dependencies for '%0%' could not be modified.</MessageText>
-      <MessageText Language="DE">Die Abh√§ngigkeiten f√ºr '%0%' konnten nicht ge√§ndert werden.</MessageText>
+      <MessageText Language="DE">Die Abh‰ngigkeiten f√ºr '%0%' konnten nicht ge‰ndert werden.</MessageText>
    </ExceptionType>
 
    <ExceptionType Code="XYNA-04204" TypeName="XFMG_DependencyStillUsedByApplicationDefinitionException" TypePath="com.gip.xyna.xprc.exceptions">
@@ -1123,7 +1123,7 @@
          </Meta>
       </Data>
       <MessageText Language="EN">The Dependency to '%0%' could not be removed because it is still used by '%1%'.</MessageText>
-      <MessageText Language="DE">Die Abh√§ngigkeit zu '%0%' kann nicht entfernt werden, weil sie von '%1%' noch verwendet wird.</MessageText>
+      <MessageText Language="DE">Die Abh‰ngigkeit zu '%0%' kann nicht entfernt werden, weil sie von '%1%' noch verwendet wird.</MessageText>
    </ExceptionType>
 
    <ExceptionType Code="XYNA-04205" TypeName="XFMG_NoCorrespondingApplicationException" TypePath="com.gip.xyna.xprc.exceptions">
@@ -1142,7 +1142,7 @@
             <Type>String</Type>
          </Meta>
       </Data>   
-      <MessageText Language="DE">Das Objekt %0% ist bereits in der Abh√§ngigkeitshierarchie enthalten.</MessageText>
+      <MessageText Language="DE">Das Objekt %0% ist bereits in der Abh‰ngigkeitshierarchie enthalten.</MessageText>
       <MessageText Language="EN">The object %0% is already included in the dependency hierarchy.</MessageText>
    </ExceptionType>
    

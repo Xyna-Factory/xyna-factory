@@ -53,14 +53,14 @@
 
 	<Form Secondary="true">
 		<Label Language="EN">Choose</Label>
-		<Label Language="DE">Ausw√§hlen</Label>
+		<Label Language="DE">Ausw‰hlen</Label>
     <FormItem Label="All unsaved changes will be lost">
           <Label Language="EN">All unsaved changes will be lost</Label>
           <Label Language="DE">Alle ungespeicherten √Ñnderungen gehen verloren</Label>
     </FormItem>
 		<FormItem Label="Click 'Apply' to choose this instance">
 			<Label Language="EN">Click 'Apply' to choose this instance</Label>
-			<Label Language="DE">Bitte klicken Sie auf 'Anwenden', um diese Instanz auszuw√§hlen</Label>
+			<Label Language="DE">Bitte klicken Sie auf 'Anwenden', um diese Instanz auszuw‰hlen</Label>
 		</FormItem>
 
 		<Box Type="Footer">

@@ -37,7 +37,7 @@
       <Target RefID="2"/>
       <Target RefID="4"/>
       <Meta>
-        <Documentation>Hier wird nach der angefragten IP Adresse in der Datenbank mit vergebenen Leases gesucht. Wird direkt keine Adresse gefunden, wird die Adresse mit vergebenen Bereichen (Prefix Delegation) abgeglichen. Bei einem Ergebnis wird die ClientID des Clients zurückgeliefert, dem aktuell die Adresse oder der Adressbereich zugewiesen ist. Wird kein Eintrag gefunden, enthält die Antwort den Statuscode "NotConfigured". Falls eine Anfrage kommt, die in der Form nicht unterstützt wird, so wird der Statuscode "UnknownQuery" zurückgeliefert. Bei einer unvollständigen Anfrage, wird der Statuscode "MalformedQuery" gesetzt.</Documentation>
+        <Documentation>Hier wird nach der angefragten IP Adresse in der Datenbank mit vergebenen Leases gesucht. Wird direkt keine Adresse gefunden, wird die Adresse mit vergebenen Bereichen (Prefix Delegation) abgeglichen. Bei einem Ergebnis wird die ClientID des Clients zurückgeliefert, dem aktuell die Adresse oder der Adressbereich zugewiesen ist. Wird kein Eintrag gefunden, enth�lt die Antwort den Statuscode "NotConfigured". Falls eine Anfrage kommt, die in der Form nicht unterstützt wird, so wird der Statuscode "UnknownQuery" zurückgeliefert. Bei einer unvollst�ndigen Anfrage, wird der Statuscode "MalformedQuery" gesetzt.</Documentation>
       </Meta>
       <Invoke Operation="processLeaseQuery" ServiceID="2">
         <Source RefID="5"/>

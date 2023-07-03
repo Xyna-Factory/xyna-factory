@@ -75,9 +75,9 @@ public class MailTriggerConnection extends TriggerConnection {
   }
 
   public void sendReply(Mail reply) {
-    //in der Reply können nun Sender, Recipients und Subject fehlen, diese werden nun ergÃ¤nzt.
+    //in der Reply können nun Sender, Recipients und Subject fehlen, diese werden nun ergänzt.
     if( isEmpty( reply.getSubject() ) ) {
-      reply.setSubject( mail.getSubject() ); //TODO "Re: " ergÃ¤nzen?
+      reply.setSubject( mail.getSubject() ); //TODO "Re: " ergänzen?
     }
     if( isEmpty( reply.getSender() ) ) {
       reply.setSender( mail.getRecipientsTo().get(0) );

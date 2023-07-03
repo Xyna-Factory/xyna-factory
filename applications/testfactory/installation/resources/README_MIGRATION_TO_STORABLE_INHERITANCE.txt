@@ -5,7 +5,7 @@ Beschrieben wird die Migration von einer XTF-Installation die noch keine Storabl
 
 
 1) Vor der Fabrik-Installation muss bereits umgestellt werden auf eine XynaTestFactoryInfrastructure-Application Version, die verhindert, dass alle TestDaten in eine Tabelle zusammenfallen. Dies geschieht in folgenden Schritten:
-1.1) Import der benötigten AbhÃ¤ngigkeiten (Processing, Zeta) und Entfernung veralteten AbhÃ¤ngigkeiten (DOM-Inspector), zB.:
+1.1) Import der benötigten Abhängigkeiten (Processing, Zeta) und Entfernung veralteten Abhängigkeiten (DOM-Inspector), zB.:
 
 ./xynafactory.sh importapplication ~/Lieferungen/Lieferung_20190513/factory/XynaBlackEdition_v8.1.0.20_20190417_1708/components/xprc/Processing.1.0.10.app
 
@@ -21,7 +21,7 @@ Beschrieben wird die Migration von einer XTF-Installation die noch keine Storabl
 ./install_testfactory.sh -i 1 -d
 
 
-1.2) Migration aller bisher prÃ¤sententen XynaTestFactoryInfrastructure Versionen auf die neue Version.
+1.2) Migration aller bisher präsententen XynaTestFactoryInfrastructure Versionen auf die neue Version.
      Falls auf dem System noch TestProjekte existieren, die gar keine XynaTestFactoryInfrastructure verwenden sondern die Infrastruktur noch als Kopie in ihrem Workspace verwenden, mÃ¼ssen diese auch umgestellt werden (hinzufÃ¼gen der XynaTestFactoryInfrastructure-App zu ihren Dependencies und dann Kollisionen löschen).
 
 ./xynafactory.sh migrateruntimecontext -fromApplicationName XynaTestFactoryInfrastructure -fromVersionName 7.0.4.1 -toApplicationName XynaTestFactoryInfrastructure -toVersionName 8.2.0.5 -f

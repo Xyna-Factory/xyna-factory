@@ -30,7 +30,7 @@
         </FormItem>
         <FormItem HideIfUndefined="false" Label="Next Value">
                  <Label Language="EN">Next value</Label>
-                 <Label Language="DE">NÃ¤chster Wert</Label>
+                 <Label Language="DE">Nächster Wert</Label>
                  <DataLink>%0%.nextValue</DataLink>
         </FormItem>
         <FormItem HideIfUndefined="false" Label="Increment">
@@ -56,7 +56,7 @@
         </FormItem>
         <FormItem Editable="true" HideIfUndefined="false" Label="Next Value" Secondary="true">
                  <Label Language="EN">Next value</Label>
-                 <Label Language="DE">NÃ¤chster Wert</Label>
+                 <Label Language="DE">Nächster Wert</Label>
                  <DataLink>%0%.nextValue</DataLink>
         </FormItem>
         <FormItem Editable="true" HideIfUndefined="false" Label="Increment" Secondary="true">

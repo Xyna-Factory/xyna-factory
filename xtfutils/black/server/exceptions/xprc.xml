@@ -29,7 +29,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">auftrag %0% hängt. es wurde ein ergebnis oder ein fehler zurückerwartet.</MessageText>
+      <MessageText Language="DE">auftrag %0% h�ngt. es wurde ein ergebnis oder ein fehler zurückerwartet.</MessageText>
       <MessageText Language="EN">order %0% hangs. expected response or error.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01011" TypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" TypePath="com.gip.xyna.xprc.exceptions">
@@ -50,7 +50,7 @@
       <MessageText Language="EN">Order %0% timed out in scheduler while waiting for veto.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01529" TypeName="XPRC_SchedulingTimeout_Predecessor" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" BaseTypePath="com.gip.xyna.xprc.exceptions">
-      <MessageText Language="DE">Auftrag %0% hat im Scheduler beim Warten auf Serien-Vorgänger seine maximale Wartezeit überschritten.</MessageText>
+      <MessageText Language="DE">Auftrag %0% hat im Scheduler beim Warten auf Serien-Vorg�nger seine maximale Wartezeit überschritten.</MessageText>
       <MessageText Language="EN">Order %0% timed out in scheduler while waiting for series predecessor.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01530" TypeName="XPRC_SchedulingTimeout_TimeConstraint" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_PROCESS_SCHEDULING_TIMEOUT" BaseTypePath="com.gip.xyna.xprc.exceptions">
@@ -190,7 +190,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Fehler während Compensation: %0%. ursprünglicher fehler: %1%</MessageText>
+      <MessageText Language="DE">Fehler w�hrend Compensation: %0%. ursprünglicher fehler: %1%</MessageText>
       <MessageText Language="EN">Error during compensation: %0%. original error: %1%</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01152" TypeName="XPRC_TIMEOUT_WAITING_FOR_DEPLOYMENT" TypePath="com.gip.xyna.xprc.exceptions">
@@ -451,7 +451,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Zirkuläre Abhängigkeit in Auftragsserie: Predecessor-CorrelationIds %0%.</MessageText>
+      <MessageText Language="DE">Zirkul�re Abh�ngigkeit in Auftragsserie: Predecessor-CorrelationIds %0%.</MessageText>
       <MessageText Language="EN">Circular dependency in series: predecessor correlationIds %0%.</MessageText>
    </ExceptionType>  
    <ExceptionType Code="XYNA-01418" TypeName="XPRC_JAVATYPE_UNSUPPORTED" TypePath="com.gip.xyna.xprc.exceptions">
@@ -961,7 +961,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Deployment wurde abgebrochen, weil noch Aufträge aktiv sind, die den Workflow "%0%" benutzen.</MessageText>
+      <MessageText Language="DE">Deployment wurde abgebrochen, weil noch Auftr�ge aktiv sind, die den Workflow "%0%" benutzen.</MessageText>
       <MessageText Language="EN">Deployment aborted, because there are active orders using workflow "%0%".</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01470" TypeName="XPRC_UnresolveableOrderTypeException" TypePath="com.gip.xyna.xprc.exceptions">
@@ -1109,7 +1109,7 @@
    </ExceptionType>
    <ExceptionType Code="XYNA-01485" TypeName="XPRC_FactoryShutdownViolation" TypePath="com.gip.xyna.xprc.exceptions">
       <MessageText Language="EN">Active orders were found, Factory-Shutdown canceled.</MessageText>
-      <MessageText Language="DE">Überprüfungen zeigten laufende Aufträge, Factory-Shutdown wurde verhindert.</MessageText>
+      <MessageText Language="DE">Überprüfungen zeigten laufende Auftr�ge, Factory-Shutdown wurde verhindert.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01486" TypeName="XPRC_TTLExpirationBeforeHandlerRegistration" TypePath="com.gip.xyna.xprc.exceptions">
       <Data Label="Formatted Expiration Timestamp" VariableName="formattedExpirationTimestamp">
@@ -1140,7 +1140,7 @@
    
    <ExceptionType Code="XYNA-01491" TypeName="XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain" TypePath="com.gip.xyna.xprc.exceptions">
       <MessageText Language="EN">Can not reduce cardinality to the desired value, too many capacities in use. Try again later.</MessageText>
-      <MessageText Language="DE">Cardinality kann nicht auf den gewünschten Wert reduziert werden, da zuviele Capacities in Benutzung sind. Später nochmal probieren.</MessageText>
+      <MessageText Language="DE">Cardinality kann nicht auf den gewünschten Wert reduziert werden, da zuviele Capacities in Benutzung sind. Sp�ter nochmal probieren.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01492" TypeName="XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryChangeState" TypePath="com.gip.xyna.xprc.exceptions">
       <MessageText Language="EN">Can not reduce cardinality to the desired value, too many capacities in use. Try changeState to DISABLED first.</MessageText>
@@ -1152,7 +1152,7 @@
    </ExceptionType>
    <ExceptionType Code="XYNA-01494" TypeName="XPRC_OrderBackupIncomplete_XynaOrderMissing" TypePath="com.gip.xyna.xprc.exceptions">
       <MessageText Language="EN">Incomplete entry in OrderBackup: Missing XynaOrder or was unable to deserialize it.</MessageText>
-      <MessageText Language="DE">Unvollständiger Eintrag im OrderBackup: XynaOrder fehlt oder konnte nicht deserialisiert werden.</MessageText>
+      <MessageText Language="DE">Unvollst�ndiger Eintrag im OrderBackup: XynaOrder fehlt oder konnte nicht deserialisiert werden.</MessageText>
    </ExceptionType>
    <ExceptionType Code="XYNA-01495" TypeName="XPRC_UnknownIntentionallyAbandonedOrderID" TypePath="com.gip.xyna.xprc.exceptions">
       <Data Label="id" VariableName="id">
@@ -1300,7 +1300,7 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">Die Cron Like Order konnte nicht erstellt oder geändert werden: %0%.</MessageText>
+      <MessageText Language="DE">Die Cron Like Order konnte nicht erstellt oder ge�ndert werden: %0%.</MessageText>
       <MessageText Language="EN">The Cron Like Order could not be created or modified: %0%.</MessageText>
    </ExceptionType> 
    
@@ -1376,7 +1376,7 @@
          </Meta>
       </Data>
       <MessageText Language="EN">Time window '%0%' is currently used by orders.</MessageText>
-      <MessageText Language="DE">Das Zeitfenster '%0%' wird derzeit von Aufträgen verwendet.</MessageText>
+      <MessageText Language="DE">Das Zeitfenster '%0%' wird derzeit von Auftr�gen verwendet.</MessageText>
    </ExceptionType>
    
    <ExceptionType Code="XYNA-01523" TypeName="XPRC_TimeWindowRemoteManagementException" TypePath="com.gip.xyna.xprc.exceptions">
