@@ -30,6 +30,11 @@
     <artifactId>bom</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -186,7 +191,7 @@
             <dependency>
                 <groupId>com.ibm.mq</groupId>
                 <artifactId>com.ibm.mq.allclient</artifactId>                <!-- unfree -->
-                <version>9.0.4.0</version>
+                <version>9.1.5.0</version>
             </dependency>
             <dependency>
                 <groupId>com.ibm.mq</groupId>

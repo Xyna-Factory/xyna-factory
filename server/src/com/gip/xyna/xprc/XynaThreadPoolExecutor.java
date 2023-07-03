@@ -80,8 +80,29 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
       threadLocalsField.setAccessible(true);
       tidField = Thread.class.getDeclaredField("tid");
       tidField.setAccessible(true);
-      createTidMethod = Thread.class.getDeclaredMethod("nextThreadID");
-      createTidMethod.setAccessible(true);
+      // In java20 Thread.nextThreadID() doesn't exist anymore.
+      // Instead the Thread.ThreadIdentifiers.next() must be used (doesn't exist prior java20)
+      String[] javaVersion = System.getProperty("java.version").split("\\.");
+      int versionNum = 11;
+      if (javaVersion.length >= 1) {
+        try {
+          versionNum = Integer.parseInt(javaVersion[0]);
+        } catch (NumberFormatException e) {
+          logger.debug("Couldn't parse major java version \"" + javaVersion[0] + "\". Going with Java11", e);
+        }
+      }
+      if (versionNum < 20) {
+        createTidMethod = Thread.class.getDeclaredMethod("nextThreadID");
+        createTidMethod.setAccessible(true);
+      } else {
+        for (Class c : Thread.class.getDeclaredClasses()) {
+          if (c.getSimpleName().equals("ThreadIdentifiers")) {
+            createTidMethod = c.getDeclaredMethod("next");
+            createTidMethod.setAccessible(true);
+            break;
+          }
+        }
+      }
     } catch (SecurityException e) {
       throw new RuntimeException("Failed to initialize " + XynaThreadPoolExecutor.class.getName(), e);
     } catch (NoSuchFieldException e) {
@@ -313,6 +334,7 @@ public class XynaThreadPoolExecutor extends ThreadPoolExecutor implements Statis
     
   }
   
+
 
   public XynaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
                                 final BlockingQueue<Runnable> workQueue, 

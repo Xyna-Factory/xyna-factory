@@ -133,10 +133,12 @@ public class InMemoryCompilationSet implements CompilationSet {
       } else if (javaVersion.equals("Java11")) {
         targetVersion = "11";
       } else {
-        throw new RuntimeException("Xyna Property " + XynaProperty.BUILDMDJAR_JAVA_VERSION.getPropertyName() + " has invalid value: " + javaVersion);
+        // Just set to current JavaVersion by default. It might not work and crash later
+        targetVersion = javaVersion.replace("Java", "");
       }
     } else {
-      switch (ListsysteminfoImpl.getJavaVersion()) {
+      int javaVersion = ListsysteminfoImpl.getJavaVersion();
+      switch (javaVersion) {
         case 7 :
           targetVersion = "1.7";
           break;
@@ -150,7 +152,8 @@ public class InMemoryCompilationSet implements CompilationSet {
           targetVersion = "11";
           break;
         default :
-          throw new RuntimeException("Unsupported java version: " + ListsysteminfoImpl.getJavaVersion());
+          // see else case above
+          targetVersion = String.valueOf(javaVersion);
       }
     }
     

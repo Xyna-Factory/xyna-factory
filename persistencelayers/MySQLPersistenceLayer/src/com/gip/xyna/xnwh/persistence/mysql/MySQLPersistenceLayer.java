@@ -42,6 +42,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -96,6 +97,7 @@ import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision.IndexModification;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerConnectionWithAlterTableSupport;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerWithAlterTableSupportHelper;
+import com.gip.xyna.xnwh.persistence.xmom.PersistenceExpressionVisitors;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.pools.MySQLPoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
@@ -949,27 +951,15 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
     private <T extends Storable> boolean isView(String tableName) {
-      Boolean queryResult = sqlUtils.queryOneRow("show table status where name = ?", new com.gip.xyna.utils.db.Parameter(tableName),
-                                  new ResultSetReader<Boolean>() {
+      Boolean queryResult = sqlUtils.queryOneRow("SELECT TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_NAME = ?",
+                                                 new com.gip.xyna.utils.db.Parameter(tableName), new ResultSetReader<Boolean>() {
 
-                                    public Boolean read(ResultSet rs) throws SQLException {
-                                      String comment = rs.getString("comment");
-                                      if (rs.wasNull()) {
-                                        return false;
-                                      }
-                                      /*
-                                       * Auszug aus http://dev.mysql.com/doc/refman/5.0/en/show-table-status.html:
-                                        "For views, all the fields displayed by SHOW TABLE STATUS are NULL except that
-                                        Name indicates the view name and Comment says view. 
-                                       */
-                                      return comment != null && comment.equalsIgnoreCase("view");
-                                    }
-                                  });
-      if (queryResult == null) {
-        return false;
-      } else {
-        return queryResult;
-      }
+                                                   public Boolean read(ResultSet rs) throws SQLException {
+                                                     String tableType = rs.getString("TABLE_TYPE");
+                                                     return tableType != null && tableType.equalsIgnoreCase("VIEW");
+                                                   }
+                                                 });
+      return Boolean.TRUE.equals(queryResult);
     }
 
 
@@ -2101,6 +2091,10 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       }
 
       String sqlQuery = query.getQuery().getSqlString();
+
+      //Umwandlung zu rlike, da MariaDB regexp_like() nicht unterstützt
+      sqlQuery = modifyFunction(sqlQuery, PersistenceExpressionVisitors.QueryFunctionStore.REGEXP_LIKE_SQL_FUNCTION, "%Column% RLIKE (%Params%)" );
+
       //TODO cachen
       if (maxRows == 1 && transactionProperties != null
           && transactionProperties.contains(TransactionProperty.selectRandomElement())) {
@@ -2136,6 +2130,24 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         throw new XNWH_GeneralPersistenceLayerException("query \"" + sqlQuery + "\" [" + paras
             + "] could not be executed.", e);
       }
+    }
+
+
+    /**
+     * Passt die Schreibweise einer SQL-Funktion (z.B. regexp_like) an MySQL an.
+     */
+    private String modifyFunction(String sqlQuery, String sqlFunction, String replacement) {
+      if (sqlQuery.contains(sqlFunction)) {
+        String preExpr = "([\\s\\(]+)"; //Leerzeichen oder Klammer stehen am Anfang
+        String params = "([^,]*),([^)]*)"; //Parameter der SQL-Funktion
+        Pattern pattern = Pattern.compile(preExpr +"\\Q" + sqlFunction + "\\E" +"\\s*\\(" + params + "\\)",Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(sqlQuery);
+          if (matcher.find()) {
+            replacement = replacement.replace("%Column%", "$2").replace("%Params%", "$3");
+            sqlQuery = matcher.replaceAll("$1" + replacement); //eigentliche Ersetzung
+        }
+      }
+      return sqlQuery;
     }
 
 

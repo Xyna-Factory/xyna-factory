@@ -548,6 +548,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     newVar.setPersistenceTypes(var.getPersistenceTypes());
     newVar.setIsList(var.isList());
     newVar.setVarName(var.getVarName());
+    newVar.setDocumentation(var.getDocumentation());
 
     dtOrException.replaceMemberVar(var, newVar);
   }

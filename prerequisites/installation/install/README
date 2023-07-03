@@ -1,6 +1,6 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 Xyna GmbH, Germany
+# Copyright 2023 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,18 +38,22 @@ das entsprechend zum Betriebssystem und der Architektur des Zielsystem zu waehle
  
 2.2	Zum Entpacken der Liefergegenstaende ist ein neues Verzeichnis im Homeverzeichnis des root-Benutzer anzulegen:
  
+```
    # mkdir -p ${HOME}/Lieferungen/Lieferung_YYYYMMDD 
    # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
-   
-   Alle benoetigten Pakete werden dann in das neue Verzeichnis kopiert und dort entpackt.
+```
+
+Alle benoetigten Pakete werden dann in das neue Verzeichnis kopiert und dort entpackt.
 
 
 
 2.3. Porperties anlegen und anpassen
 
+```
    # cd $(HOME}/Lieferungen/Lieferung_YYYYMMDD
    # cd XynaBlackEditionPrerequisites*
    # ./install_prerequisites.sh -n
+```
 
   Dieser Befehl erzeugt das Verzeichnis: /etc/xyna/environment und legt darin die Datei 
   "black_edition001.properties" und eine rechnerspezifische Properties-Datei  "<hostname>.properties" 
@@ -68,6 +72,7 @@ das entsprechend zum Betriebssystem und der Architektur des Zielsystem zu waehle
   Welche <optionen> es gibt bekommt man angezeigt durch das Kommando:
      # ./install_prerequisites.sh
   
+  *Anmerkung:* Ab Java18 sollte die Property `jvm.option.additional` ergänzt werden um `-Djava.security.manager=allow --add-opens java.lang/java-base=ALL-UNNAMED --add-opens java.base/java.util.concurrent=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED`
   
    Beispiele: 
    
