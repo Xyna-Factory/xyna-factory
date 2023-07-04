@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,6 +37,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
@@ -43,9 +45,24 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xfctrl.classloading.MDMClassLoader;
+import com.gip.xyna.xfmg.xfctrl.datamodelmgmt.xynaobjects.DataModel;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xprc.exceptions.XPRC_InheritedConcurrentDeploymentException;
+import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
+import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
+import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.DataModelInformation;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
 import xact.templates.Document;
 import xact.templates.JSON;
@@ -521,13 +538,13 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
 
   
   public Document writeJSON(GeneralXynaObject jSONBaseModel) {
-    return writeJSON(jSONBaseModel, Collections.<ListToMapTransformation>emptyList(), Collections.<MemberSubstitution>emptyList(),false);
+    return writeJSON(jSONBaseModel, Collections.<ListToMapTransformation>emptyList(), Collections.<MemberSubstitution>emptyList(), false, OASScope.none);
   }
 
-  public Document writeJSON(GeneralXynaObject jSONBaseModel, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels) {
+  public Document writeJSON(GeneralXynaObject jSONBaseModel, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels, OASScope scope) {
     Document d = new Document();
     d.setDocumentType(new JSON());
-    JSONObject job = createFromXynaObject(jSONBaseModel, transformations, substitutions, useLabels);
+    JSONObject job = createFromXynaObject(jSONBaseModel, transformations, substitutions, useLabels, scope);
     if (job != null) {
       d.setText(job.toJSON(""));
     } else {
@@ -544,7 +561,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
 
 
   private JSONObject createFromXynaObject(GeneralXynaObject xo, List<? extends ListToMapTransformation> transformations,
-                                          List<? extends MemberSubstitution> substitutions, boolean useLabels) {
+                                          List<? extends MemberSubstitution> substitutions, boolean useLabels, OASScope scope) {
     Map<String, String> mapTransformations = new HashMap<String, String>();
     if (transformations != null) {
       for (ListToMapTransformation listToMapTransformation : transformations) {
@@ -557,16 +574,41 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         mapSubstitutions.put(memberSubstitution.getPathToMemberInDataType(), memberSubstitution.getJsonName());
       }
     }
-    return createFromXynaObjectRecursivly(xo, "", mapTransformations, mapSubstitutions, useLabels);
+    return createFromXynaObjectRecursivly(xo, "", mapTransformations, mapSubstitutions, useLabels, scope);
   }
   
-  public JSONObject createFromXynaObjectRecursivly(GeneralXynaObject xo, String currentPath, Map<String, String> transformations, Map<String, String> substitutions, boolean useLabels) {
+  private enum OASScope {
+    request, response, none;
+    
+    public static OASScope valueOfOrNone(String val) {
+      if (val == null) {
+        return OASScope.none;
+      }
+      return valueOf(val.toLowerCase());
+    }
+  }
+  
+  public JSONObject createFromXynaObjectRecursivly(GeneralXynaObject xo, String currentPath, Map<String, String> transformations, Map<String, String> substitutions, boolean useLabels, OASScope scope) {
     if (xo == null) {
       return null;
     }
     JSONObject job = new JSONObject();
     HashMap<String,String> varNamesOfXynaObject = getVarNames(xo, useLabels);
     for (String varNameInXyna : varNamesOfXynaObject.keySet()) {
+      switch (scope) {
+        case none :
+          break;
+        case request :
+          if (isOASMarked(xo, varNameInXyna, true)) {
+            continue;
+          }
+          break;
+        case response :
+          if (isOASMarked(xo, varNameInXyna, false)) {
+            continue;
+          }
+          break;
+      }
       String varName = varNameInXyna;
       String newPath = currentPath.isEmpty() ? varNameInXyna : currentPath + "." + varNameInXyna; 
       if (substitutions.containsKey(newPath)) {
@@ -583,7 +625,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
           }
         } else if (val instanceof XynaObject) {
           value.type = JSONValueType.OBJECT;
-          value.objectValue = createFromXynaObjectRecursivly((XynaObject) val, newPath, transformations, substitutions, useLabels);
+          value.objectValue = createFromXynaObjectRecursivly((XynaObject) val, newPath, transformations, substitutions, useLabels, scope);
         } else if (val instanceof String) {
           value.type = JSONValueType.STRING;
           value.stringOrNumberValue = (String) val;
@@ -598,7 +640,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
             List<? extends XynaObject> l = (List<? extends XynaObject>) val;
             for (XynaObject xoe: l) {
               JSONValue childValue = new JSONValue();
-              JSONObject childJob = createFromXynaObjectRecursivly(xoe, newPath+"[]", transformations, substitutions, useLabels);
+              JSONObject childJob = createFromXynaObjectRecursivly(xoe, newPath+"[]", transformations, substitutions, useLabels, scope);
               childValue.objectValue = childJob;
               childValue.type = JSONValueType.OBJECT;
               map.objects.put(xoe.get(keyName).toString(), childValue);
@@ -612,7 +654,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
               if (o == null) {
                 jval.type = JSONValueType.NULL;
               } else if (o instanceof XynaObject) {
-                JSONObject childJob = createFromXynaObjectRecursivly((XynaObject) o, newPath+"[]", transformations, substitutions, useLabels);
+                JSONObject childJob = createFromXynaObjectRecursivly((XynaObject) o, newPath+"[]", transformations, substitutions, useLabels, scope);
                 jval.objectValue = childJob;
                 jval.type = JSONValueType.OBJECT;
               } else if (o instanceof String) {
@@ -648,6 +690,113 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
 
+  private static final GenerationBaseCache cacheForOASDataModelTypes = new GenerationBaseCache();
+
+
+  /**
+   * returns true if the datatype is part of an OAS datamodel and its membervar is marked as readonly/writeonly in its
+   * metadata (in the xml definition).
+   * readOnly = false means writeOnly
+   */
+  private boolean isOASMarked(GeneralXynaObject xo, String varNameInXyna, boolean readOnly) {
+    Class<?> clazz = xo.getClass();
+    ClassLoader cl = clazz.getClassLoader();
+    logger.trace("checking OAS marked for " + clazz.getName() + ", varName=" + varNameInXyna + "...");
+    if (!isPartOfOASDatamodel(cl)) {
+      return false;
+    }
+    logger.trace(clazz.getName() + " is in oas datamodel.");
+
+    String fqXmlName = clazz.getAnnotation(XynaObjectAnnotation.class).fqXmlName();
+    Long revision = ((MDMClassLoader) cl).getRevision();
+    DOM dom;
+    try {
+      dom = DOM.getOrCreateInstance(fqXmlName, cacheForOASDataModelTypes, revision);
+    } catch (XPRC_InvalidPackageNameException e) {
+      throw new RuntimeException();
+    }
+    try {
+      dom.parseGeneration(true, false, false);
+    } catch (XPRC_InheritedConcurrentDeploymentException | AssumedDeadlockException | XPRC_MDMDeploymentException e) {
+      throw new RuntimeException(e);
+    }
+    for (AVariable v : dom.getAllMemberVarsIncludingInherited()) {
+      if (v.getVarName() == null) {
+        continue;
+      }
+      if (v.getVarName().equals(varNameInXyna)) {
+        DataModelInformation dmi = v.getDataModelInformation();
+        if (dmi == null) {
+          continue;
+        }
+        String scope = dmi.get("OASScope");
+        if (scope == null) {
+          return false;
+        }
+        if (readOnly && scope.equals("readOnly")) {
+          return true;
+        }
+        if (!readOnly && scope.equals("writeOnly")) {
+          return true;
+        }
+        return false;
+      }
+    }
+    return false;
+  }
+
+
+  /*
+   * list (cache) of all known OAS datamodel revisions. 
+   */
+  private static final Set<Long> knownOASRevisions = new HashSet<>();
+  private static long maxRevisionCheckedForCache = -1;
+
+
+  private boolean isPartOfOASDatamodel(ClassLoader cl) {
+    if (cl instanceof MDMClassLoader) {
+      long rev = ((MDMClassLoader) cl).getRevision();
+      synchronized (knownOASRevisions) {
+        if (knownOASRevisions.contains(rev)) {
+          return true;
+        }
+        if (rev < maxRevisionCheckedForCache) {
+          return false;
+        }
+        //encountered new revision, cache reinitialization
+        maxRevisionCheckedForCache = -1;
+        Set<Long> previousOASRevisions = new HashSet<>(knownOASRevisions);
+        knownOASRevisions.clear();
+        try {
+          List<DataModel> oasModels =
+              XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDataModelManagement().listDataModels("OAS");
+          logger.debug("found " + oasModels.size() + " OAS models");
+          RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+          for (DataModel dm : oasModels) {
+            String appName = dm.getType().getLabel();
+            String version = dm.getVersion();
+            long dmrev = rm.getRevision(new Application(appName, version));
+            knownOASRevisions.add(dmrev);
+            maxRevisionCheckedForCache = Math.max(maxRevisionCheckedForCache, dmrev);
+          }
+          logger.debug("oas revisions: " + knownOASRevisions.toString() + ", checking " + rev);
+          if (!knownOASRevisions.equals(previousOASRevisions)) { //else keep the cached type info, it is still valid.
+            cacheForOASDataModelTypes.clear();
+          }
+          maxRevisionCheckedForCache = Math.max(maxRevisionCheckedForCache, rm.getAllRevisions().stream().max(Long::compare).get());
+          logger.debug("maxrevchecked = " + maxRevisionCheckedForCache);
+        } catch (PersistenceLayerException e) {
+          throw new RuntimeException(e);
+        } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+          throw new RuntimeException(e);
+        }
+        return knownOASRevisions.contains(rev);
+      }
+    }
+    return false;
+  }
+
+
   @SuppressWarnings("unchecked")
   @Override
   public List<GeneralXynaObject> parseListFromJSON(Document document, GeneralXynaObject xo) {
@@ -656,10 +805,10 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
 
 
   public Document writeJSONList(List<GeneralXynaObject> list) {
-    return writeJSONList(list, Collections.<ListToMapTransformation>emptyList(), Collections.<MemberSubstitution>emptyList(),false);
+    return writeJSONList(list, Collections.<ListToMapTransformation>emptyList(), Collections.<MemberSubstitution>emptyList(), false, OASScope.none);
   }
 
-  private Document writeJSONList(List<? extends GeneralXynaObject> list, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels) {
+  private Document writeJSONList(List<? extends GeneralXynaObject> list, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels, OASScope scope) {
     Document d = new Document();
     d.setDocumentType(new JSON());
     if (list == null || list.isEmpty()) {
@@ -669,7 +818,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       int cnt = 0;
       for (GeneralXynaObject xo : list) {
         sb.append("  ");
-        JSONObject job = createFromXynaObject(xo, transformations, substitutions, useLabels);
+        JSONObject job = createFromXynaObject(xo, transformations, substitutions, useLabels, scope);
         sb.append(job.toJSON("  "));
         if (++cnt < list.size()) {
           sb.append(",");
@@ -721,12 +870,12 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
 
   @Override
   public Document writeJSONListWithOptions(List<GeneralXynaObject> jSONBaseModel, JSONWritingOptions jSONWritingOptions) {
-    return writeJSONList(jSONBaseModel, jSONWritingOptions.getListToMapTransformation(), jSONWritingOptions.getMemberSubstitution(), jSONWritingOptions.getUseLabels());
+    return writeJSONList(jSONBaseModel, jSONWritingOptions.getListToMapTransformation(), jSONWritingOptions.getMemberSubstitution(), jSONWritingOptions.getUseLabels(), OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()));
   }
 
 
   public Document writeJSONWithOptions(GeneralXynaObject jSONBaseModel, JSONWritingOptions jSONWritingOptions) {
-    return writeJSON(jSONBaseModel, jSONWritingOptions.getListToMapTransformation(), jSONWritingOptions.getMemberSubstitution(), jSONWritingOptions.getUseLabels());
+    return writeJSON(jSONBaseModel, jSONWritingOptions.getListToMapTransformation(), jSONWritingOptions.getMemberSubstitution(), jSONWritingOptions.getUseLabels(), OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()));
   }
 
 

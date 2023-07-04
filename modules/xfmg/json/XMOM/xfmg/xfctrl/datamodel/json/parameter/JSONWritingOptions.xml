@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,15 @@
   <Data Label="Use Labels" VariableName="useLabels">
     <Meta>
       <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="OAS Message Type" VariableName="oASMessageType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Valid Values: Request, Response
+When set to Request, the Json will not contain any membervars that are marked as readOnly in their OAS datamodel Meta data.
+When set to Response, the Json will not contain any membervars that are marked as writeOnly in their OAS datamodel Meta data.
+If not set or set to a different value no membervars will be skipped.</Documentation>
     </Meta>
   </Data>
 </DataType>
