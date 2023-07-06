@@ -30,6 +30,10 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/WorkspaceObjectManagementImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
+    
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/FactoryObjectManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
 
         <antcall target="build-application" />
     </target>
@@ -40,6 +44,12 @@
         
         <!-- copy mdm.jar to service groups -->
         <copy todir="${basedir}/mdmimpl/WorkspaceObjectManagementImpl/lib/xyna" >
+          <fileset dir="${basedir}">
+            <include name="mdm.jar" />
+          </fileset>
+        </copy>
+
+        <copy todir="${basedir}/mdmimpl/FactoryObjectManagementImpl/lib/xyna" >
           <fileset dir="${basedir}">
             <include name="mdm.jar" />
           </fileset>
