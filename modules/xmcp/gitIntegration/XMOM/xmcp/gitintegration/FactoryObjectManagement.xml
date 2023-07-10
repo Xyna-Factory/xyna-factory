@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2023 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Factory Object Management" TypeName="FactoryObjectManagement" TypePath="xmcp.gitintegration" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>FactoryObjectManagementImpl.jar</Libraries>
+  <Service Label="Factory Object Management" TypeName="FactoryObjectManagement">
+    <Operation IsStatic="true" Label="Compare Factory Content" Name="compareFactoryContent">
+      <Input>
+        <Data ID="9" Label="Factory Content" ReferenceName="FactoryContent" ReferencePath="xmcp.gitintegration" VariableName="factoryContent9"/>
+        <Data ID="10" Label="Factory Content" ReferenceName="FactoryContent" ReferencePath="xmcp.gitintegration" VariableName="factoryContent10"/>
+      </Input>
+      <Output>
+        <Data ID="11" Label="Factory Content Differences" ReferenceName="FactoryContentDifferences" ReferencePath="xmcp.gitintegration" VariableName="factoryContentDifferences11"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.FactoryObjectManagementImpl.compareFactoryContent(factoryContent9, factoryContent10);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Factory Content" Name="createFactoryContent">
+      <Input/>
+      <Output>
+        <Data ID="4" Label="Factory Content" ReferenceName="FactoryContent" ReferencePath="xmcp.gitintegration" VariableName="factoryContent4"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.FactoryObjectManagementImpl.createFactoryContent();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Factory Content From File" Name="createFactoryContentFromFile">
+      <Input>
+        <Data ID="6" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file6"/>
+      </Input>
+      <Output>
+        <Data ID="5" Label="Factory Content" ReferenceName="FactoryContent" ReferencePath="xmcp.gitintegration" VariableName="factoryContent5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.FactoryObjectManagementImpl.createFactoryContentFromFile(file6);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Factory Content From Text" Name="createFactoryContentFromText">
+      <Input>
+        <Data ID="8" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Factory Content" ReferenceName="FactoryContent" ReferencePath="xmcp.gitintegration" VariableName="factoryContent7"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.FactoryObjectManagementImpl.createFactoryContentFromText(text8);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
