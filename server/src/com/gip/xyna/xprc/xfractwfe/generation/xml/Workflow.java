@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.update.Updater;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
@@ -62,7 +63,9 @@ public class Workflow {
 
   public String toXML() {
     XmlBuilder xml = new XmlBuilder();
-    xml.append(GenerationBase.COPYRIGHT_HEADER);
+    xml.append("<!--");
+    xml.append(XynaProperty.XML_HEADER_COMMENT.get());
+    xml.append("-->");
     xml.startElementWithAttributes(EL.SERVICE); {
       xml.addAttribute(ATT.XMLNS, NAMESPACE);
       xml.addAttribute(ATT.MDM_VERSION, XMOM_VERSION);

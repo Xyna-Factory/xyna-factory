@@ -284,9 +284,6 @@ public abstract class GenerationBase {
   public static final String MAC_ADDRESS_VALIDATION_EXCEPTION = "base.net.exception.MACAddressValidationException";
   public static final String VLAN_ID_VALIDATION_EXCEPTION = "base.net.exception.VLANIDValidationException";
 
-  public static final String COPYRIGHT_HEADER = "";
-
-  
   private static final String pathSeparator = Constants.PATH_SEPARATOR;
   
   /**
