@@ -54,7 +54,7 @@
           "!xmcp.Workspace!": "xmcp.Workspace"
         },
         {
-          "!autotest.generated.SONDERZEICHEN!": "autotest.generated.!rnd!.<>^°!\\\"§$%&/\\\\()=?`´{}|;:_,.-üöä+#*'~@€µ"
+          "!autotest.generated.SONDERZEICHEN!": "autotest.generated.!rnd!.<>^°!\\\"§$%&/\\\\()=?`´{}|;:_,.-���+#*'~@€µ"
         },
         {
           "!xmcp.factorymanager.ordertypes.GetOrderTypes!": "xmcp.factorymanager.ordertypes.GetOrderTypes"

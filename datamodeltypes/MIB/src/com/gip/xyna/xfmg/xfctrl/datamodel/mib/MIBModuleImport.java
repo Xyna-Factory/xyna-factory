@@ -435,7 +435,7 @@ public class MIBModuleImport {
     
     boolean checkImportOnly = importOnlyOids != null;
     if( checkImportOnly ) {
-      //evtl. mÃ¼ssen alle Children genommen werden. Dies nun prüfen
+      //evtl. müssen alle Children genommen werden. Dies nun prüfen
       OID oid = nodeData.getOID();
       for( OID ioo : importOnlyOids ) {
         if( ioo.hasChild(oid) ) {

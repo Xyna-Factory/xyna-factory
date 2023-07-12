@@ -132,7 +132,7 @@ public class ChildOrderStorage implements Serializable {
     }
     
     /**
-     * gibt den aktuell laufenden Step zurÃ¼ck
+     * gibt den aktuell laufenden Step zurück
      */
     public FractalProcessStep<?> getCurrentlyExecutingStep() {
       if (stack.isEmpty()) {

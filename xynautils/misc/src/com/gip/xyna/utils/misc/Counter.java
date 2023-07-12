@@ -68,7 +68,7 @@ public class Counter<T> {
    }
 
    /**
-    * @return Kopie des Speichers: Hashmap<gez√§hltes Object,Anzahl>
+    * @return Kopie des Speichers: Hashmap<gez‰hltes Object,Anzahl>
     */
    public HashMap<T, Integer> getCopyOfMap() {
       HashMap<T, Integer> copy = new HashMap<T, Integer>(map.size());
@@ -79,7 +79,7 @@ public class Counter<T> {
    }
 
    /**
-    * @return Darstellung aller gez√§hlten Objekte
+    * @return Darstellung aller gez‰hlten Objekte
     */
    public String toString() {
       String str = "";

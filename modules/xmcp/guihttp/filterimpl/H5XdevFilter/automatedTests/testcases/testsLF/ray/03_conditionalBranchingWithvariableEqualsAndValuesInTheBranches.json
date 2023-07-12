@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "conditional Branching with vairbale at the top and .member=value in the branches",
-	"description": "erstellt einen Datentypen mit zwei Membern. Erstellt einen neuen Workflow mit conditionalBranching und fÃ¼gt den Datentypen in die Expression ein. Die Expressions der beiden eingefÃ¼gten  Branches Ã¼berprÃ¼fen den Wert der Membervariablen.",
+	"description": "erstellt einen Datentypen mit zwei Membern. Erstellt einen neuen Workflow mit conditionalBranching und fügt den Datentypen in die Expression ein. Die Expressions der beiden eingefügten  Branches überprüfen den Wert der Membervariablen.",
 	"created": "13.11.2019",
 	"updated": "13.11.2019"
   },

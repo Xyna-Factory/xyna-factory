@@ -172,7 +172,7 @@
     2. dann dieses jar bauen
     3. dann das jar nach server/local.lib legen
     4. dann neue cli-klassen bauen. 
-    5. bei fehlern muss man das alte cliclassgenerator.jar zurÃ¼ck nach local.lib legen und erneut die cli-klassen bauen.-->
+    5. bei fehlern muss man das alte cliclassgenerator.jar zurück nach local.lib legen und erneut die cli-klassen bauen.-->
     <delete dir="${basedir}/classes" />
     <mkdir dir="${basedir}/classes" />
     <javac debug="on"
@@ -277,7 +277,7 @@
 
   
   <!-- ================================= 
-              target: buildTest (packt nicht alle Tests in das Jar, sondern nur von anderen Projekten benÃ¶tigte)         
+              target: buildTest (packt nicht alle Tests in das Jar, sondern nur von anderen Projekten benötigte)         
              ================================= -->
  <target name="buildTest" depends="build">
    <delete dir="${basedir}/classes" />

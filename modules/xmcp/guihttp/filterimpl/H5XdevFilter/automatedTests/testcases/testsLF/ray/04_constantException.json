@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "constantException",
-	"description": "Erstellt eine Exception, fÃ¼gt sie in einen Workflow ein und belegt sie konstant.",
+	"description": "Erstellt eine Exception, fügt sie in einen Workflow ein und belegt sie konstant.",
 	"created": "12.11.2019",
 	"updated": "12.11.2019"
   },

@@ -83,7 +83,7 @@
           "!xmcp.factorymanager.xynaproperties.CreateXynaPro!": "xmcp.factorymanager.xynaproperties.CreateXynaProperty"
         },
         {
-          "!SONDERZEICHEN!": "<>^°!\\\"§$%&/\\\\()=?`´{}|;:_,.-üöä+#*'~@€µ"
+          "!SONDERZEICHEN!": "<>^°!\\\"§$%&/\\\\()=?`´{}|;:_,.-���+#*'~@€µ"
         },
         {
           "!autotest.generated.random2!": "autotest.generated.!rnd1!"

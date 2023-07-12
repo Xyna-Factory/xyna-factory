@@ -1,1 +1,1 @@
-Tests ist mit und ohne PO gÃ¼ltig!
+Tests ist mit und ohne PO gültig!

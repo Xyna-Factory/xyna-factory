@@ -1,6 +1,6 @@
 [
   {
-    "descrption": "f√ºgt der ServiceGroup einen hinzu, deployt und schlie√üt sie",
+    "descrption": "f¸gt der ServiceGroup einen hinzu, deployt und schlieﬂt sie",
     "type":"function",
     "functionName": "addServiceToServiceGroup",
     "input": ["!workspaceName!", "!path!", "!sgName!", "!serviceLabel!", "!sgLabel!", "!revision!"],

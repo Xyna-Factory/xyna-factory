@@ -39,7 +39,7 @@
     <property name="server.mdm.path" value="${server.path}/${revision.dir}/saved/trigger/${project.name}" />
     <property name="deploy.sharedlibs" value=":" />
     <property name="deploy.template" value="addtrigger -fqClassName ${fqclassname} -workspaceName '${workspacename}' -jarFiles ${server.mdm.path}/${project.name}.jar -sharedLibs ${deploy.sharedlibs} -triggerName ${project.name}" />
-    <!-- FIXME warten auf Bug 21901, damit -jarFiles optional wird. Derzeit kÃ¶nnen nicht mehrere jars deployt werden! -->
+    <!-- FIXME warten auf Bug 21901, damit -jarFiles optional wird. Derzeit können nicht mehrere jars deployt werden! -->
 
     <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
@@ -116,7 +116,7 @@
          target: prepareLibs
          ================================= -->
     <target name="prepareLibs" description="Build for application">
-        <!-- leer, Ã¼berschreibbar im build.xml -->
+        <!-- leer, überschreibbar im build.xml -->
     </target>
 
 

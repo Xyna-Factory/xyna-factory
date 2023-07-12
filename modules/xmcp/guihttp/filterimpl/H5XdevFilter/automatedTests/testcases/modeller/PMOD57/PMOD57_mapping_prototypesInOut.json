@@ -3,7 +3,7 @@
     "Test Reference": "PMOD-2805", 
     "created": "8.4.2021", 
     "updated": "8.4.2021",
-	"comment": "kopiert ein Mapping mit einem prototypischen input und output Ã¼ber das clipboard in einen anderen Workflow. PrÃ¼ft, dass inputs/outputs korrekt sind"
+	"comment": "kopiert ein Mapping mit einem prototypischen input und output über das clipboard in einen anderen Workflow. Prüft, dass inputs/outputs korrekt sind"
   }, 
   "operations": [
     {

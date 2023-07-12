@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "dragTypeChoiceIntoWorkflow",
-	"description": "Ã–ffnet einen neuen Workflow und fÃ¼gt ein TypeChoice ein. ÃœberprÃ¼ft, dass im Workflow genau ein Schritt ist und der Type ein TypeChoice ist.",
+	"description": "Öffnet einen neuen Workflow und fügt ein TypeChoice ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type ein TypeChoice ist.",
 	"created": "08.11.2019",
 	"updated": "08.11.2019"
   },

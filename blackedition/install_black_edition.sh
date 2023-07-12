@@ -119,7 +119,7 @@ else
 fi
 
 #  Update version and installation date
-# bereits weit vorne ausfÃ¼hren, damit Eintrag nicht fehlt, selbst wenn weitere Installation scheitert
+# bereits weit vorne ausführen, damit Eintrag nicht fehlt, selbst wenn weitere Installation scheitert
 PRODUCT_INSTANCE=$(printf "%03g" ${INSTANCE_NUMBER:-1})
 save_components_file "${PRODUCT_NAME}.${PRODUCT_INSTANCE}"
 

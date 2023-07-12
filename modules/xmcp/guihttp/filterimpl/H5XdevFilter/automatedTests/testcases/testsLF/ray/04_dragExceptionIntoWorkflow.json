@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "dragExceptionIntoWorkflow",
-	"description": "Ã–ffnet einen neuen Workflow und fÃ¼gt eine Exception ein. ÃœberprÃ¼ft, dass im Workflow genau ein Schritt ist und der Type zu der Exception passt.",
+	"description": "Öffnet einen neuen Workflow und fügt eine Exception ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type zu der Exception passt.",
 	"created": "08.11.2019",
 	"updated": "12.11.2019"
   },

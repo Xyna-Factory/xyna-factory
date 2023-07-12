@@ -2,7 +2,7 @@
   "$meta":
   {
     "name": "datatypeCreation",
-	"description": "Testet das erstellen und entfernen eines Datatypes Ã¼ber Funktionsaufrufe."
+	"description": "Testet das erstellen und entfernen eines Datatypes über Funktionsaufrufe."
   },
   "operations":
   [

@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "assertionListlengthFailedTest",
-	"description": "Zeigt was passiert, wenn assert (listLength) einen Test auf Failed setzt. Expected Value ist 1, aber der dataflow gibt eine leere Liste an connections zurÃ¼ck."
+	"description": "Zeigt was passiert, wenn assert (listLength) einen Test auf Failed setzt. Expected Value ist 1, aber der dataflow gibt eine leere Liste an connections zurück."
   },
   "operations":
   [

@@ -242,7 +242,7 @@ f_get_error_buffer() {
  return $(f_has_error_in_buffer)
 }
 
-#EinrÃ¼cken der Ausgabe
+#Einrücken der Ausgabe
 #Beispiel
 # OUTPUT=$(zip ....)
 # f_indent "     " ${OUTPUT}"
@@ -250,6 +250,6 @@ f_indent () {
   local INDENT=${1};
   shift 1
   local OUTPUT="$@"
-  echo "${OUTPUT}" | sed "s+^+${INDENT}+" #EinrÃ¼cken
+  echo "${OUTPUT}" | sed "s+^+${INDENT}+" #Einrücken
 }
 
