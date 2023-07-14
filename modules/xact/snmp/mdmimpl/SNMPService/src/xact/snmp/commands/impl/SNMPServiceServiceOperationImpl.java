@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,9 @@ import xact.snmp.types.SNMPOctet;
 import xact.snmp.types.SNMPString;
 import xact.snmp.types.SNMPTimeTicks;
 import xact.snmp.types.SNMPUnsignedInteger;
-
+import org.snmp4j.security.SecurityProtocols;
+import org.snmp4j.security.AuthMD5;
+import org.snmp4j.security.AuthSHA;
 
 
 public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, SNMPServiceServiceOperation {
@@ -107,6 +109,8 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
 
   public void onDeployment() throws XynaException {
     engineIdGeneration = new EngineIdGeneration(getRevision(), "SNMPService");
+    SecurityProtocols.getInstance().addAuthenticationProtocol(new AuthMD5());
+    SecurityProtocols.getInstance().addAuthenticationProtocol(new AuthSHA());
   }
 
 
