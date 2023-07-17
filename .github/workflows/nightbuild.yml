@@ -1,0 +1,43 @@
+name: Nightbuild for Xyna Factory
+
+on:
+    schedule:
+    - cron: '35 4 * * *'
+    
+    workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        java-version: [11, 19]
+
+    steps:
+     - uses: actions/cache@v3
+       id: maven-cache
+       with:
+         path: /home/runner/.m2
+         key: ${{ runner.os }}-maven-cache
+
+     - name: Set up Zulu JDK ${{ matrix.java-version }
+       uses: actions/setup-java@v3
+       with:
+         java-version: ${{ matrix.java-version }}
+         distribution: 'zulu'
+
+     - name: Use Node.js ${{ matrix.node-version }}
+       uses: actions/setup-node@v3
+       with:
+         node-version: ${{ matrix.node-version }}
+
+     - name: Check out xyna-factory
+       uses: actions/checkout@v3
+            
+     - name: build
+       run: |
+          cd installation
+          sed -i 's/# main/set -e/' ./build.sh
+          ./build.sh all
