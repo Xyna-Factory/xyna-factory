@@ -233,7 +233,7 @@
 			<include name="mysql.properties" />
 		</fileset>
 	</copy>
-	<!-- codegroup definitions. müssen derzeit manuell über "./xynafactory.sh exportcodegroups" erstellt werden. -->
+	<!-- codegroup definitions. mÃ¼ssen derzeit manuell Ã¼ber "./xynafactory.sh exportcodegroups" erstellt werden. -->
 	<copy todir="${build.dir}/server/storage/BlackExceptionCodeManagement">
 		<fileset dir="${root.dir}/installation">
 			<include name="codegroup.xml" />
