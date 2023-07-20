@@ -45,7 +45,9 @@ def ignore_file(file: Path) -> bool:
         or ".app" in file.name \
         or ".swf" in file.name \
         or not "." in file.name \
-        or (".xml" in file.name and not file.name.startswith("build")) \
+        or ".xml" in file.name \
+        or ".class" in file.name \
+        or ".pom" in file.name \
         or "checkEncoding.py" in file.name \
         or "OtherExportImportAndUtils.java" in file.name
 
