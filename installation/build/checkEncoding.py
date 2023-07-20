@@ -1,26 +1,43 @@
 #!/usr/bin/python3
 # -*- coding: iso-8859-15 -*-
 """
-Goes through all the files in the given directory and checks, that their encoding is ISO-8859-1.
+Goes through all the files in the given directory and checks, that they match their expected encoding:
+
+- .xml and .pom: UTF-8
+- .java: ISO-8859-1
 """
 
 import sys
 import argparse
 from pathlib import Path
 
+UTF_8 = "UTF-8"
+ISO_8859_1 = "ISO_8859_1"
 
 REPO_ROOT = Path(sys.argv[0]).absolute().parents[2]
 VERBOSE = 0
 
 VIOLATING_FILES: list[Path] = []
 
-ENCODING_WITNESSES: list[str] = [
-    "ö",
-    "ä",
-    "ü",
-    "Ö",
-    "�",
+EXPECTED_UTF_8: list[str] = [
+    ".xml",
+    ".pom",
+    ".py",
 ]
+
+# characters the give away, that a file opened with the given encoding isn't actually encoded that way
+ENCODING_WITNESSES: dict[str, list[str]] = {
+    ISO_8859_1: [
+        "ö",
+        "ä",
+        "ü",
+        "Ö",
+        "�",
+    ],
+    UTF_8: [
+        "\uFFFD"
+    ]
+}
 
 
 def ignore_dir(directory: Path) -> bool:
@@ -45,38 +62,63 @@ def ignore_file(file: Path) -> bool:
         or ".app" in file.name \
         or ".swf" in file.name \
         or not "." in file.name \
-        or (".xml" in file.name and not file.name.startswith("build")) \
+        or ".class" in file.name \
         or "checkEncoding.py" in file.name \
         or "OtherExportImportAndUtils.java" in file.name
 
 
+def get_expected_encoding(file: Path) -> str:
+    """
+    Returns:
+        The expected encoding based on the filename
+    """
+    if any([file.name.endswith(utf_8_extension) for utf_8_extension in EXPECTED_UTF_8]):
+        return "UTF-8"
+
+    return "ISO-8859-1"
+
+
+def get_witnesses(encoding: str) -> list[str]:
+    """
+    Returns:
+        the encoding witnisses for the given encoding. If encoding is unknown, the witnesses for ISO-8859-1 are used
+    """
+    if encoding not in ENCODING_WITNESSES:
+        encoding = ISO_8859_1
+    return ENCODING_WITNESSES[encoding]
+
+
+
 def encoding_ok(file: Path) -> bool:
     """
-    Checks if `file` is ISO-8859-1 encoded or not
+    Checks if `file` has its expected encoding encoded or not
 
     Args:
         `file`  Path to file to be checked
 
     Returns:
-        `True` if file is ISO-8859-1 encoded; `False` if not
+        `True` if file has expected encoding; `False` if not
     """
     global VERBOSE
 
     if ignore_file(file):
-        if VERBOSE > 1:
+        if VERBOSE > 2:
             print(f"  Ignoring file {file}")
         return True
 
     try:
-        content = file.read_text(encoding="ISO-8859-1", errors="strict")
+        encoding = get_expected_encoding(file)
+        witnesses = get_witnesses(encoding)
+        content = file.read_text(encoding=encoding, errors="strict")
         found_witness = any(
-            [witness in content for witness in ENCODING_WITNESSES])
-        if VERBOSE > 2 and found_witness:
-            print(f"Found witness in file {file}")
+            [witness in content for witness in witnesses])
+        if VERBOSE > 0 and found_witness:
+            print(f"\n\tFound witness in file {file}")
+            print(f"\tencoding: {encoding}; witnesses: {witnesses}")
         return not found_witness
     except ValueError as e:
-        if VERBOSE > 2:
-            print(f"Got error reading file {file}: {e}")
+        if VERBOSE > 0:
+            print(f"\n\tGot error reading file {file}: {e}")
         return False
 
 
@@ -87,11 +129,11 @@ def find_files(directory: Path, report_all: bool):
     global VIOLATING_FILES, VERBOSE
 
     if not directory.is_dir() or ignore_dir(directory):
-        if VERBOSE > 1:
+        if VERBOSE > 2:
             print(f"  Ignoring directory {directory}")
         return
 
-    if VERBOSE > 0:
+    if VERBOSE > 2:
         print(f"Search through directory {directory}")
     for entry in directory.iterdir():
         if entry.is_dir():
