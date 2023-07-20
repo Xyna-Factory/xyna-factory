@@ -40,4 +40,5 @@ jobs:
        run: |
           cd installation
           sed -i 's/# main/set -e/' ./build.sh
+          sed -i 's/nvm --version//' ./build.sh
           ./build.sh all
