@@ -355,6 +355,9 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add( new OpenAuditAction() );
     allFilterActions.add( new ImportedAuditsAction() );
     allFilterActions.add( new AuditsOrderIdDownloadAction() );
+    
+    allFilterActions.add( new EncodeAction() );
+    allFilterActions.add( new DecodeAction() );
 
     STATIC_FILES.registerDependency(UserType.Filter, NAME);
     ACCESS_CONTROL_ALLOW_ORIGIN.registerDependency(UserType.Filter, NAME);
