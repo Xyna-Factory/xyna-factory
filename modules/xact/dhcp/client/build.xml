@@ -43,6 +43,14 @@
         <antcall target="build-application" />
     </target>
 
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="filterimpl" name="DHCPClientFilter" />
+        <supply-mdm-jar type="mdmimpl" name="DHCPv4ClientServiceImpl" />
+        <supply-mdm-jar type="triggerimpl" name="DHCPClientTrigger" />
+        <delete file="${basedir}/mdm.jar" />
+    </target>
+
     <import file="${root.dir}/installation/build/buildApplication.xml" />
 
 </project>

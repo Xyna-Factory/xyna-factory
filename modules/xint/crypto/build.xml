@@ -38,6 +38,12 @@
         <antcall target="build-application" />
     </target>
 
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="mdmimpl" name="PGPServiceImpl" />
+        <delete file="${basedir}/mdm.jar" />
+    </target>
+
     <import file="${root.dir}/installation/build/buildApplication.xml" />
 
 </project>

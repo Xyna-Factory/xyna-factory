@@ -39,23 +39,9 @@
     </target>
     
     <target name="prepare-mdm-jar">
-        <!-- create mdm.jar -->
         <antcall target="create-mdm-jar" />
-        
-        <!-- copy mdm.jar to service groups -->
-        <copy todir="${basedir}/mdmimpl/WorkspaceObjectManagementImpl/lib/xyna" >
-          <fileset dir="${basedir}">
-            <include name="mdm.jar" />
-          </fileset>
-        </copy>
-
-        <copy todir="${basedir}/mdmimpl/FactoryObjectManagementImpl/lib/xyna" >
-          <fileset dir="${basedir}">
-            <include name="mdm.jar" />
-          </fileset>
-        </copy>	
-        
-        <!-- delete mdm.jar -->
+        <supply-mdm-jar type="mdmimpl" name="WorkspaceObjectManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="FactoryObjectManagementImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

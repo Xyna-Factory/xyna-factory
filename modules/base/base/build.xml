@@ -49,6 +49,16 @@
         <antcall target="build-application" />
     </target>
 
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="mdmimpl" name="DocumentImpl" />
+        <supply-mdm-jar type="mdmimpl" name="ManualInteraction" />
+        <supply-mdm-jar type="mdmimpl" name="PersistenceServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="syncService" />
+        <supply-mdm-jar type="mdmimpl" name="WaitSuspend" />
+        <delete file="${basedir}/mdm.jar" />
+    </target>
+
     <import file="${root.dir}/installation/build/buildApplication.xml" />
 
 </project>

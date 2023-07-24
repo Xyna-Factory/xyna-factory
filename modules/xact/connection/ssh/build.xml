@@ -56,6 +56,16 @@
         <antcall target="build-application" />
     </target>
 
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="mdmimpl" name="SSHConnectionImpl" />
+        <supply-mdm-jar type="mdmimpl" name="SSHConnectionManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="SSHFileTransferImpl" />
+        <supply-mdm-jar type="mdmimpl" name="SSHNETCONFConnectionImpl" />
+        <supply-mdm-jar type="mdmimpl" name="SSHShellConnectionImpl" />
+        <delete file="${basedir}/mdm.jar" />
+    </target>
+
     <import file="${root.dir}/installation/build/buildApplication.xml" />
 
 </project>
