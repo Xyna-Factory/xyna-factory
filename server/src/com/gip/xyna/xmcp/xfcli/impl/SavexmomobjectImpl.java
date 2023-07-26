@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,9 +51,14 @@ public class SavexmomobjectImpl extends XynaCommandImplementation<Savexmomobject
 
 
   public void execute(OutputStream statusOutputStream, Savexmomobject payload) throws XynaException {
-    Long revision = revisionManagement.getRevision(null, null, payload.getWorkspaceName());
+    saveXmomObject(payload.getWorkspaceName(), payload.getFqName(), payload.getDeploy());
+  }
+
+
+  public void saveXmomObject(String workspace, String fqn, boolean deploy) throws XynaException{
+    Long revision = revisionManagement.getRevision(null, null, workspace);
     String pathXMOM = RevisionManagement.getPathForRevision(PathType.XMOM, revision, false);
-    String pathObject = payload.getFqName().replace('.', Constants.fileSeparator.charAt(0));
+    String pathObject = fqn.replace('.', Constants.fileSeparator.charAt(0));
     XynaMultiChannelPortal mcp = ((XynaMultiChannelPortal) XynaFactory.getInstance().getXynaMultiChannelPortal());
 
     TemporarySessionAuthentication tsa = TemporarySessionAuthentication
@@ -66,18 +71,18 @@ public class SavexmomobjectImpl extends XynaCommandImplementation<Savexmomobject
 
       mcp.saveMDM(fileAsString, true, tsa.getUsername(), tsa.getSessionId(), revision, null, true);
 
-      if (payload.getDeploy()) {
+      if (deploy) {
         Document d = XMLUtils.parse(new File(fileName.toString()), true);
         Element rootElement = d.getDocumentElement();
         XMOMType type = XMOMType.getXMOMTypeByRootTag(rootElement.getTagName());
         WorkflowProtectionMode mode = WorkflowProtectionMode.BREAK_ON_USAGE;
         WorkflowEngine wfEngine = XynaFactory.getInstance().getProcessing().getWorkflowEngine();
         if (type == XMOMType.DATATYPE) {
-          wfEngine.deployDatatype(payload.getFqName(), mode, null, null, revision);
+          wfEngine.deployDatatype(fqn, mode, null, null, revision);
         } else if (type == XMOMType.EXCEPTION) {
-          wfEngine.deployException(payload.getFqName(), mode, revision);
+          wfEngine.deployException(fqn, mode, revision);
         } else if (type == XMOMType.WORKFLOW) {
-          wfEngine.deployWorkflow(payload.getFqName(), mode, revision);
+          wfEngine.deployWorkflow(fqn, mode, revision);
         }
       }
     } finally {

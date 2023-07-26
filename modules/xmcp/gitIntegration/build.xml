@@ -35,6 +35,10 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/RepositoryManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
         <antcall target="build-application" />
     </target>
     
@@ -53,8 +57,14 @@
           <fileset dir="${basedir}">
             <include name="mdm.jar" />
           </fileset>
-        </copy>	
-        
+        </copy>
+
+        <copy todir="${basedir}/mdmimpl/RepositoryManagementImpl/lib/xyna" >
+          <fileset dir="${basedir}">
+            <include name="mdm.jar" />
+          </fileset>
+        </copy>
+
         <!-- delete mdm.jar -->
         <delete file="${basedir}/mdm.jar" />
     </target>
