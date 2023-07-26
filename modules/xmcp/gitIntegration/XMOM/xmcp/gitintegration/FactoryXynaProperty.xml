@@ -30,10 +30,5 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Default Value" VariableName="defaultValue">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
   <Data IsList="true" Label="Documentations" ReferenceName="FactoryDocumentation" ReferencePath="xmcp.gitintegration" VariableName="documentations"/>
 </DataType>
