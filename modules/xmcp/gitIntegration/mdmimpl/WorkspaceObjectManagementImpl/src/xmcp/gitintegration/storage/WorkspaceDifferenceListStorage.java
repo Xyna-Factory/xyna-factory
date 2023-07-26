@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package xmcp.gitintegration.storage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.w3c.dom.Node;
@@ -194,7 +195,7 @@ public class WorkspaceDifferenceListStorage {
 
     @Override
     public WorkspaceContentDifferences executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      xmcp.gitintegration.WorkspaceContentDifferences.Builder result = new WorkspaceContentDifferences.Builder();
+      WorkspaceContentDifferences.Builder result = new WorkspaceContentDifferences.Builder();
       WorkspaceContentDifferencesStorable storable = new WorkspaceContentDifferencesStorable(id);
       List<WorkspaceContentDifferenceStorable> entries;
       try {
@@ -213,6 +214,56 @@ public class WorkspaceDifferenceListStorage {
       return result.instance();
     }
   }
+  
+  public List<WorkspaceContentDifferences> loadDifferencesLists(String workspace, boolean loadContent) {
+    List<WorkspaceContentDifferences> result;
+    try {
+      result = WarehouseRetryExecutor.buildMinorExecutor().connection(ODSConnectionType.HISTORY)
+          .storables(new StorableClassList(WorkspaceContentDifferencesStorable.class, WorkspaceContentDifferenceStorable.class))
+          .execute(new LoadDifferencesLists(workspace, loadContent));
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(e);
+    }
+
+    return result;
+  }
+  
+  private class LoadDifferencesLists implements WarehouseRetryExecutableNoException<List<WorkspaceContentDifferences>> {
+
+    private String workspace;
+    private boolean loadContent;
+    
+    public LoadDifferencesLists(String workspace, boolean loadContent) {
+      this.workspace = workspace;
+      this.loadContent = loadContent;
+    }
+    
+    @Override
+    public List<WorkspaceContentDifferences> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+      List<WorkspaceContentDifferences> result = new ArrayList<WorkspaceContentDifferences>();
+      Collection<WorkspaceContentDifferencesStorable> collection = con.loadCollection(WorkspaceContentDifferencesStorable.class);
+      Collection<WorkspaceContentDifferenceStorable> entries = loadContent ? con.loadCollection(WorkspaceContentDifferenceStorable.class) : new ArrayList<>();
+
+      for(WorkspaceContentDifferencesStorable storable : collection) {
+        if(!Objects.equals(workspace, storable.getWorkspacename())) {
+          continue;
+        }
+        
+        xmcp.gitintegration.WorkspaceContentDifferences.Builder differences = new WorkspaceContentDifferences.Builder();
+        differences.listId(storable.getListid());
+        
+        if(loadContent) {
+          Collection<WorkspaceContentDifferenceStorable> filteredEntries = filterEntries(entries, storable.getListid());
+          differences.differences(convertEntryListToDatatype(filteredEntries));
+        }
+        
+        result.add(differences.instance());
+      }
+      
+      return result;
+    }
+    
+  }
 
   private class LoadAllDifferencesLists implements WarehouseRetryExecutableNoException<List<WorkspaceContentDifferences>> {
 
@@ -225,8 +276,7 @@ public class WorkspaceDifferenceListStorage {
 
       for (WorkspaceContentDifferencesStorable singleList : collection) {
         xmcp.gitintegration.WorkspaceContentDifferences.Builder differences = new WorkspaceContentDifferences.Builder();
-        Collection<WorkspaceContentDifferenceStorable> filteredEntries =
-            entries.stream().filter(y -> y.getListid() == singleList.getListid()).collect(Collectors.toList());
+        Collection<WorkspaceContentDifferenceStorable> filteredEntries = filterEntries(entries, singleList.getListid());
         differences.listId(singleList.getListid());
         differences.workspaceName(singleList.getWorkspacename());
         differences.differences(convertEntryListToDatatype(filteredEntries));
@@ -236,9 +286,12 @@ public class WorkspaceDifferenceListStorage {
 
       return result;
     }
-
   }
-
+  
+  private Collection<WorkspaceContentDifferenceStorable> filterEntries(Collection<WorkspaceContentDifferenceStorable> entries, long listId) {
+    return entries.stream().filter(y -> y.getListid() == listId).collect(Collectors.toList());
+  }
+  
   private class DeleteDifferencesList implements WarehouseRetryExecutableNoResult {
 
     private long id;
@@ -273,6 +326,7 @@ public class WorkspaceDifferenceListStorage {
       WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
       WorkspaceContentDifferencesStorable storable = new WorkspaceContentDifferencesStorable();
       boolean isUpdate = true;
+      storable.setListid(content.getListId());
       if (content.getListId() == -1) {
         long id = System.currentTimeMillis();
         storable.setListid(id);
