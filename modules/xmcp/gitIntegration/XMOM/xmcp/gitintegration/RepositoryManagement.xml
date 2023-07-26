@@ -1,0 +1,68 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2023 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Repository Management" TypeName="RepositoryManagement" TypePath="xmcp.gitintegration" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>RepositoryManagementImpl.jar</Libraries>
+  <Libraries>JavaEWAH-1.2.3.jar</Libraries>
+  <Libraries>org.eclipse.jgit-6.6.0.202305301015-r.jar</Libraries>
+  <Libraries>slf4j-api-2.0.7.jar</Libraries>
+  <Service Label="Repository Management" TypeName="RepositoryManagement">
+   <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.gitintegration.WorkspaceContentManagement</Datatype>
+      </AdditionalDependencies>
+   </Meta>
+    <Operation IsStatic="true" Label="Add Repository Connection" Name="addRepositoryConnection">
+      <Input>
+        <Data ID="1" Label="Path" ReferenceName="Text" ReferencePath="base" VariableName="text1"/>
+        <Data ID="2" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace2"/>
+        <Data ID="3" Label="Full" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag3"/>
+      </Input>
+      <Output>
+        <Data ID="8" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.addRepositoryConnection(text1, workspace2, flag3);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Remove Repository Connection" Name="removeRepositoryConnection">
+      <Input>
+        <Data ID="10" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace10"/>
+        <Data ID="5" Label="Full" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag5"/>
+        <Data ID="11" Label="Delete" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag11"/>
+      </Input>
+      <Output>
+        <Data ID="9" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.removeRepositoryConnection(workspace10, flag5, flag11);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Repository Connections" Name="listRepositoryConnections">
+      <Input/>
+      <Output>
+        <Data ID="6" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listRepositoryConnections();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
