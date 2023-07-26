@@ -37,7 +37,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gip.xyna</groupId>
-            <artifactId>RepositoryManagement_third_parties</artifactId>
+            <artifactId>RepositoryManagementImpl_third_parties</artifactId>
             <version>1.0.0</version>
             <type>pom</type>
             <scope>runtime</scope>
