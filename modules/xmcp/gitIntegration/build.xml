@@ -35,15 +35,6 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
-        <!-- copy additional jar files -->
-        <copy todir="${target.dir}/app/services/xmcp.gitintegration.RepositoryManagement" >
-          <fileset dir="${basedir}/mdmimpl/RepositoryManagementImpl/lib/xyna">
-            <include name="JavaEWAH-1.2.3.jar" />
-            <include name="org.eclipse.jgit-6.6.0.202305301015-r.jar" />
-            <include name="slf4j-api-2.0.7.jar" />
-          </fileset>
-        </copy>
-
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/RepositoryManagementImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
