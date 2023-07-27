@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,12 @@
     </SharedLib>
   </SharedLibs>
   <XMOMEntries>
-  
+
+   <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.EncryptionData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+
   	<!-- ProcessModeller -->
   	<XMOMEntry implicitDependency="false">
       <FqName>xmcp.processmodeller.datatypes.datatypemodeller.DataMemberVariable</FqName>

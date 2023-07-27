@@ -24,10 +24,13 @@ import com.gip.xyna.xact.filter.FilterAction;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
+import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
+
+import xmcp.EncryptionData;
 
 public class EncodeAction  implements FilterAction {
   
@@ -43,10 +46,19 @@ public class EncodeAction  implements FilterAction {
       AuthUtils.replyError(tc, jfai, new RuntimeException("SessionId or Token missing."));
     }
     
-    String data = tc.getPayload();
-    String result = SecureStorage.staticEncrypt(sessionId + token, data).replace("/", "_").replace("+", "-").replace("=", "%3d");
+    EncryptionData request = (EncryptionData) Utils.convertJsonToGeneralXynaObjectUsingGuiHttp(tc.getPayload());
+    if(request.getEncrypted()) {
+      AuthUtils.replyError(tc, jfai, new RuntimeException("Data already encrypted!"));
+    }
     
-    jfai.sendJson(tc, result);
+    for(int i=0; i<request.getValues().size(); i++) {
+      String data = request.getValues().get(i);
+      String result = SecureStorage.staticEncrypt(sessionId + token, data).replace("/", "_").replace("+", "-").replace("=", "%3d");
+      request.getValues().set(i, result);
+    }
+    request.unversionedSetEncrypted(true);
+    
+    jfai.sendJson(tc, Utils.xoToJson(request));
     
     return jfai;
   }
