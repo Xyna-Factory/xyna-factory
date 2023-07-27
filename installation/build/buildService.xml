@@ -53,7 +53,6 @@
 
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
-    <checkJavaVersion />
     <checkServerProperties />
 
     <condition property="service.definition.available">
