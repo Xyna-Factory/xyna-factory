@@ -52,7 +52,7 @@ public class DecodeAction  implements FilterAction {
     }
     
     for(int i=0; i<request.getValues().size(); i++) {
-      String data = request.getValues().get(i).replace("=", "%3d").replace("+", "-").replace("/", "_");
+      String data = request.getValues().get(i).replace("%3d", "=").replace("-", "+").replace("_", "/");
       String result = SecureStorage.staticDecrypt(sessionId + token, data);
       request.getValues().set(i, result);
     }
