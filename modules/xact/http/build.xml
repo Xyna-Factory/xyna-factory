@@ -44,7 +44,7 @@
 
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />
-        <supply-mdm-jar type="common" name="." libDir="xyna" />
+        <supply-mdm-jar type="common" name="." libDir="lib" />
         <supply-mdm-jar type="mdmimpl" name="HTTPServiceImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
