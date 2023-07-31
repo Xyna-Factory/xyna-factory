@@ -26,6 +26,7 @@
 	<property name="target.dir" value="${basedir}/deploy" />
     
     <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
 
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/MailAccounts">
             <property name="target.dir" value="${target.dir}/app" />

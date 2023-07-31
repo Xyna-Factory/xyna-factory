@@ -26,6 +26,8 @@
 
 
     <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/SessionManagementImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>

@@ -25,7 +25,9 @@
     <property name="target.dir" value="${basedir}/deploy/" />
 
     <target name="build">
-    	<ant antfile="build.xml" target="build-app" inheritAll="false" dir="filterimpl/GUIHTTPFilter">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="filterimpl/GUIHTTPFilter">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="filterimpl/H5XdevFilter">
