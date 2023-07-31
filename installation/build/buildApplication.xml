@@ -173,7 +173,7 @@
         <condition property="mdmJarExists" value="true" else="false">
             <resourcecount when="greater" count="0">
                 <fileset dir="${basedir}">
-                    <include name="mdm.jar" />
+                    <include name="**/mdm.jar" />
                 </fileset>
             </resourcecount>
         </condition>
