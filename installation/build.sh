@@ -606,6 +606,12 @@ build_xynautils() {
   build_xynautils_misc
 }
 
+fill_lib() {
+  echo "fill lib..."
+  cd $SCRIPT_DIR/build/lib
+  ant resolve
+}
+
 build_all() {
   build_xynautils
   build_misc
@@ -631,6 +637,7 @@ build() {
   build_conpooltypes
   build_persistencelayers
   build_oracle_aq_tools
+  fill_lib
 }
 
 
