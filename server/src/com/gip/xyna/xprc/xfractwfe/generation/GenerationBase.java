@@ -5431,10 +5431,7 @@ public abstract class GenerationBase {
 
   WF getCachedWFInstanceOrCreate(String originalWFInputName, long useRevision) throws XPRC_InvalidPackageNameException {
     String fqClassName = GenerationBase.transformNameForJava(originalWFInputName);
-
-    long rev =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-            .getRevisionDefiningXMOMObjectOrParent(originalWFInputName, useRevision);
+    long rev = xmlInputSource.getRevisionDefiningXMOMObjectOrParent(originalWFInputName, useRevision);
     
     GenerationBase o;
     WF.cacheLockWF.lock();
