@@ -134,7 +134,7 @@ class RequestTester:
       try:
         completeJson = json.load(jsonFile)
       except Exception as e:
-        print("Error loading function file '{0}{1}':{2} ".format(path, file, e))
+        print("Error loading function file '{0}{1}': {2}".format(path, file, e))
         raise e
 
     for entry in completeJson:
