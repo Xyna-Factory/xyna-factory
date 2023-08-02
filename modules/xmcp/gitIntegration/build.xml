@@ -36,6 +36,10 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/RepositoryManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
         <antcall target="build-application" />
     </target>
     
@@ -43,6 +47,7 @@
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="mdmimpl" name="WorkspaceObjectManagementImpl" />
         <supply-mdm-jar type="mdmimpl" name="FactoryObjectManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="RepositoryManagementImplgementImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

@@ -14,48 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-*/
+ */
 package xmcp.gitintegration.impl;
 
-
-
-import base.File;
 import base.Text;
-
-import java.util.List;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import xmcp.gitintegration.Flag;
-import xmcp.gitintegration.WorkspaceContent;
-import xmcp.gitintegration.WorkspaceContentDifferences;
 import xprc.xpce.Workspace;
-import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
+import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
-import xmcp.gitintegration.storage.ReferenceStorage;
-import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
-
-public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDeploymentTask, WorkspaceObjectManagementServiceOperation {
+public class RepositoryManagementServiceOperationImpl implements ExtendedDeploymentTask, RepositoryManagementServiceOperation {
 
   public void onDeployment() throws XynaException {
-    //TODO: register @ GuiHttp => new entry in factory manager
-    // make sure calling it multiple times behaves well
-    WorkspaceDifferenceListStorage.init();
-    ReferenceStorage.init();
+    RepositoryManagementImpl.init();
     OverallInformationProvider.onDeployment();
   }
 
-
   public void onUndeployment() throws XynaException {
-    // TODO unregister @ GuiHttp => new entry in factory manager
-
     OverallInformationProvider.onUndeployment();
   }
-
 
   public Long getOnUnDeploymentTimeout() {
     // The (un)deployment runs in its own thread. The service may define a timeout
@@ -64,7 +47,6 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
     return null;
   }
 
-
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
     // - BehaviorAfterOnUnDeploymentTimeout.EXCEPTION: Deployment will be aborted, while undeployment will log the exception and NOT abort.
@@ -72,43 +54,19 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
     // - BehaviorAfterOnUnDeploymentTimeout.KILLTHREAD: (Un)Deployment will be continued after calling Thread.stop on the thread.
     //   executing the (Un)Deployment.
     // If null is returned, the factory default <IGNORE> will be used.
-    //TODO: BehaviorAfterOnUnDeploymentTimeout.EXCEPTION once new entries in factory manager can be registered
     return null;
   }
 
-
-  public WorkspaceContentDifferences compareWorkspaceContent(WorkspaceContent workspaceContent3, WorkspaceContent workspaceContent4) {
-    WorkspaceContentComparator comparator = new WorkspaceContentComparator();
-    // first parameter: from => XML
-    // second parameter: to => current configuration
-    WorkspaceContentDifferences result = comparator.compareWorkspaceContent(workspaceContent3, workspaceContent4, true);
-    return result;
+  public Text addRepositoryConnection(Text path, Workspace workspace, Flag full) {
+    return new Text(RepositoryManagementImpl.addRepositoryConnection(path.getText(), workspace.getName(), full.getValue()));
   }
 
-
-  public WorkspaceContent createWorkspaceContent(Workspace workspace) {
-    WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
-    WorkspaceContent result = contentCreator.createWorkspaceContentForWorkspace(workspace.getName());
-    return result;
+  public Text listRepositoryConnections() {
+    return new Text(RepositoryManagementImpl.listRepositoryConnections());
   }
 
-
-  public WorkspaceContent createWorkspaceContentFromFile(File file8) {
-    // Implemented as code snippet!
-    return null;
-  }
-
-
-  public WorkspaceContent createWorkspaceContentFromText(Text text9) {
-    // Implemented as code snippet!
-    return null;
-  }
-
-
-  @Override
-  public List<? extends WorkspaceContentDifferences> listOpenWorkspaceDifferencesLists(Workspace arg0, Flag arg1) {
-    WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
-    return storage.loadDifferencesLists(arg0.getName(), arg1.getValue());
+  public Text removeRepositoryConnection(Workspace workspace, Flag full, Flag delete) {
+    return new Text(RepositoryManagementImpl.removeRepositoryConnection(workspace.getName(), full.getValue(), delete.getValue()));
   }
 
 }

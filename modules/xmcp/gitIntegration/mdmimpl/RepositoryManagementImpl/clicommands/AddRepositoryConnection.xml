@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2023 Xyna GmbH, Germany
@@ -16,19 +15,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="FactoryContentItem" BaseTypePath="xmcp.gitintegration" IsAbstract="false" Label="Factory Xyna Property" TypeName="FactoryXynaProperty" TypePath="xmcp.gitintegration" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data Label="Key" VariableName="key">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Value" VariableName="value">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data IsList="true" Label="Documentations" ReferenceName="FactoryDocumentation" ReferencePath="xmcp.gitintegration" VariableName="documentations"/>
-</DataType>
+<XynaCommandLineCommand>
+  <CommandDefinition Name="addrepositoryconnection" Description="Adds a repository connection" />
+  <Argument Name="path" Description="Path to the repository" />
+  <Argument Name="workspace" Description="Workspace to create within the factory and connect to the repository" Optional="true" />
+  <BoolOption Name="f" LongName="full" Description="Determines whether all repository workspaces will be created within the factory and then connected to the repository. This option takes precedence over the 'workspace' argument." Optional="true"/>
+</XynaCommandLineCommand>

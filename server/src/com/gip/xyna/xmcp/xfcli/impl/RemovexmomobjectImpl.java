@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,12 @@ public class RemovexmomobjectImpl extends XynaCommandImplementation<Removexmomob
 
 
   public void execute(OutputStream statusOutputStream, Removexmomobject payload) throws XynaException {
-    Long revision = revisionManagement.getRevision(null, null, payload.getWorkspaceName());
+    removeXmomObject(payload.getWorkspaceName(), payload.getFqName());
+  }
+
+
+  public void removeXmomObject(String workspace, String fqn) throws XynaException {
+    Long revision = revisionManagement.getRevision(null, null, workspace);
 
     TemporarySessionAuthentication tsa = TemporarySessionAuthentication
         .tempAuthWithUniqueUserAndOperationLock("removexmomobject", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE, revision,
@@ -50,14 +55,14 @@ public class RemovexmomobjectImpl extends XynaCommandImplementation<Removexmomob
     tsa.initiate();
     try {
       DeploymentItemState deploymentItemState = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
-          .getDeploymentItemStateManagement().get(payload.getFqName(), revision);
+          .getDeploymentItemStateManagement().get(fqn, revision);
       if (deploymentItemState == null) {
         throw new IllegalArgumentException("Object unknown.");
       }
       XMOMType type = deploymentItemState.getType();
 
       ((XynaMultiChannelPortal) XynaFactory.getInstance().getXynaMultiChannelPortal())
-          .deleteXMOMObject(type, payload.getFqName(), true, true, tsa.getUsername(), tsa.getSessionId(), revision);
+          .deleteXMOMObject(type, fqn, true, true, tsa.getUsername(), tsa.getSessionId(), revision);
 
     } finally {
       tsa.destroy();

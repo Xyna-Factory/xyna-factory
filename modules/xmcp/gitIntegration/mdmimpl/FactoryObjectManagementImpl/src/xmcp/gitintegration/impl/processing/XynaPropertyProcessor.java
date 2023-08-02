@@ -23,12 +23,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyWithDefaultValue;
 import com.gip.xyna.xmcp.XynaMultiChannelPortal;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
@@ -47,38 +51,31 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
   private static final String TAG_XYNAPROPERTY = "xynaproperty";
   private static final String TAG_KEY = "key";
   private static final String TAG_VALUE = "value";
-  private static final String TAG_DEFAULTVALUE = "defaultvalue";
   private static final String TAG_DOCUMENTATIONS = "documentations";
   private static final String TAG_DOCUMENTATION = "documentation";
   private static final String TAG_LANG = "lang";
   private static final String TAG_TEXT = "text";
 
-  private static final XynaMultiChannelPortal multiChannelPortal = (XynaMultiChannelPortal)XynaFactory.getInstance().getXynaMultiChannelPortal();
+  private static final XynaMultiChannelPortal multiChannelPortal =
+      (XynaMultiChannelPortal) XynaFactory.getInstance().getXynaMultiChannelPortal();
 
 
   @Override
   public List<FactoryXynaProperty> createItems() {
     Collection<XynaPropertyWithDefaultValue> data = multiChannelPortal.getPropertiesWithDefaultValuesReadOnly();
-    List<FactoryXynaProperty> result = data.stream()
-      .map(property -> {
-        FactoryXynaProperty fp = new FactoryXynaProperty();
-        fp.setKey(property.getName());
-        fp.setValue(property.getValueOrDefValue());
-        fp.setDefaultValue(property.getDefValue());
-        fp.setDocumentations(
-          property.getDocumentation().entrySet().stream()
-            .sorted((entryA, entryB) -> entryA.getKey().name().compareTo(entryB.getKey().name()))
-            .map(entry -> {
-              FactoryDocumentation fd = new FactoryDocumentation();
-              fd.setLang(entry.getKey().name());
-              fd.setText(entry.getValue());
-              return fd;
-            })
-            .collect(Collectors.toList())
-        );
-        return fp;
-      })
-      .collect(Collectors.toList());
+    List<FactoryXynaProperty> result = data.stream().map(property -> {
+      FactoryXynaProperty fp = new FactoryXynaProperty();
+      fp.setKey(property.getName());
+      fp.setValue(property.getValueOrDefValue());
+      fp.setDocumentations(property.getDocumentation().entrySet().stream()
+          .sorted((entryA, entryB) -> entryA.getKey().name().compareTo(entryB.getKey().name())).map(entry -> {
+            FactoryDocumentation fd = new FactoryDocumentation();
+            fd.setLang(entry.getKey().name());
+            fd.setText(entry.getValue());
+            return fd;
+          }).collect(Collectors.toList()));
+      return fp;
+    }).collect(Collectors.toList());
     return result;
   }
 
@@ -97,9 +94,6 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
     builder.element(TAG_KEY, XmlBuilder.encode(item.getKey()));
     if (item.getValue() != null) {
       builder.element(TAG_VALUE, XmlBuilder.encode(item.getValue()));
-    }
-    if (item.getDefaultValue() != null) {
-      builder.element(TAG_DEFAULTVALUE, XmlBuilder.encode(item.getDefaultValue()));
     }
     builder.startElement(TAG_DOCUMENTATIONS);
     for (FactoryDocumentation fd : item.getDocumentations()) {
@@ -154,8 +148,6 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
         fp.setKey(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_VALUE)) {
         fp.setValue(childNode.getTextContent());
-      } else if (childNode.getNodeName().equals(TAG_DEFAULTVALUE)) {
-        fp.setDefaultValue(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_DOCUMENTATIONS)) {
         fp.setDocumentations(parseDocumentationsItem(childNode));
       }
@@ -179,16 +171,21 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
     if (documentations == null) {
       return "";
     }
-    List<String> ds = new ArrayList<>();
+    SortedMap<String, String> sortedMap = new TreeMap<String, String>();
     for (FactoryDocumentation documentation : documentations) {
-      ds.add(documentation.getLang() + ":" + documentation.getText());
+      sortedMap.put(documentation.getLang(), documentation.getText());
+    }
+    List<String> ds = new ArrayList<>();
+    for (String key : sortedMap.keySet()) {
+      ds.add(key + ":" + sortedMap.get(key));
     }
     return String.join(";", ds);
   }
 
 
   @Override
-  public List<FactoryContentDifference> compare(Collection<? extends FactoryXynaProperty> from, Collection<? extends FactoryXynaProperty> to) {
+  public List<FactoryContentDifference> compare(Collection<? extends FactoryXynaProperty> from,
+                                                Collection<? extends FactoryXynaProperty> to) {
     List<FactoryContentDifference> fcdList = new ArrayList<FactoryContentDifference>();
     List<FactoryXynaProperty> toWorkingList = new ArrayList<FactoryXynaProperty>();
     if (to != null) {
@@ -209,11 +206,9 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
         fcd.setContentType(TAG_XYNAPROPERTY);
         fcd.setExistingItem(fromEntry);
         if (toEntry != null) {
-          if (
-            stringIsDifferent(fromEntry.getValue(), toEntry.getValue()) ||
-            stringIsDifferent(fromEntry.getDefaultValue(), toEntry.getDefaultValue()) ||
-            stringIsDifferent(documentationsToString(fromEntry.getDocumentations()), documentationsToString(toEntry.getDocumentations()))
-          ) {
+          if (stringIsDifferent(fromEntry.getValue(), toEntry.getValue())
+              || stringIsDifferent(documentationsToString(fromEntry.getDocumentations()),
+                                   documentationsToString(toEntry.getDocumentations()))) {
             fcd.setDifferenceType(new MODIFY());
             fcd.setNewItem(toEntry);
             toWorkingList.remove(toEntry); // remove entry from to-list
@@ -253,15 +248,11 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
       ds.append("    " + TAG_VALUE + " ");
       ds.append(MODIFY.class.getSimpleName() + " \"" + from.getValue() + "\"=>\"" + to.getValue() + "\"");
     }
-    if (stringIsDifferent(from.getDefaultValue(), to.getDefaultValue())) {
-      ds.append("\n");
-      ds.append("    " + TAG_DEFAULTVALUE + " ");
-      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getDefaultValue() + "\"=>\"" + to.getDefaultValue() + "\"");
-    }
     if (stringIsDifferent(documentationsToString(from.getDocumentations()), documentationsToString(to.getDocumentations()))) {
       ds.append("\n");
       ds.append("    " + TAG_DOCUMENTATIONS + " ");
-      ds.append(MODIFY.class.getSimpleName() + " \"" + documentationsToString(from.getDocumentations()) + "\"=>\"" + documentationsToString(to.getDocumentations()) + "\"");
+      ds.append(MODIFY.class.getSimpleName() + " \"" + documentationsToString(from.getDocumentations()) + "\"=>\""
+          + documentationsToString(to.getDocumentations()) + "\"");
     }
     return ds.toString();
   }
@@ -269,16 +260,32 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
 
   @Override
   public void create(FactoryXynaProperty item) {
+    try {
+      Map<DocumentationLanguage, String> documentionMap = new HashMap<DocumentationLanguage, String>();
+      for (FactoryDocumentation fd : item.getDocumentations()) {
+        documentionMap.put(DocumentationLanguage.valueOf(fd.getLang()), fd.getText());
+      }
+      XynaPropertyWithDefaultValue xpwdv = new XynaPropertyWithDefaultValue(item.getKey(), item.getValue(), null, documentionMap, null);
+      multiChannelPortal.setProperty(xpwdv);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
   @Override
   public void modify(FactoryXynaProperty from, FactoryXynaProperty to) {
+    create(to);
   }
 
 
   @Override
   public void delete(FactoryXynaProperty item) {
+    try {
+      multiChannelPortal.removeProperty(item.getKey());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }
