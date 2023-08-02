@@ -618,6 +618,7 @@ build_all() {
   build_xynafactory_jar
   build_conpooltypes
   build_persistencelayers
+  fill_lib
   prepare_modules
   build_oracle_aq_tools
   build_modules
