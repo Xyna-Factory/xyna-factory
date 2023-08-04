@@ -300,10 +300,10 @@ public class ReferenceSupport {
   }
 
 
-  public List<ReferenceStorable> getReferencetorableList(Long revision, String objectName) {
+  public List<ReferenceStorable> getReferencetorableList(Long revision, String objectName, ReferenceObjectType objectType) {
     List<ReferenceStorable> resultList = new ArrayList<ReferenceStorable>();
     ReferenceStorage storage = new ReferenceStorage();
-    List<ReferenceStorable> refStorablList = storage.getAllReferencesForType(revision, ReferenceObjectType.TRIGGER);
+    List<ReferenceStorable> refStorablList = storage.getAllReferencesForType(revision, objectType);
     if (refStorablList != null) {
       for (ReferenceStorable refStorable : refStorablList) {
         if (refStorable.getObjectName().equals(objectName)) {
@@ -315,11 +315,11 @@ public class ReferenceSupport {
   }
   
   public File findJar(List<Reference> references, String jarName, Long revision) {
-    for(Reference reference : references) {
+    for (Reference reference : references) {
       ReferenceType referenceType = ReferenceType.valueOf(reference.getType());
       ReferenceMethods methods = dispatch(referenceType);
       Optional<File> result = methods.findJar(reference, jarName, revision);
-      if(result.isPresent()) {
+      if (result.isPresent()) {
         return result.get();
       }
     }
