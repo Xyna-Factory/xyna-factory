@@ -23,7 +23,7 @@
   <Libraries>RepositoryManagementImpl.jar</Libraries>
   <Libraries>JavaEWAH-1.2.3.jar</Libraries>
   <Libraries>org.eclipse.jgit-6.6.0.202305301015-r.jar</Libraries>
-  <Libraries>slf4j-api-2.0.7.jar</Libraries>
+  <Libraries>slf4j-api-1.7.36.jar</Libraries>
   <Service Label="Repository Management" TypeName="RepositoryManagement">
    <Meta>
       <AdditionalDependencies>
@@ -63,6 +63,63 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listRepositoryConnections();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Repositories" Name="listRepositories">
+      <Input/>
+      <Output>
+        <Data ID="12" IsList="true" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository12"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listRepositories();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Update Repository" Name="updateRepository">
+      <Input>
+        <Data ID="13" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository13"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.updateRepository(repository13);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Users of Repository" Name="listUsersOfRepository">
+      <Input>
+        <Data ID="14" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository14"/>
+      </Input>
+      <Output>
+        <Data ID="15" IsList="true" Label="Repository User" ReferenceName="RepositoryUser" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryUser15"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listUsersOfRepository(repository14);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List All Repository Users" Name="listAllRepositoryUsers">
+      <Input/>
+      <Output>
+        <Data ID="16" IsList="true" Label="Repository User" ReferenceName="RepositoryUser" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryUser16"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listAllRepositoryUsers();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add User to Repository" Name="addUserToRepository" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="17" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository17"/>
+        <Data ID="18" Label="Encoded Password" VariableName="EncodedPassword">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="19" Label="Repository User" VariableName="repositoryUser">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.addUserToRepository(correlatedXynaOrder, repository17, EncodedPassword, repositoryUser);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

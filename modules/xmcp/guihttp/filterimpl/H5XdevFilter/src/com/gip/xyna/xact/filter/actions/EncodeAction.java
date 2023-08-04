@@ -28,8 +28,8 @@ import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
-import com.gip.xyna.xnwh.securestorage.SecureStorage;
 
+import xmcp.DeEncoder;
 import xmcp.EncryptionData;
 
 public class EncodeAction  implements FilterAction {
@@ -53,8 +53,7 @@ public class EncodeAction  implements FilterAction {
     
     for(int i=0; i<request.getValues().size(); i++) {
       String data = request.getValues().get(i);
-      String result = SecureStorage.staticEncrypt(sessionId + token, data).replace("/", "_").replace("+", "-").replace("=", "%3d");
-      request.getValues().set(i, result);
+      request.getValues().set(i, DeEncoder.encode(data, sessionId, token));
     }
     request.unversionedSetEncrypted(true);
     

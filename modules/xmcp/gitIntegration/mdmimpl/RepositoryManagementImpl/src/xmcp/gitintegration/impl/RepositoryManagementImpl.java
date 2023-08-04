@@ -55,6 +55,9 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 
+import xmcp.gitintegration.repository.Repository;
+import xmcp.gitintegration.storage.RepositoryManagementStorage;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -322,6 +325,12 @@ public class RepositoryManagementImpl {
       String subPathString = subPath.toString().substring(path.toString().length() + 1); //+1 for "/"
       persistRepositoryConnectionStorable(new RepositoryConnectionStorable(workspaceName, path.toString(), subPathString, savedInRepo));
       count++;
+    }
+    if (count > 0) {
+      RepositoryManagementStorage storage = new RepositoryManagementStorage();
+      Repository.Builder repo = new Repository.Builder();
+      repo.path(path).usesAuth(true);
+      storage.addRepository(repo.instance());
     }
     return "Successfully linked " + count + " workspace(s) to the repository.";
   }
