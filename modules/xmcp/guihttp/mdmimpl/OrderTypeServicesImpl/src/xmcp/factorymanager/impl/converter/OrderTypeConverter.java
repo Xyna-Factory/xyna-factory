@@ -51,7 +51,9 @@ public class OrderTypeConverter {
     r.setDocumentation(in.getDocumentation());
     if(in.getExecutionDestinationValue() != null)
       r.setExecutionDestination(convert(in.getExecutionDestinationValue()));
-    r.setMonitoringLevel(in.getMonitoringLevel());
+    if(in.getMonitoringLevel() != null)
+      r.setMonitoringLevel(String.valueOf(in.getMonitoringLevel()));
+    r.setEvaluatedMonitoringLevel(in.getMonitoringLevel());
     r.setName(in.getOrdertypeName());
     if(in.getPlanningDestinationValue() != null) 
       r.setPlanningDestination(convert(in.getPlanningDestinationValue()));
@@ -82,13 +84,11 @@ public class OrderTypeConverter {
         if((rule.getChildFilter() == null || rule.getChildFilter().length() == 0)) {
           // Hierbei handelt es sich um die eigene Precedence und den eigenen MonitoringLevel des OrderTypes
           r.setPrecedence(rule.getPrecedence());
-          try {
-            r.setMonitoringLevel(Integer.valueOf(rule.getUnevaluatedValue()));
-          } catch (Exception ex) {
-            
-          }
+          r.setMonitoringLevel(rule.getUnevaluatedValue());
+          r.setEvaluatedMonitoringLevel(rule.getValueAsInt());
+
         } else {
-          r.addToParameterInheritanceRules(new ParameterInheritanceRule(rule.getChildFilter(), rule.getValueAsString(), rule.getPrecedence()));
+          r.addToParameterInheritanceRules(new ParameterInheritanceRule(rule.getChildFilter(), rule.getUnevaluatedValue(), rule.getPrecedence()));
         }
       }
     }
