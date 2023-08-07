@@ -1078,7 +1078,7 @@ install_xyna_cluster () {
     ${VOLATILE_RM} -f "${INSTALL_PREFIX}"/NetworkAvailability/lib/*.jar 
     # copy all stuff from delivery to the NetworkAvailability folder
     ${VOLATILE_CP} -rp components/xact/NetworkAvailability/* "${INSTALL_PREFIX}/NetworkAvailability/."
-    ${VOLATILE_CP} -rp "$HOSTNAME/networkAvailability.properties" "${INSTALL_PREFIX}/NetworkAvailability/networkAvailability.properties"
+    ${VOLATILE_CP} -rp "$HOSTNAME/networkAvailability.properties" "${INSTALL_PREFIX}/NetworkAvailability/config/networkAvailability.properties"
     
     FILE_TO_EDIT="${INSTALL_PREFIX}/NetworkAvailability/networkAvailabilityDemonWrapper.sh"
     exit_if_not_exists "${FILE_TO_EDIT}"
