@@ -142,7 +142,7 @@ build_xynafactory_jar() {
   mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=./pom.xml -Dversion=1.0.0 -DartifactId=xynafactoryCLIGenerator -DgroudId="com.gip.xyna"
   cp ./deploy/xynafactoryCLIGenerator.jar lib/xynafactoryCLIGenerator-1.0.0.jar
   ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml -Dversion=9.0.2.1
+  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml -Dversion=9.0.2.2
   cp lib/xynafactoryCLIGenerator-1.0.0.jar .
   
   
