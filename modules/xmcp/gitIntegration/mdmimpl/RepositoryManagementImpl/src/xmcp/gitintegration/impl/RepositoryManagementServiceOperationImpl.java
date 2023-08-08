@@ -40,9 +40,7 @@ import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
-import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryUser;
-import xmcp.gitintegration.storage.RepositoryManagementStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
 
@@ -51,7 +49,6 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
     UserManagementStorage.init();
-    RepositoryManagementStorage.init();
     OverallInformationProvider.onDeployment();
   }
 
@@ -112,29 +109,20 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   }
 
   @Override
-  public List<? extends Repository> listRepositories() {
-    return new RepositoryManagementStorage().listAllRepositories();
+  public List<? extends RepositoryUser> listUsersOfRepository(String arg0) {
+    return new UserManagementStorage().listUsersOfRepo(arg0);
   }
 
-  @Override
-  public List<? extends RepositoryUser> listUsersOfRepository(Repository arg0) {
-    return new UserManagementStorage().listUsersOfRepo(arg0.getPath());
-  }
 
   @Override
-  public void updateRepository(Repository arg0) {
-    new RepositoryManagementStorage().addRepository(arg0);
-  }
-
-  @Override
-  public void addUserToRepository(XynaOrderServerExtension order, Repository repo, String encodedPassword, String repoUser) {
+  public void addUserToRepository(XynaOrderServerExtension order, String repo, String encodedPassword, String repoUser, String mail) {
     Pair<String, String> usernamePassword;
     try {
       usernamePassword = getUserNameAndDecodePassword(encodedPassword, order.getSessionId());
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
-    new UserManagementStorage().AddUserToRepository(usernamePassword.getFirst(), repoUser, repo.getPath(), usernamePassword.getSecond());
+    new UserManagementStorage().AddUserToRepository(usernamePassword.getFirst(), repoUser, repo, usernamePassword.getSecond(), mail);
 
   }
 

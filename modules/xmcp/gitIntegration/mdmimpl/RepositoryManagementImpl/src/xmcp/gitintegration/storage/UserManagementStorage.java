@@ -22,6 +22,7 @@ package xmcp.gitintegration.storage;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.ODSImpl;
@@ -43,7 +44,7 @@ public class UserManagementStorage {
 
   public static final String SEC_STORE_DESTINATION = "repositoryusers";
   public static final String CLI_USERNAME = "<CLI_USER>";
-  
+
   private static PreparedQueryCache queryCache = new PreparedQueryCache();
 
 
@@ -53,14 +54,29 @@ public class UserManagementStorage {
   }
 
 
-  public void AddUserToRepository(String factoryUser, String repoUser, String repository, String password) {
+  public String loadPassword(String factoryUser, String repository) throws XynaException {
+    String id = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_DESTINATION, id);
+  }
+
+
+  public void AddUserToRepository(String factoryUser, String repoUser, String repository, String password, String mail) {
     try {
-      buildExecutor().execute(new AddUserToRepository(factoryUser, repoUser, repository));
+      buildExecutor().execute(new AddUserToRepository(factoryUser, repoUser, repository, mail));
       SecureStorage sec = SecureStorage.getInstance();
       sec.store(SEC_STORE_DESTINATION, RepositoryUserStorable.createIdentifier(factoryUser, repository), password);
     } catch (Exception e) {
       throw new RuntimeException("Could not add user to Repository");
-    }   
+    }
+  }
+
+
+  public RepositoryUser loadUser(String factoryUser, String repository) {
+    try {
+      return buildExecutor().execute(new LoadUser(factoryUser, repository));
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
@@ -126,44 +142,73 @@ public class UserManagementStorage {
   private static final String QUERY_REPOS_OF_USER =
       "SELECT * FROM " + RepositoryUserStorable.TABLE_NAME + " WHERE " + RepositoryUserStorable.COL_FACTORY_USERNAME + "=?";
   private static final String QUERY_USERS_OF_REPO =
-      "SELECT * FROM " + RepositoryUserStorable.TABLE_NAME + " WHERE " + RepositoryStorable.COL_REPOPATH + "=?";
+      "SELECT * FROM " + RepositoryUserStorable.TABLE_NAME + " WHERE " + RepositoryUserStorable.COL_REPOSITORY + "=?";
+  private static final String QUERY_REPO_USER = "SELECT * FROM " + RepositoryUserStorable.TABLE_NAME + " WHERE "
+      + RepositoryUserStorable.COL_FACTORY_USERNAME + "=? AND " + RepositoryUserStorable.COL_REPOSITORY + "=?";
 
-  
+
+  private static class LoadUser implements WarehouseRetryExecutableNoException<RepositoryUser> {
+
+    private String factoryUser;
+    private String repository;
+
+
+    public LoadUser(String factoryUser, String repository) {
+      this.factoryUser = factoryUser;
+      this.repository = repository;
+    }
+
+
+    @Override
+    public RepositoryUser executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPO_USER, con, RepositoryUserStorable.reader);
+      RepositoryUserStorable storable = con.queryOneRow(query, new Parameter(factoryUser, repository));
+      return convert(storable);
+    }
+
+  }
+
   private static class AddUserToRepository implements WarehouseRetryExecutableNoResult {
 
     private String factoryUser;
     private String repoUser;
     private String repository;
-    
-    public AddUserToRepository(String factoryUser, String repoUser, String repository) {
+    private String mail;
+
+    public AddUserToRepository(String factoryUser, String repoUser, String repository, String mail) {
       this.factoryUser = factoryUser;
       this.repoUser = repoUser;
       this.repository = repository;
+      this.mail = mail;
     }
+
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      RepositoryUserStorable storable = new RepositoryUserStorable(factoryUser, repoUser, repository, System.currentTimeMillis());
+      RepositoryUserStorable storable = new RepositoryUserStorable(factoryUser, repoUser, repository, System.currentTimeMillis(), mail);
       con.persistObject(storable);
     }
-    
+
   }
-  
+
   private static class ListAllUsers implements WarehouseRetryExecutableNoException<List<RepositoryUser>> {
 
     @Override
     public List<RepositoryUser> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
       return con.loadCollection(RepositoryUserStorable.class).stream().map(x -> convert(x)).collect(Collectors.toList());
     }
-    
+
   }
-  
+
   private static class ListUsersOfRepo implements WarehouseRetryExecutableNoException<List<RepositoryUser>> {
+
     private String repository;
-    
+
+
     public ListUsersOfRepo(String repository) {
       this.repository = repository;
     }
+
 
     @Override
     public List<RepositoryUser> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
@@ -207,7 +252,7 @@ public class UserManagementStorage {
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      RepositoryUserStorable storable = new RepositoryUserStorable(factoryUser, repoUser, repository, -1l);
+      RepositoryUserStorable storable = new RepositoryUserStorable(factoryUser, repoUser, repository, -1l, "");
       con.deleteOneRow(storable);
     }
   }
@@ -249,12 +294,20 @@ public class UserManagementStorage {
     }
 
   }
-  
-  private static RepositoryUser convert(RepositoryUserStorable storable) { //TODO
+
+
+  private static RepositoryUser convert(RepositoryUserStorable storable) {
+
+    if (storable == null) {
+      throw new RuntimeException("Can't convert null value to RepositoryUser");
+    }
+
     RepositoryUser.Builder result = new RepositoryUser.Builder();
-    result.username(storable.getFactoryusername());
+    result.factoryUsername(storable.getFactoryusername());
+    result.repositoryUsername(storable.getRepousername());
     result.repository(storable.getRepopath());
     result.created(storable.getCreatedtimestamp());
+    result.mail(storable.getMail());
     return result.instance();
   }
 }

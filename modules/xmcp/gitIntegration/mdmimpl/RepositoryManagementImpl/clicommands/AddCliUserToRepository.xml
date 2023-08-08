@@ -20,4 +20,5 @@
   <Argument Name="repository" Description="Path to the repository" />
   <Argument Name="username" Description="Repository username" />
   <Argument Name="password" Description="Password" />
+  <Argument Name="mail" Description="Mail" />
 </XynaCommandLineCommand>

@@ -20,13 +20,12 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Username" VariableName="username">
+  <Data Label="Repository Username" VariableName="repositoryUsername">
     <Meta>
       <Type>String</Type>
-      <Documentation>Xyna Factory username</Documentation>
     </Meta>
   </Data>
-  <Data Label="Repository Username" VariableName="repositoryUsername">
+  <Data Label="Factory Username" VariableName="factoryUsername">
     <Meta>
       <Type>String</Type>
     </Meta>
@@ -40,6 +39,11 @@
   <Data Label="Created" VariableName="created">
     <Meta>
       <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Mail" VariableName="mail">
+    <Meta>
+      <Type>String</Type>
     </Meta>
   </Data>
 </DataType>

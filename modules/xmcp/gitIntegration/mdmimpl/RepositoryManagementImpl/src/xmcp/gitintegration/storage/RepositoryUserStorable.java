@@ -36,6 +36,7 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
   public static final String COL_REPO_USERNAME = "repousername";
   public static final String COL_REPOSITORY = "repopath";
   public static final String COL_TIMESTAMP = "createdtimestamp";
+  public static final String COL_MAIL = "mail";
   
   @Column(name = COL_ID)
   private String id;
@@ -47,17 +48,20 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
   private String repopath;
   @Column(name = COL_TIMESTAMP)
   private long createdtimestamp;
+  @Column(name = COL_MAIL)
+  private String mail;
   
   public RepositoryUserStorable() {
     super();
   }
   
-  public RepositoryUserStorable(String factoryUsername, String repoUsername, String repoPath, long createdTimestamp) {
+  public RepositoryUserStorable(String factoryUsername, String repoUsername, String repoPath, long createdTimestamp, String mail) {
     this();
     this.factoryusername = factoryUsername;
     this.repousername = repoUsername;
     this.repopath = repoPath;
     this.createdtimestamp = createdTimestamp;
+    this.mail = mail;
     this.id = createIdentifier(this.factoryusername,this.repopath);
   }
   
@@ -81,6 +85,7 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
       result.repousername = rs.getString(COL_REPO_USERNAME);
       result.repopath = rs.getString(COL_REPOSITORY);
       result.createdtimestamp = rs.getLong(COL_TIMESTAMP);
+      result.mail = rs.getString(COL_MAIL);
       return result;
     }
   }
@@ -98,6 +103,7 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
     repousername = cast.repousername;
     repopath = cast.repopath;
     createdtimestamp = cast.createdtimestamp;
+    mail = cast.mail;
   }
 
   
@@ -148,5 +154,15 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
   
   public void setCreatedtimestamp(long createdtimestamp) {
     this.createdtimestamp = createdtimestamp;
+  }
+
+  
+  public String getMail() {
+    return mail;
+  }
+
+  
+  public void setMail(String mail) {
+    this.mail = mail;
   }
 }

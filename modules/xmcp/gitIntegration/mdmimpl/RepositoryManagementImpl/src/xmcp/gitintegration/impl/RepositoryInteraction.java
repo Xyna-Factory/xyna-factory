@@ -41,7 +41,9 @@ import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.FS;
 
@@ -61,6 +63,8 @@ import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.storage.UserManagementStorage;
 import xprc.xpce.Workspace;
 
 public class RepositoryInteraction {
@@ -105,12 +109,12 @@ public class RepositoryInteraction {
    return repo;
  }
  
- public void push(String repository, String message, boolean dryrun) throws Exception {
+ public void push(String repository, String message, boolean dryrun, String user) throws Exception {
    Repository repo = loadRepo(repository);
    GitDataContainer container;
    
    try (Git git = new Git(repo)) {
-     container = fillGitDataContainer(git, repo, repository);
+     container = fillGitDataContainer(git, repo, repository, user);
      if(dryrun) {
        print(container);
        return;
@@ -123,10 +127,16 @@ public class RepositoryInteraction {
    }
  }
  
- private GitDataContainer fillGitDataContainer(Git git, Repository repo, String path) throws Exception {
+ private GitDataContainer fillGitDataContainer(Git git, Repository repo, String path, String user) throws Exception {
+   UserManagementStorage storage = new UserManagementStorage();
+   RepositoryUser repoUser = storage.loadUser(user, path);
+   String password = storage.loadPassword(user, path);
    GitDataContainer container = new GitDataContainer();
    container.repository = path;
-   fetch(git, repo);
+   container.creds = new UsernamePasswordCredentialsProvider(repoUser.getRepositoryUsername(), password);
+   container.user = repoUser.getRepositoryUsername();
+   container.mail = repoUser.getMail();
+   fetch(git, repo, container);
    loadLocalDiffs(git, container);
    loadRemoteDiffs(git, repo, container);
    processLocalDiffs(container);
@@ -134,15 +144,15 @@ public class RepositoryInteraction {
    return container;
  }
  
-
-  public GitDataContainer pull(String repository, boolean dryrun) throws Exception {
+  public GitDataContainer pull(String repository, boolean dryrun, String user) throws Exception {
     Repository repo = loadRepo(repository);
     GitDataContainer container = null;
     
     try (Git git = new Git(repo)) {
-      container = fillGitDataContainer(git, repo, repository);
+      container = fillGitDataContainer(git, repo, repository, user);
       if(dryrun) {
         print(container);
+        container.creds = null;
         return container;
       }
       processConflicts(container);
@@ -150,7 +160,7 @@ public class RepositoryInteraction {
       processPulls(git, repo, container);
       processExecs(container);
     }
-    
+    container.creds = null;
     return container;
   }
   
@@ -329,7 +339,7 @@ public class RepositoryInteraction {
      git.stashCreate().setIncludeUntracked(true).call(); 
     }
     
-    git.pull().call();
+    git.pull().setCredentialsProvider(container.creds).call();
     
     if(!container.push.isEmpty()) {
       git.stashApply().call();
@@ -553,23 +563,22 @@ public class RepositoryInteraction {
   }
   
 
-  private void fetch(Git git, Repository repository) throws Exception {
-    FetchResult result = git.fetch().call();
+  private void fetch(Git git, Repository repository, GitDataContainer container) throws Exception {
+    FetchResult result = git.fetch().setCredentialsProvider(container.creds).call();
     if (logger.isDebugEnabled()) {
       logger.debug("executed fetch. " + String.join(", ", result.getAdvertisedRefs().stream().map(x -> x.getName()).collect(Collectors.toList())));
     }
   }
   
-  
   private void processPushs(Git git, Repository repository, GitDataContainer container, String msg) throws Exception {
     git.add().addFilepattern(".").call();
-    git.commit().setMessage(msg).call();
-    git.push().call();
+    git.commit().setAuthor(container.user, container.mail).setCredentialsProvider(container.creds).setMessage(msg).call();
+    git.push().setCredentialsProvider(container.creds).call();
     if(logger.isDebugEnabled()) {
       logger.debug("executed push.");
     }
   }
-
+  
   private List<String> listOpenDifferencesLists(String connectedWorkspace) {
     List<? extends WorkspaceContentDifferences> list = WorkspaceObjectManagement.listOpenWorkspaceDifferencesLists(new Workspace(connectedWorkspace), new Flag(false));
     List<String> result = list.stream().map(x -> String.valueOf(x.getListId())).collect(Collectors.toList());
@@ -585,7 +594,10 @@ public class RepositoryInteraction {
     private List<String> pull = new ArrayList<>();
     private List<String> push = new ArrayList<>();
     private List<Pair<Boolean, String>> exec = new ArrayList<>(); //command => true=add, false=remove, path
-  
+    private CredentialsProvider creds; //only used within this class
+    private String user;
+    private String mail;
+
     @Override
     public String toString() {
       StringBuilder sb = new StringBuilder();

@@ -25,9 +25,4 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Uses Auth" VariableName="usesAuth">
-    <Meta>
-      <Type>boolean</Type>
-    </Meta>
-  </Data>
 </DataType>

@@ -22,6 +22,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Push;
 import xmcp.gitintegration.impl.RepositoryInteraction;
+import xmcp.gitintegration.storage.UserManagementStorage;
 
 
 
@@ -30,7 +31,7 @@ public class PushImpl extends XynaCommandImplementation<Push> {
   public void execute(OutputStream statusOutputStream, Push payload) throws XynaException {
     RepositoryInteraction repoInteraction = new RepositoryInteraction();
     try {
-      repoInteraction.push(payload.getRepository(), payload.getMessage(), payload.getDryrun());
+      repoInteraction.push(payload.getRepository(), payload.getMessage(), payload.getDryrun(), UserManagementStorage.CLI_USERNAME);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

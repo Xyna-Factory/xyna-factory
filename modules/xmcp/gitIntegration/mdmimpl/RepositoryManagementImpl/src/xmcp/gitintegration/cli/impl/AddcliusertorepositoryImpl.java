@@ -20,16 +20,16 @@ package xmcp.gitintegration.cli.impl;
 import java.io.OutputStream;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
-import xmcp.gitintegration.cli.generated.Addcliusertorepositoy;
+import xmcp.gitintegration.cli.generated.Addcliusertorepository;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
 
 
-public class AddcliusertorepositoyImpl extends XynaCommandImplementation<Addcliusertorepositoy> {
+public class AddcliusertorepositoryImpl extends XynaCommandImplementation<Addcliusertorepository> {
 
-  public void execute(OutputStream statusOutputStream, Addcliusertorepositoy payload) throws XynaException {
+  public void execute(OutputStream statusOutputStream, Addcliusertorepository payload) throws XynaException {
     UserManagementStorage storage = new UserManagementStorage();
-    storage.AddUserToRepository(UserManagementStorage.CLI_USERNAME, payload.getUsername(), payload.getRepository(), payload.getPassword());
+    storage.AddUserToRepository(UserManagementStorage.CLI_USERNAME, payload.getUsername(), payload.getRepository(), payload.getPassword(), payload.getMail());
   }
 
 }

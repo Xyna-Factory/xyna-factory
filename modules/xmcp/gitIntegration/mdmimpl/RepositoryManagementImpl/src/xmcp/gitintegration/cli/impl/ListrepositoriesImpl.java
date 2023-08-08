@@ -25,9 +25,7 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Listrepositories;
 import xmcp.gitintegration.impl.RepositoryConnectionStorable;
 import xmcp.gitintegration.impl.RepositoryManagementImpl;
-import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryUser;
-import xmcp.gitintegration.storage.RepositoryManagementStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
 
@@ -35,26 +33,24 @@ import xmcp.gitintegration.storage.UserManagementStorage;
 public class ListrepositoriesImpl extends XynaCommandImplementation<Listrepositories> {
 
   public void execute(OutputStream statusOutputStream, Listrepositories payload) throws XynaException {
-    RepositoryManagementStorage repoStorage = new RepositoryManagementStorage();
+    
     UserManagementStorage userStorage = new UserManagementStorage();
     List<? extends RepositoryConnectionStorable> connections = RepositoryManagementImpl.loadRepositoryConnections();
     List<RepositoryUser> users = userStorage.listAllUsers();
-    List<Repository> repos = repoStorage.listAllRepositories();
-    for(Repository repo : repos) {
+    List<? extends RepositoryConnectionStorable> repos = RepositoryManagementImpl.loadRepositoryConnections();
+    for(RepositoryConnectionStorable repo : repos) {
       writeToCommandLine(statusOutputStream, createRepoData(repo, connections, users));
     }
   }
 
-  private String createRepoData(Repository repo, List<? extends RepositoryConnectionStorable> connections, List<RepositoryUser> users) {
+  private String createRepoData(RepositoryConnectionStorable repo, List<? extends RepositoryConnectionStorable> connections, List<RepositoryUser> users) {
     StringBuilder sb = new StringBuilder();
     sb.append(repo.getPath());
-    sb.append(" - does ");
-    sb.append(repo.getUsesAuth() ? "" : "not ");
-    sb.append(" use authentification, has ");
+    sb.append(" has ");
     sb.append(connections.stream().filter(x-> x.getPath().equals(repo.getPath())).count());
     sb.append(" connected workspaces and ");
     sb.append(users.stream().filter(x -> x.getRepository().equals(repo.getPath())).count());
-    sb.append(" configured users");
+    sb.append(" configured users.\n");
     return sb.toString();
   }
 

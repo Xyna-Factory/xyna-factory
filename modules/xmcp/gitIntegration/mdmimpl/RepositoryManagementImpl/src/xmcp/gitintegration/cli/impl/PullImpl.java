@@ -23,6 +23,7 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Pull;
 import xmcp.gitintegration.impl.RepositoryInteraction;
 import xmcp.gitintegration.impl.RepositoryInteraction.GitDataContainer;
+import xmcp.gitintegration.storage.UserManagementStorage;
 
 
 
@@ -31,7 +32,7 @@ public class PullImpl extends XynaCommandImplementation<Pull> {
   public void execute(OutputStream statusOutputStream, Pull payload) throws XynaException {
     RepositoryInteraction repoInteraction = new RepositoryInteraction();
     try {
-      GitDataContainer result = repoInteraction.pull(payload.getRepository(), payload.getDryrun());
+      GitDataContainer result = repoInteraction.pull(payload.getRepository(), payload.getDryrun(), UserManagementStorage.CLI_USERNAME);
       writeToCommandLine(statusOutputStream, result);
     } catch (Exception e) {
       throw new RuntimeException(e);
