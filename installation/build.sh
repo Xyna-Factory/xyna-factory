@@ -142,8 +142,7 @@ build_xynafactory_jar() {
   mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=./pom.xml -Dversion=1.0.0 -DartifactId=xynafactoryCLIGenerator -DgroudId="com.gip.xyna"
   cp ./deploy/xynafactoryCLIGenerator.jar lib/xynafactoryCLIGenerator-1.0.0.jar
   ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml -Dversion=9.0.0
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml -Dversion=9.0.0.0
+  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
   cp lib/xynafactoryCLIGenerator-1.0.0.jar .
   
   
@@ -606,12 +605,19 @@ build_xynautils() {
   build_xynautils_misc
 }
 
+fill_lib() {
+  echo "fill lib..."
+  cd $SCRIPT_DIR/build/lib
+  ant resolve
+}
+
 build_all() {
   build_xynautils
   build_misc
   build_xynafactory_jar
   build_conpooltypes
   build_persistencelayers
+  fill_lib
   prepare_modules
   build_oracle_aq_tools
   build_modules
@@ -631,6 +637,7 @@ build() {
   build_conpooltypes
   build_persistencelayers
   build_oracle_aq_tools
+  fill_lib
 }
 
 

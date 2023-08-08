@@ -284,9 +284,6 @@ public abstract class GenerationBase {
   public static final String MAC_ADDRESS_VALIDATION_EXCEPTION = "base.net.exception.MACAddressValidationException";
   public static final String VLAN_ID_VALIDATION_EXCEPTION = "base.net.exception.VLANIDValidationException";
 
-  public static final String COPYRIGHT_HEADER = "";
-
-  
   private static final String pathSeparator = Constants.PATH_SEPARATOR;
   
   /**
@@ -5431,10 +5428,7 @@ public abstract class GenerationBase {
 
   WF getCachedWFInstanceOrCreate(String originalWFInputName, long useRevision) throws XPRC_InvalidPackageNameException {
     String fqClassName = GenerationBase.transformNameForJava(originalWFInputName);
-
-    long rev =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-            .getRevisionDefiningXMOMObjectOrParent(originalWFInputName, useRevision);
+    long rev = xmlInputSource.getRevisionDefiningXMOMObjectOrParent(originalWFInputName, useRevision);
     
     GenerationBase o;
     WF.cacheLockWF.lock();

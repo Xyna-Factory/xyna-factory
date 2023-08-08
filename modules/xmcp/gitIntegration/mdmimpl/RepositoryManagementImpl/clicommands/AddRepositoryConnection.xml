@@ -1,0 +1,23 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2023 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="addrepositoryconnection" Description="Adds a repository connection" />
+  <Argument Name="path" Description="Path to the repository" />
+  <Argument Name="workspace" Description="Workspace to create within the factory and connect to the repository" Optional="true" />
+  <BoolOption Name="f" LongName="full" Description="Determines whether all repository workspaces will be created within the factory and then connected to the repository. This option takes precedence over the 'workspace' argument." Optional="true"/>
+</XynaCommandLineCommand>

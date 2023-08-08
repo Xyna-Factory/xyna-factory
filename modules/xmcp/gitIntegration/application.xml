@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Application applicationName="GitIntegration" comment="" factoryVersion="8.2.11.15" versionName="0.1.0" xmlVersion="1.1">
+--><Application applicationName="GitIntegration" comment="" factoryVersion="9.0.2.0" versionName="0.1.1" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -164,6 +163,14 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.FactoryXynaProperty</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.RepositoryManagement</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.Flag</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>

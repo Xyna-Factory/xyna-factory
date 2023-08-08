@@ -44,6 +44,8 @@ public class PathElements {
   public static final String CLIPBOARD           = "clipboard";
   public static final String CLIPBOARD_CLEAR     = "clear";
   public static final String EVENTS              = "events";
+  public static final String ENCODE              = "encode";
+  public static final String DECODE              = "decode";
   
   // sub path elements
   public static final String SAVE                 = "save";
