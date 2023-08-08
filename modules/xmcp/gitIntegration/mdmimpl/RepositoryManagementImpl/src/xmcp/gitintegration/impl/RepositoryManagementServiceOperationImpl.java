@@ -17,6 +17,8 @@
  */
 package xmcp.gitintegration.impl;
 
+
+
 import base.Text;
 
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
 
+
 public class RepositoryManagementServiceOperationImpl implements ExtendedDeploymentTask, RepositoryManagementServiceOperation {
 
   public void onDeployment() throws XynaException {
@@ -52,9 +55,11 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     OverallInformationProvider.onDeployment();
   }
 
+
   public void onUndeployment() throws XynaException {
     OverallInformationProvider.onUndeployment();
   }
+
 
   public Long getOnUnDeploymentTimeout() {
     // The (un)deployment runs in its own thread. The service may define a timeout
@@ -62,6 +67,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     // If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.
     return null;
   }
+
 
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
@@ -73,20 +79,24 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     return null;
   }
 
+
   public Text addRepositoryConnection(Text path, Workspace workspace, Flag full) {
     return new Text(RepositoryManagementImpl.addRepositoryConnection(path.getText(), workspace.getName(), full.getValue()));
   }
+
 
   public Text listRepositoryConnections() {
     return new Text(RepositoryManagementImpl.listRepositoryConnections());
   }
 
+
   public Text removeRepositoryConnection(Workspace workspace, Flag full, Flag delete) {
     return new Text(RepositoryManagementImpl.removeRepositoryConnection(workspace.getName(), full.getValue(), delete.getValue()));
   }
 
+
   private Pair<String, String> getUserNameAndDecodePassword(String encodedPassword, String sessionId) throws PersistenceLayerException {
-    SessionManagement sessionManagement =  XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+    SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
     ManagedSession session = new ManagedSession(sessionId, null, null);
     ODS ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS();
     ODSConnection con = ods.openConnection();
@@ -97,16 +107,18 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     } finally {
       con.closeConnection();
     }
-    
+
     String userName = sessionManagement.resolveSessionToUser(sessionId);
     String password = DeEncoder.decode(encodedPassword, sessionId, session.getToken());
     return new Pair<>(userName, password);
   }
 
+
   @Override
   public List<? extends RepositoryUser> listAllRepositoryUsers() {
     return new ArrayList<>(new UserManagementStorage().listAllUsers());
   }
+
 
   @Override
   public List<? extends RepositoryUser> listUsersOfRepository(String arg0) {

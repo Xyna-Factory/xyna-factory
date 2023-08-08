@@ -18,6 +18,7 @@
 package xmcp.gitintegration.impl;
 
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -25,6 +26,7 @@ import com.gip.xyna.xnwh.persistence.Column;
 import com.gip.xyna.xnwh.persistence.Persistable;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
+
 
 
 @Persistable(primaryKey = RepositoryConnectionStorable.COL_WORKSPACENAME, tableName = RepositoryConnectionStorable.TABLE_NAME)
@@ -47,7 +49,7 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
 
   @Column(name = COL_SUBPATH)
   private String subpath;
-  
+
   @Column(name = COL_SAVEDINREPO)
   private boolean savedinrepo;
 
@@ -138,11 +140,13 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
   public void setSubpath(String subpath) {
     this.subpath = subpath;
   }
-  
+
+
   public void setSavedinrepo(boolean savedinrepo) {
     this.savedinrepo = savedinrepo;
   }
-  
+
+
   public boolean getSavedinrepo() {
     return savedinrepo;
   }

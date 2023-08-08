@@ -17,6 +17,8 @@
  */
 package xmcp.gitintegration.storage;
 
+
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -26,10 +28,12 @@ import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
 
 
+
 @Persistable(primaryKey = RepositoryUserStorable.COL_ID, tableName = RepositoryUserStorable.TABLE_NAME)
 public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
+
   private static final long serialVersionUID = 1L;
-  
+
   public static final String TABLE_NAME = "repositoryuser";
   public static final String COL_ID = "id";
   public static final String COL_FACTORY_USERNAME = "factoryusername";
@@ -37,7 +41,7 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
   public static final String COL_REPOSITORY = "repopath";
   public static final String COL_TIMESTAMP = "createdtimestamp";
   public static final String COL_MAIL = "mail";
-  
+
   @Column(name = COL_ID)
   private String id;
   @Column(name = COL_FACTORY_USERNAME)
@@ -50,11 +54,13 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
   private long createdtimestamp;
   @Column(name = COL_MAIL)
   private String mail;
-  
+
+
   public RepositoryUserStorable() {
     super();
   }
-  
+
+
   public RepositoryUserStorable(String factoryUsername, String repoUsername, String repoPath, long createdTimestamp, String mail) {
     this();
     this.factoryusername = factoryUsername;
@@ -62,20 +68,24 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
     this.repopath = repoPath;
     this.createdtimestamp = createdTimestamp;
     this.mail = mail;
-    this.id = createIdentifier(this.factoryusername,this.repopath);
+    this.id = createIdentifier(this.factoryusername, this.repopath);
   }
-  
+
+
   public static String createIdentifier(String username, String repopath) {
     return username + "_" + repopath;
   }
-  
+
+
   public static RepositoryUserStorableReader reader = new RepositoryUserStorableReader();
+
 
   @Override
   public ResultSetReader<? extends RepositoryUserStorable> getReader() {
     return reader;
   }
-  
+
+
   private static class RepositoryUserStorableReader implements ResultSetReader<RepositoryUserStorable> {
 
     public RepositoryUserStorable read(ResultSet rs) throws SQLException {
@@ -90,10 +100,12 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
     }
   }
 
+
   @Override
   public Object getPrimaryKey() {
     return id;
   }
+
 
   @Override
   public <U extends RepositoryUserStorable> void setAllFieldsFromData(U data) {
@@ -106,62 +118,62 @@ public class RepositoryUserStorable extends Storable<RepositoryUserStorable> {
     mail = cast.mail;
   }
 
-  
+
   public String getId() {
     return id;
   }
 
-  
+
   public void setId(String id) {
     this.id = id;
   }
 
-  
+
   public String getFactoryusername() {
     return factoryusername;
   }
 
-  
+
   public void setFactoryusername(String factoryusername) {
     this.factoryusername = factoryusername;
   }
 
-  
+
   public String getRepousername() {
     return repousername;
   }
 
-  
+
   public void setRepousername(String repousername) {
     this.repousername = repousername;
   }
 
-  
+
   public String getRepopath() {
     return repopath;
   }
 
-  
+
   public void setRepopath(String repopath) {
     this.repopath = repopath;
   }
 
-  
+
   public long getCreatedtimestamp() {
     return createdtimestamp;
   }
 
-  
+
   public void setCreatedtimestamp(long createdtimestamp) {
     this.createdtimestamp = createdtimestamp;
   }
 
-  
+
   public String getMail() {
     return mail;
   }
 
-  
+
   public void setMail(String mail) {
     this.mail = mail;
   }

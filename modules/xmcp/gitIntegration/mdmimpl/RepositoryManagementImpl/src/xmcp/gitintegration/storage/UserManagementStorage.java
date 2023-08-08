@@ -175,6 +175,7 @@ public class UserManagementStorage {
     private String repository;
     private String mail;
 
+
     public AddUserToRepository(String factoryUser, String repoUser, String repository, String mail) {
       this.factoryUser = factoryUser;
       this.repoUser = repoUser;

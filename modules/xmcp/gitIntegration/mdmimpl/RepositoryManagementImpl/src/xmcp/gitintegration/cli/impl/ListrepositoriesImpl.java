@@ -17,6 +17,8 @@
  */
 package xmcp.gitintegration.cli.impl;
 
+
+
 import java.io.OutputStream;
 import java.util.List;
 
@@ -33,21 +35,23 @@ import xmcp.gitintegration.storage.UserManagementStorage;
 public class ListrepositoriesImpl extends XynaCommandImplementation<Listrepositories> {
 
   public void execute(OutputStream statusOutputStream, Listrepositories payload) throws XynaException {
-    
+
     UserManagementStorage userStorage = new UserManagementStorage();
     List<? extends RepositoryConnectionStorable> connections = RepositoryManagementImpl.loadRepositoryConnections();
     List<RepositoryUser> users = userStorage.listAllUsers();
     List<? extends RepositoryConnectionStorable> repos = RepositoryManagementImpl.loadRepositoryConnections();
-    for(RepositoryConnectionStorable repo : repos) {
+    for (RepositoryConnectionStorable repo : repos) {
       writeToCommandLine(statusOutputStream, createRepoData(repo, connections, users));
     }
   }
 
-  private String createRepoData(RepositoryConnectionStorable repo, List<? extends RepositoryConnectionStorable> connections, List<RepositoryUser> users) {
+
+  private String createRepoData(RepositoryConnectionStorable repo, List<? extends RepositoryConnectionStorable> connections,
+                                List<RepositoryUser> users) {
     StringBuilder sb = new StringBuilder();
     sb.append(repo.getPath());
     sb.append(" has ");
-    sb.append(connections.stream().filter(x-> x.getPath().equals(repo.getPath())).count());
+    sb.append(connections.stream().filter(x -> x.getPath().equals(repo.getPath())).count());
     sb.append(" connected workspaces and ");
     sb.append(users.stream().filter(x -> x.getRepository().equals(repo.getPath())).count());
     sb.append(" configured users.\n");
