@@ -167,6 +167,36 @@
 
 
     <!-- ================================= 
+         target: prepare-mdm-jar-if-missing         
+         ================================= -->
+    <target name="prepare-mdm-jar-if-missing" description="Create mdm.jar locally, if there is no mdm.jar present">
+        <condition property="mdmJarExists" value="true" else="false">
+            <resourcecount when="greater" count="0">
+                <fileset dir="${basedir}">
+                    <include name="**/mdm.jar" />
+                </fileset>
+            </resourcecount>
+        </condition>
+        <if>
+            <equals arg1="${mdmJarExists}" arg2="false" />
+            <then>
+                <antcall target="prepare-mdm-jar" />
+            </then>
+            <else>
+                <echo message="mdm jar exists already." />
+            </else>
+        </if>
+    </target>
+
+
+    <!-- ================================= 
+         target: prepare-mdm-jar         
+         ================================= -->
+    <target name="prepare-mdm-jar" description="Create mdm.jar locally, and distribute it to consumers">
+        <!-- Override in build.xml -->
+    </target>
+
+    <!-- ================================= 
          target: create-mdm-jar         
          ================================= -->
     <target name="create-mdm-jar" description="Create mdm.jar locally">

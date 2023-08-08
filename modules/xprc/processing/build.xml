@@ -27,6 +27,8 @@
 
 
     <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/OrderControlServiceImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
@@ -35,6 +37,13 @@
         </ant>
 
         <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="mdmimpl" name="DatatypeInspectorImpl" />
+        <supply-mdm-jar type="mdmimpl" name="OrderControlServiceImpl" />
+        <delete file="${basedir}/mdm.jar" />
     </target>
 
     <import file="${root.dir}/installation/build/buildApplication.xml" />

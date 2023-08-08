@@ -23,25 +23,35 @@
         <path location="${basedir}/../../../" />
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
-	
-    <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/ZetaTools">
-        <property name="target.dir" value="${target.dir}/app" />
-    </ant>
-
-    <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableServiceGroupImpl">
-        <property name="target.dir" value="${target.dir}/app" />
-    </ant>
-
-    <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableUtilsImpl">
-        <property name="target.dir" value="${target.dir}/app" />
-    </ant>
-
-    <ant antfile="build.xml" target="build-app" inheritAll="false" dir="ISO8601ToUnixTimestampTransformationImpl">
-        <property name="target.dir" value="${target.dir}/app" />
-    </ant>
 
     <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/ZetaTools">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableServiceGroupImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableUtilsImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="ISO8601ToUnixTimestampTransformationImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
         <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="." name="ISO8601ToUnixTimestampTransformationImpl" />
+        <supply-mdm-jar type="." name="TableServiceGroupImpl" />
+        <supply-mdm-jar type="." name="TableUtilsImpl" />
+        <delete file="${basedir}/mdm.jar" />
     </target>
 
     <import file="${root.dir}/installation/build/buildApplication.xml" />
