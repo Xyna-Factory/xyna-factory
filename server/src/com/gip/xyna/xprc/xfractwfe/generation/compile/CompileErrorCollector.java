@@ -119,6 +119,9 @@ class CompileErrorCollector implements DiagnosticListener<JavaFileObject> {
   private final static String JAVA_FILE_SUFFIX = ".java";
   
   private String transformSourceFileToFqName(String originatingFileName) {
+    if (originatingFileName == null) {
+      return "";
+    }
     String fqName = originatingFileName;
     if (fqName.endsWith(JAVA_FILE_SUFFIX)) {
       fqName = fqName.substring(0, fqName.length() - JAVA_FILE_SUFFIX.length());
