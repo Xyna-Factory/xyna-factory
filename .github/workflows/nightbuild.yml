@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [16.x]
         java-version: [11]
 
     steps:
@@ -39,6 +39,8 @@ jobs:
      - name: build
        run: |
           cd installation
+          ./updateVersion.sh $(grep "release.number=v" ./delivery/delivery.properties | sed 's/release.number=v//g')
           sed -i 's/# main/set -e/' ./build.sh
           sed -i 's/nvm --version//' ./build.sh
+          sed -i 's/nvm use .*//' ./build.sh
           ./build.sh all
