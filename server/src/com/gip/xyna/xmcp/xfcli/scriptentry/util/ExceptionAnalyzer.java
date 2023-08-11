@@ -108,6 +108,8 @@ public class ExceptionAnalyzer {
           container.info = missingPackage + "." + missingSymbol;
           exceptionContainers.add(container);
         }
+      } else {
+        System.out.println("Unknown exception in " + fqn + ": " + msg);
       }
     }
     System.out.println("--- Exceptions: " + exceptionContainers.size());
