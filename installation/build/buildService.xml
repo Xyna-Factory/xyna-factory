@@ -302,7 +302,7 @@
     <target name="create-servicedefinition-jar" description="Create servicedefinition.jar locally">
 	    <xmlproperty file="${basedir}/../../application.xml" collapseAttributes="true" />
 	
-        <property name="java.compile.version" value="Java6" />
+        <property name="java.compile.version" value="Java11" />
         <property name="output.dir" value="${base.lib.dir}/xyna" />
         <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
         <property name="apps.paths" value="${root.dir}" />
