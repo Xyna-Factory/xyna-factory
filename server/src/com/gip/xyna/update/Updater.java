@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1773,6 +1773,10 @@ public class Updater implements UpdaterInterface {
       ud = new UpdateJustVersion(v466, v467, true);
       updates.add(ud);
 
+      // 9.0.3.0
+      Version v468 = new Version(v467).increaseToMajorVersion(3, 1);
+      ud = new UpdateJustVersion(v467, v468);
+      updates.add(ud);
 
       //ACHTUNG: bei updates in einem branch muss gewährleistet werden, dass alle späteren versionen (trunk, spätere branches)
       //         auf dem branch updaten können. bei updates, die in späteren versionen dann sonderbehandlungen im update-
