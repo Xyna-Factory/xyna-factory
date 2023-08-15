@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
@@ -40,8 +41,10 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.BranchConfig;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
@@ -65,6 +68,9 @@ import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.repository.Branch;
+import xmcp.gitintegration.repository.BranchData;
+import xmcp.gitintegration.repository.Commit;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.storage.UserManagementStorage;
 import xprc.xpce.Workspace;
@@ -97,15 +103,17 @@ public class RepositoryInteraction {
   }
 
 
-  private Repository loadRepo(String repository) throws IOException {
+  private Repository loadRepo(String repository, boolean checkDifferenceLists) throws IOException {
     String repositoryAndPostfix = repository + "/.git";
     validateRepository(repositoryAndPostfix);
 
-    List<String> openDifferenceListIds = findOpenDifferenceListIds(repository);
-    if (!openDifferenceListIds.isEmpty()) {
-      throw new RuntimeException("There are open Differences Lists: " + String.join(", ", openDifferenceListIds));
-    } else if (logger.isDebugEnabled()) {
-      logger.debug("No differences Lists found for connected workspaces");
+    if (checkDifferenceLists) {
+      List<String> openDifferenceListIds = findOpenDifferenceListIds(repository);
+      if (!openDifferenceListIds.isEmpty()) {
+        throw new RuntimeException("There are open Differences Lists: " + String.join(", ", openDifferenceListIds));
+      } else if (logger.isDebugEnabled()) {
+        logger.debug("No differences Lists found for connected workspaces");
+      }
     }
 
     Repository repo = new FileRepositoryBuilder().setGitDir(new File(repositoryAndPostfix)).build();
@@ -115,10 +123,49 @@ public class RepositoryInteraction {
     }
     return repo;
   }
+  
+  
+  public BranchData listBranches(String repository) throws Exception {
+    BranchData.Builder result = new BranchData.Builder();
+    List<Branch> resultBranches = new ArrayList<>();
+    Repository repo = loadRepo(repository, false);
+    try (Git git = new Git(repo)) {
+      String currentBranchName = repo.getFullBranch();
+      List<Ref> branches = git.branchList().setListMode(ListMode.ALL).call();
+      for (Ref branch : branches) {
+        Branch.Builder branchBuilder = new Branch.Builder();
+        branchBuilder.name(branch.getName()).commitHash(branch.getObjectId().getName()).target(branch.getTarget().getName());
+        resultBranches.add(branchBuilder.instance());
+        if(Objects.equals(currentBranchName, branch.getName())) {
+          result.currentBranch(branchBuilder.instance());
+        }
+      }
+    }
+    result.branches(resultBranches);
+    return result.instance();
+  }
+  
+  public List<Commit> listCommits(String repository, String branch, int length) throws Exception {
+    List<Commit> result = new ArrayList<>();
+    Repository repo = loadRepo(repository, false);
+    try (Git git = new Git(repo)) {
+      Iterable<RevCommit> commits = git.log().setMaxCount(length).add(repo.resolve(branch)).call();
+      for(RevCommit commit : commits) {
+        Commit.Builder builder = new Commit.Builder();
+        builder.authorEmail(commit.getAuthorIdent().getEmailAddress());
+        builder.authorName(commit.getAuthorIdent().getName());
+        builder.commitTime(commit.getAuthorIdent().getWhen().toInstant().toEpochMilli());
+        builder.comment(commit.getFullMessage());
+        builder.commitHash(commit.toObjectId().getName());
+        result.add(builder.instance());
+      }
+    }
+    return result;
+  }
 
 
   public void push(String repository, String message, boolean dryrun, String user) throws Exception {
-    Repository repo = loadRepo(repository);
+    Repository repo = loadRepo(repository, true);
     GitDataContainer container;
 
     try (Git git = new Git(repo)) {
@@ -155,7 +202,7 @@ public class RepositoryInteraction {
 
 
   public GitDataContainer pull(String repository, boolean dryrun, String user) throws Exception {
-    Repository repo = loadRepo(repository);
+    Repository repo = loadRepo(repository, true);
     GitDataContainer container = null;
 
     try (Git git = new Git(repo)) {

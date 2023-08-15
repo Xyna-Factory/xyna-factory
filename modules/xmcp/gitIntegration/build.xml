@@ -47,7 +47,7 @@
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="mdmimpl" name="WorkspaceObjectManagementImpl" />
         <supply-mdm-jar type="mdmimpl" name="FactoryObjectManagementImpl" />
-        <supply-mdm-jar type="mdmimpl" name="RepositoryManagementImplgementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="RepositoryManagementImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

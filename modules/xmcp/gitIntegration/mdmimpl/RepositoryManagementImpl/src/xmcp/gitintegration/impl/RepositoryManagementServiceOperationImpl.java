@@ -42,6 +42,8 @@ import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.repository.BranchData;
+import xmcp.gitintegration.repository.Commit;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
@@ -136,6 +138,26 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     }
     new UserManagementStorage().AddUserToRepository(usernamePassword.getFirst(), repoUser, repo, usernamePassword.getSecond(), mail);
 
+  }
+
+
+  @Override
+  public BranchData listBranches(String arg0) {
+    try {
+      return new RepositoryInteraction().listBranches(arg0);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  @Override
+  public List<? extends Commit> listCommits(String arg0, String arg1, int arg2) {
+    try {
+      return new RepositoryInteraction().listCommits(arg0, arg1, arg2);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }
