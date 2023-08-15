@@ -561,7 +561,7 @@ public interface XynaProperty {
   public static final XynaPropertyDuration DEPLOYMENTHANDLER_TIMEOUT = 
       new XynaPropertyDuration("xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout", "5 min", TimeUnit.MILLISECONDS );
 
-  public static XynaPropertyString BUILDMDJAR_JAVA_VERSION = new XynaPropertyString("xyna.target.mdm.jar.javaversion", "Java6");
+  public static XynaPropertyString BUILDMDJAR_JAVA_VERSION = new XynaPropertyString("xyna.target.mdm.jar.javaversion", "Java11");
   
   public static XynaPropertyBoolean TRY_PROCEED_ON_COMPILE_ERROR = new XynaPropertyBoolean("xyna.java.compile.tryproceedonerror", true);
   public static XynaPropertyBoolean NO_SINGLE_COMPILE = new XynaPropertyBoolean("xyna.java.compile.nosinglecompile", false).setHidden(true);
