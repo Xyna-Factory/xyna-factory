@@ -17,6 +17,8 @@
  */
 package xmcp.gitintegration.cli.impl;
 
+
+
 import java.io.OutputStream;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
@@ -28,7 +30,8 @@ import xmcp.gitintegration.impl.RepositoryManagementImpl;
 public class RemoverepositoryconnectionImpl extends XynaCommandImplementation<Removerepositoryconnection> {
 
   public void execute(OutputStream statusOutputStream, Removerepositoryconnection payload) throws XynaException {
-    writeToCommandLine(statusOutputStream, RepositoryManagementImpl.removeRepositoryConnection(payload.getWorkspace(), payload.getFull(), payload.getDelete()));
+    writeToCommandLine(statusOutputStream,
+                       RepositoryManagementImpl.removeRepositoryConnection(payload.getWorkspace(), payload.getFull(), payload.getDelete()));
   }
 
 }

@@ -66,6 +66,10 @@
       <FqName>xmcp.EncryptionData</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+   <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.DeEncoder</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
 
   	<!-- ProcessModeller -->
   	<XMOMEntry implicitDependency="false">

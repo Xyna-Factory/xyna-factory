@@ -17,23 +17,29 @@
  */
 package xmcp.gitintegration.impl;
 
+
+
 import java.lang.ClassNotFoundException;
 import xmcp.gitintegration.RepositoryManagementSuperProxy;
 import xmcp.gitintegration.RepositoryManagement;
+
 
 
 public class RepositoryManagementInstanceOperationImpl extends RepositoryManagementSuperProxy {
 
   private static final long serialVersionUID = 1L;
 
+
   public RepositoryManagementInstanceOperationImpl(RepositoryManagement instanceVar) {
     super(instanceVar);
   }
+
 
   private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
     //change if needed to store instance context
     s.defaultWriteObject();
   }
+
 
   private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
     //change if needed to restore instance-context during deserialization of order

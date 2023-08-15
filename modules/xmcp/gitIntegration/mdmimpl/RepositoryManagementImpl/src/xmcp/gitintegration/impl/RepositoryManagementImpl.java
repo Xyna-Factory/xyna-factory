@@ -17,6 +17,8 @@
  */
 package xmcp.gitintegration.impl;
 
+
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -50,6 +52,7 @@ import com.gip.xyna.xnwh.persistence.Parameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.persistence.PreparedQueryCache;
+import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.StorableClassList;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
@@ -60,21 +63,24 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 
+
 public class RepositoryManagementImpl {
 
   private static Pattern pattern = Pattern.compile("<workspaceConfig workspaceName=\"(.*?)\">");
-  
+
   private static PreparedQueryCache queryCache = new PreparedQueryCache();
 
   private static final String CONFIG = "config";
   private static final String SAVED = "saved";
   private static final String XMOM = "XMOM";
 
+
   public static void init() throws PersistenceLayerException {
     ODSImpl ods = ODSImpl.getInstance();
 
     ods.registerStorable(RepositoryConnectionStorable.class);
   }
+
 
   private static String replaceSymbolicLink(Path linkPath) {
     // check symbolic link and its target
@@ -109,18 +115,22 @@ public class RepositoryManagementImpl {
     return null;
   }
 
+
   private static boolean copyDirectoryContent(Path source, Path target) {
     try {
       Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            Files.createDirectories(target.resolve(source.relativize(dir).toString()));
-            return FileVisitResult.CONTINUE;
+          Files.createDirectories(target.resolve(source.relativize(dir).toString()));
+          return FileVisitResult.CONTINUE;
         }
+
+
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            Files.copy(file, target.resolve(source.relativize(file).toString()));
-            return FileVisitResult.CONTINUE;
+          Files.copy(file, target.resolve(source.relativize(file).toString()));
+          return FileVisitResult.CONTINUE;
         }
       });
     } catch (IOException e) {
@@ -130,18 +140,22 @@ public class RepositoryManagementImpl {
     return true;
   }
 
+
   private static boolean deleteDirectoryContent(Path path) {
     try {
       Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            Files.delete(file);
-            return FileVisitResult.CONTINUE;
+          Files.delete(file);
+          return FileVisitResult.CONTINUE;
         }
+
+
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-            Files.delete(dir);
-            return FileVisitResult.CONTINUE;
+          Files.delete(dir);
+          return FileVisitResult.CONTINUE;
         }
       });
     } catch (IOException e) {
@@ -150,6 +164,7 @@ public class RepositoryManagementImpl {
     }
     return true;
   }
+
 
   private static boolean deleteDirectory(Path path) {
     if (!deleteDirectoryContent(path)) {
@@ -164,6 +179,7 @@ public class RepositoryManagementImpl {
     return true;
   }
 
+
   private static Long getRevision(String workspaceName) {
     RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     try {
@@ -172,6 +188,7 @@ public class RepositoryManagementImpl {
       return null;
     }
   }
+
 
   private static Long createWorkspace(String workspaceName) {
     WorkspaceManagement wm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getWorkspaceManagement();
@@ -182,6 +199,7 @@ public class RepositoryManagementImpl {
       return null;
     }
   }
+
 
   private static Long deleteWorkspace(String workspaceName) {
     WorkspaceManagement wm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getWorkspaceManagement();
@@ -197,7 +215,11 @@ public class RepositoryManagementImpl {
       return revision;
     } catch (XFMG_CouldNotRemoveWorkspace e) {
       return null;
+    }
   }
+
+  private static boolean matchWsFile(Path filePath, BasicFileAttributes fileAttr) {
+    return fileAttr.isRegularFile() && filePath.endsWith("workspace.xml");
   }
 
   public static String addRepositoryConnection(String path, String workspace, boolean full) {
@@ -206,22 +228,16 @@ public class RepositoryManagementImpl {
       return "Error: Path '" + path + "' is not a directory!";
     }
     // collect a list of all paths to workspace.xml files
-    List<Path> workspaceXmlPaths = new ArrayList<>();
+    List<Path> wsXmls = new ArrayList<>();
     try {
-      workspaceXmlPaths.addAll(
-        Files.find(
-          Paths.get(path),
-          Integer.MAX_VALUE,
-          (filePath, fileAttr) -> fileAttr.isRegularFile() && filePath.endsWith("workspace.xml")
-        ).collect(Collectors.toList())
-      );
+      wsXmls.addAll(Files.find(Paths.get(path), Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).collect(Collectors.toList()));
     } catch (IOException e) {
       e.printStackTrace();
       return "Error: Exception occured while searching for workspace.xml files!";
     }
     // map workspace name to workspace xml paths
     Map<String, Path> workspaceXmlPathMap = new HashMap<>();
-    workspaceXmlPaths.stream().forEach(workspaceXmlPath -> {
+    wsXmls.stream().forEach(workspaceXmlPath -> {
       String fileContent;
       try {
         fileContent = Files.readString(workspaceXmlPath, StandardCharsets.UTF_8);
@@ -247,7 +263,7 @@ public class RepositoryManagementImpl {
       if (getRevision(workspaceName) != null) {
         return "Error: Workspace '" + workspaceName + "' already exists within the factory!";
       }
-    };
+    } ;
     // set workspace name is within a config directory
     Set<String> workspaceXmlConfig = new HashSet<>();
     // map workspace name to workspace xml sub paths
@@ -265,7 +281,8 @@ public class RepositoryManagementImpl {
     for (String workspaceName : workspaceXmlSubPathMap.keySet()) {
       Path subPath = workspaceXmlSubPathMap.get(workspaceName);
       if (!subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory() && !subPath.resolve(XMOM).toFile().isDirectory()) {
-        return "Error: Sub path of workspace.xml for workspace '" + workspaceName + "' does not contain the " + SAVED + "/" + XMOM + " or " + XMOM + " directory! Subpath: " + subPath;
+        return "Error: Sub path of workspace.xml for workspace '" + workspaceName + "' does not contain the " + SAVED + "/" + XMOM + " or "
+            + XMOM + " directory! Subpath: " + subPath;
       }
     }
     // create workspaces within the factory
@@ -323,23 +340,22 @@ public class RepositoryManagementImpl {
       persistRepositoryConnectionStorable(new RepositoryConnectionStorable(workspaceName, path.toString(), subPathString, savedInRepo));
       count++;
     }
+
     return "Successfully linked " + count + " workspace(s) to the repository.";
   }
 
+
   public static String listRepositoryConnections() {
-    return String.join(
-      "\n",
-      loadRepositoryConnections().stream().map(storable ->
-        "Workspace: '" + storable.getWorkspacename() + "', Path: '" + storable.getPath() + "', SubPath: '" + storable.getSubpath() + "'"
-      ).collect(Collectors.toList())
-    );
+    return String.join("\n", loadRepositoryConnections().stream().map(storable -> "Workspace: '" + storable.getWorkspacename()
+        + "', Path: '" + storable.getPath() + "', SubPath: '" + storable.getSubpath() + "'").collect(Collectors.toList()));
   }
+
 
   public static String removeRepositoryConnection(String workspace, boolean full, boolean delete) {
     List<? extends RepositoryConnectionStorable> storables = loadRepositoryConnections();
     if (!full) {
       storables.removeIf(storable -> !storable.getWorkspacename().equals(workspace));
-  }
+    }
     int count = 0;
     for (RepositoryConnectionStorable storable : storables) {
       String workspaceName = storable.getWorkspacename();
@@ -351,19 +367,26 @@ public class RepositoryManagementImpl {
       Path subPath = Path.of(storable.getSubpath());
       // make sure, saved/XMOM or XMOM is located in sub path
       if (!subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory() && !subPath.resolve(XMOM).toFile().isDirectory()) {
-        return "Error: Sub path of workspace.xml for workspace '" + workspaceName + "' does not contain the " + SAVED + "/" + XMOM + " or " + XMOM + " directory!";
+        return "Error: Sub path of workspace.xml for workspace '" + workspaceName + "' does not contain the " + SAVED + "/" + XMOM + " or "
+            + XMOM + " directory!";
       }
       // check, whether saved/XMOM exists
       String error;
       if (subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory()) {
         error = replaceSymbolicLink(revisionPath);
-        if (error != null) { return error; }
+        if (error != null) {
+          return error;
+        }
       } else {
         error = replaceSymbolicLink(revisionPath.resolve(SAVED).resolve(XMOM));
-        if (error != null) { return error; }
+        if (error != null) {
+          return error;
+        }
         if (Files.isSymbolicLink(revisionPath.resolve(CONFIG))) {
           error = replaceSymbolicLink(revisionPath.resolve(CONFIG));
-          if (error != null) { return error; }
+          if (error != null) {
+            return error;
+          }
         }
       }
       // delete storable
@@ -377,52 +400,58 @@ public class RepositoryManagementImpl {
     return "Successfully removed " + count + " workspace(s) from the repository.";
   }
 
+
   private static class LoadRepositoryConnections implements WarehouseRetryExecutableNoException<List<RepositoryConnectionStorable>> {
+
     @Override
     public List<RepositoryConnectionStorable> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
       return new ArrayList<>(con.loadCollection(RepositoryConnectionStorable.class));
     }
   }
 
+
   public static List<? extends RepositoryConnectionStorable> loadRepositoryConnections() {
     List<RepositoryConnectionStorable> result;
     try {
       result = WarehouseRetryExecutor.buildMinorExecutor().connection(ODSConnectionType.HISTORY)
-          .storables(new StorableClassList(RepositoryConnectionStorable.class))
-          .execute(new LoadRepositoryConnections());
+          .storables(new StorableClassList(RepositoryConnectionStorable.class)).execute(new LoadRepositoryConnections());
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
     return result;
   }
-  
+
+
   private static class LoadConnectionsForSingleRepository implements WarehouseRetryExecutableNoException<List<RepositoryConnectionStorable>> {
-    
+
     private String repo;
-    
+
+
     public LoadConnectionsForSingleRepository(String repo) {
       this.repo = repo;
     }
-    
+
+
     @Override
     public List<RepositoryConnectionStorable> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<? extends RepositoryConnectionStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, new RepositoryConnectionStorable().getReader());
+      ResultSetReader<? extends RepositoryConnectionStorable> reader = new RepositoryConnectionStorable().getReader();
+      PreparedQuery<? extends RepositoryConnectionStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, reader);
       List<? extends RepositoryConnectionStorable> result = con.query(query, new Parameter(repo), -1);
       return new ArrayList<RepositoryConnectionStorable>(result);
     }
-    
+
+
     private static final String QUERY_ENTRIES_FOR_LIST =
         "select * from " + RepositoryConnectionStorable.TABLE_NAME + " where " + RepositoryConnectionStorable.COL_PATH + "=?";
 
   }
 
-  
+
   public static List<? extends RepositoryConnectionStorable> loadConnectionsForSingleRepository(String repo) {
     List<RepositoryConnectionStorable> result;
     try {
       result = WarehouseRetryExecutor.buildMinorExecutor().connection(ODSConnectionType.HISTORY)
-          .storables(new StorableClassList(RepositoryConnectionStorable.class))
-          .execute(new LoadConnectionsForSingleRepository(repo));
+          .storables(new StorableClassList(RepositoryConnectionStorable.class)).execute(new LoadConnectionsForSingleRepository(repo));
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
@@ -467,11 +496,14 @@ public class RepositoryManagementImpl {
 
 
   private static class PersistRepositoryConnectionStorable implements WarehouseRetryExecutableNoResult {
+
     private RepositoryConnectionStorable content;
+
 
     public PersistRepositoryConnectionStorable(RepositoryConnectionStorable content) {
       this.content = content;
     }
+
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
@@ -479,28 +511,33 @@ public class RepositoryManagementImpl {
     }
   }
 
+
   public static void persistRepositoryConnectionStorable(RepositoryConnectionStorable storable) {
     try {
       WarehouseRetryExecutor.buildMinorExecutor().connection(ODSConnectionType.HISTORY)
-          .storables(new StorableClassList(RepositoryConnectionStorable.class))
-          .execute(new PersistRepositoryConnectionStorable(storable));
+          .storables(new StorableClassList(RepositoryConnectionStorable.class)).execute(new PersistRepositoryConnectionStorable(storable));
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
   }
 
+
   private static class DeleteRepositoryConnectionStorable implements WarehouseRetryExecutableNoResult {
+
     private String workspaceName;
+
 
     public DeleteRepositoryConnectionStorable(String workspaceName) {
       this.workspaceName = workspaceName;
     }
+
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
       con.deleteOneRow(new RepositoryConnectionStorable(workspaceName));
     }
   }
+
 
   public static void deleteRepositoryConnectionStorable(String workspaceName) {
     try {
@@ -512,18 +549,20 @@ public class RepositoryManagementImpl {
     }
   }
 
+
   private static class DeleteAllRepositoryConnectionStorables implements WarehouseRetryExecutableNoResult {
+
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
       con.deleteAll(RepositoryConnectionStorable.class);
     }
   }
 
+
   public static void deleteAllRepositoryConnectionStorables() {
     try {
       WarehouseRetryExecutor.buildMinorExecutor().connection(ODSConnectionType.HISTORY)
-          .storables(new StorableClassList(RepositoryConnectionStorable.class))
-          .execute(new DeleteAllRepositoryConnectionStorables());
+          .storables(new StorableClassList(RepositoryConnectionStorable.class)).execute(new DeleteAllRepositoryConnectionStorables());
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
