@@ -87,6 +87,9 @@ public class VariableMap {
           identifiedVariables.put(String.valueOf(i), identifyOperationVariables(objectId, i));
         }
         break;
+      case step:
+        identifiedVariables.get(objectId.getBaseId()).identify();
+        break;
       default:
         break;
     }
