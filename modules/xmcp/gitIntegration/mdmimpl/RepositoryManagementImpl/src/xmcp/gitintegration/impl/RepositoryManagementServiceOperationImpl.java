@@ -19,14 +19,21 @@ package xmcp.gitintegration.impl;
 
 import base.Text;
 
+import java.util.List;
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.repository.BranchData;
+import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.RepositoryConnection;
+import xmcp.gitintegration.repository.RepositoryUser;
 
 
 public class RepositoryManagementServiceOperationImpl implements ExtendedDeploymentTask, RepositoryManagementServiceOperation {
@@ -67,6 +74,46 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   public Text removeRepositoryConnection(Workspace workspace, Flag full, Flag delete) {
     return new Text(RepositoryManagementImpl.removeRepositoryConnection(workspace.getName(), full.getValue(), delete.getValue()));
+  }
+
+  @Override
+  public void addUserToRepository(XynaOrderServerExtension arg0, String arg1, String arg2, String arg3, String arg4) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public List<? extends RepositoryUser> listAllRepositoryUsers() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public BranchData listBranches(String arg0) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<? extends Commit> listCommits(String arg0, String arg1, int arg2) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<? extends RepositoryUser> listUsersOfRepository(String arg0) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public RepositoryConnection getRepositoryConnection(Workspace workspace) {
+     return RepositoryManagementImpl.getRepositoryConnection(workspace.getName());
+  }
+  
+  @Override
+  public void updateRepositoryConnection(RepositoryConnection repositoryConnection) {
+    RepositoryManagementImpl.updatetRepositoryConnection(repositoryConnection);
   }
 
 }

@@ -35,10 +35,13 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 
+import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.cli.generated.Createworkspacexml;
 import xmcp.gitintegration.impl.WorkspaceContentCreator;
 import xmcp.gitintegration.impl.xml.WorkspaceContentXmlConverter;
+import xmcp.gitintegration.repository.RepositoryConnection;
+import xprc.xpce.Workspace;
 
 
 
@@ -58,6 +61,23 @@ public class CreateworkspacexmlImpl extends XynaCommandImplementation<Creatework
     
     RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = rm.getRevision(null, null, workspaceName);
+    RepositoryConnection repositoryConnection = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));   
+ 
+    if((!repositoryConnection.getSplitted() && payload.getSplitResult())) {
+      if(!payload.getForce()) {
+        throw new RuntimeException("Use force to change the configuration from single file to splitted");
+      }
+      repositoryConnection.setSplitted(payload.getSplitResult());
+      RepositoryManagement.updateRepositoryConnection(repositoryConnection);
+    }
+    else if((repositoryConnection.getSplitted() && !payload.getSplitResult())) {
+      if(!payload.getForce()) {
+        throw new RuntimeException("Use force to change the configuration from splitted to single file");
+      }
+      repositoryConnection.setSplitted(payload.getSplitResult());
+      RepositoryManagement.updateRepositoryConnection(repositoryConnection);
+    }
+    
     String path = RevisionManagement.getPathForRevision(PathType.ROOT, revision);
     if (!payload.getSplitResult()) {
       removeExistingFiles(path);
@@ -69,7 +89,6 @@ public class CreateworkspacexmlImpl extends XynaCommandImplementation<Creatework
   }
   
   private void removeExistingFiles(String path) {
-    FileUtils.deleteFileWithRetries(new File(path, WorkspaceContentCreator.WORKSPACE_XML_FILENAME));
     if (Files.exists(Path.of(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME))) {
       try (Stream<Path> files = Files.list(Path.of(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME))) {
         files.forEach(x -> FileUtils.deleteFileWithRetries(x.toFile()));
