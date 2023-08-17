@@ -464,9 +464,7 @@ public class RepositoryManagementImpl {
   }
 
 
-  private static class LoadRepositoryConnectionForWorkspace
-      implements
-        WarehouseRetryExecutableNoException<Optional<RepositoryConnectionStorable>> {
+  private static class LoadRepositoryConnectionForWorkspace implements WarehouseRetryExecutableNoException<Optional<RepositoryConnectionStorable>> {
 
     private String workspace;
 
