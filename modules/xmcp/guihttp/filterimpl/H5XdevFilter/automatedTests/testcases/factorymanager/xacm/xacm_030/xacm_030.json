@@ -173,7 +173,7 @@
     {
     "operation": "set",
     "variable": "!autotest.generated.SONDERZEICHEN!",
-    "value": "autotest.generated.!rnd!.<>°!\\\"§$%&/()=?`´{}|;:,.-���+#'@€µ"
+    "value": "autotest.generated.!rnd!.<>Â°!\\\"Â§$%&/()=?`Â´{}|;:,.-üöä+#'@â‚¬Âµ"
     },
     {
       "operation": "call",
