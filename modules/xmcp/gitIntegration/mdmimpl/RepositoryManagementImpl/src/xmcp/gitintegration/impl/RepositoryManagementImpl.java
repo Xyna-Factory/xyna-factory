@@ -52,6 +52,7 @@ import com.gip.xyna.xnwh.persistence.Parameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.persistence.PreparedQueryCache;
+import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.StorableClassList;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
@@ -218,6 +219,9 @@ public class RepositoryManagementImpl {
       return null;
     }
   }
+  private static boolean matchWsFile(Path filePath, BasicFileAttributes fileAttr) {
+    return fileAttr.isRegularFile() && filePath.endsWith("workspace.xml");
+  }
 
 
   public static String addRepositoryConnection(String path, String workspace, boolean full) {
@@ -226,18 +230,16 @@ public class RepositoryManagementImpl {
       return "Error: Path '" + path + "' is not a directory!";
     }
     // collect a list of all paths to workspace.xml files
-    List<Path> workspaceXmlPaths = new ArrayList<>();
+    List<Path> wsXmls = new ArrayList<>();
     try {
-      workspaceXmlPaths.addAll(Files
-          .find(Paths.get(path), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile() && filePath.endsWith("workspace.xml"))
-          .collect(Collectors.toList()));
+      wsXmls.addAll(Files.find(Paths.get(path), Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).collect(Collectors.toList()));
     } catch (IOException e) {
       e.printStackTrace();
       return "Error: Exception occured while searching for workspace.xml files!";
     }
     // map workspace name to workspace xml paths
     Map<String, Path> workspaceXmlPathMap = new HashMap<>();
-    workspaceXmlPaths.stream().forEach(workspaceXmlPath -> {
+    wsXmls.stream().forEach(workspaceXmlPath -> {
       String fileContent;
       try {
         fileContent = Files.readString(workspaceXmlPath, StandardCharsets.UTF_8);
@@ -343,6 +345,7 @@ public class RepositoryManagementImpl {
                                                                            isSplitted));
       count++;
     }
+
     return "Successfully linked " + count + " workspace(s) to the repository.";
   }
 
@@ -424,9 +427,7 @@ public class RepositoryManagementImpl {
   }
 
 
-  private static class LoadConnectionsForSingleRepository
-      implements
-        WarehouseRetryExecutableNoException<List<RepositoryConnectionStorable>> {
+  private static class LoadConnectionsForSingleRepository implements WarehouseRetryExecutableNoException<List<RepositoryConnectionStorable>> {
 
     private String repo;
 
@@ -438,8 +439,8 @@ public class RepositoryManagementImpl {
 
     @Override
     public List<RepositoryConnectionStorable> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<? extends RepositoryConnectionStorable> query =
-          queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, new RepositoryConnectionStorable().getReader());
+      ResultSetReader<? extends RepositoryConnectionStorable> reader = new RepositoryConnectionStorable().getReader();
+      PreparedQuery<? extends RepositoryConnectionStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, reader);
       List<? extends RepositoryConnectionStorable> result = con.query(query, new Parameter(repo), -1);
       return new ArrayList<RepositoryConnectionStorable>(result);
     }

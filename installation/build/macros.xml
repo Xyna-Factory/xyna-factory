@@ -228,4 +228,21 @@
         </sequential>
     </macrodef>
 
+    <!-- ================================= 
+        macro: supply-mdm-jar        
+        ================================= -->
+    <macrodef name="supply-mdm-jar">
+        <attribute name="type" /> <!-- mdmimpl/trigger/filter -->
+        <attribute name="name" /> <!-- name of ServiceGroup/trigger/filter -->
+        <attribute name="libDir" default="lib/xyna"/>
+        <attribute name="mdmLocation" default="mdm.jar" />
+        <sequential>
+        <copy todir="${basedir}/@{type}/@{name}/@{libDir}" >
+          <fileset dir="${basedir}">
+            <include name="@{mdmLocation}" />
+          </fileset>
+        </copy>
+        </sequential>
+    </macrodef>
+
 </project>

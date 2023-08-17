@@ -18,41 +18,9 @@
 package xact.templates;
 
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
-import com.gip.xyna.xdev.xfractmod.xmdm.Container;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.DeploymentTask;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
-import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedException;
-import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedXynaObject;
-import com.gip.xyna.xprc.XynaOrderServerExtension;
-import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
-import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
-import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHandling;
-import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.lang.ClassNotFoundException;
-import java.lang.IllegalAccessException;
-import java.lang.IllegalArgumentException;
-import java.lang.NoSuchMethodException;
-import java.lang.SecurityException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-import xact.connection.DocumentType;
 
 
 public class DocumentServiceOperationImpl implements ExtendedDeploymentTask {

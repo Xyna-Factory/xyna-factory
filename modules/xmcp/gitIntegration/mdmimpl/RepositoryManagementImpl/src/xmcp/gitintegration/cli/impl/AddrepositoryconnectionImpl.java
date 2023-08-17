@@ -17,6 +17,8 @@
  */
 package xmcp.gitintegration.cli.impl;
 
+
+
 import java.io.OutputStream;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
@@ -28,7 +30,8 @@ import xmcp.gitintegration.impl.RepositoryManagementImpl;
 public class AddrepositoryconnectionImpl extends XynaCommandImplementation<Addrepositoryconnection> {
 
   public void execute(OutputStream statusOutputStream, Addrepositoryconnection payload) throws XynaException {
-    writeToCommandLine(statusOutputStream, RepositoryManagementImpl.addRepositoryConnection(payload.getPath(), payload.getWorkspace(), payload.getFull()));
+    String result = RepositoryManagementImpl.addRepositoryConnection(payload.getPath(), payload.getWorkspace(), payload.getFull());
+    writeToCommandLine(statusOutputStream, result);
   }
 
 }

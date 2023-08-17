@@ -131,7 +131,11 @@ class RequestTester:
     if self.debug:
       print("loading function file: " + path + file)
     with open(path + file, "r") as jsonFile:
-      completeJson = json.load(jsonFile)
+      try:
+        completeJson = json.load(jsonFile)
+      except Exception as e:
+        print("Error loading function file '{0}{1}': {2}".format(path, file, e))
+        raise e
 
     for entry in completeJson:
       if entry["type"] == "additionalFunctionFile":
@@ -1678,7 +1682,11 @@ class RequestTester:
 
     completeJson = ""
     with open(path + seriesFile, "r") as jsonFile:
-      completeJson = json.load(jsonFile)
+      try:
+        completeJson = json.load(jsonFile)
+      except Exception as e:
+        print("Could not parse test series file '{0}': {1}".format(completePathAndFile, e))
+        raise e
 
     # execute tests
     if "tests" in completeJson:

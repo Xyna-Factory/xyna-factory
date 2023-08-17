@@ -25,12 +25,19 @@
     <property name="target.dir" value="${basedir}/deploy/" />
 
     <target name="build">
-        
+        <antcall target="prepare-mdm-jar-if-missing" />
+
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/TimeSeriesManagementImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
         <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="mdmimpl" name="TimeSeriesManagementImpl" />
+        <delete file="${basedir}/mdm.jar" />
     </target>
 
     <import file="${root.dir}/installation/build/buildApplication.xml" />

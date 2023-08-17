@@ -49,6 +49,7 @@ import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.Filter;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
+import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.storage.ReferenceStorable;
 
 
@@ -254,7 +255,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
 
         ReferenceSupport rs = new ReferenceSupport();
         List<Reference> refList = new ArrayList<Reference>();
-        for (ReferenceStorable storable : rs.getReferencetorableList(revision, filter.getFilterName())) {
+        for (ReferenceStorable storable : rs.getReferencetorableList(revision, filter.getFilterName(), ReferenceObjectType.FILTER)) {
           refList.add(rs.convertToTag(storable));
         }
         filter.setReferences(refList);

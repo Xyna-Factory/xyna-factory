@@ -764,4 +764,10 @@ public interface XynaProperty {
       new XynaPropertyBoolean("xyna.xprc.xfracfwe.generation.exceptionOnDeployNoClassFileUpdate", true).
       setDefaultDocumentation(DocumentationLanguage.DE, "Soll eine Exception geworfen werden, wenn erfolgreiches Deployment das .class-File nicht updated?").
       setDefaultDocumentation(DocumentationLanguage.EN, "Should an exception be thrown in case a successful deployment does not update the .class file?");
+
+  
+  public static final XynaPropertyString XML_HEADER_COMMENT = new XynaPropertyString("xyna.generation.xml.headercomment", "")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "This is put into application.xmls and XMOM files as header comment. Changes take effect immediately. Old files are not updated.");
+
+
 }
