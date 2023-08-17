@@ -22,14 +22,11 @@ import datetime
 import sys
 import os
 import traceback
-import urllib
+import urllib.parse
 import string
 import random
 import xml.etree.ElementTree as ET
-try:
-    import StringIO
-except ImportError:
-    from io import StringIO
+from io import BytesIO
 import time
 import threading
 
@@ -594,7 +591,7 @@ class RequestTester:
 
     #urlencode
     if operationJson["operation"] == "urlencode":
-      result =  urllib.quote(oldValue)
+      result =  urllib.parse.quote(oldValue)
 
     #replace
     if operationJson["operation"] == "replace":
@@ -888,12 +885,11 @@ class RequestTester:
 
     if "member" in operationJson:
       memberName = operationJson["member"]
-      sortedList = map(lambda x: x[memberName], sortedList)
-      unsortedList = map(lambda x: x[memberName], unsortedList)
+      sortedList = [x[memberName] for x in sortedList]
+      unsortedList = [x[memberName] for x in unsortedList]
 
-
-    sortedList = map(lambda x: x.lower(), sortedList)
-    unsortedList = map(lambda x: x.lower(), unsortedList)
+    sortedList = [x.lower() for x in sortedList]
+    unsortedList =[x.lower() for x in unsortedList]
 
     sortedList.sort()
 
@@ -1117,8 +1113,11 @@ class RequestTester:
     if "payload" in operationJson:
       payload = json.dumps(operationJson["payload"])
       payload = self.replacePlaceholders(payload, parameters)
-      payload = json.dumps(json.loads(payload), ensure_ascii=False)
-
+      try:
+        payload = json.dumps(json.loads(payload), ensure_ascii=False)
+      except Exception as e:
+        print("Invalid json: " + str(payload))
+        raise e
     #TODO: it seems like this does not trigger?
     if "requestType" not in operationJson:
       raise Exception("requestType required for call operation.")
@@ -1140,7 +1139,7 @@ class RequestTester:
 
   def executeAsyncCall(self, operationJson, parameters, url, payload, factoryIndex):
     if "callId" not in operationJson:
-      raise Error("callId missing in async call operation")
+      raise Exception("callId missing in async call operation")
     callId = operationJson["callId"]
 
     threadParameters = parameters.copy()
@@ -1279,9 +1278,9 @@ class RequestTester:
       inputVar = json.JSONDecoder().decode(inputVar)
 
     try:
-      file = StringIO.StringIO(inputVar.encode('utf-8'))
+      file = BytesIO(inputVar.encode('utf-8'))
     except UnicodeDecodeError:
-      file = StringIO.StringIO(inputVar)
+      file = BytesIO(inputVar)
 
     root = ET.parse(file)
 

@@ -37,7 +37,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult": "True"
 	},
 	{
 	  "operation": "invoke",
@@ -59,7 +60,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult": "True"
 	},
 	{
 	  "operation": "call",
@@ -70,7 +72,8 @@
     {
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult": "True"
 	},
 	{
 	  "operation": "read",
@@ -87,7 +90,8 @@
     {
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult": "True"
 	},
 	{
 	  "operation": "set",
