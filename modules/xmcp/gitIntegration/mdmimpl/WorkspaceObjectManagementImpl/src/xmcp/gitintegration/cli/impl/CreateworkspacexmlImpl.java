@@ -63,21 +63,12 @@ public class CreateworkspacexmlImpl extends XynaCommandImplementation<Creatework
     Long revision = rm.getRevision(null, null, workspaceName);
     RepositoryConnection repositoryConnection = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));   
  
-    if((!repositoryConnection.getSplitted() && payload.getSplitResult())) {
-      if(!payload.getForce()) {
-        throw new RuntimeException("Use force to change the configuration from single file to splitted");
-      }
-      repositoryConnection.setSplitted(payload.getSplitResult());
-      RepositoryManagement.updateRepositoryConnection(repositoryConnection);
+    if(repositoryConnection.getSplitted() != payload.getSplitResult() && !payload.getForce()) {
+      throw new RuntimeException("Use force to change the configuration between single file and splitted");
     }
-    else if((repositoryConnection.getSplitted() && !payload.getSplitResult())) {
-      if(!payload.getForce()) {
-        throw new RuntimeException("Use force to change the configuration from splitted to single file");
-      }
-      repositoryConnection.setSplitted(payload.getSplitResult());
-      RepositoryManagement.updateRepositoryConnection(repositoryConnection);
-    }
-    
+    repositoryConnection.setSplitted(payload.getSplitResult());
+    RepositoryManagement.updateRepositoryConnection(repositoryConnection);
+        
     String path = RevisionManagement.getPathForRevision(PathType.ROOT, revision);
     if (!payload.getSplitResult()) {
       removeExistingFiles(path);
