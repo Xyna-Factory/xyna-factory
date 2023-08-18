@@ -58,6 +58,8 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 
+import xmcp.gitintegration.repository.RepositoryConnection;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -217,10 +219,10 @@ public class RepositoryManagementImpl {
       return null;
     }
   }
-
   private static boolean matchWsFile(Path filePath, BasicFileAttributes fileAttr) {
     return fileAttr.isRegularFile() && filePath.endsWith("workspace.xml");
   }
+
 
   public static String addRepositoryConnection(String path, String workspace, boolean full) {
     // check, if path exists
@@ -268,12 +270,14 @@ public class RepositoryManagementImpl {
     Set<String> workspaceXmlConfig = new HashSet<>();
     // map workspace name to workspace xml sub paths
     Map<String, Path> workspaceXmlSubPathMap = new HashMap<>();
+    boolean isSplitted = false;
     for (String workspaceName : workspaceXmlPathMap.keySet()) {
       Path workspaceXmlPath = workspaceXmlPathMap.get(workspaceName);
       Path subPath = workspaceXmlPath.getParent();
       if (subPath.endsWith(CONFIG)) {
         subPath = subPath.getParent();
         workspaceXmlConfig.add(workspaceName);
+        isSplitted = true;
       }
       workspaceXmlSubPathMap.put(workspaceName, subPath);
     }
@@ -337,7 +341,8 @@ public class RepositoryManagementImpl {
       }
       // persist storable
       String subPathString = subPath.toString().substring(path.toString().length() + 1); //+1 for "/"
-      persistRepositoryConnectionStorable(new RepositoryConnectionStorable(workspaceName, path.toString(), subPathString, savedInRepo));
+      persistRepositoryConnectionStorable(new RepositoryConnectionStorable(workspaceName, path.toString(), subPathString, savedInRepo,
+                                                                           isSplitted));
       count++;
     }
 
@@ -347,7 +352,7 @@ public class RepositoryManagementImpl {
 
   public static String listRepositoryConnections() {
     return String.join("\n", loadRepositoryConnections().stream().map(storable -> "Workspace: '" + storable.getWorkspacename()
-        + "', Path: '" + storable.getPath() + "', SubPath: '" + storable.getSubpath() + "'").collect(Collectors.toList()));
+        + "', Path: '" + storable.getPath() + "', SubPath: '" + storable.getSubpath() + "'" + "', Splitted: '" + storable.getSplitted() + "'").collect(Collectors.toList()));
   }
 
 
@@ -567,5 +572,33 @@ public class RepositoryManagementImpl {
       throw new RuntimeException(e);
     }
   }
+  
+  public static RepositoryConnection getRepositoryConnection(String workspaceName) {
+    Optional<RepositoryConnectionStorable> opt = loadRepositoryConnectionForWorkspace(workspaceName);
+    if(opt.isEmpty()) {
+      throw new RuntimeException("No RepositoryConnection found (Workspace: " + workspaceName + ")");
+    }
+    RepositoryConnection repositoryConnection = new RepositoryConnection();
+    repositoryConnection.setWorkspaceName(workspaceName);
+    repositoryConnection.setPath(opt.get().getPath());
+    repositoryConnection.setSubpath(opt.get().getSubpath());
+    repositoryConnection.setSavedinrepo(opt.get().getSavedinrepo());
+    repositoryConnection.setSplitted(opt.get().getSplitted());
+    return repositoryConnection;
+  }
+  
+  public static void updatetRepositoryConnection(RepositoryConnection repositoryConnection) {
+    Optional<RepositoryConnectionStorable> opt = loadRepositoryConnectionForWorkspace(repositoryConnection.getWorkspaceName());
+    if(opt.isEmpty()) {
+      throw new RuntimeException("No RepositoryConnection found (Workspace: " + repositoryConnection.getWorkspaceName() + ")");
+    }
+    // Update Attributes
+    opt.get().setPath(repositoryConnection.getPath());
+    opt.get().setSubpath(repositoryConnection.getSubpath());
+    opt.get().setSavedinrepo(repositoryConnection.getSavedinrepo());
+    opt.get().setSplitted(repositoryConnection.getSplitted());
+    persistRepositoryConnectionStorable(opt.get());
+  }
+
 
 }

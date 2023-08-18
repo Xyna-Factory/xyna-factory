@@ -44,6 +44,7 @@ import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
@@ -125,6 +126,16 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   @Override
   public List<? extends RepositoryUser> listUsersOfRepository(String arg0) {
     return new UserManagementStorage().listUsersOfRepo(arg0);
+  }
+  
+  @Override
+  public RepositoryConnection getRepositoryConnection(Workspace workspace) {
+     return RepositoryManagementImpl.getRepositoryConnection(workspace.getName());
+  }
+  
+  @Override
+  public void updateRepositoryConnection(RepositoryConnection repositoryConnection) {
+    RepositoryManagementImpl.updatetRepositoryConnection(repositoryConnection);
   }
 
 
