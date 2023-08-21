@@ -1,3 +1,20 @@
+# -*- coding: utf-8 -*-
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Copyright 2023 Xyna GmbH, Germany
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import json
 import re
 import sys
@@ -15,27 +32,27 @@ class Testgenerator:
       if not isinstance(config_json["ignoreList"], list):
         raise Exception("ignoreList in config was not a list!")
       self.ignoreList = config_json["ignoreList"]
-      
+
 
     if "ignorePaths" in config_json:
       if not isinstance(config_json["ignorePaths"], list):
         raise Exception("ignorePaths in config was not a list!")
       self.ignorePaths = config_json["ignorePaths"]
-      
+
 
     if "listIndexKeys" in config_json:
       if not isinstance(config_json["listIndexKeys"], list):
         raise Exception("listIndexKeys in config was not a list!")
       self.listIndexKeys = config_json["listIndexKeys"]
-      
+
     if "listIndexKeyToReplaceValue" in config_json:
       if not isinstance(config_json["listIndexKeys"], list):
         raise Exception("listIndexKeyToReplaceValue in config was not a list!")
-      self.listIndexKeyToReplaceValue = config_json["listIndexKeyToReplaceValue"]      
-      
+      self.listIndexKeyToReplaceValue = config_json["listIndexKeyToReplaceValue"]
+
 
     if "urlPrefix" in config_json:
-      if not isinstance(config_json["urlPrefix"], basestring):
+      if not isinstance(config_json["urlPrefix"], str):
         raise Exception("listIndexKeys in config was not a string!")
       self.urlPrefix = config_json["urlPrefix"]
 
@@ -46,28 +63,28 @@ class Testgenerator:
       if isinstance(self.meta, dict):
         for key in self.meta:
           if self.meta[key] == "CURRENT_DATE":
-            self.meta[key] = str(now.day) + "." + str(now.month) + "." + str(now.year)    
+            self.meta[key] = str(now.day) + "." + str(now.month) + "." + str(now.year)
           if self.meta[key] == "CURRENT_USER":
             try:
               self.meta[key] = getpass.getuser()
             except Exception:
               self.meta[key] = "tester"
               print("cound not determine username for meta element: " + key)
-    
+
     if "createReads" in config_json:
       self.createReads = bool(config_json["createReads"])
-      
+
     if "blacklistedStartOrders" in config_json:
       if not isinstance(config_json["blacklistedStartOrders"], list):
         raise Exception("blacklistedStartOrders in config was not a list!")
       self.blacklistedStartOrders = config_json["blacklistedStartOrders"]
-              
+
 
 
   def __init__(self):
-  
+
     #create fields + assign defaults
-    self.ignoreList = [] 
+    self.ignoreList = []
     self.ignorePaths = []
     self.listIndexKeys = ["name", "id"] # sorted
     self.listIndexKeyToReplaceValue = ["id"]
@@ -80,17 +97,17 @@ class Testgenerator:
     # contains dictionaries from path to data for every request
     # basis of read operations
     self.knowlage = []
-    
+
     #contains paths that we tried to create a read operation for
     self.alreadyReplacingPaths = []
-    
+
      # operations
     self.result = []
-    
+
     #key is variable name, value is value of variable
     #key DOES NOT INCLUDE "!"
     self.createdVariables = {}
-    
+
     if self.createReads:
       #substitutionFunctions - url + payload strings will be replaced by these
       self.substitutionFunctions = [ self.substituteSingleFromVariables, self.tryToCreateReadForPart, self.createMultiSetForPart ]
@@ -107,10 +124,10 @@ class Testgenerator:
     result["callId"] = len(self.knowlage) # so we know where to insert reads. will be removed before creating output
     if not (payload == None):
       result["payload"] = payload
-      
+
     if "status" in response and response["status"] != 200:
       result["acceptError"] = True
-      
+
     if "factoryIndex" in response:
       result["factoryIndex"] = response["factoryIndex"]
 
@@ -130,8 +147,8 @@ class Testgenerator:
     for ignoreItem in self.ignoreList:
       exp = ignoreItem
       if re.search(exp, url):
-        return False    
-    
+        return False
+
     return True
 
 
@@ -141,7 +158,7 @@ class Testgenerator:
     for listEntry in list:
       if not isinstance(listEntry, dict):
         continue
-        
+
       if key in listEntry and listEntry[key] == value:
         if not foundOnce:
           foundOnce = True
@@ -155,7 +172,7 @@ class Testgenerator:
   #if possible, it uses a top level element of list[index] with a key of name
   def createIndex(self, list, index, avoid = ""):
     listEntry = list[index]
-      
+
     if isinstance(listEntry, dict):
       for listIndexKey in self.listIndexKeys:
         if listIndexKey == avoid:
@@ -166,12 +183,12 @@ class Testgenerator:
             if isinstance(valueReplaced, int) or isinstance(valueReplaced, dict):
               valueReplaced = str(valueReplaced)
             return listIndexKey + "=" + valueReplaced
-    
+
     #return number.
     return index
 
 
-  #removes occurencies of =value] from path 
+  #removes occurencies of =value] from path
   def removeSelfFromPath(self, value, path, parent, gparent):
     for listIndexKey in self.listIndexKeys:
       valueEsc = re.escape(value)
@@ -189,12 +206,12 @@ class Testgenerator:
   def addResponseObjToKnowlage(self, newEntry, path, obj, parent, gparent):
     if newEntry:
       self.knowlage.append({})
-      
+
     pathPrefix = "" if len(path) == 0 else "/"
-    
+
     if isinstance(obj, dict):
       for key in obj:
-        self.addResponseObjToKnowlage(False, path + pathPrefix + key, obj[key], obj, parent)    
+        self.addResponseObjToKnowlage(False, path + pathPrefix + key, obj[key], obj, parent)
     elif isinstance(obj, list):
       for i in range(0,len(obj)):
         index = self.createIndex(obj, i)
@@ -210,20 +227,20 @@ class Testgenerator:
         ob = obj.encode('utf-8')
         ob = str(ob)
         ob = ob.decode('unicode-escape')
-      path = self.removeSelfFromPath(ob, path, parent, gparent) 
+      path = self.removeSelfFromPath(ob, path, parent, gparent)
       self.knowlage[len(self.knowlage)-1][path] = ob
 
 
   def addKnowlage(self, response):
     if "content" not in response or "text" not in response["content"]:
       return
-    
-    try:    
+
+    try:
       obj = json.JSONDecoder().decode(response["content"]["text"])
       self.addResponseObjToKnowlage(True, "", obj, None, None)
     except(ValueError):
       pass #result was not json
-    
+
   def escapeAgain(self, str):
     org = str
     str = str.replace( "\\", "\\\\\\")
@@ -233,10 +250,10 @@ class Testgenerator:
     str = str.replace("\n", "\\\n")
     str = str.replace("\r", "\\\r")
     str = str.replace("\t", "\\\t")
-    
+
     return str
- 
- 
+
+
   #result does not contain !
   # adds new name to createdVariables
   # reduces length of varname to 48 - before adding suffix
@@ -247,38 +264,38 @@ class Testgenerator:
     name = name.replace("\\", "x")
     name = name.replace("\"", "x")
     name = name.replace("\n", "")
-    
+
     #constant values tend to become long
     if len(name) > 48:
       name = name[:48]
-      
+
     prepName = name
-    
+
     i = 0
     while name in self.createdVariables:
       name = prepName + str(i)
       i=i+1
-      
+
     self.createdVariables[name] = ""
-    
+
     return name
 
 
-  def substituteSingleFromVariables(self, part): 
+  def substituteSingleFromVariables(self, part):
     if len(part) == 0:
         return part
-        
+
     partReplaced = part
-    
+
     #try direct read
     for key in self.createdVariables:
       value = self.createdVariables[key]
       if value == part:
         partReplaced = "!" + key + "!"
         return partReplaced
-      
-    
-    #try modification read. Separate loop do make sure we catch a direct read if possible    
+
+
+    #try modification read. Separate loop do make sure we catch a direct read if possible
     for key in self.createdVariables:
       value = self.createdVariables[key]
       if value.endswith("." + part):
@@ -291,10 +308,10 @@ class Testgenerator:
         self.createdVariables[newVarName] = shortenedValue
         partReplaced = "!" + newVarName + "!"
         return partReplaced
-        
+
     return part
 
-    
+
   # returns lowest index of self.knowlage with an entry where value == part
   # or -1 if there is none
   def getResponseIndexFor(self, part):
@@ -304,8 +321,8 @@ class Testgenerator:
         if knowlage[key] == part:
           return i
     return -1
-    
-    
+
+
   # returns path from self.knowlage[responseIndex] where the value is part
   # does not return paths that contain part as list index.
   def getPathOfValue(self, part, responseIndex):
@@ -315,10 +332,10 @@ class Testgenerator:
         continue
       if knowlage[key] == part:
         return key
-        
+
     raise Exception("not found: " + part + " in " + str(responseIndex))
- 
- 
+
+
   # find index of call operation with callId == callIndex
   def findIndexAfterCall(self, callIndex):
     result = -1
@@ -332,11 +349,11 @@ class Testgenerator:
           return i # last position before next call
       if result != -1:
         result = i
-          
-          
+
+
     if result != -1:
       return result
-          
+
     raise Exception("can't place read for callIndex: " + str(callIndex))
 
 
@@ -346,14 +363,14 @@ class Testgenerator:
     matches = re.findall(exp, path)
     if matches == None:
       return path
-    
+
     for (match, key, value) in matches:
       all = match
       toReplace = value
       if key in self.listIndexKeyToReplaceValue:
         replaced = self.applySubstitutions(toReplace, self.substitutionFunctions)
         path = re.sub("="+value, "="+replaced, path, 1)
-  
+
     return path
 
 
@@ -372,26 +389,26 @@ class Testgenerator:
 
 
   def createReadOperation(self, indexInKnowlage, variable, path):
-  
+
     if self.alreadyReplacing(path):
       value = self.knowlage[indexInKnowlage][path]
       self.createSetOperation(variable, value)
       return
-  
+
     readId = self.nextReadId
     self.nextReadId = self.nextReadId + 1
     path = self.lateReplaceListIndex(path)
     indexInResult = self.findIndexAfterCall(indexInKnowlage)
-    
+
     readOp = {}
     readOp["operation"] = "read"
     readOp["pathInResponse"] = path
     readOp["targetVariable"] = "!" + variable + "!"
     readOp["readId"] = readId
     readOp["callIdRef"] = indexInKnowlage
-    if isinstance(self.createdVariables[variable], basestring):
+    if isinstance(self.createdVariables[variable], str):
       readOp["unquoteResult"] = True
-    
+
     self.result.insert(indexInResult, readOp)
 
 
@@ -405,12 +422,12 @@ class Testgenerator:
     result["modification"]["operation"] = "substring"
     result["modification"]["divider"] = divider
     result["modification"]["keep"] = keep
-    
+
     if direction != None:
       result["modification"]["direction"] = direction
-    
+
     result["readId"] = readId
-    
+
     self.result.insert(index, result)
 
 
@@ -431,12 +448,12 @@ class Testgenerator:
   def tryToCreateReadModifyForPart(self, part):
     if len(part) == 0:
       return part
-      
+
     partEsc = re.escape(part)
 
     exp1 = "^" + partEsc + "\.[^\.]*$"
     exp2 = ".*\." + partEsc + "$"
-  
+
     for i in range(0, len(self.knowlage)):
       knowlage = self.knowlage[i]
       for key in knowlage:
@@ -452,7 +469,7 @@ class Testgenerator:
           shortenedValue = value[0 : value.rindex(".")]
           modifiedVarName = self.createVarName(shortenedValue)
           self.createSubstringModification(responseIndex, ".", "!"+ varName +"!", modifiedVarName, "inversed", "before", readId)
-          
+
           self.createdVariables[varName] = value
           self.createdVariables[modifiedVarName] = shortenedValue
           part = "!" + modifiedVarName + "!"
@@ -468,19 +485,19 @@ class Testgenerator:
           shortenedValue = value[value.rindex(".")+1: len(value)]
           modifiedVarName = self.createVarName(shortenedValue)
           self.createSubstringModification(responseIndex, ".", "!"+ varName +"!", modifiedVarName, "inversed", "after", readId)
-          
+
           self.createdVariables[varName] = value
           self.createdVariables[modifiedVarName] = shortenedValue
           part = "!" + modifiedVarName + "!"
           return part
-          
+
     return part
 
 
   def tryToCreateReadForPart(self, part):
     if len(part) == 0:
       return part
-    
+
     responseIndex = self.getResponseIndexFor(part)
     if responseIndex == -1:
       partReplaced = self.tryToCreateReadModifyForPart(part)
@@ -491,8 +508,8 @@ class Testgenerator:
       partReplaced = "!" + variable + "!"
       self.createdVariables[variable] = part
     return partReplaced
-        
-    
+
+
   def addToMultiSet(self, varName, part):
     multiSet = None
     if len(self.result) == 0 or "callId" in self.result[0]:
@@ -503,11 +520,11 @@ class Testgenerator:
       self.result.insert(0, multiSet)
     else:
       multiSet = self.result[0]
-      
+
     data = {}
     value = part
     value = self.escapeAgain(part)
-    
+
     data["!" + varName + "!"] = value
     multiSet["data"].append(data)
 
@@ -515,7 +532,7 @@ class Testgenerator:
   def createMultiSetForPart(self, part):
     partReplaced = part
     if len(part) == 0:
-      pass   
+      pass
     #do not update placeholders
     elif part.startswith("!") and part.endswith("!"):
       pass
@@ -527,16 +544,16 @@ class Testgenerator:
       varName = self.createVarName(part)
       self.createdVariables[varName] = part
       self.addToMultiSet(varName, part)
-      partReplaced = "!" + varName + "!" 
-    return partReplaced      
+      partReplaced = "!" + varName + "!"
+    return partReplaced
 
-  
+
   def replaceFromVariable(self, toReplace):
     for entry in self.createdVariables:
       if self.createdVariables[entry] == toReplace:
         return "!" + entry + "!"
     return toReplace
-    
+
 
   #TODO: should not have the assigning twice!
   #replaces strings/numbers/boolean in given object, if there is a variable holding that value.
@@ -546,7 +563,7 @@ class Testgenerator:
         return obj
       for i in range(0, len(obj)):
         entry = obj[i]
-        if isinstance(entry, (basestring, int, float, long, complex)):
+        if isinstance(entry, (str, int, float, complex)):
           newValue = self.applySubstitutions(entry, self.substitutionFunctions)
           obj[i] = newValue
         elif isinstance(entry, dict) or isinstance(entry, list):
@@ -554,25 +571,25 @@ class Testgenerator:
     elif isinstance(obj, dict):
       for key in obj:
         entry = obj[key]
-        if isinstance(entry, (basestring, int, float, long, complex)):
+        if isinstance(entry, (str, int, float, complex)):
           newValue = self.applySubstitutions(entry, self.substitutionFunctions)
           obj[key] = newValue
         elif isinstance(entry, dict) or isinstance(entry, list):
           obj[key] = self.replaceInJson(entry)
-    
+
     return obj
 
 
   #applies functions to part until part changes
   def applySubstitutions(self, part, functions):
     #only work on strings atm
-    if not isinstance(part, basestring):
+    if not isinstance(part, str):
       return part
     if len(part) == 0:
       return part
     if part in self.ignorePaths:
       return part
-  
+
     newPart = part
     for function in functions:
       newPart = function(part)
@@ -584,7 +601,7 @@ class Testgenerator:
   def replaceInUrl(self, url):
     parts = url.split("/")
     url = ""
-    
+
     for part in parts:
       parameters = []
       if "?" in part:
@@ -600,7 +617,7 @@ class Testgenerator:
         params = params[0: len(params)-1] #remove last "?"
         partReplaced = partReplaced + params
       url = url + partReplaced + "/"
-    
+
     url = url[0: len(url)-1] # remove last "/"
     return url
 
@@ -619,10 +636,10 @@ class Testgenerator:
     url = self.removePrefixFromUrl(url)
     method = request["method"]
     payload = None
-    
+
     url = self.replaceInUrl(url )
-    
-    
+
+
     if "postData" in request and "text" in request["postData"]:
       payload = request["postData"]["text"]
       try:
@@ -634,15 +651,15 @@ class Testgenerator:
         print("--------------------")
         payload = ""
       payload = self.replaceInJson(payload)
-      
-    
+
+
     # create call operation and add to result
     self.createCallOperation(url, method, payload, response)
     dontAddToKnowlage = payload is not None and ("orderType" in payload) and (payload["orderType"] not in self.blacklistedStartOrders)
     if not dontAddToKnowlage:
       self.addKnowlage(response)
 
-  
+
   #remove callId and readId from result
   def cleanupResult(self):
     for operation in self.result["operations"]:
@@ -652,8 +669,8 @@ class Testgenerator:
         del operation["callIdRef"]
       if "readId" in operation:
         del operation["readId"]
- 
-    
+
+
   def createTest(self, input):
     entries = input["log"]["entries"]
     for entry in entries:
@@ -665,46 +682,44 @@ class Testgenerator:
       if not self.includeRequest(request):
         continue
       response = entry["response"]
-        
+
       #create result entries
       self.createResultEntries(request, response)
-      
+
       self.alreadyReplacingPaths = [] #clear
-    
+
     #create result
     self.createResult()
-    
-    
+
+
     #write knowlage
     if len(self.knowlage) > 0:
       self.writeKnowladge()
-    
+
     result =  json.dumps(self.result, indent=2, sort_keys=True)
-    result = result.decode('unicode-escape')
-    
+    #result = result.decode('unicode-escape')
+
     return result
 
 
   def writeKnowladge(self):
-    f = open("lastKnowlage.txt", "w")
-    knowlage = self.knowlage[len(self.knowlage)-1]
-    for key in knowlage:
-      f.write(key)
-      f.write(": ")
-      f.write(knowlage[key].encode('utf-8'))
-      f.write("\n")
-    f.close()
-    
-    f = open("completeKnowlage.txt", "w")
-    i = 0
-    for knowlage in self.knowlage:
-      f.write("===== " + str(i) + " =====\n")
+    with open("lastKnowlage.txt", "w") as f:
+      knowlage = self.knowlage[len(self.knowlage)-1]
       for key in knowlage:
-        f.write(key.encode('utf-8') + " :")
-        f.write(knowlage[key].encode('utf-8'))
+        f.write(key)
+        f.write(": ")
+        f.write(knowlage[key])
         f.write("\n")
-      i = i + 1  
-    f.close()
+
+    with open("completeKnowlage.txt", "w") as f:
+      i = 0
+      for knowlage in self.knowlage:
+        f.write("===== " + str(i) + " =====\n")
+        for key in knowlage:
+          f.write(key + " :")
+          f.write(knowlage[key])
+          f.write("\n")
+        i = i + 1
 
 
   def createDataflowAssertOperation(self):
@@ -714,31 +729,31 @@ class Testgenerator:
     assertOp["pathToList"] = "connections/$list"
     assertOp["entries"] = []
     return assertOp
-    
-  
+
+
   def findDataflowEntry(self, entries):
     cpy = list(entries)
     cpy.reverse()
-  
+
     for entry in cpy:
       if "url" not in entry["request"]:
         continue
       if entry["request"]["url"].endswith("/dataflow"):
         return entry
-  
+
     raise Exception("no dataflow call found.")
- 
+
 
   #entry is dataflow connection object
   def addIsInListEntry(self, entry):
     type = entry["type"]
     targetId = entry["targetId"]
     targetId = self.applySubstitutions(targetId, self.substitutionFunctions) #TODO: problem: id can only be resolved by checking fqn and fqn can only be resolved checking id
-    
+
     result = {}
     result["targetId"] = targetId
     result["type"] = type
-    
+
     sourceId = None
     if "sourceId" in entry:
       sourceId = entry["sourceId"]
@@ -747,26 +762,26 @@ class Testgenerator:
 
     assertOp = self.result[len(self.result)-1]
     assertOp["entries"].append(result)
-    
-    
+
+
   def fillDataflowAssert(self, response):
     obj = json.JSONDecoder().decode(response["content"]["text"])
     connectionList = obj["connections"]["$list"]
-    
+
     for entry in connectionList:
-      self.addIsInListEntry(entry) 
+      self.addIsInListEntry(entry)
 
 
   def createAssertListLengthOperation(self, response):
     obj = json.JSONDecoder().decode(response["content"]["text"])
     connectionList = obj["connections"]["$list"]
-    
+
     operation = {}
     operation["operation"] = "assert"
     operation["constraint"] = "listLength"
     operation["expectedValue"] = len(connectionList)
     operation["path"] = "connections/$list"
-    
+
     return operation
 
 
@@ -781,28 +796,28 @@ class Testgenerator:
       if not self.includeRequest(request):
         continue
       response = entry["response"]
-        
+
       #create result entries
       self.createResultEntries(request, response)
-       
-      
+
+
     #create empty assert operation
     op = self.createDataflowAssertOperation()
     self.result.append(op)
-      
+
     #find (last) dataflow entry
     dataflowEntry = self.findDataflowEntry(entries)
     response = dataflowEntry["response"]
     self.fillDataflowAssert(response)
-    
+
     #create assert list length operation
     op = self.createAssertListLengthOperation(response)
     self.result.append(op)
-    
-    
+
+
     #create result
     self.createResult()
-    
+
     json.dumps(self.result, indent=2, sort_keys=True)
     result = result.decode('unicode-escape')
 
@@ -814,7 +829,7 @@ class Testgenerator:
     allResultEntries = self.result
     self.result = {}
     self.result["operations"] = allResultEntries
-    
+
     self.cleanupResult()
     self.result["meta"] = self.meta
 
@@ -832,14 +847,14 @@ def loadHarFiles(firstHarFileIndex, argv, numberOfHarFiles):
       sys.exit(1)
   return result
 
-  
+
 def readFactoryIndices(firstHarFileIndex, argv, numberOfHarFiles):
   result = []
   for i in range(firstHarFileIndex+1, firstHarFileIndex + (numberOfHarFiles * 2), 2):
     result.append(int(argv[i]))
   return result
 
- 
+
 def annotateFactoryIndexInHarFile(harfile, factoryIndex):
     entries = harfile["log"]["entries"]
     for entry in entries:
@@ -849,14 +864,14 @@ def annotateFactoryIndexInHarFile(harfile, factoryIndex):
         continue
       response = entry["response"]
       response["factoryIndex"] = factoryIndex
-      
-  
+
+
 def mergeHarFiles(harfiles):
   merged = harfiles[0]
-  
+
   for i in range(1, len(harfiles)):
     merged["log"]["entries"].extend(harfiles[i]["log"]["entries"])
-  
+
   return merged
 
 
@@ -871,25 +886,25 @@ def sortHarFile(harFile):
 def transformTime(timeString):
   [formattedTimeString, offsetDatetime] = formatTime(timeString)
   baseDatetime = datetime.datetime.strptime(formattedTimeString, "%Y-%m-%dT%H:%M:%S.%fZ")
-  
-  finalDatetime = baseDatetime - offsetDatetime 
+
+  finalDatetime = baseDatetime - offsetDatetime
   result = int(float(finalDatetime.strftime('%s.%f'))*1000)
-  
+
   return result
-  
+
 
 def formatTime(timeString):
   baseTime = timeString
   offset = datetime.timedelta(hours=0, minutes=0)
   indexOfZ = timeString.index("Z") if "Z" in timeString else -1
-  
+
   if indexOfZ == -1: # timeString does contain offset
     offset = timeString[len(timeString)-5:-1]
     hours = int(offset[0:2])
     minutes = int(offset[3:5])
     offset = datetime.timedelta(hours=hours, minutes=minutes)
     baseTime=timeString[0:-6] + "Z"
-  
+
   return [baseTime, offset]
 
 
@@ -900,19 +915,19 @@ def formatTime(timeString):
 def combineHarFiles(firstHarFileIndex, argv, numberOfHarFiles):
   harFiles = loadHarFiles(firstHarFileIndex, argv, numberOfHarFiles)
   factoryIndices = readFactoryIndices(firstHarFileIndex, argv, numberOfHarFiles)
-  
+
   for i in range(0, len(harFiles)):
     annotateFactoryIndexInHarFile(harFiles[i], factoryIndices[i])
-  
+
   mergedHarFile = mergeHarFiles(harFiles)
   sortHarFile(mergedHarFile)
-  
+
   return mergedHarFile
 
 
 def createCombinedHarFile(firstHarFileIndex, argv):
   numberOfHarFiles = (len(argv) - firstHarFileIndex) / 2
-  if numberOfHarFiles <= 1: 
+  if numberOfHarFiles <= 1:
     try:
       harfile = open(harFilePath)
       harfile_json = json.loads(harfile.read())
@@ -922,24 +937,24 @@ def createCombinedHarFile(firstHarFileIndex, argv):
     return harfile_json
   else:
     return combineHarFiles(firstHarFileIndex, argv, numberOfHarFiles)
-  
-  
+
+
 
 ### main ###
 if len(sys.argv) < 2:
   print("Usage: python testgenerator.py [-dataflow] <inputFile.har> [factoryIndex, <inputFile.har>. factoryIndex...]")
   sys.exit(1)
-  
+
 firstHarFileIndex = 1
 harFilePath = sys.argv[1]
-createDataflowTest = False  
+createDataflowTest = False
 
 if sys.argv[1] == "-dataflow":
   firstHarFileIndex = 2
   harFilePath = sys.argv[2]
   createDataflowTest = True
   print("creating dataflow test")
-  
+
 
 harfile_json = createCombinedHarFile(firstHarFileIndex, sys.argv)
 
@@ -951,9 +966,8 @@ try:
   else:
     result = testgenerator.createTest(harfile_json)
   filename = harFilePath[:-4]
-  f = open(filename + ".json", "w")
-  f.write(result.encode('utf8'))
-  f.close()
+  with open(filename + ".json", "w") as f:
+    f.write(result)
 except Exception as exception:
   returncode = 1
   print("Exception: " + str(exception))
