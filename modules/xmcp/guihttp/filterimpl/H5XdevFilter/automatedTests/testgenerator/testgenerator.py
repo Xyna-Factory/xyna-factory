@@ -96,7 +96,7 @@ class Testgenerator:
     self.readConfig(self.configFilePath)
     # contains dictionaries from path to data for every request
     # basis of read operations
-    self.knowlage = []
+    self.knowledge = []
 
     #contains paths that we tried to create a read operation for
     self.alreadyReplacingPaths = []
@@ -121,7 +121,7 @@ class Testgenerator:
     result["operation"] = "call"
     result["requestType"] = method
     result["url"] = url
-    result["callId"] = len(self.knowlage) # so we know where to insert reads. will be removed before creating output
+    result["callId"] = len(self.knowledge) # so we know where to insert reads. will be removed before creating output
     if not (payload == None):
       result["payload"] = payload
 
@@ -203,23 +203,23 @@ class Testgenerator:
 
     return path
 
-  def addResponseObjToKnowlage(self, newEntry, path, obj, parent, gparent):
+  def addResponseObjToKnowledge(self, newEntry, path, obj, parent, gparent):
     if newEntry:
-      self.knowlage.append({})
+      self.knowledge.append({})
 
     pathPrefix = "" if len(path) == 0 else "/"
 
     if isinstance(obj, dict):
       for key in obj:
-        self.addResponseObjToKnowlage(False, path + pathPrefix + key, obj[key], obj, parent)
+        self.addResponseObjToKnowledge(False, path + pathPrefix + key, obj[key], obj, parent)
     elif isinstance(obj, list):
       for i in range(0,len(obj)):
         index = self.createIndex(obj, i)
         if isinstance(index, int):
           index = str(index)
-        self.addResponseObjToKnowlage(False, path + "[" + index + "]", obj[i], obj, parent)
+        self.addResponseObjToKnowledge(False, path + "[" + index + "]", obj[i], obj, parent)
     else:
-      #actually add knowlage
+      #actually add knowledge
       ob = obj
       try:
         ob = str(obj)
@@ -228,16 +228,16 @@ class Testgenerator:
         ob = str(ob)
         ob = ob.decode('unicode-escape')
       path = self.removeSelfFromPath(ob, path, parent, gparent)
-      self.knowlage[len(self.knowlage)-1][path] = ob
+      self.knowledge[len(self.knowledge)-1][path] = ob
 
 
-  def addKnowlage(self, response):
+  def addKnowledge(self, response):
     if "content" not in response or "text" not in response["content"]:
       return
 
     try:
       obj = json.JSONDecoder().decode(response["content"]["text"])
-      self.addResponseObjToKnowlage(True, "", obj, None, None)
+      self.addResponseObjToKnowledge(True, "", obj, None, None)
     except(ValueError):
       pass #result was not json
 
@@ -312,25 +312,25 @@ class Testgenerator:
     return part
 
 
-  # returns lowest index of self.knowlage with an entry where value == part
+  # returns lowest index of self.knowledge with an entry where value == part
   # or -1 if there is none
   def getResponseIndexFor(self, part):
-    for i in range(0, len(self.knowlage)):
-      knowlage = self.knowlage[i]
-      for key in knowlage:
-        if knowlage[key] == part:
+    for i in range(0, len(self.knowledge)):
+      knowledge = self.knowledge[i]
+      for key in knowledge:
+        if knowledge[key] == part:
           return i
     return -1
 
 
-  # returns path from self.knowlage[responseIndex] where the value is part
+  # returns path from self.knowledge[responseIndex] where the value is part
   # does not return paths that contain part as list index.
   def getPathOfValue(self, part, responseIndex):
-    knowlage = self.knowlage[responseIndex]
-    for key in knowlage:
+    knowledge = self.knowledge[responseIndex]
+    for key in knowledge:
       if "="+part+"]" in key:
         continue
-      if knowlage[key] == part:
+      if knowledge[key] == part:
         return key
 
     raise Exception("not found: " + part + " in " + str(responseIndex))
@@ -388,24 +388,24 @@ class Testgenerator:
     self.result.insert(1, setOp) #at the beginning, after initial multiSet
 
 
-  def createReadOperation(self, indexInKnowlage, variable, path):
+  def createReadOperation(self, indexInKnowledge, variable, path):
 
     if self.alreadyReplacing(path):
-      value = self.knowlage[indexInKnowlage][path]
+      value = self.knowledge[indexInKnowledge][path]
       self.createSetOperation(variable, value)
       return
 
     readId = self.nextReadId
     self.nextReadId = self.nextReadId + 1
     path = self.lateReplaceListIndex(path)
-    indexInResult = self.findIndexAfterCall(indexInKnowlage)
+    indexInResult = self.findIndexAfterCall(indexInKnowledge)
 
     readOp = {}
     readOp["operation"] = "read"
     readOp["pathInResponse"] = path
     readOp["targetVariable"] = "!" + variable + "!"
     readOp["readId"] = readId
-    readOp["callIdRef"] = indexInKnowlage
+    readOp["callIdRef"] = indexInKnowledge
     if isinstance(self.createdVariables[variable], str):
       readOp["unquoteResult"] = True
 
@@ -441,7 +441,7 @@ class Testgenerator:
     print("could not find readId: " + str(readId))
 
 
-  #searches previous knowlage for part.* and *.part
+  #searches previous knowledge for part.* and *.part
   #if nothing is found, returns part
   #if something is found, returns !<variable>!
   #  and creates read and mofification operations.
@@ -454,10 +454,10 @@ class Testgenerator:
     exp1 = "^" + partEsc + "\.[^\.]*$"
     exp2 = ".*\." + partEsc + "$"
 
-    for i in range(0, len(self.knowlage)):
-      knowlage = self.knowlage[i]
-      for key in knowlage:
-        value = knowlage[key]
+    for i in range(0, len(self.knowledge)):
+      knowledge = self.knowledge[i]
+      for key in knowledge:
+        value = knowledge[key]
         if re.search(exp1, value):
           #create read after i^th call
           varName = self.createVarName(value)
@@ -655,9 +655,9 @@ class Testgenerator:
 
     # create call operation and add to result
     self.createCallOperation(url, method, payload, response)
-    dontAddToKnowlage = payload is not None and ("orderType" in payload) and (payload["orderType"] not in self.blacklistedStartOrders)
-    if not dontAddToKnowlage:
-      self.addKnowlage(response)
+    dontAddToknowledge = payload is not None and ("orderType" in payload) and (payload["orderType"] not in self.blacklistedStartOrders)
+    if not dontAddToknowledge:
+      self.addKnowledge(response)
 
 
   #remove callId and readId from result
@@ -692,9 +692,9 @@ class Testgenerator:
     self.createResult()
 
 
-    #write knowlage
-    if len(self.knowlage) > 0:
-      self.writeKnowladge()
+    #write knowledge
+    if len(self.knowledge) > 0:
+      self.writeknowledge()
 
     result =  json.dumps(self.result, indent=2, sort_keys=True)
     #result = result.decode('unicode-escape')
@@ -702,22 +702,22 @@ class Testgenerator:
     return result
 
 
-  def writeKnowladge(self):
-    with open("lastKnowlage.txt", "w") as f:
-      knowlage = self.knowlage[len(self.knowlage)-1]
-      for key in knowlage:
+  def writeknowledge(self):
+    with open("lastknowledge.txt", "w") as f:
+      knowledge = self.knowledge[len(self.knowledge)-1]
+      for key in knowledge:
         f.write(key)
         f.write(": ")
-        f.write(knowlage[key])
+        f.write(knowledge[key])
         f.write("\n")
 
-    with open("completeKnowlage.txt", "w") as f:
+    with open("completeknowledge.txt", "w") as f:
       i = 0
-      for knowlage in self.knowlage:
+      for knowledge in self.knowledge:
         f.write("===== " + str(i) + " =====\n")
-        for key in knowlage:
+        for key in knowledge:
           f.write(key + " :")
-          f.write(knowlage[key])
+          f.write(knowledge[key])
           f.write("\n")
         i = i + 1
 
