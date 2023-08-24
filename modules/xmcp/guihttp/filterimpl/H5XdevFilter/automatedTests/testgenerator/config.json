@@ -9,12 +9,12 @@
     "blacklistedStartOrders": "if input contains a start order request with an ordertype in this list, the result of that request will not be used for variable creation"
   },
   "ignoreList": [
-    "/modeller/favicon.ico", 
-    "/subtypes", 
+    "/modeller/favicon.ico",
+    "/subtypes",
     "/events",
     "/runtimeContext/.*/signature",
     "/runtimeContext/.*/structure",
-    "/runtimeContext/.*/subtypes", 
+    "/runtimeContext/.*/subtypes",
     "/runtimeContext/.*/xmom/paths\\?hierarchy=.*",
     "/runtimeContext/.*/xmom/objects\\?q=.*",
     "/auth/info"
@@ -43,10 +43,10 @@
     "typeChoice",
     "Service",
     "orderinputsources",
-    "dataflow", 
+    "dataflow",
     "issues",
     "warnings",
-    "runtimeContext", 
+    "runtimeContext",
     "insert",
     "close",
     "save",
@@ -72,7 +72,7 @@
     "clipboard"],
   "listIndexKeys":["name", "id", "fqn"],
   "listIndexKeyToReplaceValue": ["id", "fqn"],
-  "urlPrefix": ".*/XynaBlackEditionWebServices/io",
+  "urlPrefix": ".*/modeller-api",
   "meta":{
     "created": "CURRENT_DATE",
     "updated": "CURRENT_DATE",

@@ -37,7 +37,8 @@
 	  {
 	    "operation": "read",
 		"targetVariable": "!revision!",
-		"pathInResponse": "revision"
+		"pathInResponse": "revision",
+		"unquoteResult":"True"
 	  },
 	  {
 	    "operation": "call",

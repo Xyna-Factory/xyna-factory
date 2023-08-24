@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "RedeployAllWorkflows",
-	"description": "öffnet, speichert und deployt (unter neuem Namen) alle (max 1000) Workflows im angegebenen Workspace",
+	"description": "Ã¶ffnet, speichert und deployt (unter neuem Namen) alle (max 1000) Workflows im angegebenen Workspace",
 	"created": "26.10.2019",
 	"updated": "26.10.2019",
 	"issues": "version of GuiHttp application (current static value). We need to set !nameFilter!, !revision! -> revision of workspace to operate on, !workspacename!. Open: Determine revision inside testcase.",

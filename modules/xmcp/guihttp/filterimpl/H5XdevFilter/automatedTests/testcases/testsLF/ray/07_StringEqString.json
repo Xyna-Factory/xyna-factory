@@ -51,7 +51,7 @@
     {
 	  "operation": "invoke",
 	  "functionName": "createDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!": "!workspaceName!",
 		"!path!": "!datatypePath!",
@@ -62,7 +62,7 @@
     {
 	  "operation": "invoke",
 	  "functionName": "addSimpleTypeMemberToDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!": "!workspaceName!",
 		"!datatypePath!": "!datatypePath!",
@@ -75,7 +75,7 @@
     {
 	  "operation": "invoke",
 	  "functionName": "createDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!": "!workspaceName!",
         "!path!": "!datatypePath!",
@@ -86,7 +86,7 @@
     {
 	  "operation": "invoke",
 	  "functionName": "addSimpleTypeMemberToDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!": "!workspaceName!",
 		"!datatypePath!": "!datatypePath!",
@@ -100,15 +100,15 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!",
 		"!newPath!": "!newWorkflowPath!",
 		"!newWorkflowName!": "!newWorkflowName!"
 	  }
 	},
-	
-	
+
+
 	{
 	  "meta": "insert mapping -- start to modify workflow",
 	  "operation": "call",
@@ -125,7 +125,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "insert choice",
@@ -144,7 +145,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "insert first Datatype to mapping output",
@@ -156,7 +158,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "insert second Datatype to mapping output",
@@ -168,7 +171,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "insert first datatype in choice expression, part 1",
@@ -180,7 +184,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "insert first datatype in choice expression, part 2",
@@ -192,7 +197,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "update Choice expression",
@@ -204,7 +210,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "insert second datatype in choice expression, part 1",
@@ -216,7 +223,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "insert second datatype in choice expression, part 2",
@@ -228,7 +236,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "update Choice expression",
@@ -240,7 +249,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",
@@ -256,7 +266,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "invoke",
@@ -267,7 +278,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "set",
