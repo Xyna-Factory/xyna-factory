@@ -197,5 +197,9 @@
       <FqName>xmcp.gitintegration.repository.RepositoryConnection</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.FactoryXmlIgnoreEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   </XMOMEntries>
 </Application>

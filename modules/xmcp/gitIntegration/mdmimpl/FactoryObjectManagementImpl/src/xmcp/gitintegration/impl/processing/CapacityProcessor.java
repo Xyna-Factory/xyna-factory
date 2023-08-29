@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,12 +50,21 @@ public class CapacityProcessor implements FactoryContentProcessor<FactoryCapacit
   private static final String TAG_STATE = "state";
 
   private static XynaProcessingBase xynaProcessing;
-  
+  private static final List<IgnorePatternInterface<FactoryCapacity>> ignorePatterns = createIgnorePatterns();
+
+
   private static XynaProcessingBase getProcessing() {
-    if(xynaProcessing == null) {
+    if (xynaProcessing == null) {
       xynaProcessing = XynaFactory.getInstance().getProcessing();
     }
     return xynaProcessing;
+  }
+
+
+  private static List<IgnorePatternInterface<FactoryCapacity>> createIgnorePatterns() {
+    List<IgnorePatternInterface<FactoryCapacity>> resultList = new ArrayList<>();
+    resultList.add(new NameIgnorePattern());
+    return Collections.unmodifiableList(resultList);
   }
 
 
@@ -175,7 +185,7 @@ public class CapacityProcessor implements FactoryContentProcessor<FactoryCapacit
       ds.append("\n");
       ds.append("    " + TAG_STATE + " ");
       ds.append(MODIFY.class.getSimpleName() + " \"" + from.getState() + "\"=>\"" + to.getState() + "\"");
-      
+
     }
     return ds.toString();
   }
@@ -214,5 +224,29 @@ public class CapacityProcessor implements FactoryContentProcessor<FactoryCapacit
       throw new RuntimeException(e);
     }
   }
+
+
+  @Override
+  public List<IgnorePatternInterface<FactoryCapacity>> getIgnorePatterns() {
+    return ignorePatterns;
+  }
+
+
+  public static final class NameIgnorePattern extends RegexIgnorePattern<FactoryCapacity> {
+
+    public NameIgnorePattern() {
+      super("name");
+    }
+
+
+    @Override
+    public boolean ignore(FactoryCapacity item, String value) {
+      if (item.getCapacityName().matches(getRegexPart(value))) {
+        return true;
+      }
+      return false;
+    }
+  }
+
 
 }

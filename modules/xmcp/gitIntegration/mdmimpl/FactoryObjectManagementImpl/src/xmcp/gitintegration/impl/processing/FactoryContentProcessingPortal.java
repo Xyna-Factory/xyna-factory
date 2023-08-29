@@ -17,6 +17,9 @@
  */
 package xmcp.gitintegration.impl.processing;
 
+
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -34,6 +37,9 @@ import xmcp.gitintegration.FactoryContent;
 import xmcp.gitintegration.FactoryContentDifference;
 import xmcp.gitintegration.FactoryContentDifferences;
 import xmcp.gitintegration.FactoryContentItem;
+import xmcp.gitintegration.FactoryObjectManagement;
+import xmcp.gitintegration.FactoryXmlEntryType;
+import xmcp.gitintegration.FactoryXmlIgnoreEntry;
 import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.WorkspaceContentDifferenceType;
 import xmcp.gitintegration.impl.ResolveFactoryDifferencesParameter;
@@ -59,7 +65,9 @@ public class FactoryContentProcessingPortal {
     return result;
   }
 
+
   public static final HashMap<String, WorkspaceContentDifferenceType> differenceTypes = setupDifferenceTypes();
+
 
   private static HashMap<String, WorkspaceContentDifferenceType> setupDifferenceTypes() {
     HashMap<String, WorkspaceContentDifferenceType> result = new HashMap<>();
@@ -97,9 +105,29 @@ public class FactoryContentProcessingPortal {
 
 
   public List<FactoryContentItem> createItems() {
+     // TODO
+    List<? extends FactoryXmlIgnoreEntry> ignoreEntryList = FactoryObjectManagement.listFactoryXmlIgnoreEntries();
+    
     List<FactoryContentItem> result = new LinkedList<FactoryContentItem>();
     for (FactoryContentProcessor<? extends FactoryContentItem> supportedType : registeredTypes.values()) {
       List<? extends FactoryContentItem> subList = supportedType.createItems();
+      
+//      List<IgnorePatternInterface<?>> ignorePatternList  =  supportedType.getIgnorePatterns();
+      
+      // Liste durchlaufen mit dem Start am Ende
+      for(int i=subList.size()-1; i>=0;  i--) {
+        FactoryContentItem item = subList.get(i);
+        
+ //       for(IgnorePatternInterface<?> pattern : ignorePatternList) {
+           // valide aufrufen
+           // if valide == true
+           //   ignore aufrufen 
+           //   if ignore == true
+           //     subList.remove(i);
+//        }
+        
+      }
+      
       result.addAll(subList);
     }
 
@@ -194,6 +222,45 @@ public class FactoryContentProcessingPortal {
 
   public String createDifferenceString(FactoryContentDifference diff) {
     return createDifferenceStringInternal(diff);
+  }
+
+
+  public List<FactoryXmlEntryType> listFactoryXmlEntrytypes() {
+    List<FactoryXmlEntryType> resultList = new ArrayList<FactoryXmlEntryType>();
+    for (FactoryContentProcessor<? extends FactoryContentItem> processor : parserTypes.values()) {
+      FactoryXmlEntryType type = new FactoryXmlEntryType();
+      type.setName(processor.getTagName());
+      for (IgnorePatternInterface<? extends FactoryContentItem> ignorePattern : processor.getIgnorePatterns()) {
+        List<String> ignoreEntryList = new ArrayList<String>();
+        ignoreEntryList.add(ignorePattern.getPattern());
+      }
+      resultList.add(type);
+    }
+    return resultList;
+  }
+
+
+  public List<FactoryXmlIgnoreEntry> listInvalidateFactoryXmlIgnoreEntries() {
+    List<FactoryXmlIgnoreEntry> resultList = new ArrayList<>();
+    List<? extends FactoryXmlIgnoreEntry> entryList = FactoryObjectManagement.listFactoryXmlIgnoreEntries();
+    for (FactoryXmlIgnoreEntry entry : entryList) {
+      FactoryContentProcessor<? extends FactoryContentItem> processor = parserTypes.get(entry.getConfigType());
+
+      boolean validPatternFound = false;
+      for (IgnorePatternInterface<? extends FactoryContentItem> ignorePattern : processor.getIgnorePatterns()) {
+        if (ignorePattern.validate(entry.getValue())) {
+          validPatternFound = true;
+          break;
+        }
+      }
+      if (!validPatternFound) {
+        FactoryXmlIgnoreEntry factoryXmlIgnoreEntry = new FactoryXmlIgnoreEntry();
+        factoryXmlIgnoreEntry.setConfigType(entry.getConfigType());
+        factoryXmlIgnoreEntry.setValue(entry.getValue());
+        resultList.add(entry);
+      }
+    }
+    return resultList;
   }
 
 
