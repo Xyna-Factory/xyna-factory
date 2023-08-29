@@ -20,6 +20,7 @@ package xmcp.gitintegration.cli.impl;
 
 
 import java.io.OutputStream;
+import java.util.List;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
@@ -35,13 +36,23 @@ public class ListfactoryxmlentrytypesImpl extends XynaCommandImplementation<List
   public void execute(OutputStream statusOutputStream, Listfactoryxmlentrytypes payload) throws XynaException {
     FactoryContentProcessingPortal portal = new FactoryContentProcessingPortal();
     StringBuffer sb = new StringBuffer();
-    for (FactoryXmlEntryType type : portal.listFactoryXmlEntrytypes()) {
-      sb.append("Name: ").append(type.getName()).append("\n");
-      sb.append("  IgnoreEntryType:");
-      for (String ignoreEntryType : type.getIgnoreEntryTypes()) {
-        sb.append(" ").append(ignoreEntryType);
+    List<FactoryXmlEntryType> entryTypeList = portal.listFactoryXmlEntrytypes();
+    String exampleCall=null;
+    if ((entryTypeList != null) && (entryTypeList.size() > 0)) {
+      for (FactoryXmlEntryType entryType : entryTypeList) {
+        sb.append(entryType.getName());
+        for (String ignoreEntryType : entryType.getIgnoreEntryTypes()) {
+          sb.append("\n").append(" ").append(ignoreEntryType);
+          if(exampleCall == null) {
+            exampleCall="./xynafactory.sh addfactoryxmlignoreentry -type " + entryType.getName() + " -value " + ignoreEntryType;
+          }
+        }
+        sb.append("\n");
       }
     }
+    if(exampleCall != null) {
+      sb.append("\nExample: ").append(exampleCall).append("\n");
+    }  
     writeToCommandLine(statusOutputStream, sb.toString());
   }
 

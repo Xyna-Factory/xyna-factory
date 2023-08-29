@@ -44,7 +44,7 @@ public abstract class RegexIgnorePattern<T extends FactoryContentItem> implement
 
   @Override
   public boolean validate(String value) {
-    if (value.startsWith(TAG_NAME + ":")) {
+    if (!value.startsWith(TAG_NAME + ":")) {
       return false;
     }
     try {

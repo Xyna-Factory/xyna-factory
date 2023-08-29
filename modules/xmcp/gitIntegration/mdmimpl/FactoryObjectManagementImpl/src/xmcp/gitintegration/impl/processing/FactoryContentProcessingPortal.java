@@ -142,7 +142,7 @@ public class FactoryContentProcessingPortal {
 
 
   private <T extends FactoryContentItem> List<Pair<IgnorePatternInterface<T>, List<String>>> prepareIgnoreProcessors(FactoryContentProcessor<T> processor,
-                                                                                                                List<? extends FactoryXmlIgnoreEntry> ignore) {
+                                                                                                                     List<? extends FactoryXmlIgnoreEntry> ignore) {
     List<Pair<IgnorePatternInterface<T>, List<String>>> result = new ArrayList<>();
     Stream<? extends FactoryXmlIgnoreEntry> typeMatchStream = ignore.stream().filter(x -> processor.getTagName().equals(x.getConfigType()));
     List<? extends FactoryXmlIgnoreEntry> relevantIgnores = typeMatchStream.collect(Collectors.toList());
@@ -255,10 +255,11 @@ public class FactoryContentProcessingPortal {
     for (FactoryContentProcessor<? extends FactoryContentItem> processor : parserTypes.values()) {
       FactoryXmlEntryType type = new FactoryXmlEntryType();
       type.setName(processor.getTagName());
+      List<String> ignoreEntryList = new ArrayList<String>();
       for (IgnorePatternInterface<? extends FactoryContentItem> ignorePattern : processor.getIgnorePatterns()) {
-        List<String> ignoreEntryList = new ArrayList<String>();
         ignoreEntryList.add(ignorePattern.getPattern());
       }
+      type.setIgnoreEntryTypes(ignoreEntryList);
       resultList.add(type);
     }
     return resultList;
