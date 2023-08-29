@@ -26,9 +26,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.w3c.dom.Node;
 
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
@@ -105,32 +107,61 @@ public class FactoryContentProcessingPortal {
 
 
   public List<FactoryContentItem> createItems() {
-     // TODO
     List<? extends FactoryXmlIgnoreEntry> ignoreEntryList = FactoryObjectManagement.listFactoryXmlIgnoreEntries();
-    
     List<FactoryContentItem> result = new LinkedList<FactoryContentItem>();
-    for (FactoryContentProcessor<? extends FactoryContentItem> supportedType : registeredTypes.values()) {
-      List<? extends FactoryContentItem> subList = supportedType.createItems();
-      
-//      List<IgnorePatternInterface<?>> ignorePatternList  =  supportedType.getIgnorePatterns();
-      
-      // Liste durchlaufen mit dem Start am Ende
-      for(int i=subList.size()-1; i>=0;  i--) {
-        FactoryContentItem item = subList.get(i);
-        
- //       for(IgnorePatternInterface<?> pattern : ignorePatternList) {
-           // valide aufrufen
-           // if valide == true
-           //   ignore aufrufen 
-           //   if ignore == true
-           //     subList.remove(i);
-//        }
-        
-      }
-      
+
+    for (FactoryContentProcessor<? extends FactoryContentItem> processor : registeredTypes.values()) {
+      List<? extends FactoryContentItem> subList = createItemsForType(processor, ignoreEntryList);
       result.addAll(subList);
     }
+    return result;
+  }
 
+
+  private <T extends FactoryContentItem> List<T> createItemsForType(FactoryContentProcessor<T> processor,
+                                                                    List<? extends FactoryXmlIgnoreEntry> ignore) {
+    List<T> result = processor.createItems();
+    List<Pair<IgnorePatternInterface<T>, List<String>>> ignoreProcessors = prepareIgnoreProcessors(processor, ignore);
+
+    if (ignoreProcessors.isEmpty()) {
+      return result; //early exit
+    }
+    for (int i = result.size() - 1; i >= 0; i--) {
+      for (Pair<IgnorePatternInterface<T>, List<String>> ignoreProcessor : ignoreProcessors) {
+        if (shouldBeIgnored(result.get(i), ignoreProcessor)) {
+          result.remove(i);
+        }
+      }
+    }
+    return result;
+  }
+
+
+  private <T extends FactoryContentItem> boolean shouldBeIgnored(T item, Pair<IgnorePatternInterface<T>, List<String>> ignoreProcessor) {
+    for (String ignoreValue : ignoreProcessor.getSecond()) {
+      if (ignoreProcessor.getFirst().ignore(item, ignoreValue)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  private <T extends FactoryContentItem> List<Pair<IgnorePatternInterface<T>, List<String>>> prepareIgnoreProcessors(FactoryContentProcessor<T> processor,
+                                                                                                                List<? extends FactoryXmlIgnoreEntry> ignore) {
+    List<Pair<IgnorePatternInterface<T>, List<String>>> result = new ArrayList<>();
+    Stream<? extends FactoryXmlIgnoreEntry> typeMatchStream = ignore.stream().filter(x -> processor.getTagName().equals(x.getConfigType()));
+    List<? extends FactoryXmlIgnoreEntry> relevantIgnores = typeMatchStream.collect(Collectors.toList());
+    List<IgnorePatternInterface<T>> ignorePatterns = processor.getIgnorePatterns();
+
+    for (IgnorePatternInterface<T> ignorePattern : ignorePatterns) {
+      Stream<? extends FactoryXmlIgnoreEntry> filteredStream = relevantIgnores.stream().filter(x -> ignorePattern.validate(x.getValue()));
+      List<String> ignoreValues = filteredStream.map(x -> x.getValue()).collect(Collectors.toList());
+
+      if (!ignoreValues.isEmpty()) {
+        result.add(new Pair<IgnorePatternInterface<T>, List<String>>(ignorePattern, ignoreValues));
+      }
+    }
     return result;
   }
 
