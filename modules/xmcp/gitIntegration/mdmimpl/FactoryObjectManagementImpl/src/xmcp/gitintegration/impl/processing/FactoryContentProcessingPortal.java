@@ -123,16 +123,10 @@ public class FactoryContentProcessingPortal {
     List<T> result = processor.createItems();
     List<Pair<IgnorePatternInterface<T>, List<String>>> ignoreProcessors = prepareIgnoreProcessors(processor, ignore);
 
-    if (ignoreProcessors.isEmpty()) {
-      return result; //early exit
+    for (Pair<IgnorePatternInterface<T>, List<String>> ignoreProcessor : ignoreProcessors) {
+      result.removeIf(x -> shouldBeIgnored(x, ignoreProcessor));
     }
-    for (int i = result.size() - 1; i >= 0; i--) {
-      for (Pair<IgnorePatternInterface<T>, List<String>> ignoreProcessor : ignoreProcessors) {
-        if (shouldBeIgnored(result.get(i), ignoreProcessor)) {
-          result.remove(i);
-        }
-      }
-    }
+
     return result;
   }
 
