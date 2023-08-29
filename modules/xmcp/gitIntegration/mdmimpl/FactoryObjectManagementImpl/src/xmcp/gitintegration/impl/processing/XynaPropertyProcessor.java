@@ -331,7 +331,7 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
 
     @Override
     public boolean ignore(FactoryXynaProperty item, String value) {
-      if (item.getValue().matches(getRegexPart(value))) {
+      if ((item.getValue() != null) && item.getValue().matches(getRegexPart(value))) {
         return true;
       }
       return false;
