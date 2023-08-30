@@ -53,6 +53,7 @@ public class XMOMGuiRequest {
     Session,
     Move(true),
     Refactor(true),
+    Replace(true),
     Type(true),
     Upload,
     Close,

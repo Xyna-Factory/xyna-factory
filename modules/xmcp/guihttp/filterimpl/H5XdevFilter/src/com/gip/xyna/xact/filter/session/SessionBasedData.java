@@ -72,6 +72,8 @@ import com.gip.xyna.xact.filter.json.CloseJson;
 import com.gip.xyna.xact.filter.json.FQNameJson;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson.Type;
+import com.gip.xyna.xact.filter.replace.ReplaceProcessor;
+import com.gip.xyna.xact.filter.replace.ReplaceProcessor.ReplaceResult;
 import com.gip.xyna.xact.filter.json.PersistJson;
 import com.gip.xyna.xact.filter.json.RuntimeContextJson;
 import com.gip.xyna.xact.filter.session.View.ViewWrapperJson;
@@ -343,6 +345,8 @@ public class SessionBasedData {
         return deploy(request);
       case Refactor:
         return refactor(request);
+      case Replace:
+        return replace(request);
       case DeleteDocument:
         return deleteDocument(request);
       case Close:
@@ -894,6 +898,39 @@ public class SessionBasedData {
 
     return true;
   }
+
+  private XMOMGuiReply replace(XMOMGuiRequest request) throws Exception {
+    RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    
+    XMOMGuiReply reply = new XMOMGuiReply();
+    try {
+      JsonParser jp = new JsonParser();
+      PersistJson refactorRequest = jp.parse(request.getJson(), PersistJson.getJsonVisitor());
+      Long rev = rm.getRevision(request.getRuntimeContext());
+      
+      String newFqn = refactorRequest.getPath() + "." + Utils.labelToJavaName(refactorRequest.getLabel(), true);
+      String rmvFqn = request.getFQName().getFqName();
+
+      ReplaceProcessor processor = new ReplaceProcessor();
+      List<ReplaceResult> result = processor.replace(rmvFqn, newFqn, rev, request.getRuntimeContext());
+      RefactorResponse response = new RefactorResponse();
+      int total = result.size();
+      long successCount = result.stream().filter(x -> x.isSuccess()).count();
+      long failCount = total-successCount;
+      Hint hint = new Hint(String.format("Replaced %d occurences. Successes %d, Fails: %d", total, successCount, failCount));
+      Hint hintSuccess = new Hint("Successes:\n" + String.join("\n", result.stream().filter(x -> x.isSuccess()).map(x -> x.getObjectFqn()).collect(Collectors.toList())));
+      Hint hintFail = new Hint("Fails:\n" + String.join("\n", result.stream().filter(x -> !x.isSuccess()).map(x -> x.getObjectFqn()).collect(Collectors.toList())));
+      response.unversionedSetHints(List.of(hint, hintSuccess, hintFail));
+      reply.setXynaObject(response);
+      reply.setStatus(Status.success);
+    } catch (Exception e) {
+      reply.setXynaObject(new RefactorResponse());
+      reply.setStatus(Status.failed);
+    }
+    return reply;
+  }
+  
+
 
   private XMOMGuiReply refactor(XMOMGuiRequest request) throws InvalidJSONException, UnexpectedJSONContentException, InvalidRevisionException, XynaException, UnknownObjectIdException, MissingObjectException, DocumentLockedException {
     if(isLockedNotByMe(request.getFQName())) {
