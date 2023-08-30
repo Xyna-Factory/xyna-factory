@@ -2,7 +2,7 @@
   "$meta":
   {
     "name": "datatypeCreation",
-	"description": "Testet das erstellen und entfernen eines Datatypes über Funktionsaufrufe."
+	"description": "Testet das erstellen und entfernen eines Datatypes Ã¼ber Funktionsaufrufe."
   },
   "operations":
   [
@@ -13,7 +13,7 @@
     {
 	  "operation": "invoke",
 	  "functionName": "createDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!" : "default workspace",
 		"!path!": "lf.automatedTests.generated",

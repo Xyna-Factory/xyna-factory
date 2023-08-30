@@ -6,7 +6,7 @@
 	"created": "06.11.2019",
 	"updated": "06.11.2019"
   },
-  
+
   "operations":
   [
     {
@@ -23,7 +23,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult": true
 	},
 	{
 	  "operation": "setRandom",
@@ -43,14 +44,14 @@
 	{
 	  "operation": "invoke",
 	  "functionName": "saveAndDeploy",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!wfUrl!" : "!wfUrl!",
 		"!path!" : "!genPath!",
 		"!label!": "!genLabel!",
 		"!revision!": "!revision!"
 	  },
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!wfName!" : "!newWfName!",
 		"!wfUrl!" : "!wfUrl!"

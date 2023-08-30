@@ -930,7 +930,7 @@ public class CopyOperation extends ModifyOperationBase<CopyJson> {
         newVar = opt.get();
       }
       variableCloneMap.put(input, newVar);
-      sourceMappingGBSubObject.getRoot().getDataflow().copyConnection(input, newVar, variableCloneMap, null);
+      sourceMappingGBSubObject.getRoot().getDataflow().copyConnection(input, newVar, variableCloneMap, targetMappingGBBaseObject);
       idx++;
     }
     

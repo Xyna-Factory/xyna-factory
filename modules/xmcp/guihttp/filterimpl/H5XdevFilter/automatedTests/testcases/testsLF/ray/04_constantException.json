@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "constantException",
-	"description": "Erstellt eine Exception, fügt sie in einen Workflow ein und belegt sie konstant.",
+	"description": "Creates an Exception, adds it to a Workflow and gives it a constant value",
 	"created": "12.11.2019",
 	"updated": "12.11.2019"
   },
@@ -88,7 +88,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",
@@ -104,7 +105,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",
