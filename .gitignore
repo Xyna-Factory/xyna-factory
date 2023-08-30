@@ -167,3 +167,5 @@ localbuild
 
 !installation/build/lib/*.jar
 !xynautils/install/build/lib/*.jar
+
+/modules/xmcp/guihttp/filterimpl/H5XdevFilter/automatedTests/config.cfg

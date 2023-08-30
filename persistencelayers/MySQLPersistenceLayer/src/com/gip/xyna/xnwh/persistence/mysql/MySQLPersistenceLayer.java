@@ -951,8 +951,8 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
     private <T extends Storable> boolean isView(String tableName) {
-      Boolean queryResult = sqlUtils.queryOneRow("SELECT TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_NAME = ?",
-                                                 new com.gip.xyna.utils.db.Parameter(tableName), new ResultSetReader<Boolean>() {
+      Boolean queryResult = sqlUtils.queryOneRow("SELECT TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?",
+                                                 new com.gip.xyna.utils.db.Parameter(tableName, schemaName), new ResultSetReader<Boolean>() {
 
                                                    public Boolean read(ResultSet rs) throws SQLException {
                                                      String tableType = rs.getString("TABLE_TYPE");

@@ -202,7 +202,7 @@
     <target name="create-mdm-jar" description="Create mdm.jar locally">
         <xmlproperty file="application.xml" collapseAttributes="true" />
 
-        <property name="java.compile.version" value="Java6" />
+        <property name="java.compile.version" value="Java11" />
         <property name="output.dir" value="./mdm.jar" />
         <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
         <property name="apps.paths" value="${root.dir}" />
@@ -336,7 +336,7 @@
     <target name="compile-xmoms" description="compile xmom objects locally" depends="get-xyna-modules">
         <xmlproperty file="application.xml" collapseAttributes="true" />
 
-        <property name="java.compile.version" value="Java6" />
+        <property name="java.compile.version" value="Java11" />
         <property name="output.dir" value="./xmomclasses" />
         <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
         <property name="apps.paths" value="${root.dir}" />

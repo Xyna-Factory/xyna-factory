@@ -3,7 +3,7 @@
 """
 Goes through all the files in the given directory and checks, that they match their expected encoding:
 
-- .xml and .pom: UTF-8
+- .xml, .json and .pom: UTF-8
 - .java: ISO-8859-1
 """
 
@@ -23,16 +23,17 @@ EXPECTED_UTF_8: list[str] = [
     ".xml",
     ".pom",
     ".py",
+    ".json"
 ]
 
 # characters the give away, that a file opened with the given encoding isn't actually encoded that way
 ENCODING_WITNESSES: dict[str, list[str]] = {
     ISO_8859_1: [
-        "ö",
-        "ä",
-        "ü",
-        "Ö",
-        "�",
+        "Ã¶",
+        "Ã¤",
+        "Ã¼",
+        "Ã–",
+        "Ã",
     ],
     UTF_8: [
         "\uFFFD"
@@ -163,7 +164,7 @@ def main():
     print("")
     if len(VIOLATING_FILES) > 0:
         sys.stderr.write(
-            f"Found {len(VIOLATING_FILES)} files(s) not in ISO-8859-1 encoding:\n")
+            f"Found {len(VIOLATING_FILES)} files(s) not in expected encoding:\n")
         sys.stderr.writelines([f" - {file}\n" for file in VIOLATING_FILES])
         sys.exit(1)
 

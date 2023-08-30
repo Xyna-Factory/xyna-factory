@@ -22,7 +22,7 @@
           "!xmcp.xacm.rolemanagement.DeleteRole!": "xmcp.xacm.rolemanagement.DeleteRole"
         },
         {
-          "!autotest.generated.random.SONDERZEICHEN!": "autotest.generated.!rnd!.<>°!\\\"§$%&/()=?`´{}|;:,.-���+#'@€µ"
+          "!autotest.generated.random.SONDERZEICHEN!": "autotest.generated.!rnd!.<>Â°!\\\"Â§$%&/()=?`Â´{}|;:,.-üöä+#'@â‚¬Âµ"
         },
         {
           "!xmcp.xacm.rightmanagement.datatypes.Right!": "xmcp.xacm.rightmanagement.datatypes.Right"
