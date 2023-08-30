@@ -16,6 +16,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="validatefactoryxmlignoreentries" Description="validae ignore entries from the current factory configuration" />
+  <CommandDefinition Name="validatefactoryxmlignoreentries" Description="validate ignore entries from the current factory configuration" />
   <BoolOption Name="r" LongName="remove" Description="remove invalid ignore entries" Optional="true"/>
 </XynaCommandLineCommand>
