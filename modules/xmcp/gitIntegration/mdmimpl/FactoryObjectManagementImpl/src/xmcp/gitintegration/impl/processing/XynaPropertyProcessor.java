@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,9 +40,9 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.DELETE;
-import xmcp.gitintegration.FactoryXynaProperty;
 import xmcp.gitintegration.FactoryContentDifference;
 import xmcp.gitintegration.FactoryDocumentation;
+import xmcp.gitintegration.FactoryXynaProperty;
 import xmcp.gitintegration.MODIFY;
 
 
@@ -56,8 +57,18 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
   private static final String TAG_LANG = "lang";
   private static final String TAG_TEXT = "text";
 
+  private static final List<IgnorePatternInterface<FactoryXynaProperty>> ignorePatterns = createIgnorePatterns();
+
   private static final XynaMultiChannelPortal multiChannelPortal =
       (XynaMultiChannelPortal) XynaFactory.getInstance().getXynaMultiChannelPortal();
+
+
+  private static List<IgnorePatternInterface<FactoryXynaProperty>> createIgnorePatterns() {
+    List<IgnorePatternInterface<FactoryXynaProperty>> resultList = new ArrayList<>();
+    resultList.add(new KeyIgnorePattern());
+    resultList.add(new ValueIgnorePattern());
+    return Collections.unmodifiableList(resultList);
+  }
 
 
   @Override
@@ -285,6 +296,39 @@ public class XynaPropertyProcessor implements FactoryContentProcessor<FactoryXyn
       multiChannelPortal.removeProperty(item.getKey());
     } catch (Exception e) {
       throw new RuntimeException(e);
+    }
+  }
+
+
+  @Override
+  public List<IgnorePatternInterface<FactoryXynaProperty>> getIgnorePatterns() {
+    return ignorePatterns;
+  }
+
+
+  public static final class KeyIgnorePattern extends RegexIgnorePattern<FactoryXynaProperty> {
+
+    public KeyIgnorePattern() {
+      super("key");
+    }
+
+
+    @Override
+    public boolean ignore(FactoryXynaProperty item, String value) {
+      return item.getKey().matches(getRegexPart(value));
+    }
+  }
+
+  public static final class ValueIgnorePattern extends RegexIgnorePattern<FactoryXynaProperty> {
+
+    public ValueIgnorePattern() {
+      super("value");
+    }
+
+
+    @Override
+    public boolean ignore(FactoryXynaProperty item, String value) {
+      return ((item.getValue() != null) && item.getValue().matches(getRegexPart(value)));
     }
   }
 

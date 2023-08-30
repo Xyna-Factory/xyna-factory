@@ -49,6 +49,12 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
   private static final String TAG_RIGHT = "right";
   private static final String TAG_DOMAIN = "domain";
   private static final String TAG_DESCRIPTION = "description";
+  private static final List<IgnorePatternInterface<FactoryRole>> ignorePatterns = createIgnorePatterns();
+  
+  private static List<IgnorePatternInterface<FactoryRole>> createIgnorePatterns() {
+    List<IgnorePatternInterface<FactoryRole>> resultList = new ArrayList<>();
+    return Collections.unmodifiableList(resultList);
+  }
 
 
   @Override
@@ -239,6 +245,12 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
   public void delete(FactoryRole item) {
     // TODO Auto-generated method stub
 
+  }
+
+
+  @Override
+  public List<IgnorePatternInterface<FactoryRole>> getIgnorePatterns() {
+    return ignorePatterns;
   }
 
 }

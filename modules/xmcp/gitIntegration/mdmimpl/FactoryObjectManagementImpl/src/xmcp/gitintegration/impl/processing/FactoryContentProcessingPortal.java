@@ -17,15 +17,20 @@
  */
 package xmcp.gitintegration.impl.processing;
 
+
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.w3c.dom.Node;
 
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
@@ -34,6 +39,9 @@ import xmcp.gitintegration.FactoryContent;
 import xmcp.gitintegration.FactoryContentDifference;
 import xmcp.gitintegration.FactoryContentDifferences;
 import xmcp.gitintegration.FactoryContentItem;
+import xmcp.gitintegration.FactoryObjectManagement;
+import xmcp.gitintegration.FactoryXmlEntryType;
+import xmcp.gitintegration.FactoryXmlIgnoreEntry;
 import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.WorkspaceContentDifferenceType;
 import xmcp.gitintegration.impl.ResolveFactoryDifferencesParameter;
@@ -55,12 +63,15 @@ public class FactoryContentProcessingPortal {
     //register FactoryContentProcessors here: addToMap(result, new <FactoryContentType>Processor());
     addToMap(result, new CapacityProcessor());
     addToMap(result, new XynaPropertyProcessor());
+    addToMap(result, new FactoryXmlIgnoreEntryProcessor());
     addToMap(result, new RoleProcessor());
 
     return result;
   }
 
+
   public static final HashMap<String, WorkspaceContentDifferenceType> differenceTypes = setupDifferenceTypes();
+
 
   private static HashMap<String, WorkspaceContentDifferenceType> setupDifferenceTypes() {
     HashMap<String, WorkspaceContentDifferenceType> result = new HashMap<>();
@@ -98,12 +109,55 @@ public class FactoryContentProcessingPortal {
 
 
   public List<FactoryContentItem> createItems() {
+    List<? extends FactoryXmlIgnoreEntry> ignoreEntryList = FactoryObjectManagement.listFactoryXmlIgnoreEntries();
     List<FactoryContentItem> result = new LinkedList<FactoryContentItem>();
-    for (FactoryContentProcessor<? extends FactoryContentItem> supportedType : registeredTypes.values()) {
-      List<? extends FactoryContentItem> subList = supportedType.createItems();
+
+    for (FactoryContentProcessor<? extends FactoryContentItem> processor : registeredTypes.values()) {
+      List<? extends FactoryContentItem> subList = createItemsForType(processor, ignoreEntryList);
       result.addAll(subList);
     }
+    return result;
+  }
 
+
+  private <T extends FactoryContentItem> List<T> createItemsForType(FactoryContentProcessor<T> processor,
+                                                                    List<? extends FactoryXmlIgnoreEntry> ignore) {
+    List<T> result = processor.createItems();
+    List<Pair<IgnorePatternInterface<T>, List<String>>> ignoreProcessors = prepareIgnoreProcessors(processor, ignore);
+
+    for (Pair<IgnorePatternInterface<T>, List<String>> ignoreProcessor : ignoreProcessors) {
+      result.removeIf(x -> shouldBeIgnored(x, ignoreProcessor));
+    }
+
+    return result;
+  }
+
+
+  private <T extends FactoryContentItem> boolean shouldBeIgnored(T item, Pair<IgnorePatternInterface<T>, List<String>> ignoreProcessor) {
+    for (String ignoreValue : ignoreProcessor.getSecond()) {
+      if (ignoreProcessor.getFirst().ignore(item, ignoreValue)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  private <T extends FactoryContentItem> List<Pair<IgnorePatternInterface<T>, List<String>>> prepareIgnoreProcessors(FactoryContentProcessor<T> processor,
+                                                                                                                     List<? extends FactoryXmlIgnoreEntry> ignore) {
+    List<Pair<IgnorePatternInterface<T>, List<String>>> result = new ArrayList<>();
+    Stream<? extends FactoryXmlIgnoreEntry> typeMatchStream = ignore.stream().filter(x -> processor.getTagName().equals(x.getConfigType()));
+    List<? extends FactoryXmlIgnoreEntry> relevantIgnores = typeMatchStream.collect(Collectors.toList());
+    List<IgnorePatternInterface<T>> ignorePatterns = processor.getIgnorePatterns();
+
+    for (IgnorePatternInterface<T> ignorePattern : ignorePatterns) {
+      Stream<? extends FactoryXmlIgnoreEntry> filteredStream = relevantIgnores.stream().filter(x -> ignorePattern.validate(x.getValue()));
+      List<String> ignoreValues = filteredStream.map(x -> x.getValue()).collect(Collectors.toList());
+
+      if (!ignoreValues.isEmpty()) {
+        result.add(new Pair<IgnorePatternInterface<T>, List<String>>(ignorePattern, ignoreValues));
+      }
+    }
     return result;
   }
 
@@ -195,6 +249,53 @@ public class FactoryContentProcessingPortal {
 
   public String createDifferenceString(FactoryContentDifference diff) {
     return createDifferenceStringInternal(diff);
+  }
+
+
+  public List<FactoryXmlEntryType> listFactoryXmlEntrytypes() {
+    List<FactoryXmlEntryType> resultList = new ArrayList<FactoryXmlEntryType>();
+    for (FactoryContentProcessor<? extends FactoryContentItem> processor : parserTypes.values()) {
+      FactoryXmlEntryType type = new FactoryXmlEntryType();
+      type.setName(processor.getTagName());
+      List<String> ignoreEntryList = new ArrayList<String>();
+      for (IgnorePatternInterface<? extends FactoryContentItem> ignorePattern : processor.getIgnorePatterns()) {
+        ignoreEntryList.add(ignorePattern.getPattern());
+      }
+      type.setIgnoreEntryTypes(ignoreEntryList);
+      resultList.add(type);
+    }
+    return resultList;
+  }
+
+
+  public List<FactoryXmlIgnoreEntry> listInvalidateFactoryXmlIgnoreEntries(boolean removeFlag) {
+    List<FactoryXmlIgnoreEntry> resultList = new ArrayList<>();
+    List<? extends FactoryXmlIgnoreEntry> entryList = FactoryObjectManagement.listFactoryXmlIgnoreEntries();
+    for (FactoryXmlIgnoreEntry entry : entryList) {
+      FactoryContentProcessor<? extends FactoryContentItem> processor = parserTypes.get(entry.getConfigType());
+
+      boolean validPatternFound = false;
+      for (IgnorePatternInterface<? extends FactoryContentItem> ignorePattern : processor.getIgnorePatterns()) {
+        if (ignorePattern.validate(entry.getValue())) {
+          validPatternFound = true;
+          break;
+        }
+      }
+      if (!validPatternFound) {
+        FactoryXmlIgnoreEntry factoryXmlIgnoreEntry = new FactoryXmlIgnoreEntry();
+        factoryXmlIgnoreEntry.setConfigType(entry.getConfigType());
+        factoryXmlIgnoreEntry.setValue(entry.getValue());
+        resultList.add(entry);
+      }
+    }
+    // Remove flag
+    if (removeFlag) {
+      for (FactoryXmlIgnoreEntry toRemoveEntry : resultList) {
+        FactoryObjectManagement.removeFactoryXmlIgnoreEntry(toRemoveEntry);
+      }
+    }
+
+    return resultList;
   }
 
 

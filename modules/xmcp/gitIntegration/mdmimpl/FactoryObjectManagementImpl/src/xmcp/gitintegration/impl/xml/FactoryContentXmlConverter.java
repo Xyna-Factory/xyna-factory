@@ -45,7 +45,7 @@ public class FactoryContentXmlConverter {
     FactoryContentProcessingPortal portal = new FactoryContentProcessingPortal();
     XmlBuilder builder = new XmlBuilder();
     
-    builder.append(XynaProperty.XML_HEADER_COMMENT.get());
+   builder.append(XynaProperty.XML_HEADER_COMMENT.get());
     
     builder.startElement(TAG_FACTORYCONFIG);
     if (content.getFactoryContentItems() != null) {

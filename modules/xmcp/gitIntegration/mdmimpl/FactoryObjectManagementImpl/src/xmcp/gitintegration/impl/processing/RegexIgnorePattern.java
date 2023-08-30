@@ -17,30 +17,49 @@
  */
 package xmcp.gitintegration.impl.processing;
 
-import java.util.Collection;
-import java.util.List;
 
-import org.w3c.dom.Node;
 
-import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
-import xmcp.gitintegration.FactoryContentDifference;
 import xmcp.gitintegration.FactoryContentItem;
 
-public interface FactoryContentProcessor<T extends FactoryContentItem> {
 
-  
-  public List<T> createItems();
-  public void writeItem(XmlBuilder builder, T item);
-  public String getTagName();
-  public T parseItem(Node node);
-  public List<FactoryContentDifference> compare(Collection<? extends T> from, Collection<? extends T> to);
-  public String createItemKeyString(T item);
-  public String createDifferencesString(T from, T to);
-  
-  public void create(T item);
-  public void modify(T from, T to);
-  public void delete(T item);
-  
-  List<IgnorePatternInterface<T>> getIgnorePatterns();
+
+public abstract class RegexIgnorePattern<T extends FactoryContentItem> implements IgnorePatternInterface<T> {
+
+  protected final String TAG_NAME;
+
+
+  public RegexIgnorePattern(String tag) {
+    TAG_NAME = tag;
+  }
+
+
+  @Override
+  public String getPattern() {
+    return TAG_NAME + ":" + "<regex>";
+  }
+
+
+  @Override
+  public boolean validate(String value) {
+    if (!value.startsWith(TAG_NAME + ":")) {
+      return false;
+    }
+    try {
+      String regex = getRegexPart(value);
+      Pattern.compile(regex);
+    } catch (PatternSyntaxException e) {
+      return false;
+    }
+    return true;
+  }
+
+
+  protected String getRegexPart(String value) {
+    return value.substring(value.indexOf(":") + 1);
+  }
+
+
 }
