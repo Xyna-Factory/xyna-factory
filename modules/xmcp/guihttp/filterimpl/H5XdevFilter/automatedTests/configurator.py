@@ -17,12 +17,6 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import json
 import sys
-import os
-import traceback
-try:
-    import StringIO
-except ImportError:
-    from io import StringIO
 
 
 class Configurator:
@@ -102,13 +96,35 @@ class Configurator:
     with open(configFile, "w") as f:
       f.write("{}")
 
+  def createExample(self, configFile):
+    config = {
+      "debug": False,
+      "functions": "functions/allfunctions.json",
+      "factories": [
+        {
+          "ip": "127.0.0.1",
+          "port": 443,
+          "https": True,
+          "password": "secret",
+          "username": "user",
+          "cookiesFile": "cookies.txt"
+        }
+      ]
+    }
+    with open(configFile, "w") as f:
+      f.write(json.dumps(config, indent=2, sort_keys=True))
+
 
 
 #main
 configurator = Configurator()
 
 if len(sys.argv) < 2:
-  print("use: " + str(sys.argv[0]) + " configFile factoryId field value OR " + str(sys.argv[0]) + " configFile globalSetting value OR " + str(sys.argv[0]) + " reset")
+  print(f"{sys.argv[0]} - Create, Modify, Reset a configuration file for autotester.py. Useage:")
+  print(f"# {sys.argv[0]} <configFile> <factoryId> <field> <value>")
+  print(f"# {sys.argv[0]} <configFile> <globalSetting> <value>")
+  print(f"# {sys.argv[0]} <configFile> reset")
+  print(f"# {sys.argv[0]} <configFile> example")
   sys.exit()
 
 configFile = sys.argv[1]
@@ -116,6 +132,10 @@ configFile = sys.argv[1]
 
 if sys.argv[2] == "reset":
   configurator.resetConfig(configFile)
+  sys.exit()
+
+if sys.argv[2] == "example":
+  configurator.createExample(configFile)
   sys.exit()
 
 isConfigFactory = True
