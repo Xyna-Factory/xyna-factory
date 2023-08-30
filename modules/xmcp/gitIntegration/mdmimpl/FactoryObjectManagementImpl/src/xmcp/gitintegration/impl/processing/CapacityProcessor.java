@@ -238,13 +238,9 @@ public class CapacityProcessor implements FactoryContentProcessor<FactoryCapacit
       super("name");
     }
 
-
     @Override
     public boolean ignore(FactoryCapacity item, String value) {
-      if (item.getCapacityName().matches(getRegexPart(value))) {
-        return true;
-      }
-      return false;
+      return item.getCapacityName().matches(getRegexPart(value));
     }
   }
 

@@ -268,7 +268,7 @@ public class FactoryContentProcessingPortal {
   }
 
 
-  public List<FactoryXmlIgnoreEntry> listInvalidateFactoryXmlIgnoreEntries() {
+  public List<FactoryXmlIgnoreEntry> listInvalidateFactoryXmlIgnoreEntries(boolean removeFlag) {
     List<FactoryXmlIgnoreEntry> resultList = new ArrayList<>();
     List<? extends FactoryXmlIgnoreEntry> entryList = FactoryObjectManagement.listFactoryXmlIgnoreEntries();
     for (FactoryXmlIgnoreEntry entry : entryList) {
@@ -288,6 +288,13 @@ public class FactoryContentProcessingPortal {
         resultList.add(entry);
       }
     }
+    // Remove flag
+    if (removeFlag) {
+      for (FactoryXmlIgnoreEntry toRemoveEntry : resultList) {
+        FactoryObjectManagement.removeFactoryXmlIgnoreEntry(toRemoveEntry);
+      }
+    }
+
     return resultList;
   }
 

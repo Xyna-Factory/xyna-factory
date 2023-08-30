@@ -25,7 +25,6 @@ import java.util.List;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 
-import xmcp.gitintegration.FactoryObjectManagement;
 import xmcp.gitintegration.FactoryXmlIgnoreEntry;
 import xmcp.gitintegration.cli.generated.Validatefactoryxmlignoreentries;
 import xmcp.gitintegration.impl.processing.FactoryContentProcessingPortal;
@@ -36,7 +35,7 @@ public class ValidatefactoryxmlignoreentriesImpl extends XynaCommandImplementati
 
   public void execute(OutputStream statusOutputStream, Validatefactoryxmlignoreentries payload) throws XynaException {
     FactoryContentProcessingPortal portal = new FactoryContentProcessingPortal();
-    List<FactoryXmlIgnoreEntry> entryList = portal.listInvalidateFactoryXmlIgnoreEntries();
+    List<FactoryXmlIgnoreEntry> entryList = portal.listInvalidateFactoryXmlIgnoreEntries(payload.getRemove());
 
     StringBuilder sb = new StringBuilder();
     if ((entryList != null) && (entryList.size() > 0)) {
@@ -44,12 +43,6 @@ public class ValidatefactoryxmlignoreentriesImpl extends XynaCommandImplementati
         sb.append("The following entries were invalid and have been removed:\n");
       } else {
         sb.append("The following entries are invalid:\n");
-      }
-      for (FactoryXmlIgnoreEntry entry : entryList) {
-        sb.append(entry.getConfigType()).append(" ").append(entry.getValue()).append("\n");
-        if (payload.getRemove()) {
-          FactoryObjectManagement.removeFactoryXmlIgnoreEntry(entry);
-        }
       }
     }
     writeToCommandLine(statusOutputStream, sb.toString());

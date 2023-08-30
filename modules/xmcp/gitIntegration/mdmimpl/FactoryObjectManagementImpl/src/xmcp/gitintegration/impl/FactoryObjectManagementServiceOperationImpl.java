@@ -34,6 +34,7 @@ import xmcp.gitintegration.FactoryXmlEntryType;
 import xmcp.gitintegration.FactoryXmlIgnoreEntry;
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.impl.processing.FactoryContentProcessingPortal;
 import xmcp.gitintegration.storage.FactoryDifferenceListStorage;
 import xmcp.gitintegration.storage.FactoryXmlIgnoreEntryStorage;
 
@@ -102,8 +103,8 @@ public class FactoryObjectManagementServiceOperationImpl implements ExtendedDepl
 
   @Override
   public List<? extends FactoryXmlEntryType> listFactoryXmlEntryTypes() {
-    // TODO Auto-generated method stub
-    return null;
+    FactoryContentProcessingPortal portal = new FactoryContentProcessingPortal();
+    return portal.listFactoryXmlEntrytypes();
   }
 
 
@@ -123,8 +124,8 @@ public class FactoryObjectManagementServiceOperationImpl implements ExtendedDepl
 
   @Override
   public void validateFactoryXmlIgnoreEntries(Flag flag) {
-    // TODO Auto-generated method stub
-
+    FactoryContentProcessingPortal portal = new FactoryContentProcessingPortal();
+    portal.listInvalidateFactoryXmlIgnoreEntries(flag.getValue());
   }
 
 }
