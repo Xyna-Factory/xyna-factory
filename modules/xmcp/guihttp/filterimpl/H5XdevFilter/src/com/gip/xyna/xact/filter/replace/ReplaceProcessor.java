@@ -44,6 +44,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmomType;
 
 
@@ -90,6 +91,9 @@ public class ReplaceProcessor {
     if (obj instanceof DomOrExceptionGenerationBase) {
       DomOrExceptionGenerationBase doe = (DomOrExceptionGenerationBase) obj;
       replaceUsage(doe, newDom, fromFqn, toFqn, revision);
+      if (doe instanceof DOM) {
+        replaceInServices((DOM) doe, newDom, fromFqn, toFqn, revision);
+      }
       String path = doe.getOriginalPath();
       String name = doe.getOriginalSimpleName();
       String label = doe.getLabel();
@@ -101,13 +105,27 @@ public class ReplaceProcessor {
   }
 
 
-  private void replaceUsage(DomOrExceptionGenerationBase dom, DOM newDom, String fromFqn, String toFqn, Long revision) throws Exception {
-    for (AVariable member : dom.getMemberVars()) {
+  private void replaceInServices(DOM dom, DOM newDom, String fromFqn, String toFqn, Long revision) throws Exception {
+    for (List<Operation> services : dom.getServiceNameToOperationMap().values()) {
+      for (Operation service : services) {
+        replaceInAVarList(service.getInputVars(), fromFqn, newDom);
+        replaceInAVarList(service.getOutputVars(), fromFqn, newDom);
+      }
+    }
+  }
+
+
+  private void replaceInAVarList(List<AVariable> list, String fromFqn, DOM newDom) {
+    for (AVariable member : list) {
       if (member.getFQClassName().equals(fromFqn)) {
-        //replace member with newFqn
         member.replaceDOM(newDom, member.getLabel());
       }
     }
+  }
+
+
+  private void replaceUsage(DomOrExceptionGenerationBase dom, DOM newDom, String fromFqn, String toFqn, Long revision) throws Exception {
+    replaceInAVarList(dom.getMemberVars(), fromFqn, newDom);
   }
 
 
