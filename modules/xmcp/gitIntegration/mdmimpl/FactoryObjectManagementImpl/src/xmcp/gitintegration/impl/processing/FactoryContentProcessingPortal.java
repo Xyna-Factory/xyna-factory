@@ -65,6 +65,7 @@ public class FactoryContentProcessingPortal {
     addToMap(result, new XynaPropertyProcessor());
     addToMap(result, new FactoryXmlIgnoreEntryProcessor());
     addToMap(result, new RoleProcessor());
+    addToMap(result, new RightProcessor());
 
     return result;
   }
