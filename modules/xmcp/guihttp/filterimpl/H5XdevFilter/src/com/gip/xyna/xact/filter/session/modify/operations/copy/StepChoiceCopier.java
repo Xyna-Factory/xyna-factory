@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.util.GlobalChoiceVarIdentification;
 import com.gip.xyna.xact.filter.util.ReferencedVarIdentification;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
+import com.gip.xyna.xprc.xfractwfe.generation.DatatypeVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
@@ -44,6 +45,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.Distinction.BranchInfo;
 import com.gip.xyna.xprc.xfractwfe.generation.Distinction.CaseInfo;
+import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 
 
 
@@ -341,9 +343,20 @@ public class StepChoiceCopier implements IStepCopier<StepChoice> {
 
 
   private void addInputVars(StepChoice sourceStep, StepChoice targetStep, CopyData cpyData) {
+    WF targetWF = targetStep.getParentWFObject();
     if (sourceStep.getDistinctionType() == DistinctionType.TypeChoice) {
       AVariable inputVar = sourceStep.getInputVars().get(0);
-      AVariable copyVar = StepCopier.copyVariable(inputVar, targetStep.getParentWFObject(), cpyData);
+      AVariable copyVar;
+      if (inputVar instanceof ExceptionVariable) {
+        copyVar = new ExceptionVariable(targetWF);
+        copyVar.createDomOrException(inputVar.getLabel(), inputVar.getDomOrExceptionObject());
+      } else {
+        copyVar = new DatatypeVariable(targetWF, inputVar);
+      }
+
+      String idOfCopy = StepCopier.getOrAddIdOfVarCopy(inputVar.getId(), targetWF, cpyData);
+      copyVar.setId(idOfCopy);
+      cpyData.getVariableCopies().put(inputVar, copyVar);
       targetStep.setTypeChoiceVar(copyVar);
       return;
     }
