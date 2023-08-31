@@ -24,6 +24,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -230,9 +233,9 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
         fcd.setContentType(TAG_RIGHT);
         fcd.setExistingItem(fromEntry);
         if (toEntry != null) {
-          boolean sameCardinality = true; // TODO fromEntry.getCardinality() == toEntry.getCardinality();
-          boolean sameState = true; // TODO fromEntry.getState().equals(toEntry.getState());
-          if (!sameCardinality || !sameState) {
+          if (!Objects.equals(fromEntry.getParameter(), toEntry.getParameter())
+              || stringIsDifferent(localizationsToString(fromEntry.getLocalizations()),
+                                   localizationsToString(toEntry.getLocalizations()))) {
             fcd.setDifferenceType(new MODIFY());
             fcd.setNewItem(toEntry);
             toWorkingList.remove(toEntry); // remove entry from to-list
@@ -267,7 +270,45 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
   @Override
   public String createDifferencesString(FactoryRight from, FactoryRight to) {
     StringBuffer ds = new StringBuffer();
+    if (!Objects.equals(from.getParameter(), to.getParameter())) {
+      ds.append("\n");
+      ds.append("    " + TAG_PARAMETER + " ");
+      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getParameter() + "\"=>\"" + to.getParameter() + "\"");
+    }
+    if (stringIsDifferent(localizationsToString(from.getLocalizations()), localizationsToString(to.getLocalizations()))) {
+      ds.append("\n");
+      ds.append("    " + TAG_LOCALIZATIONS + " ");
+      ds.append(MODIFY.class.getSimpleName() + " \"" + localizationsToString(from.getLocalizations()) + "\"=>\""
+          + localizationsToString(to.getLocalizations()) + "\"");
+    }
     return ds.toString();
+  }
+
+
+  private String localizationsToString(List<? extends Localization> localizations) {
+    if (localizations == null) {
+      return "";
+    }
+    SortedMap<String, String> sortedMap = new TreeMap<String, String>();
+    for (Localization localization : localizations) {
+      sortedMap.put(localization.getLanguage() + ":" + localization.getIdentifier(), localization.getText());
+    }
+    List<String> ds = new ArrayList<>();
+    for (String key : sortedMap.keySet()) {
+      ds.add(key + ":" + sortedMap.get(key));
+    }
+    return String.join(";", ds);
+  }
+
+
+  private boolean stringIsDifferent(String from, String to) {
+    if (from == null) {
+      from = "";
+    }
+    if (to == null) {
+      to = "";
+    }
+    return !from.equals(to);
   }
 
 
