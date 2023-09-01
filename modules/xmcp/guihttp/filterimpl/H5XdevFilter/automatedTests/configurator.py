@@ -107,7 +107,7 @@ class Configurator:
           "https": True,
           "password": "secret",
           "username": "user",
-          "cookiesFile": "cookies.txt"
+          "cookieFile": "cookies.txt"
         }
       ]
     }
