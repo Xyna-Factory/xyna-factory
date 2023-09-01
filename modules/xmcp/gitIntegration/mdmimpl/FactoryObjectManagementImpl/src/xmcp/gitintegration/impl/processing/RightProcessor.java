@@ -137,7 +137,7 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
     builder.startElement(TAG_RIGHT);
     builder.element(TAG_NAME, item.getName());
     if (item.getParameter() != null) {
-      builder.element(TAG_PARAMETER, item.getParameter());
+      builder.element(TAG_PARAMETER, XmlBuilder.encode(item.getParameter()));
     }
     if ((item.getLocalizations() != null) && (item.getLocalizations().size() > 0)) {
       builder.startElement(TAG_LOCALIZATIONS);
@@ -146,7 +146,7 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
         builder.element(TAG_TYPE, loc.getType());
         builder.element(TAG_IDENTIFIER, loc.getIdentifier());
         builder.element(TAG_LANGUAGE, loc.getLanguage());
-        builder.element(TAG_TEXT, loc.getText());
+        builder.element(TAG_TEXT, XmlBuilder.encode(loc.getText()));
         builder.endElement(TAG_LOCALIZATION);
       }
       builder.endElement(TAG_LOCALIZATIONS);
