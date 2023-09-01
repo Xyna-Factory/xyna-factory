@@ -119,7 +119,7 @@ class Configurator:
 #main
 configurator = Configurator()
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
   print(f"{sys.argv[0]} - Create, Modify, Reset a configuration file for autotester.py. Useage:")
   print(f"# {sys.argv[0]} <configFile> <factoryId> <field> <value>")
   print(f"# {sys.argv[0]} <configFile> <globalSetting> <value>")
