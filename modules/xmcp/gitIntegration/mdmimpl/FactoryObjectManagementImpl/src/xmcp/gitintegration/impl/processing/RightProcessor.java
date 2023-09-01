@@ -314,8 +314,15 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
 
   @Override
   public void create(FactoryRight item) {
-    // TODO
-    //  XynaFactory.getInstance().getXynaMultiChannelPortal().createRight(item.getName() + ":" + item.GetParameter());
+    try {
+      if (item.getParameter() != null && item.getParameter().length() > 0) {
+        XynaFactory.getInstance().getXynaMultiChannelPortal().createRight(item.getName() + ":" + item.getParameter());
+      } else {
+        XynaFactory.getInstance().getXynaMultiChannelPortal().createRight(item.getName());
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
@@ -327,7 +334,15 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
 
   @Override
   public void delete(FactoryRight item) {
-    // TODO
+    try {
+      if (item.getParameter() != null && item.getParameter().length() > 0) {
+        XynaFactory.getInstance().getXynaMultiChannelPortal().deleteRight(item.getName() + ":" + item.getParameter());
+      } else {
+        XynaFactory.getInstance().getXynaMultiChannelPortal().deleteRight(item.getName());
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
