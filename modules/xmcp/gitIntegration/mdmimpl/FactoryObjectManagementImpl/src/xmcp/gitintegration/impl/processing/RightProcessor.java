@@ -71,9 +71,9 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
   @Override
   public List<FactoryRight> createItems() {
     List<FactoryRight> rightList = new ArrayList<FactoryRight>();
-    String language = "";
     try {
-      Collection<RightScope> rightScopeList = XynaFactory.getInstance().getFactoryManagement().getRightScopes(language);
+      Collection<RightScope> rightScopeList =
+          XynaFactory.getInstance().getFactoryManagement().getRightScopes(DocumentationLanguage.EN.toString());
       if (rightScopeList != null) {
         for (RightScope rightScope : rightScopeList) {
           FactoryRight right = new FactoryRight();
@@ -157,7 +157,7 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
 
   @Override
   public String getTagName() {
-    return TAG_NAME;
+    return TAG_RIGHT;
   }
 
 
