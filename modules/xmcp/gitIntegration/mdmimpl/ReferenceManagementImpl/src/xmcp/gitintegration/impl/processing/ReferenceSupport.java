@@ -275,8 +275,7 @@ public class ReferenceSupport {
 
 
   public void createDifferencesString(StringBuilder ds, List<ItemDifference<Reference>> differences) {
-    OutputCreator creator = new OutputCreator();
-    creator.appendDiffs(ds, differences, TAG_REFERENCES, this::appendDifference);
+    OutputCreator.appendDiffs(ds, differences, TAG_REFERENCES, this::appendDifference);
 
   }
 

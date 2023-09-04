@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Workspace Content Difference" TypeName="WorkspaceContentDifference" TypePath="xmcp.gitintegration" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Xyna Content Difference" TypeName="XynaContentDifference" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Existing Item" ReferenceName="WorkspaceContentItem" ReferencePath="xmcp.gitintegration" VariableName="existingItem">
+  <Data Label="Id" VariableName="id">
     <Meta>
-      <Documentation>Is null when DifferenceType is CREATE</Documentation>
+      <Type>long</Type>
     </Meta>
   </Data>
-  <Data Label="New Item" ReferenceName="WorkspaceContentItem" ReferencePath="xmcp.gitintegration" VariableName="newItem">
+  <Data Label="Content Type" VariableName="contentType">
     <Meta>
-      <Documentation>Is null when Difference Type is DELETE</Documentation>
+      <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Difference Type" ReferenceName="WorkspaceContentDifferenceType" ReferencePath="xmcp.gitintegration" VariableName="differenceType"/>
 </DataType>

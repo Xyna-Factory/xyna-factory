@@ -21,7 +21,7 @@ package xmcp.gitintegration.impl;
 
 import xmcp.gitintegration.WorkspaceContentDifferenceType;
 
-
+//WorkspaceContentDifferenceType => generalize!
 
 public class ItemDifference<T> {
 

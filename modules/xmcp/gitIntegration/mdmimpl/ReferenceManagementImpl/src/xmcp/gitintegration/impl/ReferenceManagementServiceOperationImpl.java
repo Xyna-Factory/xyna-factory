@@ -30,6 +30,8 @@ import java.util.List;
 import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.ReferenceData;
 import xmcp.gitintegration.RemoveReferenceData;
+import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.storage.ReferenceStorage;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.ReferenceManagementServiceOperation;
 
@@ -40,6 +42,8 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     // TODO do something on deployment, if required
     // This is executed again on each classloader-reload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
+    ReferenceStorage.init();
+    OverallInformationProvider.onDeployment();
   }
 
   public void onUndeployment() throws XynaException {

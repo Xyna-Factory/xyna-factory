@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,49 +28,53 @@ import java.util.function.BiFunction;
 import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.MODIFY;
-import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferenceType;
-import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
+import xmcp.gitintegration.XynaContentDifference;
+import xmcp.gitintegration.impl.processing.XynaContentProcessingPortal;
+import xmcp.gitintegration.impl.processing.XynaObjectDifferenceSelector;
 
 
 
-public class OutputCreator {
+public class OutputCreator <ITEM, DIFFERENCE extends XynaContentDifference, SELECTOR extends XynaObjectDifferenceSelector<ITEM, DIFFERENCE>>{
 
   public static final int TABLE_LIMIT = 5;
+  protected XynaObjectDifferenceSelector<ITEM, DIFFERENCE> selector;
+  
+  public OutputCreator(XynaObjectDifferenceSelector<ITEM, DIFFERENCE> selector) {
+    this.selector = selector;
+  }
 
-
-  private static final HashMap<String, BiFunction<WorkspaceContentDifference, WorkspaceContentProcessingPortal, String>> differenceStringFunctions =
+  protected final HashMap<String, BiFunction<DIFFERENCE, XynaContentProcessingPortal<ITEM, DIFFERENCE>, String>> differenceStringFunctions =
       createDifferenceStringFunctions();
 
 
-  private static final HashMap<String, BiFunction<WorkspaceContentDifference, WorkspaceContentProcessingPortal, String>> createDifferenceStringFunctions() {
-    HashMap<String, BiFunction<WorkspaceContentDifference, WorkspaceContentProcessingPortal, String>> result = new HashMap<>();
-    result.put(CREATE.class.getSimpleName(), OutputCreator::createCreateString);
-    result.put(MODIFY.class.getSimpleName(), OutputCreator::createModifyString);
-    result.put(DELETE.class.getSimpleName(), OutputCreator::createDeleteString);
+  protected final HashMap<String, BiFunction<DIFFERENCE, XynaContentProcessingPortal<ITEM, DIFFERENCE>, String>> createDifferenceStringFunctions() {
+    HashMap<String, BiFunction<DIFFERENCE, XynaContentProcessingPortal<ITEM, DIFFERENCE>, String>> result = new HashMap<>();
+    result.put(CREATE.class.getSimpleName(), this::createCreateString);
+    result.put(MODIFY.class.getSimpleName(), this::createModifyString);
+    result.put(DELETE.class.getSimpleName(), this::createDeleteString);
     return result;
   }
 
 
-  private static String createCreateString(WorkspaceContentDifference diff, WorkspaceContentProcessingPortal portal) {
-    return portal.createItemKeyString(diff.getNewItem());
+  protected String createCreateString(DIFFERENCE diff, XynaContentProcessingPortal<ITEM, DIFFERENCE> portal) {
+    return portal.createItemKeyString(selector.selectNewItem(diff));
   }
 
 
-  private static String createDeleteString(WorkspaceContentDifference diff, WorkspaceContentProcessingPortal portal) {
-    return portal.createItemKeyString(diff.getExistingItem());
+  private String createDeleteString(DIFFERENCE diff, XynaContentProcessingPortal<ITEM, DIFFERENCE> portal) {
+    return portal.createItemKeyString(selector.selectExistingItem(diff));
   }
 
 
-  private static String createModifyString(WorkspaceContentDifference diff, WorkspaceContentProcessingPortal portal) {
-    return portal.createItemKeyString(diff.getExistingItem()) + portal.createDifferenceString(diff);
+  private String createModifyString(DIFFERENCE diff, XynaContentProcessingPortal<ITEM, DIFFERENCE> portal) {
+    return portal.createItemKeyString(selector.selectExistingItem(diff)) + portal.createDifferenceString(diff);
   }
 
 
-  public String createOutput(List<? extends WorkspaceContentDifference> diffs) {
+  public String createOutput(List<? extends DIFFERENCE> diffs, XynaContentProcessingPortal<ITEM, DIFFERENCE> portal) {
     StringBuilder sb = new StringBuilder();
-    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
-    for (WorkspaceContentDifference diff : diffs) {
+    for (DIFFERENCE diff : diffs) {
       String output = createOutput(diff, portal);
       sb.append(output);
     }
@@ -78,7 +82,7 @@ public class OutputCreator {
   }
 
 
-  public String createOutput(WorkspaceContentDifference diff, WorkspaceContentProcessingPortal portal) {
+  public String createOutput(DIFFERENCE diff, XynaContentProcessingPortal<ITEM, DIFFERENCE> portal) {
     StringBuilder sb = new StringBuilder();
     sb.append(diff.getId()).append(" ");
     sb.append(diff.getContentType().toString()).append(" ");
@@ -90,16 +94,16 @@ public class OutputCreator {
   }
 
 
-  private String createDifferenceString(WorkspaceContentDifference diff, WorkspaceContentProcessingPortal portal) {
+  private String createDifferenceString(DIFFERENCE diff, XynaContentProcessingPortal<ITEM, DIFFERENCE> portal) {
     String key = diff.getDifferenceType().getClass().getSimpleName();
-    BiFunction<WorkspaceContentDifference, WorkspaceContentProcessingPortal, String> f = differenceStringFunctions.get(key);
+    BiFunction<DIFFERENCE, XynaContentProcessingPortal<ITEM, DIFFERENCE>, String> f = differenceStringFunctions.get(key);
     String result = f.apply(diff, portal);
     return result;
   }
 
 
 
-  public <C> void appendDiffs(StringBuilder ds, List<? extends ItemDifference<C>> diffs, String tag,
+  public static <C> void appendDiffs(StringBuilder ds, List<? extends ItemDifference<C>> diffs, String tag,
                               BiConsumer<StringBuilder, ItemDifference<C>> formatter) {
     if (diffs.isEmpty()) {
       return;
@@ -120,13 +124,13 @@ public class OutputCreator {
   }
 
 
-  private void appendTruncatedList(StringBuilder ds) {
+  private static void appendTruncatedList(StringBuilder ds) {
     ds.append("    ").append("...");
     ds.append("\n");
   }
 
 
-  public <T extends ItemDifference<?>> void appendDifferenceTableHeader(StringBuilder sb, List<T> list, String tag) {
+  public static <T extends ItemDifference<?>> void appendDifferenceTableHeader(StringBuilder sb, List<T> list, String tag) {
     Map<Class<? extends WorkspaceContentDifferenceType>, Integer> counts = new HashMap<>();
     counts.put(CREATE.class, 0);
     counts.put(MODIFY.class, 0);

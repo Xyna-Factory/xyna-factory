@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2023 Xyna GmbH, Germany
  *
@@ -15,11 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Factory Content Difference" TypeName="FactoryContentDifference" TypePath="xmcp.gitintegration" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data Label="Existing Item" ReferenceName="FactoryContentItem" ReferencePath="xmcp.gitintegration" VariableName="existingItem"/>
-  <Data Label="New Item" ReferenceName="FactoryContentItem" ReferencePath="xmcp.gitintegration" VariableName="newItem"/>
-</DataType>
+*/
+package xmcp.gitintegration.impl.processing;
+
+import xmcp.gitintegration.WorkspaceContentDifference;
+import xmcp.gitintegration.WorkspaceContentItem;
+
+public class WorkspaceContentItemDifferenceSelector implements XynaObjectDifferenceSelector <WorkspaceContentItem, WorkspaceContentDifference>{
+
+  @Override
+  public WorkspaceContentItem selectExistingItem(WorkspaceContentDifference item) {
+    return item.getExistingItem();
+  }
+
+  @Override
+  public WorkspaceContentItem selectNewItem(WorkspaceContentDifference item) {
+    return item.getNewItem();
+  }
+
+}
