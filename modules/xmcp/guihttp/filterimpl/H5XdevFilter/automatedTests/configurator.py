@@ -103,6 +103,7 @@ class Configurator:
       "factories": [
         {
           "ip": "127.0.0.1",
+          "prefix": "modeller-api",
           "port": 443,
           "https": True,
           "password": "secret",
