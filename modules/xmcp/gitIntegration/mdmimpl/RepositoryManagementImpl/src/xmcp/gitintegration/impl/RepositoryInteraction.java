@@ -65,6 +65,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xmcp.xfcli.impl.RemovexmomobjectImpl;
 import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
 
+import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
@@ -216,6 +217,7 @@ public class RepositoryInteraction {
       processReverts(git, repo, container);
       processPulls(git, repo, container);
       processExecs(container);
+      processReferences(container);
     }
     container.creds = null;
     return container;
@@ -246,6 +248,19 @@ public class RepositoryInteraction {
     }
   }
 
+  
+  //TODO: check - what does container.pull include?
+  private void processReferences(GitDataContainer container) {
+    //ReferenceManagement refMgmt;
+    for(String repoPath : container.pull) {
+      Pair<String, String> fqnAndWs = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
+      if(fqnAndWs == null) {
+        continue;
+      }
+      //refMgmt.triggerReferences(fqnAndWs.getFirst(), fqnAndWs.getSecond());
+    }
+  }
+  
 
   private void processExecs(GitDataContainer container) {
     List<Pair<Boolean, String>> execs = container.exec; //command, path (in repository)
