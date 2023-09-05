@@ -218,6 +218,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new DatatypesPathNameSaveAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameDeployAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameDeleteAction(xmomGui));
+    allFilterActions.add(new DatatypesPathNameReplaceAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameRefactorAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameObjectsIdRefactorAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameUploadAction(xmomGui));

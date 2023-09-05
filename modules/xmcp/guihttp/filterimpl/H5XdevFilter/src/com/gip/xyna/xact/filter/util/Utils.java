@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,6 +59,8 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xmcp.SharedLib;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xnwh.selection.parsing.ArchiveIdentifier;
+import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
 import com.gip.xyna.xprc.exceptions.XPRC_OperationUnknownException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
@@ -645,6 +648,17 @@ public class Utils {
     } else {
       return numberPattern.matcher(string).matches();
     }
+  }
+  
+  public static SearchRequestBean createReferencesSearchRequestBean(String selection, HashMap<String, String> filters) {
+    SearchRequestBean srb = new SearchRequestBean();
+    srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
+    srb.setMaxRows(-1);
+    srb.setSelection(selection);
+    if(filters != null) {
+      srb.setFilterEntries(filters);
+    }
+    return srb;
   }
 
 }
