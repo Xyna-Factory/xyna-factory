@@ -25,7 +25,7 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Parameter" VariableName="name">
+  <Data Label="Parameter" VariableName="parameter">
     <Meta>
       <Type>String</Type>
     </Meta>
