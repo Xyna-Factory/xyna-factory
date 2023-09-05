@@ -65,5 +65,50 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.FactoryObjectManagementImpl.createFactoryContentFromText(text8);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Remove Factory Xml Ignore Entry" Name="removeFactoryXmlIgnoreEntry">
+      <Input>
+        <Data ID="13" Label=" Factory Xml Ignore Entry " ReferenceName="FactoryXmlIgnoreEntry" ReferencePath="xmcp.gitintegration" VariableName="factoryXmlIgnoreEntry13"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.FactoryObjectManagementImpl.removeFactoryXmlIgnoreEntry(factoryXmlIgnoreEntry13);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Factory Xml Ignore Entries" Name="listFactoryXmlIgnoreEntries">
+      <Input/>
+      <Output>
+        <Data ID="15" IsList="true" Label=" Factory Xml Ignore Entry " ReferenceName="FactoryXmlIgnoreEntry" ReferencePath="xmcp.gitintegration" VariableName="factoryXmlIgnoreEntry15"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.FactoryObjectManagementImpl.listFactoryXmlIgnoreEntries();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Validate Factory Xml Ignore Entries" Name="validateFactoryXmlIgnoreEntries">
+      <Input>
+        <Data ID="16" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag16"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.FactoryObjectManagementImpl.validateFactoryXmlIgnoreEntries(flag16);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Factory Xml Entry Types" Name="listFactoryXmlEntryTypes">
+      <Input/>
+      <Output>
+        <Data ID="17" IsList="true" Label="Factory Xml Entry Type" ReferenceName="FactoryXmlEntryType" ReferencePath="xmcp.gitintegration" VariableName="factoryXmlEntryType17"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.FactoryObjectManagementImpl.listFactoryXmlEntryTypes();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add Factory Xml Ignore Entry" Name="addFactoryXmlIgnoreEntry">
+      <Input>
+        <Data ID="18" Label=" Factory Xml Ignore Entry " ReferenceName="FactoryXmlIgnoreEntry" ReferencePath="xmcp.gitintegration" VariableName="factoryXmlIgnoreEntry18"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.FactoryObjectManagementImpl.addFactoryXmlIgnoreEntry(factoryXmlIgnoreEntry18);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
