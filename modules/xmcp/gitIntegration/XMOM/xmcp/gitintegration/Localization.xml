@@ -16,22 +16,28 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Reference" TypeName="Reference" TypePath="xmcp.gitintegration" Version="1.8">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Localization" TypeName="Localization" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Path" VariableName="path">
-    <Meta>
-      <Type>String</Type>
-      <Documentation>relative to repository root</Documentation>
-    </Meta>
-  </Data>
   <Data Label="Type" VariableName="type">
     <Meta>
       <Type>String</Type>
-      <Documentation>build, lib_folder</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Identifier" VariableName="identifier">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Language" VariableName="language">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Text" VariableName="text">
+    <Meta>
+      <Type>String</Type>
     </Meta>
   </Data>
 </DataType>
-
-
