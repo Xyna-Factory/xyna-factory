@@ -23,7 +23,8 @@
   <Libraries>RepositoryManagementImpl.jar</Libraries>
   <Libraries>JavaEWAH-1.2.3.jar</Libraries>
   <Libraries>org.eclipse.jgit-6.6.0.202305301015-r.jar</Libraries>
-  <Libraries>slf4j-api-2.0.7.jar</Libraries>
+  <Libraries>slf4j-api-1.7.36.jar</Libraries>
+  <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
   <Service Label="Repository Management" TypeName="RepositoryManagement">
    <Meta>
       <AdditionalDependencies>

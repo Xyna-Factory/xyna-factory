@@ -19,6 +19,7 @@
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
+  <Libraries>ReferenceManagementImpl.jar</Libraries>
   <Service Label="Reference Management" TypeName="ReferenceManagement">
     <Operation IsStatic="true" Label="Add Reference" Name="addReference">
       <Input>

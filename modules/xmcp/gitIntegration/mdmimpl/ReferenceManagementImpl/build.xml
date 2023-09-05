@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,12 @@
 
     <property file="${application.dir}/workspace.properties" />
 
-    <property name="project.name" value="WorkspaceObjectManagementImpl" />
-    <property name="fqclassname" value="xmcp.gitintegration.WorkspaceObjectManagement" />
+	<property name="project.name" value="ReferenceManagementImpl" />
+    <property name="fqclassname" value="xmcp.gitintegration.ReferenceManagement" />
+	
     <property name="mdm.xml.path" value="xmcp/gitintegration" />
-    <property name="mdm.xml.filename" value="WorkspaceObjectManagement.xml" />
-    <property name="mdm.service.path" value="xmcp.gitintegration.WorkspaceObjectManagement" />
+    <property name="mdm.xml.filename" value="ReferenceManagement.xml" />
+    <property name="mdm.service.path" value="xmcp.gitintegration.ReferenceManagement" />
     <property name="cli.command.java.path" value="xmcp.gitintegration.cli" />
     <property name="cli.command.path" value="xmcp/gitintegration.cli" />
 
@@ -41,6 +42,7 @@
             <property name="target.dir" value="${basedir}/lib/" />
         </ant>
      </target>
+
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 

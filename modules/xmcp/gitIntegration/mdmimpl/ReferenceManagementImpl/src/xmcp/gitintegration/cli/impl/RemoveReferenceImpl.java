@@ -17,6 +17,8 @@
  */
 package xmcp.gitintegration.cli.impl;
 
+
+
 import java.io.OutputStream;
 
 import com.gip.xyna.XynaFactory;
@@ -36,7 +38,6 @@ public class RemoveReferenceImpl extends XynaCommandImplementation<RemoveReferen
     RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long workspaceRevision = revMgmt.getRevision(new Workspace(payload.getWorkspaceName()));
     support.delete(payload.getPath(), workspaceRevision, payload.getObjectName());
-    
   }
 
 }

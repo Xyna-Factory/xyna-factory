@@ -18,19 +18,24 @@
 package xmcp.gitintegration.impl;
 
 
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 
 import base.File;
 import base.math.IntegerNumber;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.ReferenceData;
 import xmcp.gitintegration.RemoveReferenceData;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.impl.processing.ReferenceSupport;
+import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.ReferenceManagementServiceOperation;
@@ -50,6 +55,7 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     // TODO do something on undeployment, if required
     // This is executed again on each classloader-unload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
+    OverallInformationProvider.onUndeployment();
   }
 
   public Long getOnUnDeploymentTimeout() {
@@ -69,17 +75,56 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     return null;
   }
 
+
   public void addReference(ReferenceData referenceData3) {
-    // Implemented as code snippet!
+    ReferenceSupport support = new ReferenceSupport();
+    Long workspaceRevision = getRevision(referenceData3.getWorkspaceName());
+    support.create(referenceData3.getPath(), referenceData3.getObjectType(), referenceData3.getReferenceType(), workspaceRevision,
+                   referenceData3.getObjectName());
   }
 
+
   public List<? extends ReferenceData> listReferences(Workspace workspace2) {
-    // Implemented as code snippet!
-    return null;
+    ReferenceStorage storage = new ReferenceStorage();
+    String workspaceName = workspace2.getName();
+    List<ReferenceStorable> references = null;
+    if (workspaceName == null) {
+      references = storage.getAllReferences();
+    } else {
+      Long revision = getRevision(workspaceName);
+      references = storage.getAllReferencesForWorkspace(revision);
+    }
+    return references.stream().map(this::convert).collect(Collectors.toList());
+  }
+  
+  private ReferenceData convert(ReferenceStorable storable) {
+    ReferenceData.Builder builder = new ReferenceData.Builder();
+    RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    builder.objectName(storable.getObjectName());
+    builder.objectType(storable.getObjecttype());
+    builder.path(storable.getPath());
+    builder.referenceType(storable.getReftype());
+    try {
+      builder.workspaceName(revMgmt.getWorkspace(storable.getWorkspace()).getName());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return builder.instance();
   }
 
   public void removeReference(RemoveReferenceData removeReferenceData5) {
-    // Implemented as code snippet!
+    ReferenceSupport support = new ReferenceSupport();
+    Long workspaceRevision = getRevision(removeReferenceData5.getWorkspaceName());
+    support.delete(removeReferenceData5.getPath(), workspaceRevision, removeReferenceData5.getObjectName());
+  }
+  
+  private Long getRevision(String workspaceName) {
+    RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    try {
+      return revMgmt.getRevision(new com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace(workspaceName));
+    } catch(Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

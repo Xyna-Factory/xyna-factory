@@ -40,6 +40,14 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/ReferenceManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/XynaObjectGitIntegrationManagement">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
         <antcall target="build-application" />
     </target>
     
@@ -48,6 +56,8 @@
         <supply-mdm-jar type="mdmimpl" name="WorkspaceObjectManagementImpl" />
         <supply-mdm-jar type="mdmimpl" name="FactoryObjectManagementImpl" />
         <supply-mdm-jar type="mdmimpl" name="RepositoryManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="ReferenceManagementImpl" />
+        <supply-mdm-jar type="sharedlib" name="XynaObjectGitIntegrationManagement" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 
