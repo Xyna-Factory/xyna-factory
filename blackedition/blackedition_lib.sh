@@ -1809,7 +1809,7 @@ f_check_license () {
     VENDOR=$(f_extract_vendor_from_jar ${JAR});
     #echo "Vendor ${VENDOR} for ${JAR}"
     case ${VENDOR} in 
-      'GIP AG') 
+      'Xyna GmbH') 
          CHECK_LICENSE="false";
          ;;
       '${vendor.name}')    #FIXME  das sollte raus!

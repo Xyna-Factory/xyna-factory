@@ -25,12 +25,8 @@ public class CodeBufferTest extends TestCase {
 
   private static final String DEP = "testdep";
 
-  private static final String HEADER = "/*----------------------------------------------------\n" + "* Xyna 6.1 (Black Edition)\n" + "* "
-  + DEP + "\n" + "*----------------------------------------------------\n"
-  + "* Copyright GIP AG 2015\n" + "* (http://www.gip.com)\n" + "* Hechtsheimer Str. 35-37\n"
-  + "* 55131 Mainz\n" + "*----------------------------------------------------\n" + "* $"
-  + "Revision:$\n" + "* $" + "Date:$\n" + "*----------------------------------------------------\n"
-  + "*/\n";
+  /** @todo Insert appropriate header when fixing this test */
+  private static final String HEADER = "TODO";
   
   
   public void testLines() {
