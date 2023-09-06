@@ -122,7 +122,6 @@
 		<dependency>
 			<groupId>com.gip.xyna</groupId>
 			<artifactId>xynautils-database</artifactId>
-			<version>I20190829_1328</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
