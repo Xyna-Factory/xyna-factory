@@ -20,8 +20,8 @@ IMPORTS
 --
 black MODULE-IDENTITY
         LAST-UPDATED "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
-        ORGANIZATION "GIP AG"
-        CONTACT-INFO "GIP AG"
+        ORGANIZATION "Xyna GmbH"
+        CONTACT-INFO "Xyna GmbH"
         DESCRIPTION  ""
         REVISION     "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
         DESCRIPTION  ""
