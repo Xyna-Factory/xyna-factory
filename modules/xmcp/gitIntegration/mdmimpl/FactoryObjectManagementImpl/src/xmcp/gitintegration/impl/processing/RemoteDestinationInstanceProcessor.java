@@ -51,7 +51,7 @@ public class RemoteDestinationInstanceProcessor implements FactoryContentProcess
   private static final String TAG_NAME = "name";
   private static final String TAG_DESCRIPTION = "description";
   private static final String TAG_TYPENAME = "typename";
-  private static final String TAG_EXECTIMEOUT = "exectimeout";
+  private static final String TAG_EXECUTIONTIMEOUT = "executiontimeout";
   private static final String TAG_PARAMETERS = "parameters";
   private static final String TAG_PARAMETER = "parameter";
   private static final String TAG_KEY = "key";
@@ -115,7 +115,7 @@ public class RemoteDestinationInstanceProcessor implements FactoryContentProcess
       builder.element(TAG_TYPENAME, item.getDestinationTypeName());
     }
     if (item.getExecutionTimeout() != null) {
-      builder.element(TAG_EXECTIMEOUT, item.getExecutionTimeout());
+      builder.element(TAG_EXECUTIONTIMEOUT, item.getExecutionTimeout());
     }
     if ((item.getParameters() != null) && (item.getParameters().size() > 0)) {
       builder.startElement(TAG_PARAMETERS);
@@ -149,7 +149,7 @@ public class RemoteDestinationInstanceProcessor implements FactoryContentProcess
         instance.setDescription(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_TYPENAME)) {
         instance.setDestinationTypeName(childNode.getTextContent());
-      } else if (childNode.getNodeName().equals(TAG_EXECTIMEOUT)) {
+      } else if (childNode.getNodeName().equals(TAG_EXECUTIONTIMEOUT)) {
         instance.setExecutionTimeout(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_PARAMETERS)) {
         instance.setParameters(parseParameters(childNode));
@@ -260,7 +260,7 @@ public class RemoteDestinationInstanceProcessor implements FactoryContentProcess
     }
     if (!Objects.equals(from.getExecutionTimeout(), to.getExecutionTimeout())) {
       ds.append("\n");
-      ds.append("    " + TAG_EXECTIMEOUT + " ");
+      ds.append("    " + TAG_EXECUTIONTIMEOUT + " ");
       ds.append(MODIFY.class.getSimpleName() + " \"" + from.getExecutionTimeout() + "\"=>\"" + to.getExecutionTimeout() + "\"");
     }
     if (!Objects.equals(paramtersToString(from.getParameters()), paramtersToString(to.getParameters()))) {
