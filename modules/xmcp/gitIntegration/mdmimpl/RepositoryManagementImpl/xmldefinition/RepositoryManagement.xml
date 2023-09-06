@@ -25,11 +25,6 @@
   <Libraries>org.eclipse.jgit-6.6.0.202305301015-r.jar</Libraries>
   <Libraries>slf4j-api-2.0.7.jar</Libraries>
   <Service Label="Repository Management" TypeName="RepositoryManagement">
-   <Meta>
-      <AdditionalDependencies>
-	    <Datatype>xmcp.gitintegration.WorkspaceContentManagement</Datatype>
-	  </AdditionalDependencies>
-   </Meta>
     <Operation IsStatic="true" Label="Add Repository Connection" Name="addRepositoryConnection">
       <Input>
         <Data ID="1" Label="Path" ReferenceName="Text" ReferencePath="base" VariableName="text1"/>

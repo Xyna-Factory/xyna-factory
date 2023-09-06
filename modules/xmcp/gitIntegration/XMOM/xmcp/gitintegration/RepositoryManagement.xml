@@ -26,11 +26,6 @@
   <Libraries>slf4j-api-1.7.36.jar</Libraries>
   <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
   <Service Label="Repository Management" TypeName="RepositoryManagement">
-   <Meta>
-      <AdditionalDependencies>
-        <Datatype>xmcp.gitintegration.WorkspaceContentManagement</Datatype>
-      </AdditionalDependencies>
-   </Meta>
     <Operation IsStatic="true" Label="Add Repository Connection" Name="addRepositoryConnection">
       <Input>
         <Data ID="1" Label="Path" ReferenceName="Text" ReferencePath="base" VariableName="text1"/>
