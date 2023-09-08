@@ -81,7 +81,7 @@ public class OptionsAction implements FilterAction {
     }
     setAllowedOrigin(tc, dfai, origin);
     
-    //erlaube einfach das was angefragt wird. achtung: der browser kï¿½nnte die antwort cachen. schï¿½ner wï¿½re es, wenn man hier alles angibt
+    //erlaube einfach das was angefragt wird. achtung: der browser könnte die antwort cachen. schöner wäre es, wenn man hier alles angibt
     String allow_method = tc.getHeader().getProperty("access-control-request-method");
     String allow_headers = tc.getHeader().getProperty("access-control-request-headers");
 
@@ -95,15 +95,15 @@ public class OptionsAction implements FilterAction {
 
 
   /*
-   * - falls der im request angegebene origin erlaubt ist, wird er in Access-Control-Allow-Origin zurï¿½ckgegeben
+   * - falls der im request angegebene origin erlaubt ist, wird er in Access-Control-Allow-Origin zuückgegeben
    * - falls er nicht erlaubt ist
-   *   - wird der erste in der property angegebene origin zurï¿½ckgegeben (oder "*" falls vorhanden)
-   *   - falls die property leer ist, wird versucht RMI_HOSTNAME_REGISTRY zurï¿½ckgegeben
+   *   - wird der erste in der property angegebene origin zurückgegeben (oder "*" falls vorhanden)
+   *   - falls die property leer ist, wird versucht RMI_HOSTNAME_REGISTRY zurückgegeben
    *     - falls RMI_HOSTNAME_REGISTRY auf einen hostname konfiguriert ist, der nicht localhost ist => ok
    *     - ansonsten (IP oder localhost) => nok => dann wird Access-Control-Allow-Origin nicht gesetzt
    * 
-   * ein origin ist erlaubt, falls er in der xynaproperty als einer der kommaseparierten werte enthalten ist oder wenn die xynaproperty "*" enthï¿½lt
-   * oder wenn die property leer ist UND wenn der origin er dem RMI_HOSTNAME_REGISTRY wert entspricht und dieser keine IP oder localhost enthï¿½lt.
+   * ein origin ist erlaubt, falls er in der xynaproperty als einer der kommaseparierten werte enthalten ist oder wenn die xynaproperty "*" enthält
+   * oder wenn die property leer ist UND wenn der origin er dem RMI_HOSTNAME_REGISTRY wert entspricht und dieser keine IP oder localhost enthält.
    * => localhost ist nur erlaubt, wenn localhost in der "propertyACAO" enthalten ist
    * => RMI_HOSTNAME_REGISTRY wird nur betrachtet, falls acao-property leer ist.
    */
