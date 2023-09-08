@@ -95,7 +95,7 @@ public class OptionsAction implements FilterAction {
 
 
   /*
-   * - falls der im request angegebene origin erlaubt ist, wird er in Access-Control-Allow-Origin zuückgegeben
+   * - falls der im request angegebene origin erlaubt ist, wird er in Access-Control-Allow-Origin zurückgegeben
    * - falls er nicht erlaubt ist
    *   - wird der erste in der property angegebene origin zurückgegeben (oder "*" falls vorhanden)
    *   - falls die property leer ist, wird versucht RMI_HOSTNAME_REGISTRY zurückgegeben
