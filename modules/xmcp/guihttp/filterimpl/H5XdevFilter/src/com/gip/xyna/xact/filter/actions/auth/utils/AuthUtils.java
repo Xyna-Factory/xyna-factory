@@ -55,7 +55,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_VERSION_DETECTION_PROBLEM;
 
 public class AuthUtils {
 
-  public final static String COOKIE_FIELD_SESSION_ID = "sessionId";
+  public final static String COOKIE_FIELD_SESSION_ID = "__Secure-sessionId";
   public final static String COOKIE_FIELD_TOKEN = "token";
   public final static String COOKIE_MARKER_SECURE = "Secure";
   public final static String COOKIE_MARKER_HTTP_ONLY = "HttpOnly";
