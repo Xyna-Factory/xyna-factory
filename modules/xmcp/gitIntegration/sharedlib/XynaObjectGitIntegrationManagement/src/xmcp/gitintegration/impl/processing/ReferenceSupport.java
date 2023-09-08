@@ -48,8 +48,10 @@ import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.OutputCreator;
 import xmcp.gitintegration.impl.references.ReferenceMethods;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
+import xmcp.gitintegration.impl.references.ReferenceObjectTypeMethods;
 import xmcp.gitintegration.impl.references.ReferenceType;
 import xmcp.gitintegration.impl.references.methods.LibFolderMethods;
+import xmcp.gitintegration.impl.references.methods.objecttypes.DatatypeReferenceMethods;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 
@@ -75,6 +77,7 @@ public class ReferenceSupport {
   public static final String TAG_TYPE = "type";
 
   private static final HashMap<ReferenceType, ReferenceMethods> implementations = setReferenceMethods();
+  private static final HashMap<ReferenceObjectType, ReferenceObjectTypeMethods> objectTypeImplementations = setRefTypeMethods();
   
   
   private static HashMap<ReferenceType, ReferenceMethods> setReferenceMethods() {
@@ -85,10 +88,18 @@ public class ReferenceSupport {
     
     return result;
   }
-
+  private static HashMap<ReferenceObjectType, ReferenceObjectTypeMethods> setRefTypeMethods() {
+    HashMap<ReferenceObjectType, ReferenceObjectTypeMethods> result = new HashMap<>();
+    
+    //register implementations here
+    result.put(ReferenceObjectType.DATATYPE, new DatatypeReferenceMethods());
+    
+    return result;
+  }
   private ReferenceMethods dispatch(ReferenceType type) {
     return implementations.get(type);
   }
+  
   
 
   public String getTagName() {
@@ -323,5 +334,27 @@ public class ReferenceSupport {
       }
     }
     return null;
+  }
+  
+  public void triggerReferences(String objectName, Long revision) {
+    ReferenceStorage storage = new ReferenceStorage();
+    List<ReferenceStorable> references = storage.getAllReferencesForObject(revision, objectName);
+    if(references.isEmpty()) {
+      return;
+    }
+    List<Reference> refs = convertList(references);
+    ReferenceObjectType objectType = ReferenceObjectType.valueOf(references.get(0).getObjecttype());
+    objectTypeImplementations.get(objectType).trigger(refs, objectName, revision);
+    
+  }
+  
+  public List<Reference> convertList(List<? extends ReferenceStorable> references) {
+    return references.stream().map(x -> convert(x)).collect(Collectors.toList());
+  }
+  
+  public Reference convert(ReferenceStorable reference) {
+    Reference.Builder builder = new Reference.Builder();
+    builder.path(reference.getPath()).type(reference.getReftype());
+    return builder.instance();
   }
 }

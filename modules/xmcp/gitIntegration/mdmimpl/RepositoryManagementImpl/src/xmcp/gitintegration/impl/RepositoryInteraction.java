@@ -65,10 +65,10 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xmcp.xfcli.impl.RemovexmomobjectImpl;
 import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
 
-import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
@@ -249,15 +249,16 @@ public class RepositoryInteraction {
   }
 
   
-  //TODO: check - what does container.pull include?
+  //TODO: currently only triggers if Object with references is changes
+  //      but should also trigger, if file inside reference changes!
   private void processReferences(GitDataContainer container) {
-    //ReferenceManagement refMgmt;
+    ReferenceSupport referenceSupport = new ReferenceSupport();
     for(String repoPath : container.pull) {
       Pair<String, String> fqnAndWs = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
       if(fqnAndWs == null) {
         continue;
       }
-      //refMgmt.triggerReferences(fqnAndWs.getFirst(), fqnAndWs.getSecond());
+      referenceSupport.triggerReferences(fqnAndWs.getFirst(), getRevision(fqnAndWs.getSecond()));
     }
   }
   

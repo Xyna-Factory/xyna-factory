@@ -38,7 +38,7 @@
 
      <target name="prepareLibs" description="Prepare Libs">
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/XynaObjectGitIntegrationManagement">
-            <property name="target.dir" value="${basedir}/lib/" />
+            <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
      </target>
 

@@ -20,6 +20,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>ReferenceManagementImpl.jar</Libraries>
+  <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
   <Service Label="Reference Management" TypeName="ReferenceManagement">
     <Operation IsStatic="true" Label="Add Reference" Name="addReference">
       <Input>
