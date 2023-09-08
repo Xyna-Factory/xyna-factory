@@ -36,7 +36,7 @@ public abstract class H5xFilterAction  implements FilterAction{
 
   protected boolean isLoggedIn(HTTPTriggerConnection tc) {
     try {
-      return AuthUtils.authenticate(AuthUtils.readCredentialsFromCookies(tc)) != null;
+      return AuthUtils.authenticate(AuthUtils.readCredentialsFromRequest(tc)) != null;
     } catch (RemoteException e) {
       return false;
     }
@@ -48,7 +48,7 @@ public abstract class H5xFilterAction  implements FilterAction{
   
   protected boolean hasRight(HTTPTriggerConnection tc, String right) {
     try {
-      Role role = AuthUtils.authenticate(AuthUtils.readCredentialsFromCookies(tc));
+      Role role = AuthUtils.authenticate(AuthUtils.readCredentialsFromRequest(tc));
       return XynaFactory.getInstance().getFactoryManagementPortal().hasRight(right, role);
     } catch (RemoteException | PersistenceLayerException ex) {
       return false;
@@ -57,7 +57,7 @@ public abstract class H5xFilterAction  implements FilterAction{
 
   protected Role getRole(HTTPTriggerConnection tc) {
     try {
-      return AuthUtils.authenticate(AuthUtils.readCredentialsFromCookies(tc));
+      return AuthUtils.authenticate(AuthUtils.readCredentialsFromRequest(tc));
     } catch (RemoteException ex) {
       return null;
     }
