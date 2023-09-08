@@ -72,6 +72,8 @@ import com.gip.xyna.xact.filter.json.CloseJson;
 import com.gip.xyna.xact.filter.json.FQNameJson;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson.Type;
+import com.gip.xyna.xact.filter.replace.ReplaceProcessor;
+import com.gip.xyna.xact.filter.replace.ReplaceProcessor.ReplaceResult;
 import com.gip.xyna.xact.filter.json.PersistJson;
 import com.gip.xyna.xact.filter.json.RuntimeContextJson;
 import com.gip.xyna.xact.filter.session.View.ViewWrapperJson;
@@ -343,6 +345,8 @@ public class SessionBasedData {
         return deploy(request);
       case Refactor:
         return refactor(request);
+      case Replace:
+        return replace(request);
       case DeleteDocument:
         return deleteDocument(request);
       case Close:
@@ -894,6 +898,39 @@ public class SessionBasedData {
 
     return true;
   }
+
+  private XMOMGuiReply replace(XMOMGuiRequest request) throws Exception {
+    RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    
+    XMOMGuiReply reply = new XMOMGuiReply();
+    try {
+      JsonParser jp = new JsonParser();
+      PersistJson refactorRequest = jp.parse(request.getJson(), PersistJson.getJsonVisitor());
+      Long rev = rm.getRevision(request.getRuntimeContext());
+      
+      String newFqn = refactorRequest.getPath() + "." + Utils.labelToJavaName(refactorRequest.getLabel(), true);
+      String rmvFqn = request.getFQName().getFqName();
+
+      ReplaceProcessor processor = new ReplaceProcessor();
+      List<ReplaceResult> result = processor.replace(rmvFqn, newFqn, rev, request.getRuntimeContext());
+      RefactorResponse response = new RefactorResponse();
+      int total = result.size();
+      long successCount = result.stream().filter(x -> x.isSuccess()).count();
+      long failCount = total-successCount;
+      Hint hint = new Hint(String.format("Replaced %d occurences. Successes %d, Fails: %d", total, successCount, failCount));
+      Hint hintSuccess = new Hint("Successes:\n" + String.join("\n", result.stream().filter(x -> x.isSuccess()).map(x -> x.getObjectFqn()).collect(Collectors.toList())));
+      Hint hintFail = new Hint("Fails:\n" + String.join("\n", result.stream().filter(x -> !x.isSuccess()).map(x -> x.getObjectFqn()).collect(Collectors.toList())));
+      response.unversionedSetHints(List.of(hint, hintSuccess, hintFail));
+      reply.setXynaObject(response);
+      reply.setStatus(Status.success);
+    } catch (Exception e) {
+      reply.setXynaObject(new RefactorResponse());
+      reply.setStatus(Status.failed);
+    }
+    return reply;
+  }
+  
+
 
   private XMOMGuiReply refactor(XMOMGuiRequest request) throws InvalidJSONException, UnexpectedJSONContentException, InvalidRevisionException, XynaException, UnknownObjectIdException, MissingObjectException, DocumentLockedException {
     if(isLockedNotByMe(request.getFQName())) {
@@ -1540,7 +1577,7 @@ public class SessionBasedData {
     reply.setXynaObject(response);
     
     Map<Long, RuntimeContext> rtcCache = new HashMap<Long, RuntimeContext>();
-    
+    Map<ReferenceType, List<FactoryItem>> lists = new HashMap<>();
     for (Reference reference : references) {
       FactoryItem factoryItem = new FactoryItem();
       factoryItem.setFqn(reference.getFqName().getFqName());
@@ -1562,58 +1599,24 @@ public class SessionBasedData {
       if(reference.getObjectType().equals(Type.codedService)) {
         continue;
       }
-      
-
-      switch (reference.getReferenceType()) {
-        case calledBy:
-          response.addToCalledBy(factoryItem);
-          break;
-        case extend:
-          response.addToExtends0(factoryItem);
-          break;
-        case extendedBy:
-          response.addToExtendedBy0(factoryItem);
-          break;
-        case instanceServiceReferenceOf:
-          response.addToInstanceServiceReferenceOf(factoryItem);
-          break;
-        case possessedBy:
-          response.addToIsMemberOf(factoryItem);
-          break;
-        case possesses:
-          response.addToHasMemberOf(factoryItem);
-          break;
-        case producedBy:
-          response.addToOutputOf0(factoryItem);
-          break;
-        case neededBy:
-          response.addToInputOf0(factoryItem);
-          break;
-        case thrownBy:
-          response.addToThrownBy0(factoryItem);
-          break;
-        case usedInImplOf:
-          response.addToUsedIn0(factoryItem);
-          break;
-        case calls:
-          response.addToCalls(factoryItem);
-          break;
-        case exceptions:
-          response.addToExceptions(factoryItem);
-          break;
-        case needs:
-          response.addToOutputOf0(factoryItem);
-          break;
-        case produces:
-          response.addToInputOf0(factoryItem);
-          break;
-        case online:
-//          response.addToOnline(factoryItem);
-          break;
-        default :
-          break;
-      }
+      lists.putIfAbsent(reference.getReferenceType(), new ArrayList<FactoryItem>());
+      lists.get(reference.getReferenceType()).add(factoryItem);
     }
+
+    response.setCalls(lists.get(ReferenceType.calls));
+    response.setExtends0(lists.get(ReferenceType.extend));
+    response.setOutputOf0(lists.get(ReferenceType.needs));
+    response.setInputOf0(lists.get(ReferenceType.produces));
+    response.setCalledBy(lists.get(ReferenceType.calledBy));
+    response.setInputOf0(lists.get(ReferenceType.neededBy));
+    response.setThrownBy0(lists.get(ReferenceType.thrownBy));
+    response.setOutputOf0(lists.get(ReferenceType.producedBy));
+    response.setUsedIn0(lists.get(ReferenceType.usedInImplOf));
+    response.setHasMemberOf(lists.get(ReferenceType.possesses));
+    response.setExceptions(lists.get(ReferenceType.exceptions));
+    response.setExtendedBy0(lists.get(ReferenceType.extendedBy));
+    response.setIsMemberOf(lists.get(ReferenceType.possessedBy));
+    response.setInstanceServiceReferenceOf(lists.get(ReferenceType.instanceServiceReferenceOf));
 
     return reply;
   }

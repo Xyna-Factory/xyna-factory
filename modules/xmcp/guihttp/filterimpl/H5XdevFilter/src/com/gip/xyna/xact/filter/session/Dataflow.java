@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
@@ -240,6 +241,17 @@ public class Dataflow {
       return iv.getIdentifiedVariable().isList();
     }
 
+
+    @Override
+    public String toString() {
+      String ids = String.join(",", inputVars.stream().map(x -> mapToId(x)).collect(Collectors.toList()));
+      return "SimpleConnection[" + linkstate.toString() + " - " + ids + "]";
+    }
+    
+    private String mapToId(AVariableIdentification avarIdent) {
+      return avarIdent.idprovider != null && !(avarIdent.idprovider instanceof ThrowExceptionIdProvider) ? avarIdent.idprovider.getId() : "null";
+    }
+
   }
 
 
@@ -310,18 +322,11 @@ public class Dataflow {
 
     public SimpleConnection getSimpleConnectionByBranchId(String branchId) {
       for (int i = 0; i < branchIds.size(); i++) {
-        if (eq(branchIds.get(i), branchId)) {
+        if (Objects.equals(branchIds.get(i), branchId)) {
           return connectionsPerLane.get(i);
         }
       }
       return null;
-    }
-
-    private boolean eq(String s1, String s2) {
-      if (s1 == null) {
-        return s2 == null;
-      }
-      return s1.equals(s2);
     }
 
     public boolean removeBranch(String branchId) {

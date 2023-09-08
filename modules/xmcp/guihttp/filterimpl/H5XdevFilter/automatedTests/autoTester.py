@@ -22,19 +22,16 @@ import datetime
 import sys
 import os
 import traceback
-import urllib
+import urllib.parse
 import string
 import random
 import xml.etree.ElementTree as ET
-try:
-    import StringIO
-except ImportError:
-    from io import StringIO
+from io import BytesIO
 import time
 import threading
 
 #constants
-baseURLToFormat = "http{0}://{1}:{2}/XynaBlackEditionWebServices/io{3}"  #{0} is s or '', {1} is ip, {2} is port, {3} is remainder of url. starts with '/'
+baseURLToFormat = "http{0}://{1}:{2}{3}{4}"  #{0} is s or ''; {1} is ip; {2} is port; {3} is url prefix specified in apache. May be left blank when directly connecting to trigger. If set, starts with '/'; {4} is remainder of url. starts with '/'
 keyOperation = "operation"
 keyOperationCall = "call"
 keyOperationRead = "read"
@@ -79,6 +76,7 @@ class NoValidFactoryConfigException(Exception):
 class Factory:
   ip = ""
   port = -1
+  prefix = ""
   https = False
   usename = ""
   password = ""
@@ -122,6 +120,7 @@ class RequestTester:
       f.ip = factory["ip"]
       f.port = factory["port"] if "port" in factory else 8080
       f.https = bool(factory["https"]) if "https" in factory else False
+      f.prefix = factory["prefix"]
       f.cookieFile = self.cookieFile = pathOfScript + "/" + factory["cookieFile"]
       f.tags = factory["tags"] if "tags" in factory else {}
       self.factories.append(f)
@@ -131,7 +130,11 @@ class RequestTester:
     if self.debug:
       print("loading function file: " + path + file)
     with open(path + file, "r") as jsonFile:
-      completeJson = json.load(jsonFile)
+      try:
+        completeJson = json.load(jsonFile)
+      except Exception as e:
+        print("Error loading function file '{0}{1}': {2}".format(path, file, e))
+        raise e
 
     for entry in completeJson:
       if entry["type"] == "additionalFunctionFile":
@@ -264,7 +267,8 @@ class RequestTester:
     s = "s" if self.factories[factoryIndexTranslated].https else ""
     ip = self.factories[factoryIndexTranslated].ip
     port = self.factories[factoryIndexTranslated].port
-    return baseURLToFormat.format(s, ip, port, self.urlExtension);
+    prefix = self.factories[factoryIndexTranslated].prefix
+    return baseURLToFormat.format(s, ip, port, prefix, self.urlExtension);
 
 
   def createSubprocessArguments(self, requestType, rdyUrl, rdyPayload, factoryIndexTranslated, writeCookies):
@@ -590,7 +594,7 @@ class RequestTester:
 
     #urlencode
     if operationJson["operation"] == "urlencode":
-      result =  urllib.quote(oldValue)
+      result =  urllib.parse.quote(oldValue)
 
     #replace
     if operationJson["operation"] == "replace":
@@ -884,12 +888,11 @@ class RequestTester:
 
     if "member" in operationJson:
       memberName = operationJson["member"]
-      sortedList = map(lambda x: x[memberName], sortedList)
-      unsortedList = map(lambda x: x[memberName], unsortedList)
+      sortedList = [x[memberName] for x in sortedList]
+      unsortedList = [x[memberName] for x in unsortedList]
 
-
-    sortedList = map(lambda x: x.lower(), sortedList)
-    unsortedList = map(lambda x: x.lower(), unsortedList)
+    sortedList = [x.lower() for x in sortedList]
+    unsortedList =[x.lower() for x in unsortedList]
 
     sortedList.sort()
 
@@ -1113,8 +1116,11 @@ class RequestTester:
     if "payload" in operationJson:
       payload = json.dumps(operationJson["payload"])
       payload = self.replacePlaceholders(payload, parameters)
-      payload = json.dumps(json.loads(payload), ensure_ascii=False)
-
+      try:
+        payload = json.dumps(json.loads(payload), ensure_ascii=False)
+      except Exception as e:
+        print("Invalid json: " + str(payload))
+        raise e
     #TODO: it seems like this does not trigger?
     if "requestType" not in operationJson:
       raise Exception("requestType required for call operation.")
@@ -1136,7 +1142,7 @@ class RequestTester:
 
   def executeAsyncCall(self, operationJson, parameters, url, payload, factoryIndex):
     if "callId" not in operationJson:
-      raise Error("callId missing in async call operation")
+      raise Exception("callId missing in async call operation")
     callId = operationJson["callId"]
 
     threadParameters = parameters.copy()
@@ -1275,9 +1281,9 @@ class RequestTester:
       inputVar = json.JSONDecoder().decode(inputVar)
 
     try:
-      file = StringIO.StringIO(inputVar.encode('utf-8'))
+      file = BytesIO(inputVar.encode('utf-8'))
     except UnicodeDecodeError:
-      file = StringIO.StringIO(inputVar)
+      file = BytesIO(inputVar)
 
     root = ET.parse(file)
 
@@ -1678,7 +1684,11 @@ class RequestTester:
 
     completeJson = ""
     with open(path + seriesFile, "r") as jsonFile:
-      completeJson = json.load(jsonFile)
+      try:
+        completeJson = json.load(jsonFile)
+      except Exception as e:
+        print("Could not parse test series file '{0}': {1}".format(completePathAndFile, e))
+        raise e
 
     # execute tests
     if "tests" in completeJson:

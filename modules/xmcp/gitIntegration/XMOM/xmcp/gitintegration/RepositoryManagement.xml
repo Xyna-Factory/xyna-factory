@@ -27,8 +27,8 @@
   <Service Label="Repository Management" TypeName="RepositoryManagement">
    <Meta>
       <AdditionalDependencies>
-        <Datatype>xmcp.gitintegration.WorkspaceContentManagement</Datatype>
-      </AdditionalDependencies>
+	    <Datatype>xmcp.gitintegration.WorkspaceContentManagement</Datatype>
+	  </AdditionalDependencies>
    </Meta>
     <Operation IsStatic="true" Label="Add Repository Connection" Name="addRepositoryConnection">
       <Input>
@@ -63,6 +63,26 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listRepositoryConnections();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Repository Connection" Name="getRepositoryConnection">
+      <Input>
+        <Data ID="26" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace26"/>
+      </Input>
+      <Output>
+        <Data ID="27" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection27"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return RepositoryManagementImpl.getRepositoryConnection(workspace26);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Update Repository Connection" Name="updateRepositoryConnection">
+      <Input>
+        <Data ID="28" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection28"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">RepositoryManagementImpl.updateRepositoryConnection(repositoryConnection28);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

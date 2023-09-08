@@ -31,6 +31,7 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
 
+import xmcp.DeEncoder;
 import xmcp.EncryptionData;
 
 public class DecodeAction  implements FilterAction {
@@ -54,8 +55,7 @@ public class DecodeAction  implements FilterAction {
     
     for(int i=0; i<request.getValues().size(); i++) {
       String data = request.getValues().get(i).replace("%3d", "=").replace("-", "+").replace("_", "/");
-      String result = SecureStorage.staticDecrypt(sessionId + token, data);
-      request.getValues().set(i, result);
+      request.getValues().set(i, DeEncoder.decode(data, sessionId, token));
     }
     request.unversionedSetEncrypted(false);
     

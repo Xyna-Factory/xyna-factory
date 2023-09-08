@@ -41,4 +41,6 @@ public interface FactoryContentProcessor<T extends FactoryContentItem> {
   public void create(T item);
   public void modify(T from, T to);
   public void delete(T item);
+  
+  List<IgnorePatternInterface<T>> getIgnorePatterns();
 }

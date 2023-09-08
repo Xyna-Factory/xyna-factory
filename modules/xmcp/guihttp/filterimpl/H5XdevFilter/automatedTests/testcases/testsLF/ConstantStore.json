@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "ConstantStore",
-	"descrption": "Beim konstanten setzen von Store kam/kommt es zu Classloader Fehlern. Braucht einen nicht-abstrakten Erben von Storable! Die oberen beiden set-Operationen können angepasst werden.",
+	"descrption": "Beim konstanten setzen von Store kam/kommt es zu Classloader Fehlern. Braucht einen nicht-abstrakten Erben von Storable! Die oberen beiden set-Operationen kÃ¶nnen angepasst werden.",
 	"created": "24.10.2019",
 	"updated": "24.10.2019"
   },
@@ -20,7 +20,7 @@
     {
  	  "operation": "invoke",
 	  "functionName": "createStorable",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!" : "default workspace",
 		"!path!": "!storableChildPath!",
@@ -32,7 +32,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@
           depends="resolve, genCodeClass, genCliClass"
           description="baut Jarfile inkl. generierter Klassen">
     <mkdir dir="${basedir}/classes" />
-    <compile basedir="${basedir}" memoryMaximumSize="1024m" target="11" />
+    <compile basedir="${basedir}" memoryMaximumSize="1024m" target="-1" />
     <mkdir dir="${build.dir}" />
     <jar destfile="${build.dir}/${project.name}.jar">
       <manifest>

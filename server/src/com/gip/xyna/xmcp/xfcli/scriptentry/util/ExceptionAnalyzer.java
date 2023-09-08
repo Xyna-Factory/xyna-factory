@@ -97,9 +97,9 @@ public class ExceptionAnalyzer {
       fqn = error.getFqXmlName();
       msg = error.getArgs()[2];
       parts = msg.split("\n");
-      if (parts[1].contains("cannot find symbol")) {
+      if (parts.length > 1 && parts[1].contains("cannot find symbol")) {
         missingSymbol = parts[2].split("\\s+")[3];
-        if (parts[3].split("\\s+")[2].equals("package")) {
+        if (parts.length > 3 && parts[3].split("\\s+")[2].equals("package")) {
           missingPackage = parts[3].split("\\s+")[3];
           System.out.println("Missing: " + missingPackage + "." + missingSymbol + " required for " + fqn);
           ExceptionContainer container = new ExceptionContainer();
@@ -108,6 +108,8 @@ public class ExceptionAnalyzer {
           container.info = missingPackage + "." + missingSymbol;
           exceptionContainers.add(container);
         }
+      } else {
+        System.out.println("Unknown exception in " + fqn + ": " + msg);
       }
     }
     System.out.println("--- Exceptions: " + exceptionContainers.size());

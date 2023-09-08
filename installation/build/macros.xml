@@ -88,28 +88,6 @@
         </sequential>
     </macrodef>
 
-
-    <!-- ================================= 
-         macro: checkJavaVersion
-         ================================= -->
-    <macrodef name="checkJavaVersion">
-        <sequential>
-            <fail message="Unsupported Java version: ${java.version}. Expected 1.5.0, 1.6.0, 1.7.0 or 1.8.0">
-                <condition>
-                    <not>
-                        <or>
-                            <contains string="${java.version}" substring="1.5.0" />
-                            <contains string="${java.version}" substring="1.6.0" />
-                            <contains string="${java.version}" substring="1.7.0" />
-                            <contains string="${java.version}" substring="1.8.0" />
-                            <contains string="${java.version}" substring="11" />
-                        </or>
-                    </not>
-                </condition>
-            </fail>
-        </sequential>
-    </macrodef>
-
     <!-- ================================= 
           macro: checkServerProperties
           ================================= -->

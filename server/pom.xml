@@ -28,7 +28,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gip.xyna</groupId>
 	<artifactId>xynafactory</artifactId>
-	<version>9.0.0.0</version>
+	<version>9.0.3.0</version>
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

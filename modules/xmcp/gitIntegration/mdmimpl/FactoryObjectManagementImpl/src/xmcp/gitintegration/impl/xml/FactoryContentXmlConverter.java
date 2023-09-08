@@ -27,8 +27,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.gip.xyna.utils.collections.Pair;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
@@ -45,7 +45,7 @@ public class FactoryContentXmlConverter {
     FactoryContentProcessingPortal portal = new FactoryContentProcessingPortal();
     XmlBuilder builder = new XmlBuilder();
     
-    builder.append(GenerationBase.COPYRIGHT_HEADER);
+   builder.append(XynaProperty.XML_HEADER_COMMENT.get());
     
     builder.startElement(TAG_FACTORYCONFIG);
     if (content.getFactoryContentItems() != null) {

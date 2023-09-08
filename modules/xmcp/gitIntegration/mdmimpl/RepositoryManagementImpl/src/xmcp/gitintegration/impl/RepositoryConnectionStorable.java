@@ -18,6 +18,7 @@
 package xmcp.gitintegration.impl;
 
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -25,6 +26,7 @@ import com.gip.xyna.xnwh.persistence.Column;
 import com.gip.xyna.xnwh.persistence.Persistable;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
+
 
 
 @Persistable(primaryKey = RepositoryConnectionStorable.COL_WORKSPACENAME, tableName = RepositoryConnectionStorable.TABLE_NAME)
@@ -38,6 +40,7 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
   public static final String COL_PATH = "path";
   public static final String COL_SUBPATH = "subpath";
   public static final String COL_SAVEDINREPO = "savedinrepo";
+  public static final String COL_SPLITTED = "splitted";
 
   @Column(name = COL_WORKSPACENAME)
   private String workspacename;
@@ -47,9 +50,12 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
 
   @Column(name = COL_SUBPATH)
   private String subpath;
-  
+
   @Column(name = COL_SAVEDINREPO)
   private boolean savedinrepo;
+
+  @Column(name = COL_SPLITTED)
+  private boolean splitted;
 
 
   public RepositoryConnectionStorable() {
@@ -63,11 +69,12 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
   }
 
 
-  public RepositoryConnectionStorable(String workspacename, String path, String subpath, boolean savedinrepo) {
+  public RepositoryConnectionStorable(String workspacename, String path, String subpath, boolean savedinrepo, boolean splitted) {
     this(workspacename);
     this.path = path;
     this.subpath = subpath;
     this.savedinrepo = savedinrepo;
+    this.splitted = splitted;
   }
 
 
@@ -95,6 +102,7 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
       result.path = rs.getString(COL_PATH);
       result.subpath = rs.getString(COL_SUBPATH);
       result.savedinrepo = rs.getBoolean(COL_SAVEDINREPO);
+      result.splitted = rs.getBoolean(COL_SPLITTED);
       return result;
     }
   }
@@ -107,6 +115,7 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
     path = cast.path;
     subpath = cast.subpath;
     savedinrepo = cast.savedinrepo;
+    splitted = cast.splitted;
   }
 
 
@@ -138,12 +147,24 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
   public void setSubpath(String subpath) {
     this.subpath = subpath;
   }
-  
+
+
   public void setSavedinrepo(boolean savedinrepo) {
     this.savedinrepo = savedinrepo;
   }
-  
+
+
   public boolean getSavedinrepo() {
     return savedinrepo;
+  }
+
+
+  public void setSplitted(boolean splitted) {
+    this.splitted = splitted;
+  }
+
+
+  public boolean getSplitted() {
+    return splitted;
   }
 }
