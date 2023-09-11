@@ -138,11 +138,10 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
   }
 
   @Override
-  public List<? extends File> triggerReferences(List<? extends Reference> arg0, List<String> arg1, Long arg2) {
+  public void triggerReferences(List<? extends Reference> arg0, List<String> arg1, Long arg2) {
     ReferenceSupport impl = new ReferenceSupport();
     List<InternalReference> references = convert(arg0);
     impl.triggerReferences(references, arg2);
-    return null;
   }
   
   private List<InternalReference> convert(List<? extends Reference> arg0) {
