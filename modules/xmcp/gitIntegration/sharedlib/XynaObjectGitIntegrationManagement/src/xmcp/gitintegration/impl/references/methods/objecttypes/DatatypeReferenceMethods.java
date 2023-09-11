@@ -30,8 +30,8 @@ import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 
-import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceObjectTypeMethods;
 
 
@@ -39,15 +39,14 @@ import xmcp.gitintegration.impl.references.ReferenceObjectTypeMethods;
 public class DatatypeReferenceMethods implements ReferenceObjectTypeMethods {
 
   @Override
-  public void trigger(List<Reference> references, String objectName, Long revision) {
+  public void trigger(List<InternalReference> references, String objectName, Long revision) {
     //identify required libraries
     List<String> requiredFiles = getRequiredFiles(objectName, revision);
-
+    ReferenceSupport impl = new ReferenceSupport();
     //findJar using references
-    ReferenceSupport support = new ReferenceSupport();
     File targetDir = new File(RevisionManagement.getPathForRevision(PathType.SERVICE, revision, false));
     for (String jarName : requiredFiles) {
-      File fromFile = support.findJar(references, jarName, revision);
+      File fromFile = impl.findJar(references, jarName, revision);
       //copy fromFile to expected location
       try {
         FileUtils.copyFileToDir(fromFile, targetDir);

@@ -26,13 +26,13 @@ import java.util.Optional;
 
 import com.gip.xyna.FileUtils;
 
-import xmcp.gitintegration.Reference;
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceMethods;
 
 public class LibFolderMethods implements ReferenceMethods {
 
   
-  public Optional<File> findJar(Reference reference, String jarName, Long revision) {
+  public Optional<File> findJar(InternalReference reference, String jarName, Long revision) {
     FilenameFilter fileNameFilter = createFileNameFilter(jarName);
     //TODO: call to workspace connection management to find location of repository connected to revision
     String pathToRepository = "";

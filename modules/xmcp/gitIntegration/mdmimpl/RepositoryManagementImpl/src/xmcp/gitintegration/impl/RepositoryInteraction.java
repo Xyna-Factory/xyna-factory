@@ -73,6 +73,8 @@ import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.storage.ReferenceStorable;
+import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
 import xprc.xpce.Workspace;
 
@@ -262,6 +264,33 @@ public class RepositoryInteraction {
     }
   }
   
+  private void processReferencesComplete(GitDataContainer container) {
+    ReferenceSupport referenceSupport = new ReferenceSupport();
+    ReferenceStorage storage = new ReferenceStorage();
+    List<ReferenceStorable> references = storage.getAllReferences();
+//    List<>
+    for(String repoPath : container.pull) {
+      Pair<String, String> fqnAndWs = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
+      if(fqnAndWs != null) {
+        //changes to a datatype with reference?`
+        Long revision = getRevision(fqnAndWs.getSecond());
+        if(references.stream().anyMatch(x -> matchNameAndRevision(x, fqnAndWs.getFirst(), revision))) {
+        
+        }
+      } else {
+        //changes to a referenced file?
+      }
+    }
+    
+    
+//    for() {
+//      referenceSupport.triggerReferences(objectName, revision);
+//    }
+  }
+  
+  private boolean matchNameAndRevision(ReferenceStorable s, String fqn, Long revision) {
+    return fqn.equals(s.getObjectName()) && revision == s.getWorkspace();
+  }
 
   private void processExecs(GitDataContainer container) {
     List<Pair<Boolean, String>> execs = container.exec; //command, path (in repository)

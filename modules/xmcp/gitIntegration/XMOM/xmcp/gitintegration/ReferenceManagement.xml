@@ -28,7 +28,7 @@
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java"/>
+        <CodeSnippet Type="Java">xmcp.gitintegration.ReferenceManagementImpl.addReference(referenceData3);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="List References" Name="listReferences">
@@ -39,7 +39,7 @@
         <Data ID="4" IsList="true" Label="Reference Data" ReferenceName="ReferenceData" ReferencePath="xmcp.gitintegration" VariableName="referenceData4"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.listReferences(workspace2);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Remove Reference" Name="removeReference">
@@ -48,20 +48,47 @@
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java"/>
+        <CodeSnippet Type="Java">xmcp.gitintegration.ReferenceManagementImpl.removeReference(removeReferenceData5);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Trigger References" Name="triggerReferences">
       <Input>
         <Data ID="6" IsList="true" Label="Reference" ReferenceName="Reference" ReferencePath="xmcp.gitintegration" VariableName="reference6"/>
-        <Data ID="7" IsList="true" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file7"/>
-        <Data ID="8" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber8"/>
+        <Data ID="7" IsList="true" Label="File Names" VariableName="file7">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="8" Label="Revision" VariableName="integerNumber8">
+          <Meta>
+            <Type>Long</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.ReferenceManagementImpl.triggerReferences(reference6, file7, integerNumber8);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Find Referenced Jar" Name="findReferencedJar">
+      <Input>
+        <Data ID="10" IsList="true" Label="Reference" ReferenceName="Reference" ReferencePath="xmcp.gitintegration" VariableName="reference10"/>
+        <Data ID="11" Label="File Names" VariableName="fileNames">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="12" Label="Revision" VariableName="integerNumber12">
+          <Meta>
+            <Type>Long</Type>
+          </Meta>
+        </Data>
       </Input>
       <Output>
-        <Data ID="9" IsList="true" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file9"/>
+        <Data ID="13" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file13"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.findReferencedJar(reference10, , integerNumber12);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

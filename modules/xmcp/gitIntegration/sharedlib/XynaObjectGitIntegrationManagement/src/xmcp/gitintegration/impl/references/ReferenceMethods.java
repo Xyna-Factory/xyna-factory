@@ -20,8 +20,7 @@ package xmcp.gitintegration.impl.references;
 import java.io.File;
 import java.util.Optional;
 
-import xmcp.gitintegration.Reference;
 
 public interface ReferenceMethods {
-  public Optional<File> findJar(Reference reference, String jarName, Long revision);
+  public Optional<File> findJar(InternalReference reference, String jarName, Long revision);
 }

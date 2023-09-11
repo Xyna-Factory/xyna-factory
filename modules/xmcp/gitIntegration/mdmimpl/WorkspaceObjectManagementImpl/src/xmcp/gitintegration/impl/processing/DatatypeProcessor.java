@@ -28,6 +28,9 @@ import java.util.Map;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
@@ -35,9 +38,14 @@ import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.Datatype;
 import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.Reference;
+import xmcp.gitintegration.ReferenceData;
+import xmcp.gitintegration.ReferenceManagement;
+import xmcp.gitintegration.RemoveReferenceData;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
+import xmcp.gitintegration.impl.ReferenceComparator;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
+import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 
@@ -100,15 +108,14 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
   @Override
   public Datatype parseItem(Node node) {
     Datatype dt = new Datatype();
-    ReferenceSupport rs = new ReferenceSupport();
+    ReferenceXmlConverter converter = new ReferenceXmlConverter();
     NodeList childNodes = node.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node childNode = childNodes.item(i);
       if (childNode.getNodeName().equals(TAG_FQNAME)) {
         dt.setFQName(childNode.getTextContent());
-      } else if (childNode.getNodeName().equals(rs.getTagName())) {
-        ReferenceSupport support = new ReferenceSupport();
-        dt.setReferences(support.parseTags(childNode));
+      } else if (childNode.getNodeName().equals(converter.getTagName())) {
+        dt.setReferences(converter.parseTags(childNode));
       }
     }
     return dt;
@@ -119,8 +126,8 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
   public void writeItem(XmlBuilder builder, Datatype item) {
     builder.startElement(TAG_DATATYPE);
     builder.element(TAG_FQNAME, item.getFQName());
-    ReferenceSupport rs = new ReferenceSupport();
-    rs.appendReferences(item.getReferences(), builder);
+    ReferenceXmlConverter converter = new ReferenceXmlConverter();
+    converter.appendReferences(item.getReferences(), builder);
     builder.endElement(TAG_DATATYPE);
   }
 
@@ -140,13 +147,13 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
   @Override
   public String createDifferencesString(Datatype from, Datatype to) {
     StringBuffer ds = new StringBuffer();
-    ReferenceSupport rs = new ReferenceSupport();
+    ReferenceXmlConverter converter = new ReferenceXmlConverter();
 
     // Block TAG_REFERENCES
     List<ItemDifference<Reference>> idrList = getReferenceDifferenceList(from, to);
     if (idrList.size() > 0) {
       ds.append("\n");
-      ds.append("    " + rs.getTagName());
+      ds.append("    " + converter.getTagName());
       for (ItemDifference<Reference> idr : idrList) {
         StringBuffer refEntry = new StringBuffer();
         refEntry.append("\n");
@@ -167,8 +174,8 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
 
 
   private List<ItemDifference<Reference>> getReferenceDifferenceList(Datatype from, Datatype to) {
-    ReferenceSupport rs = new ReferenceSupport();
-    return rs.compare(from.getReferences(), to.getReferences());
+    ReferenceComparator rc = new ReferenceComparator();
+    return rc.compare(from.getReferences(), to.getReferences());
   }
 
 
@@ -183,8 +190,7 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
         List<Reference> refList = new ArrayList<Reference>();
         dd.setReferences(refList);
         for (ReferenceStorable refStorable : entry.getValue()) {
-          ReferenceSupport rs = new ReferenceSupport();
-          refList.add(rs.convertToTag(refStorable));
+          refList.add(new Reference(refStorable.getPath(), refStorable.getReftype()));
         }
         dtList.add(dd);
       }
@@ -211,25 +217,42 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
 
   @Override
   public void create(Datatype item, long revision) {
-    ReferenceSupport rs = new ReferenceSupport();
+    String workspaceName = getWorkspaceName(revision);
     for (Reference ref : item.getReferences()) {
-      rs.create(ref, revision, item.getFQName(), ReferenceObjectType.DATATYPE.toString());
+      ReferenceData.Builder builder = new ReferenceData.Builder();
+      builder.objectName(item.getFQName()).objectType(ReferenceObjectType.DATATYPE.toString()).path(ref.getPath())
+          .referenceType(ref.getType()).workspaceName(workspaceName);
+      ReferenceManagement.addReference(builder.instance());
+    }
+  }
+  
+  private String getWorkspaceName(long revision) {
+    RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    try {
+      return revMgmt.getWorkspace(revision).getName();
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
     }
   }
 
 
   @Override
   public void modify(Datatype from, Datatype to, long revision) {
-    ReferenceSupport rs = new ReferenceSupport();
-    List<ItemDifference<Reference>> idrList = rs.compare(from.getReferences(), to.getReferences());
+    ReferenceStorage storage = new ReferenceStorage();
+    ReferenceComparator rc = new ReferenceComparator();
+    String workspaceName = getWorkspaceName(revision);
+    List<ItemDifference<Reference>> idrList = rc.compare(from.getReferences(), to.getReferences());
     for (ItemDifference<Reference> idr : idrList) {
       String typeName = idr.getType().getSimpleName();
       if (typeName.equals((CREATE.class.getSimpleName()))) {
-        rs.create(idr.getTo(), revision, to.getFQName(), ReferenceObjectType.DATATYPE.toString());
+        ReferenceData.Builder builder = new ReferenceData.Builder();
+        builder.objectName(to.getFQName()).objectType(ReferenceObjectType.DATATYPE.toString()).path(idr.getTo().getPath())
+            .referenceType(idr.getTo().getType()).workspaceName(workspaceName);
+        ReferenceManagement.addReference(builder.instance());
       } else if (typeName.equals((MODIFY.class.getSimpleName()))) {
-        rs.modify(idr.getFrom(), idr.getTo(), revision, to.getFQName(), ReferenceObjectType.DATATYPE);
+        storage.modify(idr.getFrom(), idr.getTo(), revision, to.getFQName(), ReferenceObjectType.DATATYPE);
       } else if (typeName.equals((DELETE.class.getSimpleName()))) {
-        rs.delete(idr.getFrom().getPath(), revision, from.getFQName());
+        storage.deleteReference(idr.getFrom().getPath(), revision, from.getFQName());
       }
     }
   }
@@ -237,9 +260,11 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
 
   @Override
   public void delete(Datatype item, long revision) {
-    ReferenceSupport rs = new ReferenceSupport();
+    String workspaceName = getWorkspaceName(revision);
+    RemoveReferenceData.Builder builder = new RemoveReferenceData.Builder();
     for (Reference ref : item.getReferences()) {
-      rs.delete(ref.getPath(), revision, item.getFQName());
+      builder.objectName(item.getFQName()).path(ref.getPath()).workspaceName(workspaceName);
+      ReferenceManagement.removeReference(builder.instance());
     }
   }
 

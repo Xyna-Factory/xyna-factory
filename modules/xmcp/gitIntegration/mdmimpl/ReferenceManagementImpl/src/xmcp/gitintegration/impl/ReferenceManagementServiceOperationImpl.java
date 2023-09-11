@@ -25,8 +25,8 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 
 import base.File;
-import base.math.IntegerNumber;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +35,7 @@ import xmcp.gitintegration.ReferenceData;
 import xmcp.gitintegration.RemoveReferenceData;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xprc.xpce.Workspace;
@@ -77,9 +78,9 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
 
 
   public void addReference(ReferenceData referenceData3) {
-    ReferenceSupport support = new ReferenceSupport();
+    ReferenceManagementImpl impl = new ReferenceManagementImpl();
     Long workspaceRevision = getRevision(referenceData3.getWorkspaceName());
-    support.create(referenceData3.getPath(), referenceData3.getObjectType(), referenceData3.getReferenceType(), workspaceRevision,
+    impl.create(referenceData3.getPath(), referenceData3.getObjectType(), referenceData3.getReferenceType(), workspaceRevision,
                    referenceData3.getObjectName());
   }
 
@@ -113,9 +114,9 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
   }
 
   public void removeReference(RemoveReferenceData removeReferenceData5) {
-    ReferenceSupport support = new ReferenceSupport();
+    ReferenceManagementImpl impl = new ReferenceManagementImpl();
     Long workspaceRevision = getRevision(removeReferenceData5.getWorkspaceName());
-    support.delete(removeReferenceData5.getPath(), workspaceRevision, removeReferenceData5.getObjectName());
+    impl.delete(removeReferenceData5.getPath(), workspaceRevision, removeReferenceData5.getObjectName());
   }
   
   private Long getRevision(String workspaceName) {
@@ -127,10 +128,32 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     }
   }
 
+
   @Override
-  public List<? extends File> triggerReferences(List<? extends Reference> arg0, List<? extends File> arg1, IntegerNumber arg2) {
-    // TODO Auto-generated method stub
+  public File findReferencedJar(List<? extends Reference> arg0, String arg1, Long arg2) {
+    ReferenceSupport impl = new ReferenceSupport();
+    List<InternalReference> references = convert(arg0);
+    
+    return new File(impl.findJar(references, arg1, arg2).getAbsolutePath());
+  }
+
+  @Override
+  public List<? extends File> triggerReferences(List<? extends Reference> arg0, List<String> arg1, Long arg2) {
+    ReferenceSupport impl = new ReferenceSupport();
+    List<InternalReference> references = convert(arg0);
+    impl.triggerReferences(references, arg2);
     return null;
+  }
+  
+  private List<InternalReference> convert(List<? extends Reference> arg0) {
+    List<InternalReference> references = new ArrayList<>();
+    for(Reference ref : arg0) {
+      InternalReference internal = new InternalReference();
+      internal.setPath(ref.getPath());
+      internal.setType(ref.getType());
+      references.add(internal);
+    }
+    return references;
   }
 
 }

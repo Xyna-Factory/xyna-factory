@@ -27,17 +27,17 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.RemoveReference;
-import xmcp.gitintegration.impl.processing.ReferenceSupport;
+import xmcp.gitintegration.impl.ReferenceManagementImpl;
 
 
 
 public class RemoveReferenceImpl extends XynaCommandImplementation<RemoveReference> {
 
   public void execute(OutputStream statusOutputStream, RemoveReference payload) throws XynaException {
-    ReferenceSupport support = new ReferenceSupport();
+    ReferenceManagementImpl impl = new ReferenceManagementImpl();
     RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long workspaceRevision = revMgmt.getRevision(new Workspace(payload.getWorkspaceName()));
-    support.delete(payload.getPath(), workspaceRevision, payload.getObjectName());
+    impl.delete(payload.getPath(), workspaceRevision, payload.getObjectName());
   }
 
 }

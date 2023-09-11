@@ -17,10 +17,25 @@
  */
 package xmcp.gitintegration.impl.references;
 
-import java.util.List;
 
+public class InternalReference {
 
-public interface ReferenceObjectTypeMethods {
-
-  public void trigger(List<InternalReference> references, String objectName, Long revision);
+  
+  public String getPath() {
+    return path;
+  }
+  
+  public void setPath(String path) {
+    this.path = path;
+  }
+  
+  public String getType() {
+    return type;
+  }
+  
+  public void setType(String type) {
+    this.type = type;
+  }
+  private String path;
+  private String type;
 }
