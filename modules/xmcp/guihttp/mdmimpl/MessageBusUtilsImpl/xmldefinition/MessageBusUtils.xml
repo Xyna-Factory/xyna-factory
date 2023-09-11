@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 8.2 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2021
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 330010 $
+ * $Date: 2023-09-11 21:19:58 +0200 (Mon, 11 Sep 2023) $
+ --><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Message Bus Utils" TypeName="MessageBusUtils" TypePath="xmcp.yggdrasil" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>MessageBusUtilsImpl.jar</Libraries>
+  <Service Label="Message Bus Utils" TypeName="MessageBusUtils">
+    <Operation IsStatic="true" Label="Publish" Name="publish">
+      <Input>
+        <Data ID="1" Label="Message" ReferenceName="Message" ReferencePath="xmcp.yggdrasil" VariableName="message1"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">MessageBusUtilsImpl.publish(message1);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

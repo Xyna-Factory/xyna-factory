@@ -78,6 +78,9 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/TimeControlledOrdersServicesImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
+		<ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/MessageBusUtilsImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
