@@ -80,7 +80,7 @@ public class AuthUtils {
   
   public static final XynaPropertyBoolean USE_CSRF_TOKEN = new XynaPropertyBoolean("xmcp.guihttp.csrf", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Add csrf token to login response and validate " + HEADER_FILED_CSRF_TOKEN + " header.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Füge csrf token zur login reposnse hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Füge csrf token zur login response hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
 
 
   public static void replyModellerLoginRequiredError(HTTPTriggerConnection tc, JsonFilterActionInstance jfai) throws SocketNotAvailableException {
