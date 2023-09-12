@@ -11,7 +11,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - -
  * $Revision: 330010 $
  * $Date: 2023-09-11 21:19:58 +0200 (Mon, 11 Sep 2023) $
- --><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+ -->
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Message Bus Utils" TypeName="MessageBusUtils" TypePath="xmcp.yggdrasil" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>

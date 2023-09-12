@@ -16,7 +16,6 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Response" BaseTypePath="xmcp.processmodeller.datatypes.response" IsAbstract="false" Label="Unsubscribe Project Poll Events Response" TypeName="UnsubscribeProjectPollEventsResponse" TypePath="xmcp.yggdrasil" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
