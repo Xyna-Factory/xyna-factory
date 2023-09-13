@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
- package xmcp.yggdrasil.impl;
+package xmcp.yggdrasil.impl;
 
 
 import java.io.StringWriter;
