@@ -15,10 +15,11 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 */
-package xmcp.gitintegration.impl.processing;
+package xmcp.gitintegration.impl;
 
 import xmcp.gitintegration.FactoryContentDifference;
 import xmcp.gitintegration.FactoryContentItem;
+import xmcp.gitintegration.impl.processing.XynaObjectDifferenceSelector;
 
 public class FactoryContentItemDifferenceSelector implements XynaObjectDifferenceSelector <FactoryContentItem, FactoryContentDifference> {
 
@@ -30,6 +31,21 @@ public class FactoryContentItemDifferenceSelector implements XynaObjectDifferenc
   @Override
   public FactoryContentItem selectNewItem(FactoryContentDifference item) {
     return item.getNewItem();
+  }
+
+  @Override
+  public String selectId(FactoryContentDifference item) {
+    return String.valueOf(item.getId());
+  }
+
+  @Override
+  public String selectContentType(FactoryContentDifference item) {
+    return item.getContentType();
+  }
+
+  @Override
+  public XynaContentDifferenceType selectDifferenceType(FactoryContentDifference item) {
+    return XynaContentDifferenceType.valueOf(item.getDifferenceType().getClass().getSimpleName());
   }
 
 }

@@ -50,6 +50,7 @@ import xmcp.gitintegration.Filter;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.XynaContentDifferenceType;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
 import xmcp.gitintegration.storage.ReferenceStorable;
@@ -220,13 +221,13 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
       for (ItemDifference<Reference> idr : idrList) {
         StringBuffer refEntry = new StringBuffer();
         refEntry.append("\n");
-        refEntry.append("      " + idr.getType().getSimpleName() + " ");
-        if (idr.getType().getSimpleName().equals((CREATE.class.getSimpleName()))) {
+        refEntry.append("      " + idr.getType() + " ");
+        if (idr.getType() == XynaContentDifferenceType.CREATE) {
           refEntry.append(idr.getTo().getPath() + ":" + idr.getTo().getType());
-        } else if (idr.getType().getSimpleName().equals((MODIFY.class.getSimpleName()))) {
+        } else if (idr.getType() == XynaContentDifferenceType.MODIFY) {
           refEntry
               .append(idr.getFrom().getPath() + ":" + idr.getFrom().getType() + "=>" + idr.getTo().getPath() + ":" + idr.getTo().getType());
-        } else if (idr.getType().getSimpleName().equals((DELETE.class.getSimpleName()))) {
+        } else if (idr.getType() == XynaContentDifferenceType.DELETE) {
           refEntry.append(idr.getFrom().getPath() + ":" + idr.getFrom().getType());
         }
         ds.append(refEntry.toString());
@@ -269,7 +270,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
 
         filter.setTriggerName(filterInfo.getTriggerName());
 
-        tiList.add(filter);   
+        tiList.add(filter);
       }
     } catch (Exception e) {
       throw new RuntimeException(e);

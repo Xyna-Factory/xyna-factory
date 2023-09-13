@@ -44,6 +44,7 @@ import xmcp.gitintegration.RemoveReferenceData;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.XynaContentDifferenceType;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
 import xmcp.gitintegration.storage.ReferenceStorable;
@@ -157,13 +158,13 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
       for (ItemDifference<Reference> idr : idrList) {
         StringBuffer refEntry = new StringBuffer();
         refEntry.append("\n");
-        refEntry.append("      " + idr.getType().getSimpleName() + " ");
-        if (idr.getType().getSimpleName().equals((CREATE.class.getSimpleName()))) {
+        refEntry.append("      " + idr.getType() + " ");
+        if (idr.getType() == XynaContentDifferenceType.CREATE) {
           refEntry.append(idr.getTo().getPath() + ":" + idr.getTo().getType());
-        } else if (idr.getType().getSimpleName().equals((MODIFY.class.getSimpleName()))) {
+        } else if (idr.getType() == XynaContentDifferenceType.MODIFY) {
           refEntry
               .append(idr.getFrom().getPath() + ":" + idr.getFrom().getType() + "=>" + idr.getTo().getPath() + ":" + idr.getTo().getType());
-        } else if (idr.getType().getSimpleName().equals((DELETE.class.getSimpleName()))) {
+        } else if (idr.getType() == XynaContentDifferenceType.DELETE) {
           refEntry.append(idr.getFrom().getPath() + ":" + idr.getFrom().getType());
         }
         ds.append(refEntry.toString());
@@ -243,15 +244,15 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
     String workspaceName = getWorkspaceName(revision);
     List<ItemDifference<Reference>> idrList = rc.compare(from.getReferences(), to.getReferences());
     for (ItemDifference<Reference> idr : idrList) {
-      String typeName = idr.getType().getSimpleName();
-      if (typeName.equals((CREATE.class.getSimpleName()))) {
+      XynaContentDifferenceType typeName = idr.getType();
+      if (typeName == XynaContentDifferenceType.CREATE) {
         ReferenceData.Builder builder = new ReferenceData.Builder();
         builder.objectName(to.getFQName()).objectType(ReferenceObjectType.DATATYPE.toString()).path(idr.getTo().getPath())
             .referenceType(idr.getTo().getType()).workspaceName(workspaceName);
         ReferenceManagement.addReference(builder.instance());
-      } else if (typeName.equals((MODIFY.class.getSimpleName()))) {
+      } else if (typeName == XynaContentDifferenceType.MODIFY) {
         storage.modify(idr.getFrom(), idr.getTo(), revision, to.getFQName(), ReferenceObjectType.DATATYPE);
-      } else if (typeName.equals((DELETE.class.getSimpleName()))) {
+      } else if (typeName == XynaContentDifferenceType.DELETE) {
         storage.deleteReference(idr.getFrom().getPath(), revision, from.getFQName());
       }
     }

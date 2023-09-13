@@ -33,7 +33,7 @@ import xmcp.gitintegration.cli.generated.Compareworkspacexml;
 import xmcp.gitintegration.impl.OutputCreator;
 import xmcp.gitintegration.impl.WorkspaceContentComparator;
 import xmcp.gitintegration.impl.WorkspaceContentCreator;
-import xmcp.gitintegration.impl.processing.WorkspaceContentItemDifferenceSelector;
+import xmcp.gitintegration.impl.WorkspaceContentItemDifferenceSelector;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
 

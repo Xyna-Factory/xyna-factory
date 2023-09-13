@@ -25,10 +25,10 @@ import org.w3c.dom.NodeList;
 
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
-import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.OutputCreator;
+import xmcp.gitintegration.impl.XynaContentDifferenceType;
 
 public class ReferenceXmlConverter {
 
@@ -100,7 +100,7 @@ public class ReferenceXmlConverter {
   
   private void appendDifference(StringBuilder ds, ItemDifference<Reference> difference) {
     appendFormatted(ds, difference.getFrom());
-    if (difference.getType() == MODIFY.class) {
+    if (difference.getType() == XynaContentDifferenceType.MODIFY) {
       ds.append(" => ");
     }
     appendFormatted(ds, difference.getTo());

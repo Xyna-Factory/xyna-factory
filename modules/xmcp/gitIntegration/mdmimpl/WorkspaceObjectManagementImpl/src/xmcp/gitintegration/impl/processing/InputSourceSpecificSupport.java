@@ -32,12 +32,9 @@ import org.w3c.dom.NodeList;
 
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
-import xmcp.gitintegration.CREATE;
-import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.InputSourceSpecific;
-import xmcp.gitintegration.MODIFY;
-import xmcp.gitintegration.WorkspaceContentDifferenceType;
 import xmcp.gitintegration.impl.ItemDifference;
+import xmcp.gitintegration.impl.XynaContentDifferenceType;
 
 
 public class InputSourceSpecificSupport {
@@ -135,14 +132,14 @@ public class InputSourceSpecificSupport {
       InputSourceSpecific toEntry = toMap.get(key);
       toList.remove(toEntry);
       if (!compareInputSourceSpecificTags(fromEntry, toEntry)) {
-        Class<? extends WorkspaceContentDifferenceType> type = toEntry == null ? DELETE.class : MODIFY.class;
+        XynaContentDifferenceType type = toEntry == null ? XynaContentDifferenceType.DELETE : XynaContentDifferenceType.MODIFY;
         result.add(new ItemDifference<InputSourceSpecific>(type, fromEntry, toEntry));
       }
     }
 
     // iterate over toWorking-list (only CREATE-Entries remain)
     for (InputSourceSpecific tag : toList) {
-      result.add(new ItemDifference<InputSourceSpecific>(CREATE.class, null, tag));
+      result.add(new ItemDifference<InputSourceSpecific>(XynaContentDifferenceType.CREATE, null, tag));
     }
 
     return result;

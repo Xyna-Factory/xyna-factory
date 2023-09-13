@@ -25,11 +25,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import xmcp.gitintegration.CREATE;
-import xmcp.gitintegration.DELETE;
-import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.Reference;
-import xmcp.gitintegration.WorkspaceContentDifferenceType;
 
 public class ReferenceComparator {
   public List<ItemDifference<Reference>> compare(Collection<? extends Reference> from, Collection<? extends Reference> to) {
@@ -46,14 +42,14 @@ public class ReferenceComparator {
       Reference toEntry = toMap.get(key);
       toList.remove(toEntry);
       if (!compareReferenceTags(fromEntry, toEntry)) {
-        Class<? extends WorkspaceContentDifferenceType> type = toEntry == null ? DELETE.class : MODIFY.class;
+        XynaContentDifferenceType type = toEntry == null ? XynaContentDifferenceType.DELETE : XynaContentDifferenceType.MODIFY;
         result.add(new ItemDifference<Reference>(type, fromEntry, toEntry));
       }
     }
 
     // iterate over toWorking-list (only CREATE-Entries remain)
     for (Reference tag : toList) {
-      result.add(new ItemDifference<Reference>(CREATE.class, null, tag));
+      result.add(new ItemDifference<Reference>(XynaContentDifferenceType.CREATE, null, tag));
     }
 
     return result;

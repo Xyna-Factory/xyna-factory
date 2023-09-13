@@ -15,10 +15,11 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 */
-package xmcp.gitintegration.impl.processing;
+package xmcp.gitintegration.impl;
 
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentItem;
+import xmcp.gitintegration.impl.processing.XynaObjectDifferenceSelector;
 
 public class WorkspaceContentItemDifferenceSelector implements XynaObjectDifferenceSelector <WorkspaceContentItem, WorkspaceContentDifference>{
 
@@ -30,6 +31,21 @@ public class WorkspaceContentItemDifferenceSelector implements XynaObjectDiffere
   @Override
   public WorkspaceContentItem selectNewItem(WorkspaceContentDifference item) {
     return item.getNewItem();
+  }
+
+  @Override
+  public String selectId(WorkspaceContentDifference item) {
+    return String.valueOf(item.getId());
+  }
+
+  @Override
+  public String selectContentType(WorkspaceContentDifference item) {
+    return item.getContentType();
+  }
+
+  @Override
+  public XynaContentDifferenceType selectDifferenceType(WorkspaceContentDifference item) {
+    return XynaContentDifferenceType.valueOf(item.getDifferenceType().getClass().getSimpleName());
   }
 
 }

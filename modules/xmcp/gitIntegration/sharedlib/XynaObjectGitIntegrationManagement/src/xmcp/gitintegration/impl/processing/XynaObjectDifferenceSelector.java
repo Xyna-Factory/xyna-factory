@@ -17,9 +17,13 @@
 */
 package xmcp.gitintegration.impl.processing;
 
+import xmcp.gitintegration.impl.XynaContentDifferenceType;
 
 public interface XynaObjectDifferenceSelector <ITEM, DIFFERENCE> {
 
   public ITEM selectExistingItem(DIFFERENCE item);
   public ITEM selectNewItem(DIFFERENCE item);
+  public String selectId(DIFFERENCE item);
+  public String selectContentType(DIFFERENCE item);
+  public XynaContentDifferenceType selectDifferenceType(DIFFERENCE item);
 }

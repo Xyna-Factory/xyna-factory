@@ -30,7 +30,7 @@ import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentItem;
 import xmcp.gitintegration.cli.generated.Listworkspacegitdiffs;
 import xmcp.gitintegration.impl.OutputCreator;
-import xmcp.gitintegration.impl.processing.WorkspaceContentItemDifferenceSelector;
+import xmcp.gitintegration.impl.WorkspaceContentItemDifferenceSelector;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
