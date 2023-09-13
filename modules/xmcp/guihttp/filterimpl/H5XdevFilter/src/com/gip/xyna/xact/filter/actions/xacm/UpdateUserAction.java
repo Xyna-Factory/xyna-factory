@@ -60,7 +60,7 @@ public class UpdateUserAction implements FilterAction {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
 
     // Login-Check
-    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromCookies(tc);
+    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromRequest(tc);
     try {
       Role role = AuthUtils.authenticate(xpsc);
       if(!XynaFactory.getInstance().getFactoryManagementPortal().hasRight(Rights.USER_MANAGEMENT.name(), role)) {
