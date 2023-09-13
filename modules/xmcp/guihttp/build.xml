@@ -95,6 +95,7 @@
         <supply-mdm-jar type="mdmimpl" name="CapacityServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="CronLikeOrderServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="DeploymentItemsImpl" />
+		<supply-mdm-jar type="mdmimpl" name="MessageBusUtilsImpl" />
         <supply-mdm-jar type="mdmimpl" name="OrderInputSourcesServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="OrderTypeServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="ProcessMonitorServicesImpl" />
