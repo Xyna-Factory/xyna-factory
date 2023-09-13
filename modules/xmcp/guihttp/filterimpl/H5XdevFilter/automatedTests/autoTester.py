@@ -31,7 +31,7 @@ import time
 import threading
 
 #constants
-baseURLToFormat = "http{0}://{1}:{2}/XynaBlackEditionWebServices/io{3}"  #{0} is s or '', {1} is ip, {2} is port, {3} is remainder of url. starts with '/'
+baseURLToFormat = "http{0}://{1}:{2}{3}{4}"  #{0} is s or ''; {1} is ip; {2} is port; {3} is url prefix specified in apache. May be left blank when directly connecting to trigger. If set, starts with '/'; {4} is remainder of url. starts with '/'
 keyOperation = "operation"
 keyOperationCall = "call"
 keyOperationRead = "read"
@@ -76,6 +76,7 @@ class NoValidFactoryConfigException(Exception):
 class Factory:
   ip = ""
   port = -1
+  prefix = ""
   https = False
   usename = ""
   password = ""
@@ -119,6 +120,7 @@ class RequestTester:
       f.ip = factory["ip"]
       f.port = factory["port"] if "port" in factory else 8080
       f.https = bool(factory["https"]) if "https" in factory else False
+      f.prefix = factory["prefix"]
       f.cookieFile = self.cookieFile = pathOfScript + "/" + factory["cookieFile"]
       f.tags = factory["tags"] if "tags" in factory else {}
       self.factories.append(f)
@@ -265,7 +267,8 @@ class RequestTester:
     s = "s" if self.factories[factoryIndexTranslated].https else ""
     ip = self.factories[factoryIndexTranslated].ip
     port = self.factories[factoryIndexTranslated].port
-    return baseURLToFormat.format(s, ip, port, self.urlExtension);
+    prefix = self.factories[factoryIndexTranslated].prefix
+    return baseURLToFormat.format(s, ip, port, prefix, self.urlExtension);
 
 
   def createSubprocessArguments(self, requestType, rdyUrl, rdyPayload, factoryIndexTranslated, writeCookies):

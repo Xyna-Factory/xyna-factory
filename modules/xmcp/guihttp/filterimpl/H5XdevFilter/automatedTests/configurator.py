@@ -103,11 +103,12 @@ class Configurator:
       "factories": [
         {
           "ip": "127.0.0.1",
+          "prefix": "modeller-api",
           "port": 443,
           "https": True,
           "password": "secret",
           "username": "user",
-          "cookiesFile": "cookies.txt"
+          "cookieFile": "cookies.txt"
         }
       ]
     }
@@ -119,7 +120,7 @@ class Configurator:
 #main
 configurator = Configurator()
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
   print(f"{sys.argv[0]} - Create, Modify, Reset a configuration file for autotester.py. Useage:")
   print(f"# {sys.argv[0]} <configFile> <factoryId> <field> <value>")
   print(f"# {sys.argv[0]} <configFile> <globalSetting> <value>")

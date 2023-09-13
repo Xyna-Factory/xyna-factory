@@ -28,6 +28,8 @@ import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
+import com.gip.xyna.xnwh.securestorage.SecureStorage;
 
 import xmcp.DeEncoder;
 import xmcp.EncryptionData;
@@ -38,9 +40,9 @@ public class DecodeAction  implements FilterAction {
   public FilterActionInstance act(URLPath arg0, HTTPTriggerConnection tc) throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
     
-    Map<String, String> map = AuthUtils.readCookies(tc);
-    String sessionId = map.get(AuthUtils.COOKIE_FIELD_SESSION_ID);
-    String token = map.get(AuthUtils.COOKIE_FIELD_TOKEN);
+    XynaPlainSessionCredentials creds = AuthUtils.readCredentialsFromRequest(tc);
+    String sessionId = creds.getSessionId();
+    String token = creds.getToken();
     
     if (sessionId == null || token == null) {
       AuthUtils.replyError(tc, jfai, new RuntimeException("SessionId or Token missing."));
