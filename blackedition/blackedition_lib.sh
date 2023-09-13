@@ -30,7 +30,7 @@ ALL_DATAMODELTYPES=("mib","tr069","xsd");
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
-GUIHTTPVERSION=1.1.370
+GUIHTTPVERSION=1.1.371
 SNMPSTATVERSION=1.0.3
 PROCESSINGVERSION=1.0.17
 ALL_REPOSITORYACCESSES=("svn");
@@ -1809,7 +1809,7 @@ f_check_license () {
     VENDOR=$(f_extract_vendor_from_jar ${JAR});
     #echo "Vendor ${VENDOR} for ${JAR}"
     case ${VENDOR} in 
-      'GIP AG') 
+      'Xyna GmbH') 
          CHECK_LICENSE="false";
          ;;
       '${vendor.name}')    #FIXME  das sollte raus!

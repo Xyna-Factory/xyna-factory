@@ -49,7 +49,7 @@ public class LogoutAction implements FilterAction {
   public FilterActionInstance act(URLPath url, HTTPTriggerConnection tc) throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
     String payload = AuthUtils.insertFqnIfNeeded(tc.getPayload(), "xmcp.auth.LogoutRequest");
-    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromCookies(tc);
+    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromRequest(tc);
     
     try {
       AuthUtils.authenticate(xpsc);
@@ -63,8 +63,10 @@ public class LogoutAction implements FilterAction {
     
     List<String> list = new ArrayList<>();
     list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_SESSION_ID, "-", request.getPath(), tc, false) + "; " + AuthUtils.COOKIE_MARKER_EXPIRED);
-    list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_TOKEN, "-", request.getPath(), tc, false) + "; " + AuthUtils.COOKIE_MARKER_EXPIRED);
     jfai.setProperty("Set-Cookie", list); //Liste wird dann spaeter (in httptriggerconnection) umgewandelt in mehrere Set-Cookie Headerzeilen
+    if(!AuthUtils.USE_CSRF_TOKEN.get()) {
+      list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_TOKEN, "-", request.getPath(), tc, false) + "; " + AuthUtils.COOKIE_MARKER_EXPIRED);
+    }
     jfai.sendJson(tc, "");
     return jfai;
   }

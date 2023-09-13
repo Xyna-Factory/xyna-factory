@@ -73,7 +73,7 @@ public class StartorderAction extends RuntimeContextDependendAction {
       throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
 
-    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromCookies(tc);
+    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromRequest(tc);
     Role role = getRole(tc);
     if(role == null) {
       AuthUtils.replyLoginRequiredError(tc, jfai);

@@ -65,6 +65,7 @@ public class PathElements {
   public static final String DELETE               = "delete";
   public static final String MOVE                 = "move";
   public static final String REFACTOR             = "refactor";
+  public static final String REPLACE             = "replace";
   public static final String COPY                 = "copy";
   public static final String COPY_TO_CLIPBOARD    = "copyToClipboard";
   public static final String PASTE                = "paste";

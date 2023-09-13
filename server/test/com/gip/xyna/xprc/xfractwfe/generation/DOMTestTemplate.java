@@ -79,12 +79,8 @@ public abstract class DOMTestTemplate extends AGenerationTestTemplate<DOM> {
 
     String generated = new String(buf);
 
-    if (!generated.contains("Copyright GIP AG 20")) {
-      fail("no copyright information in generated java file");
-    }
-
-    if (!generated.contains("Copyright GIP AG 2015")) {
-      fail("no copyright information for the year 2009 in generated java code: outdated test?");
+    if (!generated.contains("Copyright 20") || !generated.contains("Xyna GmbH, Germany")) {
+      fail("no or wrong copyright information in generated java file");
     }
 
     if (generated.split("\\{").length > generated.split("\\}").length) {
