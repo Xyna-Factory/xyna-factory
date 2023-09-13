@@ -1,17 +1,21 @@
-/*----------------------------------------------------
-* Xyna 5.1 (Black Edition)
-* Development
-*----------------------------------------------------
-* Copyright GIP AG 2013
-* (http://www.gip.com)
-* Hechtsheimer Str. 35-37
-* 55131 Mainz
-*----------------------------------------------------
-* $Revision: 330010 $
-* $Date: 2023-09-11 21:19:58 +0200 (Mon, 11 Sep 2023) $
-*----------------------------------------------------
-*/
-package xmcp.yggdrasil.impl;
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+ package xmcp.yggdrasil.impl;
 
 
 import java.io.StringWriter;
