@@ -27,14 +27,14 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.RemoveReference;
-import xmcp.gitintegration.impl.ReferenceManagementImpl;
+import xmcp.gitintegration.impl.ReferenceInteraction;
 
 
 
 public class RemoveReferenceImpl extends XynaCommandImplementation<RemoveReference> {
 
   public void execute(OutputStream statusOutputStream, RemoveReference payload) throws XynaException {
-    ReferenceManagementImpl impl = new ReferenceManagementImpl();
+    ReferenceInteraction impl = new ReferenceInteraction();
     RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long workspaceRevision = revMgmt.getRevision(new Workspace(payload.getWorkspaceName()));
     impl.delete(payload.getPath(), workspaceRevision, payload.getObjectName());

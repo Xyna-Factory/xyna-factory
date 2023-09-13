@@ -44,7 +44,7 @@ import xmcp.gitintegration.storage.ReferenceStorage;
  * workspace revision), while the date provided by reference
  * tags is factory-independent.
  */
-public class ReferenceManagementImpl {
+public class ReferenceInteraction {
 
   
   public Reference convert(ReferenceStorable storable) {

@@ -23,6 +23,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 import base.File;
 
@@ -33,9 +34,11 @@ import java.util.stream.Collectors;
 import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.ReferenceData;
 import xmcp.gitintegration.RemoveReferenceData;
+import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.impl.references.InternalReference;
+import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xprc.xpce.Workspace;
@@ -78,7 +81,7 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
 
 
   public void addReference(ReferenceData referenceData3) {
-    ReferenceManagementImpl impl = new ReferenceManagementImpl();
+    ReferenceInteraction impl = new ReferenceInteraction();
     Long workspaceRevision = getRevision(referenceData3.getWorkspaceName());
     impl.create(referenceData3.getPath(), referenceData3.getObjectType(), referenceData3.getReferenceType(), workspaceRevision,
                    referenceData3.getObjectName());
@@ -114,7 +117,7 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
   }
 
   public void removeReference(RemoveReferenceData removeReferenceData5) {
-    ReferenceManagementImpl impl = new ReferenceManagementImpl();
+    ReferenceInteraction impl = new ReferenceInteraction();
     Long workspaceRevision = getRevision(removeReferenceData5.getWorkspaceName());
     impl.delete(removeReferenceData5.getPath(), workspaceRevision, removeReferenceData5.getObjectName());
   }
@@ -130,29 +133,40 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
 
 
   @Override
-  public File findReferencedJar(List<? extends Reference> arg0, String arg1, Long arg2) {
+  public File findReferencedJar(List<? extends Reference> refs, String jarName, Long revision) {
     ReferenceSupport impl = new ReferenceSupport();
-    List<InternalReference> references = convert(arg0);
+    List<InternalReference> references = convert(refs, revision);
     
-    return new File(impl.findJar(references, arg1, arg2).getAbsolutePath());
+    return new File(impl.findJar(references, jarName, revision).getAbsolutePath());
   }
 
   @Override
-  public void triggerReferences(List<? extends Reference> arg0, List<String> arg1, Long arg2) {
+  public void triggerReferences(List<? extends Reference> refs, List<String> jarNames, Long revision) {
     ReferenceSupport impl = new ReferenceSupport();
-    List<InternalReference> references = convert(arg0);
-    impl.triggerReferences(references, arg2);
+    List<InternalReference> references = convert(refs, revision);
+    impl.triggerReferences(references, revision);
   }
   
-  private List<InternalReference> convert(List<? extends Reference> arg0) {
+  private List<InternalReference> convert(List<? extends Reference> arg0, Long revision) {
     List<InternalReference> references = new ArrayList<>();
+    Workspace workspace = getWorkspace(revision);
+    RepositoryConnection connection = RepositoryManagement.getRepositoryConnection(workspace);
     for(Reference ref : arg0) {
       InternalReference internal = new InternalReference();
       internal.setPath(ref.getPath());
       internal.setType(ref.getType());
+      internal.setPathToRepo(connection.getPath());
       references.add(internal);
     }
     return references;
+  }
+  
+  private Workspace getWorkspace(Long revision) {
+    try {
+      return new Workspace(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getWorkspace(revision).getName());
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }

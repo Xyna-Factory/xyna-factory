@@ -27,7 +27,6 @@ import com.gip.xyna.FileUtils;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
-import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
@@ -44,7 +43,7 @@ public class DatatypeReferenceMethods implements ReferenceObjectTypeMethods {
     List<String> requiredFiles = getRequiredFiles(objectName, revision);
     ReferenceSupport impl = new ReferenceSupport();
     //findJar using references
-    File targetDir = new File(RevisionManagement.getPathForRevision(PathType.SERVICE, revision, false));
+    File targetDir = new File(RevisionManagement.getPathForRevision(PathType.SERVICE, revision, false), objectName);
     for (String jarName : requiredFiles) {
       File fromFile = impl.findJar(references, jarName, revision);
       //copy fromFile to expected location
@@ -56,13 +55,13 @@ public class DatatypeReferenceMethods implements ReferenceObjectTypeMethods {
     }
   }
   
-  //TODO: check if parseGeneration is required or something
   //TODO: only additionalLibraries, not shared Libraries
   private List<String> getRequiredFiles(String objectName, Long revision) {
     try {
       DOM dom = DOM.getInstance(objectName, revision);
+      dom.parseGeneration(false, true);
       return new ArrayList<String>(dom.getAdditionalLibraries());
-    } catch (XPRC_InvalidPackageNameException e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }

@@ -25,14 +25,14 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.AddReference;
-import xmcp.gitintegration.impl.ReferenceManagementImpl;
+import xmcp.gitintegration.impl.ReferenceInteraction;
 
 
 
 public class AddReferenceImpl extends XynaCommandImplementation<AddReference> {
 
   public void execute(OutputStream statusOutputStream, AddReference payload) throws XynaException {
-    ReferenceManagementImpl impl = new ReferenceManagementImpl();
+    ReferenceInteraction impl = new ReferenceInteraction();
     RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long workspaceRevision = revMgmt.getRevision(new Workspace(payload.getWorkspaceName()));
     impl.create(payload.getPath(), payload.getObjectType(), payload.getRefType(), workspaceRevision, payload.getObjectName());

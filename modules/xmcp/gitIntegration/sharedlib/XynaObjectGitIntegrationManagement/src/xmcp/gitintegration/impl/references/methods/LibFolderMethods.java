@@ -34,14 +34,12 @@ public class LibFolderMethods implements ReferenceMethods {
   
   public Optional<File> findJar(InternalReference reference, String jarName, Long revision) {
     FilenameFilter fileNameFilter = createFileNameFilter(jarName);
-    //TODO: call to workspace connection management to find location of repository connected to revision
-    String pathToRepository = "";
-    Path libFolder = Path.of(pathToRepository, reference.getPath());
+    Path libFolder = Path.of(reference.getPathToRepo(), reference.getPath());
     List<File> files = new ArrayList<>();
     //check if there is a matching file in libFolder
     FileUtils.findFilesRecursively(libFolder.toFile(), files, fileNameFilter);
     if(!files.isEmpty()) {
-      return Optional.of(Path.of(pathToRepository, reference.getPath()).toFile());
+      return Optional.of(files.get(0).getAbsoluteFile());
     }
     
     return Optional.empty();

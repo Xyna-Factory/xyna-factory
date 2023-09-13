@@ -20,6 +20,9 @@ package xmcp.gitintegration.impl.references;
 
 public class InternalReference {
 
+  private String path;
+  private String type;
+  private String pathToRepo;
   
   public String getPath() {
     return path;
@@ -36,6 +39,12 @@ public class InternalReference {
   public void setType(String type) {
     this.type = type;
   }
-  private String path;
-  private String type;
+
+  public String getPathToRepo() {
+    return pathToRepo;
+  }
+
+  public void setPathToRepo(String pathToRepo) {
+    this.pathToRepo = pathToRepo;
+  }
 }

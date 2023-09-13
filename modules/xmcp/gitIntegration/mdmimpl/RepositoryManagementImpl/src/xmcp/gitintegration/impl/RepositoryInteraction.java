@@ -72,6 +72,7 @@ import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
@@ -260,7 +261,7 @@ public class RepositoryInteraction {
       if(fqnAndWs == null) {
         continue;
       }
-      referenceSupport.triggerReferences(fqnAndWs.getFirst(), getRevision(fqnAndWs.getSecond()));
+      referenceSupport.triggerReferences(fqnAndWs.getFirst(), getRevision(fqnAndWs.getSecond()), container.repository);
     }
   }
   

@@ -83,33 +83,35 @@ public class ReferenceSupport {
   }
   
   
-  public void triggerReferences(String objectName, Long revision) {
+  public void triggerReferences(String objectName, Long revision, String repoPath) {
     ReferenceStorage storage = new ReferenceStorage();
     List<ReferenceStorable> references = storage.getAllReferencesForObject(revision, objectName);
     if(references.isEmpty()) {
       return;
     }
-    List<InternalReference> refs = convertList(references);
+    List<InternalReference> refs = convertList(references, repoPath);
     ReferenceObjectType objectType = ReferenceObjectType.valueOf(references.get(0).getObjecttype());
     objectTypeImplementations.get(objectType).trigger(refs, objectName, revision);
   }
   
   public void triggerReferences(List<InternalReference> references, Long revision) {
-    //TODO:
+    ReferenceStorage storage = new ReferenceStorage();
+    List<ReferenceStorable> allrefs = storage.getAllReferencesForWorkspace(revision);
   }
   
-  public List<InternalReference> convertList(List<ReferenceStorable> in) {
+  public List<InternalReference> convertList(List<ReferenceStorable> in, String repoPath) {
     List<InternalReference> result = new ArrayList<InternalReference>();
     for(ReferenceStorable s : in) {
-      result.add(convert(s));
+      result.add(convert(s, repoPath));
     }
     return result;
   }
   
-  public InternalReference convert(ReferenceStorable in) {
+  public InternalReference convert(ReferenceStorable in, String repoPath) {
     InternalReference result = new InternalReference();
     result.setPath(in.getPath());
     result.setType(in.getReftype());
+    result.setPathToRepo(repoPath);
     return result;
   }
 

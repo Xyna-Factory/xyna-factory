@@ -88,7 +88,7 @@
         <Data ID="13" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file13"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.findReferencedJar(reference10, , integerNumber12);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.findReferencedJar(reference10, fileNames, integerNumber12);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
