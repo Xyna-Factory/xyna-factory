@@ -118,7 +118,7 @@ public class PollEventFetcher {
             if (result.getMessages() != null && !result.getMessages().isEmpty()) {
               synchronized (pollRequestUUIDToEventsMap) {
                 for (Entry<String, Set<Long>> correlationToSubscriptionId : correlationToSubscriptionIds.entrySet()) {
-                  curCorrelationToSubscriptionIds.put(correlationToSubscriptionId.getKey(), correlationToSubscriptionId.getValue()); // TODO: Warum? Das wurde doch gerade erst kopiert.
+                  curCorrelationToSubscriptionIds.put(correlationToSubscriptionId.getKey(), correlationToSubscriptionId.getValue());
                 }
               }
 
