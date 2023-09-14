@@ -180,6 +180,11 @@ public class XercesUtils {
     return lsSerializer;
   }
 
+  /**
+   * @deprecated
+   * use com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.parseString(xml) instead
+   */
+  @Deprecated
   public static Document parseXml(String xml) throws XPRC_XmlParsingException {
     try {
       DOMImplementationLS lsImpl = getDOMImplementationLS();
