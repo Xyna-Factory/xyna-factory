@@ -23,6 +23,6 @@ LOG4J_OPTIONS="-Dlog4j.debug=false -Dlog4j.configuration=file:log4j.properties";
 #  PROFILING_OPTIONS="-Xrunhprof:cpu=samples,format=a,file=hprof.txt,cutoff=0,depth=12,thread=y"
 #  EXCEPTION_OPTIONS="-Dexceptions.storage=Exceptions.xml -DBLACK_SERVER_HOME=${PWD}";
 #exec 2>&-
-java -classpath XynaCoherence.jar:log4j-1.2.16.jar:rmiio-2.0.2.jar:xynautils-exceptions-I20110203_1540.jar:xynautils-logging-3.0.0.0.jar ${LOG4J_OPTIONS} ${DEBUG_OPTIONS} ${PROFILING_OPTIONS} ${RMI_OPTIONS} com.gip.xyna.coherence.standalone.CoherenceNodeStandalone $* >> server.log
+java -classpath XynaCoherence.jar:log4j-1.2.16.jar:rmiio-2.0.2.jar:xynautils-exceptions-4.0.0.jar:xynautils-logging-3.0.0.jar ${LOG4J_OPTIONS} ${DEBUG_OPTIONS} ${PROFILING_OPTIONS} ${RMI_OPTIONS} com.gip.xyna.coherence.standalone.CoherenceNodeStandalone $* >> server.log
 
 echo "started"

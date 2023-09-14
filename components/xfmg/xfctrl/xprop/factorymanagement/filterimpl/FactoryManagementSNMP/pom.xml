@@ -50,7 +50,6 @@
         <dependency>
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-snmp</artifactId>
-            <version>I20181112_0943</version>
         </dependency>
     </dependencies>
 </project>
