@@ -21,6 +21,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>WorkspaceObjectManagementImpl.jar</Libraries>
+  <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
   <Service Label="Workspace Object Management" TypeName="WorkspaceObjectManagement">
     <Operation IsStatic="true" Label="Create Workspace Content" Name="createWorkspaceContent">
       <Input>

@@ -32,6 +32,3 @@
   </Data>
   <Data IsList="true" Label="Localizations" ReferenceName="Localization" ReferencePath="xmcp.gitintegration" VariableName="localizations"/>
 </DataType>
-
-
-

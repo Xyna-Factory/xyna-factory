@@ -158,7 +158,7 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
         wcd.setExistingItem(fromEntry);
         wcd.setDifferenceType(toEntry == null ? new DELETE() : new MODIFY());
         toWorkingList.remove(toEntry); // remove entry from to-list
-        boolean hasChanged = !Objects.equals(fromEntry.getDescription(), toEntry.getDescription())
+        boolean hasChanged = toEntry == null || !Objects.equals(fromEntry.getDescription(), toEntry.getDescription())
             || rightsChanged(fromEntry.getRights(), toEntry.getRights());
         if (hasChanged) {
           wcd.setNewItem(toEntry);

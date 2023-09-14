@@ -36,6 +36,11 @@
     <property name="cli.command.java.path" value="xmcp.gitintegration.cli" />
     <property name="cli.command.path" value="xmcp/gitintegration.cli" />
 
+     <target name="prepareLibs" description="Prepare Libs">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/XynaObjectGitIntegrationManagement">
+            <property name="target.dir" value="${basedir}/lib/xyna" />
+        </ant>
+     </target>
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 </project>

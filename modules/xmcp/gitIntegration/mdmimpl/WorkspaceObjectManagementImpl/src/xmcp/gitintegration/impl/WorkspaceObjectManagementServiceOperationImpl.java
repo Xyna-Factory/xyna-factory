@@ -34,7 +34,6 @@ import xmcp.gitintegration.WorkspaceContentDifferences;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
-import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
@@ -45,7 +44,6 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
     //TODO: register @ GuiHttp => new entry in factory manager
     // make sure calling it multiple times behaves well
     WorkspaceDifferenceListStorage.init();
-    ReferenceStorage.init();
     OverallInformationProvider.onDeployment();
   }
 

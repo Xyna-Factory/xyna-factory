@@ -32,6 +32,7 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 
 
@@ -50,7 +51,32 @@ public class ReferenceStorage {
 
     ods.registerStorable(ReferenceStorable.class);
   }
+  
 
+  public void modify(InternalReference from, InternalReference to, Long revision, String objectName, ReferenceObjectType objectType) {
+    ReferenceStorage storage = new ReferenceStorage();
+    storage.deleteReference(from.getPath(), revision, objectName);
+    ReferenceStorable storable = new ReferenceStorable();
+    storable.setObjectName(objectName);
+    storable.setWorkspace(revision);
+    storable.setPath(to.getPath());
+    storable.setReftype(to.getType().toString());
+    storable.setObjecttype(objectType.toString());
+    storage.persist(storable);
+  }
+
+  public List<ReferenceStorable> getReferencetorableList(Long revision, String objectName, ReferenceObjectType objectType) {
+    List<ReferenceStorable> resultList = new ArrayList<ReferenceStorable>();
+    List<ReferenceStorable> refStorablList = getAllReferencesForType(revision, objectType);
+    for (ReferenceStorable refStorable : refStorablList) {
+      if (refStorable.getObjectName().equals(objectName)) {
+        resultList.add(refStorable);
+      }
+
+    }
+    return resultList;
+  }
+  
 
   public List<ReferenceStorable> getAllReferences() {
     try {
