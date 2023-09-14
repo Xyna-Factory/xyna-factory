@@ -32,7 +32,7 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 
-import xmcp.gitintegration.Reference;
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 
 
@@ -53,7 +53,7 @@ public class ReferenceStorage {
   }
   
 
-  public void modify(Reference from, Reference to, Long revision, String objectName, ReferenceObjectType objectType) {
+  public void modify(InternalReference from, InternalReference to, Long revision, String objectName, ReferenceObjectType objectType) {
     ReferenceStorage storage = new ReferenceStorage();
     storage.deleteReference(from.getPath(), revision, objectName);
     ReferenceStorable storable = new ReferenceStorable();

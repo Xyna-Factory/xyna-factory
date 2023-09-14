@@ -53,6 +53,7 @@ import xmcp.gitintegration.ReferenceManagement;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.ReferenceUpdater;
 import xmcp.gitintegration.impl.XynaContentDifferenceType;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
@@ -370,23 +371,11 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
 
   @Override
   public void modify(Trigger from, Trigger to, long revision) {
-    String workspaceName = getWorkspaceName(revision);
     createTrigger(to, revision);
     ReferenceComparator comparator = new ReferenceComparator();
-    ReferenceStorage storage = new ReferenceStorage();
+    ReferenceUpdater updater = new ReferenceUpdater();
     List<ItemDifference<Reference>> idrList = comparator.compare(from.getReferences(), to.getReferences());
-    for (ItemDifference<Reference> idr : idrList) {
-      if (idr.getType() == XynaContentDifferenceType.CREATE) {
-        ReferenceData.Builder builder = new ReferenceData.Builder();
-        builder.objectName(to.getFQTriggerClassName()).objectType(ReferenceObjectType.TRIGGER.toString()).path(idr.getTo().getPath())
-        .referenceType(idr.getTo().getType()).workspaceName(workspaceName);
-        ReferenceManagement.addReference(builder.instance());   
-      } else if (idr.getType() == XynaContentDifferenceType.MODIFY) {
-        storage.modify(idr.getFrom(), idr.getTo(), revision, to.getFQTriggerClassName(), ReferenceObjectType.TRIGGER);
-      } else if (idr.getType() == XynaContentDifferenceType.DELETE) {
-        storage.deleteReference(idr.getFrom().getPath(), revision, from.getFQTriggerClassName());
-      }
-    }
+    updater.update(idrList,revision, ReferenceObjectType.TRIGGER, from.getFQTriggerClassName(), to.getFQTriggerClassName());
   }
 
 

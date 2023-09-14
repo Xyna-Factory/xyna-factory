@@ -44,6 +44,7 @@ import xmcp.gitintegration.RemoveReferenceData;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.ReferenceUpdater;
 import xmcp.gitintegration.impl.XynaContentDifferenceType;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
@@ -239,23 +240,10 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
 
   @Override
   public void modify(Datatype from, Datatype to, long revision) {
-    ReferenceStorage storage = new ReferenceStorage();
     ReferenceComparator rc = new ReferenceComparator();
-    String workspaceName = getWorkspaceName(revision);
+    ReferenceUpdater updater = new ReferenceUpdater();
     List<ItemDifference<Reference>> idrList = rc.compare(from.getReferences(), to.getReferences());
-    for (ItemDifference<Reference> idr : idrList) {
-      XynaContentDifferenceType typeName = idr.getType();
-      if (typeName == XynaContentDifferenceType.CREATE) {
-        ReferenceData.Builder builder = new ReferenceData.Builder();
-        builder.objectName(to.getFQName()).objectType(ReferenceObjectType.DATATYPE.toString()).path(idr.getTo().getPath())
-            .referenceType(idr.getTo().getType()).workspaceName(workspaceName);
-        ReferenceManagement.addReference(builder.instance());
-      } else if (typeName == XynaContentDifferenceType.MODIFY) {
-        storage.modify(idr.getFrom(), idr.getTo(), revision, to.getFQName(), ReferenceObjectType.DATATYPE);
-      } else if (typeName == XynaContentDifferenceType.DELETE) {
-        storage.deleteReference(idr.getFrom().getPath(), revision, from.getFQName());
-      }
-    }
+    updater.update(idrList, revision, ReferenceObjectType.DATATYPE, from.getFQName(), to.getFQName());
   }
 
 
