@@ -50,7 +50,8 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
   private static final String TAG_DOMAIN = "domain";
   private static final String TAG_DESCRIPTION = "description";
   private static final List<IgnorePatternInterface<FactoryRole>> ignorePatterns = createIgnorePatterns();
-  
+
+
   private static List<IgnorePatternInterface<FactoryRole>> createIgnorePatterns() {
     List<IgnorePatternInterface<FactoryRole>> resultList = new ArrayList<>();
     return Collections.unmodifiableList(resultList);
@@ -229,22 +230,48 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
 
   @Override
   public void create(FactoryRole item) {
-    // TODO Auto-generated method stub
-
+    try {
+      XynaFactory.getInstance().getFactoryManagement().createRole(item.getName(), item.getDomain());
+      XynaFactory.getInstance().getFactoryManagement().setDescriptionOfRole(item.getName(), item.getDomain(), item.getDescription());
+      if (item.getRights() != null) {
+        for (String right : item.getRights()) {
+          XynaFactory.getInstance().getFactoryManagement().grantRightToRole(item.getName(), right);
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
   @Override
   public void modify(FactoryRole from, FactoryRole to) {
-    // TODO Auto-generated method stub
+    try {
+      if (!Objects.equals(from.getDescription(), to.getDescription())) {
+        XynaFactory.getInstance().getFactoryManagement().setDescriptionOfRole(from.getName(), from.getDomain(), to.getDescription());
+      }
+      if (rightsChanged(from.getRights(), to.getRights())) {
+        for (String right : from.getRights()) {
+          XynaFactory.getInstance().getFactoryManagement().revokeRightFromRole(from.getName(), right);
+        }
+        for (String right : to.getRights()) {
+          XynaFactory.getInstance().getFactoryManagement().grantRightToRole(to.getName(), right);
+        }
+      }
 
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
   @Override
   public void delete(FactoryRole item) {
-    // TODO Auto-generated method stub
-
+    try {
+      XynaFactory.getInstance().getFactoryManagement().deleteRole(item.getName(), item.getDomain());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
