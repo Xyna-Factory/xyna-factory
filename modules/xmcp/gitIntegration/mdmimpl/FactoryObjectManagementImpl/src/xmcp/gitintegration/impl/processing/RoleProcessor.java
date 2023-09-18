@@ -34,6 +34,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.Role;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
+import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.FactoryContentDifference;
 import xmcp.gitintegration.FactoryRole;
@@ -167,6 +168,14 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
         } // else: EQUAL -> ignore entry
       }
     }
+    // iterate over toWorking-list (only CREATE-Entries remain)
+    for (FactoryRole toEntry : toWorkingList) {
+      FactoryContentDifference fcd = new FactoryContentDifference();
+      fcd.setContentType(TAG_ROLE);
+      fcd.setNewItem(toEntry);
+      fcd.setDifferenceType(new CREATE());
+      fcdList.add(fcd);
+    }
     return fcdList;
   }
 
@@ -198,10 +207,10 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
   @Override
   public String createDifferencesString(FactoryRole from, FactoryRole to) {
     int maxLines = 5;
-    List<String> added = new ArrayList<String>(from.getRights());
-    added.removeAll(to.getRights());
-    List<String> removed = new ArrayList<String>(to.getRights());
-    removed.removeAll(from.getRights());
+    List<String> added = new ArrayList<String>(to.getRights());
+    added.removeAll(from.getRights());
+    List<String> removed = new ArrayList<String>(from.getRights());
+    removed.removeAll(to.getRights());
     StringBuilder sb = new StringBuilder();
 
     if (!Objects.equals(from.getDescription(), to.getDescription())) {
@@ -213,15 +222,15 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
     }
 
     if (!added.isEmpty() || !removed.isEmpty()) {
-      sb.append(String.format("\nRights:  %d added, %d removed\n", added.size(), removed.size()));
+      sb.append(String.format("\n  Rights:  %d added, %d removed\n", added.size(), removed.size()));
       int printedLines = 0;
       for (int i = 0; i < Math.min(added.size(), maxLines); i++) {
         printedLines++;
-        sb.append("    ADD ").append(added.get(i)).append("\n");
+        sb.append("      ADD ").append(added.get(i)).append("\n");
       }
       for (int i = 0; i < Math.min(removed.size(), maxLines - printedLines); i++) {
         printedLines++;
-        sb.append("    REMOVE ").append(removed.get(i)).append("\n");
+        sb.append("      REMOVE ").append(removed.get(i)).append("\n");
       }
     }
     return sb.toString();
