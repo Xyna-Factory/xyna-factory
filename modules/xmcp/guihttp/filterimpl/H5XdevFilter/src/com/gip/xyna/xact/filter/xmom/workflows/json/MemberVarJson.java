@@ -121,7 +121,7 @@ public class MemberVarJson extends XMOMGuiJson {
         return;
       }
 
-      if (label.equals(Tags.DATA_TYPE_MEMBER_VAR_DOCUMENTATION)) {
+      if (label.equals(Tags.DATA_TYPE_DOCUMENTATION_AREA)) {
         vj.documentation = value;
         return;
       }

@@ -724,10 +724,10 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
       switch(type) {
         case DATATYPE:
           DOM dom = DOM.getInstance(fqn, revision);
-          return dom != null && dom.exists() && !dom.isReservedServerObject();
+          return dom != null && dom.exists();
         case EXCEPTION:
           ExceptionGeneration eg = ExceptionGeneration.getInstance(fqn, revision);
-          return eg != null && eg.exists() && !eg.isReservedServerObject();
+          return eg != null && eg.exists();
         default:
           return false;
       }
@@ -738,12 +738,54 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
     return false;
   }
 
+  private AVariable createMethodParameter(final GBSubObject parent, VariableJson content, List<AVariable> parameters) throws XPRC_InvalidPackageNameException {
+    GenerationBase creator = parent.getRoot().getGenerationBase();
+    String fqn = content.getFQName() == null ? null : content.getFQName().toString();
+
+    AVariable variable = null;
+    if (Tags.EXCEPTION.equals(content.getType())) {
+      ExceptionVariable exception = new ExceptionVariable(creator);
+      exception.init(content.getFQName().getTypePath(), content.getFQName().getTypeName());
+      variable = exception;
+    } else {
+      DatatypeVariable datatypeVar = new DatatypeVariable(creator);
+      datatypeVar.create(fqn);
+      variable = datatypeVar;
+    }
+
+    List<String> usedNames = new ArrayList<>();
+    for (AVariable memberVar : parameters) {
+      usedNames.add(memberVar.getVarName());
+    }
+    variable.setVarName(com.gip.xyna.xprc.xfractwfe.generation.xml.Utils.createUniqueJavaName(usedNames, content.getLabel(), false));
+
+    variable.setLabel(content.getLabel());
+    variable.setIsList(content.isList());
+    return variable;
+  }
+
+  private List<AVariable> createMethodParameters(final GBSubObject parent, List<VariableJson> content) throws XynaException {
+    List<AVariable> parameters = new ArrayList<>();
+    for (VariableJson varJson : content) {
+      parameters.add(createMethodParameter(parent, varJson, parameters));
+    }
+    return parameters;
+  }
+
   private GBBaseObject createMemberMethod(final GBSubObject parent, MemberMethodJson content) throws XynaException {
     DOM dataType = (DOM) object.getDtOrException();
     JavaOperation operation = new JavaOperation(dataType);
-    operation.setImpl("");
     operation.setLabel(content.getLabel());
+    operation.setDocumentation(content.getDocumentation());
+    operation.setImpl(content.getImplementation());
     operation.setHasBeenPersisted(false);
+
+    createMethodParameters(parent, content.getInputVars()).forEach(operation.getInputVars()::add);
+    createMethodParameters(parent, content.getOutputVars()).forEach(operation.getOutputVars()::add);
+    createMethodParameters(parent, content.getThrownExceptions()).stream()
+      .filter(ExceptionVariable.class::isInstance)
+      .map(ExceptionVariable.class::cast)
+      .forEach(operation.getThrownExceptionsForMod()::add);
 
     List<String> usedNames = new ArrayList<String>();
     OperationInformation[] operationInformations = dataType.collectOperationsOfDOMHierarchy(true);
