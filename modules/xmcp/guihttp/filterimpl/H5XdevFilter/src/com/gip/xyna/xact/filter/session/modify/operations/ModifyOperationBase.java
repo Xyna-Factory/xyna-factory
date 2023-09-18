@@ -777,7 +777,7 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
     JavaOperation operation = new JavaOperation(dataType);
     operation.setLabel(content.getLabel());
     operation.setDocumentation(content.getDocumentation());
-    operation.setImpl(content.getImplementation());
+    operation.setImpl(content.getImplementation().strip());
     operation.setHasBeenPersisted(false);
 
     createMethodParameters(parent, content.getInputVars()).forEach(operation.getInputVars()::add);
