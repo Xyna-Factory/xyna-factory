@@ -40,7 +40,7 @@ public class Base64 {
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
-    return multiLine.replace("\n", "");
+    return multiLine.replace("\r\n", "");
   }
 
 
