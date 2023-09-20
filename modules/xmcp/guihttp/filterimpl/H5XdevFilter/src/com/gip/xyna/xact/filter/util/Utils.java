@@ -228,7 +228,11 @@ public class Utils {
   }
   
 
-  public static GeneralXynaObject convertJsonToGeneralXynaObject(String json, long revision) {
+  public static GeneralXynaObject convertJsonToGeneralXynaObject(String json) {
+    return convertJsonToGeneralXynaObject(json, null);
+  }
+
+  public static GeneralXynaObject convertJsonToGeneralXynaObject(String json, Long revision) {
     if(json == null)
       return null;
     try {
