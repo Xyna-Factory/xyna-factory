@@ -49,9 +49,14 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Monitoring Level" VariableName="monitoringLevel">
+  <Data Label="Evaluated Monitoring Level" VariableName="evaluatedMonitoringLevel">
     <Meta>
       <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="Monitoring Level" VariableName="monitoringLevel">
+    <Meta>
+      <Type>String</Type>
     </Meta>
   </Data>
   <Data Label="Monitoring Level Is Custom" VariableName="monitoringLevelIsCustom">
