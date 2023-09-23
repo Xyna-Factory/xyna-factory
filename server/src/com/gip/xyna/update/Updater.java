@@ -1783,6 +1783,7 @@ public class Updater implements UpdaterInterface {
       ud = new UpdateJustVersion(v468, v469, false);
       updates.add(ud);
 
+      // 9.0.2.3
       Version v470 = new Version(v469).increaseToMajorVersion(4, 1);
       ud = new UpdateJustVersion(v469, v470, false);
       updates.add(ud);
