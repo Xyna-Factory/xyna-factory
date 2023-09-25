@@ -563,6 +563,8 @@ public class SQLUtils {
        }
      } catch (SQLException e) {
        logException(e);
+     } catch (NullPointerException ne) {
+       logException(ne);
      }
    }
 
