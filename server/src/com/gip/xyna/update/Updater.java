@@ -1770,12 +1770,14 @@ public class Updater implements UpdaterInterface {
 
       // 9.0.2.0
       Version v467 = new Version(v466).increaseToMajorVersion(3, 1);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //9.0.1.x darf hier drauf updaten
       ud = new UpdateJustVersion(v466, v467, true);
       updates.add(ud);
 
       // 9.0.3.0
       Version v468 = new Version(v467).increaseToMajorVersion(3, 1);
       ud = new UpdateJustVersion(v467, v468);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //9.0.2.x darf hier drauf updaten  
       updates.add(ud);
 
       //ACHTUNG: bei updates in einem branch muss gewährleistet werden, dass alle späteren versionen (trunk, spätere branches)
