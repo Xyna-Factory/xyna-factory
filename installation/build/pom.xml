@@ -151,27 +151,27 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-database</artifactId>
-                <version>I20211207_0946</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-exceptions</artifactId>
-                <version>I20210705_1332</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-logging</artifactId>
-                <version>I20181114_1211</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-misc</artifactId>
-                <version>2.3.0.0</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-snmp</artifactId>
-                <version>I20190729_1044</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>

@@ -17,15 +17,9 @@
  */
 package xmcp.gitintegration.impl;
 
-
-
-import xmcp.gitintegration.WorkspaceContentDifferenceType;
-
-
-
 public class ItemDifference<T> {
 
-  private Class<? extends WorkspaceContentDifferenceType> type;
+  private XynaContentDifferenceType type;
   private T from;
   private T to;
 
@@ -35,19 +29,19 @@ public class ItemDifference<T> {
   }
 
 
-  public ItemDifference(Class<? extends WorkspaceContentDifferenceType> type, T from, T to) {
+  public ItemDifference(XynaContentDifferenceType type, T from, T to) {
     this.type = type;
     this.from = from;
     this.to = to;
   }
 
 
-  public Class<? extends WorkspaceContentDifferenceType> getType() {
+  public XynaContentDifferenceType getType() {
     return type;
   }
 
 
-  public void setType(Class<? extends WorkspaceContentDifferenceType> type) {
+  public void setType(XynaContentDifferenceType type) {
     this.type = type;
   }
 

@@ -28,10 +28,13 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
+import xmcp.gitintegration.WorkspaceContentItem;
 import xmcp.gitintegration.cli.generated.Compareworkspacexml;
 import xmcp.gitintegration.impl.OutputCreator;
 import xmcp.gitintegration.impl.WorkspaceContentComparator;
 import xmcp.gitintegration.impl.WorkspaceContentCreator;
+import xmcp.gitintegration.impl.WorkspaceContentItemDifferenceSelector;
+import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
 
 
@@ -41,6 +44,7 @@ public class CompareworkspacexmlImpl extends XynaCommandImplementation<Comparewo
   public void execute(OutputStream statusOutputStream, Compareworkspacexml payload) throws XynaException {
     String workspaceName = payload.getWorkspaceName();
     WorkspaceContentCreator creator = new WorkspaceContentCreator();
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     File file = creator.determineWorkspaceXMLFile(workspaceName);
     WorkspaceContent xmlConfig = creator.createWorkspaceContentFromFile(file);
     WorkspaceContent factoryConfig = creator.createWorkspaceContentForWorkspace(workspaceName);
@@ -54,8 +58,8 @@ public class CompareworkspacexmlImpl extends XynaCommandImplementation<Comparewo
     }
     String differenceString = diffs.size() == 1 ? "is one difference " : "are " + diffs.size() + " differences ";
     writeToCommandLine(statusOutputStream, "There " + differenceString + " between workspace.xml and factory state.\n");
-    OutputCreator outputCreator = new OutputCreator();
-    String output = outputCreator.createOutput(diffs);
+    OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> outputCreator = new OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector>(new WorkspaceContentItemDifferenceSelector());
+    String output = outputCreator.createOutput(diffs, portal);
     writeToCommandLine(statusOutputStream, output);
   }
 

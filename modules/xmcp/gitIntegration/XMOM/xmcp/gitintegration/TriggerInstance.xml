@@ -35,4 +35,14 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Max Receives" VariableName="maxReceives">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Reject After Max Receives" VariableName="rejectAfterMaxReceives">
+    <Meta>
+      <Type>Boolean</Type>
+    </Meta>
+  </Data>
 </DataType>

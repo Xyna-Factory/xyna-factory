@@ -46,14 +46,14 @@ public class InfoAction implements FilterAction {
   public FilterActionInstance act(URLPath url, HTTPTriggerConnection tc) throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
 
-    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromCookies(tc);
+    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromRequest(tc);
     try {
       AuthUtils.authenticate(xpsc);
     } catch (RemoteException e) {
       AuthUtils.replyError(tc, jfai, Status.unauthorized, e);
       return jfai;
     }
-    String sdj = AuthUtils.getSessionDetailsJson(xpsc.getSessionId());
+    String sdj = AuthUtils.getSessionDetailsJson(xpsc.getSessionId(), xpsc.getToken());
 
     jfai.sendJson(tc, sdj);
     return jfai;

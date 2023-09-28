@@ -103,14 +103,14 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
   public static final XynaPropertyBoolean USE_CACHE = new XynaPropertyBoolean("xmcp.guihttp.use_cache", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Use a cache to store recently used objects. Cache size is determined by " + cache_size_property_name)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Verwende einen Cache um auf zuletzt verwendete Objekte schneller zugreifen zu können. Größe des Caches is bestimmt durch " + cache_size_property_name);
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Verwende einen Cache um auf zuletzt verwendete Objekte schneller zugreifen zu kÃ¶nnen. GrÃ¶ÃŸe des Caches is bestimmt durch " + cache_size_property_name);
 
   public static final XynaPropertyBoolean AVARCONSTANTS = new XynaPropertyBoolean("xmcp.guihttp.new_constants", true).
       setDefaultDocumentation(DocumentationLanguage.EN, "Prevent instantiation problems by using a different approach to convert json to constants.");
   
   public static final XynaPropertyBoolean CompressResponse = new XynaPropertyBoolean("xmcp.guihttp.compress_response", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "compress response of requests using gzip, if supported by caller")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterstützt wird");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterstÃ¼tzt wird");
   
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
 
@@ -325,6 +325,9 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new ClipboardClearAction(xmomGui));
 
     allFilterActions.add(new EventsUUIDAction(xmomGui));
+    allFilterActions.add(new ProjectEventsUUIDAction(xmomGui));
+    allFilterActions.add(new SubscribeProjectEventsAction(xmomGui));
+    allFilterActions.add(new UnsubscribeProjectEventsAction(xmomGui));
 
     allFilterActions.add(new RemoteDestinationsAction());
     

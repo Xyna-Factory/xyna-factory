@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,9 +133,20 @@ public class XMLUtils {
     private static DocumentBuilderFactory defaultBuilderFactory = DocumentBuilderFactory.newInstance();
     private static DocumentBuilderFactory namespaceUnawareBuilderFactory = DocumentBuilderFactory.newInstance();
     private static DocumentBuilderFactory namespaceAwareBuilderFactory = DocumentBuilderFactory.newInstance();
+    
+    
+
     static {
       namespaceAwareBuilderFactory.setNamespaceAware(true);
       namespaceUnawareBuilderFactory.setNamespaceAware(false);
+
+      try {
+        defaultBuilderFactory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        namespaceAwareBuilderFactory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        namespaceUnawareBuilderFactory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+      } catch (ParserConfigurationException e) {
+        logger.error("Could not configure DocumentBuilderFactories. ", e);
+      }
     }
 
 

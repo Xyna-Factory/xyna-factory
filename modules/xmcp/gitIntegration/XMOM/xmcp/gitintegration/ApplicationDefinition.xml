@@ -31,5 +31,6 @@
     </Meta>
   </Data>
   <Data IsList="true" Label="Runtime Context Dependencies" ReferenceName="RuntimeContextDependency" ReferencePath="xmcp.gitintegration" VariableName="runtimeContextDependencies"/>
+  <Data IsList="true" Label="Stub Dependencies" ReferenceName="RuntimeContextDependency" ReferencePath="xmcp.gitintegration" VariableName="stubDependencies"/>
   <Data IsList="true" Label="Content Entries" ReferenceName="ContentEntry" ReferencePath="xmcp.gitintegration" VariableName="contentEntries"/>
 </DataType>

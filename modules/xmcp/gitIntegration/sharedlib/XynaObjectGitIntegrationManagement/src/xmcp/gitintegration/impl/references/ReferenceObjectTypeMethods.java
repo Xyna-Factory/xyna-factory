@@ -17,11 +17,10 @@
  */
 package xmcp.gitintegration.impl.references;
 
-import java.io.File;
-import java.util.Optional;
+import java.util.List;
 
-import xmcp.gitintegration.Reference;
 
-public interface ReferenceMethods {
-  public Optional<File> findJar(Reference reference, String jarName, Long revision);
+public interface ReferenceObjectTypeMethods {
+
+  public void trigger(List<InternalReference> references, String objectName, Long revision);
 }

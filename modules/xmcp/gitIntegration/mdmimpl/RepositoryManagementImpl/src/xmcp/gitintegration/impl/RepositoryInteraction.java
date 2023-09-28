@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,14 +66,20 @@ import com.gip.xyna.xfmg.xfctrl.deploystate.DisplayState;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xmcp.xfcli.impl.RemovexmomobjectImpl;
 import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.impl.processing.ReferenceSupport;
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.storage.ReferenceStorable;
+import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
 import xprc.xpce.Workspace;
 
@@ -216,6 +224,7 @@ public class RepositoryInteraction {
       processReverts(git, repo, container);
       processPulls(git, repo, container);
       processExecs(container);
+      processReferences(container);
     }
     container.creds = null;
     return container;
@@ -245,7 +254,62 @@ public class RepositoryInteraction {
       logger.debug("valid repository detected at " + repository);
     }
   }
-
+  
+  private void processReferences(GitDataContainer container) {
+    ReferenceSupport referenceSupport = new ReferenceSupport();
+    ReferenceStorage storage = new ReferenceStorage();
+    List<ReferenceStorable> references = storage.getAllReferences();
+    Map<Long, List<InternalReference>> grouped = new HashMap<>();
+    for(String repoPath : container.pull) {
+      Pair<String, String> fqnAndWs = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
+      if(fqnAndWs != null) {
+        //changes to a datatype with reference?
+        Long revision = getRevision(fqnAndWs.getSecond());
+        RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(fqnAndWs.getSecond());
+        Optional<ReferenceStorable> opt = references.stream().filter(x -> matchNameAndRevision(x, fqnAndWs.getFirst(), revision)).findAny();
+        if(opt.isPresent()) {
+          InternalReference internalRef = new InternalReference();
+          internalRef.setPath(opt.get().getPath());
+          internalRef.setPathToRepo(con.getPath());
+          internalRef.setType(opt.get().getReftype());
+          addEntry(grouped, revision, internalRef);
+        }
+      } else {
+        //changes to a referenced file?
+        //find referenceStorable for reference
+        List<ReferenceStorable> list = references.stream().filter(x -> repoPath.startsWith(x.getPath())).collect(Collectors.toList());
+        for(ReferenceStorable ref: list) {
+          RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(getWorkspace(ref.getWorkspace()).getName());
+          InternalReference internalRef = new InternalReference();
+          internalRef.setPath(ref.getPath());
+          internalRef.setPathToRepo(con.getPath());
+          internalRef.setType(ref.getReftype());
+          addEntry(grouped, ref.getWorkspace(), internalRef);
+        }
+      }
+    }
+    
+    for(Entry<Long, List<InternalReference>> kvp : grouped.entrySet()) {
+      referenceSupport.triggerReferences(kvp.getValue(), kvp.getKey());
+    }
+  }
+  
+  private Workspace getWorkspace(Long revision) {
+    try {
+      return new Workspace(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getWorkspace(revision).getName());
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private void addEntry(Map<Long, List<InternalReference>> grouped, Long revision, InternalReference ref) {
+    grouped.putIfAbsent(revision, new ArrayList<>());
+    grouped.get(revision).add(ref);
+  }
+  
+  private boolean matchNameAndRevision(ReferenceStorable s, String fqn, Long revision) {
+    return fqn.equals(s.getObjectName()) && revision == s.getWorkspace();
+  }
 
   private void processExecs(GitDataContainer container) {
     List<Pair<Boolean, String>> execs = container.exec; //command, path (in repository)

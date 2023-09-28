@@ -22,6 +22,7 @@ package com.gip.xyna.xact.filter.session.messagebus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -56,6 +57,7 @@ import xmcp.yggdrasil.DocumentChange;
 import xmcp.yggdrasil.DocumentLock;
 import xmcp.yggdrasil.DocumentUnlock;
 import xmcp.yggdrasil.Event;
+import xmcp.yggdrasil.ProjectEvent;
 import xmcp.yggdrasil.XMOMChangedRTCDependencies;
 import xmcp.yggdrasil.XMOMCreateRTC;
 import xmcp.yggdrasil.XMOMDelete;
@@ -69,26 +71,29 @@ public class PollEventFetcher {
 
   private static final long FETCH_DELAY = 100L; // millis
   private static final String ALL_FILTER = ".*";
+  private static final String PRODUCT_XYNA = "Xyna";
 
   private static final AtomicLong pollingThreadIdGenerator = new AtomicLong();
   private final String sessionId;
   private final Map<String, List<Event>> pollRequestUUIDToEventsMap;
+  private final Map<String, Boolean> pollRequestUUIDToIsProject;
   private final ConcurrentMap<XmomType, XmomTypeEvent> locks;
   private final SessionBasedData sessionBasedData;
   private final Map<String, Set<Long>> correlationToSubscriptionIds = new ConcurrentHashMap<>();
+  private final Map<String, Set<String>> correlationToRequestUUIDs = new ConcurrentHashMap<>();
   private static final AtomicLong subscriptionIdGenerator = new AtomicLong();
   private long lastReceivedId = -1;
   private volatile boolean terminate = false;
 
   private static final MessageBusManagementPortal messageBusManagementPortal = XynaFactory.getInstance().getXynaMultiChannelPortal().getMessageBusManagement();
-  private static final Logger logger = CentralFactoryLogging.getLogger(PollEventFetcher.class);
 
   private enum SearchField { FIRST, SECOND }
 
 
-  public PollEventFetcher(String sessionId, Map<String, List<Event>> pollRequestUUIDToEventsMap, ConcurrentMap<XmomType, XmomTypeEvent> locks, SessionBasedData responsibleSession) {
+  public PollEventFetcher(String sessionId, Map<String, List<Event>> pollRequestUUIDToEventsMap, Map<String, Boolean> pollRequestUUIDToIsProject, ConcurrentMap<XmomType, XmomTypeEvent> locks, SessionBasedData responsibleSession) {
     this.sessionId = sessionId;
     this.pollRequestUUIDToEventsMap = pollRequestUUIDToEventsMap;
+    this.pollRequestUUIDToIsProject = pollRequestUUIDToIsProject;
     this.locks = locks;
     this.sessionBasedData = responsibleSession;
 
@@ -111,15 +116,13 @@ public class PollEventFetcher {
 
             MessageRetrievalResult result = messageBusManagementPortal.fetchMessages(sessionId, lastReceivedId);
             if (result.getMessages() != null && !result.getMessages().isEmpty()) {
-              if (result.getMessages() != null) {
-                synchronized (pollRequestUUIDToEventsMap) {
-                  for (Entry<String, Set<Long>> correlationToSubscriptionId : correlationToSubscriptionIds.entrySet()) {
-                    curCorrelationToSubscriptionIds.put(correlationToSubscriptionId.getKey(), correlationToSubscriptionId.getValue());
-                  }
+              synchronized (pollRequestUUIDToEventsMap) {
+                for (Entry<String, Set<Long>> correlationToSubscriptionId : correlationToSubscriptionIds.entrySet()) {
+                  curCorrelationToSubscriptionIds.put(correlationToSubscriptionId.getKey(), correlationToSubscriptionId.getValue());
                 }
-
-                result.getMessages().forEach(x -> PollEventFetcher.this.messageReceived(x, curCorrelationToSubscriptionIds));
               }
+
+              result.getMessages().forEach(x -> PollEventFetcher.this.messageReceived(x, curCorrelationToSubscriptionIds));
               lastReceivedId = result.getLastCheckedId();
             }
           } catch (Exception e) {
@@ -144,10 +147,18 @@ public class PollEventFetcher {
 
 
   private void messageReceived(MessageOutputParameter message, Map<String, Set<Long>> curCorrelationToSubscriptionIds) {
+    if (Objects.equals(message.getProduct(), PRODUCT_XYNA)) {
+      xynaMessageReceived(message, curCorrelationToSubscriptionIds);
+    } else {
+      projectMessageReceived(message, curCorrelationToSubscriptionIds);
+    }
+  }
+
+  private void xynaMessageReceived(MessageOutputParameter message, Map<String, Set<Long>> curCorrelationToSubscriptionIds) {
     if (curCorrelationToSubscriptionIds.keySet().contains(message.getCorrelation())) {
       for (Long subscriptionId : curCorrelationToSubscriptionIds.get(message.getCorrelation())) {
         if (message.getCorrelatedSubscriptions().contains(subscriptionId)) {
-          documentMessageReceived(message, PredefinedMessagePath.byContext(message.getContext()), new XmomTypeEvent(message));
+          documentMessageReceived(message, PredefinedMessagePath.byContext(message.getContext()));
           return;
         }
       }
@@ -156,16 +167,18 @@ public class PollEventFetcher {
     if (curCorrelationToSubscriptionIds.keySet().contains(ALL_FILTER)) {
       for (Long subscriptionId : curCorrelationToSubscriptionIds.get(ALL_FILTER)) {
         if (message.getCorrelatedSubscriptions().contains(subscriptionId)) {
-          globalMessageReceived(message, PredefinedMessagePath.byContext(message.getContext()), new XmomTypeEvent(message));
+          globalMessageReceived(message, PredefinedMessagePath.byContext(message.getContext()));
           return;
         }
       }
     }
   }
+  
 
-
-  private void documentMessageReceived(MessageOutputParameter message, PredefinedMessagePath messagePath, XmomTypeEvent event) {
+  private void documentMessageReceived(MessageOutputParameter message, PredefinedMessagePath messagePath) {
+    XmomTypeEvent event = new XmomTypeEvent(message);
     Event newPollEvent = null;
+
     try {
       switch (messagePath) {
         case XYNA_MODELLER_LOCKS:
@@ -210,7 +223,7 @@ public class PollEventFetcher {
       }
 
       if (newPollEvent != null) {
-        addToPollEvents(newPollEvent);
+        addToPollEvents(newPollEvent, false);
       }
     } catch (Exception e) {
       Utils.logError("Multiuser: Could not create poll event for " + event.getXmomType().getName(), e);
@@ -218,16 +231,27 @@ public class PollEventFetcher {
   }
 
 
-  private void addToPollEvents(Event newPollEvent) {
+  private void projectMessageReceived(MessageOutputParameter message, Map<String, Set<Long>> curCorrelationToSubscriptionIds) {
+    String json = message.getPayload().get(0).getSecond();
+    ProjectEvent projectEvent = (ProjectEvent)Utils.convertJsonToGeneralXynaObject(json);
+    addToPollEvents(projectEvent, true);
+  }
+
+
+  private void addToPollEvents(Event newPollEvent, boolean projectPoll) {
     synchronized (pollRequestUUIDToEventsMap) {
       for (Entry<String, List<Event>> pollRequestMapEntry : pollRequestUUIDToEventsMap.entrySet()) {
-        pollRequestMapEntry.getValue().add(newPollEvent);
+        if (pollRequestUUIDToIsProject.get(pollRequestMapEntry.getKey()) == projectPoll) {
+          pollRequestMapEntry.getValue().add(newPollEvent);
+        }
       }
     }
   }
 
-  private void globalMessageReceived(MessageOutputParameter message, PredefinedMessagePath messagePath, XmomTypeEvent event) {
+  private void globalMessageReceived(MessageOutputParameter message, PredefinedMessagePath messagePath) {
+    XmomTypeEvent event = new XmomTypeEvent(message);
     List<Event> newPollEvents = new ArrayList<>();
+
     try {
       switch (messagePath) {
         case XYNA_MODELLER_SAVE:
@@ -267,7 +291,7 @@ public class PollEventFetcher {
       }
 
       for (Event newPollEvent : newPollEvents) {
-        addToPollEvents(newPollEvent);
+        addToPollEvents(newPollEvent, false);
       }
     } catch (Exception e) {
       Utils.logError("Multiuser: Could not create poll event for " + event.getXmomType().getName(), e);
@@ -329,11 +353,7 @@ public class PollEventFetcher {
           return;
         }
   
-        for (Long subscriptionId : correlationToSubscriptionIds.get(correlationId)) {
-          messageBusManagementPortal.cancelSubscription(sessionId, subscriptionId);
-        }
-  
-        correlationToSubscriptionIds.remove(correlationId);
+        removeSubscription(correlationId);
       }
     } catch (Exception e) {
       Utils.logError("Multiuser: Could not cancel message bus subscriptions for " + gbo.getFQName().getFqName(), e);
@@ -342,6 +362,11 @@ public class PollEventFetcher {
 
 
   private void addSubscription(String correlationId, PredefinedMessagePath messagePath) {
+    addSubscription(correlationId, messagePath.getProduct(), messagePath.getContext());
+  }
+
+
+  private void addSubscription(String correlationId, String product, String context) {
     synchronized(pollRequestUUIDToEventsMap) {
       Set<Long> subscriptionIds;
       if (!correlationToSubscriptionIds.containsKey(correlationId)) {
@@ -351,9 +376,60 @@ public class PollEventFetcher {
         subscriptionIds = correlationToSubscriptionIds.get(correlationId);
       }
 
-      MessageSubscriptionParameter subscriptionParameter = new MessageSubscriptionParameter(subscriptionIdGenerator.getAndIncrement(), messagePath.getProduct(), messagePath.getContext(), correlationId);
+      MessageSubscriptionParameter subscriptionParameter = new MessageSubscriptionParameter(subscriptionIdGenerator.getAndIncrement(), product, context, correlationId);
       subscriptionIds.add(subscriptionParameter.getId());
       messageBusManagementPortal.addSubscription(sessionId, subscriptionParameter);
+    }
+  }
+
+
+  private void removeSubscription(String correlationId) {
+    if (!correlationToSubscriptionIds.containsKey(correlationId)) {
+      return;
+    }
+
+    for (Long subscriptionId : correlationToSubscriptionIds.get(correlationId)) {
+      messageBusManagementPortal.cancelSubscription(sessionId, subscriptionId);
+    }
+
+    correlationToSubscriptionIds.remove(correlationId);
+  }
+
+
+  public void addProjectPolling(String requestUuid, String correlationId, String product, String context) {
+    synchronized(pollRequestUUIDToEventsMap) {
+      Set<String> requestUuids;
+      if (!correlationToRequestUUIDs.containsKey(correlationId)) {
+        requestUuids = new HashSet<String>();
+        correlationToRequestUUIDs.put(correlationId, requestUuids);
+      } else {
+        requestUuids = correlationToRequestUUIDs.get(correlationId);
+      }
+
+      if (requestUuids.isEmpty()) {
+        // for this correlation-id, no project subscription exists for a browser tab, yet -> subscribe
+        addSubscription(correlationId, product, context);
+      }
+
+      // add this browser tab to the list of tabs that need this subscription
+      requestUuids.add(requestUuid);
+    }
+  }
+
+
+  public void cancelProjectPolling(String pollRequestUuid, String correlation) {
+    synchronized(pollRequestUUIDToEventsMap) {
+      if (correlationToRequestUUIDs.containsKey(correlation)) {
+        // remove this browser tab from the list of tabs that need this subscription
+        correlationToRequestUUIDs.get(correlation).remove(pollRequestUuid);
+      }
+
+      // if no tabs for the user need updates for the subscription, anymore, unsubscribe it from the message bus
+      Set<String> remainingUUIDs = correlationToRequestUUIDs.get(correlation);
+      if (remainingUUIDs == null || remainingUUIDs.size() == 0) {
+        removeSubscription(correlation);
+        correlationToRequestUUIDs.remove(correlation);
+      }
     }
   }
 
@@ -361,4 +437,5 @@ public class PollEventFetcher {
   public void stop() {
     terminate = true;
   }
+
 }

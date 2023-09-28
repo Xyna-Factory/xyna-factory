@@ -107,6 +107,7 @@ import com.gip.xyna.xact.filter.xmom.workflows.json.DataflowJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.LabelJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.VariableJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.WorkflowStepVisitor;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmomlocks.LockManagement;
 import com.gip.xyna.xdev.xfractmod.xmomlocks.LockManagement.Path;
 import com.gip.xyna.xfmg.exceptions.XFMG_ACCESS_VIOLATION;
@@ -188,6 +189,9 @@ import xmcp.processmodeller.datatypes.response.UnlockResponse;
 import xmcp.xact.modeller.Hint;
 import xmcp.yggdrasil.Event;
 import xmcp.yggdrasil.GetEventsResponse;
+import xmcp.yggdrasil.UnsubscribeProjectPollEventsResponse;
+import xmcp.yggdrasil.Message;
+import xmcp.yggdrasil.SubscribeProjectPollEventsResponse;
 
 /**
  * Speichert alle Daten einer Session:
@@ -197,14 +201,14 @@ import xmcp.yggdrasil.GetEventsResponse;
 public class SessionBasedData {
 
   public static final XynaPropertyInt UNDO_LIMIT = new XynaPropertyInt("xyna.processmodeller.undo.limit", 50).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr‰gen der Undo-Historie.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr√§gen der Undo-Historie.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of entries in the undo history.");
   public static final XynaPropertyInt REDO_LIMIT = new XynaPropertyInt("xyna.processmodeller.redo.limit", 50).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr‰gen der Redo-Historie.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr√§gen der Redo-Historie.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of entries in the redo history.");
 
   public static final XynaPropertyInt CLIENT_POLLING_TIMEOUT_FACTOR = new XynaPropertyInt("xyna.messagebus.modeller.clientpollingtimeoutfactor", 10).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Faktor, der mit xyna.messagebus.request.timeout.millis multipliziert die Zeit ergibt, nach der sp‰testens ein neuer Polling-Request eines GUI-Tabs folgen muss, um nicht als verwaist gelˆscht zu werden.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Faktor, der mit xyna.messagebus.request.timeout.millis multipliziert die Zeit ergibt, nach der sp√§testens ein neuer Polling-Request eines GUI-Tabs folgen muss, um nicht als verwaist gel√∂scht zu werden.").
       setDefaultDocumentation(DocumentationLanguage.EN, "Factor that gives, multiplied by xyna.messagebus.request.timeout.millis, the maximum amount of time allowed between two polling requests for a GUI tab. Exceeding the limit leads to the tab being treated as orphaned.");
 
   public static final long MESSAGE_BUS_UPDATE_SLEEP_TIME = 100;
@@ -231,6 +235,7 @@ public class SessionBasedData {
   private Clipboard clipboard;
 
   private final Map<String, List<Event>> pollRequestUUIDToEventsMap = new ConcurrentHashMap<>();
+  private final Map<String, Boolean> pollRequestUUIDToIsProject = new ConcurrentHashMap<>();
   private final Map<String, Long> pollRequestUUIDToLastPoll = new ConcurrentHashMap<>();
   private final AtomicLong pollRequestId = new AtomicLong();
   private final List<Long> pendingPollRequestIds = Collections.synchronizedList(new ArrayList<>());
@@ -254,7 +259,7 @@ public class SessionBasedData {
   }
 
   public void init() {
-    pollEventFetcher = new PollEventFetcher(session.getId(), pollRequestUUIDToEventsMap, locks, this); // TODO: Geht das auch im Konstruktor?
+    pollEventFetcher = new PollEventFetcher(session.getId(), pollRequestUUIDToEventsMap, pollRequestUUIDToIsProject, locks, this); // TODO: Geht das auch im Konstruktor?
 
     Thread orphanedPollRequestCleaner = new Thread("Orphaned poll-request cleaner") {
       @Override
@@ -268,6 +273,7 @@ public class SessionBasedData {
               if ( System.currentTimeMillis() > (lastPoll.getValue() + maxWaitTime) ) {
                 orphanedUUIDs.add(lastPoll.getKey());
                 pollRequestUUIDToEventsMap.remove(lastPoll.getKey());
+                pollRequestUUIDToIsProject.remove(lastPoll.getKey());
               }
             }
 
@@ -375,7 +381,13 @@ public class SessionBasedData {
       case ClearClipboard:
         return clearClipboard();
       case GetPollEvents:
-        return getPollEvents(request.getObjectId());
+        return getPollEvents(request.getObjectId(), false);
+      case GetProjectPollEvents:
+        return getPollEvents(request.getObjectId(), true);
+      case SubscribeProjectPollEvents:
+        return subscribeProjectPollEvents(request);
+      case UnsubscribeProjectPollEvents:
+        return unsubscribeProjectPollEvents(request);
       case CopyXml:
         return copyXml(request);
       case Warnings:
@@ -541,7 +553,7 @@ public class SessionBasedData {
     return reply;
   }
 
-  private XMOMGuiReply getPollEvents(String pollUuid) throws InterruptedException {
+  private XMOMGuiReply getPollEvents(String pollUuid, boolean projectEvents) throws InterruptedException {
     XMOMGuiReply reply;
     GetEventsResponse response;
     Long curPollRequestId;
@@ -560,6 +572,7 @@ public class SessionBasedData {
 
       if (!pollRequestUUIDToEventsMap.containsKey(pollUuid)) {
         pollRequestUUIDToEventsMap.put(pollUuid, Collections.synchronizedList(new ArrayList<>()));
+        pollRequestUUIDToIsProject.put(pollUuid, projectEvents);
         refreshSubscriptions();
         response.setUpdates(new ArrayList<>());
 
@@ -597,6 +610,37 @@ public class SessionBasedData {
       pollRequestUUIDToEventsMap.get(pollUuid).clear();
       pendingPollRequestIds.remove(curPollRequestId);
     }
+
+    return reply;
+  }
+
+  private XMOMGuiReply subscribeProjectPollEvents(XMOMGuiRequest request) {
+    XMOMGuiReply reply = new XMOMGuiReply();
+    reply.setStatus(Status.success);
+    reply.setXynaObject(new SubscribeProjectPollEventsResponse());
+
+    Message message = (Message)com.gip.xyna.xact.filter.util.Utils.convertJsonToGeneralXynaObjectUsingGuiHttp(request.getJson());
+    pollEventFetcher.addProjectPolling(request.getObjectId(), message.getCorrelation(), message.getProduct(), message.getContext());
+    terminatePollRequests();
+
+    return reply;
+  }
+
+  private XMOMGuiReply unsubscribeProjectPollEvents(XMOMGuiRequest request) {
+    XMOMGuiReply reply = new XMOMGuiReply();
+    reply.setStatus(Status.success);
+    reply.setXynaObject(new UnsubscribeProjectPollEventsResponse());
+
+    // the current browser tab of the user does not need updates for this subscription, anymore
+    String pollUuid = request.getObjectId();
+    synchronized (pollRequestUUIDToEventsMap) {
+      pollRequestUUIDToEventsMap.remove(pollUuid);
+      pollRequestUUIDToIsProject.remove(pollUuid);
+    }
+
+    Message message = (Message)com.gip.xyna.xact.filter.util.Utils.convertJsonToGeneralXynaObjectUsingGuiHttp(request.getJson());
+    pollEventFetcher.cancelProjectPolling(pollUuid, message.getCorrelation());
+    terminatePollRequests();
 
     return reply;
   }

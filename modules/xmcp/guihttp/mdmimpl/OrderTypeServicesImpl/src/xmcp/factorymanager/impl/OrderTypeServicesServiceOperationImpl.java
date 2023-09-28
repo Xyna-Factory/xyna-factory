@@ -171,17 +171,17 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
       orderType.getRequiredCapacities().forEach(cap -> requiredCapacities.add(new Capacity(cap.getName(), cap.getCardinality())));
     
     List<InheritanceRule> inheritanceRules = new ArrayList<>();
-    Integer monitoringLevel = null;
     
     if(orderType.getPrecedence() != null) {
     //Precedence angegeben, daher eine Regel erzeugen
-      inheritanceRules.add(ParameterType.MonitoringLevel.createInheritanceRuleBuilder(String.valueOf(orderType.getMonitoringLevel()))
+      inheritanceRules.add(ParameterType.MonitoringLevel.createInheritanceRuleBuilder(orderType.getMonitoringLevel())
                                .precedence(orderType.getPrecedence())
                                .build());
     } else {
       //statisches Monitoringlevel
-      if(orderType.getMonitoringLevel() != null && orderType.getMonitoringLevel() >= 0) {
-        monitoringLevel = orderType.getMonitoringLevel() ;
+      if(orderType.getMonitoringLevel() != null && !orderType.getMonitoringLevel().matches("^-\\d+$")) {
+        inheritanceRules.add(ParameterType.MonitoringLevel.createInheritanceRuleBuilder(orderType.getMonitoringLevel())
+                                 .build());
       }
     }
         
@@ -221,7 +221,6 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
       ordertypeParameter.setCustomPriority(null);
     ordertypeParameter.setOrdertypeName(orderType.getName());
     ordertypeParameter.setRuntimeContext(revisionManagement.getRuntimeContext(orderType.getRuntimeContext().getRevision()));
-    ordertypeParameter.setMonitoringLevel(monitoringLevel);    
     ordertypeParameter.setParameterInheritanceRules(parameterInheritanceRules);
     
     return ordertypeParameter;

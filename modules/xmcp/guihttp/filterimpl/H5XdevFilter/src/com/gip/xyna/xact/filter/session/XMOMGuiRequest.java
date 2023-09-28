@@ -68,6 +68,9 @@ public class XMOMGuiRequest {
     ShowClipboard,
     ClearClipboard,
     GetPollEvents,
+    GetProjectPollEvents,
+    SubscribeProjectPollEvents,
+    UnsubscribeProjectPollEvents,
     CopyXml,
     Warnings
     ;
