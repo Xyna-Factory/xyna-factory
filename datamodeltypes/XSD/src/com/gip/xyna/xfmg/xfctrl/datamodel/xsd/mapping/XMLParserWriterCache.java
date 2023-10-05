@@ -29,6 +29,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.WrappedMap;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -174,7 +175,12 @@ public class XMLParserWriterCache extends WrappedMap<Pair<String, String>,XMLPar
     }
 
     public XynaObject parseDataModel(Map<String, Object> paramMap, String data) throws XynaObjectCreationException, XPRC_XmlParsingException {
-      Document doc = XMLUtils.parseString(data);
+      Document doc = null;
+      try {
+        doc = XMLUtils.parseString(data, true);
+      } catch (Exception e) {
+        throw new XPRC_XmlParsingException("string", e);
+      }
       Element element = doc.getDocumentElement();
       return tmc.createXynaObjectForRootElement(element);
     }
