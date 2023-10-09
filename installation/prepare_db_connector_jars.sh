@@ -41,6 +41,7 @@ fi
 mkdir -p $XYNA_PATH/server/userlib
 cp mysql-connector*.jar $XYNA_PATH/server/userlib
 cp ojdbc*.jar $XYNA_PATH/server/userlib
+cp mariadb-java-client*.jar $XYNA_PATH/server/userlib
 
 # copy licenses
 mkdir -p $XYNA_PATH/third_parties/db
