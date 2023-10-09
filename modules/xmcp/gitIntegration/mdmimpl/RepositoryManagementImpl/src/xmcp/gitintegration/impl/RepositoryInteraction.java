@@ -31,8 +31,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.CommitCommand;
+import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
@@ -50,7 +55,11 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.transport.sshd.SshdSessionFactoryBuilder;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.FS;
 
@@ -90,6 +99,7 @@ public class RepositoryInteraction {
   private static Logger logger = CentralFactoryLogging.getLogger(RepositoryInteraction.class);
 
   private DeploymentItemStateManagement dism;
+  private SshTransportConfigCallback sshTransportConfigCallback;
 
 
   private DeploymentItemStateManagement getDeploymentItemMgmt() {
@@ -97,6 +107,13 @@ public class RepositoryInteraction {
       dism = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement();
     }
     return dism;
+  }
+  
+  private SshTransportConfigCallback getSshTransportConfigCallback() {
+    if (sshTransportConfigCallback == null) {
+      sshTransportConfigCallback = new SshTransportConfigCallback();
+    }
+    return sshTransportConfigCallback;
   }
 
 
@@ -470,8 +487,15 @@ public class RepositoryInteraction {
     if (!container.push.isEmpty()) {
       git.stashCreate().setIncludeUntracked(true).call();
     }
-
-    git.pull().setCredentialsProvider(container.creds).call();
+    PullCommand cmd = git.pull();
+    if(container.creds != null) {
+      if (isHttps(repository)) {
+        cmd.setCredentialsProvider(container.creds);
+      } else if (isSsh(repository)) {
+        cmd.setTransportConfigCallback(getSshTransportConfigCallback());
+      }
+    }
+    cmd.call();
 
     if (!container.push.isEmpty()) {
       git.stashApply().call();
@@ -707,7 +731,16 @@ public class RepositoryInteraction {
 
 
   private void fetch(Git git, Repository repository, GitDataContainer container) throws Exception {
-    FetchResult result = git.fetch().setCredentialsProvider(container.creds).call();
+    FetchCommand cmd =  git.fetch();
+    if(container.creds != null) {
+      if(isHttps(repository)) {
+      cmd.setCredentialsProvider(container.creds);
+      } else if(isSsh(repository)) {
+        cmd.setTransportConfigCallback(getSshTransportConfigCallback());
+      }
+    } 
+    
+    FetchResult result = cmd.call();
     if (logger.isDebugEnabled()) {
       List<String> names = result.getAdvertisedRefs().stream().map(x -> x.getName()).collect(Collectors.toList());
       logger.debug("executed fetch. " + String.join(", ", names));
@@ -717,11 +750,39 @@ public class RepositoryInteraction {
 
   private void processPushs(Git git, Repository repository, GitDataContainer container, String msg) throws Exception {
     git.add().addFilepattern(".").call();
-    git.commit().setAuthor(container.user, container.mail).setCredentialsProvider(container.creds).setMessage(msg).call();
-    git.push().setCredentialsProvider(container.creds).call();
+    CommitCommand cmd = git.commit().setAuthor(container.user, container.mail).setMessage(msg);
+    if(container.creds != null) {
+      if(isHttps(repository)) {
+        cmd.setCredentialsProvider(container.creds);
+      } else if (isSsh(repository)) {
+        //no cmd.setTransportConfigCallback(getSshTransportConfigCallback());
+      }
+    }
+    cmd.call();
+    PushCommand pushCmd = git.push();
+    if(container.creds != null) {
+      if(isHttps(repository)) {
+        pushCmd.setCredentialsProvider(container.creds);
+      } else if(isSsh(repository)) {
+        pushCmd.setTransportConfigCallback(getSshTransportConfigCallback());
+      }
+    }
+    pushCmd.call();
     if (logger.isDebugEnabled()) {
       logger.debug("executed push.");
     }
+  }
+  
+  private boolean isSsh(Repository repository) {
+    return getRemoteOriginUrl(repository).startsWith("ssh");
+  }
+  
+  private boolean isHttps(Repository repository) {
+    return getRemoteOriginUrl(repository).startsWith("https");
+  }
+  
+  private String getRemoteOriginUrl(Repository repository) {
+    return repository.getConfig().getString("remote", "origin", "url");
   }
 
 
@@ -764,5 +825,25 @@ public class RepositoryInteraction {
       sb.append("  revt: ").append(revert.size()).append(": ").append(String.join(", ", revert)).append("\n");
       return sb.toString();
     }
+  }
+  
+  
+  
+  
+  private static class SshTransportConfigCallback implements TransportConfigCallback {
+    
+    private SshSessionFactory f = new SshdSessionFactoryBuilder()
+        .setPreferredAuthentications("publickey")
+        .setHomeDirectory(FS.DETECTED.userHome())
+        .setSshDirectory(new File(FS.DETECTED.userHome(), "/.ssh"))
+        .build(null);
+    
+    
+    @Override
+    public void configure(Transport transport) {
+      SshTransport sshTransport = (SshTransport) transport;
+      sshTransport.setSshSessionFactory(f);
+    }
+    
   }
 }
