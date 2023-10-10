@@ -42,6 +42,7 @@ import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
 import xmcp.gitintegration.repository.RepositoryConnection;
@@ -127,12 +128,14 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   public List<? extends RepositoryUser> listUsersOfRepository(String arg0) {
     return new UserManagementStorage().listUsersOfRepo(arg0);
   }
-  
+
+
   @Override
   public RepositoryConnection getRepositoryConnection(Workspace workspace) {
-     return RepositoryManagementImpl.getRepositoryConnection(workspace.getName());
+    return RepositoryManagementImpl.getRepositoryConnection(workspace.getName());
   }
-  
+
+
   @Override
   public void updateRepositoryConnection(RepositoryConnection repositoryConnection) {
     RepositoryManagementImpl.updatetRepositoryConnection(repositoryConnection);
@@ -166,6 +169,16 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   public List<? extends Commit> listCommits(String arg0, String arg1, int arg2) {
     try {
       return new RepositoryInteraction().listCommits(arg0, arg1, arg2);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  @Override
+  public void checkout(String arg0, String arg1) {
+    try {
+      new RepositoryInteraction().checkout(arg0, arg1);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
