@@ -219,23 +219,23 @@ public class RepositoryInteraction {
       }
 
       List<DiffEntry> diff = git.diff().setCached(false).setOldTree(oldTreeParser).setNewTree(newTreeParser).call();
-      if (diff != null) {
-        for (DiffEntry entry : diff) {
-          String path = entry.getChangeType() == ChangeType.ADD ? entry.getNewPath() : entry.getOldPath();
-          Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(path, repository);
-          if (fqnAndWorkspace != null) {
-            String fqn = fqnAndWorkspace.getFirst();
-            String workspace = fqnAndWorkspace.getSecond();
-            if (entry.getChangeType() == ChangeType.ADD || entry.getChangeType() == ChangeType.DELETE) {
-              if (entry.getChangeType() == ChangeType.ADD) {
-                SavexmomobjectImpl saveXmom = new SavexmomobjectImpl();
-                saveXmom.saveXmomObject(workspace, fqn, false);
-              } else {
-                RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
-                removeXmom.removeXmomObject(workspace, fqn);
-              }
-            }
-          }
+      if (diff == null) {
+        return;
+      }
+      for (DiffEntry entry : diff) {
+        String path = entry.getChangeType() == ChangeType.ADD ? entry.getNewPath() : entry.getOldPath();
+        Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(path, repository);
+        if (fqnAndWorkspace == null) {
+          continue;
+        }
+        String fqn = fqnAndWorkspace.getFirst();
+        String workspace = fqnAndWorkspace.getSecond();
+        if (entry.getChangeType() == ChangeType.ADD) {
+          SavexmomobjectImpl saveXmom = new SavexmomobjectImpl();
+          saveXmom.saveXmomObject(workspace, fqn, false);
+        } else if (entry.getChangeType() == ChangeType.DELETE) {
+          RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
+          removeXmom.removeXmomObject(workspace, fqn);
         }
       }
     }

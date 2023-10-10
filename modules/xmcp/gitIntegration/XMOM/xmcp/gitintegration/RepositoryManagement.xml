@@ -188,7 +188,7 @@
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.checkout(branch, repository);</CodeSnippet>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.checkout(branch, repository);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

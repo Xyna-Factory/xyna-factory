@@ -17,6 +17,6 @@
 -->
 <XynaCommandLineCommand>
   <CommandDefinition Name="checkout" Description="Checkout branches of a repository" />
-  <Argument Name="branchName" Description="Name of the repository" />
+  <Argument Name="branchName" Description="Name of the branch" />
   <Argument Name="repository" Description="Path to the repository" />
 </XynaCommandLineCommand>
