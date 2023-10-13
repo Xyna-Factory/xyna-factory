@@ -177,5 +177,23 @@
         <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.updateRepositoryConnection(repositoryConnection28);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Checkout" Name="checkout">
+      <Input>
+        <Data ID="30" Label="Branch" VariableName="branch">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="29" Label="Repository" VariableName="repository">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.checkout(branch, repository);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

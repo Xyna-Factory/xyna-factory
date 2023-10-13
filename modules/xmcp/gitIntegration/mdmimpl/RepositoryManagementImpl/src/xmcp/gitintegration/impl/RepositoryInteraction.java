@@ -31,11 +31,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
+import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
@@ -148,8 +151,8 @@ public class RepositoryInteraction {
     }
     return repo;
   }
-  
-  
+
+
   public BranchData listBranches(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
     List<Branch> resultBranches = new ArrayList<>();
@@ -161,7 +164,7 @@ public class RepositoryInteraction {
         Branch.Builder branchBuilder = new Branch.Builder();
         branchBuilder.name(branch.getName()).commitHash(branch.getObjectId().getName()).target(branch.getTarget().getName());
         resultBranches.add(branchBuilder.instance());
-        if(Objects.equals(currentBranchName, branch.getName())) {
+        if (Objects.equals(currentBranchName, branch.getName())) {
           result.currentBranch(branchBuilder.instance());
         }
       }
@@ -169,13 +172,14 @@ public class RepositoryInteraction {
     result.branches(resultBranches);
     return result.instance();
   }
-  
+
+
   public List<Commit> listCommits(String repository, String branch, int length) throws Exception {
     List<Commit> result = new ArrayList<>();
     Repository repo = loadRepo(repository, false);
     try (Git git = new Git(repo)) {
       Iterable<RevCommit> commits = git.log().setMaxCount(length).add(repo.resolve(branch)).call();
-      for(RevCommit commit : commits) {
+      for (RevCommit commit : commits) {
         Commit.Builder builder = new Commit.Builder();
         builder.authorEmail(commit.getAuthorIdent().getEmailAddress());
         builder.authorName(commit.getAuthorIdent().getName());
@@ -204,6 +208,88 @@ public class RepositoryInteraction {
         throw new RuntimeException("pulls required: " + String.join(", ", container.pull));
       }
       processPushs(git, repo, container, message);
+    }
+  }
+
+
+  public void checkout(String branch, String repository) throws Exception {
+    Repository repo = loadRepo(repository, true);
+
+    try (Git git = new Git(repo)) {
+      CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
+      ObjectId oldTreeId = repo.resolve("HEAD^{tree}");
+      try (ObjectReader reader = repo.newObjectReader()) {
+        oldTreeParser.reset(reader, oldTreeId);
+      }
+
+      // Check if local branch not exists and remote branch exists 
+      if (!existsLocalBranch(git, branch) && existsRemoteBranch(git, branch)) {
+        git.checkout().setCreateBranch(true).setName(branch).setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+            .setStartPoint("origin/testbranch").call();
+      }
+      git.checkout().setName(branch).call();
+
+      CanonicalTreeParser newTreeParser = new CanonicalTreeParser();
+      //  ObjectId newTreeId = ref.getObjectId();
+      ObjectId newTreeId = repo.resolve("HEAD^{tree}");
+      try (ObjectReader reader = repo.newObjectReader()) {
+        newTreeParser.reset(reader, newTreeId);
+      }
+
+      List<DiffEntry> diff = git.diff().setCached(false).setOldTree(oldTreeParser).setNewTree(newTreeParser).call();
+      if (diff == null) {
+        return;
+      }
+      for (DiffEntry entry : diff) {
+        String path = entry.getChangeType() == ChangeType.ADD ? entry.getNewPath() : entry.getOldPath();
+        Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(path, repository);
+        if (fqnAndWorkspace == null) {
+          continue;
+        }
+        String fqn = fqnAndWorkspace.getFirst();
+        String workspace = fqnAndWorkspace.getSecond();
+        if (entry.getChangeType() == ChangeType.ADD) {
+          SavexmomobjectImpl saveXmom = new SavexmomobjectImpl();
+          saveXmom.saveXmomObject(workspace, fqn, false);
+        } else if (entry.getChangeType() == ChangeType.DELETE) {
+          RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
+          removeXmom.removeXmomObject(workspace, fqn);
+        }
+      }
+    }
+  }
+
+
+  private boolean existsLocalBranch(Git git, String branchName) {
+    try {
+      ListBranchCommand listBranchCommand = git.branchList();
+      listBranchCommand.setListMode(ListBranchCommand.ListMode.ALL);
+      List<Ref> refs = listBranchCommand.call();
+      for (Ref ref : refs) {
+        if (ref.getName().equals("refs/heads/" + branchName)) {
+          return true;
+        }
+      }
+      return false;
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+
+  private boolean existsRemoteBranch(Git git, String branchName) {
+    try {
+      ListBranchCommand listBranchCommand = git.branchList();
+      listBranchCommand.setListMode(ListBranchCommand.ListMode.REMOTE);
+      List<Ref> refs = listBranchCommand.call();
+      for (Ref ref : refs) {
+        if (ref.getName().equals("refs/remotes/origin/" + branchName)) {
+          return true;
+        }
+      }
+      return false;
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
     }
   }
 
@@ -271,20 +357,21 @@ public class RepositoryInteraction {
       logger.debug("valid repository detected at " + repository);
     }
   }
-  
+
+
   private void processReferences(GitDataContainer container) {
     ReferenceSupport referenceSupport = new ReferenceSupport();
     ReferenceStorage storage = new ReferenceStorage();
     List<ReferenceStorable> references = storage.getAllReferences();
     Map<Long, List<InternalReference>> grouped = new HashMap<>();
-    for(String repoPath : container.pull) {
+    for (String repoPath : container.pull) {
       Pair<String, String> fqnAndWs = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
-      if(fqnAndWs != null) {
+      if (fqnAndWs != null) {
         //changes to a datatype with reference?
         Long revision = getRevision(fqnAndWs.getSecond());
         RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(fqnAndWs.getSecond());
         Optional<ReferenceStorable> opt = references.stream().filter(x -> matchNameAndRevision(x, fqnAndWs.getFirst(), revision)).findAny();
-        if(opt.isPresent()) {
+        if (opt.isPresent()) {
           InternalReference internalRef = new InternalReference();
           internalRef.setPath(opt.get().getPath());
           internalRef.setPathToRepo(con.getPath());
@@ -295,7 +382,7 @@ public class RepositoryInteraction {
         //changes to a referenced file?
         //find referenceStorable for reference
         List<ReferenceStorable> list = references.stream().filter(x -> repoPath.startsWith(x.getPath())).collect(Collectors.toList());
-        for(ReferenceStorable ref: list) {
+        for (ReferenceStorable ref : list) {
           RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(getWorkspace(ref.getWorkspace()).getName());
           InternalReference internalRef = new InternalReference();
           internalRef.setPath(ref.getPath());
@@ -305,28 +392,33 @@ public class RepositoryInteraction {
         }
       }
     }
-    
-    for(Entry<Long, List<InternalReference>> kvp : grouped.entrySet()) {
+
+    for (Entry<Long, List<InternalReference>> kvp : grouped.entrySet()) {
       referenceSupport.triggerReferences(kvp.getValue(), kvp.getKey());
     }
   }
-  
+
+
   private Workspace getWorkspace(Long revision) {
     try {
-      return new Workspace(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getWorkspace(revision).getName());
+      return new Workspace(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+          .getWorkspace(revision).getName());
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
   }
-  
+
+
   private void addEntry(Map<Long, List<InternalReference>> grouped, Long revision, InternalReference ref) {
     grouped.putIfAbsent(revision, new ArrayList<>());
     grouped.get(revision).add(ref);
   }
-  
+
+
   private boolean matchNameAndRevision(ReferenceStorable s, String fqn, Long revision) {
     return fqn.equals(s.getObjectName()) && revision == s.getWorkspace();
   }
+
 
   private void processExecs(GitDataContainer container) {
     List<Pair<Boolean, String>> execs = container.exec; //command, path (in repository)

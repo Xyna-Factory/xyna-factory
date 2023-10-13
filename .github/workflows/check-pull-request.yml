@@ -18,3 +18,8 @@ jobs:
       run: |
         cd installation/build
         ./checkAppVersions.py
+
+    - name: run checkServerVersion.sh
+      run: |
+        cd installation/build
+        ./checkServerVersion.sh
