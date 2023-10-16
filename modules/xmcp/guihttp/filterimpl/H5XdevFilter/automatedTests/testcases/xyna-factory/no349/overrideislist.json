@@ -136,7 +136,7 @@
     },
     {
       "operation": "read",
-      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberMethods]/items/$list[name=service]/areas/$list[name=output]/items/$list[name=text5]/id",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberMethods]/items/$list[name=service]/areas/$list[name=output]/items/$list[0]/id",
       "targetVariable": "!var0-out0!",
       "unquoteResult": true
     },
