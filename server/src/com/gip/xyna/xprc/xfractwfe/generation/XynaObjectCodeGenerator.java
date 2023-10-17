@@ -1446,7 +1446,7 @@ public class XynaObjectCodeGenerator {
 
   public static void appendGeneralSetter(CodeBuffer cb, Set<String> imports, List<AVariable> memberVars, boolean hasSuperClassWithGeneralGetter) {
     // allgemeiner setter
-    cb.addLine("public void set(String name, Object o) throws ", XDEV_PARAMETER_NAME_NOT_FOUND.class.getSimpleName(), " {");
+    cb.addLine("public void set(String name, java.lang.Object o) throws ", XDEV_PARAMETER_NAME_NOT_FOUND.class.getSimpleName(), " {");
     for (int i = 0; i < memberVars.size(); i++) {
       AVariable v = memberVars.get(i);
       if (i > 0) {
@@ -1512,13 +1512,13 @@ public class XynaObjectCodeGenerator {
     cb.addLine(" * @param name variable name or path separated by \".\".");
     cb.addLine(" */");
 
-    cb.addLine("public Object get(String name) throws ", InvalidObjectPathException.class.getSimpleName(), " {");
+    cb.addLine("public java.lang.Object get(String name) throws ", InvalidObjectPathException.class.getSimpleName(), " {");
     cb.add("String[] varNames = new String[]{");
     for (int i = 0; i < memberVars.size(); i++) {
       cb.addListElement("\"" + memberVars.get(i).getVarName() + "\"");
     }
     cb.add("};").addLB();
-    cb.add("Object[] vars = new Object[]{");
+    cb.add("java.lang.Object[] vars = new java.lang.Object[]{");
     for (AVariable v : memberVars) {
       if (v.isList()) {
         //getter verwenden, um bei listen die versionsbewusste liste zu bekommen
@@ -1528,7 +1528,7 @@ public class XynaObjectCodeGenerator {
       }
     }
     cb.add("};").addLB();
-    cb.addLine("Object o = ", XOUtils.class.getSimpleName(), ".getIfNameIsInVarNames(varNames, vars, name)");
+    cb.addLine("java.lang.Object o = ", XOUtils.class.getSimpleName(), ".getIfNameIsInVarNames(varNames, vars, name)");
     cb.addLine("if (o == ", XOUtils.class.getSimpleName(), ".VARNAME_NOTFOUND) {");
     if (hasSuperClassWithGeneralGetter) {
       cb.addLine("o = super.get(name)");

@@ -302,7 +302,7 @@ public class TypeInterface extends DeploymentItemIdentificationBase implements D
     if (typeInfo.isModelledType()) {
       return TypeInterface.of(((StepBasedType)typeInfo.getModelledType()).getGenerationType().getOriginalFqName(), false, isList);
     } else {
-      if (typeInfo.getJavaName().equals("Object")) {
+      if (typeInfo.getJavaName().equals("java.lang.Object")) {
         return TypeInterface.anyType();
       } else if (typeInfo.getJavaName().equals("List")) {
         return TypeInterface.anyType(); //FIXME
