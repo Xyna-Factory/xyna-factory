@@ -446,6 +446,7 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
       type = Tags.EXCEPTION;
     }
     VariableJson variableJson = new VariableJson(type, var.getLabel(), FQNameJson.ofPathAndName(var.getFQClassName()));
+    variableJson.setList(var.isList());
 //    VariableJson variableJson = new VariableJson(type, var.getLabel(), FQNameJson.ofAVariable(var)); TODO: PMOD-1193 
     GBBaseObject newVariable = createParameter(gbsNewMethod, variableJson);
 
