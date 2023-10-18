@@ -88,7 +88,7 @@ public class Utils {
   
   private static final Logger logger = CentralFactoryLogging.getLogger(Utils.class);
   
-  private static final String APP_NAME = "GuiHttp";
+  public static final String APP_NAME = "GuiHttp";
   
   private static final RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
   
