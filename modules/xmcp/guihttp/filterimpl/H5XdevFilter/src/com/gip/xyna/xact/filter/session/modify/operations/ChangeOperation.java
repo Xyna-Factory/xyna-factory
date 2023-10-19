@@ -611,7 +611,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       newOperation.setLabel(operation.getLabel());
       newOperation.setName(operation.getName());
       newOperation.takeOverSignature(operation);
-
+      newOperation.setDocumentation(operation.getDocumentation());
       dom.replaceOperation(operation, newOperation);
       operation = newOperation;
       
