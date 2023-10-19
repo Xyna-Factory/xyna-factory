@@ -116,7 +116,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       .setDefaultDocumentation(DocumentationLanguage.EN,
                                "If set, all startorder Requests outside of guihttp are first processed by the given workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
       .setDefaultDocumentation(DocumentationLanguage.DE,
-                               "Wenn gesetzt, werden alle startrorder Requests auﬂerhalb von guihttp zurerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName");
+                               "Wenn gesetzt, werden alle startorder Requests auﬂerhalb von guihttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName");
 
 
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
