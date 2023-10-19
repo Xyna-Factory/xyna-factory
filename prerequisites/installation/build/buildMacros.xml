@@ -188,7 +188,7 @@
 			           else="@{basedir}">
 				<available file="@{basedir}/lib" />
 			</condition>
-			<javadoc destdir="@{todir}" version="true" author="true">
+			<javadoc destdir="@{todir}" version="true" author="true" encoding="ISO-8859-1">
 				<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
 				<link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
 				<link href="http://www.dpml.net/api/ant/1.7.0" />

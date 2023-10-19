@@ -281,7 +281,7 @@ the current project and copies it to the archive directory.">
 	<target name="doc"
 	        description="Generates the Java Documentation of the current project.">
 		<delete dir="${doc.dir}" failonerror="false" />
-		<javadoc destdir="${doc.dir}" version="true" author="true">
+		<javadoc destdir="${doc.dir}" version="true" author="true" encoding="ISO-8859-1">
 			<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
 			<link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
 			<classpath>
@@ -314,6 +314,7 @@ moves it to the users public_html folder">
 		         packagenames="com.gip.xyna.utils.*"
 		         version="true"
 		         author="true"
+		         encoding="ISO-8859-1"
 		         windowtitle="Xyna Utils Documentation">
 			<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
 			<link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
