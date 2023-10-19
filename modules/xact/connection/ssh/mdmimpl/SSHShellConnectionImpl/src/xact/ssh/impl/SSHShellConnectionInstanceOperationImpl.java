@@ -18,59 +18,94 @@
 package xact.ssh.impl;
 
 
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.zip.ZipInputStream;
 
 import xact.connection.Command;
+import xact.connection.CommandResponseTuple;
+import xact.connection.ConnectionAlreadyClosed;
+import xact.connection.ConnectionParameter;
 import xact.connection.ConnectionTypeSpecificExtension;
+import xact.connection.DetectedError;
 import xact.connection.DeviceType;
+import xact.connection.ManagedConnection;
 import xact.connection.ReadTimeout;
 import xact.connection.Response;
 import xact.connection.SendParameter;
+import xact.ssh.AuthenticationMode;
+//import xact.ssh.EncryptionType;
+//import xact.ssh.HostKeyStorable;
+//import xact.ssh.HostKeyStorableRepository;
+//import xact.ssh.IdentityStorableRepository;
+import xact.ssh.PassPhrase;
+import xact.ssh.Password;
+import xact.ssh.PublicKey;
 import xact.ssh.SSHConnectionParameter;
 import xact.ssh.SSHMessagePayload;
 import xact.ssh.SSHSendParameter;
 import xact.ssh.SSHShellConnection;
 import xact.ssh.SSHShellConnectionInstanceOperation;
-import xact.ssh.SSHShellConnectionParameter;
 import xact.ssh.SSHShellConnectionSuperProxy;
 import xact.ssh.SSHShellPromptExtractor;
 import xact.ssh.SSHShellResponse;
 import xact.ssh.SSHSpecificExtension;
+//import xact.ssh.XynaHostKeyRepository;
 import xact.templates.CommandLineInterface;
+import xact.templates.Document;
 import xact.templates.DocumentType;
 import xfmg.xfmon.protocolmsg.ProtocolMessage;
 
 import com.gip.xyna.xfmg.Constants;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSchException;
+
+import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedObject;
+
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.Factory;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.direct.Session.Shell;
+import net.schmizz.sshj.userauth.keyprovider.FileKeyProvider;
+import net.schmizz.sshj.userauth.keyprovider.KeyFormat;
+import net.schmizz.sshj.userauth.keyprovider.KeyPairWrapper;
+import net.schmizz.sshj.userauth.keyprovider.KeyProviderUtil;
+
 
 
 public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionSuperProxy implements SSHShellConnectionInstanceOperation {
 
   private static final long serialVersionUID = 1L;
 
+
   public SSHShellConnectionInstanceOperationImpl(SSHShellConnection instanceVar) {
     super(instanceVar);
   }
-  
-  
+
+
   private String loginResult;
 
 
   protected void initChannelAndStreams(SendParameter sendParameter, DocumentType documentType, DeviceType deviceType, Command cmd) {
     try {
-      ChannelShell shellChannel = (ChannelShell) getSession().openChannel("shell");
-      shellChannel.setPty(true);
+
       String terminalType = "gogrid";
       if (instanceVar.getConnectionParameter() instanceof SSHConnectionParameter) {
-        SSHConnectionParameter sshConParams = (SSHConnectionParameter)instanceVar.getConnectionParameter();
-        if (sshConParams.getTerminalType() != null &&
-            !sshConParams.getTerminalType().isEmpty()) {
+        SSHConnectionParameter sshConParams = (SSHConnectionParameter) instanceVar.getConnectionParameter();
+        if (sshConParams.getTerminalType() != null && !sshConParams.getTerminalType().isEmpty()) {
           terminalType = sshConParams.getTerminalType().trim();
         }
       }
+      getSession().allocatePTY(terminalType, 5000, 5000, 5000, 5000, Collections.emptyMap());
+
+      //Prep of 47-ssh-shell-connection-terminal-dimensions-should-be-configurable
+      /*
       int terminalWidthColumns = 5000;
       int terminalHeightRows = 5000;
       int terminalWidhtPixels = 5000;
@@ -90,33 +125,38 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           terminalWidhtPixels = sscp.getTerminalWidthPixels();
         }
       }
-      shellChannel.setPtyType(terminalType, terminalWidthColumns, terminalHeightRows, terminalWidhtPixels, terminalHeightPixels);
+      //shellChannel.setPtyType(terminalType, terminalWidthColumns, terminalHeightRows, terminalWidhtPixels, terminalHeightPixels);
+      getSession().allocatePTY(terminalType, terminalWidthColumns, terminalHeightRows, terminalWidhtPixels, terminalHeightPixels, Collections.emptyMap());
+      */
+
+      Shell shell = getSession().startShell();
+      setChannelAndStreams(shell);
 
       SSHSendParameter sp;
       if (sendParameter == null) {
-        sp = new SSHSendParameter.Builder().connectionTimeoutInMilliseconds(5000).readTimeoutInMilliseconds(2000).reconnectAfterRestart(true).throwExceptionOnReadTimeout(true).instance();
+        sp = new SSHSendParameter.Builder().connectionTimeoutInMilliseconds(5000).readTimeoutInMilliseconds(2000)
+            .reconnectAfterRestart(true).throwExceptionOnReadTimeout(true).instance();
       } else {
-        sp = (SSHSendParameter) sendParameter;  
+        sp = (SSHSendParameter) sendParameter;
       }
-      
-      setChannelAndStreams(shellChannel);
-      shellChannel.connect((int) Math.min(sp.getConnectionTimeoutInMilliseconds(), Integer.MAX_VALUE));
 
-      loginResult =
-          readFromInputStream(getInputStream(), shellChannel, documentType, deviceType, sp.getReadTimeoutInMilliseconds(), cmd,
-                              getThrowReadTimeoutException(sp.getThrowExceptionOnReadTimeout()));
-    } catch (JSchException t) {
-      throw new RuntimeException(t);
+      loginResult = readFromInputStream(getInputStream(), shell, documentType, deviceType, sp.getReadTimeoutInMilliseconds(), cmd,
+                                        getThrowReadTimeoutException(sp.getThrowExceptionOnReadTimeout()));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      //Preservation of the Connection-App
+      //if (e instanceof net.schmizz.sshj.common.SSHException) {
+      //  throw xact.ssh.Utils.toSshException((net.schmizz.sshj.common.SSHException) e);
+      //} else {
+        throw new RuntimeException(e);
+      //}
     } catch (ReadTimeout e) {
       throw new RuntimeException(e);
     }
   }
-  
-  
+
+
   @Override
   protected Response generateResponse(String response, DeviceType deviceType) {
     String ls = getLineSeperator(deviceType);
@@ -136,11 +176,10 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
     }
     return super.generateResponse(response, deviceType);
   }
-  
+
 
   @Override
-  protected byte[] transformCommandForSend(String commandString, DeviceType deviceType)
-                  throws UnsupportedEncodingException {
+  protected byte[] transformCommandForSend(String commandString, DeviceType deviceType) throws UnsupportedEncodingException {
     String lineSeperator = getLineSeperator(deviceType);
     if (commandString.endsWith(Constants.LINE_SEPARATOR)) {
       commandString = commandString.substring(0, commandString.length() - Constants.LINE_SEPARATOR.length());
@@ -150,15 +189,15 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
     }
     return super.transformCommandForSend(commandString, deviceType);
   }
-  
-  
+
+
   private String getLineSeperator(DeviceType deviceType) {
     String lineSeperator = Constants.LINE_SEPARATOR;
     List<? extends ConnectionTypeSpecificExtension> list = deviceType.getConnectionTypeSpecificExtension();
     if (list != null) {
       for (ConnectionTypeSpecificExtension connectionTypeSpecificExtension : list) {
         if (connectionTypeSpecificExtension instanceof SSHSpecificExtension) {
-          lineSeperator = ((SSHSpecificExtension)connectionTypeSpecificExtension).getLineSeperator();
+          lineSeperator = ((SSHSpecificExtension) connectionTypeSpecificExtension).getLineSeperator();
           if (lineSeperator.equals("\\n")) {
             lineSeperator = "\n";
           } else if (lineSeperator.equals("\\r")) {
@@ -166,19 +205,20 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           } else if (lineSeperator.equals("\\r\\n")) {
             lineSeperator = "\r\n";
           } else if (lineSeperator == null || lineSeperator.length() == 0) {
-            lineSeperator = ""; //dafür verwendet, dass man z.b. ctrl-c drückt. das wird nicht mit enter bestätigt.
+            lineSeperator = ""; //dafï¿½r verwendet, dass man z.b. ctrl-c drï¿½ckt. das wird nicht mit enter bestï¿½tigt.
           }
         }
       }
     }
     return lineSeperator;
   }
-  
-  
+
+
   private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
     //change if needed to store instance context
     s.defaultWriteObject();
   }
+
 
   private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
     //change if needed to restore instance-context during deserialization of order
@@ -189,7 +229,8 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
   public Response getLoginMessage(DeviceType deviceType) {
     if (!prepared) {
       reconnectIfNecessary();
-      initChannelAndStreams(getInstanceVar().getConnectionParameter().getDefaultSendParameter(), new CommandLineInterface(), deviceType, new Command(""));
+      initChannelAndStreams(getInstanceVar().getConnectionParameter().getDefaultSendParameter(), new CommandLineInterface(), deviceType,
+                            new Command(""));
       prepared = true;
     }
     return new Response(loginResult);
@@ -203,6 +244,5 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
     msg.setProtocolName("SSH");
     return msg;
   }
-  
-  
+
 }

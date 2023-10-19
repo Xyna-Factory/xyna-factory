@@ -17,59 +17,80 @@
  */
 package xact.ssh.impl;
 
-import java.io.ByteArrayOutputStream;
+
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
 import xact.ssh.EncryptionType;
 import xact.ssh.HostKeyStorableRepository;
+import xact.ssh.IdentityStorable;
 import xact.ssh.IdentityStorableRepository;
-import xact.ssh.JSchUtil;
-import xact.ssh.PassphraseStore;
 import xact.ssh.SSHConnectionManagement;
-import xact.ssh.SecureStorablePassphraseStore;
+//import xact.ssh.SSHUtil;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyRegister.DependencySourceType;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement;
-import com.jcraft.jsch.Buffer;
-import com.jcraft.jsch.HostKey;
-import com.jcraft.jsch.Identity;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 
+import net.schmizz.sshj.Config;
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
+import net.schmizz.sshj.userauth.password.PasswordFinder;
+import net.schmizz.sshj.userauth.password.Resource;
+
+//Preservation of the Connection-App
+//import xact.ssh.ConnectionLostException;
+//import xact.ssh.HostKeyNotVerifiableException;
+//import xact.ssh.HostNotAllowedToConnectException;
+//import xact.ssh.IllegalUserNameException;
+//import xact.ssh.KeyExchangeFailedException;
+//import xact.ssh.UserAuthException;
+
+//import org.bouncycastle.jce.provider.*;
+//import org.bouncycastle.*;
+//import com.hierynomus.asn1.encodingrules.*;
+//import com.hierynomus.sshj.userauth.keyprovider.*;
+//import net.schmizz.sshj.*;
+//import net.schmizz.sshj.transport.*;
 
 public class SSHConnectionManagementRepositoryAccess {
-  
+
   private final static String HASHHOSTKEYS_PROPERTY_NAME = "xact.ssh.hashhostkeys";
-  
+
   private static XynaHostKeyRepository hostKeyRepo;
   private static XynaIdentityRepository identityRepo;
-  private static PassphraseStore passphraseStore;
-  private static JSch jsch;
+  private static SSHClient client;
   private static final Logger logger = CentralFactoryLogging.getLogger(SSHConnectionManagementRepositoryAccess.class);
-  
+
+
   public static void init() {
-    jsch = new JSch();
+
+    client = new SSHClient();
+
     hostKeyRepo = new HostKeyStorableRepository();
     hostKeyRepo.init();
-    identityRepo = new IdentityStorableRepository();
+    identityRepo = new IdentityStorableRepository(client.getTransport().getConfig());
     identityRepo.init();
-    passphraseStore = new SecureStorablePassphraseStore();
-    XynaFactory
-        .getInstance()
-        .getFactoryManagementPortal()
-        .getXynaFactoryControl()
-        .getDependencyRegister()
+
+    //logger.debug("SSHConnectionManagementRepositoryAccess - init - identityRepo.getAllKeys().size(): " + identityRepo.getAllKeys().size());
+
+    XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getDependencyRegister()
         .addDependency(DependencySourceType.XYNAPROPERTY, HASHHOSTKEYS_PROPERTY_NAME, DependencySourceType.DATATYPE,
                        SSHConnectionManagement.class.getName(), getRevision());
   }
@@ -87,183 +108,190 @@ public class SSHConnectionManagementRepositoryAccess {
   public static void shutdown() {
     hostKeyRepo.shutdown();
     identityRepo.shutdown();
-    XynaFactory
-        .getInstance()
-        .getFactoryManagementPortal()
-        .getXynaFactoryControl()
-        .getDependencyRegister()
+    XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getDependencyRegister()
         .removeDependency(DependencySourceType.XYNAPROPERTY, HASHHOSTKEYS_PROPERTY_NAME, DependencySourceType.DATATYPE,
                           SSHConnectionManagement.class.getName(), getRevision());
   }
 
-  
+
   public static void addKnownHost(String hostname, EncryptionType type, String publickey, String comment) {
-    if (type == null || type == EncryptionType.UNKNOWN) {
-      type = JSchUtil.getKeyType(publickey);
-    }
-    String value = XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty("xact.ssh.hashHostKeys");
-    HostKey key = JSchUtil.instantiateHashedHostKey(hostname, type, publickey, jsch, Boolean.valueOf(value), comment);
-    hostKeyRepo.add(key, null);
+    //hostKeyRepo.add(SSHUtil.createKnownHost(hostname, type, publickey, comment));
+    if (type==null) {type = EncryptionType.UNKNOWN;};
+    hostKeyRepo.add(HostKeyStorableRepository.createKnownHost(hostname, type, publickey, comment));
   }
-  
-  
+
+
   public static void exportKnownHost(String hostname, EncryptionType type, String keyFileName) {
     hostKeyRepo.exportKnownHost(hostname, type.getStringRepresentation(), keyFileName);
   }
-  
-  
+
+
+  //public static List<String> findExistingAlgorithms(String hostname, int port) {
+  //    return hostKeyRepo.findExistingAlgorithms(hostname, port);
+  //}
+
   public static void generateKeyPair(EncryptionType type, Integer keysize, String passphrase, boolean overwriteExisting) {
-    int size = 1024;
-    if (keysize != null) {
-      size = keysize.intValue();
-    }
-    com.jcraft.jsch.KeyPair pair;
     try {
-      pair = com.jcraft.jsch.KeyPair.genKeyPair(jsch, type.getNumericRepresentation(), size);
-    } catch (JSchException e) {
-      throw new RuntimeException("", e);
-    }
-    if (passphrase != null) {
-      pair.setPassphrase(passphrase);
-    }
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    pair.writePrivateKey(baos);
-    byte[] privateKeyBlob = baos.toByteArray();
-    baos = new ByteArrayOutputStream();
-    pair.writePublicKey(baos, "");
-    byte[] publicKeyBlob = baos.toByteArray();
-    if (overwriteExisting) {
-      Vector<Identity> all = identityRepo.getIdentities();
-      for (Identity identity : all) {
-        passphraseStore.remove(identity.getName());
+      if (type.getStringRepresentation().equalsIgnoreCase("RSA") | type.getStringRepresentation().equalsIgnoreCase("DSA")) {
+        xact.ssh.generatekeypackage.ExtdKeyGeneration.generateKeyPair(keysize, passphrase, overwriteExisting, type, identityRepo);
+      } else {
+        logger.warn("EncryptionType not supported: " + type.getStringRepresentation());
+        NoSuchAlgorithmException e = new NoSuchAlgorithmException();
+        throw new RuntimeException(e);
       }
-      identityRepo.removeAll();
-    }
-    Identity identity = identityRepo.tryAdd(privateKeyBlob, publicKeyBlob);
-    if (identity != null) {
-      passphraseStore.store(identity.getName(), passphrase);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
-  
-  
+
+
+  private static void add(Optional<String> name, EncryptionType type, byte[] privateKey, byte[] publicKey, Optional<String> passphrase) {
+    identityRepo.add(name, type, privateKey, publicKey, passphrase);
+  }
+
+
   public static List<String> getPublicKey(EncryptionType encryptionType) {
-    List<String> keys = new ArrayList<String>();
-    for (Object identity : identityRepo.getIdentities()) {
-      Identity id = (Identity) identity;
-      if (encryptionType == null || encryptionType == EncryptionType.UNKNOWN || encryptionType.getSshStringRepresentation().equals(id.getAlgName())) {
-        if (id.isEncrypted()) {
-          try {
-            id.setPassphrase(JSchUtil.str2byte(passphraseStore.retrieve(id.getName())));
-          } catch (JSchException e) {
-            throw new RuntimeException("",e);
-          }
+    try {
+      List<String> keys = new ArrayList<String>();
+
+      Collection<IdentityStorable> storables = identityRepo.getAllIdentities();
+      //List<KeyProvider> result = new ArrayList<KeyProvider>();
+      for (IdentityStorable identity : storables) {
+        KeyProvider keyproviderIdentity = identityRepo.storableToKeyProvider(identity);
+        //String publicKey0 = new String(identity.getPublickey(),"UTF-8");
+        if (encryptionType == null || encryptionType == EncryptionType.UNKNOWN
+            || encryptionType.getSshStringRepresentation().equals(keyproviderIdentity.getType().toString())) {
+          String publicKey = new String(identity.getPublickey(), "UTF-8");
+          keys.add(publicKey.trim());
         }
-        byte[] publicKeyBlob = id.getPublicKeyBlob();
-        byte[] encodedBytes = JSchUtil.toBase64(publicKeyBlob, 0, publicKeyBlob.length);
-        Buffer buf =new Buffer(publicKeyBlob);
-        byte[] type = buf.getString();
-        keys.add(JSchUtil.byte2str(type) + " " +JSchUtil.byte2str(encodedBytes));
-    
       }
+      /*
+      for (KeyProvider identity : identityRepo.getAllKeys()) {
+        if (encryptionType == null || 
+            encryptionType == EncryptionType.UNKNOWN || 
+            encryptionType.getSshStringRepresentation().equals(identity.getType().toString())) {
+            keys.add(SSHUtil.encodePublicKey(identity.getPublic()));
+            //keys.add(JSchUtil.byte2str(type) + " " +JSchUtil.byte2str(encodedBytes));
+        }
+      }
+      */
+      return keys;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
-    return keys;
   }
-  
-  
+
+
   public static void importKnownHosts(String keyFileName) {
     hostKeyRepo.importKnownHosts(keyFileName);
   }
-  
-  
-  public static void removeKnownHost(String hostname, String publickey, EncryptionType type) {
-    byte[] publicKeyBlob = null;
-    if (publickey != null) {
-      publicKeyBlob = JSchUtil.base64StringToPublicKeyBlob(publickey);
-    }
-    hostKeyRepo.remove(hostname, type == null ? null : type.getStringRepresentation(), publicKeyBlob);
+
+
+  public static void removeKnownHost(String hostname, String publicKey, EncryptionType type) {
+    hostKeyRepo.remove(hostname, type != null ? type.getStringRepresentation() : null);
   }
-  
-  
+
+
   public static void addKeyFiles(String publicfilename, String privatefilename, String passphrase) {
-    com.jcraft.jsch.KeyPair key; // TODO ...we don't use publicfilename, we could at least validate
+
+    //Format compatible with JSCH entries
+    File privatefile = new File(privatefilename);
+    File publicfile = new File(publicfilename);
     try {
-      key = com.jcraft.jsch.KeyPair.load(jsch, privatefilename, publicfilename);
-    } catch (JSchException e) {
-      throw new RuntimeException("",e);
+      byte[] byteprivate = Files.readAllBytes(privatefile.toPath());
+      byte[] bytepublic = Files.readAllBytes(publicfile.toPath());
+      String stringprivate = new String(byteprivate, "UTF-8");
+      String stringpublic = new String(bytepublic, "UTF-8");
+
+      //Preservation of the Connection-App
+      //addKeyPair(stringprivate, stringpublic, passphrase, null);
+      addKeyPair(stringprivate, stringpublic, passphrase);
+      
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
-    if (key.isEncrypted()) {
-      if (passphrase == null) {
-        throw new IllegalArgumentException("Key is encrypted and no passphrase is given");
-      } else {
-        key.setPassphrase(passphrase);
-        key.decrypt(passphrase);
-      }
+    /*
+    try (SSHClient client = new SSHClient()) {
+      KeyProvider provider = client.loadKeys(privatefilename, passphrase);
+      add(Optional.of(generateIdentityName(privatefilename)),
+          EncryptionType.getBySshStringRepresentation(provider.getType().toString()),
+          provider.getPublic().getEncoded(),
+          provider.getPrivate().getEncoded(),
+          Optional.ofNullable(passphrase));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    key.writePrivateKey(baos);
-    byte[] identity = baos.toByteArray();
-    baos = new ByteArrayOutputStream();
-    key.writePublicKey(baos, "");
-    byte[] publicKey = baos.toByteArray();
-    Identity generatedId = identityRepo.tryAdd(identity, publicKey);
-    if (generatedId != null) {
-      passphraseStore.store(generatedId.getName(), passphrase);
-    }
+    */
   }
-  
-  
+
+
+  //private static String generateIdentityName(String privatefilename) {
+  //  return new File(privatefilename).getName()+"_"+System.currentTimeMillis();
+  //}
+
+  //Preservation of the Connection-App
+  //public static void addKeyPair(String privatekey, String publickey, String passphrase, String alias) {
   public static void addKeyPair(String privatekey, String publickey, String passphrase) {
-    byte[] privateKeyBytes = JSchUtil.str2byte(privatekey);
-    byte[] base64KeyBytes = JSchUtil.str2byte(publickey);
-    byte[] decodedBytes = JSchUtil.fromBase64(base64KeyBytes, 0, base64KeyBytes.length);
-    Identity identity = identityRepo.tryAdd(privateKeyBytes, decodedBytes);
-    if (identity != null) {
-      passphraseStore.store(identity.getName(), passphrase);
+
+    //Preservation of the Connection-App
+    String alias = null;
+    
+    String adjustedPublickey = adjustPublickey(publickey);
+    
+    try (SSHClient client = new SSHClient()) {
+      KeyProvider provider = client.loadKeys(privatekey, adjustedPublickey, new PasswordFinder() {
+
+        public boolean shouldRetry(Resource<?> ressource) {
+          return false;
+        }
+
+
+        public char[] reqPassword(Resource<?> ressource) {
+          return passphrase.toCharArray();
+        }
+      });
+
+      //Format compatible with JSCH entries
+      byte[] byteprivate = privatekey.getBytes(StandardCharsets.UTF_8);
+      byte[] bytepublic = adjustedPublickey.getBytes(StandardCharsets.UTF_8);
+      
+      add(Optional.ofNullable(alias), EncryptionType.getBySshStringRepresentation(provider.getType().toString()), bytepublic, byteprivate,
+          Optional.ofNullable(passphrase));
+
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
-    
-  
+
+  private static String adjustPublickey(String publickey) {
+    //Format: [ssh-...] [Key] [Optional]
+    //Adjust: [ssh-...] [Key]
+    String adjustedPublickey= publickey;
+    String[] subelements = publickey.trim().split("\\s+");
+    if (subelements.length<2) {
+      adjustedPublickey = publickey.trim();
+    } else {
+      adjustedPublickey = subelements[0] + " " + subelements[1];
+    }
+    return adjustedPublickey;
+  }
+
   /**
-   * Löscht die Identities vom angegeben type und publickey. Wird keiner der beiden
+   * Lï¿½scht die Identities vom angegeben type und publickey. Wird keiner der beiden
    * Parameter angeben wird das ganze Archiv geleert.
    * @param type
    * @param publickey
    * @throws IllegalArgumentException falls der EncryptionType unbekannt ist (type == UNKOWN)
    */
   public static void removeIdentity(EncryptionType type, String publickey) {
+    if (type == null) {
+      identityRepo.clearAll();
+    }
     if (type == EncryptionType.UNKNOWN) {
       throw new IllegalArgumentException("EncryptionType not supported");
     }
-    Vector<Identity> all = identityRepo.getIdentities();
-    Collection<Pair<String, byte[]>> fittingIdentities = new ArrayList<Pair<String, byte[]>>();
-    for (Identity identity : all) {
-      if (type == null || type.getSshStringRepresentation().equals(identity.getAlgName())) {
-        byte[] privateKeyBlob = JSchUtil.exractPrivateKey(identity);
-        if (publickey == null) {
-          fittingIdentities.add(new Pair<String, byte[]>(identity.getName(), privateKeyBlob));
-        } else {
-          Pair<String, byte[]> id = new Pair<String, byte[]>(identity.getName(), privateKeyBlob);
-          if (identity.isEncrypted()) {
-            try {
-              identity.setPassphrase(JSchUtil.str2byte(passphraseStore.retrieve(identity.getName())));
-            } catch (JSchException e) {
-              throw new RuntimeException("",e);
-            }
-          }
-          byte[] publicKeyBlob = identity.getPublicKeyBlob();
-          byte[] encodedBytes = JSchUtil.toBase64(publicKeyBlob, 0, publicKeyBlob.length);
-          String identityPublicKey = JSchUtil.byte2str(encodedBytes);
-          if (identityPublicKey.equals(publickey)) {
-            fittingIdentities.add(id);
-          }
-        }
-      }
-    }
-    for (Pair<String, byte[]> identity : fittingIdentities) {
-      passphraseStore.remove(identity.getFirst());
-      identityRepo.remove(identity.getSecond());
-    }
+    identityRepo.removeKey(type, Optional.ofNullable(publickey));
   }
-  
-  
+
+
 }

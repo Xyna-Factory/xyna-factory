@@ -17,38 +17,39 @@
  */
 package xact.ssh;
 
-import com.jcraft.jsch.KeyPair;
+
+
+import net.schmizz.sshj.common.KeyType;
+
 
 
 public enum EncryptionType {
-  RSA("RSA", KeyPair.RSA, "ssh-rsa", "xact.ssh.RSA"), 
-  DSA("DSA", KeyPair.DSA, "ssh-dss", "xact.ssh.DSA"),
-  UNKNOWN("UNKNOWN", KeyPair.UNKNOWN, "unknown", "xact.ssh.EncryptionAlgorithmType");
-  
+  RSA("RSA", "ssh-rsa", "xact.ssh.RSA"), 
+  DSA("DSA", "ssh-dss", "xact.ssh.DSA"), 
+  UNKNOWN("UNKNOWN", "unknown", "xact.ssh.EncryptionAlgorithmType");
+
   private final String stringRepresentation;
-  private final int numericRepresentation;
   private final String sshStringRepresentation;
   private final String xynaFqClassName;
-  
-  private EncryptionType(String stringRepresentation, int numericRepresentation, String sshStringRepresentation, String xynaFqClassName) {
+
+
+  private EncryptionType(String stringRepresentation, String sshStringRepresentation, String xynaFqClassName) {
     this.stringRepresentation = stringRepresentation;
-    this.numericRepresentation = numericRepresentation;
     this.sshStringRepresentation = sshStringRepresentation;
     this.xynaFqClassName = xynaFqClassName;
   }
-  
+
+
   public String getStringRepresentation() {
     return stringRepresentation;
   }
-  
-  public int getNumericRepresentation() {
-    return numericRepresentation;
-  }
-  
+
+
   public String getSshStringRepresentation() {
     return sshStringRepresentation;
   }
-  
+
+
   public static EncryptionType getByStringRepresentation(String representation) {
     for (EncryptionType mode : values()) {
       if (mode.stringRepresentation.equalsIgnoreCase(representation)) {
@@ -57,7 +58,8 @@ public enum EncryptionType {
     }
     return UNKNOWN;
   }
-  
+
+
   public static EncryptionType getBySshStringRepresentation(String representation) {
     for (EncryptionType mode : values()) {
       if (mode.sshStringRepresentation.equals(representation)) {
@@ -66,17 +68,20 @@ public enum EncryptionType {
     }
     return UNKNOWN;
   }
-  
-  public static EncryptionType getByNumericRepresentation(int representation) {
-    for (EncryptionType mode : values()) {
-      if (mode.numericRepresentation == representation) {
-        return mode;
-      }
+
+
+  public static KeyType getKeyType(String representation) {
+    KeyType reply = KeyType.UNKNOWN;
+    if (representation.equalsIgnoreCase("RSA")) {
+      reply = KeyType.RSA;
     }
-    return UNKNOWN;
+    if (representation.equalsIgnoreCase("DSA")) {
+      reply = KeyType.DSA;
+    }
+    return reply;
   }
-  
-  
+
+
   public static EncryptionType getByXynaFqClassNamen(String fqClassName) {
     for (EncryptionType mode : values()) {
       if (mode.xynaFqClassName.equals(fqClassName)) {
@@ -85,5 +90,5 @@ public enum EncryptionType {
     }
     return UNKNOWN;
   }
-  
+
 }

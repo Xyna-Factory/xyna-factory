@@ -17,28 +17,31 @@
  */
 package xact.ssh.impl;
 
+
+
 import java.io.Serializable;
 
 
 
 /**
- * Verzweigung Store/Ignore sehr früh, um unnötige Arbeit zu sparen und 
- * um völlig ohne ProtocolMessagesStore auskommen zu können.
+ * Verzweigung Store/Ignore sehr frï¿½h, um unnï¿½tige Arbeit zu sparen und 
+ * um vï¿½llig ohne ProtocolMessagesStore auskommen zu kï¿½nnen.
  *
  */
 public abstract class ProtocolMessageHandler implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  
+
   private static final ProtocolMessageHandlerStore STORE = new ProtocolMessageHandlerStore();
-  
+
+
   public static ProtocolMessageHandler newInstance() {
     return STORE;
   }
 
 
-  public abstract void handleProtocol(SSHConnectionInstanceOperationImpl sshConnectionInstanceOperationImpl, 
-                                      String content, String type, boolean commandSent, long recieveTime);
-  
-  
+  public abstract void handleProtocol(SSHConnectionInstanceOperationImpl sshConnectionInstanceOperationImpl, String content, String type,
+                                      boolean commandSent, long recieveTime);
+
+
 }
