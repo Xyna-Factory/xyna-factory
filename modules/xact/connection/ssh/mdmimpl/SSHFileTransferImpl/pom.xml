@@ -38,7 +38,6 @@
         <dependency>
             <groupId>com.hierynomus</groupId>
             <artifactId>sshj</artifactId>
-            <version>0.34.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
