@@ -25,33 +25,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
-    <artifactId>SSHConnectionImpl</artifactId>
-    <version>1.0.22</version>
-    <packaging>jar</packaging>
+    <artifactId>SSHConnectionImpl_third_parties</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>SSHConnectionImpl_third_parties</artifactId>
-            <version>1.0.0</version>
-            <type>pom</type>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-1.2-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynafactory</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynautils-exceptions</artifactId>
+       <dependency>
+            <groupId>com.hierynomus</groupId>
+            <artifactId>sshj</artifactId>
         </dependency>
     </dependencies>
 </project>

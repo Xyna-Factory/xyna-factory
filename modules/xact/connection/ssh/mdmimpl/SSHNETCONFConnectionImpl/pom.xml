@@ -23,7 +23,6 @@
         <version>1.0.0</version>
         <relativePath>../../../../../../installation/build/pom.xml</relativePath>
     </parent>
-    
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
     <artifactId>SSHNETCONFConnectionImpl</artifactId>
@@ -36,8 +35,11 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.hierynomus</groupId>
-            <artifactId>sshj</artifactId>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>SSHNETCONFConnectionImpl_third_parties</artifactId>
+            <version>1.0.0</version>
+            <type>pom</type>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
