@@ -36,7 +36,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gip.xyna</groupId>
-            <artifactId>SSHConnectionManagamentImpl_third_parties</artifactId>
+            <artifactId>SSHConnectionManagementImpl_third_parties</artifactId>
             <version>1.0.0</version>
             <type>pom</type>
             <scope>runtime</scope>
