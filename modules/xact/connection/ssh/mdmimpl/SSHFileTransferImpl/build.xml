@@ -32,4 +32,10 @@
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 
+    <target name="prepareLibs" description="Build for application">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/SSHJSchUtils">
+            <property name="target.dir" value="${basedir}/lib/xyna" />
+        </ant>
+    </target>
+
 </project>

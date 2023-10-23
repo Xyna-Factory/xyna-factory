@@ -20,6 +20,7 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
+  <SharedLibraries>sshlibs</SharedLibraries>
   <Data Label="terminal height rows" VariableName="terminalHeightRows">
     <Meta>
       <Type>int</Type>

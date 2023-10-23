@@ -21,6 +21,7 @@
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Libraries>SSHShellConnectionImpl.jar</Libraries>
+  <SharedLibraries>sshlibs</SharedLibraries>
   <Service Label="SSH shell connection" TypeName="SSHShellConnection">
     <Meta>
       <AdditionalDependencies>
