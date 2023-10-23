@@ -274,6 +274,8 @@ public class DeleteOperation extends ModifyOperationBase<DeleteJson> {
       dom.removeOperation(index);
     }
 
+    object.getRoot().resetVariableMap();
+
     // data type might become abstract in case the method was overriding one from a super class
     updateAbstractness(object.getDtOrException());
 
