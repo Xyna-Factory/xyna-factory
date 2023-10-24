@@ -19,5 +19,5 @@
 #copy license files (non .jar-files) in input dir to output dir
 
 mkdir "$2"
-while read -r i; do cp "$i" "$2"; done <<< $(find "$1" ! -iname "*.jar" -type f)
+while read -r i; do cp "$i" "$2"; done <<< $(find "$1" -maxdepth 1 ! -iname "*.jar" -type f)
 
