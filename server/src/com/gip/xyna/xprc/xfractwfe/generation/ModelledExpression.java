@@ -820,7 +820,7 @@ public class ModelledExpression {
     private Object transformation_prefix(TypeInfo toType) {
       if (toType == null ||
           !toType.isBaseType()) {
-        return Functions.class.getName()+"."+Functions.ADJUST_VALUE_METHOD_NAME+"(Object.class, ";
+        return Functions.class.getName()+"."+Functions.ADJUST_VALUE_METHOD_NAME+"(java.lang.Object.class, ";
       } else {
         return Functions.class.getName()+"."+Functions.ADJUST_VALUE_METHOD_NAME+"("+toType.getJavaName()+".class, ";
       }

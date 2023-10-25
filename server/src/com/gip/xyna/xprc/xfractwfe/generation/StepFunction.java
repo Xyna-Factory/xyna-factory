@@ -1402,7 +1402,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       }
       if (receiveVarIds.length == 0) {
       } else if (receiveVarIds.length == 1) {
-        cb.add("Object temp = ");
+        cb.add("java.lang.Object temp = ");
       } else {
         cb.add(Container.class.getSimpleName() + " c = ");
       }
