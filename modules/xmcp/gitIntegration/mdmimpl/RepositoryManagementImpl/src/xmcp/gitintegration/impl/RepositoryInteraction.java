@@ -820,7 +820,11 @@ public class RepositoryInteraction {
 
 
   private String getTrackingBranch(Repository repository) throws Exception {
-    return new BranchConfig(repository.getConfig(), repository.getBranch()).getTrackingBranch();
+    String trackingBranch = new BranchConfig(repository.getConfig(), repository.getBranch()).getTrackingBranch();
+    if(trackingBranch == null) {
+      throw new TrackingBranchNotFound(repository.getBranch());
+    }
+    return trackingBranch;
   }
 
 
