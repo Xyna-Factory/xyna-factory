@@ -224,11 +224,10 @@ public class RepositoryInteraction {
 
       // Check if local branch not exists and remote branch exists 
       CheckoutCommand checkoutCommand = git.checkout();
+      checkoutCommand.setName(branch);
       if (!existsLocalBranch(git, branch) && existsRemoteBranch(git, branch)) {
-        checkoutCommand.setCreateBranch(true).setName(branch).setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+        checkoutCommand.setCreateBranch(true).setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
             .setStartPoint("origin/" + branch);
-      } else {
-        checkoutCommand.setName(branch);
       }
       checkoutCommand.call();
 
