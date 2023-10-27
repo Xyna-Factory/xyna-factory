@@ -1,4 +1,4 @@
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2023 Xyna GmbH, Germany
  *
@@ -14,9 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<XynaCommandLineCommand>
-  <CommandDefinition Name="checkout" Description="Checkout branches of a repository" />
-  <Argument Name="branchName" Description="Name of the branch or commit hash" />
-  <Argument Name="repository" Description="Path to the repository" />
-</XynaCommandLineCommand>
+ */
+package xmcp.gitintegration.impl;
+
+
+
+public class TrackingBranchNotFound extends Exception {
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -3507546737572507919L;
+
+
+  public TrackingBranchNotFound(String branch) {
+    super("No TrackingBranch found for branch name/commit hash: " + branch);
+  }
+
+}

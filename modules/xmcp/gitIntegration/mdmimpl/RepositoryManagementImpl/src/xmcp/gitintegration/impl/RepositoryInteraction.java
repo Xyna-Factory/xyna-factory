@@ -31,7 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-
+import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
@@ -223,11 +223,13 @@ public class RepositoryInteraction {
       }
 
       // Check if local branch not exists and remote branch exists 
+      CheckoutCommand checkoutCommand = git.checkout();
+      checkoutCommand.setName(branch);
       if (!existsLocalBranch(git, branch) && existsRemoteBranch(git, branch)) {
-        git.checkout().setCreateBranch(true).setName(branch).setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
-            .setStartPoint("origin/testbranch").call();
+        checkoutCommand.setCreateBranch(true).setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+            .setStartPoint("origin/" + branch);
       }
-      git.checkout().setName(branch).call();
+      checkoutCommand.call();
 
       CanonicalTreeParser newTreeParser = new CanonicalTreeParser();
       //  ObjectId newTreeId = ref.getObjectId();
@@ -258,7 +260,6 @@ public class RepositoryInteraction {
       }
     }
   }
-
 
   private boolean existsLocalBranch(Git git, String branchName) {
     try {
@@ -818,7 +819,11 @@ public class RepositoryInteraction {
 
 
   private String getTrackingBranch(Repository repository) throws Exception {
-    return new BranchConfig(repository.getConfig(), repository.getBranch()).getTrackingBranch();
+    String trackingBranch = new BranchConfig(repository.getConfig(), repository.getBranch()).getTrackingBranch();
+    if(trackingBranch == null) {
+      throw new TrackingBranchNotFound(repository.getBranch());
+    }
+    return trackingBranch;
   }
 
 
