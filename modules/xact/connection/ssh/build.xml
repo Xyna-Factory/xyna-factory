@@ -31,7 +31,7 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/PromptExtraction">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/SSHJSchUtils">
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/SSHJUtils">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/SSHStorables">
