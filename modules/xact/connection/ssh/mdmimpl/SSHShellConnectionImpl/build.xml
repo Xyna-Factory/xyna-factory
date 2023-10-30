@@ -36,7 +36,7 @@
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../SSHConnectionImpl">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/SSHJSchUtils">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/SSHJUtils">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
     </target>

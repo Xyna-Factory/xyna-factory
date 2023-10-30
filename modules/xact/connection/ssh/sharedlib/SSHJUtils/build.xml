@@ -24,7 +24,7 @@
     </pathconvert>
     
     <property name="sharedLib.folder.name" value="sshlibs" />
-    <property name="sharedLib.name" value="SSHJSchUtils" />
+    <property name="sharedLib.name" value="SSHJUtils" />
      
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
