@@ -106,13 +106,8 @@ import net.schmizz.sshj.connection.ConnectionException;
 import net.schmizz.sshj.connection.channel.Channel;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.TransportException;
-//import net.schmizz.sshj.connection.channel.direct.Session.Shell;
-//import net.schmizz.sshj.transport.TransportException;
-//import net.schmizz.sshj.transport.kex.Curve25519SHA256;
-//import net.schmizz.sshj.transport.kex.DHGexSHA256;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.AuthParams;
-//import net.schmizz.sshj.userauth.UserAuthException;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.method.AuthHostbased;
 import net.schmizz.sshj.userauth.method.AuthMethod;
@@ -124,8 +119,6 @@ import net.schmizz.sshj.userauth.password.Resource;
 import net.schmizz.sshj.transport.mac.MAC;
 import com.hierynomus.sshj.transport.mac.Macs;
 
-//Preservation of the Connection-App
-//import xact.connection.GenericConnectionException;
 
 import java.security.*;
 
@@ -199,8 +192,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   private boolean reconnectAfterRestart = true;
   protected ProtocolMessageHandler protocolMessageHandler;
   private StringBuilder accumulatedResponse;
-  //Fix-XynaIdentityRepository:
-  //protected XynaIdentityRepository idRepo;
 
   private boolean setAuthNone;
 
@@ -224,15 +215,12 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
 
   public void connect() {
-      //Preservation of the Connection-App
-      //throws GenericConnectionException {
+
     initClient();
-    
-    //Preservation of the Connection-App
+
     try {
       transientConnectionData.setSession(createSession(getSSHConnectionParameter()));
     } catch (xact.connection.SSHException sshE) {
-        //MarkerImprovedErrorLogging
         logger.trace("Error (SSHException) in Connect",sshE);
         throw new RuntimeException(sshE);
     }
@@ -246,11 +234,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     ProxyParameter proxyParam = conParams.getProxy();
     if (proxyParam != null) {
       if (proxyParam instanceof SSHProxyParameter) {
-        // old implementation used nested sessions as proxy, with might be more akin to:
-        // client.getRemotePortForwarder() 
-        // and not 
-        // new Socket(proxy)
-        // FIXME see example Jump
         logger.warn("Proxy parameter currently ignored");
       } else {
         logger.warn("Ignoring unexpected ProxyParameter " + proxyParam);
@@ -267,8 +250,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       port = conParams.getPort();
     }
 
-    // private String determineHostIdentifier(SSHConnectionParameter conParams)
-    // private Collection<String> determinePossibleHostIdentifiers(SSHConnectionParameter conParams)
     boolean persist=false;
     if (HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking()).equals(HostKeyCheckingMode.ASK)) {
       persist = true;
@@ -290,9 +271,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       connectionTimeout = -1;
     }
 
-    // client.getTransport().setTimeoutMs(connectionTimeout);
-
-    // Call in net.schmizz.sshj.SocketClient
     client.setSocketFactory(new SocketFactory() {
 
       // client uses only socketFactory.createSocket()
@@ -381,8 +359,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       // TODO Default Settings unsupported vs login-server
 
       Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-      // client.getTransport().getConfig().setKeyExchangeFactories(Collections.singletonList(new Curve25519SHA256.FactoryLibSsh()));
-
+ 
       HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
       logger.debug("SSHConnectionInstanceOperationImpl checkingMode: " + checkingMode.getStringRepresentation());
       if (checkingMode.getStringRepresentation().equalsIgnoreCase("no")) {
@@ -391,20 +368,11 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
       // Client uses only socketFactory.createSocket() and overrides with setConnectTimeout and setTimeout
       client.setConnectTimeout(connectionTimeout);
-      // client.setTimeout(timeout);
 
-      //Fix-XynaIdentityRepository:
       XynaIdentityRepository idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
       client.connect(conParams.getHost(), port);
       setAuthNone=true;
-      //Fix-XynaIdentityRepository:
       authenticate(conParams, idRepo);
-
-      // int proofTimeout = client.getConnectTimeout();
-      // boolean proofKeepAlive = client.getSocket().getKeepAlive();
-      // logger.debug("SSHConnectionInstanceOperationImpl proofKeepAlive: " + proofTimeout);
-      // logger.debug("SSHConnectionInstanceOperationImpl proofKeepAlive: " + proofKeepAlive);
-
       return client.startSession();
 
     } catch (IOException e) {
@@ -421,15 +389,13 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
   }
 
-//Fix-XynaIdentityRepository:
+
   private void authenticate(SSHConnectionParameter conParams, XynaIdentityRepository idRepo) throws SSHException {
     List<AuthenticationMethod> methods = AuthenticationMethod.getByXynaRepresentation(conParams.getAuthenticationModes());
-    //Fix-XynaIdentityRepository:
     Collection<AuthMethod> aMethod = methods.stream().flatMap(m -> convertAuthMethod(m, conParams, idRepo).stream()).collect(Collectors.toList());
     client.auth(conParams.getUserName(), aMethod);
   }
 
-//Fix-XynaIdentityRepository:
   private Collection<AuthMethod> convertAuthMethod(AuthenticationMethod method, SSHConnectionParameter conParams, XynaIdentityRepository idRepo) {
     Collection<AuthMethod> aMethodResponse = new ArrayList<AuthMethod>();
     if (setAuthNone) {
@@ -459,15 +425,10 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       case HOSTBASED :
         throw new IllegalArgumentException("AuthenticationMethod disabled (security) '" + method.toString() + "'.");
       case PUBLICKEY :
-        //Fix-XynaIdentityRepository:
         Collection<KeyProvider> keys = generateKeyProvider(conParams,idRepo);
-        //if (method == AuthenticationMethod.HOSTBASED) {
-        //    return keys.stream().map(k -> new AuthHostbased(k, conParams.getHost(), conParams.getUserName())).collect(Collectors.toList());
-        //  } else {
         Collection<AuthMethod> addMethodKey = keys.stream().map(AuthPublickey::new).collect(Collectors.toList());
         aMethodResponse.addAll(addMethodKey);
         return aMethodResponse;
-        // }
       default :
         throw new IllegalArgumentException("Unknown AuthenticationMethod '" + method.toString() + "'.");
     }
@@ -496,48 +457,18 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
         algoTypeOpt = Optional.ofNullable(encryFirstElement.getStringRepresentation());
       }
     }
-    //if (algoList.size() == 1) {
-    //  EncryptionType encryType = EncryptionType.getBySshStringRepresentation(algoList.get(0));
-    //  algoTypeOpt = Optional.ofNullable(encryType.getStringRepresentation());
-    //}
     return algoTypeOpt;
   }
 
-  //Preservation of the Connection-App
-  /*
-  private Collection<KeyProvider> generateKeyProvider(SSHConnectionParameter conParams) {
-    List<KeyProvider> kpl = new ArrayList<KeyProvider>();
-    if ((conParams.getKeyAlias() != null) && (!conParams.getKeyAlias().isEmpty())) {
-      kpl = idRepo.getKey(conParams.getKeyAlias(), Optional.empty());
-    } else {
-      HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
-      //if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes")) {
-      if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes") || checkingMode.getStringRepresentation().equalsIgnoreCase("ask")) {
-        kpl = idRepo.getKey(conParams.getKeyAlias(), getAlgoType(conParams));
-      } else {
-        kpl = idRepo.getKey(conParams.getKeyAlias(), Optional.empty());
-      }
-    }
-    return kpl;
-  }
-  */
   //Preservation of the Connection-App - copy of "generateKeyProvider"
-  //Fix-XynaIdentityRepository:
   private Collection<KeyProvider> generateKeyProvider(SSHConnectionParameter conParams, XynaIdentityRepository idRepo) {
     List<KeyProvider> kpl = new ArrayList<KeyProvider>();
-    //if ((conParams.getKeyAlias() != null) && (!conParams.getKeyAlias().isEmpty())) {
-    //  kpl = idRepo.getKey(conParams.getKeyAlias(), Optional.empty());
-    //} else {
-      HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
-      //if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes")) {
-      if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes") || checkingMode.getStringRepresentation().equalsIgnoreCase("ask")) {
-        //kpl = idRepo.getKey(conParams.getKeyAlias(), getAlgoType(conParams));
-        kpl = idRepo.getKey(null, getAlgoType(conParams));
-      } else {
-        //kpl = idRepo.getKey(conParams.getKeyAlias(), Optional.empty());
-        kpl = idRepo.getKey(null, Optional.empty());
-      }
-    //}
+    HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
+    if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes") || checkingMode.getStringRepresentation().equalsIgnoreCase("ask")) {
+      kpl = idRepo.getKey(null, getAlgoType(conParams));
+    } else {
+      kpl = idRepo.getKey(null, Optional.empty());
+    }
     return kpl;
   }
   
@@ -594,12 +525,12 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   }
 
 
-  public void disconnect() { // throws GenericConnectionException {
+  public void disconnect() {
     SSHConnectionServiceOperationImpl.removeTransientData(transientDataId);
     try {
       transientConnectionData.disconnect();
     } catch (TransportException e) {
-      throw new RuntimeException(e); // xact.ssh.Utils.toSshException((SSHException) e);
+      throw new RuntimeException(e);
     } catch (ConnectionException e) {
       // Directly close session: Workaround for "net.schmizz.sshj.connection.ConnectionException: Broken transport; encountered EOF."
       // -> see github.com/hierynomus/sshj (If a future release fixes the problem, fix the ConnectionException below)
@@ -704,8 +635,8 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     boolean byLineBreak = sendPartitionByLineBreak.get();
     while (offset < bytes.length) {
       if (offset > 0) {
-        // TODO das ist eigtl ein Workaround f�r Bug 21939. Sch�ner w�re es, wenn wir
-        // das Buffering besser verstehen und konfigurieren w�rden
+        // TODO das ist eigtl ein Workaround f�r Bug 21939. Schöner wäre es, wenn wir
+        // das Buffering besser verstehen und konfigurieren würden
         readNewInput(getInputStream(), accumulatedResponse);
         if (millis > 0) {
           try {
@@ -795,12 +726,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       initClient();
     }
     if (getSession() == null) {
-      //Preservation of the Connection-App
-      //try {
-        connect();
-      //} catch (GenericConnectionException e) {
-      //  throw new RuntimeException(e);
-      //}
+      connect();
     }
   }
 
@@ -811,64 +737,15 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     client.addHostKeyVerifier(hostRepo);
 
     // Reduce valid KeyAlgorithms
-    /*
-    client.getTransport().getConfig()
-        .setKeyAlgorithms(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
-                          // com.hierynomus.sshj.key.KeyAlgorithms.EdDSA25519CertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.EdDSA25519(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521CertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp384CertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp384(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256CertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.SSHRSACertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.SSHDSSCertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA()));
-    */
-    /*
     client.getTransport().getConfig()
         .setKeyAlgorithms(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
                           com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
                           com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.EdDSA25519CertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.EdDSA25519(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521CertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp384CertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp384(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256CertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256()
-                          // com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.SSHRSACertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.SSHDSSCertV01(),
-                          //   com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                          //   com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA()
-                             ));
-    */
-    client.getTransport().getConfig()
-        .setKeyAlgorithms(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
-                          com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.EdDSA25519CertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.EdDSA25519(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521CertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp384CertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp384(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256CertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256()
-                          // com.hierynomus.sshj.key.KeyAlgorithms.SSHRSACertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.SSHDSSCertV01(),
-                          //   com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                          //   com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA()
-                             ));
+                          com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
+                          com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
+                          com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
+                          com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256()
+                           ));
 
     //Change of order due to the specific FW of an RD.
     client.getTransport().getConfig()
@@ -889,11 +766,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
                              Macs.HMACRIPEMD160Etm(),
                              Macs.HMACRIPEMD16096(),
                              Macs.HMACRIPEMD160OpenSsh()));
-
-    //Fix-XynaIdentityRepository:
-    //XynaIdentityRepository idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
-    //idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
-    //List<KeyProvider> info = idRepo.getAllKeys();
   }
 
 

@@ -118,7 +118,6 @@ public class HostKeyAliasMapping {
       AliasEntry aliasEntry = new AliasEntry(hostnamealias, overwrite);
       putAlias(hostname, aliasEntry);
     } else {
-      //removeAlias(hostname);
       AliasEntry aliasEntry = new AliasEntry(hostname, overwrite);
       putAlias(hostname, aliasEntry);
     }

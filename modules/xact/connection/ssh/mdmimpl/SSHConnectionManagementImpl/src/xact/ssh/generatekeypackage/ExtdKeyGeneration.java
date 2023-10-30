@@ -42,8 +42,6 @@ public class ExtdKeyGeneration {
 
     if ((passPhrase != null) && (!passPhrase.isEmpty())) {
       logger.warn("Error in generateKeyPair: passphrase not implemented!");
-      //NoSuchAlgorithmException e = new NoSuchAlgorithmException();
-      //throw new RuntimeException(e);
     }
 
     try {
@@ -92,56 +90,5 @@ public class ExtdKeyGeneration {
 
   }
 
-/*
-  // Alternative: Works with new JSCH Fork from github.com/mwiede/jsch (version 0.2.5 - 07.12.2022)
-  public static void generateKeyPair_JSCH(Integer keysize, String passphrase, boolean overwriteExisting, EncryptionType type,
-                                          XynaIdentityRepository identityRepo) {
-
-    com.jcraft.jsch.JSch jsch = new com.jcraft.jsch.JSch();
-    int size = 1024;
-    if (keysize != null) {
-      size = keysize.intValue();
-    }
-    com.jcraft.jsch.KeyPair pair;
-
-    // int JSCHType = com.jcraft.jsch.KeyPair.UNKNOWN;
-    int JSCHType = com.jcraft.jsch.KeyPair.RSA; // Default;
-    if (type.getStringRepresentation().equalsIgnoreCase(EncryptionType.DSA.getStringRepresentation())) {
-      JSCHType = com.jcraft.jsch.KeyPair.DSA;
-    }
-    if (type.getStringRepresentation().equalsIgnoreCase(EncryptionType.RSA.getStringRepresentation())) {
-      JSCHType = com.jcraft.jsch.KeyPair.RSA;
-    }
-
-    try {
-      pair = com.jcraft.jsch.KeyPair.genKeyPair(jsch, JSCHType, size);
-    } catch (com.jcraft.jsch.JSchException e) {
-      throw new RuntimeException("", e);
-    }
-    if (passphrase != null) {
-      pair.setPassphrase(passphrase);
-    }
-    java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-    pair.writePrivateKey(baos);
-    byte[] privateKeyBlob = baos.toByteArray();
-    baos = new java.io.ByteArrayOutputStream();
-    pair.writePublicKey(baos, "");
-    byte[] publicKeyBlob = baos.toByteArray();
-
-    // String StringPrivate =null;
-    // String StringPublic = null;
-    // try {
-    //     StringPrivate = new String(privateKeyBlob,"UTF-8");
-    //     StringPublic = new String(publicKeyBlob,"UTF-8");
-    // } catch (Exception e) {
-    //     throw new RuntimeException(e);
-    // }
-    // byte[] rsaPubByte = StringPublic.getBytes();
-    // byte[] rsaPrvByte = StringPrivate.getBytes();
-
-    writeKey(privateKeyBlob, publicKeyBlob, type, passphrase, overwriteExisting, identityRepo);
-
-  }
-*/
 
 }

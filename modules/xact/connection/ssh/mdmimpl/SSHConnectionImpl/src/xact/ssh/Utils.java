@@ -20,14 +20,14 @@ package xact.ssh;
 
 
 import xact.connection.SSHException;
-//import xact.connection.GenericConnectionException;
+
 
 
 
 public final class Utils {
 
   private Utils() {
-  } // static utils class
+  }
 
 
   public static SSHException toSshException(net.schmizz.sshj.common.SSHException sshjException) {

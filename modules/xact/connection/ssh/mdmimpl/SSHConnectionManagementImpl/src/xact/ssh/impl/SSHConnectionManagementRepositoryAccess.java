@@ -54,21 +54,6 @@ import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.password.PasswordFinder;
 import net.schmizz.sshj.userauth.password.Resource;
 
-//Preservation of the Connection-App
-//import xact.ssh.ConnectionLostException;
-//import xact.ssh.HostKeyNotVerifiableException;
-//import xact.ssh.HostNotAllowedToConnectException;
-//import xact.ssh.IllegalUserNameException;
-//import xact.ssh.KeyExchangeFailedException;
-//import xact.ssh.UserAuthException;
-
-//import org.bouncycastle.jce.provider.*;
-//import org.bouncycastle.*;
-//import com.hierynomus.asn1.encodingrules.*;
-//import com.hierynomus.sshj.userauth.keyprovider.*;
-//import net.schmizz.sshj.*;
-//import net.schmizz.sshj.transport.*;
-
 public class SSHConnectionManagementRepositoryAccess {
 
   private final static String HASHHOSTKEYS_PROPERTY_NAME = "xact.ssh.hashhostkeys";
@@ -87,8 +72,6 @@ public class SSHConnectionManagementRepositoryAccess {
     hostKeyRepo.init();
     identityRepo = new IdentityStorableRepository(client.getTransport().getConfig());
     identityRepo.init();
-
-    //logger.debug("SSHConnectionManagementRepositoryAccess - init - identityRepo.getAllKeys().size(): " + identityRepo.getAllKeys().size());
 
     XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getDependencyRegister()
         .addDependency(DependencySourceType.XYNAPROPERTY, HASHHOSTKEYS_PROPERTY_NAME, DependencySourceType.DATATYPE,
@@ -115,7 +98,6 @@ public class SSHConnectionManagementRepositoryAccess {
 
 
   public static void addKnownHost(String hostname, EncryptionType type, String publickey, String comment) {
-    //hostKeyRepo.add(SSHUtil.createKnownHost(hostname, type, publickey, comment));
     if (type==null) {type = EncryptionType.UNKNOWN;};
     hostKeyRepo.add(HostKeyStorableRepository.createKnownHost(hostname, type, publickey, comment));
   }
@@ -124,11 +106,6 @@ public class SSHConnectionManagementRepositoryAccess {
   public static void exportKnownHost(String hostname, EncryptionType type, String keyFileName) {
     hostKeyRepo.exportKnownHost(hostname, type.getStringRepresentation(), keyFileName);
   }
-
-
-  //public static List<String> findExistingAlgorithms(String hostname, int port) {
-  //    return hostKeyRepo.findExistingAlgorithms(hostname, port);
-  //}
 
   public static void generateKeyPair(EncryptionType type, Integer keysize, String passphrase, boolean overwriteExisting) {
     try {
@@ -155,26 +132,14 @@ public class SSHConnectionManagementRepositoryAccess {
       List<String> keys = new ArrayList<String>();
 
       Collection<IdentityStorable> storables = identityRepo.getAllIdentities();
-      //List<KeyProvider> result = new ArrayList<KeyProvider>();
       for (IdentityStorable identity : storables) {
         KeyProvider keyproviderIdentity = identityRepo.storableToKeyProvider(identity);
-        //String publicKey0 = new String(identity.getPublickey(),"UTF-8");
         if (encryptionType == null || encryptionType == EncryptionType.UNKNOWN
             || encryptionType.getSshStringRepresentation().equals(keyproviderIdentity.getType().toString())) {
           String publicKey = new String(identity.getPublickey(), "UTF-8");
           keys.add(publicKey.trim());
         }
       }
-      /*
-      for (KeyProvider identity : identityRepo.getAllKeys()) {
-        if (encryptionType == null || 
-            encryptionType == EncryptionType.UNKNOWN || 
-            encryptionType.getSshStringRepresentation().equals(identity.getType().toString())) {
-            keys.add(SSHUtil.encodePublicKey(identity.getPublic()));
-            //keys.add(JSchUtil.byte2str(type) + " " +JSchUtil.byte2str(encodedBytes));
-        }
-      }
-      */
       return keys;
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -203,37 +168,15 @@ public class SSHConnectionManagementRepositoryAccess {
       String stringprivate = new String(byteprivate, "UTF-8");
       String stringpublic = new String(bytepublic, "UTF-8");
 
-      //Preservation of the Connection-App
-      //addKeyPair(stringprivate, stringpublic, passphrase, null);
       addKeyPair(stringprivate, stringpublic, passphrase);
       
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    /*
-    try (SSHClient client = new SSHClient()) {
-      KeyProvider provider = client.loadKeys(privatefilename, passphrase);
-      add(Optional.of(generateIdentityName(privatefilename)),
-          EncryptionType.getBySshStringRepresentation(provider.getType().toString()),
-          provider.getPublic().getEncoded(),
-          provider.getPrivate().getEncoded(),
-          Optional.ofNullable(passphrase));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    */
   }
 
-
-  //private static String generateIdentityName(String privatefilename) {
-  //  return new File(privatefilename).getName()+"_"+System.currentTimeMillis();
-  //}
-
-  //Preservation of the Connection-App
-  //public static void addKeyPair(String privatekey, String publickey, String passphrase, String alias) {
   public static void addKeyPair(String privatekey, String publickey, String passphrase) {
 
-    //Preservation of the Connection-App
     String alias = null;
     
     String adjustedPublickey = adjustPublickey(publickey);

@@ -50,16 +50,6 @@ import xact.templates.DocumentType;
 import xact.templates.NETCONF;
 import xfmg.xfmon.protocolmsg.ProtocolMessage;
 
-//import org.bouncycastle.jce.provider.*;
-//import com.hierynomus.asn1.encodingrules.*;
-//import net.schmizz.sshj.common.IOUtils;
-//import net.schmizz.sshj.connection.*;
-//import net.schmizz.sshj.signature.*;
-//import net.schmizz.sshj.transport.kex.*;
-//import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
-//import net.schmizz.sshj.userauth.keyprovider.*;
-//import net.schmizz.sshj.userauth.method.*;
-//import net.schmizz.sshj.*;
 
 import net.schmizz.sshj.connection.channel.direct.Session;
 
@@ -97,7 +87,6 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
       } else {
         sp = (SSHSendParameter) sendParameter;
       }
-      //netconfChannel.connect((int)Math.min(sp.getConnectionTimeoutInMilliseconds(), Integer.MAX_VALUE));
       Session.Subsystem netconfChannel = getSession().startSubsystem("netconf");
       setChannelAndStreams(netconfChannel);
 

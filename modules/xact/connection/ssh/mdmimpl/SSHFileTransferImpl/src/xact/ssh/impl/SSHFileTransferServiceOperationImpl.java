@@ -33,7 +33,6 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
-//import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.xfer.FileSystemFile;
 
 
@@ -104,8 +103,6 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
       // Optional: "useCompression"
       ssh.useCompression();
 
-      // ssh.loadKnownHosts();
-      // Original JSCH-CODE: s.setConfig("StrictHostKeyChecking", "no");
       ssh.addHostKeyVerifier(new PromiscuousVerifier());
 
       ssh.connect(host.getHostname());

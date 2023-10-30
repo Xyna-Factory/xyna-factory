@@ -39,7 +39,6 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHand
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
 
 import base.Text;
-//import net.schmizz.sshj.common.SSHException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -56,14 +55,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
-
-
-//Preservation of the Connection-App
-//import xact.connection.GenericConnectionException;
-//import xact.ssh.IllegalUserNameException;
-
 import xact.connection.ManagedConnection;
 import xact.ssh.EncryptionAlgorithmType;
 import xact.ssh.EncryptionType;
@@ -163,11 +155,9 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
       throw new RuntimeException("Unexpected DocumentType: " + type);
     }
     
-    //Preservation of the Connection-App
     try {
       connection.connect();
     } catch (Exception sshE) {
-      //MarkerImprovedErrorLogging
       logger.warn("Error (SSHException) in getConnection",sshE);
       throw new RuntimeException(sshE);
     }
@@ -215,18 +205,8 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
 
 
   public void addKeyPair(KeyPair keyPair) {
-    //Preservation of the Connection-App
-    //SSHConnectionManagementRepositoryAccess.addKeyPair(keyPair.getPrivateKey(), keyPair.getPublicKey(),
-    //                                                   keyPair.getPassPhrase().getContent(), null);
     SSHConnectionManagementRepositoryAccess.addKeyPair(keyPair.getPrivateKey(), keyPair.getPublicKey(),
                                                        keyPair.getPassPhrase().getContent());
   }
-
-
-  //Preservation of the Connection-App - not implemented
-  //public void addKeyPairWithKeyAlias(KeyPair keyPair2, Text text5) {
-  //  SSHConnectionManagementRepositoryAccess.addKeyPair(keyPair2.getPrivateKey(), keyPair2.getPublicKey(),
-  //                                                     keyPair2.getPassPhrase().getContent(), text5.getText());
-  //}
 
 }

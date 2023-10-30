@@ -24,8 +24,8 @@ import java.io.Serializable;
 
 
 /**
- * Verzweigung Store/Ignore sehr fr�h, um unn�tige Arbeit zu sparen und 
- * um v�llig ohne ProtocolMessagesStore auskommen zu k�nnen.
+ * Verzweigung Store/Ignore sehr früh, um unnötige Arbeit zu sparen und 
+ * um völlig ohne ProtocolMessagesStore auskommen zu können.
  *
  */
 public abstract class ProtocolMessageHandler implements Serializable {

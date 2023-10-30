@@ -156,13 +156,7 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
           return Collections.emptyList();
         } else {
           if (publickey.isPresent()) {
-            //logger.debug("SSH App: IdentityStorableRepository - removeKey publicKey: "+publickey.get());
-            //for (IdentityStorable identity : toDelete) {
-            //    logger.debug("SSH App: IdentityStorableRepository - removeKey publicKeyList: "+getPublicKeyString(identity));
-            //    if (getPublicKeyString(identity).trim().equals(publickey.get().trim())) {logger.debug("SSH App: IdentityStorableRepository - removeKey publicKeyList: "+"Key found");};
-            //}
             toDelete = toDelete.stream().filter(i -> getPublicKeyString(i).trim().equals(publickey.get().trim())).collect(Collectors.toList());
-            //logger.debug("SSH App: IdentityStorableRepository - removeKey toDelete.size(): "+toDelete.size());
           }
           con.delete(toDelete);
           for (IdentityStorable identity : toDelete) {
@@ -257,7 +251,6 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
       ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
       try {
         Collection<IdentityStorable> identities = con.loadCollection(IdentityStorable.class);
-        //logger.debug("SSH App: IdentityStorableRepository - getAllIdentities identities.size(): "+identities.size());
         Collection<IdentityStorable> adjustedIdentities = new ArrayList<>();
         
         //If adjustments should be necessary, please implement them here.
@@ -268,16 +261,6 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
           adjustedIdentity.setType(identity.getType());
           adjustedIdentity.setPublickey(identity.getPublickey());
           adjustedIdentity.setPrivatekey(identity.getPrivatekey());
-          
-          //String privateKeyC = null;
-          //String publicKeyC = null;
-          //try {
-          //    privateKeyC = new String(identity.getPrivatekey(),"UTF-8");
-          //    publicKeyC = new String(identity.getPublickey(),"UTF-8");
-          //} catch(Exception e) {};
-          //logger.debug("SSH App: IdentityStorableRepository - getAllIdentities privateKey: "+privateKeyC);
-          //logger.debug("SSH App: IdentityStorableRepository - getAllIdentities publicKey: "+publicKeyC);
-          
           adjustedIdentities.add(adjustedIdentity);
         }
         return adjustedIdentities;
@@ -302,7 +285,6 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
     for (IdentityStorable identity : storables) {
       result.add(storableToKeyProvider(identity));
     }
-    //logger.debug("SSH App: IdentityStorableRepository - getAllKeys result.size(): "+result.size());
     return result;
   }
 
@@ -314,13 +296,9 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
       Collection<IdentityStorable> storables = getAllIdentities();
       List<KeyProvider> result = new ArrayList<KeyProvider>();
       for (IdentityStorable identity : storables) {
-        //logger.debug("SSH App: IdentityStorableRepository - getKey identity.getName() : "+identity.getName());
         if (name != null) {
-          //logger.debug("SSH App: IdentityStorableRepository - getKey name: "+name);
           if (identity.getName().equalsIgnoreCase(name)) {
             if (type.isPresent()) {
-              //logger.debug("SSH App: IdentityStorableRepository - getKey type.get(): "+type.get());
-              //logger.debug("SSH App: IdentityStorableRepository - getKey: "+identity.getType());
               if (type.get().equals(identity.getType())) {
                 result.add(storableToKeyProvider(identity));
               }
@@ -330,8 +308,6 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
           }
         } else {
           if (type.isPresent()) {
-            //logger.debug("SSH App: IdentityStorableRepository - getKey type.get(): "+type.get());
-            //logger.debug("SSH App: IdentityStorableRepository - getKey identity.getType(): "+identity.getType());
             if (type.get().equals(identity.getType())) {
               result.add(storableToKeyProvider(identity));
             }
@@ -340,7 +316,6 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
           }
         }
       }
-      //logger.debug("SSH App: IdentityStorableRepository - getKey result.size(): "+result.size());
       return result;
     } finally {
       identityLock.readLock().unlock();

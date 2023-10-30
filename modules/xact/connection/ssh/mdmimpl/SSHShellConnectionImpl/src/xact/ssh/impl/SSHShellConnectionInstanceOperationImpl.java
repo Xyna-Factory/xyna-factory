@@ -42,10 +42,6 @@ import xact.connection.ReadTimeout;
 import xact.connection.Response;
 import xact.connection.SendParameter;
 import xact.ssh.AuthenticationMode;
-//import xact.ssh.EncryptionType;
-//import xact.ssh.HostKeyStorable;
-//import xact.ssh.HostKeyStorableRepository;
-//import xact.ssh.IdentityStorableRepository;
 import xact.ssh.PassPhrase;
 import xact.ssh.Password;
 import xact.ssh.PublicKey;
@@ -58,7 +54,6 @@ import xact.ssh.SSHShellConnectionSuperProxy;
 import xact.ssh.SSHShellPromptExtractor;
 import xact.ssh.SSHShellResponse;
 import xact.ssh.SSHSpecificExtension;
-//import xact.ssh.XynaHostKeyRepository;
 import xact.templates.CommandLineInterface;
 import xact.templates.Document;
 import xact.templates.DocumentType;
@@ -104,31 +99,6 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
       }
       getSession().allocatePTY(terminalType, 5000, 5000, 5000, 5000, Collections.emptyMap());
 
-      //Prep of 47-ssh-shell-connection-terminal-dimensions-should-be-configurable
-      /*
-      int terminalWidthColumns = 5000;
-      int terminalHeightRows = 5000;
-      int terminalWidhtPixels = 5000;
-      int terminalHeightPixels = 5000;
-      if (instanceVar.getConnectionParameter() instanceof SSHShellConnectionParameter) {
-        SSHShellConnectionParameter sscp = (SSHShellConnectionParameter) instanceVar.getConnectionParameter();
-        if (sscp.getTerminalHeightPixels() != 0) {
-          terminalHeightPixels = sscp.getTerminalHeightPixels();
-        }
-        if (sscp.getTerminalHeightRows() != 0) {
-          terminalHeightRows = sscp.getTerminalHeightRows();
-        }
-        if (sscp.getTerminalWidthColumns() != 0) {
-          terminalWidthColumns = sscp.getTerminalWidthColumns();
-        }
-        if (sscp.getTerminalWidthPixels() != 0) {
-          terminalWidhtPixels = sscp.getTerminalWidthPixels();
-        }
-      }
-      //shellChannel.setPtyType(terminalType, terminalWidthColumns, terminalHeightRows, terminalWidhtPixels, terminalHeightPixels);
-      getSession().allocatePTY(terminalType, terminalWidthColumns, terminalHeightRows, terminalWidhtPixels, terminalHeightPixels, Collections.emptyMap());
-      */
-
       Shell shell = getSession().startShell();
       setChannelAndStreams(shell);
 
@@ -145,12 +115,7 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {
-      //Preservation of the Connection-App
-      //if (e instanceof net.schmizz.sshj.common.SSHException) {
-      //  throw xact.ssh.Utils.toSshException((net.schmizz.sshj.common.SSHException) e);
-      //} else {
-        throw new RuntimeException(e);
-      //}
+      throw new RuntimeException(e);
     } catch (ReadTimeout e) {
       throw new RuntimeException(e);
     }
@@ -205,7 +170,7 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           } else if (lineSeperator.equals("\\r\\n")) {
             lineSeperator = "\r\n";
           } else if (lineSeperator == null || lineSeperator.length() == 0) {
-            lineSeperator = ""; //daf�r verwendet, dass man z.b. ctrl-c dr�ckt. das wird nicht mit enter best�tigt.
+            lineSeperator = ""; //dafür verwendet, dass man z.b. ctrl-c drückt. das wird nicht mit enter bestätigt.
           }
         }
       }

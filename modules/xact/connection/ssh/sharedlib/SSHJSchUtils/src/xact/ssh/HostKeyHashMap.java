@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-//import java.util.List;
-//import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
@@ -85,7 +83,6 @@ public class HostKeyHashMap {
       Collection<HostKeyStorable> response = HostKeyHash.get(id);
       return response;
     } catch(Exception e) {
-      //Collection<HostKeyStorable> response = Collections.emptyList();
       Collection<HostKeyStorable> response = new java.util.ArrayList<HostKeyStorable>();
       logger.trace("Error in getHostKeyCollection",e);
       return response;
