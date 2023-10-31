@@ -17,34 +17,20 @@
  */
 package xact.ssh;
 
-import com.jcraft.jsch.HostKeyRepository;
+import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
+public interface XynaHostKeyRepository extends HostKeyVerifier {
 
-public enum CheckResult {
+  public void exportKnownHost(String hostname, String type, String filenameKnownHosts);
   
-  OK(HostKeyRepository.OK),
-  CHANGED(HostKeyRepository.CHANGED),
-  NOT_INCLUDED(HostKeyRepository.NOT_INCLUDED);
-
-  private final int numericRepresentation;
+  public void importKnownHosts(String filenameKnownHosts);
   
-  private CheckResult(int numericRepresentation) {
-    this.numericRepresentation = numericRepresentation;
-  }
+  public void add(HostKeyStorable hostkey);
   
+  public boolean remove(String host, String type);
   
-  public int getNumericRepresentation() {
-    return numericRepresentation;
-  }
+  public void init();
   
-  
-  public static CheckResult getByNumericRepresentation(int numericRepresentation) {
-    for (CheckResult checkResult : values()) {
-      if (checkResult.numericRepresentation == numericRepresentation) {
-        return checkResult;
-      }
-    }
-    throw new IllegalArgumentException("Invalid numericRepresentation: " + numericRepresentation);
-  }
+  public void shutdown();
   
 }

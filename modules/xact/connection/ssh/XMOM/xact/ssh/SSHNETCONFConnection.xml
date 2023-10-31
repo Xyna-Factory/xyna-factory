@@ -21,6 +21,7 @@
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Libraries>SSHNETCONFConnectionImpl.jar</Libraries>
+  <SharedLibraries>sshlibs</SharedLibraries>
   <Service Label="SSH NETCONF connection" TypeName="SSHNETCONFConnection">
     <Operation IsStatic="false" Label="Has Capability" Name="hasCapability">
       <Input>

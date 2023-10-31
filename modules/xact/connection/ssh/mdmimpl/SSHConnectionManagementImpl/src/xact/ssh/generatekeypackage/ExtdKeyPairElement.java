@@ -15,19 +15,29 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xact.ssh;
-
-import com.jcraft.jsch.HostKeyRepository;
+package xact.ssh.generatekeypackage;
 
 
-public interface XynaHostKeyRepository extends HostKeyRepository {
 
-  public void exportKnownHost(String hostname, String type, String filenameKnownHosts);
-  
-  public void importKnownHosts(String filenameKnownHosts);
-  
-  public void init();
-  
-  public void shutdown();
-  
+class ExtdKeyPairElement {
+
+  private String publicKey;
+  private String privateKey;
+
+
+  ExtdKeyPairElement(String privateKey, String publicKey) {
+    this.privateKey = privateKey;
+    this.publicKey = publicKey;
+  }
+
+
+  public String getPrivateKey() {
+    return this.privateKey;
+  }
+
+
+  public String getPublicKey() {
+    return this.publicKey;
+  }
+
 }

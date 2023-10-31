@@ -21,26 +21,25 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.jcraft.jsch.HostKey;
 
 public enum SupportedHostNameFeature {
   HASHED {
-    public boolean accept(HostKey key) {
-      return JSchUtil.isHostKeyHashed(key);
+    public boolean accept(HostKeyStorable key) {
+      return key.isHashed();
     }
   },
   FUZZY {
-    public boolean accept(HostKey key) {
-      return HostKeyStorable.isFuzzyIdentifier(key.getHost());
+    public boolean accept(HostKeyStorable key) {
+      return key.isFuzzy();
     }
   },
   LIST {
-    public boolean accept(HostKey key) {
-      return key.getHost().contains(",");
+    public boolean accept(HostKeyStorable key) {
+      return key.isHostNameList();
     }
   };
   
-  public abstract boolean accept(HostKey key);
+  public abstract boolean accept(HostKeyStorable key);
   
   public static Set<SupportedHostNameFeature> all() {
     return new HashSet<SupportedHostNameFeature>(Arrays.asList(SupportedHostNameFeature.values()));

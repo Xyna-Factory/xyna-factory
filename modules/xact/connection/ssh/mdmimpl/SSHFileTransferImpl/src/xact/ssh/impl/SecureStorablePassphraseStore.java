@@ -17,9 +17,12 @@
  */
 package xact.ssh.impl;
 
+
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
+
 
 
 // TODO offer remove and use it?
@@ -35,6 +38,7 @@ public class SecureStorablePassphraseStore implements PassphraseStore {
     }
   }
 
+
   public String retrieve(String identityName) {
     try {
       return (String) SecureStorage.getInstance().retrieve("xact.ssh", identityName);
@@ -43,6 +47,7 @@ public class SecureStorablePassphraseStore implements PassphraseStore {
     }
   }
 
+
   public void remove(String identityName) {
     try {
       SecureStorage.getInstance().remove("xact.ssh", identityName);
@@ -50,6 +55,5 @@ public class SecureStorablePassphraseStore implements PassphraseStore {
       throw new RuntimeException("", e);
     }
   }
-  
 
 }

@@ -15,22 +15,16 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xact.ssh.cli.impl;
+package xact.ssh;
 
-import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
-import com.gip.xyna.utils.exceptions.XynaException;
-import java.io.OutputStream;
+public enum CheckResult {
+    
+    OK(),
+    CHANGED(),
+    NOT_INCLUDED();
 
-import xact.ssh.cli.generated.Importknownhost;
-import xact.ssh.impl.SSHConnectionManagementRepositoryAccess;
-
-
-
-public class ImportknownhostImpl extends XynaCommandImplementation<Importknownhost> {
-
-  public void execute(OutputStream statusOutputStream, Importknownhost payload) throws XynaException {
-    SSHConnectionManagementRepositoryAccess.importKnownHosts(payload.getFilename());
-  }
+    
+    private CheckResult() {
+    }
 
 }
-
