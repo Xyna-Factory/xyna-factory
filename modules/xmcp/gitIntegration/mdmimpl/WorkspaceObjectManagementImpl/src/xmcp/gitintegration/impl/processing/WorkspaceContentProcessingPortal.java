@@ -47,7 +47,7 @@ import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
 //'Interface' between the outside world (service group / CLI) and WorkpsaceContentProcessors
-public class WorkspaceContentProcessingPortal {
+public class WorkspaceContentProcessingPortal implements XynaContentProcessingPortal<WorkspaceContentItem, WorkspaceContentDifference>{
 
   //String is the tagName
   protected static final HashMap<String, WorkspaceContentProcessor<? extends WorkspaceContentItem>> parserTypes = new HashMap<>();

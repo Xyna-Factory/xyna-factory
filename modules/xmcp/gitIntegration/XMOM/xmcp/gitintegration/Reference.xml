@@ -23,11 +23,13 @@
   <Data Label="Path" VariableName="path">
     <Meta>
       <Type>String</Type>
+      <Documentation>relative to repository root</Documentation>
     </Meta>
   </Data>
   <Data Label="Type" VariableName="type">
     <Meta>
       <Type>String</Type>
+      <Documentation>build, lib_folder</Documentation>
     </Meta>
   </Data>
 </DataType>

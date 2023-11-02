@@ -315,10 +315,15 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
   @Override
   public void create(FactoryRight item) {
     try {
+      String rightName = item.getName();
       if (item.getParameter() != null && item.getParameter().length() > 0) {
-        XynaFactory.getInstance().getXynaMultiChannelPortal().createRight(item.getName() + ":" + item.getParameter());
-      } else {
-        XynaFactory.getInstance().getXynaMultiChannelPortal().createRight(item.getName());
+        rightName = rightName + ":" + item.getParameter();
+      }
+      XynaFactory.getInstance().getXynaMultiChannelPortal().createRight(rightName);
+      if (item.getLocalizations() != null) {
+        for (Localization loc : item.getLocalizations()) {
+          XynaFactory.getInstance().getXynaMultiChannelPortal().setDescriptionOfRight(rightName, loc.getText(), loc.getLanguage());
+        }
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -328,18 +333,19 @@ public class RightProcessor implements FactoryContentProcessor<FactoryRight> {
 
   @Override
   public void modify(FactoryRight from, FactoryRight to) {
-    // TODO
+    delete(from);
+    create(to);
   }
 
 
   @Override
   public void delete(FactoryRight item) {
     try {
+      String rightName = item.getName();
       if (item.getParameter() != null && item.getParameter().length() > 0) {
-        XynaFactory.getInstance().getXynaMultiChannelPortal().deleteRight(item.getName() + ":" + item.getParameter());
-      } else {
-        XynaFactory.getInstance().getXynaMultiChannelPortal().deleteRight(item.getName());
+        rightName = rightName + ":" + item.getParameter();
       }
+      XynaFactory.getInstance().getXynaMultiChannelPortal().deleteRight(rightName);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

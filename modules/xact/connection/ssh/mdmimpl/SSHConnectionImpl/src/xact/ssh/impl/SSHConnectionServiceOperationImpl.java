@@ -18,6 +18,7 @@
 package xact.ssh.impl;
 
 
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,53 +29,64 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 
+import net.schmizz.sshj.connection.ConnectionException;
+import net.schmizz.sshj.transport.TransportException;
+
+
 
 public class SSHConnectionServiceOperationImpl implements ExtendedDeploymentTask {
-  
-  
-  private static Map<Long, TransientConnectionData> openConnections = Collections.synchronizedMap(new HashMap<Long, TransientConnectionData>());
-  
-  
+
+
+  private static Map<Long, TransientConnectionData> openConnections =
+      Collections.synchronizedMap(new HashMap<Long, TransientConnectionData>());
+
+
   private static AtomicLong idGenerator = new AtomicLong(0);
-  
-  
+
+
   public void onDeployment() throws XynaException {
-      SSHConnectionInstanceOperationImpl.substringLengthProperty.registerDependency(UserType.Service, "xact.ssh.SSHConnection");
+    SSHConnectionInstanceOperationImpl.substringLengthProperty.registerDependency(UserType.Service, "xact.ssh.SSHConnection");
   }
 
-  
+
   public void onUndeployment() throws XynaException {
     for (TransientConnectionData transientData : openConnections.values()) {
-      transientData.disconnect();
+      try {
+        transientData.disconnect();
+      } catch (TransportException | ConnectionException e) {
+        throw new RuntimeException(e);
+      }
     }
     SSHConnectionInstanceOperationImpl.substringLengthProperty.unregister();
   }
-  
+
+
   public static long registerOpenConnection(long id, TransientConnectionData transientConnectionData) {
-    if( id == -1 ) {
+    if (id == -1) {
       id = idGenerator.incrementAndGet();
     }
     openConnections.put(id, transientConnectionData);
     return id;
   }
-   
-  
+
+
   public static TransientConnectionData getTransientData(long id) {
     return openConnections.get(id);
   }
-  
+
+
   public static void removeTransientData(long id) {
     openConnections.remove(id);
   }
 
-  
+
   public Long getOnUnDeploymentTimeout() {
     // The (un)deployment runs in its own thread. The service may define a timeout
     // in milliseconds, after which Thread.interrupt is called on this thread.
     // If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.;
     return 3000L;
   }
-  
+
 
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
@@ -85,5 +97,5 @@ public class SSHConnectionServiceOperationImpl implements ExtendedDeploymentTask
     // If null is returned, the factory default <IGNORE> will be used.
     return BehaviorAfterOnUnDeploymentTimeout.IGNORE;
   }
-  
+
 }

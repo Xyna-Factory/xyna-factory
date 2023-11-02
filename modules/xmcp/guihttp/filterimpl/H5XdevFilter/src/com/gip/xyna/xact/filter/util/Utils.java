@@ -88,7 +88,7 @@ public class Utils {
   
   private static final Logger logger = CentralFactoryLogging.getLogger(Utils.class);
   
-  private static final String APP_NAME = "GuiHttp";
+  public static final String APP_NAME = "GuiHttp";
   
   private static final RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
   
@@ -228,7 +228,11 @@ public class Utils {
   }
   
 
-  public static GeneralXynaObject convertJsonToGeneralXynaObject(String json, long revision) {
+  public static GeneralXynaObject convertJsonToGeneralXynaObject(String json) {
+    return convertJsonToGeneralXynaObject(json, null);
+  }
+
+  public static GeneralXynaObject convertJsonToGeneralXynaObject(String json, Long revision) {
     if(json == null)
       return null;
     try {

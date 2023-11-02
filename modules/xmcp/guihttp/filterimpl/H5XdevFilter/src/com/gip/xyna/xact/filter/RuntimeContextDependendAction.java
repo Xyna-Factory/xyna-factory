@@ -85,7 +85,7 @@ public abstract class RuntimeContextDependendAction extends H5xFilterAction {
   protected abstract FilterActionInstance act(RuntimeContext rc, Long revision, URLPath url, Method method, HTTPTriggerConnection tc) throws XynaException;
   
   protected XmomGuiSession getSession(HTTPTriggerConnection tc) throws XynaException {
-    String id = AuthUtils.readCredentialsFromCookies(tc).getSessionId();
+    String id = AuthUtils.readCredentialsFromRequest(tc).getSessionId();
     return new XmomGuiSession(id);
   }
   

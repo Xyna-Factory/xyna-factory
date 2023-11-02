@@ -21,6 +21,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>FactoryObjectManagementImpl.jar</Libraries>
+  <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
   <Service Label="Factory Object Management" TypeName="FactoryObjectManagement">
     <Operation IsStatic="true" Label="Compare Factory Content" Name="compareFactoryContent">
       <Input>

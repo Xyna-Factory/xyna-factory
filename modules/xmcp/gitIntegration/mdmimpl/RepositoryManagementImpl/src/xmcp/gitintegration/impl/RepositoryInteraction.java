@@ -24,13 +24,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.CheckoutCommand;
+import org.eclipse.jgit.api.CommitCommand;
+import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
+import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
@@ -48,7 +58,11 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.transport.sshd.SshdSessionFactoryBuilder;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.FS;
 
@@ -64,14 +78,20 @@ import com.gip.xyna.xfmg.xfctrl.deploystate.DisplayState;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xmcp.xfcli.impl.RemovexmomobjectImpl;
 import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.impl.processing.ReferenceSupport;
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.storage.ReferenceStorable;
+import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
 import xprc.xpce.Workspace;
 
@@ -82,6 +102,7 @@ public class RepositoryInteraction {
   private static Logger logger = CentralFactoryLogging.getLogger(RepositoryInteraction.class);
 
   private DeploymentItemStateManagement dism;
+  private SshTransportConfigCallback sshTransportConfigCallback;
 
 
   private DeploymentItemStateManagement getDeploymentItemMgmt() {
@@ -89,6 +110,13 @@ public class RepositoryInteraction {
       dism = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement();
     }
     return dism;
+  }
+  
+  private SshTransportConfigCallback getSshTransportConfigCallback() {
+    if (sshTransportConfigCallback == null) {
+      sshTransportConfigCallback = new SshTransportConfigCallback();
+    }
+    return sshTransportConfigCallback;
   }
 
 
@@ -123,8 +151,8 @@ public class RepositoryInteraction {
     }
     return repo;
   }
-  
-  
+
+
   public BranchData listBranches(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
     List<Branch> resultBranches = new ArrayList<>();
@@ -136,7 +164,7 @@ public class RepositoryInteraction {
         Branch.Builder branchBuilder = new Branch.Builder();
         branchBuilder.name(branch.getName()).commitHash(branch.getObjectId().getName()).target(branch.getTarget().getName());
         resultBranches.add(branchBuilder.instance());
-        if(Objects.equals(currentBranchName, branch.getName())) {
+        if (Objects.equals(currentBranchName, branch.getName())) {
           result.currentBranch(branchBuilder.instance());
         }
       }
@@ -144,13 +172,14 @@ public class RepositoryInteraction {
     result.branches(resultBranches);
     return result.instance();
   }
-  
+
+
   public List<Commit> listCommits(String repository, String branch, int length) throws Exception {
     List<Commit> result = new ArrayList<>();
     Repository repo = loadRepo(repository, false);
     try (Git git = new Git(repo)) {
       Iterable<RevCommit> commits = git.log().setMaxCount(length).add(repo.resolve(branch)).call();
-      for(RevCommit commit : commits) {
+      for (RevCommit commit : commits) {
         Commit.Builder builder = new Commit.Builder();
         builder.authorEmail(commit.getAuthorIdent().getEmailAddress());
         builder.authorName(commit.getAuthorIdent().getName());
@@ -179,6 +208,89 @@ public class RepositoryInteraction {
         throw new RuntimeException("pulls required: " + String.join(", ", container.pull));
       }
       processPushs(git, repo, container, message);
+    }
+  }
+
+
+  public void checkout(String branch, String repository) throws Exception {
+    Repository repo = loadRepo(repository, true);
+
+    try (Git git = new Git(repo)) {
+      CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
+      ObjectId oldTreeId = repo.resolve("HEAD^{tree}");
+      try (ObjectReader reader = repo.newObjectReader()) {
+        oldTreeParser.reset(reader, oldTreeId);
+      }
+
+      // Check if local branch not exists and remote branch exists 
+      CheckoutCommand checkoutCommand = git.checkout();
+      checkoutCommand.setName(branch);
+      if (!existsLocalBranch(git, branch) && existsRemoteBranch(git, branch)) {
+        checkoutCommand.setCreateBranch(true).setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+            .setStartPoint("origin/" + branch);
+      }
+      checkoutCommand.call();
+
+      CanonicalTreeParser newTreeParser = new CanonicalTreeParser();
+      //  ObjectId newTreeId = ref.getObjectId();
+      ObjectId newTreeId = repo.resolve("HEAD^{tree}");
+      try (ObjectReader reader = repo.newObjectReader()) {
+        newTreeParser.reset(reader, newTreeId);
+      }
+
+      List<DiffEntry> diff = git.diff().setCached(false).setOldTree(oldTreeParser).setNewTree(newTreeParser).call();
+      if (diff == null) {
+        return;
+      }
+      for (DiffEntry entry : diff) {
+        String path = entry.getChangeType() == ChangeType.ADD ? entry.getNewPath() : entry.getOldPath();
+        Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(path, repository);
+        if (fqnAndWorkspace == null) {
+          continue;
+        }
+        String fqn = fqnAndWorkspace.getFirst();
+        String workspace = fqnAndWorkspace.getSecond();
+        if (entry.getChangeType() == ChangeType.ADD) {
+          SavexmomobjectImpl saveXmom = new SavexmomobjectImpl();
+          saveXmom.saveXmomObject(workspace, fqn, false);
+        } else if (entry.getChangeType() == ChangeType.DELETE) {
+          RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
+          removeXmom.removeXmomObject(workspace, fqn);
+        }
+      }
+    }
+  }
+
+  private boolean existsLocalBranch(Git git, String branchName) {
+    try {
+      ListBranchCommand listBranchCommand = git.branchList();
+      listBranchCommand.setListMode(ListBranchCommand.ListMode.ALL);
+      List<Ref> refs = listBranchCommand.call();
+      for (Ref ref : refs) {
+        if (ref.getName().equals("refs/heads/" + branchName)) {
+          return true;
+        }
+      }
+      return false;
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+
+  private boolean existsRemoteBranch(Git git, String branchName) {
+    try {
+      ListBranchCommand listBranchCommand = git.branchList();
+      listBranchCommand.setListMode(ListBranchCommand.ListMode.REMOTE);
+      List<Ref> refs = listBranchCommand.call();
+      for (Ref ref : refs) {
+        if (ref.getName().equals("refs/remotes/origin/" + branchName)) {
+          return true;
+        }
+      }
+      return false;
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
     }
   }
 
@@ -216,6 +328,7 @@ public class RepositoryInteraction {
       processReverts(git, repo, container);
       processPulls(git, repo, container);
       processExecs(container);
+      processReferences(container);
     }
     container.creds = null;
     return container;
@@ -244,6 +357,67 @@ public class RepositoryInteraction {
     if (logger.isDebugEnabled()) {
       logger.debug("valid repository detected at " + repository);
     }
+  }
+
+
+  private void processReferences(GitDataContainer container) {
+    ReferenceSupport referenceSupport = new ReferenceSupport();
+    ReferenceStorage storage = new ReferenceStorage();
+    List<ReferenceStorable> references = storage.getAllReferences();
+    Map<Long, List<InternalReference>> grouped = new HashMap<>();
+    for (String repoPath : container.pull) {
+      Pair<String, String> fqnAndWs = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
+      if (fqnAndWs != null) {
+        //changes to a datatype with reference?
+        Long revision = getRevision(fqnAndWs.getSecond());
+        RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(fqnAndWs.getSecond());
+        Optional<ReferenceStorable> opt = references.stream().filter(x -> matchNameAndRevision(x, fqnAndWs.getFirst(), revision)).findAny();
+        if (opt.isPresent()) {
+          InternalReference internalRef = new InternalReference();
+          internalRef.setPath(opt.get().getPath());
+          internalRef.setPathToRepo(con.getPath());
+          internalRef.setType(opt.get().getReftype());
+          addEntry(grouped, revision, internalRef);
+        }
+      } else {
+        //changes to a referenced file?
+        //find referenceStorable for reference
+        List<ReferenceStorable> list = references.stream().filter(x -> repoPath.startsWith(x.getPath())).collect(Collectors.toList());
+        for (ReferenceStorable ref : list) {
+          RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(getWorkspace(ref.getWorkspace()).getName());
+          InternalReference internalRef = new InternalReference();
+          internalRef.setPath(ref.getPath());
+          internalRef.setPathToRepo(con.getPath());
+          internalRef.setType(ref.getReftype());
+          addEntry(grouped, ref.getWorkspace(), internalRef);
+        }
+      }
+    }
+
+    for (Entry<Long, List<InternalReference>> kvp : grouped.entrySet()) {
+      referenceSupport.triggerReferences(kvp.getValue(), kvp.getKey());
+    }
+  }
+
+
+  private Workspace getWorkspace(Long revision) {
+    try {
+      return new Workspace(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+          .getWorkspace(revision).getName());
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  private void addEntry(Map<Long, List<InternalReference>> grouped, Long revision, InternalReference ref) {
+    grouped.putIfAbsent(revision, new ArrayList<>());
+    grouped.get(revision).add(ref);
+  }
+
+
+  private boolean matchNameAndRevision(ReferenceStorable s, String fqn, Long revision) {
+    return fqn.equals(s.getObjectName()) && revision == s.getWorkspace();
   }
 
 
@@ -406,8 +580,15 @@ public class RepositoryInteraction {
     if (!container.push.isEmpty()) {
       git.stashCreate().setIncludeUntracked(true).call();
     }
-
-    git.pull().setCredentialsProvider(container.creds).call();
+    PullCommand cmd = git.pull();
+    if(container.creds != null) {
+      if (isHttps(repository)) {
+        cmd.setCredentialsProvider(container.creds);
+      } else if (isSsh(repository)) {
+        cmd.setTransportConfigCallback(getSshTransportConfigCallback());
+      }
+    }
+    cmd.call();
 
     if (!container.push.isEmpty()) {
       git.stashApply().call();
@@ -638,12 +819,25 @@ public class RepositoryInteraction {
 
 
   private String getTrackingBranch(Repository repository) throws Exception {
-    return new BranchConfig(repository.getConfig(), repository.getBranch()).getTrackingBranch();
+    String trackingBranch = new BranchConfig(repository.getConfig(), repository.getBranch()).getTrackingBranch();
+    if(trackingBranch == null) {
+      throw new TrackingBranchNotFound(repository.getBranch());
+    }
+    return trackingBranch;
   }
 
 
   private void fetch(Git git, Repository repository, GitDataContainer container) throws Exception {
-    FetchResult result = git.fetch().setCredentialsProvider(container.creds).call();
+    FetchCommand cmd =  git.fetch();
+    if(container.creds != null) {
+      if(isHttps(repository)) {
+      cmd.setCredentialsProvider(container.creds);
+      } else if(isSsh(repository)) {
+        cmd.setTransportConfigCallback(getSshTransportConfigCallback());
+      }
+    } 
+    
+    FetchResult result = cmd.call();
     if (logger.isDebugEnabled()) {
       List<String> names = result.getAdvertisedRefs().stream().map(x -> x.getName()).collect(Collectors.toList());
       logger.debug("executed fetch. " + String.join(", ", names));
@@ -653,11 +847,39 @@ public class RepositoryInteraction {
 
   private void processPushs(Git git, Repository repository, GitDataContainer container, String msg) throws Exception {
     git.add().addFilepattern(".").call();
-    git.commit().setAuthor(container.user, container.mail).setCredentialsProvider(container.creds).setMessage(msg).call();
-    git.push().setCredentialsProvider(container.creds).call();
+    CommitCommand cmd = git.commit().setAuthor(container.user, container.mail).setMessage(msg);
+    if(container.creds != null) {
+      if(isHttps(repository)) {
+        cmd.setCredentialsProvider(container.creds);
+      } else if (isSsh(repository)) {
+        //no cmd.setTransportConfigCallback(getSshTransportConfigCallback());
+      }
+    }
+    cmd.call();
+    PushCommand pushCmd = git.push();
+    if(container.creds != null) {
+      if(isHttps(repository)) {
+        pushCmd.setCredentialsProvider(container.creds);
+      } else if(isSsh(repository)) {
+        pushCmd.setTransportConfigCallback(getSshTransportConfigCallback());
+      }
+    }
+    pushCmd.call();
     if (logger.isDebugEnabled()) {
       logger.debug("executed push.");
     }
+  }
+  
+  private boolean isSsh(Repository repository) {
+    return getRemoteOriginUrl(repository).startsWith("ssh");
+  }
+  
+  private boolean isHttps(Repository repository) {
+    return getRemoteOriginUrl(repository).startsWith("https");
+  }
+  
+  private String getRemoteOriginUrl(Repository repository) {
+    return repository.getConfig().getString("remote", "origin", "url");
   }
 
 
@@ -700,5 +922,25 @@ public class RepositoryInteraction {
       sb.append("  revt: ").append(revert.size()).append(": ").append(String.join(", ", revert)).append("\n");
       return sb.toString();
     }
+  }
+  
+  
+  
+  
+  private static class SshTransportConfigCallback implements TransportConfigCallback {
+    
+    private SshSessionFactory f = new SshdSessionFactoryBuilder()
+        .setPreferredAuthentications("publickey")
+        .setHomeDirectory(FS.DETECTED.userHome())
+        .setSshDirectory(new File(FS.DETECTED.userHome(), "/.ssh"))
+        .build(null);
+    
+    
+    @Override
+    public void configure(Transport transport) {
+      SshTransport sshTransport = (SshTransport) transport;
+      sshTransport.setSshSessionFactory(f);
+    }
+    
   }
 }

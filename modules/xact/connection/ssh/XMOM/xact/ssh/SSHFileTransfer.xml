@@ -21,6 +21,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>SSHFileTransferImpl.jar</Libraries>
+  <SharedLibraries>sshlibs</SharedLibraries>
   <Service Label="SSH File Transfer" TypeName="SSHFileTransfer">
     <Operation IsStatic="true" Label="SCP To Remote Host" Name="sCPToRemoteHost">
       <Meta>

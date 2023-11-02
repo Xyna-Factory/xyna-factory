@@ -18,12 +18,15 @@
 package xact.ssh.impl;
 
 
+
 public interface PassphraseStore {
 
   public void store(String identityName, String passphrase);
-  
+
+
   public String retrieve(String identityName);
-  
+
+
   public void remove(String identityName);
-  
+
 }

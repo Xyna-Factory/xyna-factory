@@ -17,63 +17,86 @@
  */
 package xact.ssh.impl;
 
+
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.Session;
+import net.schmizz.sshj.connection.ConnectionException;
+import net.schmizz.sshj.connection.channel.Channel;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.transport.TransportException;
+
 
 
 public class TransientConnectionData {
+
   private Session session;
   private Channel channel;
   private InputStream inputStream;
   private OutputStream outputStream;
-  
+
+
   public void setSession(Session session) {
     this.session = session;
   }
-  
+
+
   public void setChannelAndStreams(Channel channel) throws IOException {
     this.channel = channel;
     this.outputStream = channel.getOutputStream();
     this.inputStream = channel.getInputStream();
   }
 
-  
+
   public Session getSession() {
     return session;
   }
-  
+
+
   public Channel getChannel() {
     return channel;
   }
-  
+
+
   public OutputStream getOutputStream() {
     return outputStream;
   }
-  
+
+
   public InputStream getInputStream() {
     return inputStream;
   }
-  
-  public void disconnect() {
+
+
+  public void disconnect() throws TransportException, ConnectionException {
     try {
       if (channel != null) {
-        channel.disconnect();
+        channel.close();
         channel = null;
       }
+    } catch (TransportException e) {
+      throw e;
+    } catch (ConnectionException e) {
+      throw e;
     } finally {
       if (session != null) {
-        session.disconnect();
+        try {
+          session.close();
+        } catch (TransportException e) {
+          throw e;
+        } catch (ConnectionException e) {
+          throw e;
+        }
         session = null;
       }
     }
   }
 
+
   public boolean isChannelNullOrClosed() {
-    return channel == null || channel.isClosed();
+    return channel == null || !channel.isOpen();
   }
-  
+
 }

@@ -33,7 +33,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.RemoteDestinationInstanceInformation;
+import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
@@ -291,19 +293,36 @@ public class RemoteDestinationInstanceProcessor implements FactoryContentProcess
 
   @Override
   public void create(FactoryRemoteDestinationInstance item) {
-    // TODO
+    try {
+      Map<String, String> parameterMap = new HashMap<String, String>();
+      if (item.getParameters() != null) {
+        for (Parameter param : item.getParameters()) {
+          parameterMap.put(param.getKey(), param.getValue());
+        }
+      }
+      Duration executionTimeout = null;
+      if (item.getExecutionTimeout() != null && !item.getExecutionTimeout().isEmpty()) {
+        executionTimeout = Duration.valueOf(item.getExecutionTimeout());
+      }
+      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRemoteDestinationManagement()
+          .createRemoteDestinationInstance(item.getDestinationTypeName(), item.getDescription(), item.getName(), executionTimeout,
+                                           parameterMap, false);
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
   @Override
   public void modify(FactoryRemoteDestinationInstance from, FactoryRemoteDestinationInstance to) {
-    // TODO
+    create(to);
   }
 
 
   @Override
   public void delete(FactoryRemoteDestinationInstance item) {
-    // TODO
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRemoteDestinationManagement()
+        .removeRemoteDestinationInstance(item.getName());
   }
 
 

@@ -55,8 +55,8 @@ public class XynaObjectJsonBuilder {
   protected XynaObjectVisitor visitor;
   
   public static final XynaPropertyBoolean LONG2STRING = new XynaPropertyBoolean("zeta.json.long2string", false).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Legt fest, ob in JSONs Member vom Typ Long/long als String gesendet/erwartet werden, siehe XBE-254.").
-      setDefaultDocumentation(DocumentationLanguage.EN, "Determines whether JSON-members of type Long/long are encoded/decoded as Strings, see XBE-254.");
+      setDefaultDocumentation(DocumentationLanguage.DE, "Legt fest, ob in JSONs Member vom Typ Long/long als String gesendet/erwartet werden.").
+      setDefaultDocumentation(DocumentationLanguage.EN, "Determines whether JSON-members of type Long/long are encoded/decoded as Strings.");
   
   
   public XynaObjectJsonBuilder(long revision) {

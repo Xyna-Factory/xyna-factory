@@ -193,12 +193,12 @@ public class JavaServiceImplementation {
       }
 
       //helpermethode für konstruktoren
-      cb.addLine("private static Map<String, Object> setImpls(Map<String, Object> map, ", dom.getFqClassName(), " o) {");
+      cb.addLine("private static Map<String, java.lang.Object> setImpls(Map<String, java.lang.Object> map, ", dom.getFqClassName(), " o) {");
       if (!dom.isAbstract()) {
         boolean first = true;
         for (InterfaceVersion version : dom.getVersionsOfOperations(true)) {
           if (first) {
-            cb.add("Object ");
+            cb.add("java.lang.Object ");
             first = false;
           }
           cb.add("versionImpl = map.get(\"" + version.getNameCompatibleWithCurrentVersion() + "\")").addLB();
@@ -214,11 +214,11 @@ public class JavaServiceImplementation {
 
       //konstruktor 1: wird von datentyp.init methode aus aufgerufen (oder super-aufrufe von altem (< 5.1.3) generierten code)
       cb.addLine("public ", getDelegationImplSimpleClassName(), "(", dom.getFqClassName(), " o) {");
-      cb.addLine("this(o, new HashMap<String, Object>())");
+      cb.addLine("this(o, new HashMap<String, java.lang.Object>())");
       cb.addLine("}").addLB();
 
       //konstruktor 2a: wird von abgeleiteter klasse aufgerufen
-      cb.addLine("public ", getDelegationImplSimpleClassName(), "(", dom.getFqClassName(), " o, Map<String, Object> implMap) {");
+      cb.addLine("public ", getDelegationImplSimpleClassName(), "(", dom.getFqClassName(), " o, Map<String, java.lang.Object> implMap) {");
       if (dom.hasSuperTypeWithJavaImpl(true, null)) {
         cb.addLine("super(o, setImpls(implMap, o))");
       } else {
@@ -236,7 +236,7 @@ public class JavaServiceImplementation {
       //konstruktor 2b: für abwärtskompatibilität bezüglich generiertem code <= version 5.1.3
       cb.addLine("public ", getDelegationImplSimpleClassName(), "(", getProjectNonStaticImplFQClassName(InterfaceVersion.BASE), " o) {");
       cb.addLine("this(o == null ? null : ((", getSuperProxySimpleClassName(InterfaceVersion.BASE), /*protected methode in gleichem package*/
-                 ") o).getInstanceVar(), o == null ? new HashMap<String, Object>() : new HashMap<String, Object>(",
+                 ") o).getInstanceVar(), o == null ? new HashMap<String, java.lang.Object>() : new HashMap<String, java.lang.Object>(",
                  Collections.class.getName(), ".singletonMap(\"" + InterfaceVersion.BASE.getNameCompatibleWithCurrentVersion() + "\", o)))");
       cb.addLine("}").addLB();
     }
@@ -245,7 +245,7 @@ public class JavaServiceImplementation {
     if (!dom.isAbstract()) {
       cb.addLine("public ", getDelegationImplSimpleClassName(), "() {");
       if (dom.hasSuperTypeWithJavaImpl(true, null)) {
-        cb.addLine("super(null, new HashMap<String, Object>())");
+        cb.addLine("super(null, new HashMap<String, java.lang.Object>())");
       }
       //else leerer super-aufruf
       for (InterfaceVersion version : dom.getVersionsOfOperations(true)) {

@@ -38,3 +38,4 @@ public class RemoveidentitiesImpl extends XynaCommandImplementation<Removeidenti
   }
 
 }
+

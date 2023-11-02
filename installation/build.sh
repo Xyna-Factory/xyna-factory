@@ -46,7 +46,7 @@ build_xynautils_exceptions() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-exceptions/xynautils-exceptions-I*[0-9].jar ../releases/xynautils-exceptions/xynautils-exceptions.jar
-  mvn install:install-file -Dfile=../releases/xynautils-exceptions/xynautils-exceptions.jar -DpomFile=./pom.xml -Dversion=I20210705_1332
+  mvn install:install-file -Dfile=../releases/xynautils-exceptions/xynautils-exceptions.jar -DpomFile=./pom.xml
 }
 
 build_xynautils_logging() {
@@ -57,8 +57,7 @@ build_xynautils_logging() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-logging/xynautils-logging-I*[0-9].jar ../releases/xynautils-logging/xynautils-logging.jar
-  mvn install:install-file -Dfile=../releases/xynautils-logging/xynautils-logging.jar -DpomFile=./pom.xml -Dversion=I20181114_1211
-  mvn install:install-file -Dfile=../releases/xynautils-logging/xynautils-logging.jar -DpomFile=./pom.xml -Dversion=3.0.0.0
+  mvn install:install-file -Dfile=../releases/xynautils-logging/xynautils-logging.jar -DpomFile=./pom.xml
 }
 
 build_xynautils_database() {
@@ -69,10 +68,7 @@ build_xynautils_database() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-database/xynautils-database-I*[0-9].jar ../releases/xynautils-database/xynautils-database.jar
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml -Dversion=I20211207_0946
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml -Dversion=I20190829_1328
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml -Dversion=2.4.0.1
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml -Dversion=3.0.0
+  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml
 }
 
 build_xynautils_snmp() {
@@ -83,9 +79,7 @@ build_xynautils_snmp() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-snmp/xynautils-snmp-I*[0-9].jar ../releases/xynautils-snmp/xynautils-snmp.jar
-  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml -Dversion=I20190729_1044
-  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml -Dversion=4.0.0
-  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml -Dversion=I20181112_0943
+  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml
 }
 
 build_xynautils_ldap() {
@@ -107,8 +101,7 @@ build_xynautils_misc() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-misc/xynautils-misc-I*[0-9].jar ../releases/xynautils-misc/xynautils-misc.jar
-  mvn install:install-file -Dfile=../releases/xynautils-misc/xynautils-misc.jar -DpomFile=./pom.xml -Dversion=2.3.0.0
-  mvn install:install-file -Dfile=../releases/xynautils-misc/xynautils-misc.jar -DpomFile=./pom.xml -Dversion=3.0.1
+  mvn install:install-file -Dfile=../releases/xynautils-misc/xynautils-misc.jar -DpomFile=./pom.xml
 }
 
 build_misc() {

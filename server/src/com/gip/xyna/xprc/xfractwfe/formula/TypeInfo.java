@@ -171,7 +171,7 @@ public class TypeInfo {
       return "null";
     }
     if (isAny()) {
-      return "Object";
+      return "java.lang.Object";
     }
     if (isList()) {
       return "List";

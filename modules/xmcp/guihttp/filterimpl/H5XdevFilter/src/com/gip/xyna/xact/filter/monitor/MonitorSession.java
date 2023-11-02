@@ -64,7 +64,7 @@ public class MonitorSession {
   }
   
   public static  MonitorSessionInstance getSessionInstance(HTTPTriggerConnection tc) {
-    XynaPlainSessionCredentials sessionCredentials = AuthUtils.readCredentialsFromCookies(tc);
+    XynaPlainSessionCredentials sessionCredentials = AuthUtils.readCredentialsFromRequest(tc);
     return getSessionInstance(sessionCredentials.getSessionId());
   }
   

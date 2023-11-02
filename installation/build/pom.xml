@@ -151,27 +151,27 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-database</artifactId>
-                <version>I20211207_0946</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-exceptions</artifactId>
-                <version>I20210705_1332</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-logging</artifactId>
-                <version>I20181114_1211</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-misc</artifactId>
-                <version>2.3.0.0</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-snmp</artifactId>
-                <version>I20190729_1044</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -377,7 +377,7 @@
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
-                <version>5.17.3</version>
+                <version>5.17.6</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
@@ -441,13 +441,13 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpg-jdk15on</artifactId>
-                <version>1.70</version>
+                <artifactId>bcpg-jdk18on</artifactId>
+                <version>1.76</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-ext-jdk15on</artifactId>
-                <version>1.70</version>
+                <artifactId>bcprov-ext-jdk18on</artifactId>
+                <version>1.76</version>
             </dependency>
             <dependency>
                 <groupId>org.easymock</groupId>

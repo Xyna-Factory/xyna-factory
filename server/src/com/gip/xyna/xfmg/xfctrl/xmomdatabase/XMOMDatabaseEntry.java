@@ -33,7 +33,6 @@ import com.gip.xyna.xnwh.persistence.Storable;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
-import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCall;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCallServiceReference;
@@ -363,7 +362,7 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
   }
   
   
-  protected static String generateFqNameForOperation(DOM enclosingDOM, String serviceName, JavaOperation operation) {
+  protected static String generateFqNameForOperation(DOM enclosingDOM, String serviceName, Operation operation) {
     return generateFqNameForOperation(enclosingDOM, serviceName, operation.getName());
   }
   
@@ -389,7 +388,7 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
   }
   
   
-  protected static String generateSimpleNameForOperation(DOM enclosingDOM, String serviceName, JavaOperation operation) {
+  protected static String generateSimpleNameForOperation(DOM enclosingDOM, String serviceName, Operation operation) {
     return generateSimpleNameForOperation(enclosingDOM, serviceName, operation.getName());
   }
   

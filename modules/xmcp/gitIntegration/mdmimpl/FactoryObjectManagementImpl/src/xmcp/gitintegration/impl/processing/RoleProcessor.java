@@ -34,6 +34,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.Role;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
+import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.FactoryContentDifference;
 import xmcp.gitintegration.FactoryRole;
@@ -50,7 +51,8 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
   private static final String TAG_DOMAIN = "domain";
   private static final String TAG_DESCRIPTION = "description";
   private static final List<IgnorePatternInterface<FactoryRole>> ignorePatterns = createIgnorePatterns();
-  
+
+
   private static List<IgnorePatternInterface<FactoryRole>> createIgnorePatterns() {
     List<IgnorePatternInterface<FactoryRole>> resultList = new ArrayList<>();
     return Collections.unmodifiableList(resultList);
@@ -158,13 +160,21 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
         wcd.setExistingItem(fromEntry);
         wcd.setDifferenceType(toEntry == null ? new DELETE() : new MODIFY());
         toWorkingList.remove(toEntry); // remove entry from to-list
-        boolean hasChanged = !Objects.equals(fromEntry.getDescription(), toEntry.getDescription())
+        boolean hasChanged = toEntry == null || !Objects.equals(fromEntry.getDescription(), toEntry.getDescription())
             || rightsChanged(fromEntry.getRights(), toEntry.getRights());
         if (hasChanged) {
           wcd.setNewItem(toEntry);
           fcdList.add(wcd);
         } // else: EQUAL -> ignore entry
       }
+    }
+    // iterate over toWorking-list (only CREATE-Entries remain)
+    for (FactoryRole toEntry : toWorkingList) {
+      FactoryContentDifference fcd = new FactoryContentDifference();
+      fcd.setContentType(TAG_ROLE);
+      fcd.setNewItem(toEntry);
+      fcd.setDifferenceType(new CREATE());
+      fcdList.add(fcd);
     }
     return fcdList;
   }
@@ -197,10 +207,10 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
   @Override
   public String createDifferencesString(FactoryRole from, FactoryRole to) {
     int maxLines = 5;
-    List<String> added = new ArrayList<String>(from.getRights());
-    added.removeAll(to.getRights());
-    List<String> removed = new ArrayList<String>(to.getRights());
-    removed.removeAll(from.getRights());
+    List<String> added = new ArrayList<String>(to.getRights());
+    added.removeAll(from.getRights());
+    List<String> removed = new ArrayList<String>(from.getRights());
+    removed.removeAll(to.getRights());
     StringBuilder sb = new StringBuilder();
 
     if (!Objects.equals(from.getDescription(), to.getDescription())) {
@@ -212,15 +222,15 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
     }
 
     if (!added.isEmpty() || !removed.isEmpty()) {
-      sb.append(String.format("\nRights:  %d added, %d removed\n", added.size(), removed.size()));
+      sb.append(String.format("\n  Rights:  %d added, %d removed\n", added.size(), removed.size()));
       int printedLines = 0;
       for (int i = 0; i < Math.min(added.size(), maxLines); i++) {
         printedLines++;
-        sb.append("    ADD ").append(added.get(i)).append("\n");
+        sb.append("      ADD ").append(added.get(i)).append("\n");
       }
       for (int i = 0; i < Math.min(removed.size(), maxLines - printedLines); i++) {
         printedLines++;
-        sb.append("    REMOVE ").append(removed.get(i)).append("\n");
+        sb.append("      REMOVE ").append(removed.get(i)).append("\n");
       }
     }
     return sb.toString();
@@ -229,22 +239,48 @@ public class RoleProcessor implements FactoryContentProcessor<FactoryRole> {
 
   @Override
   public void create(FactoryRole item) {
-    // TODO Auto-generated method stub
-
+    try {
+      XynaFactory.getInstance().getFactoryManagement().createRole(item.getName(), item.getDomain());
+      XynaFactory.getInstance().getFactoryManagement().setDescriptionOfRole(item.getName(), item.getDomain(), item.getDescription());
+      if (item.getRights() != null) {
+        for (String right : item.getRights()) {
+          XynaFactory.getInstance().getFactoryManagement().grantRightToRole(item.getName(), right);
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
   @Override
   public void modify(FactoryRole from, FactoryRole to) {
-    // TODO Auto-generated method stub
+    try {
+      if (!Objects.equals(from.getDescription(), to.getDescription())) {
+        XynaFactory.getInstance().getFactoryManagement().setDescriptionOfRole(from.getName(), from.getDomain(), to.getDescription());
+      }
+      if (rightsChanged(from.getRights(), to.getRights())) {
+        for (String right : from.getRights()) {
+          XynaFactory.getInstance().getFactoryManagement().revokeRightFromRole(from.getName(), right);
+        }
+        for (String right : to.getRights()) {
+          XynaFactory.getInstance().getFactoryManagement().grantRightToRole(to.getName(), right);
+        }
+      }
 
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
   @Override
   public void delete(FactoryRole item) {
-    // TODO Auto-generated method stub
-
+    try {
+      XynaFactory.getInstance().getFactoryManagement().deleteRole(item.getName(), item.getDomain());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
