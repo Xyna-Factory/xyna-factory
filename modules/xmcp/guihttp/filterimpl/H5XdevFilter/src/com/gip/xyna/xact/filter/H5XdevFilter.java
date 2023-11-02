@@ -114,7 +114,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
   
   public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Sende Session Cookie as __Secure- und füge Strict-Transport-Security header ein")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Sende Session Cookie als __Secure- und füge Strict-Transport-Security header ein")
 
   public static final XynaPropertyDuration STRICT_TRANSPORT_SECURITY_MAX_AGE = new XynaPropertyDuration("xmcp.guihttp.sts.maxage", "2 years" )
       .setDefaultDocumentation(DocumentationLanguage.EN, "Max-age of Strict-Transport-Security header.")
