@@ -74,6 +74,12 @@ public class JsonFilterActionInstance extends DefaultFilterActionInstance {
       throws SocketNotAvailableException {
     this.status = status;
     new OptionsAction(H5XdevFilter.ACCESS_CONTROL_ALLOW_ORIGIN).setAccessControlParameter(tc, this);
+
+    if(H5XdevFilter.STICT_TRANSPORT_SECURITY.get()) {
+      long maxAge = H5XdevFilter.STRICT_TRANSPORT_SECURITY_MAX_AGE().getMillis() / 1000l;
+      dfai.setProperty("Strict-Transport-Security", new StringBuilder().append("max-age=").append(maxAge).append("; includeSubDomains").toString());
+    }
+
     if(shouldZip(tc)) {
       try {
         inputStream = zip(tc, status, mime, inputStream);

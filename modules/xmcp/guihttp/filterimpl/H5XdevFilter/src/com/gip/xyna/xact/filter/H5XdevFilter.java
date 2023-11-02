@@ -112,6 +112,15 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       .setDefaultDocumentation(DocumentationLanguage.EN, "compress response of requests using gzip, if supported by caller")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterstützt wird");
   
+  public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", false)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Sende Session Cookie as __Secure- und füge Strict-Transport-Security header ein")
+
+  public static final XynaPropertyDuration STRICT_TRANSPORT_SECURITY_MAX_AGE = new XynaPropertyDuration("xmcp.guihttp.sts.maxage", "2 years" )
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Max-age of Strict-Transport-Security header.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Max-age des Strict-Transport-Security header.")
+
+
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
 
     private RevisionManagement rm;
@@ -366,6 +375,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     GENERATION_BASE_CACHE_SIZE.registerDependency(UserType.Filter, NAME);
     USE_CACHE.registerDependency(UserType.Filter, NAME);
     AVARCONSTANTS.registerDependency(UserType.Filter, NAME);
+	STRICT_TRANSPORT_SECURITY.registerDependency(UserType.Filter, NAME);
+	STRICT_TRANSPORT_SECURITY_MAX_AGE.registerDependency(UserType.Filter, NAME);
     
     super.onDeployment(triggerInstance);
   }
@@ -394,6 +405,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     GENERATION_BASE_CACHE_SIZE.unregister();
     USE_CACHE.unregister();
     AVARCONSTANTS.unregister();
+	STRICT_TRANSPORT_SECURITY.unregister();
+	STRICT_TRANSPORT_SECURITY_MAX_AGE.unregister();
   }
 
 

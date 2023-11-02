@@ -61,13 +61,7 @@ public class OptionsAction implements FilterAction {
     }
     
     setAccessControlParameter(tc, dfai);
-
-    // set HSTS (HTTP-Strict-Transport-Security) if configured
-    // TODO: read Xyna Property
-    // if set, add HSTS header
-    int maxAge = 2 * 365 * 24 * 60 * 60; // two standard years in s
-    dfai.setProperty("Strict-Transport-Security", new StringBuilder().append("max-age=").append(maxAge).append("; includeSubDomains").toString());
-    
+   
     dfai.sendProperties(tc);
     return dfai;
   }
