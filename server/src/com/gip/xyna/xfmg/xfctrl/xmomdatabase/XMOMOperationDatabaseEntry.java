@@ -34,7 +34,7 @@ import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
-import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 
@@ -57,7 +57,7 @@ public class XMOMOperationDatabaseEntry extends XMOMServiceDatabaseEntry {
   
   
   //generate cache entry for operation
-  public XMOMOperationDatabaseEntry(DOM dom, String serviceName, JavaOperation op) {
+  public XMOMOperationDatabaseEntry(DOM dom, String serviceName, Operation op) {
     super(generateFqNameForOperation(dom, serviceName, op), op.getLabel(), dom.getOriginalPath(), generateSimpleNameForOperation(dom, serviceName, op),
           "", "", generateFqNameForServiceGroup(dom, serviceName), op.getInputVars(), op.getOutputVars(), op.getThrownExceptions(), dom.isXynaFactoryComponent(),
           dom.getRevision());
