@@ -607,13 +607,7 @@ fill_lib() {
 }
 
 build_all() {
-  build_xynautils
-  build_misc
-  build_xynafactory_jar
-  build_conpooltypes
-  build_persistencelayers
-  fill_lib
-  prepare_modules
+  build
   build_oracle_aq_tools
   build_modules
   build_plugins
@@ -631,9 +625,9 @@ build() {
   build_xynafactory_jar
   build_conpooltypes
   build_persistencelayers
-  build_oracle_aq_tools
   fill_lib
   prepare_modules
+  build_oracle_aq_tools
 }
 
 
