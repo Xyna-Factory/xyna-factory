@@ -33,6 +33,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.update.Updater;
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.utils.timing.Duration;
+import com.gip.xyna.xact.filter.H5XdevFilter;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.trigger.HTTPStartParameter;
@@ -58,6 +59,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_VERSION_DETECTION_PROBLEM;
 public class AuthUtils {
 
   public final static String COOKIE_FIELD_SESSION_ID = "sessionId";
+  public final static String COOKIE_FIELD_SESSION_ID_STS = "__Secure-sessionId";
   
   /**
    * @deprecated
@@ -80,7 +82,7 @@ public class AuthUtils {
   
   public static final XynaPropertyBoolean USE_CSRF_TOKEN = new XynaPropertyBoolean("xmcp.guihttp.csrf", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Add csrf token to login response and validate " + HEADER_FILED_CSRF_TOKEN + " header.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Füge csrf token zur login response hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "FÃ¼ge csrf token zur login response hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
 
 
   public static void replyModellerLoginRequiredError(HTTPTriggerConnection tc, JsonFilterActionInstance jfai) throws SocketNotAvailableException {
@@ -188,11 +190,12 @@ public class AuthUtils {
 
   public static XynaPlainSessionCredentials readCredentialsFromRequest(HTTPTriggerConnection tc) {
     Map<String, String> map = readCookies(tc);
+    String sessionId = H5XdevFilter.STRICT_TRANSPORT_SECURITY.get() ? COOKIE_FIELD_SESSION_ID_STS : COOKIE_FIELD_SESSION_ID;
     if (USE_CSRF_TOKEN.get()) {
       String token = (String) tc.getHeader().get(HEADER_FILED_CSRF_TOKEN);
-      return new XynaPlainSessionCredentials(map.get(COOKIE_FIELD_SESSION_ID), token);
+      return new XynaPlainSessionCredentials(map.get(sessionId), token);
     } else {
-      return new XynaPlainSessionCredentials(map.get(COOKIE_FIELD_SESSION_ID), map.get(COOKIE_FIELD_TOKEN));
+      return new XynaPlainSessionCredentials(map.get(sessionId), map.get(COOKIE_FIELD_TOKEN));
     }
   }
 
@@ -226,7 +229,7 @@ public class AuthUtils {
     
   }
   
-  private static final XynaPropertyEnum<SameSite> samesiteproperty = //nicht erlauben, dass cookie für requests von anderen origins benutzt werden darf
+  private static final XynaPropertyEnum<SameSite> samesiteproperty = //nicht erlauben, dass cookie fÃ¼r requests von anderen origins benutzt werden darf
                   new XynaPropertyEnum<SameSite>("xmcp.guihttp.filter.h5xdev.cookie.samesite", SameSite.class, SameSite.STRICT);
   
 
