@@ -16,6 +16,7 @@
 # limitations under the License.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+set -e
 
 print_help() {
   echo "$0: build some or all parts of xyna."
@@ -29,8 +30,10 @@ check_dependencies() {
   ant -version
   git --version
   zip --version
-  nvm --version
-  
+}
+
+check_dependencies_frontend() {
+  node --version
 }
 
 checkout_factory() {
@@ -283,7 +286,6 @@ build_prerequisites() {
 build_modeller() {
   echo "building Modeller GUI"
   cd $SCRIPT_DIR/build
-  nvm use 16
   ant -f build-gui.xml
 }
 
@@ -605,13 +607,7 @@ fill_lib() {
 }
 
 build_all() {
-  build_xynautils
-  build_misc
-  build_xynafactory_jar
-  build_conpooltypes
-  build_persistencelayers
-  fill_lib
-  prepare_modules
+  build
   build_oracle_aq_tools
   build_modules
   build_plugins
@@ -629,8 +625,9 @@ build() {
   build_xynafactory_jar
   build_conpooltypes
   build_persistencelayers
-  build_oracle_aq_tools
   fill_lib
+  prepare_modules
+  build_oracle_aq_tools
 }
 
 
@@ -653,6 +650,7 @@ case $1 in
     build
     ;;
   "all")
+    check_dependencies_frontend
     build_all
     ;;
   "compose")
