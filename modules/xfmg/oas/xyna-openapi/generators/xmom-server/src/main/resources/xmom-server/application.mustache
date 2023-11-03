@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Application applicationName="{{openAPI.info.title}}_Provider" 
+ comment="{{openAPI.info.description}}" 
+ factoryVersion="{{xynaFactoryVersion}}" versionName="{{openAPI.info.version}}" xmlVersion="1.1">
+  <ApplicationInfo>
+  <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Processing</ApplicationName>
+        <VersionName>1.0.17</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>OAS Base</ApplicationName>
+        <VersionName>1.0</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>{{openAPI.info.title}}_Data_Model</ApplicationName>
+        <VersionName>{{openAPI.info.version}}</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Filters>
+    <Filter implicitDependency="false">
+      <Name>OASFilter</Name>
+      <JarFiles>OASFilter/OASFilter.jar:</JarFiles>
+      <FqFilterClassname>com.gip.xyna.xact.filter.OASFilter</FqFilterClassname>
+      <TriggerName>Http</TriggerName>
+      <SharedLibs/>
+    </Filter>
+  </Filters>
+  <Ordertypes>
+  </Ordertypes>
+  <SharedLibs>
+  </SharedLibs>
+  <XMOMEntries>{{#apiInfo.apis}}{{#operations}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{classFilename}}</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>{{#operation}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.wf.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endpoint</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.wf.Encode{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.wf.Decode{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.request.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>{{#responses}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>{{/responses}}{{/operation}}{{/operations}}{{/apiInfo.apis}}
+  </XMOMEntries>
+</Application>

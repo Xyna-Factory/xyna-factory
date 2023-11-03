@@ -1,0 +1,98 @@
+{{#operations}}{{#operation}}<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" 
+ TypeName="Encode{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}" TypePath="{{apiPackage}}.{{pathPrefix}}.wf" Label="encode {{httpMethod}} {{path}}">
+  <Operation ID="0" Label="encode {{httpMethod}} {{path}}" Name="Encode{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}" IsStatic="false">
+    <Input>
+      <Data ID="12" Label="{{httpMethod}} {{path}} Response" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{/lambda.camelcase}}12" 
+       ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response"/>
+    </Input>
+    <Output>
+      <Data ID="3" Label="Http Response" VariableName="httpResponse3" 
+      ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype"/>
+    </Output>
+    <ServiceReference ID="6" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Write JSON with Options">
+      <Source RefID="6">
+      </Source>
+      <Source RefID="12">
+      </Source>
+      <Source RefID="7">
+      </Source>
+      <Target RefID="6">
+      </Target>
+      <Target RefID="4">
+      </Target>
+      <Invoke ServiceID="6" Operation="writeJSONWithOptions">
+        <Source RefID="12">
+          <Meta>
+            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="7">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="6">
+        <Target RefID="4">
+        </Target>
+      </Receive>
+    </Function>
+    <Mappings ID="9" Label="Build Response">
+      <Input>
+        <Data ID="2" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{/lambda.camelcase}}2" Label="{{httpMethod}} {{path}} Response"
+         ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response">
+        </Data>
+        <Source RefID="12">
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="10" VariableName="document10" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
+        </Data>
+        <Source RefID="4">
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="11" VariableName="httpResponse11" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
+        </Data>
+        <Target RefID="8">
+        </Target>
+      </Output>
+      <Mapping>%2%.body=%1%</Mapping>
+      <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
+      <Mapping>%2%.statusCode=%0%.getStatusCode()</Mapping>
+    </Mappings>
+    <Data ID="4" VariableName="document4" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
+    </Data>
+    <Data ID="7" VariableName="jSONWritingOptions7" ReferenceName="JSONWritingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter">
+      <Data VariableName="listToMapTransformation" IsList="true" ReferenceName="ListToMapTransformation" ReferencePath="xfmg.xfctrl.datamodel.json.parameter">
+      </Data>
+      <Data VariableName="memberSubstitution" IsList="true" ReferenceName="MemberSubstitution" ReferencePath="xfmg.xfctrl.datamodel.json.parameter">
+      </Data>
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+    </Data>
+    <Data ID="8" VariableName="httpResponse8" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
+    </Data>
+    <Assign ID="1">
+      <Source RefID="8">
+      </Source>
+      <Target RefID="3">
+      </Target>
+      <Copy>
+        <Source RefID="8">
+        </Source>
+        <Target RefID="3">
+        </Target>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
+{{/operation}}{{/operations}}

@@ -1,0 +1,24 @@
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" 
+ TypeName="{{classname}}" 
+ TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"
+ Label="{{name}}" IsAbstract="false"
+>
+    <Meta>
+        <IsServiceGroupOnly>false</IsServiceGroupOnly>{{#description}}
+        <Documentation>{{description}}</Documentation>{{/description}}
+    </Meta>
+{{#vars}}
+    <Data Label="{{baseName}}" VariableName="{{name}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isString}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isString}}{{/isPrimitiveType}}>
+        <Meta>{{#isPrimitiveType}}{{^isString}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isString}}{{/isPrimitiveType}}{{#isString}}
+            <Type>String</Type>{{/isString}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
+Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+format: {{format}}{{/format}}
+requiered: {{required}}, nullable: {{isNullable}}
+            </Documentation>
+        </Meta>
+    </Data>
+{{/vars}}
+</DataType>

@@ -1,0 +1,343 @@
+package com.gip.xyna.xact.filter;
+
+import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
+import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
+import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
+import com.gip.xyna.xprc.XynaOrder;
+import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
+
+import xact.http.Header;
+import xact.http.HeaderField;
+import xact.http.MediaType;
+import xact.http.URLPathQuery;
+import xact.templates.Document;
+import xact.templates.PlainText;
+import xmcp.oas.datatype.HttpRequest;
+import xmcp.oas.datatype.HttpResponse;
+
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.Pair;
+import com.gip.xyna.utils.exceptions.XynaException;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
+import com.gip.xyna.xfmg.Constants;
+import com.gip.xyna.xfmg.exceptions.XFMG_MDMObjectClassLoaderNotFoundException;
+
+
+public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
+
+  private static final long serialVersionUID = 1L;
+
+  private static Logger logger = CentralFactoryLogging.getLogger(OASFilter.class);
+  
+  private static final HashMap<String, GeneralXynaObject> fqnInstanceDatatypeMapSucceed = new HashMap<>();
+  
+  private static final LinkedList<PathParameter> pathParameter = new LinkedList<>();
+  static {
+    {{>filterParameter}}
+  }
+
+  static void addPathParameter(String fqnInstanceDatatype, Method method, String ordertype,  String path, String... attributes) {
+    for (PathParameter para: pathParameter) {
+      if (para.hasPath(path)) {
+        para.registerMethod(method, ordertype);
+        return;
+      }
+    }
+    PathParameter pathPara = new PathParameter(fqnInstanceDatatype, path, attributes);
+    pathPara.registerMethod(method, ordertype);
+    pathParameter.add(pathPara);
+  }
+  
+  /**
+   * Called to create a configuration template to parse configuration and show configuration options.
+   * @return OASConfigurationParameter template
+   */
+  @Override
+  public FilterConfigurationParameter createFilterConfigurationTemplate() {
+    return null;
+  }
+
+  /**
+   * Analyzes TriggerConnection and creates XynaOrder if it accepts the connection.
+   * This method returns a FilterResponse object, which includes the XynaOrder if the filter is responsible for the request.
+   * # If this filter is not responsible the returned object must be: FilterResponse.notResponsible()
+   * # If this filter is responsible the returned object must be: FilterResponse.responsible(XynaOrder order)
+   * # If this filter is responsible but the request is handled without creating a XynaOrder the 
+   *   returned object must be: FilterResponse.responsibleWithoutXynaorder()
+   * # If this filter is responsible but the request should be handled by an older version of the filter in another application version, the returned
+   *    object must be: FilterResponse.responsibleButTooNew().
+   * @param tc
+   * @return FilterResponse object
+   * @throws XynaException caused by errors reading data from triggerconnection or having an internal error.
+   *         Results in onError() being called by Xyna Processing.
+   */
+  @Override
+  public FilterResponse createXynaOrder(HTTPTriggerConnection tc, FilterConfigurationParameter baseConfig ) throws XynaException {
+    //OASConfigurationParameter config = (OASConfigurationParameter)baseConfig;
+    //return FilterResponse.notResponsible() if next filter should be tried
+    try {
+      tc.readHeader();
+
+      for (PathParameter pathPara: pathParameter) {
+        if (pathPara.matchPath(tc.getUri())) {
+          String ordertype = pathPara.getOrdertype(tc.getMethod());
+          GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(pathPara.getInstanceDatatype());
+
+          if (isInWorkspace() && !checkClassLoader(implDatatype)) {
+            implDatatype = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype());
+            fqnInstanceDatatypeMapSucceed.put(pathPara.getInstanceDatatype(), implDatatype);
+          }
+          
+          if (ordertype != null && implDatatype != null) {
+            tc.read();
+            HttpRequest req = readRequest(tc);
+            req.setURLPathParameter(pathPara.getPathAttribute(tc.getUri()));
+            XynaOrder xo = new XynaOrder(new DestinationKey(ordertype), implDatatype, req);
+            return FilterResponse.responsible(xo);
+          }
+        }
+      }
+
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+
+    return FilterResponse.notResponsible();
+  }
+
+  private HttpRequest readRequest(HTTPTriggerConnection tc) {
+    HttpRequest.Builder returnBuilder = new HttpRequest.Builder();
+    returnBuilder.uRLQueries(readQueries(tc));
+    returnBuilder.header(readHeader(tc));
+    returnBuilder.body(readDocument(tc));
+    return returnBuilder.instance();
+  }
+
+  private List<URLPathQuery> readQueries(HTTPTriggerConnection tc) {
+    List<URLPathQuery> queries = new ArrayList<URLPathQuery>();
+    for (Entry<Object, Object> e : tc.getParas().entrySet()) {
+      queries.add(new URLPathQuery.Builder().attribute(String.valueOf(e.getKey())).value(String.valueOf(e.getValue())).instance());
+    }
+    return queries;
+  }
+
+  private Header readHeader(HTTPTriggerConnection tc) {
+    Properties headerProps = tc.getHeader();
+    String contentTypeString = (String) headerProps.get("content-type");
+    Header.Builder hb = new Header.Builder().contentType(new MediaType(contentTypeString));
+    List<HeaderField> headerFields = new ArrayList<HeaderField>();
+    for (Entry<Object, Object> e : headerProps.entrySet()) {
+      headerFields.add(new HeaderField.Builder().name(String.valueOf(e.getKey())).value(String.valueOf(e.getValue())).instance());
+    }
+    hb.headerField(headerFields);
+    return hb.instance();
+  }
+
+  private Document readDocument(HTTPTriggerConnection tc) {
+    String payload = tc.getPayload();
+    return new Document.Builder().documentType(new PlainText()).text(payload).instance();
+  }
+
+  /**
+   * Called when above XynaOrder returns successfully.
+   * @param response by XynaOrder returned GeneralXynaObject
+   * @param tc corresponding triggerconnection
+   */
+  @Override
+  public void onResponse(GeneralXynaObject response, HTTPTriggerConnection tc) {
+    try {
+      if (response instanceof HttpResponse) {
+        HttpResponse resp = (HttpResponse) response;
+        Document doc = resp.getBody();
+        Header header = resp.getHeader();
+
+        String data = doc == null || doc.getText() == null ? "" : doc.getText();
+
+        String status = String.valueOf(resp.getStatusCode());
+        Pair<Properties, String> responseHeaderAndMIMEType = createResponseHeader(header);
+        String mime = responseHeaderAndMIMEType.getSecond();
+        Pair<InputStream, Long> outputAndLength = createOutputAndLength(data, mime);
+
+        tc.sendResponse(status, mime, responseHeaderAndMIMEType.getFirst(), outputAndLength.getFirst(), outputAndLength.getSecond());
+      } else {
+        throw new RuntimeException("got " + response + ". expected HttpResponse.");
+      }
+    } catch (Exception exception) {
+      logger.warn("Error occurred while trying to reply.", exception);
+      try {
+        tc.sendError(HTTPTriggerConnection.HTTP_INTERNALERROR);
+      } catch (Exception e) {
+        logger.warn("Could not send error reply.", e);
+      }
+    }
+  }
+
+  
+  private Pair<Properties, String> createResponseHeader(Header header) {
+    Properties responseHeader = new Properties();
+    String mime = null;
+    if (header != null) {
+      if (header.getContentType() != null) {
+        mime = header.getContentType().getMediaType();
+      }
+      if (header.getHeaderField() != null) {
+        for (HeaderField hf : header.getHeaderField()) {
+          if (hf.getName().equalsIgnoreCase("content-type")) {
+            mime = hf.getValue();
+            continue;
+          }
+          if (hf.getName().equalsIgnoreCase("content-length")) {
+            continue;
+          }
+          responseHeader.put(hf.getName(), hf.getValue());
+        }
+      }
+    }
+    if (mime == null) {
+      mime = "text/plain";
+    }
+    return Pair.of(responseHeader, mime);
+  }
+  
+  
+  private Pair<InputStream, Long> createOutputAndLength(String data, String mime) {
+
+    String charset = Constants.DEFAULT_ENCODING;
+    if (data.length() > 0) {
+      if (!mime.contains("charset=")) {
+        mime += "; charset=" + charset;
+      } else {
+        charset = mime.substring(mime.indexOf("charset=") + 8);
+        if (!Charset.isSupported(charset)) {
+          logger.warn("unsupported charset " + charset + ".");
+          throw new RuntimeException("unsupported charset " + charset + ".");
+        }
+      }
+    }
+    byte[] bytes;
+    try {
+      bytes = data.getBytes(charset);
+    } catch (UnsupportedEncodingException e) {
+      logger.warn("unsupported charset " + charset + ": " + e.getMessage());
+      throw new RuntimeException("unsupported charset " + charset + ".");
+    }
+    Long contentLength = (long) bytes.length;
+    InputStream contentStream = new ByteArrayInputStream(bytes);
+    return Pair.of(contentStream, contentLength);
+  }
+
+
+  /**
+   * Called when above XynaOrder returns with error or if an XynaException occurs in generateXynaOrder().
+   * @param e
+   * @param tc corresponding triggerconnection
+   */
+  public void onError(XynaException[] xyExc, HTTPTriggerConnection tc) {
+    try {
+      for (XynaException ex : xyExc) {
+        logger.debug("Order returned exception", ex);
+      }
+      tc.sendError(HTTPTriggerConnection.HTTP_INTERNALERROR);
+    } catch (Exception ex) {
+      logger.warn("Could not send http reply.", ex);
+    }
+  }
+
+  /**
+   * @return description of this filter
+   */
+  public String getClassDescription() {
+    //TODO implementation
+    //TODO update dependency xml file
+    return null;
+  }
+
+  /**
+   * Called once for each filter instance when it is deployed and again on each classloader change (e.g. when changing corresponding implementation jars).
+   * @param triggerInstance trigger instance this filter instance is registered to
+   */
+  @Override
+  public void onDeployment(EventListener triggerInstance) {
+    
+    fqnInstanceDatatypeMapSucceed.clear();
+    for (PathParameter pathPara: pathParameter) {
+      GeneralXynaObject succeed = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype());
+      fqnInstanceDatatypeMapSucceed.put(pathPara.getInstanceDatatype(), succeed);
+    }
+    super.onDeployment(triggerInstance);
+  }
+
+  private GeneralXynaObject searchAndInstanciateFirstSucceed(String instanceDatatype) {
+
+    Set<GenerationBase> subTypes = searchSucceedsInDom(instanceDatatype);
+    for (GenerationBase subType: subTypes)
+      if (subType.getRevision().equals(getRevision()) && !subType.isAbstract())
+        return  XynaObject.instantiate(subType.getOriginalFqName(), true, getRevision());
+
+    logger.warn("No succeed found for " + instanceDatatype + ".");
+    return null;
+  }
+
+  private Set<GenerationBase> searchSucceedsInDom(String instanceDatatype) {
+    try {
+      DOM dom = DOM.generateUncachedInstance(instanceDatatype, true, getRevision());
+      dom.parseGeneration(true, true);
+      return dom.getSubTypes(new GenerationBaseCache());
+    } catch (Exception e) {
+      logger.warn("Error occured while searching in revision.", e);
+      return new HashSet<GenerationBase>();
+    }
+  }
+
+  /**
+   * Called once for each filter instance when it is undeployed and again on each classloader change (e.g. when changing corresponding implementation jars).
+   * @param triggerInstance trigger instance this filter instance is registered to
+   */
+  @Override
+  public void onUndeployment(EventListener triggerInstance) {
+    super.onUndeployment(triggerInstance);
+  }
+  
+  private boolean isInWorkspace() {
+    return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().
+        isWorkspaceRevision(getRevision());
+  }
+
+  private boolean checkClassLoader(GeneralXynaObject currentSucceed) {
+    
+    if (currentSucceed == null) {
+      return false;
+    }
+    try {
+      String succeedFQN = currentSucceed.getClass().getCanonicalName();
+      Class<?> clazz = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
+          .getClassLoaderDispatcher().getMDMClassLoader(succeedFQN, getRevision(), true).loadClass(succeedFQN);
+      return currentSucceed.getClass().equals(clazz);
+    } catch (XFMG_MDMObjectClassLoaderNotFoundException | ClassNotFoundException e) {
+      logger.warn("Error while checking ClassLoader", e);
+      return false;
+    }
+  }
+}

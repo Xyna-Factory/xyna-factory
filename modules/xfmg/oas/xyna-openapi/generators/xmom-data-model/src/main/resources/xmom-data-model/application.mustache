@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Application applicationName="{{openAPI.info.title}}_Data_Model" 
+ comment="{{openAPI.info.description}}" 
+ factoryVersion="{{xynaFactoryVersion}}" versionName="{{openAPI.info.version}}" xmlVersion="1.1">
+  <ApplicationInfo>
+  </ApplicationInfo>
+  <Ordertypes>
+  </Ordertypes>
+  <SharedLibs>
+  </SharedLibs>
+  <XMOMEntries>{{#models}}{{#model}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{classname}}</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>{{/model}}{{/models}}
+  </XMOMEntries>
+</Application>

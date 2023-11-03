@@ -1,0 +1,5 @@
+{{#apiInfo.apis}}{{#operations}}{{#operation}}
+    addPathParameter("{{apiPackage}}.{{classFilename}}", Method.{{httpMethod}}, "{{apiPackage}}.{{pathPrefix}}.wf.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endpoint", 
+        "{{{vendorExtensions.regexPath}}}"{{#pathParams}}, "{{paramName}}"{{/pathParams}}
+    );
+{{/operation}}{{/operations}}{{/apiInfo.apis}}

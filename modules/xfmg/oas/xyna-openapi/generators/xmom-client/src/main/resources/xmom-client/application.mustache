@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Application applicationName="{{openAPI.info.title}}_Client" 
+ comment="{{openAPI.info.description}}" 
+ factoryVersion="{{xynaFactoryVersion}}" versionName="{{openAPI.info.version}}" xmlVersion="1.1">
+  <ApplicationInfo>
+  <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Processing</ApplicationName>
+        <VersionName>1.0.17</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>OAS Base</ApplicationName>
+        <VersionName>1.0</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>{{openAPI.info.title}}_Data_Model</ApplicationName>
+        <VersionName>{{openAPI.info.version}}</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Ordertypes>
+  </Ordertypes>
+  <SharedLibs>
+  </SharedLibs>
+  <XMOMEntries>{{#apiInfo.apis}}{{#operations}}{{#operation}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.wf.Request{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.send.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.response.Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>{{#responses}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>{{/responses}}{{/operation}}{{/operations}}{{/apiInfo.apis}}
+  </XMOMEntries>
+</Application>
