@@ -27,15 +27,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        run: |
           gh pr diff {{ github.event.pull_request.number }} --name-only | grep '^modules/' | cut -f 2-3 -d/ | sort | uniq | tee changed-modules.txt
+          echo "CHANGES=$(cat changed-modules.txt | wc -l)" >> "$GITHUB_ENV"
 
      - name: build basic factory
        run: |
           cd installation
           ./build.sh build
-       if: $(cat changed-modules.txt | wc -l) != 0
+       if: env.CHANGES > 0
 
      - name: build changed modules
        run: |
           cd modules
           for d in $(cat ../changed-modules.txt); do test -d "$d" && ant -Doracle.home=/tmp -f "$d/build.xml"; done
-       if: $(cat changed-modules.txt | wc -l) != 0
+       if: env.CHANGES > 0
