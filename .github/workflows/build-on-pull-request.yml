@@ -17,6 +17,12 @@ jobs:
      - name: Check out xyna-factory
        uses: actions/checkout@v3
           
+     - uses: actions/cache@v3
+       id: maven-cache
+       with:
+         path: /home/runner/.m2
+         key: ${{ runner.os }}-maven-cache-for-pr-build-${{ hashFiles('installation/build/pom.xml') }}
+
      - name: determine changed modules
        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
