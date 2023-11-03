@@ -29,8 +29,11 @@ check_dependencies() {
   mvn --version
   ant -version
   git --version
-  node --version
   zip --version
+}
+
+check_dependencies_frontend() {
+  node --version
 }
 
 checkout_factory() {
@@ -653,6 +656,7 @@ case $1 in
     build
     ;;
   "all")
+    check_dependencies_frontend
     build_all
     ;;
   "compose")
