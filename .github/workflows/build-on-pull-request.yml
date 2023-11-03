@@ -1,12 +1,5 @@
 name: Build Changed Modules
 on:
-  workflow_dispatch:
-   inputs:
-     pr-number:
-       required: true
-       type: string
-       default: "551"
-
   pull_request:
     branches: [ "main" ]       
   
@@ -21,30 +14,28 @@ jobs:
          java-version: 11
          distribution: 'zulu'
 
+     - name: Use Node.js 18.10
+       uses: actions/setup-node@v3
+       with:
+         node-version: '18.10'
+
      - name: Check out xyna-factory
        uses: actions/checkout@v3
-
-     - name: build basic factory
-       run: |
-          cd installation
-          sed -i 's/# main/set -e/' ./build.sh
-          sed -i 's/nvm --version//' ./build.sh
-          sed -i 's/nvm use .*//' ./build.sh
-          ./build.sh build
-
-     - name: prepare module build
-       run: |
-          cd installation
-          source ./build.sh 2>&1 > /dev/null
-          prepare_modules
           
      - name: determine changed modules
        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        run: |
-          gh pr diff ${{ inputs.pr-number }}${{ github.event.pull_request.number }} --name-only | grep '^modules/' | cut -f 2-3 -d/ | sort | uniq | tee changed-modules.txt
+          gh pr diff {{ github.event.pull_request.number }} --name-only | grep '^modules/' | cut -f 2-3 -d/ | sort | uniq | tee changed-modules.txt
+
+     - name: build basic factory
+       run: |
+          cd installation
+          ./build.sh build
+       if: $(cat changed-modules.txt | wc -l) != 0
 
      - name: build changed modules
        run: |
           cd modules
           for d in $(cat ../changed-modules.txt); do test -d "$d" && ant -Doracle.home=/tmp -f "$d/build.xml"; done
+       if: $(cat changed-modules.txt | wc -l) != 0

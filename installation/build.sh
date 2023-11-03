@@ -16,6 +16,7 @@
 # limitations under the License.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+set -e
 
 print_help() {
   echo "$0: build some or all parts of xyna."
@@ -28,9 +29,8 @@ check_dependencies() {
   mvn --version
   ant -version
   git --version
+  node --version
   zip --version
-  nvm --version
-  
 }
 
 checkout_factory() {
@@ -283,7 +283,6 @@ build_prerequisites() {
 build_modeller() {
   echo "building Modeller GUI"
   cd $SCRIPT_DIR/build
-  nvm use 16
   ant -f build-gui.xml
 }
 
@@ -631,6 +630,7 @@ build() {
   build_persistencelayers
   build_oracle_aq_tools
   fill_lib
+  prepare_modules
 }
 
 
