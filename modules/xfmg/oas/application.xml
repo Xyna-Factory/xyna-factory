@@ -40,5 +40,9 @@
       <FqName>xmcp.oas.datatype.URLPathParameter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.oas.generation.ApplicationGeneration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   </XMOMEntries>
 </Application>
