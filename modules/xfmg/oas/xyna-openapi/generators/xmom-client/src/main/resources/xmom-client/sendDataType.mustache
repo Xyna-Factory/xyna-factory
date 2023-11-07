@@ -1,0 +1,45 @@
+{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter" TypePath="{{apiPackage}}.{{pathPrefix}}.send" Label="{{httpMethod}} {{path}} Send Parameter">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>{{#allParams}}
+    <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isPrimitiveType}}>
+        <Meta>{{#isPrimitiveType}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isPrimitiveType}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
+Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+format: {{format}}{{/format}}
+
+{{#required}}requiered{{/required}}
+{{#isNullable}}nullable{{/isNullable}}
+            </Documentation>
+        </Meta>
+    </Data>{{/allParams}}
+  <Service Label="{{httpMethod}} {{path}} Send Parameter" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter">
+    <Operation Label="sendRequest" Name="sendRequest" IsStatic="false">
+      <Input>
+        <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
+        <Data ID="2" Label="Send Parameter" VariableName="sendParameter2" ReferenceName="SendParameter" ReferencePath="xact.http"/>
+      </Input>
+      <Output>
+        <Data ID="3" Label="HTTP Status Code" VariableName="hTTPStatusCode3" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode"/>
+        <Data ID="4" Label="Header" VariableName="header4" ReferenceName="Header" ReferencePath="xact.http"/>
+      </Output>
+      <Throws>
+        <Exception ID="5" Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException5" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions"/>
+        <Exception ID="6" Label="Http Exception" VariableName="httpException6" ReferenceName="HttpException" ReferencePath="xact.http.exceptions"/>
+        <Exception ID="7" Label="Timeout Exception" VariableName="timeoutException7" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions"/>
+        <Exception ID="8" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException8" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">{{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}{{#bodyParams}}xact.templates.Document body;
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.{{paramName}}, null);
+
+return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/bodyParams}}{{/hasBodyParam}}
+</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+{{/operation}}{{/operations}}

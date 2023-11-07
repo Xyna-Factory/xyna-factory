@@ -1,0 +1,41 @@
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
+ TypeName="{{classname}}"
+ TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"
+ Label="{{name}}" IsAbstract="false"
+>
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    {{#description}}<Documentation>{{description}}
+    values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}</Documentation>{{/description}}
+  </Meta>
+  <Data Label="value" VariableName="value">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}</Documentation>
+    </Meta>
+  </Data>
+  {{#allowableValues}}<Service Label="{{classname}}" TypeName="{{classname}}">{{#values}}
+    <Operation Label="get {{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" Name="get{{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" IsStatic="false">
+      <Input/>
+      <Output>
+        <Data ID="11" Label="{{classname}}" VariableName="varName" ReferenceName="{{classname}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new {{classname}}(&quot;{{.}}&quot;);</CodeSnippet>
+     </SourceCode>
+    </Operation>
+    <Operation Label="is {{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" Name="is{{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" IsStatic="false">
+      <Input/>
+      <Output>
+        <Data Label="{{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" VariableName="is{{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return &quot;{{.}}&quot;.equals(this.getValue());</CodeSnippet>
+     </SourceCode>
+    </Operation>{{/values}}
+    </Service>{{/allowableValues}}
+</DataType>

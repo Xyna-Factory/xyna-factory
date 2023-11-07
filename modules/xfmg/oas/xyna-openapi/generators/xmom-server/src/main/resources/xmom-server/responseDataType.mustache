@@ -1,0 +1,72 @@
+{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="{{httpMethod}} {{path}} Response">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="{{httpMethod}} {{path}} Response" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response">
+    <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false" IsAbstract="true">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="Http Status" VariableName="Http Status">
+          <Meta>
+            <Type>int</Type>
+          </Meta>
+        </Data>
+      </Output>
+    </Operation>
+  </Service>
+</DataType>
+{{#responses}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false" Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}"
+ BaseTypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" BaseTypePath="{{apiPackage}}.{{pathPrefix}}.response"
+ TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}" TypePath="{{apiPackage}}.{{pathPrefix}}.response">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>{{#message}}Response message: {{message}}{{/message}}</Documentation>
+  </Meta>{{#dataType}}
+  <Data Label="{{baseType}}" VariableName="{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isPrimitiveType}}>
+        <Meta>{{#isPrimitiveType}}
+            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isPrimitiveType}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
+Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+format: {{format}}{{/format}}
+
+{{#required}}requiered{{/required}}
+{{#isNullable}}nullable{{/isNullable}}
+            </Documentation>
+        </Meta>
+    </Data>{{/dataType}}{{#responseHeaders}}{{#isPrimitiveType}}
+  <Data Label="{{baseName}}" VariableName="{{paramName}}" {{#isArray}}IsList="true"{{/isArray}}>
+        <Meta>
+          <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>
+          <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
+Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+format: {{format}}{{/format}}
+
+{{#required}}requiered{{/required}}
+{{#isNullable}}nullable{{/isNullable}}
+            </Documentation>
+        </Meta>
+    </Data>{{/isPrimitiveType}}{{/responseHeaders}}
+  <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}" 
+   TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}">
+    <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="Http Status" VariableName="Http Status">
+          <Meta>
+            <Type>int</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return {{code}};</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+{{/responses}}
+{{/operation}}{{/operations}}

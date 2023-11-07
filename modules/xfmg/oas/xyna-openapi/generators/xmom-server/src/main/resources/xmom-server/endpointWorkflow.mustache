@@ -1,0 +1,106 @@
+{{#operations}}{{#operation}}<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" 
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endpoint" TypePath="{{apiPackage}}.{{pathPrefix}}.wf" Label="{{httpMethod}} {{path}} endpoint">
+  <Operation ID="0" Label="{{httpMethod}} {{path}} endpoint" Name="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endpoint" IsStatic="false">
+    <Input>
+      <Data ID="2" Label="/{{pathPrefix}} Api" VariableName="{{baseName}}Api2" ReferenceName="{{baseName}}Api" ReferencePath="{{apiPackage}}"/>
+      <Data ID="3" Label="Http Request" VariableName="httpRequest3" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
+    </Input>
+    <Output>
+      <Data ID="4" Label="Http Response" VariableName="httpResponse4" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype"/>
+    </Output>
+    <ServiceReference ID="6" Label="/{{pathPrefix}} Api" ReferenceName="{{baseName}}Api.{{baseName}}Api" ReferencePath="{{apiPackage}}">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <ServiceReference ID="9" Label="decode {{httpMethod}} {{path}}" ReferenceName="Decode{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}" ReferencePath="{{apiPackage}}.{{pathPrefix}}.wf">
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <ServiceReference ID="12" Label="encode {{httpMethod}} {{path}}" ReferenceName="Encode{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}" ReferencePath="{{apiPackage}}.{{pathPrefix}}.wf">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <Function ID="8" Label="decode {{httpMethod}} {{path}}">
+      <Source RefID="9">
+      </Source>
+      <Source RefID="3">
+      </Source>
+      <Target RefID="9">
+      </Target>
+      <Target RefID="10">
+      </Target>
+      <Invoke ServiceID="9" Operation="Decode{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}">
+        <Source RefID="3">
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9">
+        <Target RefID="10">
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="5" Label="{{httpMethod}} {{path}}">
+      <Source RefID="6">
+      </Source>
+      <Source RefID="2">
+      </Source>
+      <Source RefID="10">
+      </Source>
+      <Target RefID="6">
+      </Target>
+      <Target RefID="7">
+      </Target>
+      <Invoke ServiceID="6" Operation="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}">
+        <Source RefID="2">
+        </Source>
+        <Source RefID="10">
+        </Source>
+      </Invoke>
+      <Receive ServiceID="6">
+        <Target RefID="7">
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="11" Label="encode {{httpMethod}} {{path}}">
+      <Source RefID="12">
+      </Source>
+      <Source RefID="7">
+      </Source>
+      <Target RefID="12">
+      </Target>
+      <Target RefID="13">
+      </Target>
+      <Invoke ServiceID="12" Operation="Encode{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}">
+        <Source RefID="7">
+        </Source>
+      </Invoke>
+      <Receive ServiceID="12">
+        <Target RefID="13">
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="7" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Response7" Label="{{httpMethod}} {{path}} Response" 
+    ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response">
+      <Source RefID="5"/>
+    </Data>
+    <Data ID="10" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Parameter10" Label="{{httpMethod}} {{path}} Parameter" 
+    ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.request">
+      <Source RefID="8"/>
+    </Data>
+    <Data ID="13" VariableName="httpResponse13" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
+      <Source RefID="11"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="13">
+      </Source>
+      <Target RefID="4">
+      </Target>
+      <Copy>
+        <Source RefID="13">
+        </Source>
+        <Target RefID="4">
+        </Target>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
+{{/operation}}{{/operations}}
