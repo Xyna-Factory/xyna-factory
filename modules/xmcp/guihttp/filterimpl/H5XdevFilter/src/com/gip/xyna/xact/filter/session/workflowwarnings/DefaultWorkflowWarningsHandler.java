@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.BiFunction;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
@@ -83,6 +84,10 @@ public class DefaultWorkflowWarningsHandler extends WorkflowWarningsHandler {
     pendingWarnings = new TreeMap<>();
   }
 
+  
+  private boolean matchType(ObjectId objectIdIn, ObjectId pendingWarningObjectId) {
+    return pendingWarningObjectId.getType().equals(pendingWarningObjectId.getType());
+  }
 
   private boolean shouldDeleteWarnings(ObjectId objectIdIn, ObjectId pendingWarningObjectId) {
 
@@ -96,14 +101,12 @@ public class DefaultWorkflowWarningsHandler extends WorkflowWarningsHandler {
   }
   
   
-  private void deleteAllWarningsInternal(String objectIdStr) throws Exception{
-    ObjectId objectId = ObjectId.parse(objectIdStr);
-
+  private void deleteAllWarningsInternal(ObjectId objectId, BiFunction<ObjectId, ObjectId, Boolean> func) throws Exception{
     synchronized (pendingWarnings) {
       Set<Entry<String, Warning>> entries = new HashSet<>(pendingWarnings.entrySet());
       for (Entry<String, Warning> entry : entries) {
         ObjectId pendingWarningObjectId = ObjectId.parse(entry.getValue().getObjectId());
-        if (shouldDeleteWarnings(objectId, pendingWarningObjectId)) {
+        if (func.apply(objectId, pendingWarningObjectId)) {
           Warning removedWarning = pendingWarnings.remove(entry.getKey());
           if(logger.isDebugEnabled()) {
             logger.debug("Removed " + removedWarning + " from pending warnings.");
@@ -135,7 +138,7 @@ public class DefaultWorkflowWarningsHandler extends WorkflowWarningsHandler {
   @Override
   public void deleteAllWarnings(String objectIdStr) {
     try {
-      deleteAllWarningsInternal(objectIdStr);
+      deleteAllWarningsInternal(ObjectId.parse(objectIdStr), this::shouldDeleteWarnings);
     } catch (Exception e) {
       logger.debug("Exception during warning deletion: ", e);
     }
@@ -144,6 +147,15 @@ public class DefaultWorkflowWarningsHandler extends WorkflowWarningsHandler {
   @Override
   public Warning getWarning(String warningId) {
     return pendingWarnings.get(warningId);
+  }
+
+  @Override
+  public void deleteAllWarningsOfType(ObjectType type) {
+    try {
+      deleteAllWarningsInternal(new ObjectId(type, ""), this::matchType);
+    } catch (Exception e) {
+      logger.debug("Exception during warning deletion: ", e);
+    }
   }
 
 }

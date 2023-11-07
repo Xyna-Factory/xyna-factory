@@ -100,6 +100,7 @@ import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
 import com.gip.xyna.xact.filter.session.save.Persistence;
 import com.gip.xyna.xact.filter.session.workflowissues.WorkflowIssuesRequestProcessor;
 import com.gip.xyna.xact.filter.session.workflowwarnings.DefaultWorkflowWarningsHandler;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.session.workflowwarnings.WorkflowWarningsHandler;
 import com.gip.xyna.xact.filter.util.ReadonlyUtil;
 import com.gip.xyna.xact.filter.xmom.session.json.GboJson;
@@ -107,7 +108,6 @@ import com.gip.xyna.xact.filter.xmom.workflows.json.DataflowJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.LabelJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.VariableJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.WorkflowStepVisitor;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmomlocks.LockManagement;
 import com.gip.xyna.xdev.xfractmod.xmomlocks.LockManagement.Path;
 import com.gip.xyna.xfmg.exceptions.XFMG_ACCESS_VIOLATION;
@@ -1195,6 +1195,11 @@ public class SessionBasedData {
 
     if (view.getGenerationBaseObject().getType() == XMOMType.WORKFLOW) {
       view.getGenerationBaseObject().createDataflow(getOrCreateWFWarningsHandler(view.getGenerationBaseObject().getFQName()));
+
+      FQName fqName = request.getFQName();
+      ObjectId objectId = new ObjectId(ObjectType.workflow, null);
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, view.getGenerationBaseObject().getWorkflow());
+      getWFWarningsHandler(fqName).handleChange(objectId, notification);
     }
 
     reply.setXynaObject(view.viewAll(request));
