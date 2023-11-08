@@ -44,5 +44,14 @@
       <FqName>xfmg.oas.generation.ApplicationGeneration</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.oas.generation.ApplicationGenerationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   </XMOMEntries>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>xyna-openapi</SharedLib>
+    </SharedLib>
+  </SharedLibs>
 </Application>

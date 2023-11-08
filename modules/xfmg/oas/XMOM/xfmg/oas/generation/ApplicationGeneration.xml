@@ -14,9 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Application Generation" TypeName="ApplicationGeneration" TypePath="xfmg.oas.generation" Version="1.8">
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ApplicationGeneration" TypePath="xfmg.oas.generation" Label="Application Generation" IsAbstract="false">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
-  <Service Label="Application Generation" TypeName="ApplicationGeneration"/>
+  <Libraries>ApplicationGenerationImpl.jar</Libraries>
+  <SharedLibraries>xyna-openapi</SharedLibraries>
+  <Service Label="Application Generation" TypeName="ApplicationGeneration">
+    <Operation Label="Generate Application" Name="generateApplication" IsStatic="true">
+      <Input>
+        <Data ID="1" Label="Application Generation Parameter" VariableName="applicationGenerationParameter1" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="Managed File Id" VariableName="managedFileId2" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.oas.generation.ApplicationGenerationImpl.generateApplication(applicationGenerationParameter1);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

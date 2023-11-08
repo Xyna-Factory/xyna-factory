@@ -19,19 +19,27 @@ package xfmg.oas.generation.impl;
 
 
 
+import org.openapitools.codegen.OpenAPIGenerator;
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import xfmg.oas.generation.ApplicationGenerationParameter;
+import xfmg.xfctrl.filemgmt.ManagedFileId;
+import xfmg.oas.generation.ApplicationGenerationServiceOperation;
+import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 
 
 
-public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask {
+public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask, ApplicationGenerationServiceOperation {
 
   public void onDeployment() throws XynaException {
+    OverallInformationProvider.onDeployment();
   }
 
 
   public void onUndeployment() throws XynaException {
+    OverallInformationProvider.onUndeployment();
   }
 
 
@@ -42,6 +50,14 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
 
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     return null;
+  }
+
+
+  public ManagedFileId generateApplication(ApplicationGenerationParameter applicationGenerationParameter2) {
+    String swagger = "";
+    String target = "/tmp/resultFile";
+    OpenAPIGenerator.main(new String[] {"generate", "-g", "xmom-data-model", "-i", swagger, "-o", target});
+    return new ManagedFileId.Builder().instance();
   }
 
 }

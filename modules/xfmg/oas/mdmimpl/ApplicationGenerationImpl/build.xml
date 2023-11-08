@@ -24,11 +24,15 @@
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
 
-    <property name="project.name" value="ApplicationGeneration" />
+    <property name="project.name" value="ApplicationGenerationImpl" />
     <property name="fqclassname" value="xfmg.oas.generation.ApplicationGeneration" />
     <property name="mdm.xml.path" value="xfmg/oas/generation" />
     <property name="mdm.xml.filename" value="ApplicationGeneration.xml" />
     <property name="mdm.service.path" value="xfmg.oas.generation.ApplicationGeneration" />
+
+    <property name="cli.command.java.path" value="xfmg.oas.generation.cli" />
+    <property name="cli.command.path" value="xfmg/oas/generation.cli" />
+
 	<!--
     <target name="prepareLibs" description="Prepare Libs">
         <ant antfile="build.xml" target="build" inheritAll="false" dir="">
