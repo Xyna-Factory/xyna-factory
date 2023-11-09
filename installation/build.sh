@@ -284,9 +284,10 @@ build_prerequisites() {
 }
 
 build_modeller() {
-  echo "building Modeller GUI"
+  MODELLER_TAG=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^xynamodeller.release.tag | cut -d'=' -f2) #e.g. 9.0.0.0
+  echo "building Modeller GUI from tag ${MODELLER_TAG}"
   cd $SCRIPT_DIR/build
-  ant -f build-gui.xml
+  ant -f build-gui.xml -Dmodeller.tag=${MODELLER_TAG}
 }
 
 build_xyna_factory() {
