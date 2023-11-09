@@ -66,6 +66,7 @@ import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -103,20 +104,29 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
   public static final XynaPropertyBoolean USE_CACHE = new XynaPropertyBoolean("xmcp.guihttp.use_cache", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Use a cache to store recently used objects. Cache size is determined by " + cache_size_property_name)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Verwende einen Cache um auf zuletzt verwendete Objekte schneller zugreifen zu kˆnnen. Grˆﬂe des Caches is bestimmt durch " + cache_size_property_name);
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Verwende einen Cache um auf zuletzt verwendete Objekte schneller zugreifen zu k√∂nnen. Gr√∂√üe des Caches is bestimmt durch " + cache_size_property_name);
 
   public static final XynaPropertyBoolean AVARCONSTANTS = new XynaPropertyBoolean("xmcp.guihttp.new_constants", true).
       setDefaultDocumentation(DocumentationLanguage.EN, "Prevent instantiation problems by using a different approach to convert json to constants.");
   
   public static final XynaPropertyBoolean CompressResponse = new XynaPropertyBoolean("xmcp.guihttp.compress_response", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "compress response of requests using gzip, if supported by caller")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterst¸tzt wird");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterst√ºtzt wird");
   
+  public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", false)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Sende Session Cookie als __Secure- und f√ºge Strict-Transport-Security header ein");
+
+  public static final XynaPropertyDuration STRICT_TRANSPORT_SECURITY_MAX_AGE = new XynaPropertyDuration("xmcp.guihttp.sts.maxage", "730 d" )
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Max-age of Strict-Transport-Security header.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Max-age des Strict-Transport-Security header.");
+
   public static final XynaPropertyString VALIDATION_WORKFLOW = new XynaPropertyString("xmcp.guihttp.startorder.preprocess_workflow", "")
       .setDefaultDocumentation(DocumentationLanguage.EN,
                                "If set, all startorder Requests outside of guihttp are first processed by the given workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
       .setDefaultDocumentation(DocumentationLanguage.DE,
-                               "Wenn gesetzt, werden alle startorder Requests auﬂerhalb von guihttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName");
+                               "Wenn gesetzt, werden alle startorder Requests au√üerhalb von guihttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName");
+
 
 
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
@@ -376,6 +386,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     GENERATION_BASE_CACHE_SIZE.registerDependency(UserType.Filter, NAME);
     USE_CACHE.registerDependency(UserType.Filter, NAME);
     AVARCONSTANTS.registerDependency(UserType.Filter, NAME);
+    STRICT_TRANSPORT_SECURITY.registerDependency(UserType.Filter, NAME);
+    STRICT_TRANSPORT_SECURITY_MAX_AGE.registerDependency(UserType.Filter, NAME);
     
     super.onDeployment(triggerInstance);
   }
@@ -404,6 +416,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     GENERATION_BASE_CACHE_SIZE.unregister();
     USE_CACHE.unregister();
     AVARCONSTANTS.unregister();
+    STRICT_TRANSPORT_SECURITY.unregister();
+    STRICT_TRANSPORT_SECURITY_MAX_AGE.unregister();
   }
 
 

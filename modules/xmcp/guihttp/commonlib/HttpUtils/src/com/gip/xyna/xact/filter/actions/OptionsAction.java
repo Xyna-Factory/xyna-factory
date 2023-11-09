@@ -61,7 +61,7 @@ public class OptionsAction implements FilterAction {
     }
     
     setAccessControlParameter(tc, dfai);
-    
+   
     dfai.sendProperties(tc);
     return dfai;
   }
