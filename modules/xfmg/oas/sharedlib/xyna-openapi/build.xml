@@ -28,12 +28,14 @@
 
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
-    <exec executable="mvn">
-      <arg value="package"/>
-    </exec>
+    <target name="prepareLibs">
+      <exec executable="mvn">
+        <arg value="package"/>
+      </exec>
 
-    <copy todir="${target.dir}">
-      <fileset dir="${basedir}/../target/" />
-    </copy>
+      <copy todir="${target.dir}">
+        <fileset dir="${basedir}/../target/" />
+      </copy>
+    </target>
 
 </project>
