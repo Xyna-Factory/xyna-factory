@@ -24,6 +24,7 @@ import java.util.List;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.FilterAction;
+import com.gip.xyna.xact.filter.H5XdevFilter;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.actions.PathElements;
@@ -61,8 +62,9 @@ public class LogoutAction implements FilterAction {
     XynaFactory.getInstance().getFactoryManagementPortal().quitSession(xpsc.getSessionId());
     LogoutRequest request = (LogoutRequest) Utils.convertJsonToGeneralXynaObjectUsingGuiHttp(payload);
     
+    String sessionId = H5XdevFilter.STRICT_TRANSPORT_SECURITY.get() ? AuthUtils.COOKIE_FIELD_SESSION_ID_STS : AuthUtils.COOKIE_FIELD_SESSION_ID;
     List<String> list = new ArrayList<>();
-    list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_SESSION_ID, "-", request.getPath(), tc, false) + "; " + AuthUtils.COOKIE_MARKER_EXPIRED);
+    list.add(AuthUtils.generateCookie(sessionId, "-", request.getPath(), tc, false) + "; " + AuthUtils.COOKIE_MARKER_EXPIRED);
     jfai.setProperty("Set-Cookie", list); //Liste wird dann spaeter (in httptriggerconnection) umgewandelt in mehrere Set-Cookie Headerzeilen
     if(!AuthUtils.USE_CSRF_TOKEN.get()) {
       list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_TOKEN, "-", request.getPath(), tc, false) + "; " + AuthUtils.COOKIE_MARKER_EXPIRED);
