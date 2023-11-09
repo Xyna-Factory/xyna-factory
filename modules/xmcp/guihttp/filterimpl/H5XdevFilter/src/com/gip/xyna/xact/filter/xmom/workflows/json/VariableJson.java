@@ -159,11 +159,15 @@ public class VariableJson extends XMOMGuiJson implements HasXoRepresentation {
   }
   
   public AVariable toAVariable(GenerationBase generationBase, long revision) throws XPRC_InvalidPackageNameException{
-    // primitive datatypes are not supported
     AVariable var;
     DomOrExceptionGenerationBase doe;
-
-    if (Tags.EXCEPTION.equals(getType())) {
+    
+    if (getFQName() == null) {
+      var = new DatatypeVariable(generationBase);
+      var.setIsList(isList());
+      var.createPrototype(getLabel());
+      return var;
+    } else if (Tags.EXCEPTION.equals(getType())) {
       doe = ExceptionGeneration.getInstance(getFQName().toString(), revision);
       var = new ExceptionVariable(generationBase, getFQName().toString());
     } else if (Tags.VARIABLE.equals(getType())) {
@@ -172,6 +176,7 @@ public class VariableJson extends XMOMGuiJson implements HasXoRepresentation {
     } else {
       throw new RuntimeException();
     }
+    
     var.setIsList(isList());
     com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement depMan = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     Long depRev = depMan.getRevisionDefiningXMOMObject(getFQName().toString(), revision);
