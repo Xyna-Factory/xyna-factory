@@ -139,7 +139,7 @@
          target: build-src             
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
-    <target name="build-src" depends="cleanup, resolve, prepareLibs, genExceptionClass, genCliClass">
+    <target name="build-src" depends="cleanup, create-servicedefinition-jar-if-missing, resolve, prepareLibs, genExceptionClass, genCliClass">
         <mkdir dir="${basedir}/classes" />
         <javaCompile>
             <classpath path="${basedir}/classes" />
@@ -337,6 +337,28 @@
                 </fileset>
             </classpath>
         </java>
+    </target>
+
+    <!-- ================================= 
+         target: create-servicedefinition-jar-if-missing
+         ================================= -->
+    <target name="create-servicedefinition-jar-if-missing" description="Create servicedefinition.jar locally, if there is no servicedefinition.jar present">
+        <condition property="servicedefinitionJarExists" value="true" else="false">
+            <resourcecount when="greater" count="0">
+                <fileset dir="${basedir}">
+                    <include name="**/servicedefinition.jar" />
+                </fileset>
+            </resourcecount>
+        </condition>
+        <if>
+            <equals arg1="${servicedefinitionJarExists}" arg2="false" />
+            <then>
+                <antcall target="create-servicedefinition-jar" />
+            </then>
+            <else>
+                <echo message="servicedefinition jar exists already." />
+            </else>
+        </if>
     </target>
 
 </project>
