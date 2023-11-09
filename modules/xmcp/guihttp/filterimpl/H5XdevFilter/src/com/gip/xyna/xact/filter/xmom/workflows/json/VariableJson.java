@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonParser.EmptyJsonVisitor;
@@ -44,9 +45,14 @@ import com.gip.xyna.xact.filter.xmom.XMOMGuiJson;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
+import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DatatypeVariable;
+import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 
 import xmcp.processmodeller.datatypes.Data;
 import xmcp.processmodeller.datatypes.Variable;
@@ -150,6 +156,32 @@ public class VariableJson extends XMOMGuiJson implements HasXoRepresentation {
   }
   public FQNameJson getFQName() {
     return fqName;
+  }
+  
+  public AVariable toAVariable(GenerationBase generationBase, long revision) throws XPRC_InvalidPackageNameException{
+    // primitive datatypes are not supported
+    AVariable var;
+    DomOrExceptionGenerationBase doe;
+
+    if (Tags.EXCEPTION.equals(getType())) {
+      doe = ExceptionGeneration.getInstance(getFQName().toString(), revision);
+      var = new ExceptionVariable(generationBase, getFQName().toString());
+    } else if (Tags.VARIABLE.equals(getType())) {
+      doe = DOM.getInstance(getFQName().toString(), revision);
+      var = new DatatypeVariable(generationBase);
+    } else {
+      throw new RuntimeException();
+    }
+    var.setIsList(isList());
+    com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement depMan = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+    Long depRev = depMan.getRevisionDefiningXMOMObject(getFQName().toString(), revision);
+
+    if (isPrototype() || depRev == null) {
+      var.createPrototype(getLabel());
+    } else {
+      var.createDomOrException(getLabel(), doe);
+    }
+    return var;
   }
 
 
