@@ -26,16 +26,14 @@
     <property name="sharedLib.folder.name" value="xyna-openapi" />
     <property name="sharedLib.name" value="xyna-openapi" />
 
+    <import file="${root.dir}/installation/build/buildSharedLib.xml" />
+
     <exec executable="mvn">
       <arg value="package"/>
     </exec>
 
-    <mkdir dir="${basedir}/lib" />
-
-    <copy todir="${basedir}/lib">
+    <copy todir="${target.dir}">
       <fileset dir="${basedir}/../target/" />
     </copy>
-
-    <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
 </project>

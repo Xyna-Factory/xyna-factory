@@ -33,13 +33,11 @@
     <property name="cli.command.java.path" value="xfmg.oas.generation.cli" />
     <property name="cli.command.path" value="xfmg/oas/generation.cli" />
 
-	<!--
     <target name="prepareLibs" description="Prepare Libs">
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/xyna-openapi">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
     </target>
--->
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 

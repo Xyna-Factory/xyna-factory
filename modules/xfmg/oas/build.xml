@@ -28,11 +28,11 @@
 
         <antcall target="prepare-mdm-jar-if-missing" />
 
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/ApplicationGenerationImpl">
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/xyna-openapi">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/xyna-openapi">
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/ApplicationGenerationImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
