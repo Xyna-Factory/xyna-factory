@@ -346,7 +346,7 @@
         <condition property="servicedefinitionJarExists" value="true" else="false">
             <resourcecount when="greater" count="0">
                 <fileset dir="${basedir}">
-                    <include name="**/servicedefinition.jar" />
+                    <include name="**/serviceDefinition.jar" />
                 </fileset>
             </resourcecount>
         </condition>
