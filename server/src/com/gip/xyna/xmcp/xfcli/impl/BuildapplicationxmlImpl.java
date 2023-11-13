@@ -44,7 +44,7 @@ public class BuildapplicationxmlImpl extends XynaCommandImplementation<Buildappl
         (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
 
 
-    if (workspaceName == null && versionName == null) {
+    if (payload.getWorkspaceName() == null && payload.getVersionName() == null) {
       throw new RuntimeException("Invalid parameter combination. Provide either workspaceName or versionName");
     }
 
