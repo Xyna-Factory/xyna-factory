@@ -55,10 +55,6 @@
 
     <checkServerProperties />
 
-    <condition property="service.definition.available">
-        <available file="${base.lib.dir}/xyna/serviceDefinition.jar" />
-    </condition>
-
     <condition property="cli.commands.available">
         <isset property="cli.command.java.path" />
     </condition>
@@ -165,18 +161,13 @@
             </classpath>
         </javaCompile>
         <mkdir dir="${target.dir}" />
-        <if>
-            <equals arg1="${service.definition.available}" arg2="true" />
-            <then>
-                <unzip src="${base.lib.dir}/xyna/serviceDefinition.jar" dest="${basedir}/tmp" />
-                <copy todir="${basedir}/classes">
-                    <fileset dir="${basedir}/tmp">
-                        <include name="**/*.class" />
-                    </fileset>
-                </copy>
-                <delete dir="${basedir}/tmp" />
-            </then>
-        </if>
+        <unzip src="${base.lib.dir}/xyna/serviceDefinition.jar" dest="${basedir}/tmp" />
+        <copy todir="${basedir}/classes">
+            <fileset dir="${basedir}/tmp">
+                <include name="**/*.class" />
+            </fileset>
+        </copy>
+        <delete dir="${basedir}/tmp" />
         <jar destfile="${target.dir}/${project.name}.jar">
             <manifest>
                 <attribute name="Vendor" value="${vendor.name}" />
