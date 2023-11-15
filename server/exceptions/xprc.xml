@@ -1538,6 +1538,15 @@
       <MessageText Language="DE">Das Kompilieren ist fehlgeschlagen.</MessageText>
       <MessageText Language="EN">Compile failed.</MessageText>
    </ExceptionType> 
-   <!--  letzte verwendete ID 01556 -->
+   <ExceptionType Code="XYNA-01557" TypeName="XPRC_INVALID_PLANNING_INPUT" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">(%0%) PlanningWorkflow muss die gleiche Input Signatur haben wie der ExecutionWorkflow.</MessageText>
+      <MessageText Language="EN">(%0%) PlanningWorkflow has to match ExecutionWorkflow inputs.</MessageText>
+   </ExceptionType>
+   <!--  letzte verwendete ID 01557 -->
    
  </ExceptionStore>
