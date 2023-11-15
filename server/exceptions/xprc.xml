@@ -1544,8 +1544,8 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <MessageText Language="DE">(%0%) PlanningWorkflow muss die gleiche Input Signatur haben wie der ExecutionWorkflow.</MessageText>
-      <MessageText Language="EN">(%0%) PlanningWorkflow has to match ExecutionWorkflow inputs.</MessageText>
+      <MessageText Language="DE">(%0%) Die Input Signatur des PlanningWorkflow muss entweder der Input Signatur des ExecutionWorkflow entsprechen oder leer sein.</MessageText>
+      <MessageText Language="EN">(%0%) PlanningWorkflow inputs have to match ExceptionWorkflow inputs or be empty.</MessageText>
    </ExceptionType>
    <!--  letzte verwendete ID 01557 -->
    
