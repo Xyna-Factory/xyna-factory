@@ -82,7 +82,7 @@ public class XmomServerGenerator extends DefaultCodegen {
             regexPath = regexPath.replaceAll("\\{" + p.baseName + "\\}", "(?<" + p.baseName + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
           }
           else if (p.isString) {
-            regexPath = regexPath.replaceAll("\\{" + p.baseName + "\\}", "(?<" + p.baseName + ">\\w*[a-zA-Z]+\\w*)");
+            regexPath = regexPath.replaceAll("\\{" + p.baseName + "\\}", "(?<" + p.baseName + ">[^/?]*)");
           }
         }
       }
@@ -160,7 +160,7 @@ public class XmomServerGenerator extends DefaultCodegen {
      * the client generator
      */
     languageSpecificPrimitives = new HashSet<String>(
-      Arrays.asList("boolean", "integer", "long", "double", "float", "string", "DateTime", "date", "password", "byte", "binary")
+      Arrays.asList("boolean", "integer", "long", "double", "float", "string", "DateTime", "date", "password", "byte", "binary", "URI")
     );
 
     typeMapping.clear();
@@ -176,6 +176,7 @@ public class XmomServerGenerator extends DefaultCodegen {
     typeMapping.put("byte", "String");
     typeMapping.put("binary", "String");
     typeMapping.put("file", "String");
+    typeMapping.put("URI", "String");
   }
 
   /**
@@ -229,5 +230,11 @@ public class XmomServerGenerator extends DefaultCodegen {
     lambdaBuilder.put("index", new IndexLambda(1));
     lambdaBuilder.put("statuscode", new StatusCodeLambda());
     return lambdaBuilder;
+  }
+
+  @Override
+  @SuppressWarnings("static-method")
+  public void postProcess() {
+      System.out.println("server generator finished");
   }
 }
