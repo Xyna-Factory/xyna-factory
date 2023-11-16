@@ -184,7 +184,7 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     String httpBasePath = RevisionManagement.getPathForRevision(PathType.TRIGGER, httpRevision, true);
     Path httpTriggerJar = Path.of(httpBasePath, "HTTPTrigger", "HTTPTrigger.jar");
-    Path filterOutputDir = Path.of(target, "deploy", "filter", "OASFilter");
+    Path filterOutputDir = Path.of(target, "filter", "OASFilter", "OASFilter.jar");
 
     InMemoryCompilationSet cs = new InMemoryCompilationSet(false, false, false);
     try {
