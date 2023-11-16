@@ -18,6 +18,7 @@ import xact.templates.Document;
 import xact.templates.PlainText;
 import xmcp.oas.datatype.HttpRequest;
 import xmcp.oas.datatype.HttpResponse;
+import xmcp.oas.datatype.URLPathParameter;
 
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
@@ -36,6 +37,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Properties;
 import java.util.Set;
 
@@ -43,7 +46,6 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.exceptions.XFMG_MDMObjectClassLoaderNotFoundException;
-
 
 public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
