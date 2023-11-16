@@ -28,6 +28,8 @@ import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
+import com.gip.xyna.xprc.exceptions.XPRC_INVALID_INPUT_PARAMETER_TYPE;
+import com.gip.xyna.xprc.exceptions.XPRC_INVALID_PLANNING_INPUT;
 import com.gip.xyna.xprc.exceptions.XPRC_INVALID_PLANNING_RESPONSETYPE;
 import com.gip.xyna.xprc.xfractwfe.DeploymentManagement;
 import com.gip.xyna.xprc.xfractwfe.DeploymentManagement.DispatcherType;
@@ -67,7 +69,10 @@ public class FractalPlanningProcessor extends AFractalWorkflowProcessor {
       } else {
         throw new XPRC_INVALID_PLANNING_RESPONSETYPE(Long.toString(xo.getId()));
       }
-    } finally {
+    } catch(XPRC_INVALID_INPUT_PARAMETER_TYPE e) {
+      throw new XPRC_INVALID_PLANNING_INPUT(Long.toString(xo.getId()), e);
+    }
+    finally {
       DeploymentManagement.getInstance().countOrderThatKnowsAboutDeployment(xo.getIdOfLatestDeploymentFromOrder());
       runningProcesses.remove(targetId);
     }
