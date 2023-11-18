@@ -45,6 +45,10 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.OASValidationResult</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xfmg.oas.generation.ApplicationGeneration</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
