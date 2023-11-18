@@ -29,13 +29,20 @@
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
     <target name="prepareLibs">
-      <exec executable="mvn">
+      <exec executable="mvn" failonerror="true">
         <arg value="package"/>
       </exec>
 
       <copy todir="${target.dir}">
         <fileset dir="${basedir}/../target/" />
       </copy>
+
+      <copy todir="${target.dir}">
+        <fileset dir="${basedir}/xyna-openapi-utils/target">
+          <include name="*.jar" />
+        </fileset>
+      </copy>
+
     </target>
 
 </project>
