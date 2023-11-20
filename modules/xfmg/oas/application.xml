@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Application applicationName="OAS_Base" comment="Build after checkin LF. Base application, required by applications generated from OpenAPI Specification" factoryVersion="9.0.2.3" versionName="0.1.4" xmlVersion="1.1">
+ --><Application applicationName="OAS_Base" comment="Build after checkin LF. Base application, required by applications generated from OpenAPI Specification" factoryVersion="9.0.2.3" versionName="0.1.5" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>

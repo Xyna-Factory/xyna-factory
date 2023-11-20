@@ -21,18 +21,30 @@ package xfmg.oas.generation.impl;
 
 import org.openapitools.codegen.OpenAPIGenerator;
 
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ApplicationPartImportMode;
+import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ImportApplicationParameter;
+import com.gip.xyna.xfmg.xfctrl.nodemgmt.rtctxmgmt.LocalRuntimeContextManagementSecurity;
+import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
+
 import xfmg.oas.generation.ApplicationGenerationParameter;
-import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
+import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
 
 
 
 public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask, ApplicationGenerationServiceOperation {
 
+  private static final LocalRuntimeContextManagementSecurity localLrcms =
+      new LocalRuntimeContextManagementSecurity();
+  private static final SessionManagement sessionManagement = 
+      XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+  
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
   }
@@ -52,12 +64,46 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     return null;
   }
 
-
-  public ManagedFileId generateApplication(ApplicationGenerationParameter applicationGenerationParameter2) {
-    String swagger = "";
+  @Override
+  public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter2) {
+    String swagger = applicationGenerationParameter2.getOpenAPISpecificationPath();
     String target = "/tmp/resultFile";
-    OpenAPIGenerator.main(new String[] {"generate", "-g", "xmom-data-model", "-i", swagger, "-o", target});
-    return new ManagedFileId.Builder().instance();
-  }
 
+    try {
+      OpenAPIGenerator.main(new String[] {"validate", "-i", swagger, "--recommend"});
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    
+    BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
+    
+    String id;
+    
+    id = oasAppBuilder.createOasApp("xmom-data-model", target + "_datatypes", swagger);
+    importApplication(correlatedXynaOrder, id);
+    
+    if (applicationGenerationParameter2.getGenerateProvider()) {
+      id = oasAppBuilder.createOasApp("xmom-server", target + "_provider", swagger);
+      importApplication(correlatedXynaOrder, id);
+    }
+    if (applicationGenerationParameter2.getGenerateClient()) {
+      id = oasAppBuilder.createOasApp("xmom-client", target + "_client", swagger);
+      importApplication(correlatedXynaOrder, id);
+    }
+  }
+  
+  private void importApplication(XynaOrderServerExtension correlatedXynaOrder, String id) {
+    try {
+      String user = sessionManagement.resolveSessionToUser(correlatedXynaOrder.getSessionId());
+      ImportApplicationParameter iap = ImportApplicationParameter.with(ApplicationPartImportMode.EXCLUDE,
+                                                                       ApplicationPartImportMode.EXCLUDE,
+                                                                       true,
+                                                                       true,
+                                                                       user);
+      localLrcms.importApplication(correlatedXynaOrder.getCreationRole(), iap, id);
+
+    } catch (Exception ex) {
+      throw new RuntimeException(ex.getMessage(), ex);
+    }
+  }
 }

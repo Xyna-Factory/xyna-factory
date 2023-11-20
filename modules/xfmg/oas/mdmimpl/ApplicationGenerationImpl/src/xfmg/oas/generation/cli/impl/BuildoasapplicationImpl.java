@@ -73,21 +73,21 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       throw new RuntimeException(e);
     }
     String id = createOasApp("xmom-data-model", target + "_datatypes", swagger);
-    writeToCommandLine(statusOutputStream, "Datamodel ManagedFileId: " + id);
+    writeToCommandLine(statusOutputStream, "Datamodel ManagedFileId: " + id + " ");
     if (payload.getBuildProvider()) {
       id = createOasApp("xmom-server", target + "_provider", swagger);
-      writeToCommandLine(statusOutputStream, "provider ManagedFileId: " + id);
+      writeToCommandLine(statusOutputStream, "provider ManagedFileId: " + id + " ");
     }
     if (payload.getBuildClient()) {
       id = createOasApp("xmom-client", target + "_client", swagger);
-      writeToCommandLine(statusOutputStream, "client ManagedFileId: " + id);
+      writeToCommandLine(statusOutputStream, "client ManagedFileId: " + id + " ");
     }
 
     writeToCommandLine(statusOutputStream, "Done.");
   }
 
-
-  private String createOasApp(String generator, String target, String swagger) {
+  
+  public String createOasApp(String generator, String target, String swagger) {
     OpenAPIGenerator.main(new String[] {"generate", "-g", generator, "-i", swagger, "-o", target});
 
     separateFiles(target);
