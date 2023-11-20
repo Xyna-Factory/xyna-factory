@@ -50,7 +50,7 @@ catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{classname}}.{{paramName}}");
 }
 {{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}try {
-    var cplxObj_{{-index}} = this.get("{{^isArray}}{{paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}");
+    var cplxObj_{{-index}} = this.get("{{^isArray}}{{#lambda.camelcase}}{{paramName}}{{^paramName}}{{complexType}}{{/paramName}}{{/lambda.camelcase}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}");
     if (cplxObj_{{-index}} != null) { {{^isArray}}
         var cplxValidationResult_{{-index}} = (({{complexType}})cplxObj_{{-index}}).validate();
         result.getErrorMessages().addAll(cplxValidationResult_{{-index}}.getErrorMessages());{{/isArray}}{{#isArray}}
@@ -60,11 +60,11 @@ catch (Exception e) {
             result.getErrorMessages().addAll(lValidationResult.getErrorMessages());
         }{{/isArray}}
     } else { {{#required}}
-        result.getErrorMessages().add("{{classname}}.{{^isArray}}{{paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}} of type {{complexType}} is required but is null.");{{/required}}{{^isNullable}}
-        result.getErrorMessages().add("{{classname}}.{{^isArray}}{{paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}} of type {{complexType}} must not be null.");{{/isNullable}}
+        result.getErrorMessages().add("{{classname}}.{{^isArray}}{{paramName}}{{^paramName}}{{complexType}}{{/paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}} of type {{complexType}} is required but is null.");{{/required}}{{^isNullable}}
+        result.getErrorMessages().add("{{classname}}.{{^isArray}}{{paramName}}{{^paramName}}{{complexType}}{{/paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}} of type {{complexType}} must not be null.");{{/isNullable}}
     }
 }
 catch (Exception e) {
-    result.getErrorMessages().add("Error: could not validate {{classname}}.{{^isArray}}{{paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}");
+    result.getErrorMessages().add("Error: could not validate {{classname}}.{{^isArray}}{{paramName}}{{^paramName}}{{complexType}}{{/paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}");
 }
 {{/isPrimitiveType}}
