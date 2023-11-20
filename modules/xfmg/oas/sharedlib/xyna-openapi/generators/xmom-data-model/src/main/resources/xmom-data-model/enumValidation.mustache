@@ -1,0 +1,11 @@
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+{{#allowableValues}}
+String[] enumValues = { {{#values}}"{{.}}"{{^-last}}, {{/-last}}{{/values}} };
+if (!Arrays.asList(enumValues).contains(this.getValue())) {
+    result.getErrorMessages().add(String.format("{{classname}}: Invalid enum value \"%s\"", this.getValue()));
+}
+{{/allowableValues}}
+
+return result.getResult();

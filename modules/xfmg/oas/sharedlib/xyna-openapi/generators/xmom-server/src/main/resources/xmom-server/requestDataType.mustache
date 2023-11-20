@@ -1,5 +1,6 @@
 {{#operations}}{{#operation}}{{#hasParams}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" TypePath="{{apiPackage}}.{{pathPrefix}}.request" Label="{{httpMethod}} {{path}} Parameter">
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" TypePath="{{apiPackage}}.{{pathPrefix}}.request" Label="{{httpMethod}} {{path}} Parameter"
+BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation></Documentation>
@@ -18,6 +19,21 @@ format: {{format}}{{/format}}
         </Meta>
     </Data>{{/allParams}}
   <Service Label="{{httpMethod}} {{path}} Parameter" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter">
+    <Operation Label="Validate" Name="validate" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="3" Label="OASValidationResult" VariableName="oASValidationResult3" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+{{#allParams}}{{>validation}}{{/allParams}}
+return result.getResult();
+</CodeSnippet>
+      </SourceCode>
+    </Operation>
     <Operation Label="parse Parameter" Name="parseParameter" IsStatic="false">
       <Input>
         <Data ID="1" Label="Http Request" VariableName="httpRequest1" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
@@ -55,7 +71,7 @@ for (xact.http.Header header: httpRequest1.getHeader()) {
 }
 {{/hasHeaderParams}}{{#hasBodyParam}}{{#bodyParams}}{{#isModel}}
 xact.templates.Document body = httpRequest1.getBody();
-{{dataType}} {{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}} = ({{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{dataType}}(), new  xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions());
+{{dataType}} {{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}} = ({{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{dataType}}(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions());
 ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}});
 {{/isModel}}{{/bodyParams}}{{/hasBodyParam}}
 return ret;</CodeSnippet>

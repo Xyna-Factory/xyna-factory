@@ -1,5 +1,6 @@
 {{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="{{httpMethod}} {{path}} Response">
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="{{httpMethod}} {{path}} Response"
+BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -10,9 +11,16 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Resp
       <Output>
         <Data Label="Http Status" VariableName="Http Status">
           <Meta>
-            <Type>int</Type>
+            <Type>String</Type>
           </Meta>
         </Data>
+      </Output>
+    </Operation>
+    <Operation Label="get Payload" Name="getPayload" IsStatic="false" IsAbstract="true">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="1" Label="Document" VariableName="document1" ReferenceName="Document" ReferencePath="xact.templates"/>
       </Output>
     </Operation>
   </Service>
@@ -25,7 +33,7 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Resp
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>{{#message}}Response message: {{message}}{{/message}}</Documentation>
   </Meta>{{#dataType}}
-  <Data Label="{{baseType}}" VariableName="{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}
+  <Data Label="{{complexType}}" VariableName="{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}
      ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isPrimitiveType}}>
         <Meta>{{#isPrimitiveType}}
             <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isPrimitiveType}}
@@ -58,12 +66,42 @@ format: {{format}}{{/format}}
       <Output>
         <Data Label="Http Status" VariableName="Http Status">
           <Meta>
-            <Type>int</Type>
+            <Type>String</Type>
           </Meta>
         </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return {{code}};</CodeSnippet>
+        <CodeSnippet Type="Java">return "{{code}} {{message}}";</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="get Payload" Name="getPayload" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="1" Label="Document" VariableName="document1" ReferenceName="Document" ReferencePath="xact.templates"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">{{^dataType}}return new xact.templates.Document();{{/dataType}}{{#dataType}}xact.templates.Document body;{{^isArray}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions());{{/isArray}}{{#isArray}}
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(getTroubleTicket());
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions());{{/isArray}}
+
+return body;{{/dataType}}
+</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Validate" Name="validate" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="2" Label="OAS Validation Result" VariableName="oASValidationResult2" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+{{#dataType}}{{>validation}}{{/dataType}}
+return result.getResult();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

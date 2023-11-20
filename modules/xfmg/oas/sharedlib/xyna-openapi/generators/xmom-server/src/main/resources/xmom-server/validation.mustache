@@ -1,0 +1,70 @@
+// validate {{#classname}}{{classname}}.{{/classname}}{{paramName}}{{^paramName}}{{dataType}}{{/paramName}} of type {{dataType}}{{#baseType}} with baseType {{baseType}}{{/baseType}}
+{{#isPrimitiveType}}{{^isContainer}}try {
+    var primObj_{{-index}} = {{#isInteger}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{classname}}.{{paramName}}", (Integer)get("{{paramName}}"));{{/isInteger}}{{#isLong}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{classname}}.{{paramName}}", (Long)get("{{paramName}}"));{{/isLong}}{{#isDouble}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{classname}}.{{paramName}}", (Double)get("{{paramName}}"));{{/isDouble}}{{#isNumber}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{classname}}.{{paramName}}", (Double)get("{{paramName}}"));{{/isNumber}}{{#isFloat}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{classname}}.{{paramName}}", ((Double)get("{{paramName}}")).floatValue());{{/isFloat}}{{#isString}}
+    new com.gip.xyna.openapi.OpenAPIStringType("{{classname}}.{{paramName}}", (String)get("{{paramName}}"));{{/isString}}{{#isDateTime}}
+    new com.gip.xyna.openapi.OpenAPIDateTimeType("{{classname}}.{{paramName}}", (String)get("{{paramName}}"));{{/isDateTime}}{{#isDate}}
+    new com.gip.xyna.openapi.OpenAPIDateType("{{classname}}.{{paramName}}", (String)get("{{paramName}}"));{{/isDate}}{{#exclusiveMinimum}}
+    primObj_{{-index}}.setExcludeMin();{{/exclusiveMinimum}}{{#exclusiveMaximum}}
+    primObj_{{-index}}.setExcludeMax();{{/exclusiveMaximum}}{{#isString}}{{#dataFormat}}
+    primObj_{{-index}}.setFormat("{{dataFormat}}");{{/dataFormat}}{{/isString}}{{#required}}
+    primObj_{{-index}}.setRequired();{{/required}}{{#nullable}}
+    primObj_{{-index}}.setNullable();{{/nullable}}
+
+    result.getErrorMessages().addAll(primObj_{{-index}}.checkValid());
+}
+catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate {{classname}}.{{paramName}}");
+}
+{{/isContainer}}{{#isArray}}try {
+    var primObjList_{{-index}} = (List&lt;{{datatype}}&gt;)this.get("{{paramName}}");
+    if (primObjList_{{-index}} != null) {
+        for (var l : primObjList_{{-index}}) {
+            var item = {{#items.isInteger}}
+            new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{classname}}.{{paramName}}", l);{{/items.isInteger}}{{#items.isLong}}
+            new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{classname}}.{{paramName}}", l);{{/items.isLong}}{{#items.isDouble}}
+            new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{classname}}.{{paramName}}", l);{{/items.isDouble}}{{#items.isNumber}}
+            new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{classname}}.{{paramName}}", l);{{/items.isNumber}}{{#items.isFloat}}
+            new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{classname}}.{{paramName}}", l.floatValue());{{/items.isFloat}}{{#items.isString}}
+            new com.gip.xyna.openapi.OpenAPIStringType("{{classname}}.{{paramName}}", l);{{/items.isString}}{{#items.isDateTime}}
+            new com.gip.xyna.openapi.OpenAPIDateTimeType("{{classname}}.{{paramName}}", l);{{/items.isDateTime}}{{#items.isDate}}
+            new com.gip.xyna.openapi.OpenAPIDateType("{{classname}}.{{paramName}}", l);{{/items.isDate}}{{#exclusiveMinimum}}
+            item.setExcludeMin();{{/exclusiveMinimum}}{{#exclusiveMaximum}}
+            item.setExcludeMax();{{/exclusiveMaximum}}{{#items.isString}}{{#dataFormat}}
+            item.setFormat("{{dataFormat}}");{{/dataFormat}}{{/items.isString}}{{#items.required}}
+            item.setRequired();{{/items.required}}{{#items.nullable}}
+            item.setNullable();{{/items.nullable}}
+
+            result.getErrorMessages().addAll(item.checkValid());
+        }
+    } else { {{#required}}
+        result.getErrorMessages().add("{{classname}}.{{paramName}} List of type {{dataType}} is required but is null.");{{/required}}{{^isNullable}}
+        result.getErrorMessages().add("{{classname}}.{{paramName}} List of type {{dataType}} must not be null.");{{/isNullable}}
+    }
+}
+catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate {{classname}}.{{paramName}}");
+}
+{{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}try {
+    var cplxObj_{{-index}} = this.get("{{^isArray}}{{paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}");
+    if (cplxObj_{{-index}} != null) { {{^isArray}}
+        var cplxValidationResult_{{-index}} = (({{complexType}})cplxObj_{{-index}}).validate();
+        result.getErrorMessages().addAll(cplxValidationResult_{{-index}}.getErrorMessages());{{/isArray}}{{#isArray}}
+        var cplxObjList_{{-index}} = (List&lt;{{complexType}}&gt;)cplxObj_{{-index}};
+        for (var l : cplxObjList_{{-index}}) {
+            var lValidationResult = l.validate();
+            result.getErrorMessages().addAll(lValidationResult.getErrorMessages());
+        }{{/isArray}}
+    } else { {{#required}}
+        result.getErrorMessages().add("{{classname}}.{{^isArray}}{{paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}} of type {{complexType}} is required but is null.");{{/required}}{{^isNullable}}
+        result.getErrorMessages().add("{{classname}}.{{^isArray}}{{paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}} of type {{complexType}} must not be null.");{{/isNullable}}
+    }
+}
+catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate {{classname}}.{{^isArray}}{{paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}");
+}
+{{/isPrimitiveType}}

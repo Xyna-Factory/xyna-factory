@@ -1,7 +1,7 @@
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" 
  TypeName="{{classname}}" 
  TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"
- Label="{{name}}" IsAbstract="false"
+ Label="{{name}}" IsAbstract="false" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype"
 >
     <Meta>
         <IsServiceGroupOnly>false</IsServiceGroupOnly>{{#description}}
@@ -21,4 +21,16 @@ requiered: {{required}}, nullable: {{isNullable}}
         </Meta>
     </Data>
 {{/vars}}
+    <Service Label="TroubleTicket" TypeName="TroubleTicket">
+        <Operation Label="Validate" Name="validate" IsStatic="false">
+            <Input>
+            </Input>
+            <Output>
+                <Data ID="1" Label="OAS Validation Result" VariableName="oASValidationResult1" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+            </Output>
+            <SourceCode>
+                <CodeSnippet Type="Java">{{>validation}}</CodeSnippet>
+            </SourceCode>
+        </Operation>
+    </Service>
 </DataType>

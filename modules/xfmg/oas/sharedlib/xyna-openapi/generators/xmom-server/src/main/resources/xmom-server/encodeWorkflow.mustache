@@ -9,35 +9,26 @@
       <Data ID="3" Label="Http Response" VariableName="httpResponse3" 
       ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype"/>
     </Output>
-    <ServiceReference ID="6" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
-      <Source RefID="5"/>
-      <Target RefID="5"/>
+    <ServiceReference ID="5" Label="{{httpMethod}} {{path}} Response" 
+    ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response">
+      <Source RefID="4"/>
+      <Target RefID="4"/>
     </ServiceReference>
-    <Function ID="5" Label="Write JSON with Options">
-      <Source RefID="6">
+    <Function ID="4" Label="get Payload">
+      <Source RefID="5">
       </Source>
       <Source RefID="12">
       </Source>
-      <Source RefID="7">
-      </Source>
+      <Target RefID="5">
+      </Target>
       <Target RefID="6">
       </Target>
-      <Target RefID="4">
-      </Target>
-      <Invoke ServiceID="6" Operation="writeJSONWithOptions">
+      <Invoke ServiceID="5" Operation="getPayload">
         <Source RefID="12">
-          <Meta>
-            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</ExpectedType>
-          </Meta>
-        </Source>
-        <Source RefID="7">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
         </Source>
       </Invoke>
-      <Receive ServiceID="6">
-        <Target RefID="4">
+      <Receive ServiceID="5">
+        <Target RefID="6">
         </Target>
       </Receive>
     </Function>
@@ -52,7 +43,7 @@
       <Input>
         <Data ID="10" VariableName="document10" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
         </Data>
-        <Source RefID="4">
+        <Source RefID="6">
         </Source>
       </Input>
       <Output>
@@ -65,21 +56,10 @@
       <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
       <Mapping>%2%.statusCode=%0%.getStatusCode()</Mapping>
     </Mappings>
-    <Data ID="4" VariableName="document4" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
-    </Data>
-    <Data ID="7" VariableName="jSONWritingOptions7" ReferenceName="JSONWritingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter">
-      <Data VariableName="listToMapTransformation" IsList="true" ReferenceName="ListToMapTransformation" ReferencePath="xfmg.xfctrl.datamodel.json.parameter">
-      </Data>
-      <Data VariableName="memberSubstitution" IsList="true" ReferenceName="MemberSubstitution" ReferencePath="xfmg.xfctrl.datamodel.json.parameter">
-      </Data>
-      <Data VariableName="useLabels">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>true</Value>
-      </Data>
-    </Data>
     <Data ID="8" VariableName="httpResponse8" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
+    </Data>
+    <Data ID="6" VariableName="document83" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
+      <Source RefID="4"/>
     </Data>
     <Assign ID="1">
       <Source RefID="8">

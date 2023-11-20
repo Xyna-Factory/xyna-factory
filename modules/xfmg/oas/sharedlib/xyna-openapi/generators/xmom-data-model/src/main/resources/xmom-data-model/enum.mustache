@@ -1,7 +1,7 @@
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
  TypeName="{{classname}}"
  TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"
- Label="{{name}}" IsAbstract="false"
+ Label="{{name}}" IsAbstract="false" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype"
 >
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
@@ -14,11 +14,21 @@
       <Documentation>values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}</Documentation>
     </Meta>
   </Data>
-  {{#allowableValues}}<Service Label="{{classname}}" TypeName="{{classname}}">{{#values}}
+  <Service Label="{{classname}}" TypeName="{{classname}}">
+   <Operation Label="Validate" Name="validate" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" VariableName="oASValidationResult1" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">{{>enumValidation}}</CodeSnippet>
+      </SourceCode>
+    </Operation>{{#allowableValues}}{{#values}}
     <Operation Label="get {{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" Name="get{{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" IsStatic="false">
       <Input/>
       <Output>
-        <Data ID="11" Label="{{classname}}" VariableName="varName" ReferenceName="{{classname}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"/>
+        <Data ID="2" Label="{{classname}}" VariableName="varName" ReferenceName="{{classname}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return new {{classname}}(&quot;{{.}}&quot;);</CodeSnippet>
