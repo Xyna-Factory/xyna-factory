@@ -33,7 +33,7 @@ TypeName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}
     xact.templates.Document document;
     document = xact.http.HTTPService.receiveDocument(hTTPConnection1);
     List&lt;{{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}&gt; body = new ArrayList&lt; &gt;();
-    List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}(), null);
+    List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions());
     for (GeneralXynaObject obj : parsedList) {
         body.add(({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}})obj);
     }
@@ -42,7 +42,7 @@ TypeName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}
     xact.templates.Document document;
     document = xact.http.HTTPService.receiveDocument(hTTPConnection1);
     {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}} body;
-    body = ({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}}(), null);
+    body = ({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}}(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions());
     responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(body);{{/isModel}}{{/isArray}}{{#hasHeaders}}
 
     for (xact.http.HeaderField field : header3.getHeaderField()) { {{#responseHeaders}}
