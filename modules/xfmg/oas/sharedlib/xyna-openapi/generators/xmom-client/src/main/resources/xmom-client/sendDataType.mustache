@@ -34,7 +34,7 @@ format: {{format}}{{/format}}
       </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">{{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}{{#bodyParams}}xact.templates.Document body;
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}, new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions());
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(), new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions());
 
 return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/bodyParams}}{{/hasBodyParam}}
 </CodeSnippet>
