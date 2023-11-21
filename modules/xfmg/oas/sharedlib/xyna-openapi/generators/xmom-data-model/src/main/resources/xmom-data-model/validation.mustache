@@ -9,7 +9,8 @@ result.setErrorMessages(new ArrayList&lt;String&gt;());
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{classname}}.{{name}}", (Long)get("{{name}}"));{{/isLong}}{{#isDouble}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{classname}}.{{name}}", (Double)get("{{name}}"));{{/isDouble}}{{#isNumber}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{classname}}.{{name}}", (Double)get("{{name}}"));{{/isNumber}}{{#isFloat}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{classname}}.{{name}}", ((Double)get("{{name}}")).floatValue());{{/isFloat}}{{#isString}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{classname}}.{{name}}", ((Double)get("{{name}}")).floatValue());{{/isFloat}}{{#isBoolean}}
+    new com.gip.xyna.openapi.OpenAPIBooleanType("{{classname}}.{{name}}", (Boolean)get("{{name}}"));{{/isBoolean}}{{#isString}}
     new com.gip.xyna.openapi.OpenAPIStringType("{{classname}}.{{name}}", (String)get("{{name}}"));{{/isString}}{{#isDateTime}}
     new com.gip.xyna.openapi.OpenAPIDateTimeType("{{classname}}.{{name}}", (String)get("{{name}}"));{{/isDateTime}}{{#isDate}}
     new com.gip.xyna.openapi.OpenAPIDateType("{{classname}}.{{name}}", (String)get("{{name}}"));{{/isDate}}{{#exclusiveMinimum}}
@@ -54,7 +55,7 @@ catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{classname}}.{{name}}");
 }
 {{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}try {
-    var cplxObj_{{-index}} = this.get("{{name}}");
+    var cplxObj_{{-index}} = this.get("{{#lambda.camelcase}}{{name}}{{/lambda.camelcase}}");
     if (cplxObj_{{-index}} != null) { {{^isArray}}
         var cplxValidationResult_{{-index}} = (({{complexType}})cplxObj_{{-index}}).validate();
         result.getErrorMessages().addAll(cplxValidationResult_{{-index}}.getErrorMessages());{{/isArray}}{{#isArray}}

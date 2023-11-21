@@ -120,7 +120,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
      * the client generator
      */
     languageSpecificPrimitives = new HashSet<String>(
-      Arrays.asList("boolean", "integer", "long", "double", "float", "string", "DateTime", "date", "password", "byte", "binary", "URI")
+      Arrays.asList("boolean", "integer", "long", "double", "float", "number", "string", "DateTime", "date", "password", "byte", "binary", "URI")
     );
 
     typeMapping.clear();
@@ -129,6 +129,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     typeMapping.put("long", "Long");
     typeMapping.put("double", "Double");
     typeMapping.put("float", "Double");
+    typeMapping.put("number", "Double");
     typeMapping.put("string", "String");
     typeMapping.put("DateTime", "String");
     typeMapping.put("date", "String");

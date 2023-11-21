@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class OpenAPIBaseType {
+
     private final String name;
     private boolean isNullable;
     private boolean isRequired;

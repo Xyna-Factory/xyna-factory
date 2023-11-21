@@ -5,7 +5,8 @@
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{classname}}.{{paramName}}", (Long)get("{{paramName}}"));{{/isLong}}{{#isDouble}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{classname}}.{{paramName}}", (Double)get("{{paramName}}"));{{/isDouble}}{{#isNumber}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{classname}}.{{paramName}}", (Double)get("{{paramName}}"));{{/isNumber}}{{#isFloat}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{classname}}.{{paramName}}", ((Double)get("{{paramName}}")).floatValue());{{/isFloat}}{{#isString}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{classname}}.{{paramName}}", ((Double)get("{{paramName}}")).floatValue());{{/isFloat}}{{#isBoolean}}
+    new com.gip.xyna.openapi.OpenAPIBooleanType("{{classname}}.{{paramName}}", (Boolean)get("{{paramName}}"));{{/isBoolean}}{{#isString}}
     new com.gip.xyna.openapi.OpenAPIStringType("{{classname}}.{{paramName}}", (String)get("{{paramName}}"));{{/isString}}{{#isDateTime}}
     new com.gip.xyna.openapi.OpenAPIDateTimeType("{{classname}}.{{paramName}}", (String)get("{{paramName}}"));{{/isDateTime}}{{#isDate}}
     new com.gip.xyna.openapi.OpenAPIDateType("{{classname}}.{{paramName}}", (String)get("{{paramName}}"));{{/isDate}}{{#exclusiveMinimum}}
@@ -50,7 +51,7 @@ catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{classname}}.{{paramName}}");
 }
 {{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}try {
-    var cplxObj_{{-index}} = this.get("{{^isArray}}{{#lambda.camelcase}}{{paramName}}{{^paramName}}{{complexType}}{{/paramName}}{{/lambda.camelcase}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}");
+    var cplxObj_{{-index}} = this.get("{{#lambda.camelcase}}{{^isArray}}{{paramName}}{{^paramName}}{{complexType}}{{/paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}{{/lambda.camelcase}}");
     if (cplxObj_{{-index}} != null) { {{^isArray}}
         var cplxValidationResult_{{-index}} = (({{complexType}})cplxObj_{{-index}}).validate();
         result.getErrorMessages().addAll(cplxValidationResult_{{-index}}.getErrorMessages());{{/isArray}}{{#isArray}}
