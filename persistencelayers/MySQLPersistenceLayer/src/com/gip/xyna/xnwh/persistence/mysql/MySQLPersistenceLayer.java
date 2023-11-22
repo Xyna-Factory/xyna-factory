@@ -127,7 +127,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     NUMBER, FLOAT, TIME, TEXT_ENCODED, BINARY, OTHER;
 
     /**
-     * gibt zurück, ob der übergebene typ größergleich ist. OTHER.isCompatibleTo(TIME) = false
+     * gibt zurÃ¼ck, ob der Ã¼bergebene typ grÃ¶ÃŸergleich ist. OTHER.isCompatibleTo(TIME) = false
      * NUMBER.isCompatibleTo(TEXT_ENCODED) = true
      * @param otherType
      * @return
@@ -208,7 +208,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
     /**
-     * gibt zu einem typ alle damit kompatiblen typen zurück (die "größer" sind). beispiel: BLOB.getCompatibleTypes =>
+     * gibt zu einem typ alle damit kompatiblen typen zurÃ¼ck (die "grÃ¶ÃŸer" sind). beispiel: BLOB.getCompatibleTypes =>
      * BLOB, MEDIUMBLOB, LONGBLOB
      * @return
      */
@@ -335,9 +335,12 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     } else {
       String poolname = handleParams(args);
       regularPoolDefinition = poolMgmt.getConnectionPoolDefinition(poolname);
-      if (!regularPoolDefinition.getType().equals(MySQLPoolType.POOLTYPE_IDENTIFIER)) {
+      if (regularPoolDefinition == null) {
+        throw new XNWH_GeneralPersistenceLayerException("Pool '" + poolname + "' for pliID " + String.valueOf(this.pliID) + " does not exist!");
+      }
+      if (!MySQLPoolType.POOLTYPE_IDENTIFIER.equals(regularPoolDefinition.getType())) {
         // only warn as it might be a custom poolType made for MySQL-PL usage
-        logger.warn("PoolType does not match the expected identifier!");
+        logger.warn("PoolType '" + regularPoolDefinition.getType() + "' for pool '" + poolname + "' does not match the expected identifier '" + MySQLPoolType.POOLTYPE_IDENTIFIER + "'!");
       }
       TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
       tcpp.size(0).name(tcpp.getName() + "_dedicated");
@@ -345,13 +348,13 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         poolMgmt.startAndAddConnectionPool(tcpp);
       } catch (NoConnectionAvailableException e) {
         // mimics behavior of @deprecated getInstance call
-        throw new RuntimeException(e);
+        throw new RuntimeException("No connection for pool '" + poolname + "' available.", e);
       }
       dedicatedPoolDefinition = poolMgmt.getConnectionPoolDefinition(tcpp.getName());
     }
     
     if (regularPoolDefinition == null) {
-      throw new XNWH_GeneralPersistenceLayerException("Pool does not exist!");
+      throw new XNWH_GeneralPersistenceLayerException("Pool for pliID " + String.valueOf(this.pliID) + " does not exist!");
     }
     
     
@@ -359,10 +362,10 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     url = regularPoolDefinition.getConnectstring();
     username = regularPoolDefinition.getUser();
     
-    // TODO echtes Pattern für den connect string benutzen
+    // TODO echtes Pattern fÃ¼r den connect string benutzen
     int i = url.lastIndexOf("/");
     if (i < 0 || i + 1 == url.length()) {
-      throw new XNWH_GeneralPersistenceLayerException("Connect string must contain a schema name.");
+      throw new XNWH_GeneralPersistenceLayerException("Connect string "' + url + '" for pliID " + String.valueOf(this.pliID) + " must contain a schema name.");
     }
     schemaName = url.substring(i + 1);
     if (schemaName.contains("?")) {
@@ -450,7 +453,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       } else if (key.equals(KEY_CONNECT_TIMEOUT)) {
         connectTimeout = Integer.valueOf(keyValue[1]);
         if (connectTimeout <= 0) {
-          connectTimeout = 60 * 60 * 24 * 365; //1 jahr. besser als sonderbehandlung für 0 unten
+          connectTimeout = 60 * 60 * 24 * 365; //1 jahr. besser als sonderbehandlung fÃ¼r 0 unten
         }
         if (logger.isDebugEnabled()) {
           logger.debug("set " + KEY_CONNECT_TIMEOUT + " to " + connectTimeout);
@@ -525,9 +528,9 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   private SQLErrorHandlingLogger sqlUtilsLoggerInfo;
   private SQLErrorHandlingLogger sqlUtilsLoggerCreateTable;
   
-  //basiert auf den inneren (echten) connections. cache räumt sich automatisch auf, wenn die connections nicht mehr verwendet werden
+  //basiert auf den inneren (echten) connections. cache rÃ¤umt sich automatisch auf, wenn die connections nicht mehr verwendet werden
   //auf die pooledconnection kann man den cache nicht basieren, weil dieser innen seine connection austauschen kann
-  //achtung: feature ist für ORACLE nicht einfach zu kopieren.
+  //achtung: feature ist fÃ¼r ORACLE nicht einfach zu kopieren.
   private WeakHashMap<Connection, StatementCache> statementCaches = new WeakHashMap<Connection, StatementCache>();
   private boolean useDurableStatementCache = false;
   private boolean zippedBlobs = false;
@@ -621,7 +624,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         case Other:  //Ursache nicht entscheidbar //FIXME derzeit immer PoolExhausted oder Other
         case NetworkUnreachable:
         case Timeout:
-          //Retries könnten erfolgreich sein
+          //Retries kÃ¶nnten erfolgreich sein
           throw new XNWH_RetryTransactionException(e);
         case PoolClosed:
         case URLInvalid:
@@ -640,7 +643,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
   private void closeSQLUtils(SQLUtils sqlUtils) throws PersistenceLayerException {
     if (useDurableStatementCache) {
-      sqlUtils.setStatementCache(null); //cache soll überleben (sqlUtils clearen den cache bei closeConnection())
+      sqlUtils.setStatementCache(null); //cache soll Ã¼berleben (sqlUtils clearen den cache bei closeConnection())
     }
     try {
       sqlUtils.closeConnection();
@@ -665,7 +668,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
     private MySqlType type; //uppercase
     private IndexType indexType;
-    private MySQLColumnInfo next; //verkettete Liste, wenn mehrere Einträge zu einer Tabellenspalte existieren
+    private MySQLColumnInfo next; //verkettete Liste, wenn mehrere EintrÃ¤ge zu einer Tabellenspalte existieren
     private Class<?> clazz;
 
     @Override
@@ -746,7 +749,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       Class<?> fieldType = f.getType();
       MySqlType type = javaTypeToMySQLType.get(fieldType);
       if (type == null) {
-        //Iteration über die Einträge in javaTypeToMySQLType: evtl. ist Storable-Column von einem bekannten Typ abgeleitet
+        //Iteration Ã¼ber die EintrÃ¤ge in javaTypeToMySQLType: evtl. ist Storable-Column von einem bekannten Typ abgeleitet
         for (Class<?> clazz : javaTypeToMySQLType.keySet()) {
           if (clazz.isAssignableFrom(fieldType)) {
             type = javaTypeToMySQLType.get(clazz);
@@ -820,7 +823,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
               "If Query to avoid duplicate Indexes is not set this determines how many charactes of a hash value should be appended to avoid duplicate Indexes");
 
 
-  // unterstützt nicht mehrere threads die die gleiche connection benutzen
+  // unterstÃ¼tzt nicht mehrere threads die die gleiche connection benutzen
   private class MySQLPersistenceLayerConnection
       implements
         PersistenceLayerConnection,
@@ -829,7 +832,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     private final ConnectionPool connectionPool;
     private final SQLUtils sqlUtils;
     private boolean closed = false;
-    //falls db connection über mehrere mysql-pl cons geteilt wird, stehen hier alle beteiligten aktiven mysqlPL-connections drin.
+    //falls db connection Ã¼ber mehrere mysql-pl cons geteilt wird, stehen hier alle beteiligten aktiven mysqlPL-connections drin.
     //beim close schliesst nur der letzte aus der liste die zugrundeliegende db-connection
     private final List<MySQLPersistenceLayerConnection> sharedConnections;
 
@@ -876,9 +879,9 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
     /**
-     * überprüfung ob tabelle existiert. falls nicht wird sie erstellt. falls ja, wird validiert, ob spalten fehlen oder
-     * geändert werden müssen. fehlende spalten werden hinzugefügt. vorhandene spalten werden geupdated, falls das ohne
-     * datenverlust möglich ist. (ansonsten wird ein fehler geworfen.)
+     * Ã¼berprÃ¼fung ob tabelle existiert. falls nicht wird sie erstellt. falls ja, wird validiert, ob spalten fehlen oder
+     * geÃ¤ndert werden mÃ¼ssen. fehlende spalten werden hinzugefÃ¼gt. vorhandene spalten werden geupdated, falls das ohne
+     * datenverlust mÃ¶glich ist. (ansonsten wird ein fehler geworfen.)
      */
     public <T extends Storable> void addTable(Class<T> klass, boolean forceWidening, Properties props)
         throws PersistenceLayerException {
@@ -963,17 +966,17 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     }
 
 
-//  Kürzungsregeln:
+//  KÃ¼rzungsregeln:
 //  (Bsp. Ziel: 62)
 //  abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz_012345678901234567890123456789012345678901234567890123456789_idx  ==> 117 Zeichen 
 //
 //      abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz_0123456789012345678901234567890123456789012345678901_idx  ==> 109 Zeichen
-//      1. Kürzen bis beide gleich lang (Falls es währenddessen schon passt: aufhören)
+//      1. KÃ¼rzen bis beide gleich lang (Falls es wÃ¤hrenddessen schon passt: aufhÃ¶ren)
 //
 //      abcdefghijklmnopqrstuvwxyzab_01234567890123456789012345678_idx  ==> 62 Zeichen
-//      2. Beide gleich kürzen bis es passt
+//      2. Beide gleich kÃ¼rzen bis es passt
     
-  //Maximale Länge des Hashs, bei dem es noch Sinn macht zu modulon. Alles darüber übertrifft Integer.MAX_VALUE und ergibt somit keinen Sinn mehr
+  //Maximale LÃ¤nge des Hashs, bei dem es noch Sinn macht zu modulon. Alles darÃ¼ber Ã¼bertrifft Integer.MAX_VALUE und ergibt somit keinen Sinn mehr
   private final int MAX_HASH = (int)(Math.log(Integer.MAX_VALUE)/Math.log(36));
 
   private String createIndexName(String tableName, String columnName, boolean pk) {
@@ -991,11 +994,11 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       int toShortenTableName;
       int toShortenColumnName;
       if(tablePart.length() > columnPart.length()) {
-        toShortenTableName = Math.min(toShorten, tablePart.length() - columnPart.length()); //Auf gleiche Länge
+        toShortenTableName = Math.min(toShorten, tablePart.length() - columnPart.length()); //Auf gleiche LÃ¤nge
         toShortenTableName += (toShorten - toShortenTableName) / 2; //Rest
         toShortenColumnName = toShorten - toShortenTableName;
       } else {
-        toShortenColumnName = Math.min(toShorten, columnPart.length() - tablePart.length()); //Auf gleiche Länge
+        toShortenColumnName = Math.min(toShorten, columnPart.length() - tablePart.length()); //Auf gleiche LÃ¤nge
         toShortenColumnName += (toShorten - toShortenColumnName) / 2; //Rest
         toShortenTableName = toShorten - toShortenColumnName;
       }
@@ -1014,7 +1017,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         }
       } else { 
         String hash = "";
-        if(HASH_LENGTH <= MAX_HASH) { //Falls HASH_LENGTH Integer.MAX_VALUE übertrifft, gibte es keinen Sinn mehr zu modulon
+        if(HASH_LENGTH <= MAX_HASH) { //Falls HASH_LENGTH Integer.MAX_VALUE Ã¼bertrifft, gibte es keinen Sinn mehr zu modulon
           int mod = (int) Math.pow(36, HASH_LENGTH);
           hash = numberToStringUsingAllChars(columnName.hashCode() % mod);
         } else {
@@ -1065,7 +1068,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
     private void executeDDL(String ddl) {
-      //Ausführen des Statements ddl und Warn-Log, falls dies nicht erfolgreich war
+      //AusfÃ¼hren des Statements ddl und Warn-Log, falls dies nicht erfolgreich war
       boolean created = false;
       try {
         sqlUtils.executeDDL(ddl, null);
@@ -1192,7 +1195,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
               if (columnMap.get(col) == null ||
                   columnMap.get(col).indexType != colInfo.indexType ||
                   columnMap.get(col).type != colInfo.type) {
-                colInfo.next = columnMap.get(col); //evtl. vorherige Einträge aufheben: es kann mehrere Einträge ...
+                colInfo.next = columnMap.get(col); //evtl. vorherige EintrÃ¤ge aufheben: es kann mehrere EintrÃ¤ge ...
                 //... in "colInfos" zu einem Eintrag in "cols" geben 
                 columnMap.put(col, colInfo);
               }
@@ -1206,14 +1209,14 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
             sqlUtils.executeDDL("ALTER TABLE " + tableNameWithSchemaPrefix + "\n" + addColumnString.toString(), null);
           }
           
-          //indizes überprüfen
+          //indizes Ã¼berprÃ¼fen
           for (Column column : cols) {
             boolean isPk = column.name().equals(persistable.primaryKey());
             IndexType javaIndexType = isPk ? IndexType.UNIQUE : column.index();
 
             MySQLColumnInfo colInfo = columnMap.get(column);
             if (colInfo == null) {
-              //keine Daten für den Index bislang, deswegen evtl. neu bauen
+              //keine Daten fÃ¼r den Index bislang, deswegen evtl. neu bauen
               if (javaIndexType != IndexType.NONE) {
                 String indexName = createIndexName(tableNameWithSchemaPrefix, column.name(), isPk);
                 try {
@@ -1236,7 +1239,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
               continue;
             }
 
-            //es gibt mindestens einen Index für diese Spalte, dieser hat einen Namen
+            //es gibt mindestens einen Index fÃ¼r diese Spalte, dieser hat einen Namen
             String indexName = createIndexName(tableNameWithSchemaPrefix, column.name(), isPk);
             try {
               IndexModification mod = checkIndex(column, colInfo, javaIndexType, indexName, tableNameWithSchemaPrefix);
@@ -1274,13 +1277,13 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
           Column col = collision.getColumn();
 
           if (!isView(tableNameWithSchemaPrefix)) {
-            //indizes überprüfen
+            //indizes Ã¼berprÃ¼fen
               boolean isPk = col.name().equals(collision.getPersi().primaryKey());
               IndexType javaIndexType = isPk ? IndexType.UNIQUE : col.index();
 
               MySQLColumnInfo colInfo = columnMap.get(col);
               if (colInfo == null) {
-                //keine Daten für den Index bislang, deswegen evtl. neu bauen
+                //keine Daten fÃ¼r den Index bislang, deswegen evtl. neu bauen
                 if (javaIndexType != IndexType.NONE) {
                   String indexName = createIndexName(tableNameWithSchemaPrefix, col.name(), isPk);
                   try {
@@ -1303,7 +1306,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
                 continue;
               }
 
-              //es gibt mindestens einen Index für diese Spalte, dieser hat einen Namen
+              //es gibt mindestens einen Index fÃ¼r diese Spalte, dieser hat einen Namen
               String indexName = createIndexName(tableNameWithSchemaPrefix, col.name(), isPk);
               try {
                 alterIndex(col, colInfo, javaIndexType, indexName, tableNameWithSchemaPrefix, collision.getIndexModification());
@@ -1606,7 +1609,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       //TODO merging von objekten mit dem gleichen pk
       
       final T firstElement = storableCollection.iterator().next();
-      //gibt bytearray als string zurück
+      //gibt bytearray als string zurÃ¼ck
       ResultSetReader<Object> resultSetReaderForPK = getResultSetReaderForPrimaryKey(firstElement.getPrimaryKey());
       Column[] columns = firstElement.getColumns();
       final Column colPK = getColumnForPrimaryKey(firstElement);
@@ -1672,22 +1675,22 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       while (it.hasNext()) {
         T s = it.next();
         //transformation des pks, die im set existingPKs verwendet wird. 
-        //(TODO etwas umständlich, das könnte man refactorn. oder man könnte die unformatierten pks 
-        //vergleichen, dann müsste man im bytearray fall den comparator korrekt überschreiben)
+        //(TODO etwas umstÃ¤ndlich, das kÃ¶nnte man refactorn. oder man kÃ¶nnte die unformatierten pks 
+        //vergleichen, dann mÃ¼sste man im bytearray fall den comparator korrekt Ã¼berschreiben)
         com.gip.xyna.utils.db.Parameter tempPara = new com.gip.xyna.utils.db.Parameter();
         addToParameter(tempPara, colPK, s.getPrimaryKey(), s);
         Object transformedPk = tempPara.getParameter(1);
         if (existingPKs.contains(transformedPk)) {
           //update
           com.gip.xyna.utils.db.Parameter paras = createParasForInsertAndUpdate(columns, s);
-          //parameter für whereclause adden
+          //parameter fÃ¼r whereclause adden
           addToParameter(paras, colPK, s.getPrimaryKey(), s);
           updateParas.add(paras);
         } else {
           com.gip.xyna.utils.db.Parameter paras = createParasForInsertAndUpdate(columns, s);
           
           insertParas.add(paras);
-          existingPKs.add(transformedPk); //damit nicht später in der gleichen collection erneut insert versucht wird
+          existingPKs.add(transformedPk); //damit nicht spÃ¤ter in der gleichen collection erneut insert versucht wird
         }
       }
       try {
@@ -1712,7 +1715,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       try {
         paras.addParameter(val); //erkennt strings, zahlen etc
       } catch (UnexpectedParameterException e) {
-        //toString oder analoge repräsentation verwenden
+        //toString oder analoge reprÃ¤sentation verwenden
         if (val.getClass().isArray()) {
           Class<?> componentType = val.getClass().getComponentType();
           if (componentType == byte.class) {
@@ -1905,10 +1908,10 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
     public <T extends Storable> boolean persistObject(T storable) throws PersistenceLayerException {
 
-      //FIXME dieser Code ist aus OraclePersistenceLayer kopiert. Aufgrund der Ähnlichkeiten sollte er
+      //FIXME dieser Code ist aus OraclePersistenceLayer kopiert. Aufgrund der Ã„hnlichkeiten sollte er
       //aus beiden extrahiert werden
       ensureOpen();
-      //überprüfen, ob objekt bereits in db ist
+      //Ã¼berprÃ¼fen, ob objekt bereits in db ist
       String sqlString =
           "select count(*) from " + storable.getTableName().toLowerCase() + " where "
               + Storable.getPersistable(storable.getClass()).primaryKey() + " = ?";
@@ -1942,7 +1945,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
           //solange versuchen, bis insert oder update erfolgreich ist.
           if (updateOrInsert == UpdateInsert.insert) {
             //TODO performance: hier kann man die erstellten parameter und das statement cachen, wenn die whileschleife hier mehrfach vorbei kommt.
-            //                  das passiert aber nicht oft, dass hier die while schleife mehrfach den insert-fall durchläuft.
+            //                  das passiert aber nicht oft, dass hier die while schleife mehrfach den insert-fall durchlÃ¤uft.
             //insert
             Column[] columns = storable.getColumns();
 
@@ -1962,21 +1965,21 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
                 //Duplicate entry 'corrT_SingleS1_eda1c56f-31' for key 'seriesinformation_correlationId_idx'
 
 
-                //Leider werden wegen Einführung von jdbc4 unterschiedliche Exceptions geworfen,
+                //Leider werden wegen EinfÃ¼hrung von jdbc4 unterschiedliche Exceptions geworfen,
                 //je nachdem, ob Java 5 oder 6 verwendet wird.
                 //Java5: com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException
                 //Java6: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException
                 //Da hier mit Java 5 kompiliert werden soll, kann leider kein instanceof verwendet 
                 //werden, da es sonst die Fehlermeldung "The type java.sql.SQLIntegrityConstraintViolationException 
                 //cannot be resolved. It is indirectly referenced from required .class files" gibt.
-                //Daher nun Test über den Classname
+                //Daher nun Test Ã¼ber den Classname
                 String className = sqlEx.getClass().getSimpleName();
 
                 boolean uniqueConstraintViolated = className.contains("MySQLIntegrityConstraintViolationException");
                 if (uniqueConstraintViolated) {
                   cnt = sqlUtils.queryInt(sqlString, parasForCountQuery);
                   if (cnt == 0) {
-                    //entweder bereits wieder gelöscht (unwahrscheinlich) oder die uniqueconstraintverletzung ist von einer anderen spalte bedingt
+                    //entweder bereits wieder gelÃ¶scht (unwahrscheinlich) oder die uniqueconstraintverletzung ist von einer anderen spalte bedingt
                     //updateOrInsert weiterhin auf insert
                     if (++insertRetryCounter > MAX_INSERT_RETRY_COUNTER) {
                       throw e;
@@ -1998,7 +2001,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
             String updateStmt = createUpdateStatement(columns, storable);
             com.gip.xyna.utils.db.Parameter paras = createParasForInsertAndUpdate(columns, storable);
-            //parameter für whereclause adden
+            //parameter fÃ¼r whereclause adden
             addToParameter(paras, colPK, storable.getPrimaryKey(), storable);
 
             sqlUtils.cacheStatement(updateStmt);
@@ -2092,14 +2095,14 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
       String sqlQuery = query.getQuery().getSqlString();
 
-      //Umwandlung zu rlike, da MariaDB regexp_like() nicht unterstützt
+      //Umwandlung zu rlike, da MariaDB regexp_like() nicht unterstÃ¼tzt
       sqlQuery = modifyFunction(sqlQuery, PersistenceExpressionVisitors.QueryFunctionStore.REGEXP_LIKE_SQL_FUNCTION, "%Column% RLIKE (%Params%)" );
 
       //TODO cachen
       if (maxRows == 1 && transactionProperties != null
           && transactionProperties.contains(TransactionProperty.selectRandomElement())) {
         if (!sqlQuery.toLowerCase().contains("order by")) { //else altes order by beibehalten
-          if (sqlQuery.toLowerCase().endsWith("for update")) { //vor das "for update" einfügen
+          if (sqlQuery.toLowerCase().endsWith("for update")) { //vor das "for update" einfÃ¼gen
             sqlQuery =
                 sqlQuery.substring(0, sqlQuery.length() - "for update".length())
                     + " order by rand() limit 0, 1 for update";
@@ -2108,7 +2111,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
           }
         }
       } else if (maxRows > -1 && maxRows < Integer.MAX_VALUE) {
-        //beschränkung des ergebnisses. das ist das einzige mysql spezifische
+        //beschrÃ¤nkung des ergebnisses. das ist das einzige mysql spezifische
         //limit ist vor "for update", aber nach allem anderen.
         //http://dev.mysql.com/doc/refman/5.0/en/select.html
         sqlQuery = sqlQuery.trim();
@@ -2278,7 +2281,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   private <T extends Storable<?>> int getColumnSize(Column col, Class<T> clazz) {
     MySQLColumnInfo colInfo = columnMap.get(col);
     if (colInfo == null) {
-      //TODO cache befüllen oder sicherstellen, dass dieser fall nicht unerwartet auftritt.
+      //TODO cache befÃ¼llen oder sicherstellen, dass dieser fall nicht unerwartet auftritt.
       if (logger.isTraceEnabled()) {
         logger.trace("Column " + col.name() + " of " + Storable.getPersistable(clazz).tableName() + " not found in colInfo cache. (classloader=" + clazz.getClassLoader() + ")");
       }
