@@ -22,7 +22,7 @@
   <Data Label="Body" ReferenceName="Document" ReferencePath="xact.templates" VariableName="body"/>
   <Data Label="Status Code" VariableName="statusCode">
     <Meta>
-      <Type>int</Type>
+      <Type>String</Type>
     </Meta>
   </Data>
 </DataType>
