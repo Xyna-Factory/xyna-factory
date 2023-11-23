@@ -67,7 +67,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   @Override
   public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter2) {
     String swagger = applicationGenerationParameter2.getOpenAPISpecificationPath();
-    String target = "/tmp/resultFile";
+    String target = "/tmp/Order_" + correlatedXynaOrder.getId();
 
     try {
       OpenAPIGenerator.main(new String[] {"validate", "-i", swagger, "--recommend"});
