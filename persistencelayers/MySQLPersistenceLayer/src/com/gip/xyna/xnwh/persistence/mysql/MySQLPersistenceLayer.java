@@ -365,7 +365,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     // TODO echtes Pattern für den connect string benutzen
     int i = url.lastIndexOf("/");
     if (i < 0 || i + 1 == url.length()) {
-      throw new XNWH_GeneralPersistenceLayerException("Connect string "' + url + '" for pliID " + String.valueOf(this.pliID) + " must contain a schema name.");
+      throw new XNWH_GeneralPersistenceLayerException("Connect string '" + url + "' for pliID " + String.valueOf(this.pliID) + " must contain a schema name.");
     }
     schemaName = url.substring(i + 1);
     if (schemaName.contains("?")) {
