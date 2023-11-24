@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Application applicationName="OAS_Base" comment="Build after checkin LF. Base application, required by applications generated from OpenAPI Specification" factoryVersion="9.0.2.3" versionName="0.1.8" xmlVersion="1.1">
+ --><Application applicationName="OAS_Base" comment="First build with provider validation, decode and encode moved to the Base app." factoryVersion="9.0.2.3" versionName="0.1.9" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -24,6 +24,10 @@
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>
         <VersionName>1.2.0</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>XynaPropertyMgmt</ApplicationName>
+        <VersionName>1.0.1</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -56,7 +60,49 @@
       <FqName>xfmg.oas.generation.ApplicationGenerationParameter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.ValidationError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.datatype.provider.RequestParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.datatype.provider.ResponseParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.provider.ValidationErrorResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.exception.ValidationException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+        <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.wf.OASTypeValidation</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.wf.provider.Decode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.wf.provider.Encode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
   </XMOMEntries>
+  <XynaProperties>
+    <XynaProperty implicitDependency="false">
+      <Name>xmcp.oas.validation.request_validation</Name>
+      <Value>400 Bad Request</Value>
+    </XynaProperty>
+    <XynaProperty implicitDependency="false">
+      <Name>xmcp.oas.validation.response_validation</Name>
+      <Value>500 Internal Server Error</Value>
+    </XynaProperty>
+  </XynaProperties>
   <SharedLibs>
     <SharedLib implicitDependency="false">
       <SharedLib>xyna-openapi</SharedLib>

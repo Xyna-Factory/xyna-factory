@@ -74,7 +74,7 @@ public class OpenAPIStringType extends OpenAPIPrimitiveType<String> {
 
         if (!this.checkPattern()) {
             errorMessages.add(String.format(
-                "%s: Invalid pattern, \"%s\" does not match \"%s\"", this.getName(), this.getValue(), this.pattern)
+                "%s: Invalid format, value \"%s\" does not match format \"%s\"", this.getName(), this.getValue(), this.format)
             );
         }
 

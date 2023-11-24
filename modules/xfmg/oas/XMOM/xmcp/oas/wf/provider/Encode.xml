@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!----><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Encode" TypeName="Encode" TypePath="xmcp.oas.wf.provider" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Encode" Name="Encode">
+    <Input>
+      <Data ID="14" Label="Response Parameter" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="responseParameter14"/>
+    </Input>
+    <Output>
+      <Data ID="127" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse127"/>
+    </Output>
+    <ServiceReference ID="2242" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
+      <Source RefID="2241"/>
+      <Target RefID="2241"/>
+    </ServiceReference>
+    <ServiceReference ID="29" Label="Response Parameter" ReferenceName="ResponseParameter.ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
+      <Source RefID="28"/>
+      <Target RefID="28"/>
+    </ServiceReference>
+    <ServiceReference ID="2754" Label="Validation Error Response" ReferenceName="ValidationErrorResponse.ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider">
+      <Source RefID="2753"/>
+      <Target RefID="2753"/>
+    </ServiceReference>
+    <Function ID="28" Label="get Payload">
+      <Source RefID="29"/>
+      <Source RefID="14"/>
+      <Target RefID="29"/>
+      <Target RefID="31"/>
+      <Invoke Operation="getPayload" ServiceID="29">
+        <Source RefID="14"/>
+      </Invoke>
+      <Receive ServiceID="29">
+        <Target RefID="31"/>
+      </Receive>
+    </Function>
+    <Function ID="2241" Label="OAS Type Validation">
+      <Source RefID="2242"/>
+      <Source RefID="14"/>
+      <Source RefID="2294"/>
+      <Target RefID="2242"/>
+      <Invoke Operation="OASTypeValidation" ServiceID="2242">
+        <Source RefID="14"/>
+        <Source RefID="2294">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="2242"/>
+    </Function>
+    <Mappings ID="57" Label="Build Response">
+      <Input>
+        <Data ID="94" Label="Response Parameter" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="responseParameter94">
+          <Source RefID="57"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Input>
+        <Data ID="60" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document60"/>
+        <Source RefID="31"/>
+      </Input>
+      <Output>
+        <Data ID="61" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse61"/>
+        <Target RefID="1685"/>
+      </Output>
+      <Mapping>%2%.body=%1%</Mapping>
+      <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
+      <Mapping>%2%.statusCode=%0%.getStatusCode()</Mapping>
+    </Mappings>
+    <Data ID="31" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document31">
+      <Source RefID="28"/>
+    </Data>
+    <Data ID="1685" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse1685"/>
+    <Data ID="2294" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyString2294">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xmcp.oas.validation.response_validation</Value>
+      </Data>
+      <Data VariableName="value">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value/>
+      </Data>
+      <Data ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+    </Data>
+    <Data ID="2526" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider" VariableName="validationErrorResponse2526">
+      <Source RefID="2492"/>
+    </Data>
+    <Data ID="2801" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse2801"/>
+    <Exception ID="2455" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException2455"/>
+    <Assign ID="1">
+      <Source RefID="1685"/>
+      <Target RefID="127"/>
+      <Copy>
+        <Source RefID="1685"/>
+        <Target RefID="127"/>
+      </Copy>
+    </Assign>
+    <Catch ExceptionID="2455" ID="2458">
+      <Mappings ID="2492" Label="Get Validation Error Response">
+        <Input>
+          <Exception ID="2559" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException2559">
+            <Source RefID="2492"/>
+          </Exception>
+          <Source RefID="2455"/>
+        </Input>
+        <Output>
+          <Data ID="2525" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider" VariableName="validationErrorResponse2525">
+            <Source RefID="2492"/>
+          </Data>
+          <Target RefID="2526"/>
+        </Output>
+        <Mapping>%1%=%0%.errorResponse</Mapping>
+      </Mappings>
+      <Function ID="2753" Label="get Payload">
+        <Source RefID="2754"/>
+        <Source RefID="2526"/>
+        <Target RefID="2754"/>
+        <Target RefID="2756"/>
+        <Invoke Operation="getPayload" ServiceID="2754">
+          <Source RefID="2526"/>
+        </Invoke>
+        <Receive ServiceID="2754">
+          <Target RefID="2756"/>
+        </Receive>
+      </Function>
+      <Mappings ID="2797" Label="Build Error Response">
+        <Input>
+          <Data ID="2798" Label="Response Parameter" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="responseParameter2798"/>
+          <Source RefID="2526">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="2799" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2799"/>
+          <Source RefID="2756"/>
+        </Input>
+        <Output>
+          <Data ID="2800" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse2800"/>
+          <Target RefID="2801"/>
+        </Output>
+        <Mapping>%2%.body=%1%</Mapping>
+        <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
+        <Mapping>%2%.statusCode=%0%.getStatusCode()</Mapping>
+      </Mappings>
+      <Assign>
+        <Source RefID="2801"/>
+        <Target RefID="127"/>
+        <Copy>
+          <Source RefID="2801"/>
+          <Target RefID="127"/>
+        </Copy>
+      </Assign>
+      <Data ID="2756" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2756">
+        <Source RefID="2753"/>
+      </Data>
+    </Catch>
+  </Operation>
+</Service>

@@ -55,10 +55,6 @@ public abstract class OpenAPIBaseType {
             errorMessages.add(this.name + ": Property is required, but has value null");
         }
         
-        if (!this.isNullable && this.isNull()) {
-            errorMessages.add(this.name + ": Property must not be null");
-        }
-        
         return errorMessages;
     }
 

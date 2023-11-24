@@ -120,8 +120,6 @@ public class XmomServerGenerator extends DefaultCodegen {
     apiTemplateFiles.put("requestDataType.mustache", "_requestDataTypes_toSplit.xml");
     apiTemplateFiles.put("responseDataType.mustache", "_responseDataTypes_toSplit.xml");
     apiTemplateFiles.put("endpointWorkflow.mustache", "_endpointWorkflows_toSplit.xml");
-    apiTemplateFiles.put("decodeWorkflow.mustache", "_decodeWorkflows_toSplit.xml");
-    apiTemplateFiles.put("encodeWorkflow.mustache", "_encodeWorkflow_toSplit.xml");
 
     templateDir = "xmom-server";
 

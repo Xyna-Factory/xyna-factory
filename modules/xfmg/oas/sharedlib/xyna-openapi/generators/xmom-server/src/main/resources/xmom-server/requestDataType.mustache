@@ -1,6 +1,6 @@
 {{#operations}}{{#operation}}{{#hasParams}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
 TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" TypePath="{{apiPackage}}.{{pathPrefix}}.request" Label="{{httpMethod}} {{path}} Parameter"
-BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
+BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation></Documentation>

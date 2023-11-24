@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!----><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="true" Label="Response Parameter" TypeName="ResponseParameter" TypePath="xmcp.oas.datatype.provider" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Response Parameter" TypeName="ResponseParameter">
+    <Operation IsAbstract="true" IsStatic="false" Label="get Payload" Name="getPayload">
+      <Input/>
+      <Output>
+        <Data ID="6" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document6"/>
+      </Output>
+    </Operation>
+    <Operation IsAbstract="true" IsStatic="false" Label="get Status Code" Name="getStatusCode">
+      <Input/>
+      <Output>
+        <Data Label="Http Status" VariableName="Http Status">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+    </Operation>
+    <Operation IsAbstract="true" IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="9" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult9"/>
+      </Output>
+    </Operation>
+  </Service>
+</DataType>
