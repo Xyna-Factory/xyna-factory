@@ -42,6 +42,7 @@ import org.w3c.dom.NodeList;
 
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xlibdev.supp4eclipse.Support4Eclipse;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
@@ -92,18 +93,22 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
 
     separateFiles(target);
     compileFilter(target);
-
+    String appName = readApplicationXML(target);
+ 
     File targetAsFile = new File(target);
+    File unzipedApp = new File("/tmp/" + appName);
+    
     File tmpFile;
     try {
-      tmpFile = File.createTempFile("app_", ".zip");
-    } catch (IOException e1) {
+      FileUtils.copyRecursivelyWithFolderStructure(targetAsFile, unzipedApp);
+      FileUtils.deleteDirectoryRecursively(targetAsFile);
+      tmpFile = File.createTempFile(appName + "_", ".zip");
+    } catch (IOException | Ex_FileAccessException e1) {
       throw new RuntimeException(e1);
     }
-
     FileManagement fileMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
     try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tmpFile))) {
-      FileUtils.zipDir(targetAsFile, zos, targetAsFile);
+      FileUtils.zipDir(unzipedApp, zos, unzipedApp);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -114,7 +119,31 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       throw new RuntimeException(e);
     }
 
+    tmpFile.deleteOnExit();
+    
     return id;
+  }
+  
+  
+  private String readApplicationXML(String target) {
+    Path applicationXML = Path.of(target, "application.xml");
+    String appname = "app";
+    if (!applicationXML.toFile().exists()) {
+      return appname;
+    }
+    try {
+      Document applicationDocument = XMLUtils.parseString(Files.readString(applicationXML));
+      if (applicationDocument.getDocumentElement().hasAttribute("applicationName")) {
+        appname = applicationDocument.getDocumentElement().getAttribute("applicationName");
+      }
+      if (applicationDocument.getDocumentElement().hasAttribute("versionName")) {
+        appname = appname + "_" + applicationDocument.getDocumentElement().getAttribute("versionName");
+        
+      }
+    } catch (IOException | XPRC_XmlParsingException e) {
+      throw new RuntimeException(e);
+    }
+    return appname;
   }
 
 
