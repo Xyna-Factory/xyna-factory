@@ -69,9 +69,13 @@ for (xact.http.Header header: httpRequest1.getHeader()) {
     }
     {{/headerParams}}
 }
-{{/hasHeaderParams}}{{#hasBodyParam}}{{#bodyParams}}{{#isModel}}
+{{/hasHeaderParams}}{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+jsonOptions.setUseLabels(true);{{#bodyParams}}{{#isModel}}
+
 xact.templates.Document body = httpRequest1.getBody();
-{{dataType}} {{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}} = ({{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{dataType}}(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions());
+{{dataType}} {{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}} = ({{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{dataType}}(), jsonOptions);
 ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}});
 {{/isModel}}{{/bodyParams}}{{/hasBodyParam}}
 return ret;</CodeSnippet>

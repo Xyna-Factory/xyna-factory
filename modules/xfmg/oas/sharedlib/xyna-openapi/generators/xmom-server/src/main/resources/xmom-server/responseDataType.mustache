@@ -81,10 +81,15 @@ format: {{format}}{{/format}}
         <Data ID="1" Label="Document" VariableName="document1" ReferenceName="Document" ReferencePath="xact.templates"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">{{^dataType}}return new xact.templates.Document();{{/dataType}}{{#dataType}}xact.templates.Document body;{{^isArray}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions());{{/isArray}}{{#isArray}}
+        <CodeSnippet Type="Java">{{^dataType}}return new xact.templates.Document();{{/dataType}}{{#dataType}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+jsonOptions.setUseLabels(true);
+
+xact.templates.Document body;{{^isArray}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), jsonOptions);{{/isArray}}{{#isArray}}
 List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}());
-body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions());{{/isArray}}
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/isArray}}
 
 return body;{{/dataType}}
 </CodeSnippet>

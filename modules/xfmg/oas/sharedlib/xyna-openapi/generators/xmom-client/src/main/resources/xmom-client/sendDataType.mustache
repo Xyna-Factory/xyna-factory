@@ -33,8 +33,13 @@ format: {{format}}{{/format}}
         <Exception ID="8" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException8" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">{{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}{{#bodyParams}}xact.templates.Document body;
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(), new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions());
+        <CodeSnippet Type="Java">{{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+jsonOptions.setUseLabels(true);{{#bodyParams}}
+
+xact.templates.Document body;
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(), jsonOptions);
 
 return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/bodyParams}}{{/hasBodyParam}}
 </CodeSnippet>
