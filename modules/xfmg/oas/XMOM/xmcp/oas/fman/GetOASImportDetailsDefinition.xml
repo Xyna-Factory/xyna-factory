@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!----><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get OAS Import Details Definition" TypeName="GetOASImportDetailsDefinition" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get OAS Import Details Definition" Name="GetOASImportDetailsDefinition">
+    <Input>
+      <Data ID="377" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory377"/>
+    </Input>
+    <Output>
+      <Data ID="26" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition26"/>
+      <Data ID="390" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory390"/>
+    </Output>
+    <Data ID="1258" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="const_FormPanelDefinition1258">
+      <Data VariableName="hideIfEmpty">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="compact">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="hidden">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="collapsed">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="closable">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data VariableName="collapsable">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="disabled">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="hideIfUndefined">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="label">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Specification File:</Value>
+      </Data>
+      <Data VariableName="dataPath">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>%0%</Value>
+      </Data>
+      <Data IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="children">
+        <Value>
+          <Data ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition">
+            <Data VariableName="hideIfEmpty">
+              <Meta>
+                <Type>boolean</Type>
+              </Meta>
+              <Value>false</Value>
+            </Data>
+            <Data VariableName="hidden">
+              <Meta>
+                <Type>boolean</Type>
+              </Meta>
+              <Value>false</Value>
+            </Data>
+            <Data VariableName="disabled">
+              <Meta>
+                <Type>boolean</Type>
+              </Meta>
+              <Value>false</Value>
+            </Data>
+            <Data VariableName="hideIfUndefined">
+              <Meta>
+                <Type>boolean</Type>
+              </Meta>
+              <Value>false</Value>
+            </Data>
+            <Data VariableName="style">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>pre</Value>
+            </Data>
+            <Data VariableName="label">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value/>
+            </Data>
+            <Data VariableName="dataPath">
+              <Meta>
+                <Type>String</Type>
+              </Meta>
+              <Value>specificationFile</Value>
+            </Data>
+          </Data>
+        </Value>
+      </Data>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1258"/>
+      <Source RefID="377"/>
+      <Target RefID="26"/>
+      <Target RefID="390"/>
+      <Copy>
+        <Source RefID="1258">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="26"/>
+      </Copy>
+      <Copy>
+        <Source RefID="377"/>
+        <Target RefID="390"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

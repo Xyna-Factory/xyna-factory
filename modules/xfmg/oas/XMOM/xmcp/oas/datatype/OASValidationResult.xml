@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="OASValidationResult" TypePath="xmcp.oas.datatype" Label="OAS Validation Result" IsAbstract="false">
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="OAS Validation Result" TypeName="OASValidationResult" TypePath="xmcp.oas.datatype" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -23,17 +23,16 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
-  <Data Label="Error Messages" VariableName="errorMessages" IsList="true">
+  <Data IsList="true" Label="Error Messages" VariableName="errorMessages">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
   <Service Label="OAS Validation Result" TypeName="OASValidationResult">
-    <Operation Label="get Result" Name="getResult" IsStatic="false">
-      <Input>
-      </Input>
+    <Operation IsStatic="false" Label="get Result" Name="getResult">
+      <Input/>
       <Output>
-        <Data ID="4" Label="OAS Validation Result" VariableName="oASValidationResult4" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+        <Data ID="4" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult4"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">if (this.getErrorMessages() == null || this.getErrorMessages().isEmpty()) {
