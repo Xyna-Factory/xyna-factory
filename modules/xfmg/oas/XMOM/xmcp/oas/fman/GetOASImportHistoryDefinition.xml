@@ -7,7 +7,7 @@
       <Data ID="274" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text274"/>
     </Output>
     <Data ID="983" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text983"/>
-    <Data ID="2131" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="const_TablePanelDefinition2131">
+    <Data ID="2148" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="const_TablePanelDefinition2148">
       <Data VariableName="hideIfEmpty">
         <Meta>
           <Type>boolean</Type>
@@ -192,6 +192,12 @@
             </Meta>
             <Value/>
           </Data>
+          <Data VariableName="dataPath">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value/>
+          </Data>
           <Data IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="children">
             <Value>
               <Data ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition">
@@ -299,7 +305,7 @@
                   <Meta>
                     <Type>boolean</Type>
                   </Meta>
-                  <Value>false</Value>
+                  <Value>true</Value>
                 </Data>
                 <Data VariableName="dataPath">
                   <Meta>
@@ -319,14 +325,7 @@
                   </Meta>
                   <Value>false</Value>
                 </Data>
-                <Data Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="serviceRTC">
-                  <Data VariableName="name">
-                    <Meta>
-                      <Type>String</Type>
-                    </Meta>
-                    <Value>OAS Base</Value>
-                  </Data>
-                </Data>
+                <Data ReferenceName="OwnContext" ReferencePath="xprc.xpce" VariableName="serviceRTC"/>
               </Data>
             </Value>
             <Value>
@@ -389,16 +388,9 @@
                   <Meta>
                     <Type>boolean</Type>
                   </Meta>
-                  <Value>true</Value>
+                  <Value>false</Value>
                 </Data>
-                <Data Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="serviceRTC">
-                  <Data VariableName="name">
-                    <Meta>
-                      <Type>String</Type>
-                    </Meta>
-                    <Value>OAS Base</Value>
-                  </Data>
-                </Data>
+                <Data ReferenceName="OwnContext" ReferencePath="xprc.xpce" VariableName="serviceRTC"/>
               </Data>
             </Value>
             <Value>
@@ -443,7 +435,7 @@
                   <Meta>
                     <Type>boolean</Type>
                   </Meta>
-                  <Value>false</Value>
+                  <Value>true</Value>
                 </Data>
                 <Data VariableName="dataPath">
                   <Meta>
@@ -463,14 +455,7 @@
                   </Meta>
                   <Value>false</Value>
                 </Data>
-                <Data Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="serviceRTC">
-                  <Data VariableName="name">
-                    <Meta>
-                      <Type>String</Type>
-                    </Meta>
-                    <Value>OAS Base</Value>
-                  </Data>
-                </Data>
+                <Data ReferenceName="OwnContext" ReferencePath="xprc.xpce" VariableName="serviceRTC"/>
               </Data>
             </Value>
             <Value>
@@ -515,7 +500,7 @@
                   <Meta>
                     <Type>boolean</Type>
                   </Meta>
-                  <Value>false</Value>
+                  <Value>true</Value>
                 </Data>
                 <Data VariableName="dataPath">
                   <Meta>
@@ -535,14 +520,7 @@
                   </Meta>
                   <Value>false</Value>
                 </Data>
-                <Data Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="serviceRTC">
-                  <Data VariableName="name">
-                    <Meta>
-                      <Type>String</Type>
-                    </Meta>
-                    <Value>OAS Base</Value>
-                  </Data>
-                </Data>
+                <Data ReferenceName="OwnContext" ReferencePath="xprc.xpce" VariableName="serviceRTC"/>
               </Data>
             </Value>
           </Data>
@@ -572,12 +550,12 @@
       </Data>
     </Data>
     <Assign ID="1">
-      <Source RefID="2131"/>
+      <Source RefID="2148"/>
       <Source RefID="983"/>
       <Target RefID="14"/>
       <Target RefID="274"/>
       <Copy>
-        <Source RefID="2131">
+        <Source RefID="2148">
           <Meta>
             <LinkType>Constant</LinkType>
           </Meta>
