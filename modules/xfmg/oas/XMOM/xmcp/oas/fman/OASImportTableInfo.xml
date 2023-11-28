@@ -3,17 +3,11 @@
   <Operation ID="0" IsStatic="false" Label="OAS Import TableInfo" Name="OASImportTableInfo">
     <Input>
       <Data ID="5540" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5540"/>
-      <Data ID="14625" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text14625"/>
     </Input>
     <Output>
       <Data ID="4366" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo4366"/>
       <Data ID="5644" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory5644"/>
-      <Data ID="14674" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text14674"/>
     </Output>
-    <ServiceReference ID="14178" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
-      <Source RefID="14177"/>
-      <Target RefID="14177"/>
-    </ServiceReference>
     <ServiceReference ID="13812" Label="Query" ReferenceName="Query" ReferencePath="xnwh.persistence">
       <Source RefID="13811"/>
       <Target RefID="13811"/>
@@ -21,6 +15,10 @@
     <ServiceReference ID="12592" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="12591"/>
       <Target RefID="12591"/>
+    </ServiceReference>
+    <ServiceReference ID="14178" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="14177"/>
+      <Target RefID="14177"/>
     </ServiceReference>
     <Choice ID="5918" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="5540"/>
@@ -304,10 +302,8 @@
     <Assign ID="1">
       <Source RefID="25549"/>
       <Source RefID="13814"/>
-      <Source RefID="14625"/>
       <Target RefID="4366"/>
       <Target RefID="5644"/>
-      <Target RefID="14674"/>
       <Copy>
         <Source RefID="25549">
           <Meta>
@@ -319,10 +315,6 @@
       <Copy>
         <Source RefID="13814"/>
         <Target RefID="5644"/>
-      </Copy>
-      <Copy>
-        <Source RefID="14625"/>
-        <Target RefID="14674"/>
       </Copy>
     </Assign>
   </Operation>

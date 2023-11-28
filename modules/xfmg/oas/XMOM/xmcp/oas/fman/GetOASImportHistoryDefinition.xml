@@ -124,6 +124,12 @@
     </Mappings>
     <Mappings ID="2265" Label="Table Panel">
       <Input>
+        <Data ID="3306" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3306">
+          <Source RefID="2265"/>
+        </Data>
+        <Source RefID="2418"/>
+      </Input>
+      <Input>
         <Data ID="2490" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow2490">
           <Source RefID="2265"/>
         </Data>
@@ -181,13 +187,16 @@
         </Data>
         <Target RefID="2275"/>
       </Output>
-      <Mapping>%6%.label="OAS Import History"</Mapping>
-      <Mapping>%6%.header.rightArea.children["0"]=%1%</Mapping>
-      <Mapping>%6%.header.rightArea.children["1"]=%2%</Mapping>
-      <Mapping>%6%.header.rightArea.children["2"]=%3%</Mapping>
-      <Mapping>%6%.header.rightArea.children["3"]=%4%</Mapping>
-      <Mapping>%6%.header.rightArea.children["4"]=%5%</Mapping>
-      <Mapping>%6%.detailsDefinitionReference=%0%</Mapping>
+      <Mapping>%7%.dataPath="%%"</Mapping>
+      <Mapping>%7%.detailsDefinitionReference=%1%</Mapping>
+      <Mapping>%7%.header.rightArea.children["0"]=%2%</Mapping>
+      <Mapping>%7%.header.rightArea.children["1"]=%3%</Mapping>
+      <Mapping>%7%.header.rightArea.children["2"]=%4%</Mapping>
+      <Mapping>%7%.header.rightArea.children["3"]=%5%</Mapping>
+      <Mapping>%7%.header.rightArea.children["4"]=%6%</Mapping>
+      <Mapping>%7%.label="OAS Import History"</Mapping>
+      <Mapping>%7%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
+      <Mapping>%7%.tableWorkflowRTC=%0%</Mapping>
     </Mappings>
     <Data ID="983" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text983"/>
     <Data ID="2275" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2275">
