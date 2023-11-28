@@ -24,6 +24,35 @@
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
+  <Capacities>
+    <Capacity implicitDependency="true">
+      <Name>ImportOASApp</Name>
+      <Cardinality>1</Cardinality>
+      <State>ACTIVE</State>
+    </Capacity>
+  </Capacities>
+  <CapacityRequirements>
+    <CapacityRequirement>
+      <OrdertypeName>xmcp.oas.fman.ImportClientApplication</OrdertypeName>
+      <CapacityName>ImportOASApp</CapacityName>
+      <Cardinality>1</Cardinality>
+    </CapacityRequirement>
+    <CapacityRequirement>
+      <OrdertypeName>xmcp.oas.fman.ImportDatamodelApplication</OrdertypeName>
+      <CapacityName>ImportOASApp</CapacityName>
+      <Cardinality>1</Cardinality>
+    </CapacityRequirement>
+    <CapacityRequirement>
+      <OrdertypeName>xmcp.oas.fman.ImportOASApplications</OrdertypeName>
+      <CapacityName>ImportOASApp</CapacityName>
+      <Cardinality>1</Cardinality>
+    </CapacityRequirement>
+    <CapacityRequirement>
+      <OrdertypeName>xmcp.oas.fman.ImportProviderApplication</OrdertypeName>
+      <CapacityName>ImportOASApp</CapacityName>
+      <Cardinality>1</Cardinality>
+    </CapacityRequirement>
+  </CapacityRequirements>
   <Ordertypes>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.GetOASImportDetailsDefinition</DestinationKey>
