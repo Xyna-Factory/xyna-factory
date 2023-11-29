@@ -288,8 +288,6 @@ public class SessionBasedData {
             break;
           }
         }
-
-        terminateOrphanCleaner = false;
       }
     };
 
