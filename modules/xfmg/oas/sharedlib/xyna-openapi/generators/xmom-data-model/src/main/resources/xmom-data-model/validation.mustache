@@ -46,10 +46,9 @@ catch (Exception e) {
 
             result.getErrorMessages().addAll(item.checkValid());
         }
-    } else { {{#required}}
-        result.getErrorMessages().add("{{classname}}.{{name}} List of type {{dataType}} is required but is null.");{{/required}}{{^isNullable}}
-        result.getErrorMessages().add("{{classname}}.{{name}} List of type {{dataType}} must not be null.");{{/isNullable}}
-    }
+    } {{#required}}else {
+        result.getErrorMessages().add("{{classname}}.{{name}} List of type {{dataType}} is required, but is null.");
+    }{{/required}}
 }
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{classname}}.{{name}}");
@@ -64,10 +63,9 @@ catch (Exception e) {
             var lValidationResult = l.validate();
             result.getErrorMessages().addAll(lValidationResult.getErrorMessages());
         }{{/isArray}}
-    } else { {{#required}}
-        result.getErrorMessages().add("{{classname}}.{{name}} of type {{complexType}} is required but is null.");{{/required}}{{^isNullable}}
-        result.getErrorMessages().add("{{classname}}.{{name}} of type {{complexType}} must not be null.");{{/isNullable}}
-    }
+    } {{#required}}else {
+        result.getErrorMessages().add("{{classname}}.{{name}} of type {{complexType}} is required but is null.");
+    }{{/required}}
 }
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{classname}}.{{name}}");
