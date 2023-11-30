@@ -192,6 +192,10 @@
         <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.UploadButtonDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
         <FqName>xmcp.forms.datatypes.DefinitionListDefinition</FqName>
         <Type>DATATYPE</Type>
     </XMOMEntry>
