@@ -40,6 +40,7 @@ import xact.connection.DeviceType;
 import xact.connection.ManagedConnection;
 import xact.connection.ReadTimeout;
 import xact.connection.SendParameter;
+import xact.ssh.SSHMessagePayload;
 import xact.ssh.SSHNETCONFConnection;
 import xact.ssh.SSHNETCONFConnectionInstanceOperation;
 import xact.ssh.SSHNETCONFConnectionSuperProxy;
