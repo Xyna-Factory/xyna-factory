@@ -14,7 +14,7 @@
         <Target RefID="2418"/>
       </Output>
       <Mapping>%0%.name="OAS_Base"</Mapping>
-      <Mapping>%0%.version="0.2.1"</Mapping>
+      <Mapping>%0%.version="0.2.2"</Mapping>
     </Mappings>
     <Mappings ID="2946" Label="spec file imput">
       <Output>
