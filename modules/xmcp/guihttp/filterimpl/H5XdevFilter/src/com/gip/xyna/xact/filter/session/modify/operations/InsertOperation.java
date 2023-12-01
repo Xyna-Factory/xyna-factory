@@ -50,6 +50,7 @@ import com.gip.xyna.xact.filter.session.modify.Insertion;
 import com.gip.xyna.xact.filter.session.modify.Insertion.PossibleContent;
 import com.gip.xyna.xact.filter.session.modify.Insertion.QueryInsertStep;
 import com.gip.xyna.xact.filter.session.modify.operations.copy.StepCopier;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.util.DirectVarIdentification;
@@ -115,6 +116,11 @@ public class InsertOperation extends ModifyOperationBase<InsertJson> {
       }
     }
     insert();
+    
+    FQName fqName = modification.getObject().getFQName();
+    ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+    modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
+
   }
 
   @Override
@@ -125,6 +131,13 @@ public class InsertOperation extends ModifyOperationBase<InsertJson> {
   @Override
   protected void modifyVariable(Variable variable) throws UnknownObjectIdException, MissingObjectException, XynaException, InvalidJSONException, UnexpectedJSONContentException {
     insert();
+    
+    Step step = object.getStep();
+    if(step != null && step instanceof WFStep) {
+      FQName fqName = modification.getObject().getFQName();
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+      modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
+    }
   }
 
   @Override
@@ -140,6 +153,12 @@ public class InsertOperation extends ModifyOperationBase<InsertJson> {
   @Override
   protected void modifyCase(Case caseInfo) throws XynaException, UnknownObjectIdException, MissingObjectException, InvalidJSONException, UnexpectedJSONContentException {
     insert();
+
+    if (object.getParent().getWorkflow() != null) {
+      FQName fqName = modification.getObject().getFQName();
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+      modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
+    }
   }
 
   @Override

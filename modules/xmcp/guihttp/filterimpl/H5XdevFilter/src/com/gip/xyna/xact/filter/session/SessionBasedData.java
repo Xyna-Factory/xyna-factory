@@ -100,6 +100,7 @@ import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
 import com.gip.xyna.xact.filter.session.save.Persistence;
 import com.gip.xyna.xact.filter.session.workflowissues.WorkflowIssuesRequestProcessor;
 import com.gip.xyna.xact.filter.session.workflowwarnings.DefaultWorkflowWarningsHandler;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.session.workflowwarnings.WorkflowWarningsHandler;
 import com.gip.xyna.xact.filter.util.ReadonlyUtil;
 import com.gip.xyna.xact.filter.xmom.session.json.GboJson;
@@ -1194,6 +1195,11 @@ public class SessionBasedData {
 
     if (view.getGenerationBaseObject().getType() == XMOMType.WORKFLOW) {
       view.getGenerationBaseObject().createDataflow(getOrCreateWFWarningsHandler(view.getGenerationBaseObject().getFQName()));
+
+      FQName fqName = request.getFQName();
+      ObjectId objectId = new ObjectId(ObjectType.workflow, null);
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, view.getGenerationBaseObject().getWorkflow());
+      getWFWarningsHandler(fqName).handleChange(objectId, notification);
     }
 
     reply.setXynaObject(view.viewAll(request));
