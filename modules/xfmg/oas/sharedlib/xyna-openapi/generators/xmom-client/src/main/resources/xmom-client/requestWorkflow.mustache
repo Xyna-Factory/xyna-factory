@@ -26,6 +26,14 @@
       <Source RefID="16"/>
       <Target RefID="16"/>
     </ServiceReference>
+     <ServiceReference ID="27" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
+      <Source RefID="26"/>
+      <Target RefID="26"/>
+    </ServiceReference>
+    <ServiceReference ID="24" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
+      <Source RefID="23"/>
+      <Target RefID="23"/>
+    </ServiceReference>
     <ServiceReference ID="8" Label="HTTP Service" ReferenceName="HTTPService.HTTPService" ReferencePath="xact.http">
       <Source RefID="7"/>
       <Target RefID="7"/>
@@ -35,6 +43,30 @@
       <Source RefID="21"/>
       <Target RefID="21"/>
     </ServiceReference>
+     <Function ID="23" Label="OAS Type Validation">
+      <Source RefID="24">
+      </Source>
+      <Source RefID="11">
+      </Source>
+      <Source RefID="25">
+      </Source>
+      <Target RefID="24">
+      </Target>
+      <Invoke ServiceID="24" Operation="OASTypeValidation">
+        <Source RefID="11">
+          <Meta>
+            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.send.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="25">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="24">
+      </Receive>
+    </Function>
     <Mappings ID="5" Label="Build Payload">
       <Input>
         <Data ID="12" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{/lambda.camelcase}}12" Label="{{httpMethod}}" ReferenceName="{{httpMethod}}" ReferencePath="xact.http.enums.httpmethods">
@@ -157,6 +189,30 @@
       <Receive ServiceID="8">
       </Receive>
     </Function>
+    <Function ID="26" Label="OAS Type Validation">
+      <Source RefID="27">
+      </Source>
+      <Source RefID="18">
+      </Source>
+      <Source RefID="28">
+      </Source>
+      <Target RefID="27">
+      </Target>
+      <Invoke ServiceID="27" Operation="OASTypeValidation">
+        <Source RefID="18">
+          <Meta>
+            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="28">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="27">
+      </Receive>
+    </Function>
     <Data ID="4" VariableName="hTTPConnection4" Label="HTTP Connection" ReferenceName="HTTPConnection" ReferencePath="xact.http">
       <Source RefID="2"/>
     </Data>
@@ -172,6 +228,38 @@
     <Data ID="19" VariableName="hTTPStatusCode19" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
     </Data>
     <Data ID="20" VariableName="header20" Label="Header" ReferenceName="Header" ReferencePath="xact.http">
+    </Data>
+    <Data ID="25" VariableName="const_XynaPropertyString25" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xmcp.oas.validation.request_validation</Value>
+      </Data>
+      <Data VariableName="value">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value></Value>
+      </Data>
+      <Data VariableName="behaviourIfPropertyNotSet" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter">
+      </Data>
+    </Data>
+    <Data ID="28" VariableName="const_XynaPropertyString28" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xmcp.oas.validation.response_validation</Value>
+      </Data>
+      <Data VariableName="value">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value></Value>
+      </Data>
+      <Data VariableName="behaviourIfPropertyNotSet" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter">
+      </Data>
     </Data>
     <Assign ID="1">
       <Source RefID="18">

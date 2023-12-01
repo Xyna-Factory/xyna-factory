@@ -5,8 +5,8 @@
 >
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    {{#description}}<Documentation>{{description}}
-    values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}</Documentation>{{/description}}
+    <Documentation>{{#description}}{{description}}{{/description}}
+values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}</Documentation>
   </Meta>
   <Data Label="value" VariableName="value">
     <Meta>
@@ -22,7 +22,11 @@
         <Data ID="1" Label="OAS Validation Result" VariableName="oASValidationResult1" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">{{>enumValidation}}</CodeSnippet>
+        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+{{>enumValidation}}
+return result.getResult();</CodeSnippet>
       </SourceCode>
     </Operation>{{#allowableValues}}{{#values}}
     <Operation Label="get {{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" Name="get{{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" IsStatic="false">

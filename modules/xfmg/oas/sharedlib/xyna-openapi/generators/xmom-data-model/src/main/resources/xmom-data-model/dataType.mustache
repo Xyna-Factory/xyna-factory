@@ -1,22 +1,22 @@
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" 
- TypeName="{{classname}}" 
- TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"
- Label="{{name}}" IsAbstract="false" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype"
->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+ TypeName="{{classname}}" TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}" Label="{{name}}"
+ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
     <Meta>
         <IsServiceGroupOnly>false</IsServiceGroupOnly>{{#description}}
         <Documentation>{{description}}</Documentation>{{/description}}
     </Meta>
 {{#vars}}
-    <Data Label="{{baseName}}" VariableName="{{name}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isString}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isString}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}{{^isString}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isString}}{{/isPrimitiveType}}{{#isString}}
-            <Type>String</Type>{{/isString}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
-Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+    <Data Label="{{baseName}}" VariableName="{{name}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
+        <Meta>{{#isPrimitiveType}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
+Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
+values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
+{{/isEnumRef}}{{#format}}
 format: {{format}}{{/format}}
-requiered: {{required}}, nullable: {{isNullable}}
+requiered: {{required}}
             </Documentation>
         </Meta>
     </Data>

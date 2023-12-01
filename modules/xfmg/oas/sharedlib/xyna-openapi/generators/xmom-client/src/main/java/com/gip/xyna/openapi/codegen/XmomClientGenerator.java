@@ -20,6 +20,8 @@ public class XmomClientGenerator extends DefaultCodegen {
   protected String apiVersion = "1.0.0";
   protected String xynaFactoryVersion = "9.0.2.3";
 
+  public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
+
   /**
    * Configures the type of generator.
    *
@@ -98,6 +100,7 @@ public class XmomClientGenerator extends DefaultCodegen {
      * are available in models, apis, and supporting files
      */
     additionalProperties.put("apiVersion", apiVersion);
+    additionalProperties.put(XYNA_FACTORY_VERSION, xynaFactoryVersion);
 
     /**
      * Supporting Files.  You can write single files for the generator with the

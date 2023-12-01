@@ -53,7 +53,7 @@ catch (Exception e) {
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{classname}}.{{name}}");
 }
-{{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}try {
+{{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{^isEnumRef}}try {
     var cplxObj_{{-index}} = this.get("{{#lambda.camelcase}}{{name}}{{/lambda.camelcase}}");
     if (cplxObj_{{-index}} != null) { {{^isArray}}
         var cplxValidationResult_{{-index}} = (({{complexType}})cplxObj_{{-index}}).validate();
@@ -70,5 +70,5 @@ catch (Exception e) {
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{classname}}.{{name}}");
 }
-{{/isPrimitiveType}}{{/vars}}
+{{/isEnumRef}}{{#isEnumRef}}{{>enumValidation}}{{/isEnumRef}}{{/isPrimitiveType}}{{/vars}}
 return result.getResult();

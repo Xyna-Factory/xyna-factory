@@ -5,16 +5,17 @@ BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation></Documentation>
   </Meta>{{#allParams}}
-    <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isPrimitiveType}}>
+    <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
         <Meta>{{#isPrimitiveType}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isPrimitiveType}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
-Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
+Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
+values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
+{{/isEnumRef}}{{#format}}
 format: {{format}}{{/format}}
-
-{{#required}}required{{/required}}
-{{#isNullable}}nullable{{/isNullable}}
+requiered: {{required}}
             </Documentation>
         </Meta>
     </Data>{{/allParams}}

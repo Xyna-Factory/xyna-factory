@@ -1,18 +1,20 @@
 {{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter" TypePath="{{apiPackage}}.{{pathPrefix}}.send" Label="{{httpMethod}} {{path}} Send Parameter">
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter" TypePath="{{apiPackage}}.{{pathPrefix}}.send" Label="{{httpMethod}} {{path}} Send Parameter"
+BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>{{#allParams}}
-    <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isPrimitiveType}}>
+    <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
         <Meta>{{#isPrimitiveType}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isPrimitiveType}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
-Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
+Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
+values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
+{{/isEnumRef}}{{#format}}
 format: {{format}}{{/format}}
-
-{{#required}}requiered{{/required}}
-{{#isNullable}}nullable{{/isNullable}}
+requiered: {{required}}
             </Documentation>
         </Meta>
     </Data>{{/allParams}}
@@ -42,6 +44,21 @@ xact.templates.Document body;
 body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(), jsonOptions);
 
 return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/bodyParams}}{{/hasBodyParam}}
+</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Validate" Name="validate" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="9" Label="OASValidationResult" VariableName="oASValidationResult9" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+{{#allParams}}{{>validation}}{{/allParams}}
+return result.getResult();
 </CodeSnippet>
       </SourceCode>
     </Operation>

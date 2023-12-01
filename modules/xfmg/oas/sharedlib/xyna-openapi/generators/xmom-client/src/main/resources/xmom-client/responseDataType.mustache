@@ -1,5 +1,6 @@
 {{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="{{httpMethod}} {{path}} Response">
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="{{httpMethod}} {{path}} Response"
+BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -12,16 +13,17 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Resp
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>{{#message}}Response message: {{message}}{{/message}}</Documentation>
   </Meta>{{#dataType}}
-  <Data Label="{{baseType}}" VariableName="{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isPrimitiveType}}>
+  <Data Label="{{baseType}}" VariableName="{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
         <Meta>{{#isPrimitiveType}}
-            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isPrimitiveType}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
-Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
+Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
+values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
+{{/isEnumRef}}{{#format}}
 format: {{format}}{{/format}}
-
-{{#required}}requiered{{/required}}
-{{#isNullable}}nullable{{/isNullable}}
+requiered: {{required}}
             </Documentation>
         </Meta>
     </Data>{{/dataType}}{{#responseHeaders}}{{#isPrimitiveType}}
@@ -37,6 +39,23 @@ format: {{format}}{{/format}}
             </Documentation>
         </Meta>
     </Data>{{/isPrimitiveType}}{{/responseHeaders}}
+    <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}" 
+    TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}">
+      <Operation Label="Validate" Name="validate" IsStatic="false">
+        <Input>
+        </Input>
+        <Output>
+          <Data ID="1" Label="OAS Validation Result" VariableName="oASValidationResult1" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+        </Output>
+        <SourceCode>
+          <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+{{#dataType}}{{>validation}}{{/dataType}}
+return result.getResult();</CodeSnippet>
+        </SourceCode>
+      </Operation>
+    </Service>
 </DataType>
 {{/responses}}
 {{/operation}}{{/operations}}

@@ -74,6 +74,7 @@
               </Output>
               <Mapping>%2%.code=%0%.text</Mapping>
               <Mapping>%2%.reason="Validation Error"</Mapping>
+              <Mapping>%2%.message=concat(%1%.errorMessages)</Mapping>
             </Mappings>
             <Mappings ID="365" Label="Build Validation Error Response">
               <Input>

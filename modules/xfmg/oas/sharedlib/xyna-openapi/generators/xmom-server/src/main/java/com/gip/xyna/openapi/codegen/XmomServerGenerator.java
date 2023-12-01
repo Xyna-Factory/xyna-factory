@@ -141,6 +141,7 @@ public class XmomServerGenerator extends DefaultCodegen {
      * are available in models, apis, and supporting files
      */
     additionalProperties.put("apiVersion", apiVersion);
+    additionalProperties.put(XYNA_FACTORY_VERSION, xynaFactoryVersion);
 
     /**
      * Supporting Files.  You can write single files for the generator with the
