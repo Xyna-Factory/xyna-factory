@@ -8,28 +8,43 @@
       <Data ID="165" Label="Specification Filename" ReferenceName="Text" ReferencePath="base" VariableName="text165"/>
     </Output>
     <Throws>
-      <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException662">
-        <Meta>
-          <Type>XynaException</Type>
-        </Meta>
-      </Exception>
-      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException663"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException13398"/>
     </Throws>
-    <ServiceReference ID="371" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
-      <Source RefID="370"/>
-      <Target RefID="370"/>
+    <ServiceReference ID="8969" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="8968"/>
+      <Target RefID="8968"/>
     </ServiceReference>
-    <ServiceReference ID="56" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
-      <Source RefID="55"/>
-      <Target RefID="55"/>
+    <ServiceReference ID="11087" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="11086"/>
+      <Target RefID="11086"/>
     </ServiceReference>
-    <ServiceReference ID="287" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
-      <Source RefID="286"/>
-      <Target RefID="286"/>
+    <ServiceReference ID="3670" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
+      <Source RefID="3669"/>
+      <Target RefID="3669"/>
+    </ServiceReference>
+    <ServiceReference ID="9899" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="9898"/>
+      <Target RefID="9898"/>
+    </ServiceReference>
+    <ServiceReference ID="7103" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
+      <Source RefID="7102"/>
+      <Target RefID="7102"/>
     </ServiceReference>
     <ServiceReference ID="106" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
       <Source RefID="105"/>
       <Target RefID="105"/>
+    </ServiceReference>
+    <ServiceReference ID="6835" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
+      <Source RefID="6834"/>
+      <Target RefID="6834"/>
+    </ServiceReference>
+    <ServiceReference ID="6961" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
+      <Source RefID="6960"/>
+      <Target RefID="6960"/>
+    </ServiceReference>
+    <ServiceReference ID="2568" Label="Retrieve Specification File" ReferenceName="RetrieveSpecificationFile" ReferencePath="xmcp.oas.fman">
+      <Source RefID="2567"/>
+      <Target RefID="2567"/>
     </ServiceReference>
     <Mappings ID="32" Label="Mapping">
       <Output>
@@ -50,14 +65,14 @@
       <Mapping>%1%.generateProvider="false"</Mapping>
       <Mapping>%1%.generateClient="true"</Mapping>
     </Mappings>
-    <Function ID="55" Label="Generate Application">
-      <Source RefID="56"/>
+    <Function ID="3669" Label="Generate Application">
+      <Source RefID="3670"/>
       <Source RefID="42"/>
-      <Target RefID="56"/>
-      <Invoke Operation="generateApplication" ServiceID="56">
+      <Target RefID="3670"/>
+      <Invoke Operation="generateApplication" ServiceID="3670">
         <Source RefID="42"/>
       </Invoke>
-      <Receive ServiceID="56"/>
+      <Receive ServiceID="3670"/>
     </Function>
     <Mappings ID="75" Label="Mapping">
       <Input>
@@ -70,58 +85,32 @@
       </Input>
       <Output>
         <Data ID="80" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory80"/>
-        <Target RefID="74"/>
+        <Target RefID="5727"/>
       </Output>
       <Mapping>%2%.type="OAS Client Application"</Mapping>
       <Mapping>%2%.date=%0%.asString()</Mapping>
       <Mapping>%2%.fileName=%1%.text</Mapping>
-      <Mapping>%2%.specificationFile="{\"Example\": \"Specification\"}"</Mapping>
     </Mappings>
-    <Mappings ID="472" Label="Mapping">
-      <Input>
-        <Data ID="474" Label="Specification Filename" ReferenceName="Text" ReferencePath="base" VariableName="text474"/>
-        <Source RefID="18"/>
-      </Input>
-      <Output>
-        <Data ID="475" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file475"/>
-        <Target RefID="471"/>
-      </Output>
-      <Mapping>%1%.path=%0%.text</Mapping>
-    </Mappings>
-    <Function ID="370" Label="store">
-      <Source RefID="371"/>
-      <Source RefID="471"/>
+    <Function ID="2567" Label="Retrieve Specification File">
+      <Source RefID="2568"/>
       <Source RefID="18"/>
-      <Target RefID="371"/>
-      <Target RefID="369"/>
-      <Invoke Operation="store" ServiceID="371">
-        <Source RefID="471"/>
+      <Target RefID="2568"/>
+      <Target RefID="2570"/>
+      <Invoke Operation="RetrieveSpecificationFile" ServiceID="2568">
         <Source RefID="18"/>
       </Invoke>
-      <Receive ServiceID="371">
-        <Target RefID="369"/>
-      </Receive>
-    </Function>
-    <Function ID="286" Label="retrieve as document">
-      <Source RefID="287"/>
-      <Source RefID="369"/>
-      <Target RefID="287"/>
-      <Target RefID="285"/>
-      <Invoke Operation="retrieveAsDocument" ServiceID="287">
-        <Source RefID="369"/>
-      </Invoke>
-      <Receive ServiceID="287">
-        <Target RefID="285"/>
+      <Receive ServiceID="2568">
+        <Target RefID="2570"/>
       </Receive>
     </Function>
     <Mappings ID="225" Label="Mapping">
       <Input>
         <Data ID="227" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory227"/>
-        <Source RefID="74"/>
+        <Source RefID="5727"/>
       </Input>
       <Input>
         <Data ID="229" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document229"/>
-        <Source RefID="285"/>
+        <Source RefID="2570"/>
       </Input>
       <Output>
         <Data ID="230" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory230"/>
@@ -129,6 +118,7 @@
       </Output>
       <Mapping>%2%=%0%</Mapping>
       <Mapping>%2%.specificationFile=%1%.text</Mapping>
+      <Mapping>%2%.importStatus="Success"</Mapping>
     </Mappings>
     <Function ID="105" Label="Store">
       <Source RefID="106"/>
@@ -159,7 +149,6 @@
     </Function>
     <Data ID="31" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now31"/>
     <Data ID="42" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter42"/>
-    <Data ID="74" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory74"/>
     <Data ID="97" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory97"/>
     <Data ID="109" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter109">
       <Data VariableName="historizePreviousObject">
@@ -182,9 +171,93 @@
       </Data>
     </Data>
     <Data ID="224" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory224"/>
-    <Data ID="285" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document285"/>
-    <Data ID="369" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId369"/>
-    <Data ID="471" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file471"/>
+    <Data ID="2570" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2570">
+      <Source RefID="2567"/>
+    </Data>
+    <Data ID="4667" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory4667"/>
+    <Data ID="5412" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="const_Now5412"/>
+    <Data ID="5727" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory5727"/>
+    <Data ID="6838" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter6838">
+      <Data VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Data ID="6964" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter6964">
+      <Data VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Data ID="7106" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter7106">
+      <Data VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Data ID="13134" ReferenceName="Now" ReferencePath="base.date" VariableName="now13134">
+      <Data VariableName="date">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>2023-12-01 16:20:58</Value>
+      </Data>
+    </Data>
+    <Data ID="13138" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory13138"/>
+    <Data ID="13268" ReferenceName="Now" ReferencePath="base.date" VariableName="now13268">
+      <Data VariableName="date">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>2023-12-01 16:20:58</Value>
+      </Data>
+    </Data>
+    <Data ID="13272" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory13272"/>
+    <Exception ID="3834" Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException3834"/>
+    <Exception ID="3904" Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException3904"/>
+    <Exception ID="3966" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception3966"/>
     <Assign ID="1">
       <Source RefID="18"/>
       <Target RefID="165"/>
@@ -193,5 +266,229 @@
         <Target RefID="165"/>
       </Copy>
     </Assign>
+    <Catch ExceptionID="3904" ID="3906">
+      <Function ID="11086" Label="Get Exception Details">
+        <Source RefID="11087"/>
+        <Source RefID="3904"/>
+        <Target RefID="11087"/>
+        <Target RefID="11089"/>
+        <Invoke Operation="getExceptionDetails" ServiceID="11087">
+          <Source RefID="3904"/>
+        </Invoke>
+        <Receive ServiceID="11087">
+          <Target RefID="11089"/>
+        </Receive>
+      </Function>
+      <Mappings ID="4663" Label="Mapping">
+        <Input>
+          <Data ID="4664" Label="Date" ReferenceName="Date" ReferencePath="base.date" VariableName="date4664"/>
+          <Source RefID="5412">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="4665" Label="Specification Filename" ReferenceName="Text" ReferencePath="base" VariableName="text4665"/>
+          <Source RefID="18"/>
+        </Input>
+        <Input>
+          <Data ID="11595" Label="Exception Details" ReferenceName="ExceptionDetails" ReferencePath="core.exception" VariableName="exceptionDetails11595">
+            <Source RefID="4663"/>
+          </Data>
+          <Source RefID="11089"/>
+        </Input>
+        <Output>
+          <Data ID="4666" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory4666"/>
+          <Target RefID="4667"/>
+        </Output>
+        <Mapping>%3%.type="OAS Client Application"</Mapping>
+        <Mapping>%3%.date=%0%.asString()</Mapping>
+        <Mapping>%3%.fileName=%1%.text</Mapping>
+        <Mapping>%3%.errorMessage=%2%.message</Mapping>
+        <Mapping>%3%.importStatus="Error"</Mapping>
+      </Mappings>
+      <Function ID="6834" Label="Store">
+        <Source RefID="6835"/>
+        <Source RefID="4667"/>
+        <Source RefID="6838"/>
+        <Target RefID="6835"/>
+        <Target RefID="6837"/>
+        <Invoke Operation="Store" ServiceID="6835">
+          <Source RefID="4667"/>
+          <Source RefID="6838">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="6835">
+          <Target RefID="6837"/>
+        </Receive>
+      </Function>
+      <Assign>
+        <Source RefID="18"/>
+        <Target RefID="165"/>
+        <Copy>
+          <Source RefID="18"/>
+          <Target RefID="165"/>
+        </Copy>
+      </Assign>
+      <Data ID="6837" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable6837">
+        <Source RefID="6"/>
+        <Source RefID="6834"/>
+      </Data>
+      <Data ID="11089" Label="Exception Details" ReferenceName="ExceptionDetails" ReferencePath="core.exception" VariableName="exceptionDetails11089">
+        <Source RefID="11086"/>
+      </Data>
+    </Catch>
+    <Catch ExceptionID="3834" ID="3838">
+      <Function ID="9898" Label="Get Exception Details">
+        <Source RefID="9899"/>
+        <Source RefID="3834"/>
+        <Target RefID="9899"/>
+        <Target RefID="9901"/>
+        <Invoke Operation="getExceptionDetails" ServiceID="9899">
+          <Source RefID="3834"/>
+        </Invoke>
+        <Receive ServiceID="9899">
+          <Target RefID="9901"/>
+        </Receive>
+      </Function>
+      <Mappings ID="13132" Label="Mapping">
+        <Input>
+          <Data ID="13133" Label="Date" ReferenceName="Date" ReferencePath="base.date" VariableName="date13133"/>
+          <Source RefID="13134">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="13135" Label="Specification Filename" ReferenceName="Text" ReferencePath="base" VariableName="text13135"/>
+          <Source RefID="18"/>
+        </Input>
+        <Input>
+          <Data ID="13136" Label="Exception Details" ReferenceName="ExceptionDetails" ReferencePath="core.exception" VariableName="exceptionDetails13136"/>
+          <Source RefID="9901"/>
+        </Input>
+        <Output>
+          <Data ID="13137" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory13137"/>
+          <Target RefID="13138"/>
+        </Output>
+        <Mapping>%3%.type="OAS Client Application"</Mapping>
+        <Mapping>%3%.date=%0%.asString()</Mapping>
+        <Mapping>%3%.fileName=%1%.text</Mapping>
+        <Mapping>%3%.errorMessage=%2%.message</Mapping>
+        <Mapping>%3%.importStatus="Error"</Mapping>
+      </Mappings>
+      <Function ID="6960" Label="Store">
+        <Source RefID="6961"/>
+        <Source RefID="13138"/>
+        <Source RefID="6964"/>
+        <Target RefID="6961"/>
+        <Target RefID="6963"/>
+        <Invoke Operation="Store" ServiceID="6961">
+          <Source RefID="13138"/>
+          <Source RefID="6964">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="6961">
+          <Target RefID="6963"/>
+        </Receive>
+      </Function>
+      <Assign>
+        <Source RefID="18"/>
+        <Target RefID="165"/>
+        <Copy>
+          <Source RefID="18"/>
+          <Target RefID="165"/>
+        </Copy>
+      </Assign>
+      <Data ID="6963" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable6963">
+        <Source RefID="6960"/>
+        <Source RefID="6"/>
+      </Data>
+      <Data ID="9901" Label="Exception Details" ReferenceName="ExceptionDetails" ReferencePath="core.exception" VariableName="exceptionDetails9901">
+        <Source RefID="9898"/>
+      </Data>
+    </Catch>
+    <Catch ExceptionID="3966" ID="3967">
+      <Function ID="8968" Label="Get Exception Details">
+        <Source RefID="8969"/>
+        <Source RefID="3966"/>
+        <Target RefID="8969"/>
+        <Target RefID="8971"/>
+        <Invoke Operation="getExceptionDetails" ServiceID="8969">
+          <Source RefID="3966"/>
+        </Invoke>
+        <Receive ServiceID="8969">
+          <Target RefID="8971"/>
+        </Receive>
+      </Function>
+      <Mappings ID="13266" Label="Mapping">
+        <Input>
+          <Data ID="13267" Label="Date" ReferenceName="Date" ReferencePath="base.date" VariableName="date13267"/>
+          <Source RefID="13268">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="13269" Label="Specification Filename" ReferenceName="Text" ReferencePath="base" VariableName="text13269"/>
+          <Source RefID="18"/>
+        </Input>
+        <Input>
+          <Data ID="13270" Label="Exception Details" ReferenceName="ExceptionDetails" ReferencePath="core.exception" VariableName="exceptionDetails13270"/>
+          <Source RefID="8971"/>
+        </Input>
+        <Output>
+          <Data ID="13271" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory13271"/>
+          <Target RefID="13272"/>
+        </Output>
+        <Mapping>%3%.type="OAS Client Application"</Mapping>
+        <Mapping>%3%.date=%0%.asString()</Mapping>
+        <Mapping>%3%.fileName=%1%.text</Mapping>
+        <Mapping>%3%.errorMessage=%2%.message</Mapping>
+        <Mapping>%3%.importStatus="Error"</Mapping>
+      </Mappings>
+      <Function ID="7102" Label="Store">
+        <Source RefID="7103"/>
+        <Source RefID="13272"/>
+        <Source RefID="7106"/>
+        <Target RefID="7103"/>
+        <Target RefID="7105"/>
+        <Invoke Operation="Store" ServiceID="7103">
+          <Source RefID="13272"/>
+          <Source RefID="7106">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="7103">
+          <Target RefID="7105"/>
+        </Receive>
+      </Function>
+      <Assign>
+        <Source RefID="18"/>
+        <Target RefID="165"/>
+        <Copy>
+          <Source RefID="18"/>
+          <Target RefID="165"/>
+        </Copy>
+      </Assign>
+      <Data ID="7105" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable7105">
+        <Source RefID="7102"/>
+        <Source RefID="6"/>
+      </Data>
+      <Data ID="8971" Label="Exception Details" ReferenceName="ExceptionDetails" ReferencePath="core.exception" VariableName="exceptionDetails8971">
+        <Source RefID="8968"/>
+      </Data>
+    </Catch>
   </Operation>
 </Service>

@@ -34,4 +34,14 @@
       <MaxLength>1000000</MaxLength>
     </Restriction>
   </Data>
+  <Data Label="Import Status" VariableName="importStatus">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Error Message" VariableName="errorMessage">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
