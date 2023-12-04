@@ -283,6 +283,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
           s = new Socket();
         }
         s.setKeepAlive(true);
+        s.setTcpNoDelay(true);
         return s;
       }
 
@@ -346,6 +347,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       // Client uses only socketFactory.createSocket(), sub-method will not have an effect!
       private void connectSocket(Socket s, InetSocketAddress host) throws IOException {
         s.setKeepAlive(true);
+        s.setTcpNoDelay(true);
         if (connectionTimeout > 0) {
           s.connect(host, connectionTimeout);
         } else {
