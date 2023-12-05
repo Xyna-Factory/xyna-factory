@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!----><Application applicationName="OAS_Base" comment="Added client validation, changed enum members to primitive strings" factoryVersion="9.0.3.2" versionName="0.2.3" xmlVersion="1.1">
+<!----><Application applicationName="OAS_Base" comment="Added null check for enums" factoryVersion="9.0.3.2" versionName="0.2.4" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -228,10 +228,24 @@
     </XmomStorable>
     <XmomStorable>
       <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>errorMessage</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>errorMessage</FqPath>
+      <ColumnName>errormessage</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
       <Path>fileName</Path>
       <OdsName>oas_importhistory</OdsName>
       <FqPath>fileName</FqPath>
       <ColumnName>filename</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>importStatus</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>importStatus</FqPath>
+      <ColumnName>importstatus</ColumnName>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>

@@ -35,7 +35,7 @@ public class OpenAPIStringTypeTest {
     }
 
     @Test
-    void testRequieredAndNullIsInvalid() {
+    void testRequiredAndNullIsInvalid() {
         OpenAPIStringType st = new OpenAPIStringType("test", null);
         List<String> errorMessages = st.checkValid();
 
@@ -54,7 +54,7 @@ public class OpenAPIStringTypeTest {
     }
 
     @Test
-    void testRequieredIsValid() {
+    void testRequiredIsValid() {
         OpenAPIStringType st = new OpenAPIStringType("test", "test");
 
         assert (st.checkValid().size() == 0);

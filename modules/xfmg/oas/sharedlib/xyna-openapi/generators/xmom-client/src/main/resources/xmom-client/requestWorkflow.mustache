@@ -261,6 +261,9 @@
       <Data VariableName="behaviourIfPropertyNotSet" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter">
       </Data>
     </Data>
+    <Exception ID="29" VariableName="validationException29" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception">
+      <Target RefID="31"/>
+    </Exception>
     <Assign ID="1">
       <Source RefID="18">
       </Source>
@@ -273,6 +276,17 @@
         </Target>
       </Copy>
     </Assign>
+    <Catch ID="30" ExceptionID="29">
+      <Throw ID="31" Label="Throw Validation Exception" ExceptionID="29">
+        <Meta>
+          <PreferedExceptionType>xmcp.oas.exception.ValidationException</PreferedExceptionType>
+        </Meta>
+        <Source RefID="29">
+        </Source>
+      </Throw>
+      <Assign>
+      </Assign>
+    </Catch>
   </Operation>
 </Service>
 {{/operation}}{{/operations}}

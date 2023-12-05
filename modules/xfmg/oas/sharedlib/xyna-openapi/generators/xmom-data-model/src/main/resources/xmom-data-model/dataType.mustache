@@ -2,8 +2,10 @@
  TypeName="{{classname}}" TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}" Label="{{name}}"
  BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
     <Meta>
-        <IsServiceGroupOnly>false</IsServiceGroupOnly>{{#description}}
-        <Documentation>{{description}}</Documentation>{{/description}}
+        <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        <Documentation>{{#description}}{{description}}{{/description}}
+{{#allOf}}{{#-first}}This data type is "allOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/allOf}}{{#oneOf}}{{#-first}}This data type is "oneOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/oneOf}}{{#anyOf}}{{#-first}}This data type is "anyOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/anyOf}}
+</Documentation>
     </Meta>
 {{#vars}}
     <Data Label="{{baseName}}" VariableName="{{name}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
@@ -16,7 +18,7 @@ Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.
 values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
 {{/isEnumRef}}{{#format}}
 format: {{format}}{{/format}}
-requiered: {{required}}
+required: {{required}}
             </Documentation>
         </Meta>
     </Data>

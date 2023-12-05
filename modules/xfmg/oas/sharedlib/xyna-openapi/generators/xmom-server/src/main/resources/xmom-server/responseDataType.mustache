@@ -3,6 +3,9 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Resp
 BaseTypeName="ResponseParameter" BaseTypePath="xmcp.oas.datatype.provider">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Specified Responses:{{#responses}}
+- {{code}} {{message}}{{/responses}}
+</Documentation>
   </Meta>
   <Service Label="{{httpMethod}} {{path}} Response" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response">
     <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false" IsAbstract="true">
@@ -43,7 +46,7 @@ Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.
 values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
 {{/isEnumRef}}{{#format}}
 format: {{format}}{{/format}}
-requiered: {{required}}
+required: {{required}}
             </Documentation>
         </Meta>
     </Data>{{/dataType}}{{#responseHeaders}}{{#isPrimitiveType}}
@@ -54,7 +57,7 @@ requiered: {{required}}
 Enum with values: {{_enum}}{{/isEnum}}{{#format}}
 format: {{format}}{{/format}}
 
-{{#required}}requiered{{/required}}
+{{#required}}required{{/required}}
 {{#isNullable}}nullable{{/isNullable}}
             </Documentation>
         </Meta>
