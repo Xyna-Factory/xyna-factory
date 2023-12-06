@@ -97,7 +97,7 @@
       <Mapping>%2%.expectedHTTPStatusCode["{{#lambda.index}}{{/lambda.index}}"].reason="{{message}}"</Mapping>{{/responses}}
       <Mapping>%2%.hTTPMethod#cast("xact.http.enums.httpmethods.{{httpMethod}}")=%0%</Mapping>
       <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
-      <Mapping>%2%.uRLPath.path={{#lambda.pathparam}}{{path}}{{/lambda.pathparam}}</Mapping>{{^lambda.index}}0{{/lambda.index}}{{#queryParams}}
+      <Mapping>%2%.uRLPath.path={{#lambda.pathparam}}{{basePathWithoutHost}}{{path}}{{/lambda.pathparam}}</Mapping>{{^lambda.index}}0{{/lambda.index}}{{#queryParams}}
       <Mapping>%2%.uRLPath.query["{{^lambda.index}}{{/lambda.index}}"].attribute="{{paramName}}"</Mapping>
       <Mapping>%2%.uRLPath.query["{{#lambda.index}}{{/lambda.index}}"].value=%1%.{{paramName}}</Mapping>{{/queryParams}}
     </Mappings>
