@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!----><Application applicationName="OAS_Base" comment="Added null check for enums" factoryVersion="9.0.3.2" versionName="0.2.4" xmlVersion="1.1">
+<!----><Application applicationName="OAS_Base" comment="Added base path to filter and client request workflows" factoryVersion="9.0.3.2" versionName="0.2.5" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
