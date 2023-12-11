@@ -170,13 +170,22 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
 
   public FilterInstanceDetails getFilterInstanceDetail(FilterInstance filterInstance22) {
     FilterInstanceInformation info;
+    TriggerInstanceInformation triggerInfo;
     try {
-      info = activationTrigger.getFilterInstanceInformation(
-        filterInstance22.getFilterInstance(), getRevision(filterInstance22.getRuntimeContext()));
+      info = activationTrigger.getFilterInstanceInformation
+        (filterInstance22.getFilterInstance(), getRevision(filterInstance22.getRuntimeContext()));
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
-    }
-    return getDetail(info);
+    }    
+    FilterInstanceDetails result = getDetail(info);
+    try {
+      triggerInfo = activationTrigger.getTriggerInstanceInformation
+        (info.getTriggerInstanceName(), info.getRevision(), true);
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(e);
+    }    
+    result.setTriggerInstanceDetail(getDetail(triggerInfo));
+    return result;
   }
 
   public List<? extends Filter> getFilterOverview() {
@@ -203,7 +212,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     return getDetail(triggerinfo);
   }
 
-  public TriggerInstanceDetail getTriggerInstanceDetail(TriggerInstance triggerInstance20) {    
+  public TriggerInstanceDetail getTriggerInstanceDetail(TriggerInstance triggerInstance20) {
     TriggerInstanceInformation info;
     try {
       info = activationTrigger.getTriggerInstanceInformation(
@@ -211,7 +220,26 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
-    return getDetail(info);
+    TriggerInstanceDetail result = getDetail(info);
+    
+    List<FilterInstance> filterInstances;
+    try {
+      filterInstances = activationTrigger.getFilterInstancesForTriggerInstance
+        (triggerInstance20.getTriggerInstance(), getRevision(triggerInstance20.getRuntimeContext()), true).stream().
+        map(instance -> {
+          try {
+            return activationTrigger.getFilterInstanceInformation(instance.getFilterInstanceName(), instance.getRevision());
+          } catch (PersistenceLayerException e) {
+            throw new RuntimeException(e);
+          }
+        }).
+        map(filterinstanceinfo -> convertToXMOM(filterinstanceinfo)).
+        collect(Collectors.toList());
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(e);
+    }
+    result.setFilterInstance(filterInstances);
+    return result;
   }
 
   public List<? extends Trigger> getTriggerOverview() {

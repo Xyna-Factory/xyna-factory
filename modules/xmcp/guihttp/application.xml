@@ -1094,7 +1094,11 @@
 
     <!-- // RtcManager -->
     <!-- TriggerAndFilterManager -->
-    
+
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.FilterAndTriggerManagerServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.filtermanager.DeployFilterInstance</FqName>
       <Type>WORKFLOW</Type>

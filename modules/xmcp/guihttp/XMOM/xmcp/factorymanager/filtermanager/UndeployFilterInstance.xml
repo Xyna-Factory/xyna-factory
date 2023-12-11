@@ -22,10 +22,30 @@
       <Data ID="37" Label="Filter Instance" ReferenceName="FilterInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstance37"/>
     </Input>
     <Output/>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights111"/>
+    </Throws>
     <ServiceReference ID="19" Label="Filter and Trigger Manager Services" ReferenceName="FilterAndTriggerManagerServices.FilterAndTriggerManagerServices" ReferencePath="xmcp.factorymanager">
       <Source RefID="18"/>
       <Target RefID="18"/>
     </ServiceReference>
+    <ServiceReference ID="67" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="66"/>
+      <Target RefID="66"/>
+    </ServiceReference>
+    <Function ID="66" Label="Check Rights for Current User">
+      <Source RefID="67"/>
+      <Source RefID="68"/>
+      <Target RefID="67"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="67">
+        <Source RefID="68">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="67"/>
+    </Function>
     <Function ID="18" Label="Undeploy Filter Instance">
       <Source RefID="19"/>
       <Source RefID="37"/>
@@ -35,6 +55,18 @@
       </Invoke>
       <Receive ServiceID="19"/>
     </Function>
+    <Data ID="68" IsList="true" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight68">
+      <Value>
+        <Data ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.FilterManagement</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
     <Assign ID="1"/>
   </Operation>
 </Service>
