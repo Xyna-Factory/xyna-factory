@@ -31,4 +31,5 @@
     </Meta>
   </Data>
   <Data IsList="true" Label="Filter Instance" ReferenceName="FilterInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstance"/>
+  <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext"/>
 </DataType>

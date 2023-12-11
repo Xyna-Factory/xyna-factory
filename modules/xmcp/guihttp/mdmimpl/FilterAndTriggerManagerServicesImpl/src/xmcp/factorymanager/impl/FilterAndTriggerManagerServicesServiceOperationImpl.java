@@ -279,6 +279,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       triggerInstance(info.getTriggerInstances().stream().
         map(inInfo -> convertToXMOM(inInfo)).
         collect(Collectors.toList())).
+      runtimeContext(convert(info.getRuntimeContext())).
       instance();
   }
   
@@ -298,6 +299,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       filterInstance(info.getFilterInstances().stream().
         map(inInfo -> convertToXMOM(inInfo)).
         collect(Collectors.toList())).
+      runtimeContext(convert(info.getRuntimeContext())).
       instance();
   }
   
