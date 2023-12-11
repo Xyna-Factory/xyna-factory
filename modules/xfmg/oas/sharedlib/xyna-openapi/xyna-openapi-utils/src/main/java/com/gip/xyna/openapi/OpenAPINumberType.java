@@ -60,6 +60,10 @@ public class OpenAPINumberType<N extends Number> extends OpenAPIPrimitiveType<N>
     public List<String> checkValid() {
         List<String> errorMessages = super.checkValid();
 
+        if (this.isNull()) {
+            return errorMessages;
+        }
+
         if (!this.checkMultipleOf()) {
             errorMessages.add(String.format(
                 "%s: Value %s is not multiple of %s", this.getName(), this.getValue().toString(), this.multipleOf.toString())
@@ -79,7 +83,7 @@ public class OpenAPINumberType<N extends Number> extends OpenAPIPrimitiveType<N>
                 "%s: Value is %s, but must be %s %s", this.getName(), this.getValue().toString(), condition, this.max.toString())
             );
         }
-
+        
         return errorMessages;
     }
 

@@ -83,7 +83,7 @@ public class XmomClientGenerator extends DefaultCodegen {
     apiTemplateFiles.put("requestWorkflow.mustache", "_requestWorkflows_toSplit.xml");
     templateDir = "xmom-client";
 
-    apiPackage = "xmcp.oas";
+    apiPackage = "xmcp.oas.client";
     modelPackage = "model.generated";
 
     /**

@@ -67,7 +67,7 @@
             <Target RefID="4294"/>
           </Output>
           <Mapping>%0%.name="OAS_Base"</Mapping>
-          <Mapping>%0%.version="0.2.5"</Mapping>
+          <Mapping>%0%.version="0.2.6"</Mapping>
         </Mappings>
         <Assign ID="4049">
           <Source RefID="4294"/>

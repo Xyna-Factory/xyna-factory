@@ -123,7 +123,7 @@ public class XmomServerGenerator extends DefaultCodegen {
 
     templateDir = "xmom-server";
 
-    apiPackage = "xmcp.oas";
+    apiPackage = "xmcp.oas.provider";
     modelPackage = "model.generated";
 
     /**
