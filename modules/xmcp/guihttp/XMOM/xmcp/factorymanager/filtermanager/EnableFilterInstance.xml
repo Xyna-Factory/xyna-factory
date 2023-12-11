@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Enable Filter Instance" TypeName="EnableFilterInstance" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Enable Filter Instance" Name="EnableFilterInstance">
+    <Input>
+      <Data ID="37" Label="Filter Instance" ReferenceName="FilterInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstance37"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="19" Label="Filter and Trigger Manager Services" ReferenceName="FilterAndTriggerManagerServices.FilterAndTriggerManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="18"/>
+      <Target RefID="18"/>
+    </ServiceReference>
+    <Function ID="18" Label="Enable Filter Instance">
+      <Source RefID="19"/>
+      <Source RefID="37"/>
+      <Target RefID="19"/>
+      <Invoke Operation="enableFilterInstance" ServiceID="19">
+        <Source RefID="37"/>
+      </Invoke>
+      <Receive ServiceID="19"/>
+    </Function>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
