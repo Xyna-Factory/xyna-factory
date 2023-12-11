@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!----><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Runtime Context" TypeName="SetRuntimeContext" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Set Runtime Context" Name="SetRuntimeContext">
+    <Input>
+      <Data ID="4608" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4608"/>
+    </Input>
+    <Output>
+      <Data ID="4625" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4625"/>
+      <Data ID="4642" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4642"/>
+      <Data ID="4659" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition4659"/>
+    </Output>
+    <Choice ID="36" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="4608"/>
+      <Target RefID="25"/>
+      <Target RefID="29"/>
+      <Target RefID="33"/>
+      <Input>
+        <Data ID="4518" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4518"/>
+        <Source RefID="4608"/>
+      </Input>
+      <Case ID="4519" Label="Runtime Context" Premise="xprc.xpce.RuntimeContext">
+        <Mappings ID="4535" Label="Mapping">
+          <Output>
+            <Data ID="4536" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4536"/>
+            <Target RefID="21"/>
+          </Output>
+          <Output>
+            <Data ID="4537" Label="Import Client Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4537"/>
+            <Target RefID="22"/>
+          </Output>
+          <Output>
+            <Data ID="4538" Label="Import Provider Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4538"/>
+            <Target RefID="23"/>
+          </Output>
+          <Output>
+            <Data ID="4539" Label="Import Datamodel Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4539"/>
+            <Target RefID="24"/>
+          </Output>
+          <Output>
+            <Data ID="4540" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4540"/>
+            <Target RefID="27"/>
+          </Output>
+          <Output>
+            <Data ID="4541" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition4541"/>
+            <Target RefID="32"/>
+          </Output>
+        </Mappings>
+        <Assign/>
+        <Assign>
+          <Source RefID="24"/>
+          <Source RefID="27"/>
+          <Source RefID="32"/>
+          <Target RefID="25"/>
+          <Target RefID="29"/>
+          <Target RefID="33"/>
+          <Copy>
+            <Source RefID="24"/>
+            <Target RefID="25"/>
+          </Copy>
+          <Copy>
+            <Source RefID="27"/>
+            <Target RefID="29"/>
+          </Copy>
+          <Copy>
+            <Source RefID="32"/>
+            <Target RefID="33"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="4520" Label="Own Context" Premise="xprc.xpce.OwnContext">
+        <Mappings ID="4542" Label="Mapping">
+          <Output>
+            <Data ID="4543" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4543"/>
+            <Target RefID="17"/>
+          </Output>
+          <Output>
+            <Data ID="4544" Label="Import Client Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4544"/>
+            <Target RefID="18"/>
+          </Output>
+          <Output>
+            <Data ID="4545" Label="Import Provider Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4545"/>
+            <Target RefID="19"/>
+          </Output>
+          <Output>
+            <Data ID="4546" Label="Import Datamodel Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4546"/>
+            <Target RefID="20"/>
+          </Output>
+          <Output>
+            <Data ID="4547" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4547"/>
+            <Target RefID="26"/>
+          </Output>
+          <Output>
+            <Data ID="4548" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition4548"/>
+            <Target RefID="31"/>
+          </Output>
+        </Mappings>
+        <Assign/>
+        <Assign>
+          <Source RefID="20"/>
+          <Source RefID="26"/>
+          <Source RefID="31"/>
+          <Target RefID="25"/>
+          <Target RefID="29"/>
+          <Target RefID="33"/>
+          <Copy>
+            <Source RefID="20"/>
+            <Target RefID="25"/>
+          </Copy>
+          <Copy>
+            <Source RefID="26"/>
+            <Target RefID="29"/>
+          </Copy>
+          <Copy>
+            <Source RefID="31"/>
+            <Target RefID="33"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="4521" Label="Workspace" Premise="xprc.xpce.Workspace">
+        <Mappings ID="4549" Label="Mapping">
+          <Input>
+            <Data ID="4550" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4550"/>
+            <Source RefID="4608">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="4551" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace4551"/>
+            <Target RefID="12"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Parallel>
+          <Serial>
+            <Mappings ID="4552" Label="Import OAS Applications">
+              <Input>
+                <Data ID="4553" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace4553"/>
+                <Source RefID="12">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="4554" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4554"/>
+                <Target RefID="10"/>
+              </Output>
+              <Mapping>%1%.serviceRTC#cast("xprc.xpce.Workspace")=%0%</Mapping>
+            </Mappings>
+          </Serial>
+          <Serial>
+            <Mappings ID="4555" Label="Import Client Application">
+              <Input>
+                <Data ID="4556" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace4556"/>
+                <Source RefID="12">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="4557" Label="Import Client Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4557"/>
+                <Target RefID="14"/>
+              </Output>
+              <Mapping>%1%.serviceRTC#cast("xprc.xpce.Workspace")=%0%</Mapping>
+            </Mappings>
+          </Serial>
+          <Serial>
+            <Mappings ID="4558" Label="Import Provider Application">
+              <Input>
+                <Data ID="4559" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace4559"/>
+                <Source RefID="12">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="4560" Label="Import Provider Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4560"/>
+                <Target RefID="15"/>
+              </Output>
+              <Mapping>%1%.serviceRTC#cast("xprc.xpce.Workspace")=%0%</Mapping>
+            </Mappings>
+          </Serial>
+          <Serial>
+            <Mappings ID="4561" Label="Import Datamodel Application">
+              <Input>
+                <Data ID="4562" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace4562"/>
+                <Source RefID="12">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="4563" Label="Import Datamodel Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4563"/>
+                <Target RefID="16"/>
+              </Output>
+              <Mapping>%1%.serviceRTC#cast("xprc.xpce.Workspace")=%0%</Mapping>
+            </Mappings>
+          </Serial>
+        </Parallel>
+        <Mappings ID="4564" Label="Details Workflow">
+          <Input>
+            <Data ID="4565" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace4565"/>
+            <Source RefID="12">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="4566" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4566"/>
+            <Target RefID="28"/>
+          </Output>
+          <Mapping>%1%.rTC#cast("xprc.xpce.Workspace")=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="4567" Label="Mapping">
+          <Input>
+            <Data ID="4568" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace4568"/>
+            <Source RefID="12">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="4569" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition4569"/>
+            <Target RefID="30"/>
+          </Output>
+          <Mapping>%1%.tableWorkflowRTC#cast("xprc.xpce.Workspace")=%0%</Mapping>
+        </Mappings>
+        <Assign/>
+        <Assign>
+          <Source RefID="16"/>
+          <Source RefID="28"/>
+          <Source RefID="30"/>
+          <Target RefID="25"/>
+          <Target RefID="29"/>
+          <Target RefID="33"/>
+          <Copy>
+            <Source RefID="16"/>
+            <Target RefID="25"/>
+          </Copy>
+          <Copy>
+            <Source RefID="28"/>
+            <Target RefID="29"/>
+          </Copy>
+          <Copy>
+            <Source RefID="30"/>
+            <Target RefID="33"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="4522" Label="Application" Premise="xprc.xpce.Application">
+        <Mappings ID="4572" Label="Mapping">
+          <Input>
+            <Data ID="4573" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4573"/>
+            <Source RefID="4608">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="4574" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application4574"/>
+            <Target RefID="13"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Parallel>
+          <Serial>
+            <Mappings ID="4575" Label="Import OAS Applications">
+              <Input>
+                <Data ID="4576" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application4576"/>
+                <Source RefID="13">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="4577" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4577"/>
+                <Target RefID="11"/>
+              </Output>
+              <Mapping>%1%.serviceRTC#cast("xprc.xpce.Application")=%0%</Mapping>
+            </Mappings>
+          </Serial>
+          <Serial>
+            <Mappings ID="4579" Label="Import Client Application">
+              <Input>
+                <Data ID="4580" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application4580"/>
+                <Source RefID="13">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="4581" Label="Import Client Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4581"/>
+                <Target RefID="4578"/>
+              </Output>
+              <Mapping>%1%.serviceRTC#cast("xprc.xpce.Application")=%0%</Mapping>
+            </Mappings>
+            <Data ID="4578" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4578"/>
+          </Serial>
+          <Serial>
+            <Mappings ID="4583" Label="Import Provider Application">
+              <Input>
+                <Data ID="4584" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application4584"/>
+                <Source RefID="13">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="4585" Label="Import Provider Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4585"/>
+                <Target RefID="4582"/>
+              </Output>
+              <Mapping>%1%.serviceRTC#cast("xprc.xpce.Application")=%0%</Mapping>
+            </Mappings>
+            <Data ID="4582" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4582"/>
+          </Serial>
+          <Serial>
+            <Mappings ID="4587" Label="Import Datamodel Application">
+              <Input>
+                <Data ID="4588" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application4588"/>
+                <Source RefID="13">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="4589" Label="Import Datamodel Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4589"/>
+                <Target RefID="4586"/>
+              </Output>
+              <Mapping>%1%.serviceRTC#cast("xprc.xpce.Application")=%0%</Mapping>
+            </Mappings>
+            <Data ID="4586" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4586"/>
+          </Serial>
+        </Parallel>
+        <Mappings ID="4590" Label="Details Workflow">
+          <Input>
+            <Data ID="4591" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application4591"/>
+            <Source RefID="13">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="4592" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4592"/>
+            <Target RefID="4570"/>
+          </Output>
+          <Mapping>%1%.rTC#cast("xprc.xpce.Application")=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="4593" Label="Mapping">
+          <Input>
+            <Data ID="4594" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application4594"/>
+            <Source RefID="13">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="4595" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition4595"/>
+            <Target RefID="4571"/>
+          </Output>
+          <Mapping>%1%.tableWorkflowRTC#cast("xprc.xpce.Application")=%0%</Mapping>
+        </Mappings>
+        <Assign/>
+        <Assign>
+          <Source RefID="4586"/>
+          <Source RefID="4570"/>
+          <Source RefID="4571"/>
+          <Target RefID="25"/>
+          <Target RefID="29"/>
+          <Target RefID="33"/>
+          <Copy>
+            <Source RefID="4586"/>
+            <Target RefID="25"/>
+          </Copy>
+          <Copy>
+            <Source RefID="4570"/>
+            <Target RefID="29"/>
+          </Copy>
+          <Copy>
+            <Source RefID="4571"/>
+            <Target RefID="33"/>
+          </Copy>
+        </Assign>
+        <Data ID="4570" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4570"/>
+        <Data ID="4571" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition4571"/>
+      </Case>
+    </Choice>
+    <Data ID="10" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition10"/>
+    <Data ID="11" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition11"/>
+    <Data ID="12" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace12"/>
+    <Data ID="13" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application13"/>
+    <Data ID="14" Label="Import Client Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition14"/>
+    <Data ID="15" Label="Import Provider Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition15"/>
+    <Data ID="16" Label="Import Datamodel Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition16"/>
+    <Data ID="17" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition17"/>
+    <Data ID="18" Label="Import Client Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition18"/>
+    <Data ID="19" Label="Import Provider Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition19"/>
+    <Data ID="20" Label="Import Datamodel Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition20"/>
+    <Data ID="21" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition21"/>
+    <Data ID="22" Label="Import Client Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition22"/>
+    <Data ID="23" Label="Import Provider Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition23"/>
+    <Data ID="24" Label="Import Datamodel Application" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition24"/>
+    <Data ID="25" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition25"/>
+    <Data ID="26" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow26"/>
+    <Data ID="27" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow27"/>
+    <Data ID="28" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow28"/>
+    <Data ID="29" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow29"/>
+    <Data ID="30" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition30"/>
+    <Data ID="31" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition31"/>
+    <Data ID="32" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition32"/>
+    <Data ID="33" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition33"/>
+    <Assign ID="1">
+      <Source RefID="25"/>
+      <Source RefID="29"/>
+      <Source RefID="33"/>
+      <Target RefID="4625"/>
+      <Target RefID="4642"/>
+      <Target RefID="4659"/>
+      <Copy>
+        <Source RefID="25"/>
+        <Target RefID="4625"/>
+      </Copy>
+      <Copy>
+        <Source RefID="29"/>
+        <Target RefID="4642"/>
+      </Copy>
+      <Copy>
+        <Source RefID="33"/>
+        <Target RefID="4659"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
