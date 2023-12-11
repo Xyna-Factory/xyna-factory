@@ -212,6 +212,10 @@
   </XMOMEntries>
   <XynaProperties>
     <XynaProperty implicitDependency="false">
+      <Name>xmcp.oas.fman.properties.runtime_context</Name>
+      <Value>Workspace</Value>
+    </XynaProperty>
+    <XynaProperty implicitDependency="false">
       <Name>xmcp.oas.validation.request_validation</Name>
       <Value>400 Bad Request</Value>
     </XynaProperty>
