@@ -177,8 +177,14 @@ public class SSHStartParameter extends EnhancedStartParameter implements SSHServ
     return "";
   }
 
-   @Override
+  @Override
   public String getKnownHostFile() {
+    return "";
+  }
+
+
+  @Override
+  public String getPassPhrase() {
     return "";
   }
   
