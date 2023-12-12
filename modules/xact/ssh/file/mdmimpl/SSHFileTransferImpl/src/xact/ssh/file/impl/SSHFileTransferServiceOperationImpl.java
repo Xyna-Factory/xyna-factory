@@ -69,7 +69,7 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
     // If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.
     return null;
   }
-
+  
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
     // - BehaviorAfterOnUnDeploymentTimeout.EXCEPTION: Deployment will be aborted, while undeployment will log the exception and NOT abort.
@@ -118,7 +118,7 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
 
   @Override
   public Container scpFromRemoteHost(SSHServerParameter server, File remoteFile, Text location) {
-    String localName = remoteFile.getPath(); //FIXME lokaler name übergebn?
+    String localName = remoteFile.getPath(); //FIXME lokaler name Ã¼bergebn?
     int idx = localName.lastIndexOf('/');
     if ( idx > 0 ) {
       localName = localName.substring(idx+1);
@@ -218,8 +218,32 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
     if (server.getPassword() != null && server.getPassword().length() > 0) {
       s.setPassword(server.getPassword());
       userInfo.setPassword(server.getPassword());
+      s.setConfig("PreferredAuthentications", "password,keyboard-interactive");
     }
-    s.setConfig("PreferredAuthentications", "password,keyboard-interactive");
+
+    String knownHostsFile = server.getKnownHostFile();
+    String privateKeyFile = server.getPrivateKeyFile();
+    String privateKey = server.getPrivateKey();
+    String publicKey = server.getPublicKey();
+    String passPhrase = server.getPassPhrase();
+    if (privateKey != null && privateKey.length() > 0) {
+      String charset = "US-ASCII";
+      byte[] privateKeyBytes = privateKey.getBytes(charset);
+      byte[] publicKeyBytes = publicKey.getBytes(charset);
+      byte[] passPhraseBytes = passPhrase.getBytes(charset);
+      jsch.setConfig("PreferredAuthentications", "publickey");
+      jsch.addIdentity("id_rsa", privateKeyBytes, publicKeyBytes, passPhraseBytes);
+      
+    } else if (privateKeyFile != null && privateKeyFile.length() > 0) {
+      jsch.setConfig("PreferredAuthentications", "publickey");
+      jsch.setConfig("StrictHostKeyChecking", "no");
+      jsch.addIdentity(privateKeyFile, passPhrase);
+    }
+    if (knownHostsFile != null && knownHostsFile.length() > 0) {
+      jsch.setKnownHosts(knownHostsFile);
+      jsch.setConfig("StrictHostKeyChecking", "yes");
+    }
+    
     if(server.getSCPTimeouts() != null && server.getSCPTimeouts().getConnectionTimeout() != null && server.getSCPTimeouts().getConnectionTimeout() > 0)
       s.connect(server.getSCPTimeouts().getConnectionTimeout());
     else
