@@ -161,32 +161,6 @@ public class SSHStartParameter extends EnhancedStartParameter implements SSHServ
   public Auth getAuth() {
     return auth;
   }
-
-  @Override
-  public String getPrivateKey() {
-    return "";
-  }
-
-  @Override
-  public String getPrivateKeyFile() {
-    return "";
-  }
-
-  @Override
-  public String getPublicKey() {
-    return "";
-  }
-
-  @Override
-  public String getKnownHostFile() {
-    return "";
-  }
-
-
-  @Override
-  public String getPassPhrase() {
-    return "";
-  }
   
   /*
   public boolean isUsePublickey() {
