@@ -32,7 +32,17 @@ public interface SSHServerParameter {
   int getPort();
 
   String getHost();
- 
+
+  String getPrivateKey();
+  
+  String getPassPhrase();
+
+  String getPublicKey();
+
+  String getPrivateKeyFile();
+
+  String getKnownHostFile();
+  
   Auth getAuth();
   
   Duration getIdleTimeout();
