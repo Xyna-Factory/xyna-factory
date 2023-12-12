@@ -28,8 +28,8 @@ class Configurator:
   }
 
   factorySettings = {
-    "ip": int,
-    "port": bool,
+    "ip": str,
+    "port": int,
     "username": str,
     "password": str,
     "https": bool,
