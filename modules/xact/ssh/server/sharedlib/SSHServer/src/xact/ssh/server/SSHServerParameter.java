@@ -36,16 +36,5 @@ public interface SSHServerParameter {
   Auth getAuth();
   
   Duration getIdleTimeout();
-
-  String getPrivateKey();
-
-  String getPassPhrase();
-
-  String getPublicKey();
-
-  String getPrivateKeyFile();
-
-  String getKnownHostFile();
-
-  
+   
 }
