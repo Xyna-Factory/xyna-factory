@@ -112,6 +112,7 @@ public class SSHStartParameter extends EnhancedStartParameter implements SSHServ
   private Auth auth;
   private ErrorHandling errorHandling;
   private String hostKeyFileName;
+  private String privateKeyFile;
   private Duration idleTimeout;
   
   // the empty constructor may not be removed or throw exceptions! additional ones are possible, though.
@@ -159,6 +160,26 @@ public class SSHStartParameter extends EnhancedStartParameter implements SSHServ
   @Override
   public Auth getAuth() {
     return auth;
+  }
+
+  @Override
+  public String getPrivateKey() {
+    return "";
+  }
+
+  @Override
+  public String getPrivateKeyFile() {
+    return "";
+  }
+
+  @Override
+  public String getPublicKey() {
+    return "";
+  }
+
+   @Override
+  public String getKnownHostFile() {
+    return "";
   }
   
   /*
