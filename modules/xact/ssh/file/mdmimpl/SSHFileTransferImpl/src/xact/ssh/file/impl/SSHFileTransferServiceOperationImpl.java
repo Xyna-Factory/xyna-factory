@@ -232,11 +232,10 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
         byte[] privateKeyBytes = privateKey.getBytes(charset);
         byte[] publicKeyBytes = publicKey.getBytes(charset);
         byte[] passPhraseBytes = passPhrase.getBytes(charset);
+        jsch.setConfig("PreferredAuthentications", "publickey");
+        jsch.addIdentity("id_rsa", privateKeyBytes, publicKeyBytes, passPhraseBytes);
       } catch(Exception ex) {
       }
-      jsch.setConfig("PreferredAuthentications", "publickey");
-      jsch.addIdentity("id_rsa", privateKeyBytes, publicKeyBytes, passPhraseBytes);
-      
     } else if (privateKeyFile != null && privateKeyFile.length() > 0) {
       jsch.setConfig("PreferredAuthentications", "publickey");
       jsch.setConfig("StrictHostKeyChecking", "no");
