@@ -228,9 +228,12 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
     String passPhrase = server.getPassPhrase();
     if (privateKey != null && privateKey.length() > 0) {
       String charset = "US-ASCII";
-      byte[] privateKeyBytes = privateKey.getBytes(charset);
-      byte[] publicKeyBytes = publicKey.getBytes(charset);
-      byte[] passPhraseBytes = passPhrase.getBytes(charset);
+      try {
+        byte[] privateKeyBytes = privateKey.getBytes(charset);
+        byte[] publicKeyBytes = publicKey.getBytes(charset);
+        byte[] passPhraseBytes = passPhrase.getBytes(charset);
+      } catch(Exception ex) {
+      }
       jsch.setConfig("PreferredAuthentications", "publickey");
       jsch.addIdentity("id_rsa", privateKeyBytes, publicKeyBytes, passPhraseBytes);
       
