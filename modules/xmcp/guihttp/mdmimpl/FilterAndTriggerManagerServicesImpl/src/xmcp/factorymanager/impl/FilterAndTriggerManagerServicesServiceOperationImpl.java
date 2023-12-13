@@ -276,20 +276,22 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
   
   public List<? extends RuntimeContext> getPossibleRTCForFilterDeployment0(Filter filter31) {
     long revision = getRevision(filter31.getRuntimeContext());
-    HashSet<Long> result = new HashSet<Long>();
+    HashSet<Long> revisions = new HashSet<Long>();
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-      .getParentRevisionsRecursivly(revision, result);
-    return result.stream().
+      .getParentRevisionsRecursivly(revision, revisions);
+    revisions.add(revision);
+    return revisions.stream().
       map(rev -> convert(rev)).
       collect(Collectors.toList());
   }
   
   public List<? extends RuntimeContext> getPossibleRTCForTriggerDeployment0(Trigger trigger32) {
     long revision = getRevision(trigger32.getRuntimeContext());
-    HashSet<Long> result = new HashSet<Long>();
+    HashSet<Long> revisions = new HashSet<Long>();
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-      .getParentRevisionsRecursivly(revision, result);
-    return result.stream().
+      .getParentRevisionsRecursivly(revision, revisions);
+    revisions.add(revision);
+    return revisions.stream().
       map(rev -> convert(rev)).
       collect(Collectors.toList());
   }
@@ -307,6 +309,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     HashSet<Long> revisions = new HashSet<Long>();
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().
     getDependenciesRecursivly(getRevision(runtimeContext36), revisions);
+    revisions.add(getRevision(runtimeContext36));
 
     return instanceinfo.stream().
       filter(info -> revisions.contains(getRevision(info.getRuntimeContext()))).
