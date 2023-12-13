@@ -28,6 +28,7 @@ import java.util.Objects;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMapping;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMappingUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
@@ -207,23 +208,36 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
 
   @Override
   public void create(XMOMStorable item, long revision) {
-    // TODO Auto-generated method stub
-
+    XMOMODSMapping mapping = new XMOMODSMapping();
+    mapping.setId(XynaFactory.getInstance().getXynaNetworkWarehouse().getXMOMPersistence().getXMOMPersistenceManagement().genId());
+    mapping.setRevision(revision);
+    mapping.setPath(item.getPath());
+    mapping.setFqpath(item.getFQPath());
+    mapping.setFqxmlname(item.getXMLName());
+    mapping.setTablename(item.getODSName());
+    mapping.setColumnname(item.getColumnName());
+    mapping.setUserdefined(false);
+    try {
+      XMOMODSMappingUtils.storeMapping(mapping);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
   @Override
   public void modify(XMOMStorable from, XMOMStorable to, long revision) {
-    // TODO Auto-generated method stub
-
+    this.delete(from, revision);
+    this.create(to, revision);
   }
 
 
   @Override
   public void delete(XMOMStorable item, long revision) {
-    // TODO Auto-generated method stub
-
+    try {
+      XMOMODSMappingUtils.removeForRevisionNameAndFqPath(revision, item.getXMLName(), item.getFQPath());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
-
-
 }
