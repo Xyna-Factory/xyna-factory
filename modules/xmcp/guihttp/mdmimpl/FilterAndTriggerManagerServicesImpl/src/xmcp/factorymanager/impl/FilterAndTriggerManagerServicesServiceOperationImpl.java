@@ -94,6 +94,12 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
   }
 
   public void deployFilterInstance(DeployFilterRequest deployFilterRequest10) {
+    String[] parameter;
+    if (deployFilterRequest10.getConfigurationParameter() == null) {
+      parameter = new String[0];
+    } else {
+      parameter = deployFilterRequest10.getConfigurationParameter().split(",");
+    }
     DeployFilterParameter deployFilterParameter = 
         new DeployFilterParameter.Builder().
         filterName(deployFilterRequest10.getFilterName()).
@@ -101,7 +107,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
         triggerInstanceName(deployFilterRequest10.getTriggerInstanceName()).
         description(deployFilterRequest10.getDocumentation()).
         optional(deployFilterRequest10.getOptional()).
-        configuration(deployFilterRequest10.getConfigurationParameter().split(",")).
+        configuration(parameter).
         revision(getRevision(deployFilterRequest10.getRuntimeContext())).build();
     try {
       activationTrigger.deployFilter(deployFilterParameter);
@@ -112,11 +118,17 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
 
   public void deployTriggerInstance(DeployTriggerRequest deployTriggerRequest16) {
     try {
+      String[] parameter;
+      if (deployTriggerRequest16.getStartParameter() == null) {
+        parameter = new String[0];
+      } else {
+        parameter = deployTriggerRequest16.getStartParameter().split(",");
+      }
       activationTrigger.deployTrigger(
-        deployTriggerRequest16.getTriggerName(), 
-        deployTriggerRequest16.getTriggerInstanceName(), 
-        deployTriggerRequest16.getStartParameter().split(","), 
-        deployTriggerRequest16.getDocumentation(), 
+        deployTriggerRequest16.getTriggerName(),
+        deployTriggerRequest16.getTriggerInstanceName(),
+        parameter,
+        deployTriggerRequest16.getDocumentation(),
         getRevision(deployTriggerRequest16.getRuntimeContext()));
     } catch (Exception e) {
       throw new RuntimeException(e);
