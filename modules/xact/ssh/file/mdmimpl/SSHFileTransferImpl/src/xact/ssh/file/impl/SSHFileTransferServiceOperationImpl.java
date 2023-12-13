@@ -231,7 +231,7 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
       String charset = "US-ASCII";
       try {
         if (publicKey==null) publicKey = "";
-        if (passPhrase=null) passPhrase="";
+        if (passPhrase==null) passPhrase = "";
         byte[] privateKeyBytes = privateKey.getBytes(charset);
         byte[] publicKeyBytes = publicKey.getBytes(charset);
         byte[] passPhraseBytes = passPhrase.getBytes(charset);
