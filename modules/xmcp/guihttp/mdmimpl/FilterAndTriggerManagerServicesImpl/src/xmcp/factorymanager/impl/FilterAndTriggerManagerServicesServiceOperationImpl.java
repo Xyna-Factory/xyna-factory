@@ -35,6 +35,8 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext.RuntimeDependencyContextType;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -272,6 +274,46 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     }
   }
   
+  public List<? extends RuntimeContext> getPossibleRTCForFilterDeployment0(Filter filter31) {
+    long revision = getRevision(filter31.getRuntimeContext());
+    HashSet<Long> result = new HashSet<Long>();
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
+      .getParentRevisionsRecursivly(revision, result);
+    return result.stream().
+      map(rev -> convert(rev)).
+      collect(Collectors.toList());
+  }
+  
+  public List<? extends RuntimeContext> getPossibleRTCForTriggerDeployment0(Trigger trigger32) {
+    long revision = getRevision(trigger32.getRuntimeContext());
+    HashSet<Long> result = new HashSet<Long>();
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
+      .getParentRevisionsRecursivly(revision, result);
+    return result.stream().
+      map(rev -> convert(rev)).
+      collect(Collectors.toList());
+  }
+  
+  public List<? extends TriggerInstance> getPossibleTriggerInstanceForFilterDeployment(Filter filter37, RuntimeContext runtimeContext36) {
+    TriggerInformation triggerinfo;
+    try {
+      FilterInformation filterinfo = activationTrigger.getFilterInformation(filter37.getName(), getRevision(filter37.getRuntimeContext()), false);
+      triggerinfo = activationTrigger.getTriggerInformation(filterinfo.getTriggerName(), getRevision(runtimeContext36), true);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    List<TriggerInstanceInformation> instanceinfo = triggerinfo.getTriggerInstances();
+
+    HashSet<Long> revisions = new HashSet<Long>();
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().
+    getDependenciesRecursivly(getRevision(runtimeContext36), revisions);
+
+    return instanceinfo.stream().
+      filter(info -> revisions.contains(getRevision(info.getRuntimeContext()))).
+      map(info -> convertToXMOM(info)).
+      collect(Collectors.toList());
+  }
+  
   private Trigger convertToXMOM(TriggerInformation info) {
     return new Trigger.Builder().
       name(info.getTriggerName()).
@@ -344,7 +386,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
 
   private FilterInstanceDetails getDetail(FilterInstanceInformation info) {
     return new FilterInstanceDetails.Builder().
-      instance(info.getTriggerInstanceName()).
+      instance(info.getFilterInstanceName()).
       filter(info.getFilterName()).
       status(info.getState().serializeToString()).
       description(info.getDescription()).
@@ -371,6 +413,18 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     return result;
   }
   
+  private RuntimeContext convert(long revision) {
+    com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext runtimeContext;
+    try {
+      runtimeContext = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+        .getRuntimeContext(revision);
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
+    }
+
+    return convert(runtimeContext);
+  }
+  
   private long getRevision(RuntimeContext rc) {
     try {
       if (rc instanceof RuntimeApplication) {
@@ -380,7 +434,25 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
         return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
           .getRevision(null, null, rc.getName());
       } else {
-        return -1;
+        throw new RuntimeException("Not Supported runtime context");
+      }
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private long getRevision(com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext rc) {
+    
+    RuntimeDependencyContextType type = rc.getRuntimeDependencyContextType();
+    try {
+      if (type.equals(RuntimeDependencyContextType.Application)) {
+        return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+          .getRevision( rc.getName() , ((Application) rc).getVersionName(), null);
+      } else if (type.equals(RuntimeDependencyContextType.Workspace)) {
+        return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+          .getRevision(null, null, rc.getName());
+      } else {
+        throw new RuntimeException("Not Supported runtime context");
       }
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);

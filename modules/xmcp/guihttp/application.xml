@@ -1203,6 +1203,18 @@
       <FqName>xmcp.factorymanager.filtermanager.UndeployTriggerInstance</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleRTCForFilterDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleRTCForTriggerDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleTriggerInstanceForFilterDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
     
     <!-- // TriggerAndFilterManager -->
     

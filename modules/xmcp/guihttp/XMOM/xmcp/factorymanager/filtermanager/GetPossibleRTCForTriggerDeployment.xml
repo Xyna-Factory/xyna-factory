@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Possible RTC for Trigger Deployment" TypeName="GetPossibleRTCForTriggerDeployment" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Possible RTC for Trigger Deployment" Name="GetPossibleRTCForTriggerDeployment">
+    <Input>
+      <Data ID="47" Label="Trigger" ReferenceName="Trigger" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="trigger47"/>
+    </Input>
+    <Output>
+      <Data ID="68" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext68"/>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights146"/>
+    </Throws>
+    <ServiceReference ID="102" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="101"/>
+      <Target RefID="101"/>
+    </ServiceReference>
+    <ServiceReference ID="28" Label="Filter and Trigger Manager Services" ReferenceName="FilterAndTriggerManagerServices.FilterAndTriggerManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="27"/>
+      <Target RefID="27"/>
+    </ServiceReference>
+    <Function ID="101" Label="Check Rights for Current User">
+      <Source RefID="102"/>
+      <Source RefID="103"/>
+      <Target RefID="102"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="102">
+        <Source RefID="103">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="102"/>
+    </Function>
+    <Function ID="27" Label="Get Possible RTC for Trigger Deployment">
+      <Source RefID="28"/>
+      <Source RefID="47"/>
+      <Target RefID="28"/>
+      <Target RefID="30"/>
+      <Invoke Operation="getPossibleRTCForTriggerDeployment0" ServiceID="28">
+        <Source RefID="47"/>
+      </Invoke>
+      <Receive ServiceID="28">
+        <Target RefID="30"/>
+      </Receive>
+    </Function>
+    <Data ID="30" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext30">
+      <Source RefID="27"/>
+    </Data>
+    <Data ID="103" IsList="true" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight103">
+      <Value>
+        <Data ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.TriggerManagement</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="30"/>
+      <Target RefID="68"/>
+      <Copy>
+        <Source RefID="30"/>
+        <Target RefID="68"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

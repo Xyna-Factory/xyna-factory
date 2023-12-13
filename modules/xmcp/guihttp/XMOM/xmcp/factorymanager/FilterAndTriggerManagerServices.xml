@@ -156,5 +156,39 @@
         <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.undeployTriggerInstance(triggerInstance15);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Get Possible RTC for Filter Deployment" Name="getPossibleRTCForFilterDeployment0">
+      <Input>
+        <Data ID="31" Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filter31"/>
+      </Input>
+      <Output>
+        <Data ID="34" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext34"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getPossibleRTCForFilterDeployment0(filter31);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Possible RTC for Trigger Deployment" Name="getPossibleRTCForTriggerDeployment0">
+      <Input>
+        <Data ID="32" Label="Trigger" ReferenceName="Trigger" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="trigger32"/>
+      </Input>
+      <Output>
+        <Data ID="33" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext33"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getPossibleRTCForTriggerDeployment0(trigger32);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Possible Trigger Instance for Filter Deployment" Name="getPossibleTriggerInstanceForFilterDeployment">
+      <Input>
+        <Data ID="37" Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filter37"/>
+        <Data ID="36" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext36"/>
+      </Input>
+      <Output>
+        <Data ID="35" IsList="true" Label="Trigger Instance" ReferenceName="TriggerInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="triggerInstance35"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getPossibleTriggerInstanceForFilterDeployment(filter37, runtimeContext36);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
