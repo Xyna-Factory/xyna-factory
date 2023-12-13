@@ -211,11 +211,12 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
 
     int port = server.getPort() == null ? 22 : server.getPort().intValue();
     Session s = jsch.getSession(server.getUser(), server.getHost(), port);
-    PassphraseRetrievingUserInfo userInfo =
-        new PassphraseRetrievingUserInfo(new SecureStorablePassphraseStore(), new LogAdapter(logger) );
-    s.setUserInfo(userInfo);
     s.setConfig("StrictHostKeyChecking", "no"); //FIXME sinnvoll?
+    
     if (server.getPassword() != null && server.getPassword().length() > 0) {
+      PassphraseRetrievingUserInfo userInfo =
+        new PassphraseRetrievingUserInfo(new SecureStorablePassphraseStore(), new LogAdapter(logger) );
+      s.setUserInfo(userInfo);
       s.setPassword(server.getPassword());
       userInfo.setPassword(server.getPassword());
       s.setConfig("PreferredAuthentications", "password,keyboard-interactive");
@@ -229,6 +230,8 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
     if (privateKey != null && privateKey.length() > 0) {
       String charset = "US-ASCII";
       try {
+        if (publicKey==null) publicKey = "";
+        if (passPhrase=null) passPhrase="";
         byte[] privateKeyBytes = privateKey.getBytes(charset);
         byte[] publicKeyBytes = publicKey.getBytes(charset);
         byte[] passPhraseBytes = passPhrase.getBytes(charset);
