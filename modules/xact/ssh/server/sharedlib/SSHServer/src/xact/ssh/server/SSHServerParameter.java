@@ -36,5 +36,5 @@ public interface SSHServerParameter {
   Auth getAuth();
   
   Duration getIdleTimeout();
-   
+
 }
