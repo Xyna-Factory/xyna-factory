@@ -78,7 +78,10 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/TimeControlledOrdersServicesImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-		<ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/MessageBusUtilsImpl">
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/MessageBusUtilsImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/FilterAndTriggerManagerServicesImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
@@ -95,7 +98,7 @@
         <supply-mdm-jar type="mdmimpl" name="CapacityServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="CronLikeOrderServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="DeploymentItemsImpl" />
-		<supply-mdm-jar type="mdmimpl" name="MessageBusUtilsImpl" />
+        <supply-mdm-jar type="mdmimpl" name="MessageBusUtilsImpl" />
         <supply-mdm-jar type="mdmimpl" name="OrderInputSourcesServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="OrderTypeServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="ProcessMonitorServicesImpl" />
@@ -106,6 +109,7 @@
         <supply-mdm-jar type="mdmimpl" name="TimeControlledOrdersServicesImpl" />
         <supply-mdm-jar type="mdmimpl" name="UserManagementImpl" />
         <supply-mdm-jar type="mdmimpl" name="XynaPropertiesServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="FilterAndTriggerManagerServicesImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 
