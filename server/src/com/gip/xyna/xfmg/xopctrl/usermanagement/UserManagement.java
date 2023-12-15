@@ -263,12 +263,12 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
     /**
      * Zugriffsrechte Trigger-Verwaltung.
      */
-    Trigger("xfmg.xfctrl.TriggerManagement", new String[] {}),
+    Trigger("xfmg.xfctrl.TriggerManagement", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ANY_ESCAPED_STRING}),
     
     /**
      * Zugriffsrechte Filter-Verwaltung.
      */
-    Filter("xfmg.xfctrl.FilterManagement", new String[] {}),
+    Filter("xfmg.xfctrl.FilterManagement", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ANY_ESCAPED_STRING}),
     
     /**
      * Rechtebereich, für den lokalen dateizugriff:

@@ -65,7 +65,7 @@
             <Meta>
               <Type>String</Type>
             </Meta>
-            <Value>xfmg.xfctrl.FilterManagement</Value>
+            <Value>xfmg.xfctrl.FilterManagement:read:*</Value>
           </Data>
         </Data>
       </Value>
