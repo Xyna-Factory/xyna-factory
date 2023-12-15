@@ -70,7 +70,7 @@
             <Meta>
               <Type>String</Type>
             </Meta>
-            <Value>xfmg.xfctrl.TriggerManagement</Value>
+            <Value>xfmg.xfctrl.TriggerManagement:read:*</Value>
           </Data>
         </Data>
       </Value>
