@@ -97,15 +97,13 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
    */
   @Override
   public FilterResponse createXynaOrder(HTTPTriggerConnection tc, FilterConfigurationParameter baseConfig ) throws XynaException {
-    //OASConfigurationParameter config = (OASConfigurationParameter)baseConfig;
-    //return FilterResponse.notResponsible() if next filter should be tried
 
     try {
       logger.debug("Reading Header");
       tc.readHeader();
 
       for (PathParameter pathPara: pathParameter) {
-        logger.debug("Checking URI " + pathPara.pathRegEx.toString());
+        logger.debug("Checking URI " + pathPara.toString());
         if (pathPara.matchPath(tc.getUri())) {
           String ordertype = pathPara.getOrdertype(tc.getMethod());
           GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(pathPara.getInstanceDatatype());
@@ -121,6 +119,12 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
             req.setURLPathParameter(pathPara.getPathAttribute(tc.getUri()));
             XynaOrder xo = new XynaOrder(new DestinationKey(ordertype), implDatatype, req);
             return FilterResponse.responsible(xo);
+          } else if (ordertype == null) {
+            sendStatusCode(tc, "405 Method Not Allowed");
+            return FilterResponse.responsibleWithoutXynaorder();
+          } else {
+            sendStatusCode(tc, HTTPTriggerConnection.HTTP_NOTIMPLEMENTED);
+            return FilterResponse.responsibleWithoutXynaorder();
           }
         }
       }
@@ -130,6 +134,16 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
     }
     logger.debug("Not Responsible");
     return FilterResponse.notResponsible();
+  }
+
+  private void sendStatusCode(HTTPTriggerConnection tc, String statuscode) throws SocketNotAvailableException {
+    try {
+      String msg = "<html><body><h3>" + statuscode + "</h3></body></html>";
+      byte[] msgBytes = msg.getBytes(tc.getCharSet());
+      tc.sendResponse(statuscode, HTTPTriggerConnection.MIME_HTML, null, new ByteArrayInputStream(msgBytes), (long)msgBytes.length);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("charset " + tc.getCharSet() + " is unsupported.");
+    }
   }
 
   private HttpRequest readRequest(HTTPTriggerConnection tc) {
@@ -274,9 +288,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
    * @return description of this filter
    */
   public String getClassDescription() {
-    //TODO implementation
-    //TODO update dependency xml file
-    return null;
+    return "Generated filter for a specific Open Api Specification.";
   }
 
   /**
@@ -390,5 +402,9 @@ class PathParameter {
   
   public String getInstanceDatatype() {
     return fqnOfInstanceDatatype;
+  }
+  
+  public String toString() {
+    return this.pathRegEx.toString();
   }
 }
