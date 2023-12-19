@@ -101,10 +101,15 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
     try {
       logger.debug("Reading Header");
       tc.readHeader();
+      
+      String uri = tc.getUri();
+      if (uri.endsWith("/")) {
+        uri = uri.substring(0, uri.length()-1);
+      }
 
       for (PathParameter pathPara: pathParameter) {
         logger.debug("Checking URI " + pathPara.toString());
-        if (pathPara.matchPath(tc.getUri())) {
+        if (pathPara.matchPath(uri)) {
           String ordertype = pathPara.getOrdertype(tc.getMethod());
           GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(pathPara.getInstanceDatatype());
 
@@ -116,7 +121,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
           if (ordertype != null && implDatatype != null) {
             tc.read();
             HttpRequest req = readRequest(tc);
-            req.setURLPathParameter(pathPara.getPathAttribute(tc.getUri()));
+            req.setURLPathParameter(pathPara.getPathAttribute(uri));
             XynaOrder xo = new XynaOrder(new DestinationKey(ordertype), implDatatype, req);
             return FilterResponse.responsible(xo);
           } else if (ordertype == null) {
