@@ -99,10 +99,13 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
   public FilterResponse createXynaOrder(HTTPTriggerConnection tc, FilterConfigurationParameter baseConfig ) throws XynaException {
     //OASConfigurationParameter config = (OASConfigurationParameter)baseConfig;
     //return FilterResponse.notResponsible() if next filter should be tried
+
     try {
+      logger.debug("Reading Header");
       tc.readHeader();
 
       for (PathParameter pathPara: pathParameter) {
+        logger.debug("Checking URI " + pathPara.pathRegEx.toString());
         if (pathPara.matchPath(tc.getUri())) {
           String ordertype = pathPara.getOrdertype(tc.getMethod());
           GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(pathPara.getInstanceDatatype());
@@ -125,7 +128,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
-
+    logger.debug("Not Responsible");
     return FilterResponse.notResponsible();
   }
 
