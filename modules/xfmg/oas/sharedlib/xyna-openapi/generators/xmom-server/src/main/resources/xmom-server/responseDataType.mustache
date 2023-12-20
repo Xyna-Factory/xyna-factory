@@ -90,10 +90,12 @@ jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.js
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
 
-xact.templates.Document body;{{^isArray}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), jsonOptions);{{/isArray}}{{#isArray}}
+xact.templates.Document body;{{^isArray}}{{#isModel}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), jsonOptions);{{/isModel}}{{/isArray}}{{#isArray}}{{#items.isModel}}
 List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}());
-body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/isArray}}
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/items.isModel}}{{/isArray}}{{^isModel}}{{#primitiveType}}
+body = new xact.templates.Document();
+body.setText(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}
 
 return body;{{/dataType}}
 </CodeSnippet>
@@ -109,7 +111,8 @@ return body;{{/dataType}}
         <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
 
-{{#dataType}}{{>validation}}{{/dataType}}
+{{#dataType}}{{^isArray}}{{#isModel}}{{>validation}}{{/isModel}}{{/isArray}}{{#isArray}}{{#items.isModel}}{{>validation}}{{/items.isModel}}{{/isArray}}{{/dataType}}{{#responseHeaders}}
+{{>validation}}{{/responseHeaders}}
 return result.getResult();</CodeSnippet>
       </SourceCode>
     </Operation>
