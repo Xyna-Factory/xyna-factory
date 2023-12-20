@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +55,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
   private static Logger logger = CentralFactoryLogging.getLogger(OASFilter.class);
   
-  private static final HashMap<String, GeneralXynaObject> fqnInstanceDatatypeMapSucceed = new HashMap<>();
+  private static final Map<Pair<String, Long>, GeneralXynaObject> fqnInstanceDatatypeMapSucceed = new HashMap<>();
   
   private static final LinkedList<PathParameter> pathParameter = new LinkedList<>();
   static {
@@ -112,11 +113,11 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
         logger.debug("Checking URI " + pathPara.toString());
         if (pathPara.matchPath(uri)) {
           String ordertype = pathPara.getOrdertype(tc.getMethod());
-          GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(pathPara.getInstanceDatatype());
+          GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(new Pair<>(pathPara.getInstanceDatatype(), getRevision()));
 
           if (isInWorkspace() && !checkClassLoader(implDatatype)) {
             implDatatype = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype());
-            fqnInstanceDatatypeMapSucceed.put(pathPara.getInstanceDatatype(), implDatatype);
+            fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(), getRevision()), implDatatype);
           }
           
           if (ordertype != null && implDatatype != null) {
@@ -304,10 +305,9 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
   @Override
   public void onDeployment(EventListener triggerInstance) {
     
-    fqnInstanceDatatypeMapSucceed.clear();
     for (PathParameter pathPara: pathParameter) {
       GeneralXynaObject succeed = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype());
-      fqnInstanceDatatypeMapSucceed.put(pathPara.getInstanceDatatype(), succeed);
+      fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(), getRevision()), succeed);
     }
     super.onDeployment(triggerInstance);
   }
@@ -340,7 +340,23 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
    */
   @Override
   public void onUndeployment(EventListener triggerInstance) {
-    super.onUndeployment(triggerInstance);
+    
+    int instancesWithSameFilterAndRevison = 0;
+    try {
+      instancesWithSameFilterAndRevison = XynaFactory.getInstance().getActivation().getActivationTrigger().getFilterInstancesForFilter("OASFilter", getRevision()).size();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      super.onUndeployment(triggerInstance);
+      if (instancesWithSameFilterAndRevison == 1) {
+        Set<Pair<String, Long>> keys = fqnInstanceDatatypeMapSucceed.keySet();
+        for (Pair<String, Long> key: keys) {
+          if (key.getSecond().equals(getRevision())) {
+            fqnInstanceDatatypeMapSucceed.remove(key);
+          }
+        }
+      }
+    }
   }
   
   private boolean isInWorkspace() {
