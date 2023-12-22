@@ -27,14 +27,17 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ApplicationPartImportMode;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ImportApplicationParameter;
+import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.rtctxmgmt.LocalRuntimeContextManagementSecurity;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
+import base.File;
 import xfmg.oas.generation.ApplicationGenerationParameter;
 import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
+import xfmg.xfctrl.filemgmt.ManagedFileId;
 
 
 
@@ -44,6 +47,9 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       new LocalRuntimeContextManagementSecurity();
   private static final SessionManagement sessionManagement = 
       XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+  private static final FileManagement fileManagement = 
+      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
+  
   
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
@@ -65,8 +71,8 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   }
 
   @Override
-  public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter2) {
-    String swagger = applicationGenerationParameter2.getOpenAPISpecificationPath();
+  public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter1, File file4) {
+    String swagger = file4.getPath();
     String target = "/tmp/Order_" + correlatedXynaOrder.getId();
 
     try {
@@ -82,11 +88,11 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     id = oasAppBuilder.createOasApp("xmom-data-model", target + "_datatypes", swagger);
     importApplication(correlatedXynaOrder, id);
     
-    if (applicationGenerationParameter2.getGenerateProvider()) {
+    if (applicationGenerationParameter1.getGenerateProvider()) {
       id = oasAppBuilder.createOasApp("xmom-server", target + "_provider", swagger);
       importApplication(correlatedXynaOrder, id);
     }
-    if (applicationGenerationParameter2.getGenerateClient()) {
+    if (applicationGenerationParameter1.getGenerateClient()) {
       id = oasAppBuilder.createOasApp("xmom-client", target + "_client", swagger);
       importApplication(correlatedXynaOrder, id);
     }
@@ -105,5 +111,13 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
     }
+  }
+  
+  @Override
+  public void generateApplicationByManagedFileID(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter2, ManagedFileId managedFileId3) {
+    File file = new File.Builder()
+        .path(fileManagement.getAbsolutePath(managedFileId3.getId()))
+        .instance();
+    generateApplication(correlatedXynaOrder, applicationGenerationParameter2, file);
   }
 }

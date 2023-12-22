@@ -3,11 +3,6 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="OpenAPI Specification Path" VariableName="openAPISpecificationPath">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
   <Data Label="generate Provider" VariableName="generateProvider">
     <Meta>
       <Type>boolean</Type>

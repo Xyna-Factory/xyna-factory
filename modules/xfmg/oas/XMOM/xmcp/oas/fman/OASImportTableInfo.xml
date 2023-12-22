@@ -8,13 +8,13 @@
       <Data ID="4366" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo4366"/>
       <Data ID="5644" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory5644"/>
     </Output>
-    <ServiceReference ID="13812" Label="Query" ReferenceName="Query" ReferencePath="xnwh.persistence">
-      <Source RefID="13811"/>
-      <Target RefID="13811"/>
-    </ServiceReference>
     <ServiceReference ID="12592" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="12591"/>
       <Target RefID="12591"/>
+    </ServiceReference>
+    <ServiceReference ID="13812" Label="Query" ReferenceName="Query" ReferencePath="xnwh.persistence">
+      <Source RefID="13811"/>
+      <Target RefID="13811"/>
     </ServiceReference>
     <ServiceReference ID="14178" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="14177"/>
@@ -34,7 +34,7 @@
           <Source RefID="14178"/>
           <Source RefID="5540"/>
           <Source RefID="14314"/>
-          <Source RefID="25369"/>
+          <Source RefID="25711"/>
           <Target RefID="14178"/>
           <Target RefID="14404"/>
           <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="14178">
@@ -45,7 +45,7 @@
                 <ExpectedType>xmcp.oas.fman.storables.OAS_ImportHistory</ExpectedType>
               </Meta>
             </Source>
-            <Source RefID="25369">
+            <Source RefID="25711">
               <Meta>
                 <LinkType>Constant</LinkType>
               </Meta>
@@ -150,7 +150,10 @@
     <Data ID="13814" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory13814"/>
     <Data ID="14314" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="const_OAS_ImportHistory14314"/>
     <Data ID="19637" Label="Query All Columns" ReferenceName="QueryAllColumns" ReferencePath="xmcp.tables.datatypes.query" VariableName="const_QueryAllColumns19637"/>
-    <Data ID="25369" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn25369">
+    <Data ID="25549" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo25549">
+      <Source RefID="5918"/>
+    </Data>
+    <Data ID="25711" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn25711">
       <Value>
         <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
           <Data VariableName="disableFilter">
@@ -295,9 +298,52 @@
           </Data>
         </Data>
       </Value>
-    </Data>
-    <Data ID="25549" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo25549">
-      <Source RefID="5918"/>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>importStatus</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>State</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
     </Data>
     <Assign ID="1">
       <Source RefID="25549"/>

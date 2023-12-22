@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!----><Application applicationName="OAS_Base" factoryVersion="9.0.3.2" versionName="0.2.8" xmlVersion="1.1">
+<!----><Application applicationName="OAS_Base" comment="" factoryVersion="9.0.4.0" versionName="0.2.9" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -20,7 +20,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.47</VersionName>
+        <VersionName>0.6.48</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -80,10 +80,6 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.OASImportTableInfo</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.oas.fman.RetrieveSpecificationFile</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -186,10 +182,6 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.RetrieveSpecificationFile</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.SetRuntimeContext</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
@@ -213,7 +205,7 @@
   <XynaProperties>
     <XynaProperty implicitDependency="false">
       <Name>xmcp.oas.fman.properties.runtime_context</Name>
-      <Value>Workspace</Value>
+      <Value/>
     </XynaProperty>
     <XynaProperty implicitDependency="false">
       <Name>xmcp.oas.validation.request_validation</Name>

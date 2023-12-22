@@ -9,10 +9,21 @@
     <Operation IsStatic="true" Label="Generate Application" Name="generateApplication" RequiresXynaOrder="true">
       <Input>
         <Data ID="1" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter1"/>
+        <Data ID="4" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file4"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplication(correlatedXynaOrder, applicationGenerationParameter1);</CodeSnippet>
+        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplication(correlatedXynaOrder, applicationGenerationParameter1, file4);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Generate Application by managed File ID" Name="generateApplicationByManagedFileID" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="2" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter2"/>
+        <Data ID="3" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId3"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplicationByManagedFileID(correlatedXynaOrder, applicationGenerationParameter2, managedFileId3);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

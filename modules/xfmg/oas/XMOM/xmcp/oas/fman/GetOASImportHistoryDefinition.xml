@@ -4,7 +4,7 @@
     <Input/>
     <Output>
       <Data ID="14" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition14"/>
-      <Data ID="274" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text274"/>
+      <Data ID="8172" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId8172"/>
     </Output>
     <ServiceReference ID="8135" Label="Set Runtime Context" ReferenceName="SetRuntimeContext" ReferencePath="xmcp.oas.fman">
       <Source RefID="8134"/>
@@ -67,7 +67,7 @@
             <Target RefID="4294"/>
           </Output>
           <Mapping>%0%.name="OAS_Base"</Mapping>
-          <Mapping>%0%.version="0.2.8"</Mapping>
+          <Mapping>%0%.version="0.2.9"</Mapping>
         </Mappings>
         <Assign ID="4049">
           <Source RefID="4294"/>
@@ -81,14 +81,13 @@
     </Choice>
     <Mappings ID="2946" Label="spec file imput">
       <Output>
-        <Data ID="2955" Label="spec file" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition2955">
+        <Data ID="8226" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition8226">
           <Source RefID="2946"/>
         </Data>
-        <Target RefID="2956"/>
+        <Target RefID="8227"/>
       </Output>
-      <Mapping>%0%.dataPath="%0%.text"</Mapping>
-      <Mapping>%0%.label="Specification"</Mapping>
-      <Mapping>%0%.placeholder="/tmp/specs/Example.json"</Mapping>
+      <Mapping>%0%.dataPath="%0%.id"</Mapping>
+      <Mapping>%0%.label="Upload Spec"</Mapping>
     </Mappings>
     <Function ID="8134" Label="Set Runtime Context">
       <Source RefID="8135"/>
@@ -216,10 +215,10 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="3029" Label="spec file" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3029">
+        <Data ID="8412" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition8412">
           <Source RefID="2265"/>
         </Data>
-        <Source RefID="2956"/>
+        <Source RefID="8227"/>
       </Input>
       <Input>
         <Data ID="3072" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3072">
@@ -270,7 +269,7 @@
       <Mapping>%7%=%0%</Mapping>
       <Mapping>%7%.dataPath="%%"</Mapping>
       <Mapping>%7%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%1%</Mapping>
-      <Mapping>%7%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%7%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.UploadButtonDefinition")=%2%</Mapping>
       <Mapping>%7%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%3%</Mapping>
       <Mapping>%7%.header.rightArea.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%4%</Mapping>
       <Mapping>%7%.header.rightArea.children["3"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%5%</Mapping>
@@ -278,12 +277,8 @@
       <Mapping>%7%.label="OAS Import History"</Mapping>
       <Mapping>%7%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
     </Mappings>
-    <Data ID="983" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text983"/>
     <Data ID="2275" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2275">
       <Source RefID="2265"/>
-    </Data>
-    <Data ID="2956" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition2956">
-      <Source RefID="2946"/>
     </Data>
     <Data ID="4120" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString4120">
       <Source RefID="4110"/>
@@ -317,11 +312,15 @@
     <Data ID="8139" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition8139">
       <Source RefID="8134"/>
     </Data>
+    <Data ID="8209" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="const_ManagedFileId8209"/>
+    <Data ID="8227" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition8227">
+      <Source RefID="2946"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="2275"/>
-      <Source RefID="983"/>
+      <Source RefID="8209"/>
       <Target RefID="14"/>
-      <Target RefID="274"/>
+      <Target RefID="8172"/>
       <Copy>
         <Source RefID="2275">
           <Meta>
@@ -331,12 +330,12 @@
         <Target RefID="14"/>
       </Copy>
       <Copy>
-        <Source RefID="983">
+        <Source RefID="8209">
           <Meta>
             <LinkType>Constant</LinkType>
           </Meta>
         </Source>
-        <Target RefID="274"/>
+        <Target RefID="8172"/>
       </Copy>
     </Assign>
   </Operation>
