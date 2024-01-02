@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import java.io.Serializable;
 
 
 /**
- * Verzweigung Store/Ignore sehr frÃ¼h, um unnÃ¶tige Arbeit zu sparen und 
- * um vÃ¶llig ohne ProtocolMessagesStore auskommen zu kÃ¶nnen.
+ * Verzweigung Store/Ignore sehr früh, um unnötige Arbeit zu sparen und 
+ * um völlig ohne ProtocolMessagesStore auskommen zu können.
  *
  */
 public abstract class ProtocolMessageHandler implements Serializable {
