@@ -637,8 +637,8 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     boolean byLineBreak = sendPartitionByLineBreak.get();
     while (offset < bytes.length) {
       if (offset > 0) {
-        // TODO das ist eigtl ein Workaround fï¿½r Bug 21939. SchÃ¶ner wÃ¤re es, wenn wir
-        // das Buffering besser verstehen und konfigurieren wÃ¼rden
+        // TODO das ist eigtl ein Workaround für Bug 21939. Schöner wäre es, wenn wir
+        // das Buffering besser verstehen und konfigurieren würden
         readNewInput(getInputStream(), accumulatedResponse);
         if (millis > 0) {
           try {
@@ -830,7 +830,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
         try {
           sleep.sleep();
         } catch (Exception ee) {
-        } // interruption soll ï¿½ber cancel geschehen
+        } // interruption soll über cancel geschehen
       }
       return responseBuilder.toString();
     } finally {

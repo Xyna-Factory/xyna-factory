@@ -118,7 +118,7 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
 
   @Override
   public Container scpFromRemoteHost(SSHServerParameter server, File remoteFile, Text location) {
-    String localName = remoteFile.getPath(); //FIXME lokaler name übergebn?
+    String localName = remoteFile.getPath(); //FIXME pass local name?
     int idx = localName.lastIndexOf('/');
     if ( idx > 0 ) {
       localName = localName.substring(idx+1);

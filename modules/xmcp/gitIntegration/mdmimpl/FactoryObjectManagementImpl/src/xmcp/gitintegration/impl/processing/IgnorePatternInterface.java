@@ -26,13 +26,13 @@ import xmcp.gitintegration.FactoryContentItem;
 public interface IgnorePatternInterface<T extends FactoryContentItem> {
 
   public String getPattern();
-    // Bsp XynaProperty:  name:regex 
+    // E.g. XynaProperty:  name:regex 
 
 
   boolean validate(String value);
-   //item  name:<regex>  check start with "name:" und ob regex gültig
+   //item  name:<regex>  check start with "name:" and regex valid
    
- // Annahme: value ist valide
+ // Assumption: value is valide
   boolean ignore(T item, String value);
-  // check ob item.getName() matches value (ohne name:) 
+  // check if item.getName() matches value (ohne name:) 
 }

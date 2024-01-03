@@ -82,7 +82,7 @@ public class AuthUtils {
   
   public static final XynaPropertyBoolean USE_CSRF_TOKEN = new XynaPropertyBoolean("xmcp.guihttp.csrf", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Add csrf token to login response and validate " + HEADER_FILED_CSRF_TOKEN + " header.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "FÃ¼ge csrf token zur login response hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Füge csrf token zur login response hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
 
 
   public static void replyModellerLoginRequiredError(HTTPTriggerConnection tc, JsonFilterActionInstance jfai) throws SocketNotAvailableException {
@@ -229,7 +229,7 @@ public class AuthUtils {
     
   }
   
-  private static final XynaPropertyEnum<SameSite> samesiteproperty = //nicht erlauben, dass cookie fÃ¼r requests von anderen origins benutzt werden darf
+  private static final XynaPropertyEnum<SameSite> samesiteproperty = //nicht erlauben, dass cookie für requests von anderen origins benutzt werden darf
                   new XynaPropertyEnum<SameSite>("xmcp.guihttp.filter.h5xdev.cookie.samesite", SameSite.class, SameSite.STRICT);
   
 
