@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
@@ -44,7 +42,6 @@ import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
-import com.gip.xyna.CentralFactoryLogging;
 
 
 public class XynaObjectJsonBuilder {
@@ -143,6 +140,7 @@ public class XynaObjectJsonBuilder {
   }
 
 
+  @SuppressWarnings("unchecked")
   private Class<? extends GeneralXynaObject> loadListClass(GeneralXynaObjectList<? extends GeneralXynaObject> gxol, long revToUse){
     long rev = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
                                       .getRevisionDefiningXMOMObjectOrParent(gxol.getContainedFQTypeName(), revToUse);
@@ -261,7 +259,7 @@ public class XynaObjectJsonBuilder {
             } else {
               buildPrimitiveListJson(field, (List<?>)value);
             }
-          } else if (GeneralXynaObject.class.isAssignableFrom(fieldType)) {
+          } else if (GeneralXynaObject.class.isAssignableFrom(fieldType) || XynaExceptionBase.class.isAssignableFrom(value.getClass())) {
             buildXynaObjectJson((GeneralXynaObject) value);
           } else {
             throw new IllegalArgumentException("Unexpected field type " + fieldType);
