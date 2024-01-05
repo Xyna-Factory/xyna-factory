@@ -49,10 +49,6 @@
             <artifactId>log4j-1.2-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.oracle.database.xml</groupId>
-            <artifactId>xmlparserv2</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
         </dependency>
