@@ -317,21 +317,79 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
 
   @Override
   public void create(Filter item, long revision) {
-    // TODO Auto-generated method stub
+    // create references
+    for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
+      referenceSupport.create(reference, revision, item.getTriggerName(), ReferenceObjectType.FILTER.toString());
+    }
+    // create filter
+    createFilter(item, revision);
 
+  }
+
+
+  private void createFilter(Filter item, long revision) {
+    StringSerializableList<String> ssl;
+    ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
+    String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[] {});
+    ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
+    String[] sharedLibs = ssl.deserializeFromString(item.getSharedlibs()).toArray(new String[] {});
+    if (jarFiles.length > 0 && item.getReferences() == null) {
+      throw new RuntimeException("No references found (filter: " + item.getFilterName() + ")");
+    }
+    File[] jarFilesArray = new File[jarFiles.length];
+    int idx = 0;
+    for (String jarFile : jarFiles) {
+      List<Reference> references = new ArrayList<>(item.getReferences());
+      jarFilesArray[idx++] = referenceSupport.findJar(references, new File(jarFile).getName(), revision);
+    }
+    try {
+      List<File> jarFilesList = copyToSavedIfNecessary(jarFilesArray, item.getFQFilterClassName(), revision);
+      xynaActivation.getActivationTrigger().addFilter(item.getFilterName(), jarFilesList.toArray(new File[jarFilesList.size()]),
+                                                      item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, null, revision);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  private List<File> copyToSavedIfNecessary(File[] jarFiles, String fqClassName, Long revision) throws Ex_FileAccessException {
+    String targetDirPath = XynaActivationTrigger.getFilterSavedFolderByFilterFqClassName(fqClassName, revision);
+    return XynaActivationTrigger.copyFilesToTargetFolder(targetDirPath, jarFiles);
   }
 
 
   @Override
   public void modify(Filter from, Filter to, long revision) {
-    // TODO Auto-generated method stub
-
+    createFilter(to, revision);
+    // modify references
+    ReferenceSupport rs = new ReferenceSupport();
+    List<ItemDifference<Reference>> idrList = rs.compare(from.getReferences(), to.getReferences());
+    for (ItemDifference<Reference> idr : idrList) {
+      if (idr.getType().getSimpleName().equals((CREATE.class.getSimpleName()))) {
+        rs.create(idr.getTo(), revision, to.getFQFilterClassName(), ReferenceObjectType.FILTER.toString());
+      } else if (idr.getType().getSimpleName().equals((MODIFY.class.getSimpleName()))) {
+        rs.modify(idr.getFrom(), idr.getTo(), revision, to.getFQFilterClassName(), ReferenceObjectType.FILTER);
+      } else if (idr.getType().getSimpleName().equals((DELETE.class.getSimpleName()))) {
+        rs.delete(idr.getFrom().getPath(), revision, from.getFQFilterClassName());
+      }
+    }
   }
 
 
   @Override
   public void delete(Filter item, long revision) {
-    // TODO Auto-generated method stub
+    // delete filter
+    try {
+      xynaActivation.removeFilter(item.getFilterName(), revision);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+    // delete references
+    for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
+      referenceSupport.delete(reference.getPath(), revision, item.getFilterName());
+    }
 
   }
 
