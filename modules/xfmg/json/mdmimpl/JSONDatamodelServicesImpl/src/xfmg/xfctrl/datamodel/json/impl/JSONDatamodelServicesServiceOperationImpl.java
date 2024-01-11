@@ -220,7 +220,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       Class<?> typeOfField = null;
       Type genericType = null;
       boolean searchingClass = true;
-      Class currentClass = xo.getClass();
+      Class<?> currentClass = xo.getClass();
       while (searchingClass) {
         try {
           Field f = currentClass.getDeclaredField(varNameInXyna);
@@ -309,6 +309,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                 if (genType instanceof Class) {
                   Class<?> genTypeClass = (Class<?>) genType;
                   if (XynaObject.class.isAssignableFrom(genTypeClass)) {
+                    @SuppressWarnings("unchecked")
                     List<?> l = createList((Class<? extends XynaObject>) genTypeClass, value.arrayValue, newPath, transformations, substitutions, useLabels);
                     xo.set(varNameInXyna, l);
                   } else if (genTypeClass == String.class) {
@@ -443,6 +444,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                 if (XynaObject.class.isAssignableFrom(genTypeClass)) {
                   List<JSONValue> list = new ArrayList<JSONValue>();
                   list.addAll(value.objectValue.objects.values());
+                  @SuppressWarnings("unchecked")
                   List<?> l = createList((Class<? extends XynaObject>) genTypeClass, list, newPath, transformations, substitutions, useLabels);
                   xo.set(varNameInXyna, l);
                 } else {
@@ -517,6 +519,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
   
   
+  @SuppressWarnings("unchecked")
   private HashMap<String,String> getVarNames(GeneralXynaObject xo, boolean useLabels) {
     try {
       Method methodGetVarNames = xo.getClass().getMethod("getVariableNames");
@@ -577,7 +580,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return createFromXynaObjectRecursivly(xo, "", mapTransformations, mapSubstitutions, useLabels, scope);
   }
   
-  private enum OASScope {
+  public enum OASScope {
     request, response, none;
     
     public static OASScope valueOfOrNone(String val) {
@@ -637,6 +640,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
             String keyName = transformations.get(newPath);
             value.type = JSONValueType.OBJECT;
             JSONObject map = new JSONObject();
+            @SuppressWarnings("unchecked")
             List<? extends XynaObject> l = (List<? extends XynaObject>) val;
             for (XynaObject xoe: l) {
               JSONValue childValue = new JSONValue();
@@ -681,7 +685,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
           logger.debug("Unsupported parameter type: " + val);
           continue;
         }
-        job.objects.put(varNamesOfXynaObject.get(varName), value);
+        job.objects.put(varName, value);
       } catch (InvalidObjectPathException e) {
         throw new RuntimeException(e);
       }
@@ -858,6 +862,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
   
   
+  @SuppressWarnings("unchecked")
   public List<GeneralXynaObject> parseListFromJSONWithOptions(Document document, GeneralXynaObject xo,
                                                                     JSONParsingOptions jSONParsingOptions) {
     return (List<GeneralXynaObject>) parseListFromJSONWithOptions(document, xo, jSONParsingOptions.getListToMapTransformation(), jSONParsingOptions.getMemberSubstitution(), jSONParsingOptions.getUseLabels());
