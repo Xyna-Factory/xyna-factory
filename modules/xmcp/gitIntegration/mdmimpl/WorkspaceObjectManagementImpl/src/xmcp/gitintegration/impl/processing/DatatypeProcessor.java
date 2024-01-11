@@ -28,9 +28,6 @@ import java.util.Map;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.gip.xyna.XynaFactory;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
-import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
@@ -40,7 +37,6 @@ import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.ReferenceData;
 import xmcp.gitintegration.ReferenceManagement;
-import xmcp.gitintegration.RemoveReferenceData;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.ReferenceComparator;
@@ -219,21 +215,12 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
 
   @Override
   public void create(Datatype item, long revision) {
-    String workspaceName = getWorkspaceName(revision);
+    String workspaceName = ReferenceUpdater.getWorkspaceName(revision);
     for (Reference ref : item.getReferences()) {
       ReferenceData.Builder builder = new ReferenceData.Builder();
       builder.objectName(item.getFQName()).objectType(ReferenceObjectType.DATATYPE.toString()).path(ref.getPath())
           .referenceType(ref.getType()).workspaceName(workspaceName);
       ReferenceManagement.addReference(builder.instance());
-    }
-  }
-  
-  private String getWorkspaceName(long revision) {
-    RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-    try {
-      return revMgmt.getWorkspace(revision).getName();
-    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      throw new RuntimeException(e);
     }
   }
 
@@ -249,11 +236,9 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
 
   @Override
   public void delete(Datatype item, long revision) {
-    String workspaceName = getWorkspaceName(revision);
-    RemoveReferenceData.Builder builder = new RemoveReferenceData.Builder();
-    for (Reference ref : item.getReferences()) {
-      builder.objectName(item.getFQName()).path(ref.getPath()).workspaceName(workspaceName);
-      ReferenceManagement.removeReference(builder.instance());
+    ReferenceStorage storage = new ReferenceStorage();
+    for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
+      storage.deleteReference(reference.getPath(), revision, item.getFQName());
     }
   }
 
