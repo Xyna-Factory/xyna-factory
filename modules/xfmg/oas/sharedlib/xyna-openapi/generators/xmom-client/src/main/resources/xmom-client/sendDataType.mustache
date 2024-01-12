@@ -6,8 +6,8 @@ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   </Meta>{{#allParams}}
     <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
      ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isPrimitiveType}}{{#isEnumRef}}
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
             <Type>String</Type>{{/isEnumRef}}
             <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
 Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
@@ -40,8 +40,12 @@ jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.js
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);{{#bodyParams}}
 
-xact.templates.Document body;
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(), jsonOptions);
+xact.templates.Document body;{{#isArray}}
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}());
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/isArray}}{{^isArray}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(), jsonOptions);{{/isArray}}{{^isModel}}{{#primitiveType}}
+body = new xact.templates.Document();
+body.setText(get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}
 
 return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/bodyParams}}{{/hasBodyParam}}
 </CodeSnippet>

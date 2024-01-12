@@ -1,4 +1,4 @@
-{{#operations}}{{#operation}}{{#hasParams}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
 TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" TypePath="{{apiPackage}}.{{pathPrefix}}.request" Label="{{httpMethod}} {{path}} Parameter"
 BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
   <Meta>
@@ -7,8 +7,8 @@ BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
   </Meta>{{#allParams}}
     <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
      ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isPrimitiveType}}{{#isEnumRef}}
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
             <Type>String</Type>{{/isEnumRef}}
             <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
 Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
@@ -63,10 +63,10 @@ for (xact.http.URLPathQuery query: httpRequest1.getURLQueries()) {
     {{/queryParams}}
 }
 {{/hasQueryParams}}{{#hasHeaderParams}}
-for (xact.http.Header header: httpRequest1.getHeader()) {
+for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField()) {
     {{#headerParams}}
-    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (header.getAttribute().equals("{{paramName}}")) {
-        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(header.getValue()));
+    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (headerField.getName().equals("{{paramName}}")) {
+        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(headerField.getValue()));
     }
     {{/headerParams}}
 }
@@ -84,4 +84,4 @@ return ret;</CodeSnippet>
     </Operation>
   </Service>
 </DataType>
-{{/hasParams}}{{/operation}}{{/operations}}
+{{/operation}}{{/operations}}

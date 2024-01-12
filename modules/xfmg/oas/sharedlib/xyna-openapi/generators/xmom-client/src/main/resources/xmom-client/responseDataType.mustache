@@ -18,8 +18,8 @@ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   </Meta>{{#dataType}}
   <Data Label="{{baseType}}" VariableName="{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}
      ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}
-            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isPrimitiveType}}{{#isEnumRef}}
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
+            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
             <Type>String</Type>{{/isEnumRef}}
             <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
 Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}

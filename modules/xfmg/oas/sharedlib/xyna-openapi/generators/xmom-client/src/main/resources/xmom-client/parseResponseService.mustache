@@ -32,22 +32,29 @@ jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.pa
 jsonOptions.setUseLabels(true);{{#responses}}
 
 {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (statusCode == {{code}}) {
-    {{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}} responseDataType = new {{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}();{{#isArray}}{{#items.isModel}}
+    {{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}} responseDataType = new {{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}();
 
     xact.templates.Document document;
-    document = xact.http.HTTPService.receiveDocument(hTTPConnection1);
-    List&lt;{{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}&gt; body = new ArrayList&lt; &gt;();
-    List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}(), jsonOptions);
-    for (GeneralXynaObject obj : parsedList) {
-        body.add(({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}})obj);
+    document = xact.http.HTTPService.receiveDocument(hTTPConnection1);{{#isArray}}{{#items.isModel}}
+    if (!document.getText().trim().equals("")) {
+        List&lt;{{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}&gt; body = new ArrayList&lt; &gt;();
+        List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}(), jsonOptions);
+        for (GeneralXynaObject obj : parsedList) {
+            body.add(({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}})obj);
+        }
+        responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(body);
     }
-    responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(body);{{/items.isModel}}{{/isArray}}{{^isArray}}{{#isModel}}
-
-    xact.templates.Document document;
-    document = xact.http.HTTPService.receiveDocument(hTTPConnection1);
-    {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}} body;
-    body = ({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}}(), jsonOptions);
-    responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(body);{{/isModel}}{{/isArray}}{{#hasHeaders}}
+    else {
+        responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
+    }{{/items.isModel}}{{/isArray}}{{^isArray}}{{#isModel}}
+    if (!document.getText().trim().equals("")) {
+        {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}} body;
+        body = ({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}}(), jsonOptions);
+        responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(body);
+    }
+    else {
+        responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
+    }{{/isModel}}{{/isArray}}{{#hasHeaders}}
 
     for (xact.http.HeaderField field : header3.getHeaderField()) { {{#responseHeaders}}
         {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (field.getName().equals("{{paramName}}")) {

@@ -38,8 +38,8 @@ BaseTypeName="ResponseParameter" BaseTypePath="xmcp.oas.datatype.provider">
   </Meta>{{#dataType}}
   <Data Label="{{complexType}}" VariableName="{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}
      ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}
-            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isPrimitiveType}}{{#isEnumRef}}
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
+            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
             <Type>String</Type>{{/isEnumRef}}
             <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
 Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
